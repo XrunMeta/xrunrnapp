@@ -6,9 +6,12 @@ const CustomListItem = ({onPress, text, image}) => {
     <Pressable style={styles.selectItem} onPress={onPress}>
       <Image
         resizeMode="contain"
-        style={{height: 50}}
-        source={require('../../../assets/images/icon_flag_id.png')}
-        // source={require()}
+        style={{
+          height: 50,
+          width: 40,
+          marginRight: 10,
+        }}
+        source={image}
       />
       <Text style={styles.mediumText}>{text}</Text>
     </Pressable>

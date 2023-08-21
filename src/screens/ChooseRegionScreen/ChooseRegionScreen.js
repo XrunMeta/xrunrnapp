@@ -12,21 +12,26 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import CustomListItem from '../../components/CustomButton/CustomListItem';
 
-const ChooseRegionScreen = () => {
+const ChooseRegionScreen = ({route}) => {
   const navigation = useNavigation();
+  const {flag, countryCode, country} = route.params || {};
 
-  const onBack = () => {
-    navigation.navigate('SignUp');
+  const onBack = (flag, cCountryCode, cCountry) => {
+    navigation.navigate('SignUp', {
+      flag: flag,
+      countryCode: cCountryCode,
+      country: cCountry,
+    });
   };
 
   // ########## Looping Region List
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetch('https://app.xrun.run/gateway.php?act=app1520-01')
+    fetch('https://app.xrun.run/gateway.php?act=countries')
       .then(response => response.json())
       .then(jsonData => {
-        setData(jsonData.data);
+        setData(jsonData);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
@@ -36,10 +41,10 @@ const ChooseRegionScreen = () => {
   // ########## Choose Region
   const chooseRegion = item => {
     navigation.navigate('SignUp', {
-      flag: require('../../../assets/images/icon_flag_id.png'),
-      countryCode: item.ext3,
+      flag: item.lcode,
+      countryCode: item.callnumber,
+      country: item.country,
     });
-    // navigation.navigate('SignUp');
   };
 
   // ########## Search Function
@@ -47,7 +52,7 @@ const ChooseRegionScreen = () => {
 
   return (
     <View style={[styles.root]}>
-      <ButtonBack onClick={onBack} />
+      <ButtonBack onClick={() => onBack(flag, countryCode, country)} />
 
       <View style={styles.titleWrapper}>
         <Text style={styles.title}>Pemilihan Negara</Text>
@@ -66,18 +71,30 @@ const ChooseRegionScreen = () => {
           }}>
           <Image
             resizeMode="contain"
-            style={{height: 50}}
-            source={require('../../../assets/images/icon_flag_id.png')}
+            style={{height: 50, width: 45, marginRight: 10}}
+            source={
+              flag == undefined
+                ? {
+                    uri: 'https://app.xrun.run/flags/id.png',
+                  }
+                : {
+                    uri: flag,
+                  }
+            }
           />
-          <Text style={styles.mediumText}>INDONESIA</Text>
-          <Text style={styles.mediumText}>(+62)</Text>
+          <Text style={styles.mediumText}>
+            {country == undefined ? 'Indonesia' : country}
+          </Text>
+          <Text style={styles.mediumText}>
+            (+{countryCode == undefined ? '62' : countryCode})
+          </Text>
         </View>
       </View>
 
       {/* Search Box */}
       <View style={styles.searchBox}>
         <TextInput
-          placeholder="Silakan mencari negara anda"
+          placeholder="Silakan cari negara anda"
           style={[styles.mediumText, {flex: 1}]}
           value={searchText}
           onChangeText={text => setSearchText(text)}
@@ -106,13 +123,15 @@ const ChooseRegionScreen = () => {
             if (searchText === '') {
               return true; // Tampilkan semua data jika tidak ada pencarian
             }
-            return item.ext2.toLowerCase().includes(searchText.toLowerCase());
+            return item.country
+              .toLowerCase()
+              .includes(searchText.toLowerCase());
           })
           .map((item, index) => (
             <CustomListItem
               key={item.code + '-' + item.subcode}
-              text={'+' + item.ext3 + ') ' + item.ext2}
-              image={require('../../../assets/images/icon_flag_id.png')}
+              text={'+' + item.callnumber + ') ' + item.country}
+              image={{uri: item.lcode}}
               onPress={() => chooseRegion(item)}
             />
           ))}

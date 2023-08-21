@@ -14,7 +14,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import CustomMultipleChecbox from '../../components/CustomCheckbox/CustomMultipleCheckbox';
 
-const SignInScreen = ({route}) => {
+const SignUpScreen = ({route}) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -24,9 +24,9 @@ const SignInScreen = ({route}) => {
   const [age, setAge] = useState('');
   const [refferalEmail, setRefferalEmail] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(true);
-  const {flag, countryCode} = route.params || {};
+  const {flag, countryCode, country} = route.params || {};
 
-  console.log(flag);
+  console.log(flag, ' + ', countryCode, ' + ', country);
 
   const navigation = useNavigation();
 
@@ -60,8 +60,12 @@ const SignInScreen = ({route}) => {
     navigation.navigate('First');
   };
 
-  const chooseRegion = () => {
-    navigation.navigate('ChooseRegion');
+  const chooseRegion = (flag, countryCode, country) => {
+    navigation.navigate('ChooseRegion', {
+      flag: flag,
+      countryCode: countryCode,
+      country: country,
+    });
   };
 
   return (
@@ -115,14 +119,20 @@ const SignInScreen = ({route}) => {
               width: '100%',
               flexDirection: 'row',
             }}>
-            <Pressable style={{flexDirection: 'row'}} onPress={chooseRegion}>
+            <Pressable
+              style={{flexDirection: 'row'}}
+              onPress={() => chooseRegion(flag, countryCode, country)}>
               <Image
                 resizeMode="contain"
-                style={{height: 50}}
+                style={{height: 50, width: 35, marginRight: 10}}
                 source={
                   flag == undefined
-                    ? require('../../../assets/images/icon_flag_id.png')
-                    : flag
+                    ? {
+                        uri: 'https://app.xrun.run/flags/id.png',
+                      }
+                    : {
+                        uri: flag,
+                      }
                 }
               />
               <Text
@@ -284,4 +294,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignInScreen;
+export default SignUpScreen;
