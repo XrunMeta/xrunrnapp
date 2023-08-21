@@ -1,0 +1,58 @@
+{
+  "id": {
+    "alert": {
+      "title": {
+        "error": "Error",
+        "fail": "Gagal",
+        "warning": "Peringatan",
+        "info": "Info",
+        "success": "Berhasil"
+      }
+    },
+    "screen_first": {
+      "title": {
+        "1": "Dapatkan Rewardnya",
+        "2": "Dan Ciptakan Momenmu!"
+      },
+      "login": "Masuk",
+      "signUp": "Ayo XRUN, Daftar Sekarang",
+      "tos": {
+        "1": "Silakan baca",
+        "2": "serta",
+        "3": "di bawah ini untuk mengetahui tentang fitur dan",
+        "4": "yang disediakan oleh aplikasi ini"
+      },
+      "terms": "syarat & ketentuan",
+      "privacy": "kebijakan privasi",
+      "information": "penggunaan informasi"
+    },
+    "screen_signin": {
+      "title": "Masuk Via Email",
+      "subTitle": "Ayo Login Sekarang 'Catch Me'",
+      "email": {
+        "label": "Email",
+        "placeholder": "xrun@xrun.run"
+      },
+      "password": {
+        "label": "Kata sandi",
+        "placeholder": "Kata sandi"
+      },
+      "authcode": {
+        "label": "Coba",
+        "link": "Email Autentikasi"
+      }
+    },
+    "screen_emailAuth": {
+      "email": {
+        "label": "Masukan Email anda",
+        "placeholder": "xrun@xrun.run"
+      }
+    },
+    "screen_emailVerification": {
+      "email": {
+        "label": "Masukan kode verifikasi 6 digit"
+      },
+      "timer": "kirim ulang"
+    }
+  }
+}
