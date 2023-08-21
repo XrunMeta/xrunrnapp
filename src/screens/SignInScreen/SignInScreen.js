@@ -12,8 +12,10 @@ import React, {useState} from 'react';
 import CustomInput from '../../components/CustomInput/';
 import ButtonBack from '../../components/ButtonBack/';
 import {useNavigation} from '@react-navigation/native';
+import {useAuth} from '../../context/AuthContext/AuthContext';
 
 const SignInScreen = () => {
+  const {isLoggedIn, login} = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(true);
@@ -22,17 +24,31 @@ const SignInScreen = () => {
 
   let ScreenHeight = Dimensions.get('window').height;
 
-  const onSignIn = () => {
-    // validate user
-    // navigation.navigate('Home');
+  const onSignIn = async () => {
     if (email.trim() === '') {
       Alert.alert('Error', 'Please insert your Email');
     } else if (!isValidEmail(email)) {
-      Alert.alert('Error', `Invalid email address`);
+      Alert.alert('Error', 'Invalid email address');
     } else if (password.trim() === '') {
       Alert.alert('Error', 'Please insert your Password');
     } else {
-      console.warn('Cek login');
+      try {
+        const response = await fetch(
+          `https://app.xrun.run/gateway.php?act=login-checker&email=${email}&pin=${password}`,
+        );
+        const data = await response.text();
+
+        if (data === 'OK') {
+          login();
+          navigation.navigate('Home');
+          // Simpan session dan navigasi ke halaman selanjutnya
+        } else {
+          Alert.alert('Error', 'Invalid Email & Password');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        Alert.alert('Error', 'An error occurred while logging in');
+      }
     }
   };
 

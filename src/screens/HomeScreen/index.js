@@ -1,12 +1,24 @@
-import {View, Text} from 'react-native';
 import React from 'react';
+import {View, Text, Pressable} from 'react-native';
+import {useAuth} from '../../context/AuthContext/AuthContext';
 
-const Home = () => {
+export default function Home() {
+  const {isLoggedIn, logout} = useAuth();
+
+  const handleLogout = () => {
+    // Lakukan logout dan set state isLoggedIn menjadi false
+    logout();
+  };
+
   return (
     <View>
-      <Text style={{fontSize: 24, alignSelf: 'center'}}>Home</Text>
+      {isLoggedIn ? (
+        <Pressable onPress={handleLogout}>
+          <Text>Logout</Text>
+        </Pressable>
+      ) : (
+        <Text>You are not logged in.</Text>
+      )}
     </View>
   );
-};
-
-export default Home;
+}

@@ -47,84 +47,84 @@ const FirstScreenV2 = () => {
   );
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={styles.root}>
-        <View style={styles.titleWrapper}>
-          <Text style={styles.title}>Dapatkan Rewardnya</Text>
-          <Text style={styles.title}>Dan Ciptakan Momenmu!</Text>
-        </View>
+    // <ScrollView showsVerticalScrollIndicator={false}>
+    <View style={styles.root}>
+      <View style={styles.titleWrapper}>
+        <Text style={styles.title}>Dapatkan Rewardnya</Text>
+        <Text style={styles.title}>Dan Ciptakan Momenmu!</Text>
+      </View>
 
-        <View style={styles.sliderWrapper}>
-          <FlatList
-            data={images}
-            renderItem={renderImage}
-            keyExtractor={(item, index) => index.toString()}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            onMomentumScrollEnd={event => {
-              // Menghitung indeks gambar yang sedang aktif
-              const newIndex = Math.round(
-                event.nativeEvent.contentOffset.x /
-                  event.nativeEvent.layoutMeasurement.width,
-              );
-              setActiveIndex(newIndex); // Set indeks gambar aktif
-            }}
-          />
-          <View style={styles.sliderNavigator}>
-            {images.map((_, index) => (
-              <View
-                key={index}
-                style={[
-                  styles.sliderDot,
-                  {
-                    backgroundColor:
-                      activeIndex === index ? '#343a59' : '#dcdcdc',
-                  },
-                ]}
-              />
-            ))}
-          </View>
-        </View>
-
-        <CustomButton text="Log in" onPress={onSignIn} />
-        <CustomButton
-          text="Let's XRUN, Sign me up"
-          type="SECONDARY"
-          onPress={onJoin}
+      <View style={styles.sliderWrapper}>
+        <FlatList
+          data={images}
+          renderItem={renderImage}
+          keyExtractor={(item, index) => index.toString()}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          onMomentumScrollEnd={event => {
+            // Menghitung indeks gambar yang sedang aktif
+            const newIndex = Math.round(
+              event.nativeEvent.contentOffset.x /
+                event.nativeEvent.layoutMeasurement.width,
+            );
+            setActiveIndex(newIndex); // Set indeks gambar aktif
+          }}
         />
-
-        <View style={styles.descWrapper}>
-          <Text style={styles.text}>
-            Silakan baca{' '}
-            <Text
-              style={styles.link}
-              onPress={() => {
-                Linking.openURL('https://app.xrun.run/7011.html');
-              }}>
-              syarat & ketentuan
-            </Text>{' '}
-            serta{'\n'}
-            <Text
-              style={styles.link}
-              onPress={() => {
-                Linking.openURL('https://app.xrun.run/7013.html');
-              }}>
-              kebijakan privasi
-            </Text>{' '}
-            di bawah ini untuk mengetahui tentang fitur dan{' '}
-            <Text
-              style={styles.link}
-              onPress={() => {
-                Linking.openURL('https://app.xrun.run/7012.html');
-              }}>
-              penggunaan informasi
-            </Text>{' '}
-            yang disediakan oleh aplikasi ini.
-          </Text>
+        <View style={styles.sliderNavigator}>
+          {images.map((_, index) => (
+            <View
+              key={index}
+              style={[
+                styles.sliderDot,
+                {
+                  backgroundColor:
+                    activeIndex === index ? '#343a59' : '#dcdcdc',
+                },
+              ]}
+            />
+          ))}
         </View>
       </View>
-    </ScrollView>
+
+      <CustomButton text="Log in" onPress={onSignIn} />
+      <CustomButton
+        text="Let's XRUN, Sign me up"
+        type="SECONDARY"
+        onPress={onJoin}
+      />
+
+      <View style={styles.descWrapper}>
+        <Text style={styles.text}>
+          Silakan baca{' '}
+          <Text
+            style={styles.link}
+            onPress={() => {
+              Linking.openURL('https://app.xrun.run/7011.html');
+            }}>
+            syarat & ketentuan
+          </Text>{' '}
+          serta{'\n'}
+          <Text
+            style={styles.link}
+            onPress={() => {
+              Linking.openURL('https://app.xrun.run/7013.html');
+            }}>
+            kebijakan privasi
+          </Text>{' '}
+          di bawah ini untuk mengetahui tentang fitur dan{' '}
+          <Text
+            style={styles.link}
+            onPress={() => {
+              Linking.openURL('https://app.xrun.run/7012.html');
+            }}>
+            penggunaan informasi
+          </Text>{' '}
+          yang disediakan oleh aplikasi ini.
+        </Text>
+      </View>
+    </View>
+    // </ScrollView>
   );
 };
 
