@@ -7,19 +7,23 @@ const CustomMultipleChecbox = ({
   singleCheck = false,
   defaultCheckedIndices = [],
   wrapperStyle,
+  onCheckChange,
 }) => {
   const [checkedIndices, setCheckedIndices] = useState(defaultCheckedIndices);
 
   const checkBoxToggle = index => {
+    let newCheckedIndices;
     if (singleCheck) {
-      setCheckedIndices([index]);
+      newCheckedIndices = [index];
     } else {
       if (checkedIndices.includes(index)) {
-        setCheckedIndices(checkedIndices.filter(i => i !== index));
+        newCheckedIndices = checkedIndices.filter(i => i !== index);
       } else {
-        setCheckedIndices([...checkedIndices, index]);
+        newCheckedIndices = [...checkedIndices, index];
       }
     }
+    setCheckedIndices(newCheckedIndices);
+    onCheckChange(newCheckedIndices); // Memanggil callback dengan status terbaru
   };
 
   return (

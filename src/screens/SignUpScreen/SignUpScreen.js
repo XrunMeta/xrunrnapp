@@ -20,23 +20,29 @@ const SignUpScreen = ({route}) => {
   const [password, setPassword] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [region, setRegion] = useState('');
-  const [gender, setGender] = useState('');
-  const [age, setAge] = useState('');
+  const [gender, setGender] = useState('pria');
+  const [age, setAge] = useState('10');
   const [refferalEmail, setRefferalEmail] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(true);
   const {flag, countryCode, country} = route.params || {};
 
-  console.log(flag, ' + ', countryCode, ' + ', country);
+  // console.log(flag, ' + ', countryCode, ' + ', country);
 
   const navigation = useNavigation();
 
-  const onSignIn = () => {
-    if (email.trim() === '') {
-      Alert.alert('Error', 'Please insert your Email');
+  const onSignUp = () => {
+    if (name.trim() === '') {
+      Alert.alert('Error', 'Nama harus diisi');
+    } else if (email.trim() === '') {
+      Alert.alert('Error', 'Email harus diisi');
     } else if (!isValidEmail(email)) {
-      Alert.alert('Error', `Invalid email address`);
+      Alert.alert('Error', `Format email tidak valid`);
     } else if (password.trim() === '') {
-      Alert.alert('Error', 'Please insert your Password');
+      Alert.alert('Error', 'Password harus diisi');
+    } else if (phoneNumber.trim() === '') {
+      Alert.alert('Error', `Nomor Telepon harus diisi`);
+    } else if (region.trim() === '') {
+      Alert.alert('Error', `Daerah harus diisi`);
     } else {
       console.warn('Cek login');
     }
@@ -52,10 +58,6 @@ const SignUpScreen = ({route}) => {
     setIsEmailValid(isValidEmail(text));
   };
 
-  const onEmailAuth = () => {
-    navigation.navigate('EmailAuth');
-  };
-
   const onBack = () => {
     navigation.navigate('First');
   };
@@ -67,6 +69,30 @@ const SignUpScreen = ({route}) => {
       country: country,
     });
   };
+
+  const genderSelector = getGender => {
+    if (getGender == 0) {
+      setGender('pria');
+    } else {
+      setGender('wanita');
+    }
+  };
+
+  const ageSelector = getAge => {
+    if (getAge == 0) {
+      setAge('10');
+    } else if (getAge == 1) {
+      setAge('20');
+    } else if (getAge == 2) {
+      setAge('30');
+    } else if (getAge == 3) {
+      setAge('40');
+    } else if (getAge == 4) {
+      setAge('50+');
+    }
+  };
+
+  console.log(gender, ' - ', age);
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -168,6 +194,7 @@ const SignUpScreen = ({route}) => {
             singleCheck={true}
             wrapperStyle={styles.horizontalChecbox}
             defaultCheckedIndices={[0]}
+            onCheckChange={genderSelector}
           />
         </View>
 
@@ -179,6 +206,7 @@ const SignUpScreen = ({route}) => {
             singleCheck={true}
             wrapperStyle={styles.horizontalChecbox}
             defaultCheckedIndices={[0]}
+            onCheckChange={ageSelector}
           />
         </View>
 
@@ -204,11 +232,11 @@ const SignUpScreen = ({route}) => {
               mendapatkan bonus spesial XRUN
             </Text>
           </View>
-          <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
+          <Pressable onPress={onSignUp} style={styles.buttonSignUp}>
             <Image
               source={require('../../../assets/images/icon_next.png')}
               resizeMode="contain"
-              style={styles.buttonSignInImage}
+              style={styles.buttonSignUpImage}
             />
           </Pressable>
         </View>
@@ -256,12 +284,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#343a59',
   },
-  emailAuth: {
-    fontFamily: 'Poppins-SemiBold',
-    fontSize: 15,
-    color: '#343a59',
-  },
-  buttonSignIn: {
+  buttonSignUp: {
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'flex-end',
@@ -269,7 +292,7 @@ const styles = StyleSheet.create({
     height: 100,
     justifyContent: 'center',
   },
-  buttonSignInImage: {
+  buttonSignUpImage: {
     height: 80,
     width: 80,
   },
