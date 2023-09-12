@@ -40,7 +40,7 @@ const SignInScreen = () => {
 
         if (data === 'OK') {
           login();
-          navigation.navigate('Home');
+          navigation.navigate('MainApp');
           // Simpan session dan navigasi ke halaman selanjutnya
         } else {
           Alert.alert('Error', 'Invalid Email & Password');

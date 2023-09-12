@@ -1,6 +1,7 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native/';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import FirstScreen from '../screens/FirstScreen/';
 import SignInScreen from '../screens/SignInScreen/';
@@ -13,7 +14,10 @@ import NewPasswordScreen from '../screens/NewPasswordScreen/';
 import HomeScreen from '../screens/HomeScreen/';
 import ChooseRegionScreen from '../screens/ChooseRegionScreen/ChooseRegionScreen';
 
+import TabNavigator from './TabNavigator';
+
 const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
 const Navigation = () => {
   return (
@@ -31,9 +35,27 @@ const Navigation = () => {
         <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
         <Stack.Screen name="NewPassword" component={NewPasswordScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="MainApp" component={MainApp} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
 
 export default Navigation;
+
+const MainApp = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+      tabBar={props => <TabNavigator {...props} />}>
+      <Tab.Screen name="Wallet" component={HomeScreen} />
+      <Tab.Screen name="Adverti..." component={HomeScreen} />
+      <Tab.Screen name="Map" component={HomeScreen} />
+      <Tab.Screen name="AR" component={HomeScreen} />
+      <Tab.Screen name="Notify" component={EmailAuthScreen} />
+      <Tab.Screen name="My Info" component={NewPasswordScreen} />
+    </Tab.Navigator>
+  );
+};

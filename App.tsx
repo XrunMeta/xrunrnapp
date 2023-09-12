@@ -14,11 +14,14 @@ import Navigation from './src/navigation';
 import HomeScreen from './src/screens/HomeScreen/';
 import {NavigationContainer} from '@react-navigation/native/';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import TabNavigator from './src/navigation/TabNavigator';
 
 function App(): JSX.Element {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const Stack = createNativeStackNavigator();
+  const Tab = createBottomTabNavigator();
 
   useEffect(() => {
     checkLoginStatus();
@@ -46,11 +49,20 @@ function App(): JSX.Element {
       <SafeAreaView style={styles.root}>
         {isLoggedIn ? (
           <NavigationContainer>
-            <Stack.Navigator>
+            <Stack.Navigator screenOptions={{headerShown: false}}>
               <Stack.Screen name="Home" component={HomeScreen} />
             </Stack.Navigator>
           </NavigationContainer>
         ) : (
+          // <NavigationContainer>
+          //   <Tab.Navigator
+          //     screenOptions={{
+          //       headerShown: false,
+          //     }}
+          //     tabBar={props => <TabNavigator {...props} />}>
+          //     <Tab.Screen name="Map" component={HomeScreen} />
+          //   </Tab.Navigator>
+          // </NavigationContainer>
           <Navigation />
         )}
       </SafeAreaView>
