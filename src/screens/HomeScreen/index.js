@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Text,
   Pressable,
@@ -14,8 +14,13 @@ import {useNavigation} from '@react-navigation/native';
 
 export default function Home() {
   const {isLoggedIn, logout} = useAuth();
+  const [showDetail, setShowDetail] = useState(false);
 
   const navigation = useNavigation();
+
+  const handleShowDetail = () => {
+    setShowDetail(!showDetail);
+  };
 
   const handleLogout = () => {
     // Lakukan logout dan set state isLoggedIn menjadi false
@@ -57,6 +62,7 @@ export default function Home() {
               />
             </Pressable>
           </LinearGradient>
+
           <View style={styles.container}>
             <MapView
               style={styles.mapStyle}
@@ -81,6 +87,67 @@ export default function Home() {
               />
             </MapView>
           </View>
+
+          <View
+            style={{
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              position: 'absolute',
+              bottom: showDetail ? -110 : 0,
+              left: 0,
+              right: 0,
+              backgroundColor: '#e4e8e8',
+              paddingHorizontal: 20,
+              paddingVertical: 15,
+              borderTopStartRadius: 30,
+              borderTopEndRadius: 30,
+            }}>
+            <Pressable onPress={handleShowDetail}>
+              <Image
+                source={require('../../../assets/images/icon_bottom.png')}
+                resizeMode="contain"
+                style={{
+                  width: 20,
+                  marginTop: -15,
+                  marginBottom: 10,
+                  transform: showDetail ? [{rotate: '180deg'}] : [],
+                }}
+              />
+            </Pressable>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Image
+                source={require('../../../assets/images/icon_arrow.png')}
+                resizeMode="contain"
+                style={{marginRight: 10}}
+              />
+              <View
+                style={{
+                  flex: 1,
+                }}>
+                <Text style={styles.subTitle}>66.13m</Text>
+                <Text style={styles.desc}>
+                  There is a XRUN of{' '}
+                  <Text style={{fontFamily: 'Poppins-Bold'}}>XRUN</Text> that
+                  can be acquired.
+                </Text>
+              </View>
+              <Image
+                source={require('../../../assets/images/logo_xrun.png')}
+                resizeMode="contain"
+                style={{
+                  marginLeft: 10,
+                  height: 70,
+                  width: 70,
+                }}
+              />
+            </View>
+          </View>
         </View>
       ) : (
         <Text>You are not logged in.</Text>
@@ -92,6 +159,21 @@ export default function Home() {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
+  },
+  title: {
+    fontFamily: 'Poppins-Bold',
+    fontSize: 30,
+    color: '#343a59',
+  },
+  subTitle: {
+    fontFamily: 'Poppins-Medium',
+    fontSize: 26,
+    color: '#343a59',
+  },
+  desc: {
+    fontFamily: 'Poppins-Medium',
+    fontSize: 14,
+    color: '#343a59',
   },
   navWrapper: {
     position: 'relative',

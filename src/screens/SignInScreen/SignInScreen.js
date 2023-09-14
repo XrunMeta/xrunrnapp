@@ -16,8 +16,8 @@ import {useAuth} from '../../context/AuthContext/AuthContext';
 
 const SignInScreen = () => {
   const {isLoggedIn, login} = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('ggg@hhh.com');
+  const [password, setPassword] = useState('111!!!aaaAAA');
   const [isEmailValid, setIsEmailValid] = useState(true);
 
   const navigation = useNavigation();
@@ -40,7 +40,7 @@ const SignInScreen = () => {
 
         if (data === 'OK') {
           login();
-          navigation.navigate('MainApp');
+          navigation.navigate('Tabs');
           // Simpan session dan navigasi ke halaman selanjutnya
         } else {
           Alert.alert('Error', 'Invalid Email & Password');
