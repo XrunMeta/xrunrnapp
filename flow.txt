@@ -1,0 +1,1 @@
+LoginScreen -> asyncStorage : userEmail = email if response login = "OK"

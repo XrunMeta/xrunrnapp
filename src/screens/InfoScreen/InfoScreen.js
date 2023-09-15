@@ -9,16 +9,59 @@ import {
   Share,
   Alert,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import ButtonList from '../../components/ButtonList/ButtonList';
 import {useAuth} from '../../context/AuthContext/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Navigation} from '../../navigation';
 
 const InfoScreen = () => {
   const {isLoggedIn, logout} = useAuth();
+  const [userName, setUserName] = useState(null);
+  const [userDetails, setUserDetails] = useState([]);
 
   let ScreenHeight = Dimensions.get('window').height;
   const navigation = useNavigation();
+
+  //   Call API
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userEmail = await AsyncStorage.getItem('userEmail');
+        const response = await fetch(
+          `https://app.xrun.run/gateway.php?act=login-04-email&email=${userEmail}`,
+        );
+        const data = await response.json();
+
+        if (data.data === 'true') {
+          const fullName = `${data.firstname}${data.lastname}`;
+          setUserName(fullName);
+
+          setUserDetails({
+            email: data.email,
+            firstname: data.firstname,
+            lastname: data.lastname,
+            gender: data.gender,
+            extrastr: data.extrastr,
+            country: data.country,
+            countrycode: data.countrycode,
+            region: data.region,
+            ages: data.ages,
+          });
+
+          await AsyncStorage.setItem(
+            'userDetails',
+            JSON.stringify(userDetails),
+          );
+        }
+      } catch (err) {
+        console.error('Error fetching user data: ', err);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const onLogout = () => {
     Alert.alert('Warning', 'Are you sure you want to logout?', [
@@ -34,7 +77,11 @@ const InfoScreen = () => {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: 'Im sharing with u :)',
+        message: `
+Let's join XRUN!!!
+Referral me!
+Email : ${userDetails.email}
+https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
       });
 
       if (result.action === Share.sharedAction) {
@@ -69,6 +116,10 @@ const InfoScreen = () => {
     ]);
   };
 
+  const onAppInfo = () => {
+    navigation.navigate('AppInformation');
+  };
+
   return (
     <View style={[styles.root, {height: ScreenHeight}]}>
       {/* Title */}
@@ -93,7 +144,9 @@ const InfoScreen = () => {
               fontSize: 18,
               color: 'black',
             }}>
-            ggg@hhh.comchbaffff
+            {userDetails
+              ? `${userDetails.firstname}${userDetails.lastname}`
+              : 'Loading...'}
           </Text>
           <Text
             style={{
@@ -101,7 +154,7 @@ const InfoScreen = () => {
               fontSize: 16,
               color: 'grey',
             }}>
-            ggg@hhh.com
+            {userDetails ? userDetails.email : 'Loading...'}
           </Text>
         </View>
         <View
@@ -168,7 +221,7 @@ const InfoScreen = () => {
           <ButtonList label="Setting" onPress={onSetting} />
           <ButtonList label="Clause" />
           <ButtonList label="Customer Service" />
-          <ButtonList label="App Information" />
+          <ButtonList label="App Information" onPress={onAppInfo} />
           <ButtonList label="Recommend" />
         </ScrollView>
       </View>

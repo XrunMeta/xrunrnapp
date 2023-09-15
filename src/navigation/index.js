@@ -236,6 +236,8 @@ import HomeScreen from '../screens/HomeScreen/';
 import ChooseRegionScreen from '../screens/ChooseRegionScreen/ChooseRegionScreen';
 import ARScreen from '../screens/ARScreen/ARScreen';
 import InfoScreen from '../screens/InfoScreen/InfoScreen';
+import AppInformation from '../screens/AppInformation/AppInformation';
+import PersonalPolicy from '../screens/PersonalPolicyScreen/PersonalPolicy';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -259,6 +261,8 @@ export const Navigation = () => {
         <Stack.Screen name="ARScreen" component={ARScreen} />
         <Stack.Screen name="Tabs" component={Tabs} />
         <Stack.Screen name="Info" component={InfoScreen} />
+        <Stack.Screen name="AppInformation" component={AppInformation} />
+        <Stack.Screen name="PersonalPolicy" component={PersonalPolicy} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -502,7 +506,7 @@ export const Tabs = () => {
       />
       <Tab.Screen
         name="Info"
-        component={InfoScreen}
+        component={PersonalPolicy}
         options={{
           tabBarIcon: ({focused}) => (
             <View

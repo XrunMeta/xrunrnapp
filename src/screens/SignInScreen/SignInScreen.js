@@ -13,6 +13,7 @@ import CustomInput from '../../components/CustomInput/';
 import ButtonBack from '../../components/ButtonBack/';
 import {useNavigation} from '@react-navigation/native';
 import {useAuth} from '../../context/AuthContext/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignInScreen = () => {
   const {isLoggedIn, login} = useAuth();
@@ -39,6 +40,7 @@ const SignInScreen = () => {
         const data = await response.text();
 
         if (data === 'OK') {
+          await AsyncStorage.setItem('userEmail', email);
           login();
           navigation.navigate('Tabs');
           // Simpan session dan navigasi ke halaman selanjutnya

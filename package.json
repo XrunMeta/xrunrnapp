@@ -27,7 +27,8 @@
     "react-native-screens": "^3.23.0",
     "react-native-tab-view": "^3.5.2",
     "react-native-vector-icons": "^10.0.0",
-    "react-native-viewpager": "^0.2.13"
+    "react-native-viewpager": "^0.2.13",
+    "react-native-webview": "^13.6.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
