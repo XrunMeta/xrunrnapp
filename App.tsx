@@ -8,21 +8,11 @@
 import React, {useState, useEffect} from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
 import {AuthProvider} from './src/context/AuthContext/AuthContext';
-import {Navigation, Tabs} from './src/navigation';
-import HomeScreen from './src/screens/HomeScreen/';
-import {NavigationContainer} from '@react-navigation/native/';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import TabNavigator from './src/navigation/TabNavigator';
+import {Navigation, MainTabNavigator} from './src/navigation';
 
 function App(): JSX.Element {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  // const navigation = useNavigation();
-
-  const Stack = createNativeStackNavigator();
-  const Tab = createBottomTabNavigator();
 
   useEffect(() => {
     checkLoginStatus();
@@ -48,15 +38,7 @@ function App(): JSX.Element {
   return (
     <AuthProvider>
       <SafeAreaView style={styles.root}>
-        {isLoggedIn ? (
-          <NavigationContainer>
-            <Stack.Navigator screenOptions={{headerShown: false}}>
-              <Stack.Screen name="Tabs" component={Tabs} />
-            </Stack.Navigator>
-          </NavigationContainer>
-        ) : (
-          <Navigation />
-        )}
+        {isLoggedIn ? <MainTabNavigator /> : <Navigation />}
       </SafeAreaView>
     </AuthProvider>
   );

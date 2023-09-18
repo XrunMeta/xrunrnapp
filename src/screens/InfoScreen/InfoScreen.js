@@ -14,7 +14,6 @@ import {useNavigation} from '@react-navigation/native';
 import ButtonList from '../../components/ButtonList/ButtonList';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Navigation} from '../../navigation';
 
 const InfoScreen = () => {
   const {isLoggedIn, logout} = useAuth();
@@ -22,6 +21,7 @@ const InfoScreen = () => {
   const [userDetails, setUserDetails] = useState([]);
 
   let ScreenHeight = Dimensions.get('window').height;
+
   const navigation = useNavigation();
 
   //   Call API
@@ -114,6 +114,10 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
       },
       {text: 'OK', onPress: () => console.log('OK Pressed')},
     ]);
+  };
+
+  const onClause = () => {
+    navigation.navigate('Clause');
   };
 
   const onAppInfo = () => {
@@ -219,7 +223,7 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
         <ScrollView showsVerticalScrollIndicator={false}>
           <ButtonList label="Modify Information" onPress={onModify} />
           <ButtonList label="Setting" onPress={onSetting} />
-          <ButtonList label="Clause" />
+          <ButtonList label="Clause" onPress={onClause} />
           <ButtonList label="Customer Service" />
           <ButtonList label="App Information" onPress={onAppInfo} />
           <ButtonList label="Recommend" />

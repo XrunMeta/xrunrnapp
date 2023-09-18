@@ -1,9 +1,12 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import ButtonBack from '../../components/ButtonBack';
+import {useNavigation} from '@react-navigation/native';
 
 const AppInformation = () => {
   const [version, setVersion] = useState('0');
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,11 +30,15 @@ const AppInformation = () => {
     fetchData();
   });
 
+  const onBack = () => {
+    navigation.navigate('InfoHome');
+  };
+
   return (
     <View style={styles.root}>
       <View style={{flexDirection: 'row'}}>
         <View style={{position: 'absolute', zIndex: 1}}>
-          <ButtonBack />
+          <ButtonBack onClick={onBack} />
         </View>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>App Information</Text>
