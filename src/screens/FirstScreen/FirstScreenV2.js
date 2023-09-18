@@ -13,12 +13,34 @@ import {
 } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import {useNavigation} from '@react-navigation/native';
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useRef, useEffect} from 'react';
+import * as RNLocalize from 'react-native-localize';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const FirstScreenV2 = () => {
   const {height} = useWindowDimensions();
   const navigation = useNavigation();
   const [activeIndex, setActiveIndex] = useState(0);
+  const deviceLanguageLoggedRef = useRef(false);
+
+  // Get Used Language
+  useEffect(() => {
+    if (!deviceLanguageLoggedRef.current) {
+      const deviceLanguage = RNLocalize.getLocales()[0].languageCode;
+
+      // Set to AsyncStorage
+      AsyncStorage.setItem('currentLanguage', deviceLanguage)
+        .then(() => {
+          setCurrentLanguage(deviceLanguage);
+          deviceLanguageLoggedRef.current = true;
+
+          console.log('Pake Bahasa : ', deviceLanguage);
+        })
+        .catch(error => {
+          console.log('Error saving currentLanguage to AsyncStorage : ', error);
+        });
+    }
+  }, []);
 
   const onSignIn = () => {
     navigation.navigate('SignIn');

@@ -14,6 +14,7 @@ import ButtonBack from '../../components/ButtonBack/';
 import {useNavigation} from '@react-navigation/native';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {MainTabNavigator} from '../../navigation';
 
 const SignInScreen = () => {
   const {isLoggedIn, login} = useAuth();
@@ -42,7 +43,7 @@ const SignInScreen = () => {
         if (data === 'OK') {
           await AsyncStorage.setItem('userEmail', email);
           login();
-          navigation.navigate('Tabs');
+          navigation.navigate('MainTabNavigator');
           // Simpan session dan navigasi ke halaman selanjutnya
         } else {
           Alert.alert('Error', 'Invalid Email & Password');

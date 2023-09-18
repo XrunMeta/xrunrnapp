@@ -21,6 +21,9 @@ import PersonalPolicy from '../screens/PersonalPolicyScreen/PersonalPolicy';
 import CustomTabBarButton from '../components/CustomTabBarButton';
 import {createStackNavigator} from '@react-navigation/stack';
 import ClauseScreen from '../screens/ClauseScreen/ClauseScreen';
+import ServiceClause from '../screens/ServiceClauseScreen/ServiceClause';
+import ClauseForUsage from '../screens/ClauseForUsage/ClauseForUsage';
+import ClauseForPersonal from '../screens/ClauseForPersonal/ClauseForPersonal';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -44,16 +47,11 @@ const InfoStack = () => {
       initialRouteName="InfoHome"
       screenOptions={{headerShown: false}}>
       <Stack.Screen name="InfoHome" component={InfoScreen} />
-      <Stack.Screen
-        name="AppInformation"
-        component={AppInformation}
-        options={{
-          tabBarStyle: {
-            display: 'none',
-          },
-        }}
-      />
+      <Stack.Screen name="AppInformation" component={AppInformation} />
       <Stack.Screen name="Clause" component={ClauseScreen} />
+      <Stack.Screen name="ServiceClause" component={ServiceClause} />
+      <Stack.Screen name="UsageClause" component={ClauseForUsage} />
+      <Stack.Screen name="PersonalClause" component={ClauseForPersonal} />
       <Stack.Screen name="PersonalPolicy" component={PersonalPolicy} />
     </Stack.Navigator>
   );
@@ -77,6 +75,7 @@ export const Navigation = () => {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="ARScreen" component={ARScreen} />
         <Stack.Screen name="AppInformation" component={AppInformation} />
+        <Stack.Screen name="MainTabNavigator" component={MainTabNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -68,6 +68,18 @@ const ClauseScreen = () => {
     navigation.navigate('InfoHome');
   };
 
+  const onServiceClause = () => {
+    navigation.navigate('ServiceClause');
+  };
+
+  const onClausePersonal = () => {
+    navigation.navigate('PersonalClause');
+  };
+
+  const onClauseUsage = () => {
+    navigation.navigate('UsageClause');
+  };
+
   return (
     <View style={styles.root}>
       {/* Title */}
@@ -87,9 +99,15 @@ const ClauseScreen = () => {
           flex: 1,
         }}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <ButtonList label="Service Clause" />
-          <ButtonList label="Clause for Personal Location Information" />
-          <ButtonList label="Clause for Usage/Collecting Personal Information" />
+          <ButtonList label="Service Clause" onPress={onServiceClause} />
+          <ButtonList
+            label="Clause for Personal Location Information"
+            onPress={onClausePersonal}
+          />
+          <ButtonList
+            label="Clause for Usage/Collecting Personal Information"
+            onPress={onClauseUsage}
+          />
         </ScrollView>
       </View>
     </View>
