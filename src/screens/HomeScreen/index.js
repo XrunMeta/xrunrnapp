@@ -9,13 +9,13 @@ import {
 } from 'react-native';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import LinearGradient from 'react-native-linear-gradient';
-import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {useNavigation} from '@react-navigation/native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
 } from 'react-native-reanimated';
+import MapComponent from '../../components/Map/Map';
 
 const initialOffset = 110;
 const defaultOffset = 0;
@@ -87,28 +87,7 @@ export default function Home() {
 
           {/* Map View */}
           <View style={styles.container}>
-            <MapView
-              style={styles.mapStyle}
-              provider={PROVIDER_GOOGLE}
-              initialRegion={{
-                latitude: 37.78825,
-                longitude: -122.4324,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              }}
-              // customMapStyle={mapStyle}
-            >
-              <Marker
-                draggable
-                coordinate={{
-                  latitude: 37.78825,
-                  longitude: -122.4324,
-                }}
-                onDragEnd={e => alert(JSON.stringify(e.nativeEvent.coordinate))}
-                title={'Test Marker'}
-                description={'This is a description of the marker'}
-              />
-            </MapView>
+            <MapComponent />
           </View>
 
           {/* Card Information */}
