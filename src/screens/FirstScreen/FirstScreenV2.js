@@ -23,23 +23,41 @@ const FirstScreenV2 = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const deviceLanguageLoggedRef = useRef(false);
 
-  // Get Used Language
-  useEffect(() => {
-    if (!deviceLanguageLoggedRef.current) {
-      const deviceLanguage = RNLocalize.getLocales()[0].languageCode;
-
-      // Set to AsyncStorage
-      AsyncStorage.setItem('currentLanguage', deviceLanguage)
-        .then(() => {
-          setCurrentLanguage(deviceLanguage);
-          deviceLanguageLoggedRef.current = true;
-
-          console.log('Pake Bahasa : ', deviceLanguage);
-        })
-        .catch(error => {
-          console.log('Error saving currentLanguage to AsyncStorage : ', error);
-        });
+  const setCurrentLanguage = async language => {
+    try {
+      // Simpan bahasa yang digunakan ke dalam AsyncStorage
+      await AsyncStorage.setItem('currentLanguage', language);
+      console.log('Bahasa saat ini disimpan: ', language);
+    } catch (error) {
+      console.error(
+        'Error saat menyimpan bahasa ke dalam AsyncStorage: ',
+        error,
+      );
     }
+  };
+
+  // Get Used Language
+  // useEffect(() => {
+  //   if (!deviceLanguageLoggedRef.current) {
+  //     const deviceLanguage = RNLocalize.getLocales()[0].languageCode;
+
+  //     // Set to AsyncStorage
+  //     AsyncStorage.setItem('currentLanguage', deviceLanguage)
+  //       .then(() => {
+  //         setCurrentLanguage(deviceLanguage);
+  //         deviceLanguageLoggedRef.current = true;
+
+  //         console.log('Pake Bahasa : ', deviceLanguage);
+  //       })
+  //       .catch(error => {
+  //         console.log('Error saving currentLanguage to AsyncStorage : ', error);
+  //       });
+  //   }
+  // }, []);
+
+  useEffect(() => {
+    const deviceLanguage = RNLocalize.getLocales()[0].languageCode;
+    setCurrentLanguage(deviceLanguage);
   }, []);
 
   const onSignIn = () => {

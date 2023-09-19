@@ -19,11 +19,11 @@ import InfoScreen from '../screens/InfoScreen/InfoScreen';
 import AppInformation from '../screens/AppInformation/AppInformation';
 import PersonalPolicy from '../screens/PersonalPolicyScreen/PersonalPolicy';
 import CustomTabBarButton from '../components/CustomTabBarButton';
-import {createStackNavigator} from '@react-navigation/stack';
 import ClauseScreen from '../screens/ClauseScreen/ClauseScreen';
 import ServiceClause from '../screens/ServiceClauseScreen/ServiceClause';
 import ClauseForUsage from '../screens/ClauseForUsage/ClauseForUsage';
 import ClauseForPersonal from '../screens/ClauseForPersonal/ClauseForPersonal';
+import Testing from '../screens/testing';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -175,7 +175,7 @@ export const MainTabNavigator = () => {
         />
         <Tab.Screen
           name="Notify"
-          component={NewPasswordScreen}
+          component={Testing}
           options={{
             tabBarIcon: ({focused}) => (
               <View

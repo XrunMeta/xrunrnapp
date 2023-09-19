@@ -11,10 +11,31 @@ import {useAuth} from '../../context/AuthContext/AuthContext';
 import LinearGradient from 'react-native-linear-gradient';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import {useNavigation} from '@react-navigation/native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+} from 'react-native-reanimated';
+
+const initialOffset = 110;
+const defaultOffset = 0;
 
 export default function Home() {
   const {isLoggedIn, logout} = useAuth();
   const [showDetail, setShowDetail] = useState(false);
+  const offset = useSharedValue(initialOffset);
+
+  const animatedStyles = useAnimatedStyle(() => ({
+    transform: [{translateY: offset.value}],
+  }));
+
+  React.useEffect(() => {
+    if (showDetail) {
+      offset.value = withSpring(initialOffset); // Buka Card
+    } else {
+      offset.value = withSpring(defaultOffset); // Tutup Card
+    }
+  }, [showDetail]);
 
   const navigation = useNavigation();
 
@@ -91,13 +112,17 @@ export default function Home() {
           </View>
 
           {/* Card Information */}
-          <View
-            style={{
-              position: 'absolute',
-              bottom: showDetail ? -110 : 0,
-              left: 0,
-              right: 0,
-            }}>
+          <Animated.View
+            style={[
+              {
+                position: 'absolute',
+                // bottom: showDetail ? -110 : 0,
+                bottom: -90,
+                left: 0,
+                right: 0,
+              },
+              animatedStyles,
+            ]}>
             <LinearGradient
               colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']} // Gradient from Black to Transparent
               start={{x: 0, y: 0}} // From Gradien
@@ -186,10 +211,11 @@ export default function Home() {
                 paddingVertical: 15,
                 borderTopStartRadius: 30,
                 borderTopEndRadius: 30,
-
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
+                height: 240,
+                paddingBottom: 100,
               }}>
               <Pressable onPress={handleShowDetail}>
                 <Image
@@ -247,7 +273,7 @@ export default function Home() {
                 left: 0,
                 right: 0,
               }}></LinearGradient>
-          </View>
+          </Animated.View>
         </View>
       ) : (
         <Text>You are not logged in.</Text>
