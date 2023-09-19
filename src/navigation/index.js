@@ -231,9 +231,9 @@ export const MainTabNavigator = () => {
                 </Text>
               </View>
             ),
-            // tabBarStyle: {
-            //   display: 'none',
-            // },
+            tabBarStyle: {
+              display: 'none',
+            },
           }}
         />
       </Tab.Navigator>

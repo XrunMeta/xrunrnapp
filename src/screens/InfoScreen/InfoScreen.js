@@ -14,6 +14,7 @@ import {useNavigation} from '@react-navigation/native';
 import ButtonList from '../../components/ButtonList/ButtonList';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ButtonBack from '../../components/ButtonBack';
 
 const InfoScreen = () => {
   const {isLoggedIn, logout} = useAuth();
@@ -124,10 +125,21 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
     navigation.navigate('AppInformation');
   };
 
+  const onBack = () => {
+    navigation.navigate('Home');
+  };
+
   return (
     <View style={[styles.root, {height: ScreenHeight}]}>
       {/* Title */}
-      <Text style={styles.title}>My Info</Text>
+      <View style={{flexDirection: 'row'}}>
+        <View style={{position: 'absolute', zIndex: 1}}>
+          <ButtonBack onClick={onBack} />
+        </View>
+        <View style={styles.titleWrapper}>
+          <Text style={styles.title}>My Info</Text>
+        </View>
+      </View>
 
       {/* User Info */}
       <View
@@ -137,6 +149,7 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
           justifyContent: 'space-between',
           paddingHorizontal: 20,
           paddingVertical: 20,
+          marginTop: 10,
         }}>
         <View
           style={{
@@ -238,15 +251,21 @@ export default InfoScreen;
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    paddingVertical: 20,
     backgroundColor: '#f2f5f6',
+  },
+  titleWrapper: {
+    paddingVertical: 10,
+    alignItems: 'center',
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    flex: 1,
+    elevation: 5,
+    zIndex: 0,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#051C60',
     margin: 10,
-    marginBottom: 30,
-    textAlign: 'center',
   },
 });

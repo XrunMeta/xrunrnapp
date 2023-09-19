@@ -32,6 +32,7 @@ export default function Home() {
     <SafeAreaView style={{flex: 1}}>
       {isLoggedIn ? (
         <View style={styles.root}>
+          {/* Header */}
           <LinearGradient
             colors={['rgba(0, 0, 0, 1)', 'rgba(0, 0, 0, 0)']} // Gradient from Black to Transparent
             start={{x: 0, y: -0.5}} // From Gradien
@@ -63,6 +64,7 @@ export default function Home() {
             </Pressable>
           </LinearGradient>
 
+          {/* Map View */}
           <View style={styles.container}>
             <MapView
               style={styles.mapStyle}
@@ -88,65 +90,163 @@ export default function Home() {
             </MapView>
           </View>
 
+          {/* Card Information */}
           <View
             style={{
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
               position: 'absolute',
               bottom: showDetail ? -110 : 0,
               left: 0,
               right: 0,
-              backgroundColor: '#e4e8e8',
-              paddingHorizontal: 20,
-              paddingVertical: 15,
-              borderTopStartRadius: 30,
-              borderTopEndRadius: 30,
             }}>
-            <Pressable onPress={handleShowDetail}>
-              <Image
-                source={require('../../../assets/images/icon_bottom.png')}
-                resizeMode="contain"
-                style={{
-                  width: 20,
-                  marginTop: -15,
-                  marginBottom: 10,
-                  transform: showDetail ? [{rotate: '180deg'}] : [],
-                }}
-              />
-            </Pressable>
-            <View
+            <LinearGradient
+              colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']} // Gradient from Black to Transparent
+              start={{x: 0, y: 0}} // From Gradien
+              end={{x: 0, y: 1}} // To Gradien
               style={{
-                flexDirection: 'row',
                 alignItems: 'center',
-                justifyContent: 'center',
+                justifyContent: 'space-between',
+                paddingHorizontal: 20,
+                flexDirection: 'row',
+                marginBottom: -40,
+                height: 220,
               }}>
-              <Image
-                source={require('../../../assets/images/icon_arrow.png')}
-                resizeMode="contain"
-                style={{marginRight: 10}}
-              />
+              <View style={{marginBottom: -40}}>
+                <Text
+                  style={{
+                    fontFamily: 'Poppins-Medium',
+                    fontSize: 13,
+                    color: 'white',
+                  }}>
+                  Within a radius of 1000 meters
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: 'Poppins-Medium',
+                    fontSize: 14,
+                    color: 'white',
+                  }}>
+                  There are{' '}
+                  <Text
+                    style={{
+                      fontFamily: 'Poppins-Bold',
+                    }}>
+                    2 XRUN
+                  </Text>{' '}
+                  dan{' '}
+                  <Text
+                    style={{
+                      fontFamily: 'Poppins-Bold',
+                    }}>
+                    10 BIG XRUN{' '}
+                  </Text>
+                  {'\n'}
+                  bisa didapatkan
+                </Text>
+              </View>
               <View
                 style={{
                   flex: 1,
+                  alignItems: 'flex-end',
+                  marginBottom: -40,
                 }}>
-                <Text style={styles.subTitle}>66.13m</Text>
-                <Text style={styles.desc}>
-                  There is a XRUN of{' '}
-                  <Text style={{fontFamily: 'Poppins-Bold'}}>XRUN</Text> that
-                  can be acquired.
+                <Text> </Text>
+                <Text
+                  style={{
+                    fontFamily: 'Poppins-Medium',
+                    fontSize: 14,
+                    color: 'white',
+                  }}>
+                  XRUN Event
                 </Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    gap: 8,
+                  }}>
+                  <Image
+                    source={require('../../../assets/images/icon_diamond_white.png')}
+                    style={{height: 20, tintColor: '#ffdc04'}}
+                    resizeMode="contain"
+                  />
+                  <Text
+                    style={{
+                      fontFamily: 'Poppins-SemiBold',
+                      fontSize: 14,
+                      color: '#ffdc04',
+                    }}>
+                    Diamond 0
+                  </Text>
+                </View>
               </View>
-              <Image
-                source={require('../../../assets/images/logo_xrun.png')}
-                resizeMode="contain"
+            </LinearGradient>
+            <View
+              style={{
+                backgroundColor: '#e4e8e8',
+                paddingHorizontal: 20,
+                paddingVertical: 15,
+                borderTopStartRadius: 30,
+                borderTopEndRadius: 30,
+
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Pressable onPress={handleShowDetail}>
+                <Image
+                  source={require('../../../assets/images/icon_bottom.png')}
+                  resizeMode="contain"
+                  style={{
+                    width: 20,
+                    marginTop: -15,
+                    marginBottom: 10,
+                    transform: showDetail ? [{rotate: '180deg'}] : [],
+                  }}
+                />
+              </Pressable>
+              <View
                 style={{
-                  marginLeft: 10,
-                  height: 70,
-                  width: 70,
-                }}
-              />
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Image
+                  source={require('../../../assets/images/icon_arrow.png')}
+                  resizeMode="contain"
+                  style={{marginRight: 10}}
+                />
+                <View
+                  style={{
+                    flex: 1,
+                  }}>
+                  <Text style={styles.subTitle}>66.13m</Text>
+                  <Text style={styles.desc}>
+                    There is a XRUN of{' '}
+                    <Text style={{fontFamily: 'Poppins-Bold'}}>XRUN</Text> that
+                    can be acquired.
+                  </Text>
+                </View>
+                <Image
+                  source={require('../../../assets/images/logo_xrun.png')}
+                  resizeMode="contain"
+                  style={{
+                    marginLeft: 10,
+                    height: 70,
+                    width: 70,
+                  }}
+                />
+              </View>
             </View>
+            <LinearGradient
+              colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, .1)']} // Gradient from Black to Transparent
+              start={{x: 0, y: 0}} // From Gradien
+              end={{x: 0, y: 1}} // To Gradien
+              style={{
+                height: 20,
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+              }}></LinearGradient>
           </View>
         </View>
       ) : (
