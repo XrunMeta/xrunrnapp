@@ -22,8 +22,8 @@ const CustomTabBarButton = () => {
         flexDirection: 'row',
         backgroundColor: '#343a59',
         borderRadius: 50,
-        height: 70,
-        width: 140,
+        height: 50,
+        width: 100,
         marginHorizontal: 5,
         alignSelf: 'center',
         shadowColor: '#000',
@@ -60,8 +60,8 @@ const CustomTabBarButton = () => {
           }
           resizeMode="contain"
           style={{
-            width: 30,
-            height: 30,
+            width: 25,
+            height: 25,
           }}
         />
       </TouchableOpacity>
@@ -91,8 +91,8 @@ const CustomTabBarButton = () => {
           }
           resizeMode="contain"
           style={{
-            width: 30,
-            height: 30,
+            width: 25,
+            height: 25,
           }}
         />
       </TouchableOpacity>

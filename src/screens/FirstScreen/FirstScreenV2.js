@@ -10,18 +10,86 @@ import {
   TouchableOpacity,
   FlatList,
   Linking,
+  Platform,
+  PermissionsAndroid,
 } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import React, {useState, useCallback, useRef, useEffect} from 'react';
 import * as RNLocalize from 'react-native-localize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Geolocation from 'react-native-geolocation-service';
 
 const FirstScreenV2 = () => {
   const {height} = useWindowDimensions();
   const navigation = useNavigation();
   const [activeIndex, setActiveIndex] = useState(0);
   const deviceLanguageLoggedRef = useRef(false);
+  const [selfCoordinate, setSelfCoordinate] = useState(null);
+
+  // Get Map Initial Geolocation
+  const getCurrentLocation = async () => {
+    if (Platform.OS === 'ios') {
+      // Meminta izin akses lokasi hanya untuk iOS
+      Geolocation.requestAuthorization('whenInUse').then(result => {
+        if (result === 'granted') {
+          // Izin diberikan, dapatkan koordinat
+          Geolocation.getCurrentPosition(
+            position => {
+              const latitude = position.coords.latitude;
+              const longitude = position.coords.longitude;
+            },
+            error => {
+              console.error(error);
+            },
+            {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+          );
+        }
+      });
+    } else if (Platform.OS === 'android') {
+      // Meminta izin akses lokasi di Android
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          {
+            title: 'Izin Lokasi',
+            message:
+              'Aplikasi memerlukan izin akses lokasi untuk fungsi tertentu.',
+            buttonPositive: 'Izinkan',
+          },
+        );
+
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          // Izin diberikan, dapatkan koordinat
+          Geolocation.getCurrentPosition(
+            position => {
+              // Set To AsyncStorage => selfCoordinate
+              AsyncStorage.setItem(
+                'selfCoordinate',
+                JSON.stringify({
+                  latitude: position.coords.latitude,
+                  longitude: position.coords.longitude,
+                }),
+              ).catch(err => {
+                console.error('Error saving location: ', err);
+              });
+            },
+            error => {
+              console.error(error);
+            },
+            {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
+          );
+        } else {
+          // Izin ditolak, beri tahu pengguna atau lakukan tindakan lain
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
+  // Panggil fungsi ini saat Anda ingin mendapatkan koordinat
+  getCurrentLocation();
 
   const setCurrentLanguage = async language => {
     try {
@@ -35,25 +103,6 @@ const FirstScreenV2 = () => {
       );
     }
   };
-
-  // Get Used Language
-  // useEffect(() => {
-  //   if (!deviceLanguageLoggedRef.current) {
-  //     const deviceLanguage = RNLocalize.getLocales()[0].languageCode;
-
-  //     // Set to AsyncStorage
-  //     AsyncStorage.setItem('currentLanguage', deviceLanguage)
-  //       .then(() => {
-  //         setCurrentLanguage(deviceLanguage);
-  //         deviceLanguageLoggedRef.current = true;
-
-  //         console.log('Pake Bahasa : ', deviceLanguage);
-  //       })
-  //       .catch(error => {
-  //         console.log('Error saving currentLanguage to AsyncStorage : ', error);
-  //       });
-  //   }
-  // }, []);
 
   useEffect(() => {
     const deviceLanguage = RNLocalize.getLocales()[0].languageCode;

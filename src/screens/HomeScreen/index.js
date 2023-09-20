@@ -18,7 +18,7 @@ import Animated, {
 import MapComponent from '../../components/Map/Map';
 
 const initialOffset = 110;
-const defaultOffset = 0;
+const defaultOffset = 20;
 
 export default function Home() {
   const {isLoggedIn, logout} = useAuth();
@@ -63,7 +63,7 @@ export default function Home() {
               source={require('../../../assets/images/logoMain_XRUN_White.png')}
               resizeMode="contain"
               style={{
-                width: 110,
+                width: 75,
                 height: 35,
               }}
             />
@@ -96,7 +96,7 @@ export default function Home() {
               {
                 position: 'absolute',
                 // bottom: showDetail ? -110 : 0,
-                bottom: -90,
+                bottom: -40,
                 left: 0,
                 right: 0,
               },
@@ -112,13 +112,13 @@ export default function Home() {
                 paddingHorizontal: 20,
                 flexDirection: 'row',
                 marginBottom: -40,
-                height: 220,
+                height: 170,
               }}>
-              <View style={{marginBottom: -40}}>
+              <View style={{marginBottom: -20}}>
                 <Text
                   style={{
                     fontFamily: 'Poppins-Medium',
-                    fontSize: 13,
+                    fontSize: 10,
                     color: 'white',
                   }}>
                   Within a radius of 1000 meters
@@ -126,7 +126,7 @@ export default function Home() {
                 <Text
                   style={{
                     fontFamily: 'Poppins-Medium',
-                    fontSize: 14,
+                    fontSize: 11,
                     color: 'white',
                   }}>
                   There are{' '}
@@ -151,13 +151,13 @@ export default function Home() {
                 style={{
                   flex: 1,
                   alignItems: 'flex-end',
-                  marginBottom: -40,
+                  marginBottom: -20,
                 }}>
                 <Text> </Text>
                 <Text
                   style={{
                     fontFamily: 'Poppins-Medium',
-                    fontSize: 14,
+                    fontSize: 11,
                     color: 'white',
                   }}>
                   XRUN Event
@@ -165,17 +165,17 @@ export default function Home() {
                 <View
                   style={{
                     flexDirection: 'row',
-                    gap: 8,
+                    gap: 3,
                   }}>
                   <Image
                     source={require('../../../assets/images/icon_diamond_white.png')}
-                    style={{height: 20, tintColor: '#ffdc04'}}
+                    style={{height: 15, tintColor: '#ffdc04'}}
                     resizeMode="contain"
                   />
                   <Text
                     style={{
                       fontFamily: 'Poppins-SemiBold',
-                      fontSize: 14,
+                      fontSize: 11,
                       color: '#ffdc04',
                     }}>
                     Diamond 0
@@ -193,17 +193,23 @@ export default function Home() {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                height: 240,
-                paddingBottom: 100,
+                height: 190,
+                paddingBottom: 70,
               }}>
-              <Pressable onPress={handleShowDetail}>
+              <Pressable
+                onPress={handleShowDetail}
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginTop: -20,
+                  marginBottom: 5,
+                  paddingHorizontal: 90,
+                }}>
                 <Image
                   source={require('../../../assets/images/icon_bottom.png')}
                   resizeMode="contain"
                   style={{
                     width: 20,
-                    marginTop: -15,
-                    marginBottom: 10,
                     transform: showDetail ? [{rotate: '180deg'}] : [],
                   }}
                 />
@@ -217,7 +223,11 @@ export default function Home() {
                 <Image
                   source={require('../../../assets/images/icon_arrow.png')}
                   resizeMode="contain"
-                  style={{marginRight: 10}}
+                  style={{
+                    marginRight: 10,
+                    height: 25,
+                    width: 25,
+                  }}
                 />
                 <View
                   style={{
@@ -235,8 +245,8 @@ export default function Home() {
                   resizeMode="contain"
                   style={{
                     marginLeft: 10,
-                    height: 70,
-                    width: 70,
+                    height: 45,
+                    width: 45,
                   }}
                 />
               </View>
@@ -248,7 +258,7 @@ export default function Home() {
               style={{
                 height: 20,
                 position: 'absolute',
-                bottom: 0,
+                bottom: 50,
                 left: 0,
                 right: 0,
               }}></LinearGradient>
@@ -271,13 +281,13 @@ const styles = StyleSheet.create({
     color: '#343a59',
   },
   subTitle: {
-    fontFamily: 'Poppins-Medium',
-    fontSize: 26,
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 18,
     color: '#343a59',
   },
   desc: {
     fontFamily: 'Poppins-Medium',
-    fontSize: 14,
+    fontSize: 11,
     color: '#343a59',
   },
   navWrapper: {
@@ -285,16 +295,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     paddingHorizontal: 20,
-    paddingVertical: 15,
+    paddingVertical: 5,
     justifyContent: 'space-between',
     alignItems: 'center',
-    height: 70,
+    height: 50,
     zIndex: 1,
   },
   mapPointButton: {
     backgroundColor: 'transparent',
-    width: 40,
-    height: 40,
+    width: 23,
+    height: 23,
     alignItems: 'center',
   },
   container: {

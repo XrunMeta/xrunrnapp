@@ -92,7 +92,7 @@ export const MainTabNavigator = () => {
           tabBarStyle: {
             backgroundColor: 'white',
             ...styles.shadow,
-            height: 100,
+            height: 75,
           },
         }}>
         <Tab.Screen
@@ -109,7 +109,7 @@ export const MainTabNavigator = () => {
                   source={require('../../assets/images/icon_wallet.png')}
                   resizeMode="contain"
                   style={{
-                    width: 35,
+                    width: 25,
                     tintColor: focused ? 'black' : '#343a59',
                   }}
                 />
@@ -117,7 +117,8 @@ export const MainTabNavigator = () => {
                   style={{
                     fontFamily: focused ? 'Poppins-Bold' : 'Poppins-Medium',
                     color: 'black',
-                    fontSize: 14,
+                    fontSize: 11,
+                    marginTop: -15,
                   }}>
                   Wallet
                 </Text>
@@ -139,7 +140,7 @@ export const MainTabNavigator = () => {
                   source={require('../../assets/images/icon_advertisement.png')}
                   resizeMode="contain"
                   style={{
-                    width: 35,
+                    width: 25,
                     tintColor: focused ? 'black' : '#343a59',
                   }}
                 />
@@ -147,9 +148,10 @@ export const MainTabNavigator = () => {
                   style={{
                     fontFamily: focused ? 'Poppins-Bold' : 'Poppins-Medium',
                     color: 'black',
-                    fontSize: 14,
+                    fontSize: 11,
+                    marginTop: -15,
                   }}>
-                  Adverti..
+                  Advertise
                 </Text>
               </View>
             ),
@@ -164,7 +166,7 @@ export const MainTabNavigator = () => {
                 source={require('../../assets/images/icon_map.png')}
                 resizeMode="contain"
                 style={{
-                  width: 35,
+                  width: 25,
                   // tintColor: focused ? '#343a59' : 'white',
                   tintColor: '#343a59',
                 }}
@@ -187,7 +189,7 @@ export const MainTabNavigator = () => {
                   source={require('../../assets/images/icon_bell.png')}
                   resizeMode="contain"
                   style={{
-                    width: 35,
+                    width: 25,
                     tintColor: focused ? 'black' : '#343a59',
                   }}
                 />
@@ -195,7 +197,8 @@ export const MainTabNavigator = () => {
                   style={{
                     fontFamily: focused ? 'Poppins-Bold' : 'Poppins-Medium',
                     color: 'black',
-                    fontSize: 14,
+                    fontSize: 11,
+                    marginTop: -15,
                   }}>
                   Notify
                 </Text>
@@ -217,7 +220,7 @@ export const MainTabNavigator = () => {
                   source={require('../../assets/images/icon_user.png')}
                   resizeMode="contain"
                   style={{
-                    width: 35,
+                    width: 25,
                     tintColor: focused ? 'black' : '#343a59',
                   }}
                 />
@@ -225,7 +228,8 @@ export const MainTabNavigator = () => {
                   style={{
                     fontFamily: focused ? 'Poppins-Bold' : 'Poppins-Medium',
                     color: 'black',
-                    fontSize: 14,
+                    fontSize: 11,
+                    marginTop: -15,
                   }}>
                   Info
                 </Text>
