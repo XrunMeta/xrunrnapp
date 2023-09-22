@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import LinearGradient from 'react-native-linear-gradient';
-import {useNavigation} from '@react-navigation/native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -21,9 +20,10 @@ const initialOffset = 110;
 const defaultOffset = 20;
 
 export default function Home() {
-  const {isLoggedIn, logout} = useAuth();
+  const {isLoggedIn} = useAuth();
   const [showDetail, setShowDetail] = useState(false);
   const offset = useSharedValue(initialOffset);
+  const [selectedMarker, setSelectedMarker] = useState(null);
 
   const animatedStyles = useAnimatedStyle(() => ({
     transform: [{translateY: offset.value}],
@@ -37,16 +37,17 @@ export default function Home() {
     }
   }, [showDetail]);
 
-  const navigation = useNavigation();
-
   const handleShowDetail = () => {
     setShowDetail(!showDetail);
   };
 
-  const handleLogout = () => {
+  const getBackToPoint = () => {
     // Lakukan logout dan set state isLoggedIn menjadi false
-    logout();
-    navigation.navigate('First');
+    console.warn('Get Current Location');
+  };
+
+  const onMarkerClick = item => {
+    setSelectedMarker(item);
   };
 
   return (
@@ -69,7 +70,7 @@ export default function Home() {
             />
             <Pressable
               style={styles.mapPointButton}
-              onPress={handleLogout}
+              onPress={getBackToPoint}
               // android_ripple={{color: 'rgba(0, 0, 0, 0.01)'}}
             >
               <Image
@@ -87,7 +88,7 @@ export default function Home() {
 
           {/* Map View */}
           <View style={styles.container}>
-            <MapComponent />
+            <MapComponent clickedMarker={onMarkerClick} />
           </View>
 
           {/* Card Information */}
@@ -233,7 +234,9 @@ export default function Home() {
                   style={{
                     flex: 1,
                   }}>
-                  <Text style={styles.subTitle}>66.13m</Text>
+                  <Text style={styles.subTitle}>
+                    {selectedMarker ? selectedMarker.distance : 0}m
+                  </Text>
                   <Text style={styles.desc}>
                     There is a XRUN of{' '}
                     <Text style={{fontFamily: 'Poppins-Bold'}}>XRUN</Text> that
@@ -300,6 +303,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 50,
     zIndex: 1,
+    marginTop: -10,
   },
   mapPointButton: {
     backgroundColor: 'transparent',

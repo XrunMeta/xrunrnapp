@@ -5,42 +5,33 @@ import {
   Platform,
   PermissionsAndroid,
   Text,
-  DeviceEventEmitter,
   Image,
 } from 'react-native';
-import MapView, {Circle, Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {
+  Circle,
+  Marker,
+  PROVIDER_GOOGLE,
+  Callout,
+} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import ArrowMarker from './ArrowMarker';
-import {gyroscope} from 'react-native-sensors';
-import markerData from './TempAPI';
+import {fetchMarkerData} from './APIGetMarker';
+import RNFetchBlob from 'rn-fetch-blob';
 
-const markers = markerData.map(item => (
-  <Marker
-    key={item.id}
-    coordinate={{
-      latitude: item.latitude,
-      longitude: item.longitude,
-    }}
-    title={item.name}
-    onPress={() => {
-      alert(`Ini adalah ${item.name}`);
-    }}>
-    <Image
-      source={require('../../../assets/images/logo_xrun.png')} // Gantilah dengan path yang sesuai
-      style={{width: 15, height: 15}}
-    />
-  </Marker>
-));
-
-const MapComponent = () => {
+const MapComponent = ({clickedMarker}) => {
   const [pin, setPin] = useState({
     latitude: 37.4226711,
     longitude: -122.0849872,
   });
   const [loading, setLoading] = useState(true);
-  const [mapRotation, setMapRotation] = useState(0);
-  const [gyroData, setGyroData] = useState({x: 0, y: 0, z: 0});
+  const [markersData, setMarkersData] = useState([]);
+  const [blobData, setBlobData] = useState([]);
+
+  const saveBlobAsImage = async (blob, filename) => {
+    const path = `${RNFetchBlob.fs.dirs.CacheDir}/${filename}`;
+    await RNFetchBlob.fs.writeFile(path, blob, 'base64');
+    return path;
+  };
 
   useEffect(() => {
     const getSelfCoordinate = async () => {
@@ -52,6 +43,25 @@ const MapComponent = () => {
 
           setPin(coordinate);
           setLoading(false);
+
+          const data = await fetchMarkerData(
+            coordinate.latitude,
+            coordinate.longitude,
+          );
+
+          if (data) {
+            // Simpan data ke dalam state markerData
+            setMarkersData(data.data);
+
+            data.data.map(async item => {
+              const imagePath = await saveBlobAsImage(
+                item.symbolimg,
+                `${item.coin}.png`,
+              );
+
+              setBlobData(imagePath);
+            });
+          }
         }
       } catch (err) {
         console.error(
@@ -109,8 +119,6 @@ const MapComponent = () => {
                   latitude: position.coords.latitude,
                   longitude: position.coords.longitude,
                 });
-
-                console.log(pin);
               },
               error => {
                 console.error(error);
@@ -128,23 +136,13 @@ const MapComponent = () => {
 
     // Panggil fungsi ini saat Anda ingin mendapatkan koordinat
     getCurrentLocation();
-
-    const gyroscopeSubscription = gyroscope.pipe().subscribe(({x, y, z}) => {
-      // x, y, dan z adalah nilai rotasi perangkat di tiga sumbu dari giroskop.
-
-      // Menggunakan nilai-z (roll) untuk mengatur rotasi marker.
-      const roll = z * (180 / Math.PI); // Ubah radian ke derajat
-      console.log('Roll: ', roll);
-
-      // Set rotasi marker sesuai dengan nilai roll.
-      // Jika Anda memiliki gambar panah yang mengarah ke atas, ini akan memutar marker sesuai dengan rotasi perangkat.
-      setGyroData({x, y, z});
-    });
-
-    return () => {
-      gyroscopeSubscription.unsubscribe(); // Berhenti mendengarkan sensor ketika komponen unmount
-    };
   });
+
+  const handleMarkerClick = item => {
+    // Memanggil prop onMarkerClick sebagai fungsi
+    clickedMarker(item);
+    console.log('Item yang diklik:', item.title);
+  };
 
   return (
     <View style={styles.container}>
@@ -166,20 +164,102 @@ const MapComponent = () => {
             longitudeDelta: 0.005,
           }}
           showsUserLocation={true}>
-          {/* <Marker
-            draggable={false}
-            coordinate={pin}
-            title={'Rotated Marker'}
-            description={'This is a rotated marker'}
-            rotation={gyroData.z * (180 / Math.PI)} // Atur rotasi sesuai mapRotation
-            image={require('../../../assets/images/icon_arrowCircle.png')}> */}
-          {/* <Image
-              source={require('../../../assets/images/icon_arrowCircle.png')} // Gantilah dengan path yang sesuai
-              style={{width: 20, height: 20}}
-            /> */}
-          {/* </Marker> */}
-          {/* <Circle center={pin} radius={500} /> */}
-          {markers}
+          <Circle center={pin} radius={500} />
+
+          {markersData &&
+            markersData.map &&
+            markersData.map(item => (
+              // Marker of Coin
+              <Marker
+                key={item.coin}
+                coordinate={{
+                  latitude: parseFloat(item.lat),
+                  longitude: parseFloat(item.lng),
+                }}
+                title={item.title}
+                onPress={() => {
+                  handleMarkerClick(item);
+                }}>
+                <Image
+                  source={require('../../../assets/images/logo_xrun.png')} // Gantilah dengan path yang sesuai
+                  // source={{uri: `file://${imagePath}`}} // Gantilah dengan path yang sesuai
+                  style={{width: 15, height: 15}}
+                />
+                <Callout tooltip>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      borderColor: '#ffdc04',
+                      borderWidth: 3,
+                      flexDirection: 'row',
+                      width: 200,
+                      height: 80,
+                      paddingVertical: 5,
+                      paddingHorizontal: 10,
+                      borderTopLeftRadius: 50,
+                      borderTopRightRadius: 15,
+                      borderBottomLeftRadius: 50,
+                      borderBottomRightRadius: 15,
+                      gap: 7,
+                      elevation: 4,
+                    }}>
+                    <View
+                      style={{
+                        justifyContent: 'space-between',
+                        marginLeft: 10,
+                      }}>
+                      <Text
+                        style={{
+                          flex: 1,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          textAlign: 'center',
+                          marginTop: -10,
+                        }}>
+                        <Image
+                          source={{uri: `file://${blobData}`}} // Gantilah dengan path yang sesuai
+                          style={{
+                            width: 37,
+                            height: 37,
+                          }}
+                          onError={err => console.log('Error Bgst! : ', err)}
+                        />
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 11,
+                          fontFamily: 'Poppins-Medium',
+                        }}>
+                        {item.distance}m
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        flex: 1,
+                        justifyContent: 'space-between',
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: 11,
+                          fontFamily: 'Poppins-Medium',
+                          marginTop: 3,
+                        }}>
+                        There is an {item.brand} {'\n'}with {item.brand}.
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 18,
+                          fontFamily: 'Poppins-SemiBold',
+                          marginBottom: -5,
+                          color: 'black',
+                        }}>
+                        {item.coins} {item.brand}
+                      </Text>
+                    </View>
+                  </View>
+                </Callout>
+              </Marker>
+            ))}
         </MapView>
       )}
     </View>
@@ -202,6 +282,22 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
+  },
+  arrow: {
+    backgroundColor: 'transparent',
+    borderColor: 'transparent',
+    borderTopColor: '#fff',
+    borderWidth: 16,
+    alignSelf: 'center',
+    marginTop: -32,
+  },
+  arrowBorder: {
+    backgroundColor: 'transparent',
+    borderColor: 'transparent',
+    borderTopColor: 'blue',
+    borderWidth: '16',
+    alignSelf: 'center',
+    marginTop: -0.5,
   },
 });
 
