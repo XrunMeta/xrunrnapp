@@ -18,14 +18,21 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {fetchMarkerData} from './APIGetMarker';
 import RNFetchBlob from 'rn-fetch-blob';
 
-const MapComponent = ({clickedMarker}) => {
+const MapComponent = ({clickedMarker, clickedRange}) => {
   const [pin, setPin] = useState({
     latitude: 37.4226711,
     longitude: -122.0849872,
   });
+  const [pinTarget, setPinTarget] = useState({
+    latitude: -6.294915,
+    longitude: 106.785179,
+  });
+  const [initialRegion, setInitialRegion] = useState(null);
   const [loading, setLoading] = useState(true);
   const [markersData, setMarkersData] = useState([]);
-  const [blobData, setBlobData] = useState([]);
+  const [brandLogo, setBrandLogo] = useState([]);
+  const [adThumbnail, setAdThumbnail] = useState([]);
+  const [distance, setDistance] = useState(null);
 
   const saveBlobAsImage = async (blob, filename) => {
     const path = `${RNFetchBlob.fs.dirs.CacheDir}/${filename}`;
@@ -34,6 +41,7 @@ const MapComponent = ({clickedMarker}) => {
   };
 
   useEffect(() => {
+    // Get Self Cordinate
     const getSelfCoordinate = async () => {
       try {
         const selfCoordinate = await AsyncStorage.getItem('selfCoordinate');
@@ -44,22 +52,29 @@ const MapComponent = ({clickedMarker}) => {
           setPin(coordinate);
           setLoading(false);
 
+          // Call API for getting Coin on Map
           const data = await fetchMarkerData(
             coordinate.latitude,
             coordinate.longitude,
           );
 
+          // Saving to State
           if (data) {
-            // Simpan data ke dalam state markerData
             setMarkersData(data.data);
 
             data.data.map(async item => {
-              const imagePath = await saveBlobAsImage(
-                item.symbolimg,
+              const brandLogo = await saveBlobAsImage(
+                item.brandlogo,
                 `${item.coin}.png`,
               );
 
-              setBlobData(imagePath);
+              const adThumbnail = await saveBlobAsImage(
+                item.adthumbnail2,
+                `${item.coin}.png`,
+              );
+
+              setBrandLogo(brandLogo);
+              setAdThumbnail(adThumbnail);
             });
           }
         }
@@ -76,12 +91,13 @@ const MapComponent = ({clickedMarker}) => {
   }, []);
 
   useEffect(() => {
+    // Update Self Coordinate repeatable
     const getCurrentLocation = async () => {
+      // IOS
       if (Platform.OS === 'ios') {
-        // Meminta izin akses lokasi hanya untuk iOS
         Geolocation.requestAuthorization('whenInUse').then(result => {
           if (result === 'granted') {
-            // Izin diberikan, dapatkan koordinat
+            // Is Permission = true -> Get Coordinate
             Geolocation.getCurrentPosition(
               position => {
                 // Set To State
@@ -97,8 +113,9 @@ const MapComponent = ({clickedMarker}) => {
             );
           }
         });
+        // ANDROID
       } else if (Platform.OS === 'android') {
-        // Meminta izin akses lokasi di Android
+        // Ask for Permission
         try {
           const granted = await PermissionsAndroid.request(
             PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -111,7 +128,7 @@ const MapComponent = ({clickedMarker}) => {
           );
 
           if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            // Izin diberikan, dapatkan koordinat
+            // Is Permission = true -> Get Coordinate
             Geolocation.getCurrentPosition(
               position => {
                 // Set To State
@@ -119,6 +136,11 @@ const MapComponent = ({clickedMarker}) => {
                   latitude: position.coords.latitude,
                   longitude: position.coords.longitude,
                 });
+
+                // console.log(
+                //   `Lat : ${position.coords.latitude} --- Lng : ${position.coords.longitude}
+                //   `,
+                // );
               },
               error => {
                 console.error(error);
@@ -126,7 +148,7 @@ const MapComponent = ({clickedMarker}) => {
               {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
             );
           } else {
-            // Izin ditolak, beri tahu pengguna atau lakukan tindakan lain
+            // Is Permission = false -> Do something
           }
         } catch (error) {
           console.error(error);
@@ -134,15 +156,63 @@ const MapComponent = ({clickedMarker}) => {
       }
     };
 
-    // Panggil fungsi ini saat Anda ingin mendapatkan koordinat
+    // Get Update for Coordinate
     getCurrentLocation();
   });
+
+  useEffect(() => {
+    const watchId = Geolocation.watchPosition(
+      position => {
+        // Dapatkan lokasi pengguna (position.coords.latitude dan position.coords.longitude)
+        // Hitung jarak antara pengguna dan lokasi tujuan
+        const newDistance = calculateDistance(
+          position.coords.latitude,
+          position.coords.longitude,
+          pinTarget.latitude,
+          pinTarget.longitude,
+        );
+        // Perbarui teks yang menampilkan jarak
+        setDistance(newDistance);
+        clickedRange(newDistance);
+        // console.log('Jarak : ', newDistance);
+      },
+      error => {
+        console.error(error);
+      },
+      {
+        enableHighAccuracy: true, // Aktifkan untuk mendapatkan akurasi tinggi jika perlu
+        distanceFilter: 10, // Atur threshold perubahan jarak yang akan memicu pemanggilan fungsi
+      },
+    );
+
+    return () => {
+      Geolocation.clearWatch(watchId);
+    };
+  }, [pin]);
 
   const handleMarkerClick = item => {
     // Memanggil prop onMarkerClick sebagai fungsi
     clickedMarker(item);
-    console.log('Item yang diklik:', item.title);
+    setPinTarget({
+      latitude: parseFloat(item.lat),
+      longitude: parseFloat(item.lng),
+    });
   };
+
+  function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Earth Radius on Kilometers
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) *
+        Math.cos(lat2 * (Math.PI / 180)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const range = R * c; // Range on Kilometers
+    return range;
+  }
 
   return (
     <View style={styles.container}>
@@ -163,11 +233,14 @@ const MapComponent = ({clickedMarker}) => {
             latitudeDelta: 0.005,
             longitudeDelta: 0.005,
           }}
-          showsUserLocation={true}>
+          showsUserLocation={true}
+          showsMyLocationButton={false}>
           <Circle center={pin} radius={500} />
+          {/* {console.log('Jarak Sekarang : ', distance)} */}
 
           {markersData &&
             markersData.map &&
+            adThumbnail &&
             markersData.map(item => (
               // Marker of Coin
               <Marker
@@ -181,8 +254,8 @@ const MapComponent = ({clickedMarker}) => {
                   handleMarkerClick(item);
                 }}>
                 <Image
-                  source={require('../../../assets/images/logo_xrun.png')} // Gantilah dengan path yang sesuai
-                  // source={{uri: `file://${imagePath}`}} // Gantilah dengan path yang sesuai
+                  // source={require('../../../assets/images/logo_xrun.png')} // Gantilah dengan path yang sesuai
+                  source={{uri: `file://${adThumbnail}`}} // Gantilah dengan path yang sesuai
                   style={{width: 15, height: 15}}
                 />
                 <Callout tooltip>
@@ -217,7 +290,7 @@ const MapComponent = ({clickedMarker}) => {
                           marginTop: -10,
                         }}>
                         <Image
-                          source={{uri: `file://${blobData}`}} // Gantilah dengan path yang sesuai
+                          source={{uri: `file://${brandLogo}`}} // Gantilah dengan path yang sesuai
                           style={{
                             width: 37,
                             height: 37,
@@ -254,6 +327,10 @@ const MapComponent = ({clickedMarker}) => {
                           color: 'black',
                         }}>
                         {item.coins} {item.brand}
+                        {/* {console.log(
+                          `Jarak coin ${item.coin} = `,
+                          item.distance,
+                        )} */}
                       </Text>
                     </View>
                   </View>

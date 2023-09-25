@@ -15,6 +15,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import MapComponent from '../../components/Map/Map';
+import MapView, {Marker} from 'react-native-maps';
 
 const initialOffset = 110;
 const defaultOffset = 20;
@@ -24,6 +25,7 @@ export default function Home() {
   const [showDetail, setShowDetail] = useState(false);
   const offset = useSharedValue(initialOffset);
   const [selectedMarker, setSelectedMarker] = useState(null);
+  const [rangeToMarker, setRangeToMarker] = useState(0);
 
   const animatedStyles = useAnimatedStyle(() => ({
     transform: [{translateY: offset.value}],
@@ -42,12 +44,16 @@ export default function Home() {
   };
 
   const getBackToPoint = () => {
-    // Lakukan logout dan set state isLoggedIn menjadi false
-    console.warn('Get Current Location');
+    console.warn('Back to Point');
   };
 
   const onMarkerClick = item => {
     setSelectedMarker(item);
+  };
+
+  const getMarkerRange = distance => {
+    fixedDistance = (distance * 1000).toFixed(2);
+    setRangeToMarker(fixedDistance); // Convert KM -> M
   };
 
   return (
@@ -60,6 +66,7 @@ export default function Home() {
             start={{x: 0, y: -0.5}} // From Gradien
             end={{x: 0, y: 1}} // To Gradien
             style={styles.navWrapper}>
+            {console.log('Jarak : ', rangeToMarker)}
             <Image
               source={require('../../../assets/images/logoMain_XRUN_White.png')}
               resizeMode="contain"
@@ -88,7 +95,10 @@ export default function Home() {
 
           {/* Map View */}
           <View style={styles.container}>
-            <MapComponent clickedMarker={onMarkerClick} />
+            <MapComponent
+              clickedMarker={onMarkerClick}
+              clickedRange={getMarkerRange}
+            />
           </View>
 
           {/* Card Information */}
@@ -235,7 +245,8 @@ export default function Home() {
                     flex: 1,
                   }}>
                   <Text style={styles.subTitle}>
-                    {selectedMarker ? selectedMarker.distance : 0}m
+                    {/* {selectedMarker ? selectedMarker.distance : 0}m */}
+                    {rangeToMarker ? rangeToMarker : 0}m
                   </Text>
                   <Text style={styles.desc}>
                     There is a XRUN of{' '}
