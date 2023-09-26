@@ -18,7 +18,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {fetchMarkerData} from './APIGetMarker';
 import RNFetchBlob from 'rn-fetch-blob';
 
-const MapComponent = ({clickedMarker, clickedRange}) => {
+const MapComponent = ({
+  clickedMarker,
+  clickedRange,
+  brandCount,
+  markerCount,
+  bigCoinCount,
+}) => {
   const [pin, setPin] = useState({
     latitude: 37.4226711,
     longitude: -122.0849872,
@@ -33,6 +39,7 @@ const MapComponent = ({clickedMarker, clickedRange}) => {
   const [brandLogo, setBrandLogo] = useState([]);
   const [adThumbnail, setAdThumbnail] = useState([]);
   const [distance, setDistance] = useState(null);
+  const [markerDistance, setMarkerDistance] = useState(null);
 
   const saveBlobAsImage = async (blob, filename) => {
     const path = `${RNFetchBlob.fs.dirs.CacheDir}/${filename}`;
@@ -61,6 +68,30 @@ const MapComponent = ({clickedMarker, clickedRange}) => {
           // Saving to State
           if (data) {
             setMarkersData(data.data);
+
+            // Get XRUN Brand
+            let brandcount = 0;
+            let currentBrand = null;
+
+            data.data.forEach(item => {
+              const brand = item.advertisement;
+
+              // Make sure Brand(Advertisement) isn't duplicate
+              if (brand !== currentBrand) {
+                currentBrand = brand;
+                brandcount++;
+              }
+            });
+
+            // Get Big Coin
+            const getBigCoin = data.data.filter(
+              item => item.isbigcoin === '1',
+            ).length;
+
+            // Set to Props
+            markerCount(data.data.length);
+            brandCount(brandcount);
+            bigCoinCount(getBigCoin);
 
             data.data.map(async item => {
               const brandLogo = await saveBlobAsImage(
@@ -193,6 +224,18 @@ const MapComponent = ({clickedMarker, clickedRange}) => {
   const handleMarkerClick = item => {
     // Memanggil prop onMarkerClick sebagai fungsi
     clickedMarker(item);
+
+    // Menghitung jarak
+    const newDistance = calculateDistance(
+      pin.latitude,
+      pin.longitude,
+      parseFloat(item.lat),
+      parseFloat(item.lng),
+    );
+
+    // Mengubah state markerDistance
+    setMarkerDistance(newDistance);
+
     setPinTarget({
       latitude: parseFloat(item.lat),
       longitude: parseFloat(item.lng),

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   Pressable,
@@ -16,6 +16,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import MapComponent from '../../components/Map/Map';
 import MapView, {Marker} from 'react-native-maps';
+import {accelerometer, gyroscope} from 'react-native-sensors';
 
 const initialOffset = 110;
 const defaultOffset = 20;
@@ -26,6 +27,10 @@ export default function Home() {
   const offset = useSharedValue(initialOffset);
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [rangeToMarker, setRangeToMarker] = useState(0);
+  const [azimuth, setAzimuth] = useState(0);
+  const [markerCount, setMarkerCount] = useState(0);
+  const [brandCount, setBrandCount] = useState(0);
+  const [bigCoin, setBigCoin] = useState(0);
 
   const animatedStyles = useAnimatedStyle(() => ({
     transform: [{translateY: offset.value}],
@@ -38,6 +43,21 @@ export default function Home() {
       offset.value = withSpring(defaultOffset); // Tutup Card
     }
   }, [showDetail]);
+
+  useEffect(() => {
+    // const subscription = gyroscope.subscribe(({x, y, z}) => {
+    //   const azimuth = Math.atan2(y, x) * (180 / Math.PI);
+    //   // handleAzimuthUpdate(azimuth);
+    //   console.log('Azimuth : ', ((z.toFixed(2) + 360) % 360) * 1000);
+    // });
+    // const subscription = accelerometer.subscribe(({x, y, z}) => {
+    //   // Lakukan sesuatu dengan data accelerometer di sini
+    //   console.log(`x: ${x}, y: ${y}, z: ${z}`);
+    // });
+    // return () => {
+    //   subscription.unsubscribe();
+    // };
+  }, []);
 
   const handleShowDetail = () => {
     setShowDetail(!showDetail);
@@ -56,6 +76,10 @@ export default function Home() {
     setRangeToMarker(fixedDistance); // Convert KM -> M
   };
 
+  const handleAzimuthUpdate = newAzimuth => {
+    setAzimuth(newAzimuth);
+  };
+
   return (
     <SafeAreaView style={{flex: 1}}>
       {isLoggedIn ? (
@@ -66,7 +90,6 @@ export default function Home() {
             start={{x: 0, y: -0.5}} // From Gradien
             end={{x: 0, y: 1}} // To Gradien
             style={styles.navWrapper}>
-            {console.log('Jarak : ', rangeToMarker)}
             <Image
               source={require('../../../assets/images/logoMain_XRUN_White.png')}
               resizeMode="contain"
@@ -98,6 +121,9 @@ export default function Home() {
             <MapComponent
               clickedMarker={onMarkerClick}
               clickedRange={getMarkerRange}
+              markerCount={marker => setMarkerCount(marker)}
+              brandCount={brandcount => setBrandCount(brandcount)}
+              bigCoinCount={bigcoin => setBigCoin(bigcoin)}
             />
           </View>
 
@@ -145,14 +171,14 @@ export default function Home() {
                     style={{
                       fontFamily: 'Poppins-Bold',
                     }}>
-                    2 XRUN
+                    {brandCount} XRUN
                   </Text>{' '}
                   dan{' '}
                   <Text
                     style={{
                       fontFamily: 'Poppins-Bold',
                     }}>
-                    10 BIG XRUN{' '}
+                    {markerCount} BIG XRUN{' '}
                   </Text>
                   {'\n'}
                   bisa didapatkan
@@ -189,7 +215,7 @@ export default function Home() {
                       fontSize: 11,
                       color: '#ffdc04',
                     }}>
-                    Diamond 0
+                    Diamond {bigCoin}
                   </Text>
                 </View>
               </View>
