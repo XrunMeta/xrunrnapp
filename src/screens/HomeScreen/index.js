@@ -13,6 +13,11 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
+  withTiming,
+  withRepeat,
+  Easing,
+  interpolate,
+  useDerivedValue,
 } from 'react-native-reanimated';
 import MapComponent from '../../components/Map/Map';
 import MapView, {Marker} from 'react-native-maps';
@@ -31,10 +36,30 @@ export default function Home() {
   const [markerCount, setMarkerCount] = useState(0);
   const [brandCount, setBrandCount] = useState(0);
   const [bigCoin, setBigCoin] = useState(0);
+  const [degToTarget, setDegToTarget] = useState(0);
 
   const animatedStyles = useAnimatedStyle(() => ({
     transform: [{translateY: offset.value}],
   }));
+
+  const rotationValue = useSharedValue(0);
+
+  const arrowStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{rotate: `${rotationValue.value}deg`}],
+    };
+  });
+  //
+  useEffect(() => {
+    // Konversi nilai degToTarget ke kisaran -180 hingga 180 derajat
+    const normalizedDeg = ((degToTarget % 360) + 360) % 360;
+
+    // Mulai animasi rotasi
+    rotationValue.value = withTiming(normalizedDeg, {
+      duration: 500, // Sesuaikan dengan durasi yang Anda inginkan
+      easing: Easing.linear, // Sesuaikan dengan jenis animasi yang Anda inginkan
+    });
+  }, [degToTarget]);
 
   React.useEffect(() => {
     if (showDetail) {
@@ -43,21 +68,6 @@ export default function Home() {
       offset.value = withSpring(defaultOffset); // Tutup Card
     }
   }, [showDetail]);
-
-  useEffect(() => {
-    // const subscription = gyroscope.subscribe(({x, y, z}) => {
-    //   const azimuth = Math.atan2(y, x) * (180 / Math.PI);
-    //   // handleAzimuthUpdate(azimuth);
-    //   console.log('Azimuth : ', ((z.toFixed(2) + 360) % 360) * 1000);
-    // });
-    // const subscription = accelerometer.subscribe(({x, y, z}) => {
-    //   // Lakukan sesuatu dengan data accelerometer di sini
-    //   console.log(`x: ${x}, y: ${y}, z: ${z}`);
-    // });
-    // return () => {
-    //   subscription.unsubscribe();
-    // };
-  }, []);
 
   const handleShowDetail = () => {
     setShowDetail(!showDetail);
@@ -124,6 +134,7 @@ export default function Home() {
               markerCount={marker => setMarkerCount(marker)}
               brandCount={brandcount => setBrandCount(brandcount)}
               bigCoinCount={bigcoin => setBigCoin(bigcoin)}
+              degToTarget={deg => setDegToTarget(deg)}
             />
           </View>
 
@@ -257,14 +268,17 @@ export default function Home() {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
-                <Image
+                <Animated.Image
                   source={require('../../../assets/images/icon_arrow.png')}
                   resizeMode="contain"
-                  style={{
-                    marginRight: 10,
-                    height: 25,
-                    width: 25,
-                  }}
+                  style={[
+                    {
+                      marginRight: 10,
+                      height: 25,
+                      width: 25,
+                    },
+                    arrowStyle,
+                  ]}
                 />
                 <View
                   style={{

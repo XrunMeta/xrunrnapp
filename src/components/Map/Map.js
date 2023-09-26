@@ -18,37 +18,38 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {fetchMarkerData} from './APIGetMarker';
 import RNFetchBlob from 'rn-fetch-blob';
 
+// ########## Main Component ##########
 const MapComponent = ({
-  clickedMarker,
-  clickedRange,
-  brandCount,
-  markerCount,
-  bigCoinCount,
+  clickedMarker, // Get Data from Clicked Marker
+  clickedRange, // Get Range from Clicked Marker
+  brandCount, // Get Count of Brand from API
+  markerCount, // Get Count of Marker That Shown on Map
+  bigCoinCount, // Get Count of Big Coin from API
+  degToTarget, // Get Degrees from User Coordinate -> Target Coordinate
 }) => {
   const [pin, setPin] = useState({
     latitude: 37.4226711,
     longitude: -122.0849872,
-  });
+  }); // Get User Coordinate
   const [pinTarget, setPinTarget] = useState({
     latitude: -6.294915,
     longitude: 106.785179,
-  });
-  const [initialRegion, setInitialRegion] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [markersData, setMarkersData] = useState([]);
-  const [brandLogo, setBrandLogo] = useState([]);
-  const [adThumbnail, setAdThumbnail] = useState([]);
-  const [distance, setDistance] = useState(null);
-  const [markerDistance, setMarkerDistance] = useState(null);
+  }); // Get Target Coordinate
+  const [loading, setLoading] = useState(true); // Get Loading Info
+  const [markersData, setMarkersData] = useState([]); // Save Marker Data from API
+  const [brandLogo, setBrandLogo] = useState([]); // Save Brand Logo from BLOB API
+  const [adThumbnail, setAdThumbnail] = useState([]); // Save AdThumbnail from BLOB API
 
+  // Blob to base64 PNG Converter
   const saveBlobAsImage = async (blob, filename) => {
     const path = `${RNFetchBlob.fs.dirs.CacheDir}/${filename}`;
     await RNFetchBlob.fs.writeFile(path, blob, 'base64');
     return path;
   };
 
+  // 1 Time Use Effect
   useEffect(() => {
-    // Get Self Cordinate
+    // Get Self Cordinate from AsyncStorage
     const getSelfCoordinate = async () => {
       try {
         const selfCoordinate = await AsyncStorage.getItem('selfCoordinate');
@@ -65,7 +66,6 @@ const MapComponent = ({
             coordinate.longitude,
           );
 
-          // Saving to State
           if (data) {
             setMarkersData(data.data);
 
@@ -93,6 +93,7 @@ const MapComponent = ({
             brandCount(brandcount);
             bigCoinCount(getBigCoin);
 
+            // Save BLOB to State
             data.data.map(async item => {
               const brandLogo = await saveBlobAsImage(
                 item.brandlogo,
@@ -121,10 +122,11 @@ const MapComponent = ({
     getSelfCoordinate();
   }, []);
 
+  // Tick Call UseEffect
   useEffect(() => {
     // Update Self Coordinate repeatable
     const getCurrentLocation = async () => {
-      // IOS
+      // ----- IOS
       if (Platform.OS === 'ios') {
         Geolocation.requestAuthorization('whenInUse').then(result => {
           if (result === 'granted') {
@@ -144,7 +146,7 @@ const MapComponent = ({
             );
           }
         });
-        // ANDROID
+        // ----- ANDROID
       } else if (Platform.OS === 'android') {
         // Ask for Permission
         try {
@@ -167,11 +169,6 @@ const MapComponent = ({
                   latitude: position.coords.latitude,
                   longitude: position.coords.longitude,
                 });
-
-                // console.log(
-                //   `Lat : ${position.coords.latitude} --- Lng : ${position.coords.longitude}
-                //   `,
-                // );
               },
               error => {
                 console.error(error);
@@ -191,28 +188,36 @@ const MapComponent = ({
     getCurrentLocation();
   });
 
+  // As 'pin' change useEffect
   useEffect(() => {
     const watchId = Geolocation.watchPosition(
       position => {
-        // Dapatkan lokasi pengguna (position.coords.latitude dan position.coords.longitude)
-        // Hitung jarak antara pengguna dan lokasi tujuan
+        // Get Range from User -> Target
         const newDistance = calculateDistance(
           position.coords.latitude,
           position.coords.longitude,
           pinTarget.latitude,
           pinTarget.longitude,
         );
-        // Perbarui teks yang menampilkan jarak
-        setDistance(newDistance);
+
+        // Get Degrees from User -> Target
+        const deg = arcT(
+          position.coords.latitude,
+          position.coords.longitude,
+          pinTarget.latitude,
+          pinTarget.longitude,
+        );
+
+        // Set to Props
+        degToTarget(deg);
         clickedRange(newDistance);
-        // console.log('Jarak : ', newDistance);
       },
       error => {
         console.error(error);
       },
       {
-        enableHighAccuracy: true, // Aktifkan untuk mendapatkan akurasi tinggi jika perlu
-        distanceFilter: 10, // Atur threshold perubahan jarak yang akan memicu pemanggilan fungsi
+        enableHighAccuracy: true, // True = Get High Acccuration
+        distanceFilter: 10, // Set Treshold That Will Trigger Function Call
       },
     );
 
@@ -221,20 +226,9 @@ const MapComponent = ({
     };
   }, [pin]);
 
+  // When Marker is Clicked
   const handleMarkerClick = item => {
-    // Memanggil prop onMarkerClick sebagai fungsi
     clickedMarker(item);
-
-    // Menghitung jarak
-    const newDistance = calculateDistance(
-      pin.latitude,
-      pin.longitude,
-      parseFloat(item.lat),
-      parseFloat(item.lng),
-    );
-
-    // Mengubah state markerDistance
-    setMarkerDistance(newDistance);
 
     setPinTarget({
       latitude: parseFloat(item.lat),
@@ -242,6 +236,7 @@ const MapComponent = ({
     });
   };
 
+  // Count distance between Current Postition -> Target Position
   function calculateDistance(lat1, lon1, lat2, lon2) {
     const R = 6371; // Earth Radius on Kilometers
     const dLat = (lat2 - lat1) * (Math.PI / 180);
@@ -257,6 +252,18 @@ const MapComponent = ({
     return range;
   }
 
+  // Get Degrees between Current Postition -> Target Position
+  function arcT(lat1, lon1, lat2, lon2) {
+    const delLat = lat2 - lat1;
+    const delLon = lon2 - lon1;
+
+    let deg = 0;
+    deg = Math.atan2(delLon, delLat);
+    deg = (deg * 180) / Math.PI;
+
+    return deg;
+  }
+
   return (
     <View style={styles.container}>
       {loading ? (
@@ -265,7 +272,7 @@ const MapComponent = ({
             `Loading = true => Lat: ${pin.latitude} & Lng: ${pin.longitude}`,
           )}
           Loading...
-        </Text> // Tampilkan pesan loading selama data dimuat
+        </Text> // Show Loading While Data is Load
       ) : (
         <MapView
           style={styles.mapStyle}
@@ -279,8 +286,6 @@ const MapComponent = ({
           showsUserLocation={true}
           showsMyLocationButton={false}>
           <Circle center={pin} radius={500} />
-          {/* {console.log('Jarak Sekarang : ', distance)} */}
-
           {markersData &&
             markersData.map &&
             adThumbnail &&
@@ -297,8 +302,7 @@ const MapComponent = ({
                   handleMarkerClick(item);
                 }}>
                 <Image
-                  // source={require('../../../assets/images/logo_xrun.png')} // Gantilah dengan path yang sesuai
-                  source={{uri: `file://${adThumbnail}`}} // Gantilah dengan path yang sesuai
+                  source={{uri: `file://${adThumbnail}`}}
                   style={{width: 15, height: 15}}
                 />
                 <Callout tooltip>
@@ -333,7 +337,7 @@ const MapComponent = ({
                           marginTop: -10,
                         }}>
                         <Image
-                          source={{uri: `file://${brandLogo}`}} // Gantilah dengan path yang sesuai
+                          source={{uri: `file://${brandLogo}`}}
                           style={{
                             width: 37,
                             height: 37,
@@ -370,10 +374,6 @@ const MapComponent = ({
                           color: 'black',
                         }}>
                         {item.coins} {item.brand}
-                        {/* {console.log(
-                          `Jarak coin ${item.coin} = `,
-                          item.distance,
-                        )} */}
                       </Text>
                     </View>
                   </View>
