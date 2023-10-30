@@ -54,5 +54,62 @@
       },
       "timer": "kirim ulang"
     }
+  },
+
+  "eng": {
+    "alert": {
+      "title": {
+        "error": "Error",
+        "fail": "Failed",
+        "warning": "Warning",
+        "info": "Info",
+        "success": "Success"
+      }
+    },
+    "screen_first": {
+      "title": {
+        "1": "Get Your Rewards",
+        "2": "And Create Your Moments!"
+      },
+      "login": "Log In",
+      "signUp": "Let's XRUN, Sign me up",
+      "tos": {
+        "1": "Please read",
+        "2": "and",
+        "3": "below to find out about the features and",
+        "4": "provided by this app"
+      },
+      "terms": "the terms & conditions",
+      "privacy": "privacy policy",
+      "information": "information use"
+    },
+    "screen_signin": {
+      "title": "Sign In via Email",
+      "subTitle": "Let's Log In 'Catch Me' Now",
+      "email": {
+        "label": "Email",
+        "placeholder": "xrun@xrun.run"
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "Password"
+      },
+      "authcode": {
+        "label": "Try",
+        "link": "Email Authentication"
+      }
+    },
+    "screen_emailAuth": {
+      "email": {
+        "label": "Enter your Email",
+        "placeholder": "xrun@xrun.run"
+      }
+    },
+    "screen_emailVerification": {
+      "email": {
+        "label": "Enter 6-digit Verification Code"
+      },
+      "timer": "resend"
+    }
   }
 }

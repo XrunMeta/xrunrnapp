@@ -14,80 +14,64 @@ import Animated, {
   useAnimatedStyle,
   withSpring,
   withTiming,
-  withRepeat,
   Easing,
-  interpolate,
-  useDerivedValue,
 } from 'react-native-reanimated';
 import MapComponent from '../../components/Map/Map';
-import MapView, {Marker} from 'react-native-maps';
-import {accelerometer, gyroscope} from 'react-native-sensors';
 
+// Offset Value of Slider Card
 const initialOffset = 110;
 const defaultOffset = 20;
 
+// ########## Main Component ##########
 export default function Home() {
-  const {isLoggedIn} = useAuth();
-  const [showDetail, setShowDetail] = useState(false);
-  const offset = useSharedValue(initialOffset);
-  const [selectedMarker, setSelectedMarker] = useState(null);
-  const [rangeToMarker, setRangeToMarker] = useState(0);
+  const {isLoggedIn} = useAuth(); // Login Checker
+  const [showDetail, setShowDetail] = useState(false); // Slider Card Bool
+  const offset = useSharedValue(initialOffset); // Slider Card Animation
+  const [selectedMarker, setSelectedMarker] = useState(null); // Get Data from Selected Marker
+  const [rangeToMarker, setRangeToMarker] = useState(0); // Get Range of Selected Marker
   const [azimuth, setAzimuth] = useState(0);
-  const [markerCount, setMarkerCount] = useState(0);
-  const [brandCount, setBrandCount] = useState(0);
-  const [bigCoin, setBigCoin] = useState(0);
-  const [degToTarget, setDegToTarget] = useState(0);
-
+  const [markerCount, setMarkerCount] = useState(0); // Count of Marker That Show on Map
+  const [brandCount, setBrandCount] = useState(0); // Count of Brand from API
+  const [bigCoin, setBigCoin] = useState(0); // Count of Big Coin from API
+  const [degToTarget, setDegToTarget] = useState(0); // Get Degrees from User Coordinate -> Target Coordinate
+  const [shouldResetMap, setShouldResetMap] = useState(false); // Reset Map after Click Back To Point on Map
+  const rotationValue = useSharedValue(0); // Init Rotation of Arrow
   const animatedStyles = useAnimatedStyle(() => ({
     transform: [{translateY: offset.value}],
-  }));
-
-  const rotationValue = useSharedValue(0);
-
+  })); // Slider Card Translate Animation
   const arrowStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{rotate: `${rotationValue.value}deg`}],
-    };
-  });
-  //
+    return {transform: [{rotate: `${rotationValue.value}deg`}]};
+  }); // Arrow Rotate Animation
+
+  // As 'degToTarget' change UseEffect
   useEffect(() => {
-    // Konversi nilai degToTarget ke kisaran -180 hingga 180 derajat
+    // Convert value 'degToTarget' from -360 until 360
     const normalizedDeg = ((degToTarget % 360) + 360) % 360;
 
-    // Mulai animasi rotasi
+    // Start Rotate Animation
     rotationValue.value = withTiming(normalizedDeg, {
-      duration: 500, // Sesuaikan dengan durasi yang Anda inginkan
-      easing: Easing.linear, // Sesuaikan dengan jenis animasi yang Anda inginkan
+      duration: 500,
+      easing: Easing.linear,
     });
   }, [degToTarget]);
 
-  React.useEffect(() => {
+  // As 'showDetail' change UseEffect
+  useEffect(() => {
     if (showDetail) {
-      offset.value = withSpring(initialOffset); // Buka Card
+      offset.value = withSpring(initialOffset); // Show Card
     } else {
-      offset.value = withSpring(defaultOffset); // Tutup Card
+      offset.value = withSpring(defaultOffset); // Hide Card
     }
   }, [showDetail]);
 
+  // Button Collapse Slider Card
   const handleShowDetail = () => {
     setShowDetail(!showDetail);
   };
 
+  // Button Back To Current Position on Map
   const getBackToPoint = () => {
-    console.warn('Back to Point');
-  };
-
-  const onMarkerClick = item => {
-    setSelectedMarker(item);
-  };
-
-  const getMarkerRange = distance => {
-    fixedDistance = (distance * 1000).toFixed(2);
-    setRangeToMarker(fixedDistance); // Convert KM -> M
-  };
-
-  const handleAzimuthUpdate = newAzimuth => {
-    setAzimuth(newAzimuth);
+    setShouldResetMap(true);
   };
 
   return (
@@ -96,7 +80,7 @@ export default function Home() {
         <View style={styles.root}>
           {/* Header */}
           <LinearGradient
-            colors={['rgba(0, 0, 0, 1)', 'rgba(0, 0, 0, 0)']} // Gradient from Black to Transparent
+            colors={['rgba(0, 0, 0, 1)', 'rgba(0, 0, 0, 0)']}
             start={{x: 0, y: -0.5}} // From Gradien
             end={{x: 0, y: 1}} // To Gradien
             style={styles.navWrapper}>
@@ -108,11 +92,7 @@ export default function Home() {
                 height: 35,
               }}
             />
-            <Pressable
-              style={styles.mapPointButton}
-              onPress={getBackToPoint}
-              // android_ripple={{color: 'rgba(0, 0, 0, 0.01)'}}
-            >
+            <Pressable style={styles.mapPointButton} onPress={getBackToPoint}>
               <Image
                 source={require('../../../assets/images/icon_mapPoint.png')}
                 resizeMode="contain"
@@ -121,6 +101,7 @@ export default function Home() {
                   margin: 'auto',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  width: 23,
                 }}
               />
             </Pressable>
@@ -129,12 +110,17 @@ export default function Home() {
           {/* Map View */}
           <View style={styles.container}>
             <MapComponent
-              clickedMarker={onMarkerClick}
-              clickedRange={getMarkerRange}
+              clickedMarker={item => setSelectedMarker(item)}
+              clickedRange={distance => {
+                let fixedDistance = (distance * 1000).toFixed(2);
+                setRangeToMarker(fixedDistance);
+              }}
               markerCount={marker => setMarkerCount(marker)}
               brandCount={brandcount => setBrandCount(brandcount)}
               bigCoinCount={bigcoin => setBigCoin(bigcoin)}
               degToTarget={deg => setDegToTarget(deg)}
+              shouldResetMap={shouldResetMap}
+              onResetMap={() => setShouldResetMap(false)}
             />
           </View>
 
@@ -143,7 +129,6 @@ export default function Home() {
             style={[
               {
                 position: 'absolute',
-                // bottom: showDetail ? -110 : 0,
                 bottom: -40,
                 left: 0,
                 right: 0,
@@ -151,7 +136,7 @@ export default function Home() {
               animatedStyles,
             ]}>
             <LinearGradient
-              colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']} // Gradient from Black to Transparent
+              colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']}
               start={{x: 0, y: 0}} // From Gradien
               end={{x: 0, y: 1}} // To Gradien
               style={{
@@ -201,7 +186,6 @@ export default function Home() {
                   alignItems: 'flex-end',
                   marginBottom: -20,
                 }}>
-                <Text> </Text>
                 <Text
                   style={{
                     fontFamily: 'Poppins-Medium',
@@ -284,10 +268,7 @@ export default function Home() {
                   style={{
                     flex: 1,
                   }}>
-                  <Text style={styles.subTitle}>
-                    {/* {selectedMarker ? selectedMarker.distance : 0}m */}
-                    {rangeToMarker ? rangeToMarker : 0}m
-                  </Text>
+                  <Text style={styles.subTitle}>{rangeToMarker || 0}m</Text>
                   <Text style={styles.desc}>
                     There is a XRUN of{' '}
                     <Text style={{fontFamily: 'Poppins-Bold'}}>XRUN</Text> that
@@ -306,7 +287,7 @@ export default function Home() {
               </View>
             </View>
             <LinearGradient
-              colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, .1)']} // Gradient from Black to Transparent
+              colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, .1)']}
               start={{x: 0, y: 0}} // From Gradien
               end={{x: 0, y: 1}} // To Gradien
               style={{
@@ -354,13 +335,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 50,
     zIndex: 1,
-    marginTop: -10,
   },
   mapPointButton: {
-    backgroundColor: 'transparent',
-    width: 23,
-    height: 23,
     alignItems: 'center',
+    padding: 10,
+    marginRight: -16,
   },
   container: {
     position: 'absolute',

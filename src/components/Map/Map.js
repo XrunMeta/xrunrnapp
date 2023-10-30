@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
   View,
   StyleSheet,
@@ -26,6 +26,8 @@ const MapComponent = ({
   markerCount, // Get Count of Marker That Shown on Map
   bigCoinCount, // Get Count of Big Coin from API
   degToTarget, // Get Degrees from User Coordinate -> Target Coordinate
+  shouldResetMap,
+  onResetMap,
 }) => {
   const [pin, setPin] = useState({
     latitude: 37.4226711,
@@ -39,6 +41,7 @@ const MapComponent = ({
   const [markersData, setMarkersData] = useState([]); // Save Marker Data from API
   const [brandLogo, setBrandLogo] = useState([]); // Save Brand Logo from BLOB API
   const [adThumbnail, setAdThumbnail] = useState([]); // Save AdThumbnail from BLOB API
+  const mapRef = useRef(null);
 
   // Blob to base64 PNG Converter
   const saveBlobAsImage = async (blob, filename) => {
@@ -226,6 +229,22 @@ const MapComponent = ({
     };
   }, [pin]);
 
+  // As 'shouldResetMap' change useEffect
+  useEffect(() => {
+    if (shouldResetMap && mapRef.current) {
+      const initialRegion = {
+        latitude: pin.latitude,
+        longitude: pin.longitude,
+        latitudeDelta: 0.005,
+        longitudeDelta: 0.005,
+      };
+
+      mapRef.current.animateToRegion(initialRegion, 1000);
+
+      onResetMap();
+    }
+  }, [shouldResetMap]);
+
   // When Marker is Clicked
   const handleMarkerClick = item => {
     clickedMarker(item);
@@ -275,6 +294,7 @@ const MapComponent = ({
         </Text> // Show Loading While Data is Load
       ) : (
         <MapView
+          ref={mapRef}
           style={styles.mapStyle}
           provider={PROVIDER_GOOGLE}
           initialRegion={{

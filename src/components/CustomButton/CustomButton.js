@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     padding: 15,
-    paddingVertical: 15,
+    paddingVertical: 8,
     marginTop: 15,
     alignItems: 'center',
     borderRadius: 35,
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
 
   text: {
     color: '#45494c',
-    fontSize: 20,
+    fontSize: 16,
     fontFamily: 'Poppins-Medium',
   },
 
@@ -80,7 +80,6 @@ const styles = StyleSheet.create({
   text_TERTIARY: {
     fontWeight: 'bold',
     color: '#343a59',
-    fontSize: 17,
     fontFamily: 'Poppins-Medium',
   },
 });

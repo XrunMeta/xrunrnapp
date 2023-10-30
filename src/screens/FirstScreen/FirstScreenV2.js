@@ -1,31 +1,28 @@
 import {
-  Alert,
   View,
   Text,
   Image,
   StyleSheet,
-  useWindowDimensions,
-  ScrollView,
-  Pressable,
-  TouchableOpacity,
   FlatList,
   Linking,
   Platform,
   PermissionsAndroid,
+  Dimensions,
 } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import {useNavigation} from '@react-navigation/native';
-import React, {useState, useCallback, useRef, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import * as RNLocalize from 'react-native-localize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
 
+// Get Language Data
+const langData = require('../../../lang.json');
+
 const FirstScreenV2 = () => {
-  const {height} = useWindowDimensions();
+  const [lang, setLang] = useState({});
   const navigation = useNavigation();
   const [activeIndex, setActiveIndex] = useState(0);
-  const deviceLanguageLoggedRef = useRef(false);
-  const [selfCoordinate, setSelfCoordinate] = useState(null);
 
   // Get Map Initial Geolocation
   const getCurrentLocation = async () => {
@@ -107,6 +104,10 @@ const FirstScreenV2 = () => {
   useEffect(() => {
     const deviceLanguage = RNLocalize.getLocales()[0].languageCode;
     setCurrentLanguage(deviceLanguage);
+
+    const selectedLanguage = deviceLanguage === 'id' ? 'id' : 'eng';
+    const language = langData[selectedLanguage];
+    setLang(language);
   }, []);
 
   const onSignIn = () => {
@@ -139,8 +140,16 @@ const FirstScreenV2 = () => {
     // <ScrollView showsVerticalScrollIndicator={false}>
     <View style={styles.root}>
       <View style={styles.titleWrapper}>
-        <Text style={styles.title}>Dapatkan Rewardnya</Text>
-        <Text style={styles.title}>Dan Ciptakan Momenmu!</Text>
+        <Text style={styles.title}>
+          {lang && lang.screen_first && lang.screen_first.title
+            ? lang.screen_first.title[1]
+            : ''}
+        </Text>
+        <Text style={[styles.title, {marginTop: -10}]}>
+          {lang && lang.screen_first && lang.screen_first.title
+            ? lang.screen_first.title[2]
+            : ''}
+        </Text>
       </View>
 
       <View style={styles.sliderWrapper}>
@@ -176,40 +185,67 @@ const FirstScreenV2 = () => {
         </View>
       </View>
 
-      <CustomButton text="Log in" onPress={onSignIn} />
+      {/* <CustomButton text={lang.screen_first.login} onPress={onSignIn} /> */}
       <CustomButton
-        text="Let's XRUN, Sign me up"
+        text={
+          lang && lang.screen_first && lang.screen_first.login
+            ? lang.screen_first.login
+            : ''
+        }
+        onPress={onSignIn}
+      />
+      <CustomButton
+        text={
+          lang && lang.screen_first && lang.screen_first.signUp
+            ? lang.screen_first.signUp
+            : ''
+        }
         type="SECONDARY"
         onPress={onJoin}
       />
 
       <View style={styles.descWrapper}>
         <Text style={styles.text}>
-          Silakan baca{' '}
+          {lang && lang.screen_first && lang.screen_first.tos
+            ? lang.screen_first.tos[1] + ' '
+            : ''}
           <Text
             style={styles.link}
             onPress={() => {
               Linking.openURL('https://app.xrun.run/7011.html');
             }}>
-            syarat & ketentuan
+            {lang && lang.screen_first && lang.screen_first.terms
+              ? lang.screen_first.terms
+              : ''}
           </Text>{' '}
-          serta{'\n'}
+          {lang && lang.screen_first && lang.screen_first.tos
+            ? lang.screen_first.tos[2]
+            : ''}
+          {'\n'}
           <Text
             style={styles.link}
             onPress={() => {
               Linking.openURL('https://app.xrun.run/7013.html');
             }}>
-            kebijakan privasi
+            {lang && lang.screen_first && lang.screen_first.privacy
+              ? lang.screen_first.privacy
+              : ''}
           </Text>{' '}
-          di bawah ini untuk mengetahui tentang fitur dan{' '}
+          {lang && lang.screen_first && lang.screen_first.tos
+            ? lang.screen_first.tos[3] + ' '
+            : ''}
           <Text
             style={styles.link}
             onPress={() => {
               Linking.openURL('https://app.xrun.run/7012.html');
             }}>
-            penggunaan informasi
+            {lang && lang.screen_first && lang.screen_first.information
+              ? lang.screen_first.information
+              : ''}
           </Text>{' '}
-          yang disediakan oleh aplikasi ini.
+          {lang && lang.screen_first && lang.screen_first.tos
+            ? lang.screen_first.tos[4] + ' '
+            : ''}
         </Text>
       </View>
     </View>
@@ -224,6 +260,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     padding: 20,
+    position: 'relative',
   },
 
   imageContainer: {
@@ -245,25 +282,44 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 25,
   },
+
+  // titleWrapper: {
+  //   position: 'absolute', // Membuat elemen ini tumpang tindih dengan elemen di bawahnya
+  //   backgroundColor: 'pink', // Warna latar belakang pink
+  //   width: '100%',
+  //   zIndex: 1,
+  //   alignItems: 'center',
+  //   top: 50,
+  // },
+
   title: {
-    fontSize: 23,
+    fontSize: 20,
     color: '#343a59',
     fontFamily: 'Poppins-Bold',
   },
+  // sliderWrapper: {
+  //   width: '100%',
+  //   flexGrow: 1,
+  //   backgroundColor: 'pink',
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  // },
   sliderWrapper: {
-    width: '100%',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   sliderImage: {
-    width: 351,
-    height: 200,
+    width: Dimensions.get('window').width * 0.86, // Misalnya, 86% dari lebar layar.
+    // height: Dimensions.get('window').width * 0.8 * (200 / 351), // Sesuaikan tinggi sesuai aspek rasio gambar asli.
+    height: '95%',
     borderRadius: 10,
-    marginHorizontal: 10,
+    marginHorizontal: 5,
   },
   sliderNavigator: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 15,
   },
   sliderDot: {
     width: 8,
@@ -280,7 +336,7 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: 'Poppins-Regular',
     textAlign: 'center',
-    fontSize: 15,
+    fontSize: 13,
     lineHeight: 19,
   },
 
@@ -288,7 +344,7 @@ const styles = StyleSheet.create({
     color: '#343a59',
     fontFamily: 'Poppins-Regular',
     textDecorationLine: 'underline',
-    fontSize: 15,
+    fontSize: 13,
     position: 'relative',
   },
 });

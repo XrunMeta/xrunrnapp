@@ -1,4 +1,4 @@
-// api.js
+// Get Coin as Lat Lng
 export const fetchMarkerData = async (latitude, longitude) => {
   try {
     const apiUrl = `https://app.xrun.run/gateway.php?act=coinmapping&member=1102&lat=${latitude}&lng=${longitude}&limit=30`;
