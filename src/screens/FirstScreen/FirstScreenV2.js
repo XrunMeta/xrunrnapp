@@ -137,7 +137,6 @@ const FirstScreenV2 = () => {
   );
 
   return (
-    // <ScrollView showsVerticalScrollIndicator={false}>
     <View style={styles.root}>
       <View style={styles.titleWrapper}>
         <Text style={styles.title}>
@@ -145,7 +144,7 @@ const FirstScreenV2 = () => {
             ? lang.screen_first.title[1]
             : ''}
         </Text>
-        <Text style={[styles.title, {marginTop: -10}]}>
+        <Text style={[styles.title, {marginTop: -5}]}>
           {lang && lang.screen_first && lang.screen_first.title
             ? lang.screen_first.title[2]
             : ''}
@@ -185,7 +184,6 @@ const FirstScreenV2 = () => {
         </View>
       </View>
 
-      {/* <CustomButton text={lang.screen_first.login} onPress={onSignIn} /> */}
       <CustomButton
         text={
           lang && lang.screen_first && lang.screen_first.login
@@ -249,7 +247,6 @@ const FirstScreenV2 = () => {
         </Text>
       </View>
     </View>
-    // </ScrollView>
   );
 };
 
@@ -293,7 +290,7 @@ const styles = StyleSheet.create({
   // },
 
   title: {
-    fontSize: 20,
+    fontSize: 22,
     color: '#343a59',
     fontFamily: 'Poppins-Bold',
   },
@@ -310,7 +307,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   sliderImage: {
-    width: Dimensions.get('window').width * 0.86, // Misalnya, 86% dari lebar layar.
+    width: Dimensions.get('window').width * 0.86, // 86% width of screen
     // height: Dimensions.get('window').width * 0.8 * (200 / 351), // Sesuaikan tinggi sesuai aspek rasio gambar asli.
     height: '95%',
     borderRadius: 10,

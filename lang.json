@@ -39,8 +39,9 @@
       },
       "authcode": {
         "label": "Coba",
-        "link": "Email Autentikasi"
-      }
+        "link": "EMAIL AUTENTIKASI"
+      },
+      "validator": "Email anda tidak valid"
     },
     "screen_emailAuth": {
       "email": {
@@ -84,8 +85,8 @@
       "information": "information use"
     },
     "screen_signin": {
-      "title": "Sign In via Email",
-      "subTitle": "Let's Log In 'Catch Me' Now",
+      "title": "Login Via E-mail",
+      "subTitle": "Let's Login Quickly 'Catch Me'",
       "email": {
         "label": "Email",
         "placeholder": "xrun@xrun.run"
@@ -96,8 +97,9 @@
       },
       "authcode": {
         "label": "Try",
-        "link": "Email Authentication"
-      }
+        "link": "EMAIL AUTHCODE"
+      },
+      "validator": "Your Email is not Valid"
     },
     "screen_emailAuth": {
       "email": {

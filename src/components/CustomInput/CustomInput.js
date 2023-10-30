@@ -76,27 +76,28 @@ const styles = StyleSheet.create({
   },
   label: {
     fontFamily: 'Poppins-Medium',
-    fontSize: 18,
-    marginBottom: -5,
+    fontSize: 13,
+    marginBottom: -10,
     color: '#343a59',
   },
   input: {
-    height: 50,
+    height: 40,
+    paddingBottom: -10,
     fontFamily: 'Poppins-Medium',
-    fontSize: 18,
+    fontSize: 13,
     color: '#343a59',
     borderBottomColor: '#cccccc',
     borderBottomWidth: 1,
-    paddingRight: 48,
-    paddingLeft: 10,
+    paddingRight: 30,
+    paddingLeft: -10,
   },
   toggleButton: {
     position: 'absolute',
-    top: 30,
-    right: 35,
+    top: 25,
+    right: 23,
   },
   toggleButtonImage: {
-    height: 25,
+    height: 15,
   },
 });
 
