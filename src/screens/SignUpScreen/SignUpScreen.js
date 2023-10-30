@@ -8,13 +8,17 @@ import {
   Alert,
   TextInput,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import CustomMultipleChecbox from '../../components/CustomCheckbox/CustomMultipleCheckbox';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const langData = require('../../../lang.json');
 
 const SignUpScreen = ({route}) => {
+  const [lang, setLang] = useState({});
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -25,8 +29,6 @@ const SignUpScreen = ({route}) => {
   const [refferalEmail, setRefferalEmail] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(true);
   const {flag, countryCode, country} = route.params || {};
-
-  // console.log(flag, ' + ', countryCode, ' + ', country);
 
   const navigation = useNavigation();
 
@@ -94,6 +96,28 @@ const SignUpScreen = ({route}) => {
 
   console.log(gender, ' - ', age);
 
+  useEffect(() => {
+    // Get Language
+    const getLanguage = async () => {
+      try {
+        const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+
+        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
+        const language = langData[selectedLanguage];
+        setLang(language);
+      } catch (err) {
+        console.error(
+          'Error retrieving selfCoordinate from AsyncStorage:',
+          err,
+        );
+      }
+    };
+
+    getLanguage();
+  }, []);
+
+  console.log(lang);
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={[styles.root]}>
@@ -123,6 +147,8 @@ const SignUpScreen = ({route}) => {
               alignSelf: 'flex-start',
               marginLeft: 25,
               color: 'red',
+              fontFamily: 'Poppins-Medium',
+              fontSize: 13,
             }}>
             Email anda tidak valid
           </Text>
@@ -146,11 +172,14 @@ const SignUpScreen = ({route}) => {
               flexDirection: 'row',
             }}>
             <Pressable
-              style={{flexDirection: 'row'}}
+              style={{flexDirection: 'row', marginBottom: -10}}
               onPress={() => chooseRegion(flag, countryCode, country)}>
               <Image
                 resizeMode="contain"
-                style={{height: 50, width: 35, marginRight: 10}}
+                style={{
+                  width: 35,
+                  marginRight: 10,
+                }}
                 source={
                   flag == undefined
                     ? {
@@ -164,7 +193,7 @@ const SignUpScreen = ({route}) => {
               <Text
                 style={{
                   fontFamily: 'Poppins-Medium',
-                  fontSize: 18,
+                  fontSize: 13,
                   color: '#a8a8a7',
                   alignSelf: 'center',
                   paddingRight: 10,
@@ -258,7 +287,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'Poppins-Bold',
-    fontSize: 30,
+    fontSize: 22,
     color: '#343a59',
   },
   subTitle: {
@@ -279,10 +308,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 100,
   },
+  normalText: {
+    fontFamily: 'Poppins-Regular',
+    fontSize: 13,
+  },
   label: {
     fontFamily: 'Poppins-Medium',
-    fontSize: 18,
+    fontSize: 13,
     color: '#343a59',
+    marginBottom: -5,
   },
   buttonSignUp: {
     flexDirection: 'row',
@@ -308,11 +342,12 @@ const styles = StyleSheet.create({
   },
   input: {
     fontFamily: 'Poppins-Medium',
-    fontSize: 18,
+    fontSize: 13,
     color: '#343a59',
     borderBottomColor: '#cccccc',
     borderBottomWidth: 1,
-    paddingHorizontal: 15,
+    paddingHorizontal: 5,
+    paddingBottom: -10,
     flex: 1,
   },
 });

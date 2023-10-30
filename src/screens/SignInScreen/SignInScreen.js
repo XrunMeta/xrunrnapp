@@ -102,7 +102,6 @@ const SignInScreen = () => {
 
         const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
         const language = langData[selectedLanguage];
-        console.log(language);
         setLang(language);
       } catch (err) {
         console.error(

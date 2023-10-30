@@ -49,10 +49,52 @@
       },
       "failedLogin": "Email & Password tidak cocok"
     },
+    "screen_signup": {
+      "title": "Registrasi",
+      "name": {
+        "label": "Nama",
+        "placeholder": "Nama"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "xrun@xrun.run"
+      },
+      "password": {
+        "label": "Kata Sandi",
+        "placeholder": "Masukan kata sandi baru anda"
+      },
+      "phone_number": {
+        "label": "Nomor Telepon"
+      },
+      "area": {
+        "label": "Daerah",
+        "placeholder": "Cari berdasarkan wilayah anda"
+      },
+      "gender": {
+        "label": "Jenis Kelamin",
+        "1": "Pria",
+        "2": "Wanita"
+      },
+      "age": {
+        "label": "Umur"
+      },
+      "referral": {
+        "label": "Referral Email",
+        "placeholder": "xrun@xrun.run"
+      },
+      "add_desc": {
+        "1": "Masukan kode referral untuk",
+        "2": "mendapatkan bonus spesial XRUN"
+      }
+    },
     "screen_emailAuth": {
       "email": {
         "label": "Masukan Email anda",
         "placeholder": "xrun@xrun.run"
+      },
+      "alert": {
+        "emptyEmail": "Tolong isi email anda",
+        "invalidEmail": "Email anda tidak valid"
       }
     },
     "screen_emailVerification": {
@@ -117,8 +159,13 @@
       "email": {
         "label": "Enter your Email",
         "placeholder": "xrun@xrun.run"
+      },
+      "alert": {
+        "emptyEmail": "Please insert your email",
+        "invalidEmail": "Your email is not valid"
       }
     },
+
     "screen_emailVerification": {
       "email": {
         "label": "Enter 6-digit Verification Code"

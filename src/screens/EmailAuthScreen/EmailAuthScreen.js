@@ -8,12 +8,16 @@ import {
   Dimensions,
   Alert,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const langData = require('../../../lang.json');
 
 const EmailAuthScreen = () => {
+  const [lang, setLang] = useState({});
   const [email, setEmail] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(true);
 
@@ -23,9 +27,19 @@ const EmailAuthScreen = () => {
 
   const onSignIn = () => {
     if (email.trim() === '') {
-      Alert.alert('Error', 'Please insert your Email');
+      Alert.alert(
+        'Error',
+        lang && lang.screen_emailAuth && lang.screen_emailAuth.alert
+          ? lang.screen_emailAuth.alert.emptyEmail
+          : '',
+      );
     } else if (!isValidEmail(email)) {
-      Alert.alert('Error', `Your email is invalid`);
+      Alert.alert(
+        'Error',
+        lang && lang.screen_emailAuth && lang.screen_emailAuth.alert
+          ? lang.screen_emailAuth.alert.invalidEmail
+          : '',
+      );
     } else {
       navigation.navigate('EmailVerif', {dataEmail: email});
     }
@@ -45,14 +59,42 @@ const EmailAuthScreen = () => {
     navigation.navigate('SignIn');
   };
 
+  useEffect(() => {
+    // Get Language
+    const getLanguage = async () => {
+      try {
+        const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+
+        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
+        const language = langData[selectedLanguage];
+        setLang(language);
+      } catch (err) {
+        console.error(
+          'Error retrieving selfCoordinate from AsyncStorage:',
+          err,
+        );
+      }
+    };
+
+    getLanguage();
+  }, []);
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={[styles.root, {height: ScreenHeight}]}>
         <ButtonBack onClick={onBack} />
 
         <CustomInput
-          label="Masukan Email anda"
-          placeholder="xrun@xrun.run"
+          label={
+            lang && lang.screen_emailAuth && lang.screen_emailAuth.email
+              ? lang.screen_emailAuth.email.label
+              : ''
+          }
+          placeholder={
+            lang && lang.screen_emailAuth && lang.screen_emailAuth.email
+              ? lang.screen_emailAuth.email.placeholder
+              : ''
+          }
           value={email}
           setValue={onEmailChange}
           isPassword={false}
@@ -64,7 +106,9 @@ const EmailAuthScreen = () => {
               marginLeft: 25,
               color: 'red',
             }}>
-            Your Email is not Valid
+            {lang && lang.screen_emailAuth && lang.screen_emailAuth.alert
+              ? lang.screen_emailAuth.alert.invalidEmail
+              : ''}
           </Text>
         )}
 
