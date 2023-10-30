@@ -31,11 +31,26 @@ const SignInScreen = () => {
 
   const onSignIn = async () => {
     if (email.trim() === '') {
-      Alert.alert('Error', 'Please insert your Email');
+      Alert.alert(
+        'Error',
+        lang && lang.screen_signin && lang.screen_signin.alert
+          ? lang.screen_signin.alert.emptyEmail
+          : '',
+      );
     } else if (!isValidEmail(email)) {
-      Alert.alert('Error', 'Invalid email address');
+      Alert.alert(
+        'Error',
+        lang && lang.screen_signin && lang.screen_signin.alert
+          ? lang.screen_signin.alert.invalidEmail
+          : '',
+      );
     } else if (password.trim() === '') {
-      Alert.alert('Error', 'Please insert your Password');
+      Alert.alert(
+        'Error',
+        lang && lang.screen_signin && lang.screen_signin.alert
+          ? lang.screen_signin.alert.emptyPassword
+          : '',
+      );
     } else {
       try {
         const response = await fetch(
@@ -49,7 +64,10 @@ const SignInScreen = () => {
           navigation.navigate('MainTabNavigator');
           // Simpan session dan navigasi ke halaman selanjutnya
         } else {
-          Alert.alert('Error', 'Invalid Email & Password');
+          Alert.alert(
+            'Error',
+            lang && lang.screen_signin ? lang.screen_signin.failedLogin : '',
+          );
         }
       } catch (error) {
         console.error('Error:', error);
@@ -138,6 +156,8 @@ const SignInScreen = () => {
               alignSelf: 'flex-start',
               marginLeft: 25,
               color: 'red',
+              fontFamily: 'Poppins-Regular',
+              fontSize: 13,
             }}>
             {lang && lang.screen_signin && lang.screen_signin.validator
               ? lang.screen_signin.validator
@@ -198,7 +218,6 @@ const styles = StyleSheet.create({
   titleWrapper: {
     width: '100%',
     paddingHorizontal: 20,
-    marginBottom: 30,
     alignItems: 'center',
   },
   title: {

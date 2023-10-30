@@ -28,7 +28,7 @@
     },
     "screen_signin": {
       "title": "Masuk Via Email",
-      "subTitle": "Ayo Login Sekarang 'Catch Me'",
+      "subTitle": "Ayo Masuk Sekarang 'Catch Me'",
       "email": {
         "label": "Email",
         "placeholder": "xrun@xrun.run"
@@ -41,7 +41,13 @@
         "label": "Coba",
         "link": "EMAIL AUTENTIKASI"
       },
-      "validator": "Email anda tidak valid"
+      "validator": "Email anda tidak valid",
+      "alert": {
+        "emptyEmail": "Tolong isi email anda",
+        "emptyPassword": "Tolong isi kata sandi anda",
+        "invalidEmail": "Email anda tidak valid"
+      },
+      "failedLogin": "Email & Password tidak cocok"
     },
     "screen_emailAuth": {
       "email": {
@@ -99,7 +105,13 @@
         "label": "Try",
         "link": "EMAIL AUTHCODE"
       },
-      "validator": "Your Email is not Valid"
+      "validator": "Your Email is not Valid",
+      "alert": {
+        "emptyEmail": "Please insert your email",
+        "emptyPassword": "Please fill your password",
+        "invalidEmail": "Your email is not valid"
+      },
+      "failedLogin": "Invalid Email & Password"
     },
     "screen_emailAuth": {
       "email": {
