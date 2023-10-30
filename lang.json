@@ -72,19 +72,26 @@
       },
       "gender": {
         "label": "Jenis Kelamin",
-        "1": "Pria",
-        "2": "Wanita"
+        "male": "Pria",
+        "female": "Wanita"
       },
       "age": {
         "label": "Umur"
       },
       "referral": {
-        "label": "Referral Email",
+        "label": "Rujukan Email",
         "placeholder": "xrun@xrun.run"
       },
       "add_desc": {
-        "1": "Masukan kode referral untuk",
-        "2": "mendapatkan bonus spesial XRUN"
+        "ad1": "Masukan kode referral untuk",
+        "ad2": "mendapatkan bonus spesial XRUN"
+      },
+      "validator": {
+        "emptyName": "Nama harus diisi",
+        "emptyEmail": "Email harus diisi",
+        "invalidEmail": "Format email tidak valid",
+        "emptyPassword": "Password harus diisi",
+        "emptyArea": "Daerah harus diisi"
       }
     },
     "screen_emailAuth": {
@@ -154,6 +161,51 @@
         "invalidEmail": "Your email is not valid"
       },
       "failedLogin": "Invalid Email & Password"
+    },
+    "screen_signup": {
+      "title": "Registration",
+      "name": {
+        "label": "Name",
+        "placeholder": "Name"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "xrun@xrun.run"
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "Enter your new password"
+      },
+      "phone_number": {
+        "label": "Phone Number"
+      },
+      "area": {
+        "label": "Region",
+        "placeholder": "Search by your region"
+      },
+      "gender": {
+        "label": "Gender",
+        "male": "Male",
+        "female": "Female"
+      },
+      "age": {
+        "label": "Age"
+      },
+      "referral": {
+        "label": "Referral Member Email",
+        "placeholder": "xrun@xrun.run"
+      },
+      "add_desc": {
+        "ad1": "Enter referral code for",
+        "ad2": "get a special XRUN bonus"
+      },
+      "validator": {
+        "emptyName": "Name is required",
+        "emptyEmail": "Email required",
+        "invalidEmail": "Invalid email format",
+        "emptyPassword": "Password is required",
+        "emptyArea": "Area must be filled"
+      }
     },
     "screen_emailAuth": {
       "email": {

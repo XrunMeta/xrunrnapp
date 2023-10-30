@@ -124,19 +124,39 @@ const SignUpScreen = ({route}) => {
         <ButtonBack onClick={onBack} />
 
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>Registrasi</Text>
+          <Text style={styles.title}>
+            {lang && lang.screen_signup && lang.screen_signup.title
+              ? lang.screen_signup.title
+              : ''}
+          </Text>
         </View>
 
         <CustomInput
-          label="Nama"
-          placeholder="Nama"
+          label={
+            lang && lang.screen_signup && lang.screen_signup.name
+              ? lang.screen_signup.name.label
+              : ''
+          }
+          placeholder={
+            lang && lang.screen_signup && lang.screen_signup.name
+              ? lang.screen_signup.name.placeholder
+              : ''
+          }
           value={name}
           setValue={setName}
           isPassword={false}
         />
         <CustomInput
-          label="Email"
-          placeholder="xrun@xrun.run"
+          label={
+            lang && lang.screen_signup && lang.screen_signup.email
+              ? lang.screen_signup.email.label
+              : ''
+          }
+          placeholder={
+            lang && lang.screen_signup && lang.screen_signup.email
+              ? lang.screen_signup.email.placeholder
+              : ''
+          }
           value={email}
           setValue={onEmailChange}
           isPassword={false}
@@ -150,13 +170,23 @@ const SignUpScreen = ({route}) => {
               fontFamily: 'Poppins-Medium',
               fontSize: 13,
             }}>
-            Email anda tidak valid
+            {lang && lang.screen_signup && lang.screen_signup.validator
+              ? lang.screen_signup.validator.invalidEmail
+              : ''}
           </Text>
         )}
 
         <CustomInput
-          label="Kata sandi"
-          placeholder="Masukan kata sandi baru anda"
+          label={
+            lang && lang.screen_signup && lang.screen_signup.password
+              ? lang.screen_signup.password.label
+              : ''
+          }
+          placeholder={
+            lang && lang.screen_signup && lang.screen_signup.password
+              ? lang.screen_signup.password.placeholder
+              : ''
+          }
           value={password}
           setValue={setPassword}
           secureTextEntry
@@ -165,7 +195,11 @@ const SignUpScreen = ({route}) => {
 
         {/* Disini Pilih negara */}
         <View style={styles.formGroup}>
-          <Text style={styles.label}>Nomor Telepon</Text>
+          <Text style={styles.label}>
+            {lang && lang.screen_signup && lang.screen_signup.phone_number
+              ? lang.screen_signup.phone_number.label
+              : ''}
+          </Text>
           <View
             style={{
               width: '100%',
@@ -208,17 +242,37 @@ const SignUpScreen = ({route}) => {
         </View>
 
         <CustomInput
-          label="Daerah"
-          placeholder="Cari berdasarkan wilayah anda"
+          label={
+            lang && lang.screen_signup && lang.screen_signup.area
+              ? lang.screen_signup.area.label
+              : ''
+          }
+          placeholder={
+            lang && lang.screen_signup && lang.screen_signup.area
+              ? lang.screen_signup.area.placeholder
+              : ''
+          }
           value={region}
           setValue={setRegion}
           isPassword={false}
         />
 
         <View style={styles.formGroup}>
-          <Text style={styles.label}>Jenis Kelamin</Text>
+          <Text style={styles.label}>
+            {lang && lang.screen_signup && lang.screen_signup.gender
+              ? lang.screen_signup.gender.label
+              : ''}
+          </Text>
           <CustomMultipleChecbox
-            texts={['Pria', 'Wanita']}
+            texts={[
+              lang && lang.screen_signup && lang.screen_signup.gender
+                ? lang.screen_signup.gender.male
+                : '',
+              lang && lang.screen_signup && lang.screen_signup.gender
+                ? lang.screen_signup.gender.female
+                : '',
+              ,
+            ]}
             count={2}
             singleCheck={true}
             wrapperStyle={styles.horizontalChecbox}
@@ -228,7 +282,11 @@ const SignUpScreen = ({route}) => {
         </View>
 
         <View style={styles.formGroup}>
-          <Text style={styles.label}>Umur</Text>
+          <Text style={styles.label}>
+            {lang && lang.screen_signup && lang.screen_signup.age
+              ? lang.screen_signup.age.label
+              : ''}
+          </Text>
           <CustomMultipleChecbox
             texts={['10', '20', '30', '40', '50+']}
             count={5}
@@ -240,8 +298,16 @@ const SignUpScreen = ({route}) => {
         </View>
 
         <CustomInput
-          label="Referral Email"
-          placeholder="xrun@xrun.run"
+          label={
+            lang && lang.screen_signup && lang.screen_signup.referral
+              ? lang.screen_signup.referral.label
+              : ''
+          }
+          placeholder={
+            lang && lang.screen_signup && lang.screen_signup.referral
+              ? lang.screen_signup.referral.placeholder
+              : ''
+          }
           value={refferalEmail}
           setValue={setRefferalEmail}
           isPassword={false}
@@ -257,8 +323,13 @@ const SignUpScreen = ({route}) => {
         <View style={[styles.bottomSection]}>
           <View style={styles.additionalLogin}>
             <Text style={styles.normalText}>
-              Masukan kode referral untuk {'\n'}
-              mendapatkan bonus spesial XRUN
+              {lang && lang.screen_signup && lang.screen_signup.add_desc
+                ? lang.screen_signup.add_desc.ad1
+                : ''}{' '}
+              {'\n'}
+              {lang && lang.screen_signup && lang.screen_signup.add_desc
+                ? lang.screen_signup.add_desc.ad2
+                : ''}
             </Text>
           </View>
           <Pressable onPress={onSignUp} style={styles.buttonSignUp}>
