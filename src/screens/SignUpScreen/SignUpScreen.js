@@ -320,6 +320,11 @@ const SignUpScreen = ({route}) => {
               ? lang.screen_signup.gender.label
               : ''}
           </Text>
+          {/* halo selamat malam semua, hari ini saya memperbaiki UI pada pemilihan
+          negara, juga termasuk fungsi yang sedikit bug juga menambahkan animasi
+          loading jika data belum muncul. Lalu saya membuat region bisa dicari
+          sesuai dengan negara yang di pilih namun UI nya belum selesai, masih
+          fungsinya dulu. Terimakasih */}
           <CustomMultipleChecbox
             texts={[
               lang && lang.screen_signup && lang.screen_signup.gender
