@@ -9,6 +9,7 @@
         "success": "Berhasil"
       }
     },
+
     "screen_first": {
       "title": {
         "1": "Dapatkan Rewardnya",
@@ -26,6 +27,7 @@
       "privacy": "kebijakan privasi",
       "information": "penggunaan informasi"
     },
+
     "screen_signin": {
       "title": "Masuk Via Email",
       "subTitle": "Ayo Masuk Sekarang 'Catch Me'",
@@ -49,6 +51,7 @@
       },
       "failedLogin": "Email & Password tidak cocok"
     },
+
     "screen_signup": {
       "title": "Registrasi",
       "name": {
@@ -94,6 +97,7 @@
         "emptyArea": "Daerah harus diisi"
       }
     },
+
     "screen_emailAuth": {
       "email": {
         "label": "Masukan Email anda",
@@ -104,11 +108,18 @@
         "invalidEmail": "Email anda tidak valid"
       }
     },
+
     "screen_emailVerification": {
       "email": {
         "label": "Masukan kode verifikasi 6 digit"
       },
       "timer": "kirim ulang"
+    },
+
+    "screen_country": {
+      "title": "Pemilihan Negara",
+      "current_country": "Lokasi Sekarang",
+      "placeholder": "Silakan cari negara anda"
     }
   },
 
@@ -122,6 +133,7 @@
         "success": "Success"
       }
     },
+
     "screen_first": {
       "title": {
         "1": "Get Your Rewards",
@@ -139,6 +151,7 @@
       "privacy": "privacy policy",
       "information": "information use"
     },
+
     "screen_signin": {
       "title": "Login Via E-mail",
       "subTitle": "Let's Login Quickly 'Catch Me'",
@@ -162,6 +175,7 @@
       },
       "failedLogin": "Invalid Email & Password"
     },
+
     "screen_signup": {
       "title": "Registration",
       "name": {
@@ -207,6 +221,7 @@
         "emptyArea": "Area must be filled"
       }
     },
+
     "screen_emailAuth": {
       "email": {
         "label": "Enter your Email",
@@ -223,6 +238,12 @@
         "label": "Enter 6-digit Verification Code"
       },
       "timer": "resend"
+    },
+
+    "screen_country": {
+      "title": "Country Selection",
+      "current_country": "Current Location",
+      "placeholder": "Search for a country"
     }
   }
 }

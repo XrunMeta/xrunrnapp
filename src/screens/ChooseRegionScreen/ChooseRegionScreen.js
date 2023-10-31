@@ -12,8 +12,12 @@ import React, {useState, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import CustomListItem from '../../components/CustomButton/CustomListItem';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const langData = require('../../../lang.json');
 
 const ChooseRegionScreen = ({route}) => {
+  const [lang, setLang] = useState({});
   const navigation = useNavigation();
   const {flag, countryCode, country} = route.params || {};
   const [isLoading, setIsLoading] = useState(true);
@@ -30,6 +34,7 @@ const ChooseRegionScreen = ({route}) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
+    // Get Country List
     fetch('https://app.xrun.run/gateway.php?act=countries')
       .then(response => response.json())
       .then(jsonData => {
@@ -40,6 +45,24 @@ const ChooseRegionScreen = ({route}) => {
         console.error('Error fetching data:', error);
         setIsLoading(false);
       });
+
+    // Get Language
+    const getLanguage = async () => {
+      try {
+        const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+
+        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
+        const language = langData[selectedLanguage];
+        setLang(language);
+      } catch (err) {
+        console.error(
+          'Error retrieving selfCoordinate from AsyncStorage:',
+          err,
+        );
+      }
+    };
+
+    getLanguage();
   }, []);
 
   // ########## Choose Region
@@ -59,14 +82,20 @@ const ChooseRegionScreen = ({route}) => {
       <ButtonBack onClick={() => onBack(flag, countryCode, country)} />
 
       <View style={styles.titleWrapper}>
-        <Text style={styles.title}>Pemilihan Negara</Text>
+        <Text style={styles.title}>
+          {lang && lang.screen_country && lang.screen_country.title
+            ? lang.screen_country.title
+            : ''}
+        </Text>
       </View>
 
       {/* Selected Region */}
       <View style={[styles.formGroup, {marginTop: 25}]}>
         <Text
           style={[styles.mediumText, {alignSelf: 'flex-start', marginTop: 20}]}>
-          Lokasi Sekarang
+          {lang && lang.screen_country && lang.screen_country.current_country
+            ? lang.screen_country.current_country
+            : ''}
         </Text>
         <View
           style={{
@@ -98,7 +127,11 @@ const ChooseRegionScreen = ({route}) => {
       {/* Search Box */}
       <View style={styles.searchBox}>
         <TextInput
-          placeholder="Silakan cari negara anda"
+          placeholder={
+            lang && lang.screen_country && lang.screen_country.placeholder
+              ? lang.screen_country.placeholder
+              : ''
+          }
           style={[styles.mediumText, {flex: 1}]}
           value={searchText}
           onChangeText={text => setSearchText(text)}
@@ -145,7 +178,11 @@ const ChooseRegionScreen = ({route}) => {
               <CustomListItem
                 key={item.code + '-' + item.subcode}
                 text={'+' + item.callnumber + ') ' + item.country}
-                image={{uri: item.lcode}}
+                image={
+                  {uri: item.lcode}
+                    ? {uri: item.lcode}
+                    : require('../../../assets/images/icon_none.png')
+                }
                 onPress={() => chooseRegion(item)}
               />
             ))

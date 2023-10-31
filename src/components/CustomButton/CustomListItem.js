@@ -6,11 +6,7 @@ const CustomListItem = ({onPress, text, image}) => {
     <Pressable style={styles.selectItem} onPress={onPress}>
       <Image
         resizeMode="contain"
-        style={{
-          height: 50,
-          width: 40,
-          marginRight: 10,
-        }}
+        style={{height: 20, width: 45, marginRight: 10, marginVertical: 15}}
         source={image}
       />
       <Text style={styles.mediumText}>{text}</Text>
@@ -40,6 +36,7 @@ const styles = StyleSheet.create({
     color: '#343a59',
     alignSelf: 'center',
     paddingRight: 10,
+    marginBottom: -2,
   },
 });
 

@@ -30,6 +30,7 @@ const SignUpScreen = ({route}) => {
   const [isEmailValid, setIsEmailValid] = useState(true);
   const {flag, countryCode, country} = route.params || {};
   const [areaData, setAreaData] = useState([]);
+  const [filteredAreaData, setFilteredAreaData] = useState([]);
 
   const navigation = useNavigation();
 
@@ -95,6 +96,8 @@ const SignUpScreen = ({route}) => {
     }
   };
 
+  console.log(gender, ' - ', age);
+
   useEffect(() => {
     // Get Language
     const getLanguage = async () => {
@@ -119,13 +122,10 @@ const SignUpScreen = ({route}) => {
         countryCode ? countryCode : 62
       }`,
     )
-      .then(response => response.json())
-      .then(jsonData => {
-        var jsonToArr = Object.values(jsonData);
-        var arrResult = jsonToArr.flat();
-        setAreaData(arrResult);
-        // setAreaData(jsonData);
-      })
+      .then(response => setAreaData(response))
+      // .then(jsonData => {
+      //   setAreaData(jsonData);
+      // })
       .catch(error => {
         console.error('Error fetching data:', error);
       });
@@ -138,17 +138,61 @@ const SignUpScreen = ({route}) => {
         countryCode ? countryCode : 62
       }`,
     )
-      .then(response => response.json())
-      .then(jsonData => {
-        var jsonToArr = Object.values(jsonData);
-        var arrResult = jsonToArr.flat();
-        setAreaData(arrResult);
-        // setAreaData(jsonData);
+      // .then(response => response.json())
+      .then(response => {
+        setAreaData(response);
+        console.log('Respon cuy : ' + response);
       })
+      // .then(jsonData => {
+      //   setAreaData(jsonData);
+      // })
       .catch(error => {
         console.error('Error fetching data:', error);
       });
   }, [countryCode]);
+
+  console.log('Area sesuai negara : ' + areaData);
+
+  useEffect(() => {
+    console.log('Region : ' + region);
+  }, [region]);
+
+  // Fungsi untuk menangani perubahan pada input region
+  const handleRegionChange = text => {
+    setRegion(text);
+
+    // Pastikan areaData sudah terdefinisi sebelum mencoba memfilternya
+    if (Array.isArray(areaData)) {
+      // Lakukan filter pada data berdasarkan input region
+      const filteredData = areaData.filter(item => {
+        return item.description.toLowerCase().includes(text.toLowerCase());
+      });
+      setFilteredAreaData(filteredData);
+    }
+  };
+
+  // const searchFilterFunction = text => {
+  //   // Check if searched text is not blank
+  //   if (text) {
+  //     // Inserted text is not blank
+  //     // Filter the masterDataSource and update FilteredDataSource
+  //     const newData = areaData.filter(function (item) {
+  //       // Applying filter for the inserted text in search bar
+  //       const itemData = item.description
+  //         ? item.description.toUpperCase()
+  //         : ''.toUpperCase();
+  //       const textData = text.toUpperCase();
+  //       return itemData.indexOf(textData) > -1;
+  //     });
+  //     setFilteredDataSource(newData);
+  //     setSearch(text);
+  //   } else {
+  //     // Inserted text is blank
+  //     // Update FilteredDataSource with masterDataSource
+  //     setFilteredDataSource(masterDataSource);
+  //     setSearch(text);
+  //   }
+  // };
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -291,27 +335,71 @@ const SignUpScreen = ({route}) => {
               : ''
           }
           value={region}
-          setValue={setRegion}
+          // setValue={setRegion}
+          setValue={handleRegionChange}
           isPassword={false}
         />
 
-        {areaData &&
-          areaData
-            .filter(item => {
-              if (region === '') {
-                return true; // Tampilkan semua data jika tidak ada pencarian
-              }
-              return item.description
-                .toLowerCase()
-                .includes(region.toLowerCase());
-            })
-            .map((item, index) => (
+        {filteredAreaData.length > 0 && (
+          <ScrollView>
+            {filteredAreaData.map((result, index) => (
               <Pressable
                 key={index}
-                onPress={() => handleRegionSelection(item)}>
-                <Text>{item.description}</Text>
+                onPress={() => handleRegionSelection(result)}>
+                {/* Tampilkan hasil pencarian di sini, misalnya, nama region */}
+                <Text>{result.nama_region}</Text>
+                {console.log(result)}
               </Pressable>
             ))}
+          </ScrollView>
+        )}
+
+        {
+          //region.length > 0 && (
+          //   <ScrollView>
+          //     {areaData.map((result, index) => (
+          //       <Pressable
+          //         key={index}
+          //         onPress={() => handleRegionSelection(result)}>
+          //         {/* Tampilkan hasil pencarian di sini, misalnya, nama region */}
+          //         <Text>{result.nama_region}</Text>
+          //       </Pressable>
+          //     ))}
+          //   </ScrollView>
+          // )
+        }
+
+        {
+          // Array.isArray(areaData) && areaData.length > 0 ? (
+          //   <ScrollView>
+          //     {areaData.map((result, index) => (
+          //       <Pressable
+          //         key={index}
+          //         onPress={() => handleRegionSelection(result)}>
+          //         {/* Tampilkan hasil pencarian di sini, misalnya, nama region */}
+          //         <Text>{result.nama_region}</Text>
+          //         {console.log('Hasil : ' + result)}
+          //       </Pressable>
+          //     ))}
+          //   </ScrollView>
+          // ) : null
+        }
+
+        {/* {areaData
+          .filter(item => {
+            if (region === '') {
+              return true; // Tampilkan semua data jika tidak ada pencarian
+            }
+            return item.description
+              .toLowerCase()
+              .includes(region.toLowerCase());
+          })
+          .map((item, index) => (
+            <CustomListItem
+              key={item.code + '-' + item.subcode}
+              text={item.description}
+            />
+          ))} */}
 
         {/*  Field - Gender */}
         <View style={styles.formGroup}>
