@@ -6,6 +6,7 @@ import {
   Pressable,
   Image,
   TextInput,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
@@ -15,6 +16,7 @@ import CustomListItem from '../../components/CustomButton/CustomListItem';
 const ChooseRegionScreen = ({route}) => {
   const navigation = useNavigation();
   const {flag, countryCode, country} = route.params || {};
+  const [isLoading, setIsLoading] = useState(true);
 
   const onBack = (flag, cCountryCode, cCountry) => {
     navigation.navigate('SignUp', {
@@ -32,9 +34,11 @@ const ChooseRegionScreen = ({route}) => {
       .then(response => response.json())
       .then(jsonData => {
         setData(jsonData);
+        setIsLoading(false);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        setIsLoading(false);
       });
   }, []);
 
@@ -71,7 +75,7 @@ const ChooseRegionScreen = ({route}) => {
           }}>
           <Image
             resizeMode="contain"
-            style={{height: 50, width: 45, marginRight: 10}}
+            style={{height: 20, width: 45, marginRight: 10}}
             source={
               flag == undefined
                 ? {
@@ -104,7 +108,7 @@ const ChooseRegionScreen = ({route}) => {
             source={require('../../../assets/images/icon_search.png')}
             resizeMode="contain"
             style={{
-              height: 35,
+              height: 20,
             }}
           />
         </Pressable>
@@ -118,23 +122,34 @@ const ChooseRegionScreen = ({route}) => {
           paddingHorizontal: 20,
           marginVertical: 20,
         }}>
-        {data
-          .filter(item => {
-            if (searchText === '') {
-              return true; // Tampilkan semua data jika tidak ada pencarian
-            }
-            return item.country
-              .toLowerCase()
-              .includes(searchText.toLowerCase());
-          })
-          .map((item, index) => (
-            <CustomListItem
-              key={item.code + '-' + item.subcode}
-              text={'+' + item.callnumber + ') ' + item.country}
-              image={{uri: item.lcode}}
-              onPress={() => chooseRegion(item)}
-            />
-          ))}
+        {isLoading ? (
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              flex: 1,
+            }}>
+            <ActivityIndicator size="large" color="#343a59" />
+          </View>
+        ) : (
+          data
+            .filter(item => {
+              if (searchText === '') {
+                return true; // Tampilkan semua data jika tidak ada pencarian
+              }
+              return item.country
+                .toLowerCase()
+                .includes(searchText.toLowerCase());
+            })
+            .map((item, index) => (
+              <CustomListItem
+                key={item.code + '-' + item.subcode}
+                text={'+' + item.callnumber + ') ' + item.country}
+                image={{uri: item.lcode}}
+                onPress={() => chooseRegion(item)}
+              />
+            ))
+        )}
       </ScrollView>
     </View>
   );
@@ -153,7 +168,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'Poppins-Bold',
-    fontSize: 30,
+    fontSize: 22,
     color: '#343a59',
   },
   subTitle: {
@@ -217,7 +232,7 @@ const styles = StyleSheet.create({
 
   mediumText: {
     fontFamily: 'Poppins-Medium',
-    fontSize: 18,
+    fontSize: 13,
     color: '#343a59',
     alignSelf: 'center',
     paddingRight: 10,
@@ -228,7 +243,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 10,
     marginHorizontal: 20,
-    paddingVertical: 10,
+    paddingVertical: 0,
     borderRadius: 15,
     shadowColor: '#b8b8b8',
     shadowOffset: {

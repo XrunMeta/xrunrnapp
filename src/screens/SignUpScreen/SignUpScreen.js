@@ -116,8 +116,6 @@ const SignUpScreen = ({route}) => {
     getLanguage();
   }, []);
 
-  console.log(lang);
-
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={[styles.root]}>

@@ -23,7 +23,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     flexDirection: 'row',
     paddingHorizontal: 10,
-    paddingVertical: 10,
     borderRadius: 15,
     shadowColor: '#969493',
     shadowOffset: {
@@ -33,11 +32,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 15,
     elevation: 1,
-    marginVertical: 3,
+    marginVertical: 2,
   },
   mediumText: {
     fontFamily: 'Poppins-Medium',
-    fontSize: 18,
+    fontSize: 13,
     color: '#343a59',
     alignSelf: 'center',
     paddingRight: 10,
