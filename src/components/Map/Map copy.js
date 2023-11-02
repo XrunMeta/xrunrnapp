@@ -42,8 +42,7 @@ const MapComponent = ({
   const [brandLogo, setBrandLogo] = useState([]); // Save Brand Logo from BLOB API
   const [adThumbnail, setAdThumbnail] = useState([]); // Save AdThumbnail from BLOB API
   const mapRef = useRef(null);
-  const [brandLogoCachePath, setBrandLogoCachePatch] = useState('');
-  const [adThumbnailCachePath, setAdThumbnailPath] = useState('');
+  const [uniqueBrandLogos, setUniqueBrandLogos] = useState(new Set());
 
   // Blob to base64 PNG Converter
   const saveBlobAsImage = async (blob, filename) => {
@@ -51,6 +50,8 @@ const MapComponent = ({
     await RNFetchBlob.fs.writeFile(path, blob, 'base64');
     return path;
   };
+
+  const uniqueBrandLogosArr = [...uniqueBrandLogos];
 
   // 1 Time Use Effect
   useEffect(() => {
@@ -112,6 +113,14 @@ const MapComponent = ({
 
               setBrandLogo(brandLogo);
               setAdThumbnail(adThumbnail);
+
+              // Add the brand to uniqueBrandLogos if it doesn't already exist
+              if (!uniqueBrandLogos.has(item.advertisement)) {
+                setUniqueBrandLogos(
+                  prevBrandLogos =>
+                    new Set([...prevBrandLogos, item.advertisement]),
+                );
+              }
             });
           }
         }
@@ -311,97 +320,103 @@ const MapComponent = ({
           {markersData &&
             markersData.map &&
             adThumbnail &&
-            markersData.map(item => (
-              // Marker of Coin
-              <Marker
-                key={item.coin}
-                coordinate={{
-                  latitude: parseFloat(item.lat),
-                  longitude: parseFloat(item.lng),
-                }}
-                title={item.title}
-                onPress={() => {
-                  handleMarkerClick(item);
-                }}>
-                <Image
-                  source={{uri: `file://${adThumbnail}`}}
-                  style={{width: 15, height: 15}}
-                />
-                <Callout tooltip>
-                  <View
-                    style={{
-                      backgroundColor: 'white',
-                      borderColor: '#ffdc04',
-                      borderWidth: 3,
-                      flexDirection: 'row',
-                      width: 200,
-                      height: 80,
-                      paddingVertical: 5,
-                      paddingHorizontal: 10,
-                      borderTopLeftRadius: 50,
-                      borderTopRightRadius: 15,
-                      borderBottomLeftRadius: 50,
-                      borderBottomRightRadius: 15,
-                      gap: 7,
-                      elevation: 4,
-                    }}>
+            markersData.map(item => {
+              const brandLogo = uniqueBrandLogosArr.find(
+                brand => brand === item.brandlogo,
+              );
+
+              return (
+                // Marker of Coin
+                <Marker
+                  key={item.coin}
+                  coordinate={{
+                    latitude: parseFloat(item.lat),
+                    longitude: parseFloat(item.lng),
+                  }}
+                  title={item.title}
+                  onPress={() => {
+                    handleMarkerClick(item);
+                  }}>
+                  <Image
+                    source={{uri: `file://${adThumbnail}`}}
+                    style={{width: 15, height: 15}}
+                  />
+                  <Callout tooltip>
                     <View
                       style={{
-                        justifyContent: 'space-between',
-                        marginLeft: 10,
+                        backgroundColor: 'white',
+                        borderColor: '#ffdc04',
+                        borderWidth: 3,
+                        flexDirection: 'row',
+                        width: 200,
+                        height: 80,
+                        paddingVertical: 5,
+                        paddingHorizontal: 10,
+                        borderTopLeftRadius: 50,
+                        borderTopRightRadius: 15,
+                        borderBottomLeftRadius: 50,
+                        borderBottomRightRadius: 15,
+                        gap: 7,
+                        elevation: 4,
                       }}>
-                      <Text
+                      <View
+                        style={{
+                          justifyContent: 'space-between',
+                          marginLeft: 10,
+                        }}>
+                        <Text
+                          style={{
+                            flex: 1,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            textAlign: 'center',
+                            marginTop: -10,
+                          }}>
+                          <Image
+                            source={{uri: `file://${brandLogo}`}}
+                            style={{
+                              width: 37,
+                              height: 37,
+                            }}
+                            onError={err => console.log('Error Bgst! : ', err)}
+                          />
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 11,
+                            fontFamily: 'Poppins-Medium',
+                          }}>
+                          {item.distance}m
+                        </Text>
+                      </View>
+                      <View
                         style={{
                           flex: 1,
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          textAlign: 'center',
-                          marginTop: -10,
+                          justifyContent: 'space-between',
                         }}>
-                        <Image
-                          source={{uri: `file://${brandLogo}`}}
+                        <Text
                           style={{
-                            width: 37,
-                            height: 37,
-                          }}
-                          onError={err => console.log('Error Bgst! : ', err)}
-                        />
-                      </Text>
-                      <Text
-                        style={{
-                          fontSize: 11,
-                          fontFamily: 'Poppins-Medium',
-                        }}>
-                        {item.distance}m
-                      </Text>
+                            fontSize: 11,
+                            fontFamily: 'Poppins-Medium',
+                            marginTop: 3,
+                          }}>
+                          There is an {item.brand} {'\n'}with {item.brand}.
+                        </Text>
+                        <Text
+                          style={{
+                            fontSize: 18,
+                            fontFamily: 'Poppins-SemiBold',
+                            marginBottom: -5,
+                            color: 'black',
+                          }}>
+                          {item.coins} {item.brand}
+                        </Text>
+                      </View>
                     </View>
-                    <View
-                      style={{
-                        flex: 1,
-                        justifyContent: 'space-between',
-                      }}>
-                      <Text
-                        style={{
-                          fontSize: 11,
-                          fontFamily: 'Poppins-Medium',
-                          marginTop: 3,
-                        }}>
-                        There is an {item.brand} {'\n'}with {item.brand}.
-                      </Text>
-                      <Text
-                        style={{
-                          fontSize: 18,
-                          fontFamily: 'Poppins-SemiBold',
-                          marginBottom: -5,
-                          color: 'black',
-                        }}>
-                        {item.coins} {item.brand}
-                      </Text>
-                    </View>
-                  </View>
-                </Callout>
-              </Marker>
-            ))}
+                  </Callout>
+                </Marker>
+              );
+            })}
         </MapView>
       )}
     </View>

@@ -21,8 +21,10 @@ const langData = require('../../../lang.json');
 const SignInScreen = () => {
   const [lang, setLang] = useState({});
   const {isLoggedIn, login} = useAuth();
-  const [email, setEmail] = useState('ggg@hhh.com');
-  const [password, setPassword] = useState('111!!!aaaAAA');
+  // const [email, setEmail] = useState('ggg@hhh.com');
+  // const [password, setPassword] = useState('111!!!aaaAAA');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(true);
 
   const navigation = useNavigation();

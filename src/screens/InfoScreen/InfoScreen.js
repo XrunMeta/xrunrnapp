@@ -71,7 +71,14 @@ const InfoScreen = () => {
         onPress: () => console.log('Cancel Pressed'),
         style: 'cancel',
       },
-      {text: 'OK', onPress: () => logout()},
+      {
+        text: 'OK',
+        onPress: () => {
+          logout();
+          // Go to First Screen
+          // navigation.navigate('First');
+        },
+      },
     ]);
   };
 
