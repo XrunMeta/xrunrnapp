@@ -7,6 +7,7 @@ import {
   Image,
   Alert,
   TextInput,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput';
@@ -30,6 +31,7 @@ const SignUpScreen = ({route}) => {
   const [isEmailValid, setIsEmailValid] = useState(true);
   const {flag, countryCode, country} = route.params || {};
   const [areaData, setAreaData] = useState([]);
+  const [isListWrapperVisible, setIsListWrapperVisible] = useState(false);
 
   const navigation = useNavigation();
 
@@ -150,6 +152,92 @@ const SignUpScreen = ({route}) => {
       });
   }, [countryCode]);
 
+  // ListWrapper
+  const ListWrapper = ({onClose}) => {
+    return (
+      <TouchableWithoutFeedback
+        onPress={() => {
+          setIsListWrapperVisible(false);
+          onClose();
+        }}
+        style={{
+          flex: 1,
+        }}>
+        <View
+          style={{
+            flex: 1,
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+          }}>
+          <ScrollView
+            style={{
+              position: 'absolute',
+              top: '56.5%', // Sesuaikan sesuai kebutuhan
+              left: 0,
+              right: 0,
+              backgroundColor: 'white',
+              borderWidth: 1,
+              borderColor: '#ccc',
+              borderRadius: 5,
+              maxHeight: 155, // Sesuaikan sesuai kebutuhan
+              overflowY: 'auto',
+              elevation: 4,
+              padding: 5,
+              marginHorizontal: 25,
+            }}>
+            {areaData
+              .filter(item => {
+                return item.description
+                  .toLowerCase()
+                  .includes(region.toLowerCase());
+              })
+              .map((item, index) => (
+                <Pressable
+                  style={{
+                    borderBottomWidth: 1,
+                    borderBottomColor: '#dbdbdb',
+                    paddingTop: 5,
+                    paddingBottom: 2,
+                    marginHorizontal: 5,
+                  }}
+                  key={index}
+                  onPress={() => {
+                    setRegion(item.description);
+                    setIsListWrapperVisible(false);
+                  }}>
+                  {console.log(item.description)}
+                  <Text style={styles.normalText}>{item.description}</Text>
+                </Pressable>
+              ))}
+          </ScrollView>
+        </View>
+      </TouchableWithoutFeedback>
+    );
+  };
+
+  const closeButton = () => {
+    setIsListWrapperVisible(false);
+  };
+
+  useEffect(() => {
+    if (region !== '') {
+      setIsListWrapperVisible(true);
+    } else {
+      setIsListWrapperVisible(false);
+    }
+  }, [region]);
+
+  useEffect(() => {
+    if (region.trim() !== '') {
+      setIsListWrapperVisible(true);
+    } else {
+      setIsListWrapperVisible(false);
+    }
+  }, [region]);
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={[styles.root]}>
@@ -268,13 +356,16 @@ const SignUpScreen = ({route}) => {
                   color: '#a8a8a7',
                   alignSelf: 'center',
                   paddingRight: 10,
-                }}
-                value={phoneNumber}
-                setValue={setPhoneNumber}>
+                }}>
                 +{countryCode == undefined ? '62' : countryCode}
               </Text>
             </Pressable>
-            <TextInput keyboardType="numeric" style={styles.input} />
+            <TextInput
+              keyboardType="numeric"
+              style={styles.input}
+              setValue={setPhoneNumber}
+              onChangeText={text => setPhoneNumber(text)}
+            />
           </View>
         </View>
 
@@ -295,36 +386,15 @@ const SignUpScreen = ({route}) => {
           isPassword={false}
         />
 
-        {areaData &&
-          areaData
-            .filter(item => {
-              if (region === '') {
-                return true; // Tampilkan semua data jika tidak ada pencarian
-              }
-              return item.description
-                .toLowerCase()
-                .includes(region.toLowerCase());
-            })
-            .map((item, index) => (
-              <Pressable
-                key={index}
-                onPress={() => handleRegionSelection(item)}>
-                <Text>{item.description}</Text>
-              </Pressable>
-            ))}
+        {isListWrapperVisible && <ListWrapper onClose={closeButton} />}
 
         {/*  Field - Gender */}
-        <View style={styles.formGroup}>
+        <View style={[styles.formGroup, {zIndex: -1}]}>
           <Text style={styles.label}>
             {lang && lang.screen_signup && lang.screen_signup.gender
               ? lang.screen_signup.gender.label
               : ''}
           </Text>
-          {/* halo selamat malam semua, hari ini saya memperbaiki UI pada pemilihan
-          negara, juga termasuk fungsi yang sedikit bug juga menambahkan animasi
-          loading jika data belum muncul. Lalu saya membuat region bisa dicari
-          sesuai dengan negara yang di pilih namun UI nya belum selesai, masih
-          fungsinya dulu. Terimakasih */}
           <CustomMultipleChecbox
             texts={[
               lang && lang.screen_signup && lang.screen_signup.gender
@@ -344,7 +414,7 @@ const SignUpScreen = ({route}) => {
         </View>
 
         {/*  Field - Age */}
-        <View style={styles.formGroup}>
+        <View style={[styles.formGroup, {zIndex: -1}]}>
           <Text style={styles.label}>
             {lang && lang.screen_signup && lang.screen_signup.age
               ? lang.screen_signup.age.label

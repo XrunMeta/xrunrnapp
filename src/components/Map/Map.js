@@ -42,6 +42,7 @@ const MapComponent = ({
   const [brandLogo, setBrandLogo] = useState([]); // Save Brand Logo from BLOB API
   const [adThumbnail, setAdThumbnail] = useState([]); // Save AdThumbnail from BLOB API
   const mapRef = useRef(null);
+  const uniqueBrandLogos = new Set();
 
   // Blob to base64 PNG Converter
   const saveBlobAsImage = async (blob, filename) => {

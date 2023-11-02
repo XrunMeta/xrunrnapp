@@ -83,7 +83,7 @@ export const Navigation = () => {
 
 export const MainTabNavigator = () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer independent={true}>
       <Tab.Navigator
         initialRouteName="Home"
         screenOptions={{
