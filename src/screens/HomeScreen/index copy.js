@@ -62,12 +62,6 @@ export default function Home() {
     } else {
       offset.value = withSpring(defaultOffset); // Hide Card
     }
-
-    console.log(`
-      ShowCard?      : ${showDetail}
-      Initial Offset : ${initialOffset}
-      Default Offset : ${defaultOffset}
-    `);
   }, [showDetail]);
 
   // Button Collapse Slider Card
@@ -130,7 +124,7 @@ export default function Home() {
             />
           </View>
 
-          {/* <LinearGradient
+          <LinearGradient
             colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']}
             start={{x: 0, y: 0}} // From Gradien
             end={{x: 0, y: 1}} // To Gradien
@@ -139,12 +133,9 @@ export default function Home() {
               justifyContent: 'space-between',
               paddingHorizontal: 20,
               flexDirection: 'row',
-              position: 'absolute',
-              left: 0,
-              right: 0,
-              bottom: 90, // Atur bottom ke 0 untuk selalu menempel ke bawah
+              marginBottom: -40,
               height: 170,
-              pointerEvents: 'none',
+              bottom: 0,
             }}>
             <View style={{marginBottom: -20, backgroundColor: 'pink'}}>
               <Text
@@ -213,103 +204,7 @@ export default function Home() {
                 </Text>
               </View>
             </View>
-          </LinearGradient> */}
-
-          <Animated.View
-            style={[
-              {
-                position: 'absolute',
-                bottom: 20,
-                left: 0,
-                right: 0,
-              },
-              animatedStyles,
-            ]}>
-            <LinearGradient
-              colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']}
-              start={{x: 0, y: 0}} // From Gradien
-              end={{x: 0, y: 1}} // To Gradien
-              style={{
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingHorizontal: 20,
-                flexDirection: 'row',
-                position: 'absolute',
-                left: 0,
-                right: 0,
-                bottom: 90, // Atur bottom ke 0 untuk selalu menempel ke bawah
-                height: 170,
-                pointerEvents: 'none',
-              }}>
-              <View style={{marginBottom: -20}}>
-                <Text
-                  style={{
-                    fontFamily: 'Poppins-Medium',
-                    fontSize: 10,
-                    color: 'white',
-                  }}>
-                  Within a radius of 1000 meters
-                </Text>
-                <Text
-                  style={{
-                    fontFamily: 'Poppins-Medium',
-                    fontSize: 11,
-                    color: 'white',
-                  }}>
-                  There are{' '}
-                  <Text
-                    style={{
-                      fontFamily: 'Poppins-Bold',
-                    }}>
-                    {brandCount} XRUN
-                  </Text>{' '}
-                  dan{' '}
-                  <Text
-                    style={{
-                      fontFamily: 'Poppins-Bold',
-                    }}>
-                    {markerCount} BIG XRUN{' '}
-                  </Text>
-                  {'\n'}
-                  bisa didapatkan
-                </Text>
-              </View>
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: 'flex-end',
-                  marginBottom: -20,
-                }}>
-                <Text
-                  style={{
-                    fontFamily: 'Poppins-Medium',
-                    fontSize: 11,
-                    color: 'white',
-                  }}>
-                  XRUN Event
-                </Text>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    gap: 3,
-                  }}>
-                  <Image
-                    source={require('../../../assets/images/icon_diamond_white.png')}
-                    style={{height: 15, tintColor: '#ffdc04'}}
-                    resizeMode="contain"
-                  />
-                  <Text
-                    style={{
-                      fontFamily: 'Poppins-SemiBold',
-                      fontSize: 11,
-                      color: '#ffdc04',
-                    }}>
-                    Diamond {bigCoin}
-                  </Text>
-                </View>
-              </View>
-            </LinearGradient>
-          </Animated.View>
+          </LinearGradient>
           {/* Card Information */}
           <Animated.View
             style={[
@@ -323,7 +218,8 @@ export default function Home() {
             ]}>
             <View
               style={{
-                backgroundColor: '#e4e8e8',
+                // backgroundColor: '#e4e8e8',
+                backgroundColor: 'red',
                 paddingHorizontal: 20,
                 paddingVertical: 15,
                 borderTopStartRadius: 30,
