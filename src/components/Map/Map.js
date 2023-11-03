@@ -192,7 +192,7 @@ const MapComponent = ({
     };
 
     // Get Update for Coordinate
-    getCurrentLocation();
+    // getCurrentLocation();
   });
 
   // As 'pin' change useEffect
@@ -310,7 +310,7 @@ const MapComponent = ({
           showsUserLocation={true}
           showsMyLocationButton={false}>
           {/* <Circle center={pin} radius={100} /> */}
-          {/* {markersData &&
+          {markersData &&
             markersData.map &&
             adThumbnail &&
             markersData.map(item => (
@@ -405,7 +405,7 @@ const MapComponent = ({
                   </View>
                 </Callout>
               </Marker>
-            ))} */}
+            ))}
         </MapView>
       )}
     </View>
