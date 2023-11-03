@@ -89,29 +89,48 @@ export default function Home() {
             colors={['rgba(0, 0, 0, 1)', 'rgba(0, 0, 0, 0)']}
             start={{x: 0, y: -0.5}} // From Gradien
             end={{x: 0, y: 1}} // To Gradien
-            style={{...styles.navWrapper, pointerEvents: 'none'}}>
+            style={{
+              pointerEvents: 'none',
+              position: 'absolute',
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              paddingHorizontal: 20,
+              paddingVertical: 5,
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              height: 50,
+              zIndex: 1,
+              top: 0,
+              right: 0,
+              left: 0,
+            }}
+          />
+          {/* <View style={styles.navWrapper}> */}
+          <Image
+            source={require('../../../assets/images/logoMain_XRUN_White.png')}
+            resizeMode="contain"
+            style={{
+              width: 75,
+              height: 35,
+              zIndex: 1,
+              marginHorizontal: 15,
+              marginVertical: 5,
+            }}
+          />
+          <Pressable style={styles.mapPointButton} onPress={getBackToPoint}>
             <Image
-              source={require('../../../assets/images/logoMain_XRUN_White.png')}
+              source={require('../../../assets/images/icon_mapPoint.png')}
               resizeMode="contain"
               style={{
-                width: 75,
-                height: 35,
+                flex: 1,
+                margin: 'auto',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 23,
               }}
             />
-            <Pressable style={styles.mapPointButton} onPress={getBackToPoint}>
-              <Image
-                source={require('../../../assets/images/icon_mapPoint.png')}
-                resizeMode="contain"
-                style={{
-                  flex: 1,
-                  margin: 'auto',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 23,
-                }}
-              />
-            </Pressable>
-          </LinearGradient>
+          </Pressable>
+          {/* </View> */}
 
           {/* Map View */}
           <View style={styles.container}>
@@ -359,11 +378,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 50,
     zIndex: 1,
+    backgroundColor: 'pink',
   },
   mapPointButton: {
     alignItems: 'center',
+    position: 'absolute',
+    width: 60,
+    height: 35,
+    zIndex: 1,
     padding: 10,
-    marginRight: -16,
+    marginVertical: 5,
+    right: 0,
   },
   container: {
     position: 'absolute',
