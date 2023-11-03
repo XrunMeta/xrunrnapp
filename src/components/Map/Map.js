@@ -17,6 +17,7 @@ import Geolocation from 'react-native-geolocation-service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {fetchMarkerData} from './APIGetMarker';
 import RNFetchBlob from 'rn-fetch-blob';
+import logoMarker from '../../../assets/images/logo_xrun.png';
 
 // ########## Main Component ##########
 const MapComponent = ({
@@ -70,6 +71,7 @@ const MapComponent = ({
             coordinate.latitude,
             coordinate.longitude,
           );
+          console.log('Datanya : ' + JSON.stringify(data.data));
 
           if (data) {
             setMarkersData(data.data);
@@ -99,20 +101,20 @@ const MapComponent = ({
             bigCoinCount(getBigCoin);
 
             // Save BLOB to State
-            data.data.map(async item => {
-              const brandLogo = await saveBlobAsImage(
-                item.brandlogo,
-                `${item.coin}.png`,
-              );
+            // data.data.map(async item => {
+            //   const brandLogo = await saveBlobAsImage(
+            //     item.brandlogo,
+            //     `${item.coin}.png`,
+            //   );
 
-              const adThumbnail = await saveBlobAsImage(
-                item.adthumbnail2,
-                `${item.coin}.png`,
-              );
+            //   const adThumbnail = await saveBlobAsImage(
+            //     item.adthumbnail2,
+            //     `${item.coin}.png`,
+            //   );
 
-              setBrandLogo(brandLogo);
-              setAdThumbnail(adThumbnail);
-            });
+            //   setBrandLogo(brandLogo);
+            //   setAdThumbnail(adThumbnail);
+            // });
           }
         }
       } catch (err) {
@@ -307,8 +309,8 @@ const MapComponent = ({
           }}
           showsUserLocation={true}
           showsMyLocationButton={false}>
-          <Circle center={pin} radius={500} />
-          {markersData &&
+          {/* <Circle center={pin} radius={100} /> */}
+          {/* {markersData &&
             markersData.map &&
             adThumbnail &&
             markersData.map(item => (
@@ -324,7 +326,8 @@ const MapComponent = ({
                   handleMarkerClick(item);
                 }}>
                 <Image
-                  source={{uri: `file://${adThumbnail}`}}
+                  // source={{uri: `file://${adThumbnail}`}}
+                  source={logoMarker}
                   style={{width: 15, height: 15}}
                 />
                 <Callout tooltip>
@@ -359,7 +362,8 @@ const MapComponent = ({
                           marginTop: -10,
                         }}>
                         <Image
-                          source={{uri: `file://${brandLogo}`}}
+                          // source={{uri: `file://${brandLogo}`}}
+                          source={logoMarker}
                           style={{
                             width: 37,
                             height: 37,
@@ -401,7 +405,7 @@ const MapComponent = ({
                   </View>
                 </Callout>
               </Marker>
-            ))}
+            ))} */}
         </MapView>
       )}
     </View>
