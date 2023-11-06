@@ -315,7 +315,7 @@ const MapComponent = ({
                   fontSize: 11,
                   fontFamily: 'Poppins-Medium',
                 }}>
-                {currentRange.toFixed(2)}m
+                {item.distance}m
               </Text>
             </View>
             <View
