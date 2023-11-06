@@ -17,6 +17,9 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import MapComponent from '../../components/Map/Map';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const langData = require('../../../lang.json');
 
 // Offset Value of Slider Card
 const initialOffset = 110;
@@ -24,6 +27,7 @@ const defaultOffset = 20;
 
 // ########## Main Component ##########
 export default function Home() {
+  const [lang, setLang] = useState({});
   const {isLoggedIn} = useAuth(); // Login Checker
   const [showDetail, setShowDetail] = useState(false); // Slider Card Bool
   const offset = useSharedValue(initialOffset); // Slider Card Animation
@@ -62,6 +66,12 @@ export default function Home() {
     } else {
       offset.value = withSpring(defaultOffset); // Hide Card
     }
+
+    console.log(`
+      ShowCard?      : ${showDetail}
+      Initial Offset : ${initialOffset}
+      Default Offset : ${defaultOffset}
+    `);
   }, [showDetail]);
 
   // Button Collapse Slider Card
@@ -74,6 +84,26 @@ export default function Home() {
     setShouldResetMap(true);
   };
 
+  useEffect(() => {
+    // Get Language
+    const getLanguage = async () => {
+      try {
+        const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+
+        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
+        const language = langData[selectedLanguage];
+        setLang(language);
+      } catch (err) {
+        console.error(
+          'Error retrieving selfCoordinate from AsyncStorage:',
+          err,
+        );
+      }
+    };
+
+    getLanguage();
+  }, []);
+
   return (
     <SafeAreaView style={{flex: 1}}>
       {isLoggedIn ? (
@@ -83,29 +113,48 @@ export default function Home() {
             colors={['rgba(0, 0, 0, 1)', 'rgba(0, 0, 0, 0)']}
             start={{x: 0, y: -0.5}} // From Gradien
             end={{x: 0, y: 1}} // To Gradien
-            style={{...styles.navWrapper, pointerEvents: 'none'}}>
+            style={{
+              pointerEvents: 'none',
+              position: 'absolute',
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              paddingHorizontal: 20,
+              paddingVertical: 5,
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              height: 50,
+              zIndex: 1,
+              top: 0,
+              right: 0,
+              left: 0,
+            }}
+          />
+          {/* <View style={styles.navWrapper}> */}
+          <Image
+            source={require('../../../assets/images/logoMain_XRUN_White.png')}
+            resizeMode="contain"
+            style={{
+              width: 75,
+              height: 35,
+              zIndex: 1,
+              marginHorizontal: 15,
+              marginVertical: 5,
+            }}
+          />
+          <Pressable style={styles.mapPointButton} onPress={getBackToPoint}>
             <Image
-              source={require('../../../assets/images/logoMain_XRUN_White.png')}
+              source={require('../../../assets/images/icon_mapPoint.png')}
               resizeMode="contain"
               style={{
-                width: 75,
-                height: 35,
+                flex: 1,
+                margin: 'auto',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 23,
               }}
             />
-            <Pressable style={styles.mapPointButton} onPress={getBackToPoint}>
-              <Image
-                source={require('../../../assets/images/icon_mapPoint.png')}
-                resizeMode="contain"
-                style={{
-                  flex: 1,
-                  margin: 'auto',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 23,
-                }}
-              />
-            </Pressable>
-          </LinearGradient>
+          </Pressable>
+          {/* </View> */}
 
           {/* Map View */}
           <View style={styles.container}>
@@ -114,6 +163,7 @@ export default function Home() {
               clickedRange={distance => {
                 let fixedDistance = (distance * 1000).toFixed(2);
                 setRangeToMarker(fixedDistance);
+                // console.log('Di klik dg jarak : ' + distance);
               }}
               markerCount={marker => setMarkerCount(marker)}
               brandCount={brandcount => setBrandCount(brandcount)}
@@ -121,90 +171,131 @@ export default function Home() {
               degToTarget={deg => setDegToTarget(deg)}
               shouldResetMap={shouldResetMap}
               onResetMap={() => setShouldResetMap(false)}
+              lang={lang}
             />
           </View>
 
-          <LinearGradient
-            colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']}
-            start={{x: 0, y: 0}} // From Gradien
-            end={{x: 0, y: 1}} // To Gradien
-            style={{
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingHorizontal: 20,
-              flexDirection: 'row',
-              marginBottom: -40,
-              height: 170,
-              bottom: 0,
-            }}>
-            <View style={{marginBottom: -20, backgroundColor: 'pink'}}>
-              <Text
-                style={{
-                  fontFamily: 'Poppins-Medium',
-                  fontSize: 10,
-                  color: 'white',
-                }}>
-                Within a radius of 1000 meters
-              </Text>
-              <Text
-                style={{
-                  fontFamily: 'Poppins-Medium',
-                  fontSize: 11,
-                  color: 'white',
-                }}>
-                There are{' '}
-                <Text
-                  style={{
-                    fontFamily: 'Poppins-Bold',
-                  }}>
-                  {brandCount} XRUN
-                </Text>{' '}
-                dan{' '}
-                <Text
-                  style={{
-                    fontFamily: 'Poppins-Bold',
-                  }}>
-                  {markerCount} BIG XRUN{' '}
-                </Text>
-                {'\n'}
-                bisa didapatkan
-              </Text>
-            </View>
-            <View
+          {/* XRUN Amount that Shown on Map Screen */}
+          <Animated.View
+            style={[
+              {
+                position: 'absolute',
+                bottom: 20,
+                left: 0,
+                right: 0,
+              },
+              animatedStyles,
+            ]}>
+            <LinearGradient
+              colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.8)']}
+              start={{x: 0, y: 0}} // From Gradien
+              end={{x: 0, y: 1}} // To Gradien
               style={{
-                flex: 1,
-                alignItems: 'flex-end',
-                marginBottom: -20,
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingHorizontal: 20,
+                flexDirection: 'row',
+                position: 'absolute',
+                left: 0,
+                right: 0,
+                bottom: 95, // Atur bottom ke 0 untuk selalu menempel ke bawah
+                height: 170,
+                pointerEvents: 'none',
               }}>
-              <Text
-                style={{
-                  fontFamily: 'Poppins-Medium',
-                  fontSize: 11,
-                  color: 'white',
-                }}>
-                XRUN Event
-              </Text>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  gap: 3,
-                }}>
-                <Image
-                  source={require('../../../assets/images/icon_diamond_white.png')}
-                  style={{height: 15, tintColor: '#ffdc04'}}
-                  resizeMode="contain"
-                />
+              <View style={{marginBottom: -20}}>
                 <Text
                   style={{
-                    fontFamily: 'Poppins-SemiBold',
-                    fontSize: 11,
-                    color: '#ffdc04',
+                    fontFamily: 'Poppins-Medium',
+                    fontSize: 10.5,
+                    color: 'white',
                   }}>
-                  Diamond {bigCoin}
+                  {lang &&
+                  lang.screen_map &&
+                  lang.screen_map.section_card_shadow
+                    ? lang.screen_map.section_card_shadow.radius
+                    : ''}
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: 'Poppins-Medium',
+                    fontSize: 13,
+                    color: 'white',
+                  }}>
+                  {lang &&
+                  lang.screen_map &&
+                  lang.screen_map.section_card_shadow
+                    ? lang.screen_map.section_card_shadow.amount + ' '
+                    : ''}
+                  <Text
+                    style={{
+                      fontFamily: 'Poppins-Bold',
+                    }}>
+                    {brandCount} XRUN
+                  </Text>{' '}
+                  {lang &&
+                  lang.screen_map &&
+                  lang.screen_map.section_card_shadow
+                    ? lang.screen_map.section_card_shadow.and + ' '
+                    : ''}
+                  <Text
+                    style={{
+                      fontFamily: 'Poppins-Bold',
+                    }}>
+                    {markerCount} BIG XRUN{' '}
+                  </Text>
+                  {'\n'}
+                  {lang &&
+                  lang.screen_map &&
+                  lang.screen_map.section_card_shadow
+                    ? lang.screen_map.section_card_shadow.getable
+                    : ''}
                 </Text>
               </View>
-            </View>
-          </LinearGradient>
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: 'flex-end',
+                  marginBottom: -38,
+                }}>
+                <Text
+                  style={{
+                    fontFamily: 'Poppins-Medium',
+                    fontSize: 13,
+                    color: 'white',
+                  }}>
+                  {lang &&
+                  lang.screen_map &&
+                  lang.screen_map.section_card_shadow
+                    ? lang.screen_map.section_card_shadow.event
+                    : ''}
+                </Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                  }}>
+                  <Image
+                    source={require('../../../assets/images/icon_diamond_white.png')}
+                    style={{height: 13, tintColor: '#ffdc04'}}
+                    resizeMode="contain"
+                  />
+                  <Text
+                    style={{
+                      fontFamily: 'Poppins-Bold',
+                      fontSize: 13,
+                      color: '#ffdc04',
+                      marginTop: -4,
+                    }}>
+                    {lang &&
+                    lang.screen_map &&
+                    lang.screen_map.section_card_shadow
+                      ? lang.screen_map.section_card_shadow.diamond + ' '
+                      : ''}
+                    {bigCoin}
+                  </Text>
+                </View>
+              </View>
+            </LinearGradient>
+          </Animated.View>
           {/* Card Information */}
           <Animated.View
             style={[
@@ -218,8 +309,7 @@ export default function Home() {
             ]}>
             <View
               style={{
-                // backgroundColor: '#e4e8e8',
-                backgroundColor: 'red',
+                backgroundColor: '#e4e8e8',
                 paddingHorizontal: 20,
                 paddingVertical: 15,
                 borderTopStartRadius: 30,
@@ -261,8 +351,8 @@ export default function Home() {
                   style={[
                     {
                       marginRight: 10,
-                      height: 25,
-                      width: 25,
+                      height: 20,
+                      width: 20,
                     },
                     arrowStyle,
                   ]}
@@ -273,9 +363,17 @@ export default function Home() {
                   }}>
                   <Text style={styles.subTitle}>{rangeToMarker || 0}m</Text>
                   <Text style={styles.desc}>
-                    There is a XRUN of{' '}
-                    <Text style={{fontFamily: 'Poppins-Bold'}}>XRUN</Text> that
-                    can be acquired.
+                    {lang &&
+                    lang.screen_map &&
+                    lang.screen_map.section_slider_card
+                      ? lang.screen_map.section_slider_card.desc1 + ' '
+                      : ''}
+                    <Text style={{fontFamily: 'Poppins-Bold'}}>XRUN</Text>{' '}
+                    {lang &&
+                    lang.screen_map &&
+                    lang.screen_map.section_slider_card
+                      ? lang.screen_map.section_slider_card.desc2
+                      : ''}
                   </Text>
                 </View>
                 <Image
@@ -316,17 +414,18 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'Poppins-Bold',
-    fontSize: 30,
+    fontSize: 22,
     color: '#343a59',
   },
   subTitle: {
     fontFamily: 'Poppins-SemiBold',
-    fontSize: 18,
+    fontSize: 22,
     color: '#343a59',
+    marginBottom: -9,
   },
   desc: {
     fontFamily: 'Poppins-Medium',
-    fontSize: 11,
+    fontSize: 13,
     color: '#343a59',
   },
   navWrapper: {
@@ -339,11 +438,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 50,
     zIndex: 1,
+    backgroundColor: 'pink',
   },
   mapPointButton: {
     alignItems: 'center',
+    position: 'absolute',
+    width: 60,
+    height: 35,
+    zIndex: 1,
     padding: 10,
-    marginRight: -16,
+    marginVertical: 5,
+    right: 0,
   },
   container: {
     position: 'absolute',

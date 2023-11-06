@@ -70,7 +70,7 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {AntDesign} from '@expo/vector-icons'; // Anda dapat mengganti ini dengan ikon-ikon yang Anda inginkan
-import HomeScreen from '../screens/HomeScreen/';
+import HomeScreen from '../screens/HomeScreen';
 import FirstScreen from '../screens/FirstScreen/';
 
 const Tab = createBottomTabNavigator();

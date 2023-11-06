@@ -17,6 +17,7 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import MapComponent from '../../components/Map/Map';
+import {fetchMarkerData} from '../../components/Map/APIGetMarker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const langData = require('../../../lang.json');
@@ -163,7 +164,7 @@ export default function Home() {
               clickedRange={distance => {
                 let fixedDistance = (distance * 1000).toFixed(2);
                 setRangeToMarker(fixedDistance);
-                console.log('Di klik dg jarak : ' + distance);
+                // console.log('Di klik dg jarak : ' + distance);
               }}
               markerCount={marker => setMarkerCount(marker)}
               brandCount={brandcount => setBrandCount(brandcount)}
@@ -326,9 +327,12 @@ export default function Home() {
                 style={{
                   alignItems: 'center',
                   justifyContent: 'center',
-                  marginTop: -20,
-                  marginBottom: 5,
+                  marginTop: -30,
+                  marginBottom: -20,
                   paddingHorizontal: 90,
+                  paddingBottom: 20,
+                  paddingTop: 15,
+                  zIndex: 1,
                 }}>
                 <Image
                   source={require('../../../assets/images/icon_bottom.png')}

@@ -17,6 +17,7 @@ import Geolocation from 'react-native-geolocation-service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {fetchMarkerData} from './APIGetMarker';
 import RNFetchBlob from 'rn-fetch-blob';
+import logoMarker from '../../../assets/images/logo_xrun.png';
 
 // ########## Main Component ##########
 const MapComponent = ({
@@ -28,6 +29,7 @@ const MapComponent = ({
   degToTarget, // Get Degrees from User Coordinate -> Target Coordinate
   shouldResetMap,
   onResetMap,
+  lang,
 }) => {
   const [pin, setPin] = useState({
     latitude: 37.4226711,
@@ -42,7 +44,8 @@ const MapComponent = ({
   const [brandLogo, setBrandLogo] = useState([]); // Save Brand Logo from BLOB API
   const [adThumbnail, setAdThumbnail] = useState([]); // Save AdThumbnail from BLOB API
   const mapRef = useRef(null);
-  const [uniqueBrandLogos, setUniqueBrandLogos] = useState(new Set());
+  const [brandLogoCachePath, setBrandLogoCachePatch] = useState('');
+  const [adThumbnailCachePath, setAdThumbnailPath] = useState('');
 
   // Blob to base64 PNG Converter
   const saveBlobAsImage = async (blob, filename) => {
@@ -50,8 +53,6 @@ const MapComponent = ({
     await RNFetchBlob.fs.writeFile(path, blob, 'base64');
     return path;
   };
-
-  const uniqueBrandLogosArr = [...uniqueBrandLogos];
 
   // 1 Time Use Effect
   useEffect(() => {
@@ -100,28 +101,20 @@ const MapComponent = ({
             bigCoinCount(getBigCoin);
 
             // Save BLOB to State
-            data.data.map(async item => {
-              const brandLogo = await saveBlobAsImage(
-                item.brandlogo,
-                `${item.coin}.png`,
-              );
+            // data.data.map(async item => {
+            //   const brandLogo = await saveBlobAsImage(
+            //     item.brandlogo,
+            //     `${item.coin}.png`,
+            //   );
 
-              const adThumbnail = await saveBlobAsImage(
-                item.adthumbnail2,
-                `${item.coin}.png`,
-              );
+            //   const adThumbnail = await saveBlobAsImage(
+            //     item.adthumbnail2,
+            //     `${item.coin}.png`,
+            //   );
 
-              setBrandLogo(brandLogo);
-              setAdThumbnail(adThumbnail);
-
-              // Add the brand to uniqueBrandLogos if it doesn't already exist
-              if (!uniqueBrandLogos.has(item.advertisement)) {
-                setUniqueBrandLogos(
-                  prevBrandLogos =>
-                    new Set([...prevBrandLogos, item.advertisement]),
-                );
-              }
-            });
+            //   setBrandLogo(brandLogo);
+            //   setAdThumbnail(adThumbnail);
+            // });
           }
         }
       } catch (err) {
@@ -199,7 +192,7 @@ const MapComponent = ({
     };
 
     // Get Update for Coordinate
-    getCurrentLocation();
+    // getCurrentLocation();
   });
 
   // As 'pin' change useEffect
@@ -221,6 +214,11 @@ const MapComponent = ({
           pinTarget.latitude,
           pinTarget.longitude,
         );
+
+        console.log(`
+        Latitude : ${position.coords.latitude}
+        Longitude : ${position.coords.longitude}
+        `);
 
         // Set to Props
         degToTarget(deg);
@@ -294,6 +292,18 @@ const MapComponent = ({
     return deg;
   }
 
+  // Hide Default Marker Building
+  const customMapStyle = [
+    {
+      featureType: 'poi',
+      stylers: [
+        {
+          visibility: 'off',
+        },
+      ],
+    },
+  ];
+
   return (
     <View style={styles.container}>
       {loading ? (
@@ -301,7 +311,9 @@ const MapComponent = ({
           {console.log(
             `Loading = true => Lat: ${pin.latitude} & Lng: ${pin.longitude}`,
           )}
-          Loading...
+          {lang && lang.screen_map && lang.screen_map.section_marker
+            ? lang.screen_map.section_marker.loader
+            : ''}
         </Text> // Show Loading While Data is Load
       ) : (
         <MapView
@@ -314,109 +326,118 @@ const MapComponent = ({
             latitudeDelta: 0.005,
             longitudeDelta: 0.005,
           }}
+          customMapStyle={customMapStyle}
           showsUserLocation={true}
           showsMyLocationButton={false}>
-          <Circle center={pin} radius={500} />
           {markersData &&
             markersData.map &&
             adThumbnail &&
-            markersData.map(item => {
-              const brandLogo = uniqueBrandLogosArr.find(
-                brand => brand === item.brandlogo,
-              );
-
-              return (
-                // Marker of Coin
-                <Marker
-                  key={item.coin}
-                  coordinate={{
-                    latitude: parseFloat(item.lat),
-                    longitude: parseFloat(item.lng),
-                  }}
-                  title={item.title}
-                  onPress={() => {
-                    handleMarkerClick(item);
-                  }}>
-                  <Image
-                    source={{uri: `file://${adThumbnail}`}}
-                    style={{width: 15, height: 15}}
-                  />
-                  <Callout tooltip>
+            markersData.map(item => (
+              // Marker of Coin
+              <Marker
+                key={item.coin}
+                coordinate={{
+                  latitude: parseFloat(item.lat),
+                  longitude: parseFloat(item.lng),
+                }}
+                title={item.title}
+                onPress={() => {
+                  handleMarkerClick(item);
+                  console.log('Marker di klik => ' + JSON.stringify(item));
+                }}>
+                <Image
+                  // source={{uri: `file://${adThumbnail}`}}
+                  source={logoMarker}
+                  style={{width: 15, height: 15}}
+                />
+                <Callout tooltip>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      borderColor: '#ffdc04',
+                      borderWidth: 3,
+                      flexDirection: 'row',
+                      width: 200,
+                      height: 80,
+                      paddingVertical: 5,
+                      paddingHorizontal: 10,
+                      borderTopLeftRadius: 50,
+                      borderTopRightRadius: 15,
+                      borderBottomLeftRadius: 50,
+                      borderBottomRightRadius: 15,
+                      gap: 7,
+                      elevation: 4,
+                    }}>
                     <View
                       style={{
-                        backgroundColor: 'white',
-                        borderColor: '#ffdc04',
-                        borderWidth: 3,
-                        flexDirection: 'row',
-                        width: 200,
-                        height: 80,
-                        paddingVertical: 5,
-                        paddingHorizontal: 10,
-                        borderTopLeftRadius: 50,
-                        borderTopRightRadius: 15,
-                        borderBottomLeftRadius: 50,
-                        borderBottomRightRadius: 15,
-                        gap: 7,
-                        elevation: 4,
+                        justifyContent: 'space-between',
+                        marginLeft: 10,
                       }}>
-                      <View
-                        style={{
-                          justifyContent: 'space-between',
-                          marginLeft: 10,
-                        }}>
-                        <Text
-                          style={{
-                            flex: 1,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            textAlign: 'center',
-                            marginTop: -10,
-                          }}>
-                          <Image
-                            source={{uri: `file://${brandLogo}`}}
-                            style={{
-                              width: 37,
-                              height: 37,
-                            }}
-                            onError={err => console.log('Error Bgst! : ', err)}
-                          />
-                        </Text>
-                        <Text
-                          style={{
-                            fontSize: 11,
-                            fontFamily: 'Poppins-Medium',
-                          }}>
-                          {item.distance}m
-                        </Text>
-                      </View>
-                      <View
+                      <Text
                         style={{
                           flex: 1,
-                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          textAlign: 'center',
+                          marginTop: -10,
                         }}>
-                        <Text
+                        <Image
+                          // source={{uri: `file://${brandLogo}`}}
+                          source={logoMarker}
                           style={{
-                            fontSize: 11,
-                            fontFamily: 'Poppins-Medium',
-                            marginTop: 3,
-                          }}>
-                          There is an {item.brand} {'\n'}with {item.brand}.
-                        </Text>
-                        <Text
-                          style={{
-                            fontSize: 18,
-                            fontFamily: 'Poppins-SemiBold',
-                            marginBottom: -5,
-                            color: 'black',
-                          }}>
-                          {item.coins} {item.brand}
-                        </Text>
-                      </View>
+                            width: 37,
+                            height: 37,
+                          }}
+                          onError={err => console.log('Error Bgst! : ', err)}
+                        />
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 11,
+                          fontFamily: 'Poppins-Medium',
+                        }}>
+                        {item.distance}m
+                      </Text>
                     </View>
-                  </Callout>
-                </Marker>
-              );
-            })}
+                    <View
+                      style={{
+                        flex: 1,
+                        justifyContent: 'space-between',
+                      }}>
+                      <Text
+                        style={{
+                          fontSize: 11,
+                          fontFamily: 'Poppins-Medium',
+                          marginTop: 3,
+                        }}>
+                        {lang &&
+                        lang.screen_map &&
+                        lang.screen_map.section_marker
+                          ? lang.screen_map.section_marker.desc1 + ' '
+                          : ''}
+                        {item.brand}
+                        {'\n'}
+                        {lang &&
+                        lang.screen_map &&
+                        lang.screen_map.section_marker
+                          ? lang.screen_map.section_marker.desc2 + ' '
+                          : ''}
+                        {item.brand + '.'}
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 18,
+                          fontFamily: 'Poppins-SemiBold',
+                          marginBottom: -5,
+                          color: 'black',
+                        }}>
+                        {item.coins} {item.brand}
+                      </Text>
+                    </View>
+                  </View>
+                </Callout>
+              </Marker>
+            ))}
         </MapView>
       )}
     </View>

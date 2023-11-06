@@ -1,23 +1,12 @@
-import React, {useEffect, useState, useRef} from 'react';
-import {
-  View,
-  StyleSheet,
-  Platform,
-  PermissionsAndroid,
-  Text,
-  Image,
-} from 'react-native';
-import MapView, {
-  Circle,
-  Marker,
-  PROVIDER_GOOGLE,
-  Callout,
-} from 'react-native-maps';
+import React, {useEffect, useState, useRef, useCallback, useMemo} from 'react';
+import {View, StyleSheet, Text, Image} from 'react-native';
+import MapView, {Marker, PROVIDER_GOOGLE, Callout} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {fetchMarkerData} from './APIGetMarker';
 import RNFetchBlob from 'rn-fetch-blob';
 import logoMarker from '../../../assets/images/logo_xrun.png';
+import MarkerMap from './MarkerMap';
 
 // ########## Main Component ##########
 const MapComponent = ({
@@ -46,6 +35,8 @@ const MapComponent = ({
   const mapRef = useRef(null);
   const [brandLogoCachePath, setBrandLogoCachePatch] = useState('');
   const [adThumbnailCachePath, setAdThumbnailPath] = useState('');
+  const [updateRange, setUpdateRange] = useState(0);
+  const [currentRange, setCurrentRange] = useState(0);
 
   // Blob to base64 PNG Converter
   const saveBlobAsImage = async (blob, filename) => {
@@ -129,114 +120,58 @@ const MapComponent = ({
     getSelfCoordinate();
   }, []);
 
-  // Tick Call UseEffect
-  useEffect(() => {
-    // Update Self Coordinate repeatable
-    const getCurrentLocation = async () => {
-      // ----- IOS
-      if (Platform.OS === 'ios') {
-        Geolocation.requestAuthorization('whenInUse').then(result => {
-          if (result === 'granted') {
-            // Is Permission = true -> Get Coordinate
-            Geolocation.getCurrentPosition(
-              position => {
-                // Set To State
-                setPin({
-                  latitude: position.coords.latitude,
-                  longitude: position.coords.longitude,
-                });
-              },
-              error => {
-                console.error(error);
-              },
-              {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
-            );
-          }
-        });
-        // ----- ANDROID
-      } else if (Platform.OS === 'android') {
-        // Ask for Permission
-        try {
-          const granted = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-            {
-              title: 'Izin Lokasi',
-              message:
-                'Aplikasi memerlukan izin akses lokasi untuk fungsi tertentu.',
-              buttonPositive: 'Izinkan',
-            },
-          );
-
-          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            // Is Permission = true -> Get Coordinate
-            Geolocation.getCurrentPosition(
-              position => {
-                // Set To State
-                setPin({
-                  latitude: position.coords.latitude,
-                  longitude: position.coords.longitude,
-                });
-              },
-              error => {
-                console.error(error);
-              },
-              {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
-            );
-          } else {
-            // Is Permission = false -> Do something
-          }
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    };
-
-    // Get Update for Coordinate
-    // getCurrentLocation();
-  });
-
   // As 'pin' change useEffect
+  const handlePinChange = useCallback(
+    (position, target) => {
+      // Get Range from User -> Target
+      const newDistance = calculateDistance(
+        position.coords.latitude,
+        position.coords.longitude,
+        target.latitude,
+        target.longitude,
+      );
+
+      console.log('Jarak baru : ' + newDistance);
+
+      // Hanya perbarui posisi pengguna jika jarak lebih dari ambang tertentu
+      if (newDistance > 0.002) {
+        setPin({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+        degToTarget(
+          arcT(
+            position.coords.latitude,
+            position.coords.longitude,
+            target.latitude,
+            target.longitude,
+          ),
+        );
+        clickedRange(newDistance);
+        setUpdateRange(newDistance);
+      }
+    },
+    [setPin, clickedRange, degToTarget, calculateDistance, setUpdateRange],
+  );
+
   useEffect(() => {
     const watchId = Geolocation.watchPosition(
       position => {
-        // Get Range from User -> Target
-        const newDistance = calculateDistance(
-          position.coords.latitude,
-          position.coords.longitude,
-          pinTarget.latitude,
-          pinTarget.longitude,
-        );
-
-        // Get Degrees from User -> Target
-        const deg = arcT(
-          position.coords.latitude,
-          position.coords.longitude,
-          pinTarget.latitude,
-          pinTarget.longitude,
-        );
-
-        console.log(`
-        Latitude : ${position.coords.latitude}
-        Longitude : ${position.coords.longitude}
-        `);
-
-        // Set to Props
-        degToTarget(deg);
-        clickedRange(newDistance);
+        handlePinChange(position, pinTarget);
       },
       error => {
         console.error(error);
       },
       {
-        enableHighAccuracy: true, // True = Get High Acccuration
-        distanceFilter: 10, // Set Treshold That Will Trigger Function Call
+        enableHighAccuracy: true,
+        distanceFilter: 10,
       },
     );
 
     return () => {
       Geolocation.clearWatch(watchId);
     };
-  }, [pin]);
+  }, [handlePinChange, pinTarget]);
 
   // As 'shouldResetMap' change useEffect
   useEffect(() => {
@@ -262,6 +197,16 @@ const MapComponent = ({
       latitude: parseFloat(item.lat),
       longitude: parseFloat(item.lng),
     });
+
+    // Hitung ulang jarak saat marker diklik
+    const newRange =
+      calculateDistance(
+        pin.latitude,
+        pin.longitude,
+        parseFloat(item.lat),
+        parseFloat(item.lng),
+      ) * 1000; // Dikonversi ke meter
+    setCurrentRange(newRange);
   };
 
   // Count distance between Current Postition -> Target Position
@@ -304,6 +249,26 @@ const MapComponent = ({
     },
   ];
 
+  // Menggunakan useMemo untuk menghindari pembaruan berulang
+  const markers = useMemo(() => {
+    if (!markersData) {
+      return null;
+    }
+
+    return markersData.map(item => (
+      <Marker
+        key={item.coin}
+        coordinate={{
+          latitude: parseFloat(item.lat),
+          longitude: parseFloat(item.lng),
+        }}
+        title={item.title}
+        onPress={() => handleMarkerClick(item)}>
+        <Image source={logoMarker} style={{width: 15, height: 15}} />
+      </Marker>
+    ));
+  }, [markersData]);
+
   return (
     <View style={styles.container}>
       {loading ? (
@@ -329,115 +294,25 @@ const MapComponent = ({
           customMapStyle={customMapStyle}
           showsUserLocation={true}
           showsMyLocationButton={false}>
-          {markersData &&
+          {/* {markersData &&
             markersData.map &&
             adThumbnail &&
             markersData.map(item => (
-              // Marker of Coin
               <Marker
                 key={item.coin}
                 coordinate={{
                   latitude: parseFloat(item.lat),
                   longitude: parseFloat(item.lng),
                 }}
-                title={item.title}
-                onPress={() => {
-                  handleMarkerClick(item);
-                  console.log('Marker di klik => ' + JSON.stringify(item));
-                }}>
+                title={item.title}>
                 <Image
                   // source={{uri: `file://${adThumbnail}`}}
                   source={logoMarker}
                   style={{width: 15, height: 15}}
                 />
-                <Callout tooltip>
-                  <View
-                    style={{
-                      backgroundColor: 'white',
-                      borderColor: '#ffdc04',
-                      borderWidth: 3,
-                      flexDirection: 'row',
-                      width: 200,
-                      height: 80,
-                      paddingVertical: 5,
-                      paddingHorizontal: 10,
-                      borderTopLeftRadius: 50,
-                      borderTopRightRadius: 15,
-                      borderBottomLeftRadius: 50,
-                      borderBottomRightRadius: 15,
-                      gap: 7,
-                      elevation: 4,
-                    }}>
-                    <View
-                      style={{
-                        justifyContent: 'space-between',
-                        marginLeft: 10,
-                      }}>
-                      <Text
-                        style={{
-                          flex: 1,
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          textAlign: 'center',
-                          marginTop: -10,
-                        }}>
-                        <Image
-                          // source={{uri: `file://${brandLogo}`}}
-                          source={logoMarker}
-                          style={{
-                            width: 37,
-                            height: 37,
-                          }}
-                          onError={err => console.log('Error Bgst! : ', err)}
-                        />
-                      </Text>
-                      <Text
-                        style={{
-                          fontSize: 11,
-                          fontFamily: 'Poppins-Medium',
-                        }}>
-                        {item.distance}m
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        flex: 1,
-                        justifyContent: 'space-between',
-                      }}>
-                      <Text
-                        style={{
-                          fontSize: 11,
-                          fontFamily: 'Poppins-Medium',
-                          marginTop: 3,
-                        }}>
-                        {lang &&
-                        lang.screen_map &&
-                        lang.screen_map.section_marker
-                          ? lang.screen_map.section_marker.desc1 + ' '
-                          : ''}
-                        {item.brand}
-                        {'\n'}
-                        {lang &&
-                        lang.screen_map &&
-                        lang.screen_map.section_marker
-                          ? lang.screen_map.section_marker.desc2 + ' '
-                          : ''}
-                        {item.brand + '.'}
-                      </Text>
-                      <Text
-                        style={{
-                          fontSize: 18,
-                          fontFamily: 'Poppins-SemiBold',
-                          marginBottom: -5,
-                          color: 'black',
-                        }}>
-                        {item.coins} {item.brand}
-                      </Text>
-                    </View>
-                  </View>
-                </Callout>
               </Marker>
-            ))}
+            ))} */}
+          {markers}
         </MapView>
       )}
     </View>
