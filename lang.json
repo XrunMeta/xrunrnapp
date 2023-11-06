@@ -120,6 +120,26 @@
       "title": "Pemilihan Negara",
       "current_country": "Lokasi Sekarang",
       "placeholder": "Silakan cari negara anda"
+    },
+
+    "screen_map": {
+      "section_card_shadow": {
+        "radius": "Dalam radius 1000 meter",
+        "amount": "Ada",
+        "and": "dan",
+        "getable": "dapat diperoleh",
+        "event": "XRUN Event",
+        "diamond": "Diamond"
+      },
+      "section_slider_card": {
+        "desc1": "Ada XRUN dari",
+        "desc2": "yang dapat diperoleh."
+      },
+      "section_marker": {
+        "loader": "Memuat...",
+        "desc1": "Ada sebuah",
+        "desc2": "dengan"
+      }
     }
   },
 
@@ -244,6 +264,26 @@
       "title": "Country Selection",
       "current_country": "Current Location",
       "placeholder": "Search for a country"
+    },
+
+    "screen_map": {
+      "section_card_shadow": {
+        "radius": "Within a radius of 1000 meters",
+        "amount": "There are",
+        "and": "and",
+        "getable": "can be optained",
+        "event": "XRUN Event",
+        "diamond": "Diamond"
+      },
+      "section_slider_card": {
+        "desc1": "There is a XRUN of",
+        "desc2": "that can be acquired."
+      },
+      "section_marker": {
+        "loader": "Loading...",
+        "desc1": "There is an",
+        "desc2": "with"
+      }
     }
   }
 }

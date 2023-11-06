@@ -17,6 +17,9 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import MapComponent from '../../components/Map/Map';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const langData = require('../../../lang.json');
 
 // Offset Value of Slider Card
 const initialOffset = 110;
@@ -24,6 +27,7 @@ const defaultOffset = 20;
 
 // ########## Main Component ##########
 export default function Home() {
+  const [lang, setLang] = useState({});
   const {isLoggedIn} = useAuth(); // Login Checker
   const [showDetail, setShowDetail] = useState(false); // Slider Card Bool
   const offset = useSharedValue(initialOffset); // Slider Card Animation
@@ -79,6 +83,26 @@ export default function Home() {
   const getBackToPoint = () => {
     setShouldResetMap(true);
   };
+
+  useEffect(() => {
+    // Get Language
+    const getLanguage = async () => {
+      try {
+        const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+
+        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
+        const language = langData[selectedLanguage];
+        setLang(language);
+      } catch (err) {
+        console.error(
+          'Error retrieving selfCoordinate from AsyncStorage:',
+          err,
+        );
+      }
+    };
+
+    getLanguage();
+  }, []);
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -139,6 +163,7 @@ export default function Home() {
               clickedRange={distance => {
                 let fixedDistance = (distance * 1000).toFixed(2);
                 setRangeToMarker(fixedDistance);
+                console.log('Di klik dg jarak : ' + distance);
               }}
               markerCount={marker => setMarkerCount(marker)}
               brandCount={brandcount => setBrandCount(brandcount)}
@@ -146,6 +171,7 @@ export default function Home() {
               degToTarget={deg => setDegToTarget(deg)}
               shouldResetMap={shouldResetMap}
               onResetMap={() => setShouldResetMap(false)}
+              lang={lang}
             />
           </View>
 
@@ -161,7 +187,7 @@ export default function Home() {
               animatedStyles,
             ]}>
             <LinearGradient
-              colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']}
+              colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.8)']}
               start={{x: 0, y: 0}} // From Gradien
               end={{x: 0, y: 1}} // To Gradien
               style={{
@@ -172,7 +198,7 @@ export default function Home() {
                 position: 'absolute',
                 left: 0,
                 right: 0,
-                bottom: 90, // Atur bottom ke 0 untuk selalu menempel ke bawah
+                bottom: 95, // Atur bottom ke 0 untuk selalu menempel ke bawah
                 height: 170,
                 pointerEvents: 'none',
               }}>
@@ -180,25 +206,37 @@ export default function Home() {
                 <Text
                   style={{
                     fontFamily: 'Poppins-Medium',
-                    fontSize: 10,
+                    fontSize: 10.5,
                     color: 'white',
                   }}>
-                  Within a radius of 1000 meters
+                  {lang &&
+                  lang.screen_map &&
+                  lang.screen_map.section_card_shadow
+                    ? lang.screen_map.section_card_shadow.radius
+                    : ''}
                 </Text>
                 <Text
                   style={{
                     fontFamily: 'Poppins-Medium',
-                    fontSize: 11,
+                    fontSize: 13,
                     color: 'white',
                   }}>
-                  There are{' '}
+                  {lang &&
+                  lang.screen_map &&
+                  lang.screen_map.section_card_shadow
+                    ? lang.screen_map.section_card_shadow.amount + ' '
+                    : ''}
                   <Text
                     style={{
                       fontFamily: 'Poppins-Bold',
                     }}>
                     {brandCount} XRUN
                   </Text>{' '}
-                  dan{' '}
+                  {lang &&
+                  lang.screen_map &&
+                  lang.screen_map.section_card_shadow
+                    ? lang.screen_map.section_card_shadow.and + ' '
+                    : ''}
                   <Text
                     style={{
                       fontFamily: 'Poppins-Bold',
@@ -206,40 +244,53 @@ export default function Home() {
                     {markerCount} BIG XRUN{' '}
                   </Text>
                   {'\n'}
-                  bisa didapatkan
+                  {lang &&
+                  lang.screen_map &&
+                  lang.screen_map.section_card_shadow
+                    ? lang.screen_map.section_card_shadow.getable
+                    : ''}
                 </Text>
               </View>
               <View
                 style={{
                   flex: 1,
                   alignItems: 'flex-end',
-                  marginBottom: -20,
+                  marginBottom: -38,
                 }}>
                 <Text
                   style={{
                     fontFamily: 'Poppins-Medium',
-                    fontSize: 11,
+                    fontSize: 13,
                     color: 'white',
                   }}>
-                  XRUN Event
+                  {lang &&
+                  lang.screen_map &&
+                  lang.screen_map.section_card_shadow
+                    ? lang.screen_map.section_card_shadow.event
+                    : ''}
                 </Text>
                 <View
                   style={{
                     flexDirection: 'row',
-                    gap: 3,
                   }}>
                   <Image
                     source={require('../../../assets/images/icon_diamond_white.png')}
-                    style={{height: 15, tintColor: '#ffdc04'}}
+                    style={{height: 13, tintColor: '#ffdc04'}}
                     resizeMode="contain"
                   />
                   <Text
                     style={{
-                      fontFamily: 'Poppins-SemiBold',
-                      fontSize: 11,
+                      fontFamily: 'Poppins-Bold',
+                      fontSize: 13,
                       color: '#ffdc04',
+                      marginTop: -4,
                     }}>
-                    Diamond {bigCoin}
+                    {lang &&
+                    lang.screen_map &&
+                    lang.screen_map.section_card_shadow
+                      ? lang.screen_map.section_card_shadow.diamond + ' '
+                      : ''}
+                    {bigCoin}
                   </Text>
                 </View>
               </View>
@@ -300,8 +351,8 @@ export default function Home() {
                   style={[
                     {
                       marginRight: 10,
-                      height: 25,
-                      width: 25,
+                      height: 20,
+                      width: 20,
                     },
                     arrowStyle,
                   ]}
@@ -312,9 +363,17 @@ export default function Home() {
                   }}>
                   <Text style={styles.subTitle}>{rangeToMarker || 0}m</Text>
                   <Text style={styles.desc}>
-                    There is a XRUN of{' '}
-                    <Text style={{fontFamily: 'Poppins-Bold'}}>XRUN</Text> that
-                    can be acquired.
+                    {lang &&
+                    lang.screen_map &&
+                    lang.screen_map.section_slider_card
+                      ? lang.screen_map.section_slider_card.desc1 + ' '
+                      : ''}
+                    <Text style={{fontFamily: 'Poppins-Bold'}}>XRUN</Text>{' '}
+                    {lang &&
+                    lang.screen_map &&
+                    lang.screen_map.section_slider_card
+                      ? lang.screen_map.section_slider_card.desc2
+                      : ''}
                   </Text>
                 </View>
                 <Image
@@ -355,17 +414,18 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'Poppins-Bold',
-    fontSize: 30,
+    fontSize: 22,
     color: '#343a59',
   },
   subTitle: {
     fontFamily: 'Poppins-SemiBold',
-    fontSize: 18,
+    fontSize: 22,
     color: '#343a59',
+    marginBottom: -9,
   },
   desc: {
     fontFamily: 'Poppins-Medium',
-    fontSize: 11,
+    fontSize: 13,
     color: '#343a59',
   },
   navWrapper: {

@@ -117,7 +117,7 @@ export const MainTabNavigator = () => {
                   style={{
                     fontFamily: focused ? 'Poppins-Bold' : 'Poppins-Medium',
                     color: 'black',
-                    fontSize: 11,
+                    fontSize: 10.5,
                     marginTop: -15,
                   }}>
                   Wallet
@@ -148,7 +148,7 @@ export const MainTabNavigator = () => {
                   style={{
                     fontFamily: focused ? 'Poppins-Bold' : 'Poppins-Medium',
                     color: 'black',
-                    fontSize: 11,
+                    fontSize: 10.5,
                     marginTop: -15,
                   }}>
                   Advertise
@@ -197,7 +197,7 @@ export const MainTabNavigator = () => {
                   style={{
                     fontFamily: focused ? 'Poppins-Bold' : 'Poppins-Medium',
                     color: 'black',
-                    fontSize: 11,
+                    fontSize: 10.5,
                     marginTop: -15,
                   }}>
                   Notify
@@ -228,7 +228,7 @@ export const MainTabNavigator = () => {
                   style={{
                     fontFamily: focused ? 'Poppins-Bold' : 'Poppins-Medium',
                     color: 'black',
-                    fontSize: 11,
+                    fontSize: 10.5,
                     marginTop: -15,
                   }}>
                   Info

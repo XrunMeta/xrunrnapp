@@ -29,6 +29,7 @@ const MapComponent = ({
   degToTarget, // Get Degrees from User Coordinate -> Target Coordinate
   shouldResetMap,
   onResetMap,
+  lang,
 }) => {
   const [pin, setPin] = useState({
     latitude: 37.4226711,
@@ -214,6 +215,11 @@ const MapComponent = ({
           pinTarget.longitude,
         );
 
+        console.log(`
+        Latitude : ${position.coords.latitude}
+        Longitude : ${position.coords.longitude}
+        `);
+
         // Set to Props
         degToTarget(deg);
         clickedRange(newDistance);
@@ -286,6 +292,18 @@ const MapComponent = ({
     return deg;
   }
 
+  // Hide Default Marker Building
+  const customMapStyle = [
+    {
+      featureType: 'poi',
+      stylers: [
+        {
+          visibility: 'off',
+        },
+      ],
+    },
+  ];
+
   return (
     <View style={styles.container}>
       {loading ? (
@@ -293,7 +311,9 @@ const MapComponent = ({
           {console.log(
             `Loading = true => Lat: ${pin.latitude} & Lng: ${pin.longitude}`,
           )}
-          Loading...
+          {lang && lang.screen_map && lang.screen_map.section_marker
+            ? lang.screen_map.section_marker.loader
+            : ''}
         </Text> // Show Loading While Data is Load
       ) : (
         <MapView
@@ -306,10 +326,10 @@ const MapComponent = ({
             latitudeDelta: 0.005,
             longitudeDelta: 0.005,
           }}
+          customMapStyle={customMapStyle}
           showsUserLocation={true}
           showsMyLocationButton={false}>
-          {/* <Circle center={pin} radius={100} /> */}
-          {/* {markersData &&
+          {markersData &&
             markersData.map &&
             adThumbnail &&
             markersData.map(item => (
@@ -323,6 +343,7 @@ const MapComponent = ({
                 title={item.title}
                 onPress={() => {
                   handleMarkerClick(item);
+                  console.log('Marker di klik => ' + JSON.stringify(item));
                 }}>
                 <Image
                   // source={{uri: `file://${adThumbnail}`}}
@@ -389,7 +410,19 @@ const MapComponent = ({
                           fontFamily: 'Poppins-Medium',
                           marginTop: 3,
                         }}>
-                        There is an {item.brand} {'\n'}with {item.brand}.
+                        {lang &&
+                        lang.screen_map &&
+                        lang.screen_map.section_marker
+                          ? lang.screen_map.section_marker.desc1 + ' '
+                          : ''}
+                        {item.brand}
+                        {'\n'}
+                        {lang &&
+                        lang.screen_map &&
+                        lang.screen_map.section_marker
+                          ? lang.screen_map.section_marker.desc2 + ' '
+                          : ''}
+                        {item.brand + '.'}
                       </Text>
                       <Text
                         style={{
@@ -404,7 +437,7 @@ const MapComponent = ({
                   </View>
                 </Callout>
               </Marker>
-            ))} */}
+            ))}
         </MapView>
       )}
     </View>
