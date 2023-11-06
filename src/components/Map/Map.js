@@ -37,6 +37,7 @@ const MapComponent = ({
   const [adThumbnailCachePath, setAdThumbnailPath] = useState('');
   const [updateRange, setUpdateRange] = useState(0);
   const [currentRange, setCurrentRange] = useState(0);
+  const [clickedMarkerData, setClickedMarkerData] = useState(null);
 
   // Blob to base64 PNG Converter
   const saveBlobAsImage = async (blob, filename) => {
@@ -193,6 +194,9 @@ const MapComponent = ({
   const handleMarkerClick = item => {
     clickedMarker(item);
 
+    // Save clicked marker data
+    setClickedMarkerData(item);
+
     setPinTarget({
       latitude: parseFloat(item.lat),
       longitude: parseFloat(item.lng),
@@ -265,6 +269,88 @@ const MapComponent = ({
         title={item.title}
         onPress={() => handleMarkerClick(item)}>
         <Image source={logoMarker} style={{width: 15, height: 15}} />
+        <Callout tooltip>
+          <View
+            style={{
+              backgroundColor: 'white',
+              borderColor: '#ffdc04',
+              borderWidth: 3,
+              flexDirection: 'row',
+              width: 200,
+              height: 80,
+              paddingVertical: 5,
+              paddingHorizontal: 10,
+              borderTopLeftRadius: 50,
+              borderTopRightRadius: 15,
+              borderBottomLeftRadius: 50,
+              borderBottomRightRadius: 15,
+              gap: 7,
+              elevation: 4,
+            }}>
+            <View
+              style={{
+                justifyContent: 'space-between',
+                marginLeft: 10,
+              }}>
+              <Text
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  textAlign: 'center',
+                  marginTop: -10,
+                }}>
+                <Image
+                  // source={{uri: `file://${brandLogo}`}}
+                  source={logoMarker}
+                  style={{
+                    width: 37,
+                    height: 37,
+                  }}
+                  onError={err => console.log('Error Bgst! : ', err)}
+                />
+              </Text>
+              <Text
+                style={{
+                  fontSize: 11,
+                  fontFamily: 'Poppins-Medium',
+                }}>
+                {currentRange.toFixed(2)}m
+              </Text>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'space-between',
+              }}>
+              <Text
+                style={{
+                  fontSize: 11,
+                  fontFamily: 'Poppins-Medium',
+                  marginTop: 3,
+                }}>
+                {lang && lang.screen_map && lang.screen_map.section_marker
+                  ? lang.screen_map.section_marker.desc1 + ' '
+                  : ''}
+                {item.brand}
+                {'\n'}
+                {lang && lang.screen_map && lang.screen_map.section_marker
+                  ? lang.screen_map.section_marker.desc2 + ' '
+                  : ''}
+                {item.brand + '.'}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontFamily: 'Poppins-SemiBold',
+                  marginBottom: -5,
+                  color: 'black',
+                }}>
+                {item.coins} {item.brand}
+              </Text>
+            </View>
+          </View>
+        </Callout>
       </Marker>
     ));
   }, [markersData]);
