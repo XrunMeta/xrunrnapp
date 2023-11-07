@@ -33,11 +33,14 @@ const MapComponent = ({
   const [brandLogo, setBrandLogo] = useState([]); // Save Brand Logo from BLOB API
   const [adThumbnail, setAdThumbnail] = useState([]); // Save AdThumbnail from BLOB API
   const mapRef = useRef(null);
-  const [brandLogoCachePath, setBrandLogoCachePatch] = useState('');
-  const [adThumbnailCachePath, setAdThumbnailPath] = useState('');
   const [updateRange, setUpdateRange] = useState(0);
   const [currentRange, setCurrentRange] = useState(0);
   const [clickedMarkerData, setClickedMarkerData] = useState(null);
+  // Buat state untuk menyimpan koordinat pengguna sebelumnya
+  const prevUserCoordinate = useRef({
+    latitude: 0,
+    longitude: 0,
+  });
 
   // Blob to base64 PNG Converter
   const saveBlobAsImage = async (blob, filename) => {
@@ -93,20 +96,20 @@ const MapComponent = ({
             bigCoinCount(getBigCoin);
 
             // Save BLOB to State
-            // data.data.map(async item => {
-            //   const brandLogo = await saveBlobAsImage(
-            //     item.brandlogo,
-            //     `${item.coin}.png`,
-            //   );
+            data.data.map(async item => {
+              const brandLogo = await saveBlobAsImage(
+                item.brandlogo,
+                `${item.coin}.png`,
+              );
 
-            //   const adThumbnail = await saveBlobAsImage(
-            //     item.adthumbnail2,
-            //     `${item.coin}.png`,
-            //   );
+              const adThumbnail = await saveBlobAsImage(
+                item.adthumbnail2,
+                `${item.coin}.png`,
+              );
 
-            //   setBrandLogo(brandLogo);
-            //   setAdThumbnail(adThumbnail);
-            // });
+              setBrandLogo(brandLogo);
+              setAdThumbnail(adThumbnail);
+            });
           }
         }
       } catch (err) {
@@ -132,7 +135,7 @@ const MapComponent = ({
         target.longitude,
       );
 
-      console.log('Jarak baru : ' + newDistance);
+      // console.log('Jarak baru : ' + newDistance);
 
       // Hanya perbarui posisi pengguna jika jarak lebih dari ambang tertentu
       if (newDistance > 0.002) {
@@ -159,6 +162,29 @@ const MapComponent = ({
     const watchId = Geolocation.watchPosition(
       position => {
         handlePinChange(position, pinTarget);
+
+        // Mengambil koordinat pengguna saat ini
+        const userCoordinate = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        };
+
+        // Menghitung jarak antara koordinat pengguna saat ini dan sebelumnya
+        const distance = calculateDistance(
+          prevUserCoordinate.current.latitude,
+          prevUserCoordinate.current.longitude,
+          userCoordinate.latitude,
+          userCoordinate.longitude,
+        );
+
+        // Jika perbedaan jarak melebihi 0.001, perbarui `pin` dan `degToTarget`
+        if (distance > 0.0015) {
+          console.log('Perubahan Posisi : ' + distance);
+          handlePinChange(position, pinTarget);
+
+          // Simpan koordinat pengguna saat ini sebagai koordinat sebelumnya
+          prevUserCoordinate.current = userCoordinate;
+        }
       },
       error => {
         console.error(error);
@@ -268,7 +294,11 @@ const MapComponent = ({
         }}
         title={item.title}
         onPress={() => handleMarkerClick(item)}>
-        <Image source={logoMarker} style={{width: 15, height: 15}} />
+        <Image
+          // source={{uri: `file://${adThumbnail}`}}
+          source={logoMarker}
+          style={{width: 15, height: 15}}
+        />
         <Callout tooltip>
           <View
             style={{
@@ -380,24 +410,6 @@ const MapComponent = ({
           customMapStyle={customMapStyle}
           showsUserLocation={true}
           showsMyLocationButton={false}>
-          {/* {markersData &&
-            markersData.map &&
-            adThumbnail &&
-            markersData.map(item => (
-              <Marker
-                key={item.coin}
-                coordinate={{
-                  latitude: parseFloat(item.lat),
-                  longitude: parseFloat(item.lng),
-                }}
-                title={item.title}>
-                <Image
-                  // source={{uri: `file://${adThumbnail}`}}
-                  source={logoMarker}
-                  style={{width: 15, height: 15}}
-                />
-              </Marker>
-            ))} */}
           {markers}
         </MapView>
       )}
