@@ -67,12 +67,6 @@ export default function Home() {
     } else {
       offset.value = withSpring(defaultOffset); // Hide Card
     }
-
-    console.log(`
-      ShowCard?      : ${showDetail}
-      Initial Offset : ${initialOffset}
-      Default Offset : ${defaultOffset}
-    `);
   }, [showDetail]);
 
   // Button Collapse Slider Card
@@ -174,6 +168,7 @@ export default function Home() {
               onResetMap={() => setShouldResetMap(false)}
               lang={lang}
             />
+            {/* {console.log('Marker in bro : ' + JSON.stringify(selectedMarker))} */}
           </View>
 
           {/* XRUN Amount that Shown on Map Screen */}
