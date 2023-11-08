@@ -17,7 +17,6 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 import MapComponent from '../../components/Map/Map';
-import {fetchMarkerData} from '../../components/Map/APIGetMarker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const langData = require('../../../lang.json');
@@ -68,6 +67,13 @@ export default function Home() {
       offset.value = withSpring(defaultOffset); // Hide Card
     }
   }, [showDetail]);
+
+  // Show Card when Marker is Clicked
+  useEffect(() => {
+    if (showDetail) {
+      setShowDetail(!showDetail); // Show Card
+    }
+  }, [setSelectedMarker, selectedMarker]);
 
   // Button Collapse Slider Card
   const handleShowDetail = () => {

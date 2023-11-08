@@ -6,8 +6,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {fetchMarkerData} from './APIGetMarker';
 import RNFetchBlob from 'rn-fetch-blob';
 import logoMarker from '../../../assets/images/logo_xrun.png';
-import MarkerMap from './MarkerMap';
-import WebView from 'react-native-webview';
 
 // ########## Main Component ##########
 const MapComponent = ({
@@ -293,6 +291,8 @@ const MapComponent = ({
   // When Marker is Clicked
   const handleMarkerClick = item => {
     clickedMarker(item);
+
+    console.log('Marker di klik : ' + item.coin);
 
     setPinTarget({
       latitude: parseFloat(item.lat),
