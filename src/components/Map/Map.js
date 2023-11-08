@@ -21,21 +21,13 @@ const MapComponent = ({
   onResetMap,
   lang,
 }) => {
-  // const [pin, setPin] = useState({
-  //   latitude: 37.4226711,
-  //   longitude: -122.0849872,
-  // }); // Get User Coordinate
   const [pin, setPin] = useState(null); // Get User Coordinate
-  const [pinTarget, setPinTarget] = useState(null); // Get Target Coordinate
+  const [pinTarget, setPinTarget] = useState(0); // Get Target Coordinate
   const [loading, setLoading] = useState(true); // Get Loading Info
   const [markersData, setMarkersData] = useState([]); // Save Marker Data from API
   const [brandLogo, setBrandLogo] = useState([]); // Save Brand Logo from BLOB API
   const [adThumbnail, setAdThumbnail] = useState([]); // Save AdThumbnail from BLOB API
   const mapRef = useRef(null);
-  const [updateRange, setUpdateRange] = useState(0);
-  const [currentRange, setCurrentRange] = useState(0);
-  const [clickedMarkerData, setClickedMarkerData] = useState(null);
-  // Buat state untuk menyimpan koordinat pengguna sebelumnya
   const prevUserCoordinate = useRef({
     latitude: 0,
     longitude: 0,
@@ -44,7 +36,6 @@ const MapComponent = ({
   const [nearestMarkerDistance, setNearestMarkerDistance] = useState(
     Number.MAX_VALUE,
   );
-  const [renderCount, setRenderCount] = useState(1);
 
   // Blob to base64 PNG Converter
   const saveBlobAsImage = async (blob, filename) => {
@@ -137,8 +128,6 @@ const MapComponent = ({
               }
             });
 
-            console.log('Coin terdekat : ' + nearestDistance);
-
             // Set nilai awal untuk clickedRange dan nearestMarkerDistance
             clickedRange(nearestDistance);
             setNearestMarkerDistance(nearestDistance);
@@ -212,7 +201,6 @@ const MapComponent = ({
   // As 'pin' change useEffect
   const handlePinChange = useCallback(
     (position, target) => {
-      // if (target && target.latitdue && target.longitude) {
       // Get Range from User -> Target
       const newDistance = calculateDistance(
         position.coords.latitude,
@@ -222,7 +210,7 @@ const MapComponent = ({
       );
 
       // Hanya perbarui posisi pengguna jika jarak lebih dari ambang tertentu
-      if (newDistance > 0.002) {
+      if (newDistance > 0.001) {
         setPin({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
@@ -236,11 +224,9 @@ const MapComponent = ({
           ),
         );
         clickedRange(newDistance);
-        setUpdateRange(newDistance);
       }
-      // }
     },
-    [setPin, clickedRange, degToTarget, calculateDistance, setUpdateRange],
+    [setPin, clickedRange, degToTarget, calculateDistance],
   );
 
   useEffect(() => {
@@ -267,8 +253,7 @@ const MapComponent = ({
         );
 
         // Jika perbedaan jarak melebihi 0.001, perbarui `pin` dan `degToTarget`
-        if (distance > 0.0015) {
-          // console.log('Perubahan Posisi : ' + distance);
+        if (distance > 0.001) {
           handlePinChange(position, pinTarget);
 
           // Simpan koordinat pengguna saat ini sebagai koordinat sebelumnya
@@ -309,23 +294,10 @@ const MapComponent = ({
   const handleMarkerClick = item => {
     clickedMarker(item);
 
-    // Save clicked marker data
-    setClickedMarkerData(item);
-
     setPinTarget({
       latitude: parseFloat(item.lat),
       longitude: parseFloat(item.lng),
     });
-
-    // Hitung ulang jarak saat marker diklik
-    const newRange =
-      calculateDistance(
-        pin.latitude,
-        pin.longitude,
-        parseFloat(item.lat),
-        parseFloat(item.lng),
-      ) * 1000; // Dikonversi ke meter
-    setCurrentRange(newRange);
   };
 
   // Count distance between Current Postition -> Target Position
@@ -383,10 +355,8 @@ const MapComponent = ({
         }}
         title={item.title}
         onPress={() => handleMarkerClick(item)}>
-        {setRenderCount(renderCount + 1)}
         <Image
           source={{uri: `file://${adThumbnail[idx]}`}}
-          // source={{uri: `file://${adThumbnail}`}}
           // source={logoMarker}
           style={{width: 15, height: 15}}
         />
@@ -413,27 +383,6 @@ const MapComponent = ({
                 justifyContent: 'space-between',
                 marginLeft: 10,
               }}>
-              {/* <Text
-                style={{
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  textAlign: 'center',
-                  marginTop: -10,
-                }}>
-                {console.log(
-                  `Image Tooltip Render ke-${renderCount} : ` + brandLogo[idx],
-                )}
-                <Image
-                  source={{uri: `file://${brandLogo[idx]}`}}
-                  // source={logoMarker}
-                  style={{
-                    width: 37,
-                    height: 37,
-                  }}
-                  onError={err => console.log('Error Cuy : ', err)}
-                />
-              </Text> */}
               <Text
                 style={{
                   flex: 1,
@@ -450,13 +399,6 @@ const MapComponent = ({
                   }}
                   onError={err => console.log('Error Cuy : ', err)}
                 />
-                {/* <WebView
-                  style={{
-                    width: 37,
-                    height: 37,
-                  }}
-                  source={{uri: `data:image/png;base64,${brandLogo[idx]}`}}
-                /> */}
               </Text>
               <Text
                 style={{

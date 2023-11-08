@@ -7,6 +7,7 @@ import {fetchMarkerData} from './APIGetMarker';
 import RNFetchBlob from 'rn-fetch-blob';
 import logoMarker from '../../../assets/images/logo_xrun.png';
 import MarkerMap from './MarkerMap';
+import WebView from 'react-native-webview';
 
 // ########## Main Component ##########
 const MapComponent = ({
@@ -20,14 +21,12 @@ const MapComponent = ({
   onResetMap,
   lang,
 }) => {
-  const [pin, setPin] = useState({
-    latitude: 37.4226711,
-    longitude: -122.0849872,
-  }); // Get User Coordinate
-  const [pinTarget, setPinTarget] = useState({
-    latitude: -6.294915,
-    longitude: 106.785179,
-  }); // Get Target Coordinate
+  // const [pin, setPin] = useState({
+  //   latitude: 37.4226711,
+  //   longitude: -122.0849872,
+  // }); // Get User Coordinate
+  const [pin, setPin] = useState(null); // Get User Coordinate
+  const [pinTarget, setPinTarget] = useState(null); // Get Target Coordinate
   const [loading, setLoading] = useState(true); // Get Loading Info
   const [markersData, setMarkersData] = useState([]); // Save Marker Data from API
   const [brandLogo, setBrandLogo] = useState([]); // Save Brand Logo from BLOB API
@@ -42,6 +41,10 @@ const MapComponent = ({
     longitude: 0,
   });
   const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [nearestMarkerDistance, setNearestMarkerDistance] = useState(
+    Number.MAX_VALUE,
+  );
+  const [renderCount, setRenderCount] = useState(1);
 
   // Blob to base64 PNG Converter
   const saveBlobAsImage = async (blob, filename) => {
@@ -71,9 +74,47 @@ const MapComponent = ({
           if (data) {
             setMarkersData(data.data);
 
+            // Set default coordinate for Pin Target
+            const nearestCoin = data.data.reduce(
+              (nearest, item) => {
+                const markerLatitude = parseFloat(item.lat);
+                const markerLongitude = parseFloat(item.lng);
+                const targetDistance = calculateDistance(
+                  coordinate.latitude,
+                  coordinate.longitude,
+                  markerLatitude,
+                  markerLongitude,
+                );
+
+                if (targetDistance < nearest.targetDistance) {
+                  return {
+                    targetDistance,
+                    latitude: markerLatitude,
+                    longitude: markerLongitude,
+                  };
+                }
+
+                return nearest;
+              },
+              {targetDistance: Number.MAX_VALUE, latitude: 0, longitude: 0},
+            );
+
+            setPinTarget({
+              latitude: nearestCoin.latitude,
+              longitude: nearestCoin.longitude,
+            });
+
+            console.log('Pin Target Baru di Set Ni Bro');
+
             // Get XRUN Brand
             let brandcount = 0;
             let currentBrand = null;
+
+            // Hitung jarak dari pengguna ke setiap marker dan temukan yang terdekat
+            const userLatitude = coordinate.latitude;
+            const userLongitude = coordinate.longitude;
+
+            let nearestDistance = Number.MAX_VALUE;
 
             data.data.forEach(item => {
               const brand = item.advertisement;
@@ -83,7 +124,26 @@ const MapComponent = ({
                 currentBrand = brand;
                 brandcount++;
               }
+
+              const markerLatitude = parseFloat(item.lat);
+              const markerLongitude = parseFloat(item.lng);
+              const distance = calculateDistance(
+                userLatitude,
+                userLongitude,
+                markerLatitude,
+                markerLongitude,
+              );
+
+              if (distance < nearestDistance) {
+                nearestDistance = distance;
+              }
             });
+
+            console.log('Coin terdekat : ' + nearestDistance);
+
+            // Set nilai awal untuk clickedRange dan nearestMarkerDistance
+            clickedRange(nearestDistance);
+            setNearestMarkerDistance(nearestDistance);
 
             // Get Big Coin
             const getBigCoin = data.data.filter(
@@ -97,30 +157,47 @@ const MapComponent = ({
 
             // Save BLOB to State
             const imagePromises = data.data.map(async item => {
-              const brandLogo = await saveBlobAsImage(
-                item.brandlogo,
-                `${item.coin}.png`,
-              );
+              // const brandLogo = await saveBlobAsImage(
+              //   item.brandlogo,
+              //   `${item.coin}.png`,
+              // );
 
               const adThumbnail = await saveBlobAsImage(
                 item.adthumbnail2,
                 `${item.coin}.png`,
               );
 
-              setBrandLogo(brandLogo);
-              setAdThumbnail(adThumbnail);
-              console.log('Image udah di load bro');
-              // console.log(`
-              // Brand Logo : ${brandLogo}
-              // Ad Thumbnail: ${adThumbnail}
-              // `);
+              const brandLogo = item.brandlogo;
+
+              return {brandLogo, adThumbnail};
             });
 
             // Waiting All Promise is finish
-            Promise.all(imagePromises).then(() => {
-              console.warn('Loading Hapus Brooooo');
-              setLoading(false);
-            });
+            Promise.all(imagePromises)
+              .then(images => {
+                const brandLogos = images.map(image => image.brandLogo);
+                const adThumbnails = images.map(image => image.adThumbnail);
+
+                setBrandLogo(brandLogos);
+                setAdThumbnail(adThumbnails);
+
+                setImagesLoaded(true);
+                setLoading(false);
+
+                if (mapRef.current) {
+                  const initialRegion = {
+                    latitude: coordinate.latitude,
+                    longitude: coordinate.longitude,
+                    latitudeDelta: 0.005,
+                    longitudeDelta: 0.005,
+                  };
+
+                  mapRef.current.animateToRegion(initialRegion, 1000);
+                }
+              })
+              .catch(error => {
+                console.error('Error while loading images:', error);
+              });
           }
         }
       } catch (err) {
@@ -137,6 +214,7 @@ const MapComponent = ({
   // As 'pin' change useEffect
   const handlePinChange = useCallback(
     (position, target) => {
+      // if (target && target.latitdue && target.longitude) {
       // Get Range from User -> Target
       const newDistance = calculateDistance(
         position.coords.latitude,
@@ -144,8 +222,6 @@ const MapComponent = ({
         target.latitude,
         target.longitude,
       );
-
-      // console.log('Jarak baru : ' + newDistance);
 
       // Hanya perbarui posisi pengguna jika jarak lebih dari ambang tertentu
       if (newDistance > 0.002) {
@@ -164,13 +240,19 @@ const MapComponent = ({
         clickedRange(newDistance);
         setUpdateRange(newDistance);
       }
+      // }
     },
     [setPin, clickedRange, degToTarget, calculateDistance, setUpdateRange],
   );
 
   useEffect(() => {
+    clickedRange(nearestMarkerDistance);
+  }, [nearestMarkerDistance]);
+
+  useEffect(() => {
     const watchId = Geolocation.watchPosition(
       position => {
+        console.log('Handle Pin Change udah kelar');
         handlePinChange(position, pinTarget);
 
         // Mengambil koordinat pengguna saat ini
@@ -295,7 +377,7 @@ const MapComponent = ({
       return null;
     }
 
-    return markersData.map(item => (
+    return markersData.map((item, idx) => (
       <Marker
         key={item.coin}
         coordinate={{
@@ -304,15 +386,10 @@ const MapComponent = ({
         }}
         title={item.title}
         onPress={() => handleMarkerClick(item)}>
-        {/* {console.log(`
-          Brand Logo : ${brandLogo}
-          Ad Thumbnail: ${adThumbnail}
-          `)} */}
-        {console.log(
-          `--------------------------------------------------------`,
-        )}
+        {setRenderCount(renderCount + 1)}
         <Image
-          source={{uri: `file://${adThumbnail}`}}
+          source={{uri: `file://${adThumbnail[idx]}`}}
+          // source={{uri: `file://${adThumbnail}`}}
           // source={logoMarker}
           style={{width: 15, height: 15}}
         />
@@ -339,6 +416,27 @@ const MapComponent = ({
                 justifyContent: 'space-between',
                 marginLeft: 10,
               }}>
+              {/* <Text
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  textAlign: 'center',
+                  marginTop: -10,
+                }}>
+                {console.log(
+                  `Image Tooltip Render ke-${renderCount} : ` + brandLogo[idx],
+                )}
+                <Image
+                  source={{uri: `file://${brandLogo[idx]}`}}
+                  // source={logoMarker}
+                  style={{
+                    width: 37,
+                    height: 37,
+                  }}
+                  onError={err => console.log('Error Cuy : ', err)}
+                />
+              </Text> */}
               <Text
                 style={{
                   flex: 1,
@@ -348,14 +446,20 @@ const MapComponent = ({
                   marginTop: -10,
                 }}>
                 <Image
-                  source={{uri: `file://${brandLogo}`}}
-                  // source={logoMarker}
+                  source={{uri: `data:image/png;base64,${brandLogo[idx]}`}}
                   style={{
                     width: 37,
                     height: 37,
                   }}
                   onError={err => console.log('Error Cuy : ', err)}
                 />
+                {/* <WebView
+                  style={{
+                    width: 37,
+                    height: 37,
+                  }}
+                  source={{uri: `data:image/png;base64,${brandLogo[idx]}`}}
+                /> */}
               </Text>
               <Text
                 style={{
@@ -400,7 +504,7 @@ const MapComponent = ({
         </Callout>
       </Marker>
     ));
-  }, [markersData]);
+  }, [markersData, brandLogo, adThumbnail]);
 
   return (
     <View style={styles.container}>
@@ -437,7 +541,23 @@ const MapComponent = ({
           customMapStyle={customMapStyle}
           showsUserLocation={true}
           showsMyLocationButton={false}>
-          {markers}
+          {imagesLoaded ? (
+            markers
+          ) : (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#343a59" />
+              <Text
+                style={{
+                  color: 'white',
+                  fontFamily: 'Poppins-Regular',
+                  fontSize: 13,
+                }}>
+                {lang && lang.screen_map && lang.screen_map.section_marker
+                  ? lang.screen_map.section_marker.loader
+                  : ''}
+              </Text>
+            </View>
+          )}
         </MapView>
       )}
     </View>

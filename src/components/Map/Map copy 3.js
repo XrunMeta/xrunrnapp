@@ -26,7 +26,7 @@ const MapComponent = ({
   //   longitude: -122.0849872,
   // }); // Get User Coordinate
   const [pin, setPin] = useState(null); // Get User Coordinate
-  const [pinTarget, setPinTarget] = useState(null); // Get Target Coordinate
+  const [pinTarget, setPinTarget] = useState(0); // Get Target Coordinate
   const [loading, setLoading] = useState(true); // Get Loading Info
   const [markersData, setMarkersData] = useState([]); // Save Marker Data from API
   const [brandLogo, setBrandLogo] = useState([]); // Save Brand Logo from BLOB API
@@ -103,6 +103,8 @@ const MapComponent = ({
               latitude: nearestCoin.latitude,
               longitude: nearestCoin.longitude,
             });
+
+            console.log('Pin Target Baru di Set Ni Bro');
 
             // Get XRUN Brand
             let brandcount = 0;
@@ -250,6 +252,10 @@ const MapComponent = ({
   useEffect(() => {
     const watchId = Geolocation.watchPosition(
       position => {
+        console.log(`Handle Pin Change udah kelar
+        Target Lat : ${pinTarget.latitude}
+        Target Lon : ${pinTarget.longitude}
+        `);
         handlePinChange(position, pinTarget);
 
         // Mengambil koordinat pengguna saat ini
