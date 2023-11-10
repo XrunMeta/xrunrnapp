@@ -7,6 +7,19 @@ import {fetchMarkerData} from './APIGetMarker';
 import RNFetchBlob from 'rn-fetch-blob';
 import logoMarker from '../../../assets/images/logo_xrun.png';
 
+// Komponen terpisah untuk teks yang akan diperbarui saat localClickedRange berubah
+function RangeText({localClickedRange}) {
+  return (
+    <Text
+      style={{
+        fontSize: 11,
+        fontFamily: 'Poppins-Medium',
+      }}>
+      {localClickedRange}m
+    </Text>
+  );
+}
+
 // ########## Main Component ##########
 const MapComponent = ({
   clickedMarker, // Get Data from Clicked Marker
@@ -34,6 +47,8 @@ const MapComponent = ({
   const [nearestMarkerDistance, setNearestMarkerDistance] = useState(
     Number.MAX_VALUE,
   );
+  const [localClickedRange, setLocalClickedRange] = useState(0);
+  const [selectedMarker, setSelectedMarker] = useState(null);
 
   // Blob to base64 PNG Converter
   const saveBlobAsImage = async (blob, filename) => {
@@ -222,6 +237,9 @@ const MapComponent = ({
           ),
         );
         clickedRange(newDistance);
+
+        var toMeter = (newDistance * 1000).toFixed(2);
+        setLocalClickedRange(toMeter);
       }
     },
     [setPin, clickedRange, degToTarget, calculateDistance],
@@ -292,7 +310,7 @@ const MapComponent = ({
   const handleMarkerClick = item => {
     clickedMarker(item);
 
-    console.log('Marker di klik : ' + item.coin);
+    console.log('Marker di klik : ' + item.distance);
 
     setPinTarget({
       latitude: parseFloat(item.lat),
@@ -340,6 +358,16 @@ const MapComponent = ({
     },
   ];
 
+  useEffect(() => {
+    // console.log('Local Clicked Range : ' + localClickedRange);
+  }, [
+    setLocalClickedRange,
+    // setPin,
+    clickedRange,
+    degToTarget,
+    calculateDistance,
+  ]);
+
   // Menggunakan useMemo untuk menghindari pembaruan berulang
   const markers = useMemo(() => {
     if (!markersData) {
@@ -355,6 +383,10 @@ const MapComponent = ({
         }}
         title={item.title}
         onPress={() => handleMarkerClick(item)}>
+        {/* {console.log(`
+          Lat : ${item.lat}
+          Lng : ${item.lng}
+        `)} */}
         <Image
           source={{uri: `file://${adThumbnail[idx]}`}}
           // source={logoMarker}
@@ -400,13 +432,17 @@ const MapComponent = ({
                   onError={err => console.log('Error Cuy : ', err)}
                 />
               </Text>
+              {/* {console.log('Local Clicked Range : ' + localClickedRange)} */}
               <Text
+                key={localClickedRange}
                 style={{
                   fontSize: 11,
                   fontFamily: 'Poppins-Medium',
                 }}>
-                {item.distance}m
+                {item.distance}m{/* {localClickedRange}m */}
               </Text>
+              {/* {console.log('Selected Marker : ' + selectedMarker)} */}
+              {item === selectedMarker && <Text>Jamal</Text>}
             </View>
             <View
               style={{

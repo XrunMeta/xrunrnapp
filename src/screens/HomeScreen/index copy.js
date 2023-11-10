@@ -6,7 +6,6 @@ import {
   SafeAreaView,
   StyleSheet,
   View,
-  TouchableOpacity,
 } from 'react-native';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import LinearGradient from 'react-native-linear-gradient';
@@ -19,7 +18,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import MapComponent from '../../components/Map/Map';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import CompassHeading from 'react-native-compass-heading';
 
 const langData = require('../../../lang.json');
 
@@ -42,65 +40,12 @@ export default function Home() {
   const [degToTarget, setDegToTarget] = useState(0); // Get Degrees from User Coordinate -> Target Coordinate
   const [shouldResetMap, setShouldResetMap] = useState(false); // Reset Map after Click Back To Point on Map
   const rotationValue = useSharedValue(0); // Init Rotation of Arrow
-  const [directionToTarget, setDirectionToTarget] = useState(0);
-  const [compassHeading, setCompassHeading] = useState(0);
-  const [targetLatitude, setTargetLatitude] = useState(0);
-  const [targetLongitude, setTargetLongitude] = useState(0);
-  const [pin, setPin] = useState(0); // Player Coordinate
   const animatedStyles = useAnimatedStyle(() => ({
     transform: [{translateY: offset.value}],
   })); // Slider Card Translate Animation
-
   const arrowStyle = useAnimatedStyle(() => {
-    if (pin) {
-      const deltaLatitude = targetLatitude - pin.latitude;
-      const deltaLongitude = targetLongitude - pin.longitude;
-      const dirToTarget =
-        (Math.atan2(deltaLongitude, deltaLatitude) * 180) / Math.PI;
-
-      return {
-        transform: [{rotate: `${360 - compassHeading + dirToTarget}deg`}],
-      };
-    } else {
-      return {transform: [{rotate: `${360 - compassHeading}deg`}]};
-    }
-  });
-
-  useEffect(() => {
-    // Get Language
-    const getLanguage = async () => {
-      try {
-        const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const selfCoordinate = await AsyncStorage.getItem('selfCoordinate');
-
-        // Set Language
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
-        setLang(language);
-
-        // Set Player Coordinate
-        const coordinate = JSON.parse(selfCoordinate);
-        setPin(coordinate);
-      } catch (err) {
-        console.error(
-          'Error retrieving selfCoordinate from AsyncStorage:',
-          err,
-        );
-      }
-    };
-    getLanguage();
-
-    // Get Device Rotation
-    const degree_update_rate = 3;
-
-    CompassHeading.start(degree_update_rate, ({heading}) => {
-      setCompassHeading(heading);
-    });
-
-    return () => {
-      CompassHeading.stop();
-    };
-  }, []);
+    return {transform: [{rotate: `${rotationValue.value}deg`}]};
+  }); // Arrow Rotate Animation
 
   // As 'degToTarget' change UseEffect
   useEffect(() => {
@@ -113,11 +58,6 @@ export default function Home() {
       easing: Easing.linear,
     });
   }, [degToTarget]);
-
-  const rotateCompassToTarget = (latitude, longitude) => {
-    setTargetLatitude(latitude);
-    setTargetLongitude(longitude);
-  };
 
   // As 'showDetail' change UseEffect
   useEffect(() => {
@@ -133,21 +73,7 @@ export default function Home() {
     if (showDetail) {
       setShowDetail(!showDetail); // Show Card
     }
-
-    if (selectedMarker !== null) {
-      var latTarget = selectedMarker.lat;
-      var lngTarget = selectedMarker.lng;
-
-      console.log(
-        `Selected Marker : 
-                - Lat : ${latTarget}
-                - Lng : ${lngTarget} 
-      `,
-      );
-
-      rotateCompassToTarget(latTarget, lngTarget);
-    }
-  }, [selectedMarker]);
+  }, [setSelectedMarker, selectedMarker]);
 
   // Button Collapse Slider Card
   const handleShowDetail = () => {
@@ -159,21 +85,25 @@ export default function Home() {
     setShouldResetMap(true);
   };
 
-  // const calculateDirectionToTarget = (targetLongitude, targetLatitude) => {
-  //   const deltaLongitude = targetLongitude;
-  //   const deltaLatitude = targetLatitude;
-
-  //   return (Math.atan2(deltaLongitude, deltaLatitude) * 180) / Math.PI;
-  // };
-  const calculateDirectionToTarget = () => {
-    const deltaLongitude = targetLongitude;
-    const deltaLatitude = targetLatitude;
-    return (Math.atan2(deltaLongitude, deltaLatitude) * 180) / Math.PI;
-  };
-
   useEffect(() => {
-    console.log('');
-  }, [selectedMarker]);
+    // Get Language
+    const getLanguage = async () => {
+      try {
+        const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+
+        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
+        const language = langData[selectedLanguage];
+        setLang(language);
+      } catch (err) {
+        console.error(
+          'Error retrieving selfCoordinate from AsyncStorage:',
+          err,
+        );
+      }
+    };
+
+    getLanguage();
+  }, []);
 
   return (
     <SafeAreaView style={{flex: 1}}>
