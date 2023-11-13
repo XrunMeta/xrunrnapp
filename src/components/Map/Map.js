@@ -428,13 +428,13 @@ const MapComponent = ({
                 />
               </Text>
               <Text
-                key={localClickedRange}
+                key={jamal}
                 style={{
                   fontSize: 11,
                   fontFamily: 'Poppins-Medium',
                   color: '#343a59',
                 }}>
-                {localClickedRange}m
+                {jamal}m
               </Text>
             </View>
             {/* {console.log('Range Update : ' + localClickedRange)} */}
