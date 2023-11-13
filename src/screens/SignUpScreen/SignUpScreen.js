@@ -504,6 +504,7 @@ const styles = StyleSheet.create({
   normalText: {
     fontFamily: 'Poppins-Regular',
     fontSize: 13,
+    color: '#343a59',
   },
   label: {
     fontFamily: 'Poppins-Medium',

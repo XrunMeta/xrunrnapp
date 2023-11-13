@@ -6,7 +6,6 @@ import {
   SafeAreaView,
   StyleSheet,
   View,
-  TouchableOpacity,
 } from 'react-native';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import LinearGradient from 'react-native-linear-gradient';
@@ -35,14 +34,12 @@ export default function Home() {
   const offset = useSharedValue(initialOffset); // Slider Card Animation
   const [selectedMarker, setSelectedMarker] = useState(null); // Get Data from Selected Marker
   const [rangeToMarker, setRangeToMarker] = useState(0); // Get Range of Selected Marker
-  const [azimuth, setAzimuth] = useState(0);
   const [markerCount, setMarkerCount] = useState(0); // Count of Marker That Show on Map
   const [brandCount, setBrandCount] = useState(0); // Count of Brand from API
   const [bigCoin, setBigCoin] = useState(0); // Count of Big Coin from API
   const [degToTarget, setDegToTarget] = useState(0); // Get Degrees from User Coordinate -> Target Coordinate
   const [shouldResetMap, setShouldResetMap] = useState(false); // Reset Map after Click Back To Point on Map
   const rotationValue = useSharedValue(0); // Init Rotation of Arrow
-  const [directionToTarget, setDirectionToTarget] = useState(0);
   const [compassHeading, setCompassHeading] = useState(0);
   const [targetLatitude, setTargetLatitude] = useState(0);
   const [targetLongitude, setTargetLongitude] = useState(0);
@@ -138,13 +135,6 @@ export default function Home() {
       var latTarget = selectedMarker.lat;
       var lngTarget = selectedMarker.lng;
 
-      console.log(
-        `Selected Marker : 
-                - Lat : ${latTarget}
-                - Lng : ${lngTarget} 
-      `,
-      );
-
       rotateCompassToTarget(latTarget, lngTarget);
     }
   }, [selectedMarker]);
@@ -158,22 +148,6 @@ export default function Home() {
   const getBackToPoint = () => {
     setShouldResetMap(true);
   };
-
-  // const calculateDirectionToTarget = (targetLongitude, targetLatitude) => {
-  //   const deltaLongitude = targetLongitude;
-  //   const deltaLatitude = targetLatitude;
-
-  //   return (Math.atan2(deltaLongitude, deltaLatitude) * 180) / Math.PI;
-  // };
-  const calculateDirectionToTarget = () => {
-    const deltaLongitude = targetLongitude;
-    const deltaLatitude = targetLatitude;
-    return (Math.atan2(deltaLongitude, deltaLatitude) * 180) / Math.PI;
-  };
-
-  useEffect(() => {
-    console.log('');
-  }, [selectedMarker]);
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -246,6 +220,7 @@ export default function Home() {
               shouldResetMap={shouldResetMap}
               onResetMap={() => setShouldResetMap(false)}
               lang={lang}
+              jamal={rangeToMarker}
             />
           </View>
 

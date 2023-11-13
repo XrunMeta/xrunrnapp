@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
   },
   normalText: {
     fontFamily: 'Poppins-Medium',
-    fontSize: 18,
+    fontSize: 13,
     color: '#343a59',
   },
   boldText: {

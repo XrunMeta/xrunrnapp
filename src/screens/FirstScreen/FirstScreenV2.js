@@ -273,34 +273,16 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 20,
   },
-
   titleWrapper: {
     width: '100%',
     alignItems: 'center',
     marginVertical: 25,
   },
-
-  // titleWrapper: {
-  //   position: 'absolute', // Membuat elemen ini tumpang tindih dengan elemen di bawahnya
-  //   backgroundColor: 'pink', // Warna latar belakang pink
-  //   width: '100%',
-  //   zIndex: 1,
-  //   alignItems: 'center',
-  //   top: 50,
-  // },
-
   title: {
     fontSize: 22,
     color: '#343a59',
     fontFamily: 'Poppins-Bold',
   },
-  // sliderWrapper: {
-  //   width: '100%',
-  //   flexGrow: 1,
-  //   backgroundColor: 'pink',
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  // },
   sliderWrapper: {
     flex: 1,
     alignItems: 'center',
@@ -308,7 +290,6 @@ const styles = StyleSheet.create({
   },
   sliderImage: {
     width: Dimensions.get('window').width * 0.86, // 86% width of screen
-    // height: Dimensions.get('window').width * 0.8 * (200 / 351), // Sesuaikan tinggi sesuai aspek rasio gambar asli.
     height: '95%',
     borderRadius: 10,
     marginHorizontal: 5,
@@ -329,14 +310,13 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: 30,
   },
-
   text: {
     fontFamily: 'Poppins-Regular',
     textAlign: 'center',
     fontSize: 13,
     lineHeight: 19,
+    color: '#343a59',
   },
-
   link: {
     color: '#343a59',
     fontFamily: 'Poppins-Regular',
