@@ -6,7 +6,14 @@ import React, {
   useMemo,
   createRef,
 } from 'react';
-import {View, StyleSheet, Text, Image, ActivityIndicator} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  Image,
+  ActivityIndicator,
+  TouchableOpacity,
+} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE, Callout} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -47,6 +54,7 @@ const MapComponent = ({
   );
   const [localClickedRange, setLocalClickedRange] = useState(0);
   const [selectedMarker, setSelectedMarker] = useState(null);
+  const [calloutValue, setCalloutValue] = useState(0);
 
   // Blob to base64 PNG Converter
   const saveBlobAsImage = async (blob, filename) => {
@@ -208,6 +216,11 @@ const MapComponent = ({
     getSelfCoordinate();
   }, []);
 
+  const jamsSkuy = () => {
+    setCalloutValue(prevValue => prevValue + 1);
+    console.log('Bgst : ' + calloutValue);
+  };
+
   // As 'pin' change useEffect
   const handlePinChange = useCallback(
     (position, target) => {
@@ -320,6 +333,10 @@ const MapComponent = ({
 
     // console.log('Marker Index : ' + targetMarkerRef);
 
+    // if (targetMarkerRef.current) {
+    //   targetMarkerRef.current.showCallout();
+    // }
+
     setPinTarget({
       latitude: parseFloat(item.lat),
       longitude: parseFloat(item.lng),
@@ -380,8 +397,8 @@ const MapComponent = ({
 
     return markersData.map((item, idx) => (
       <Marker
-        // ref={markerRefs.current[idx]}
-        ref={markerRef}
+        ref={markerRefs.current[idx]}
+        // ref={markerRef}
         key={item.coin}
         coordinate={{
           latitude: parseFloat(item.lat),
@@ -419,6 +436,16 @@ const MapComponent = ({
               }}>
               <Text
                 style={{
+                  color: '#343a59',
+                  fontSize: 16,
+                  lineHeight: 20,
+                  textAlign: 'left',
+                  zIndex: 10,
+                }}>
+                Bgst {calloutValue}
+              </Text>
+              <Text
+                style={{
                   flex: 1,
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -445,6 +472,7 @@ const MapComponent = ({
                 {localClickedRange}m
               </Text>
             </View>
+            {/* {console.log('Range Update : ' + localClickedRange)} */}
             <View
               style={{
                 flex: 1,
@@ -481,20 +509,28 @@ const MapComponent = ({
         </Callout>
       </Marker>
     ));
-  }, [markersData, brandLogo, adThumbnail, localClickedRange, jamal]);
+  }, [
+    markersData,
+    brandLogo,
+    adThumbnail,
+    localClickedRange,
+    jamal,
+    calloutValue,
+  ]);
 
   // Main Return
   return (
     <View style={styles.container}>
-      {/* <Text
+      <TouchableOpacity
         style={{
           backgroundColor: 'pink',
           zIndex: 10,
           position: 'absolute',
           top: '60%',
-        }}>
-        Jamalllll : {jamal}
-      </Text> */}
+        }}
+        onPress={() => jamsSkuy()}>
+        <Text>Jamalllll : {jamal}</Text>
+      </TouchableOpacity>
 
       {loading ? (
         <View style={styles.loadingContainer}>
