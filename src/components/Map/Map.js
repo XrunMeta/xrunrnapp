@@ -6,14 +6,7 @@ import React, {
   useMemo,
   createRef,
 } from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  Image,
-  ActivityIndicator,
-  TouchableOpacity,
-} from 'react-native';
+import {View, StyleSheet, Text, Image, ActivityIndicator} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE, Callout} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -53,8 +46,6 @@ const MapComponent = ({
     Number.MAX_VALUE,
   );
   const [localClickedRange, setLocalClickedRange] = useState(0);
-  const [selectedMarker, setSelectedMarker] = useState(null);
-  const [calloutValue, setCalloutValue] = useState(0);
 
   // Blob to base64 PNG Converter
   const saveBlobAsImage = async (blob, filename) => {
@@ -189,17 +180,6 @@ const MapComponent = ({
 
               setImagesLoaded(true);
               setLoading(false);
-
-              // if (mapRef.current) {
-              //   const initialRegion = {
-              //     latitude: coordinate.latitude,
-              //     longitude: coordinate.longitude,
-              //     latitudeDelta: 0.001,
-              //     longitudeDelta: 0.001,
-              //   };
-
-              //   mapRef.current.animateToRegion(initialRegion, 1000);
-              // }
             })
             .catch(error => {
               console.error('Error while loading images:', error);
@@ -215,11 +195,6 @@ const MapComponent = ({
   useEffect(() => {
     getSelfCoordinate();
   }, []);
-
-  const jamsSkuy = () => {
-    setCalloutValue(prevValue => prevValue + 1);
-    console.log('Bgst : ' + calloutValue);
-  };
 
   // As 'pin' change useEffect
   const handlePinChange = useCallback(
@@ -324,12 +299,11 @@ const MapComponent = ({
   const handleMarkerClick = item => {
     clickedMarker(item);
     setLocalClickedRange(localClickedRange);
-    setSelectedMarker(item);
 
     console.log('Marker di klik : ' + item.distance);
 
     const markerIndex = markersData.findIndex(m => m.coin === item.coin);
-    const targetMarkerRef = markerRefs.current[markerIndex];
+    const targetMarkerRef = markerRef.current[markerIndex];
 
     // console.log('Marker Index : ' + targetMarkerRef);
 
@@ -397,9 +371,10 @@ const MapComponent = ({
 
     return markersData.map((item, idx) => (
       <Marker
-        ref={markerRefs.current[idx]}
-        // ref={markerRef}
+        // ref={markerRefs.current[idx]}
+        ref={markerRef}
         key={item.coin}
+        tracksInfoWindowChanges={true}
         coordinate={{
           latitude: parseFloat(item.lat),
           longitude: parseFloat(item.lng),
@@ -434,16 +409,6 @@ const MapComponent = ({
                 justifyContent: 'space-between',
                 marginLeft: 10,
               }}>
-              <Text
-                style={{
-                  color: '#343a59',
-                  fontSize: 16,
-                  lineHeight: 20,
-                  textAlign: 'left',
-                  zIndex: 10,
-                }}>
-                Bgst {calloutValue}
-              </Text>
               <Text
                 style={{
                   flex: 1,
@@ -513,15 +478,15 @@ const MapComponent = ({
     markersData,
     brandLogo,
     adThumbnail,
-    localClickedRange,
+    setLocalClickedRange,
     jamal,
-    calloutValue,
+    clickedMarker,
   ]);
 
   // Main Return
   return (
     <View style={styles.container}>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={{
           backgroundColor: 'pink',
           zIndex: 10,
@@ -530,7 +495,7 @@ const MapComponent = ({
         }}
         onPress={() => jamsSkuy()}>
         <Text>Jamalllll : {jamal}</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       {loading ? (
         <View style={styles.loadingContainer}>
