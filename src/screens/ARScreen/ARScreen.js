@@ -53,7 +53,12 @@ import React from 'react';
 const ARScreen = () => {
   return (
     <View>
-      <Text>ARScreen</Text>
+      <Text
+        style={{
+          color: 'black',
+        }}>
+        ARScreen
+      </Text>
     </View>
   );
 };

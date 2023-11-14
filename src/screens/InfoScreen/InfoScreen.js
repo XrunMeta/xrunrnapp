@@ -92,7 +92,7 @@ const InfoScreen = () => {
           onPress: () => {
             logout();
             // Go to First Screen
-            // navigation.navigate('First');
+            navigation.navigate('First');
           },
         },
       ],
@@ -200,9 +200,7 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
               color: 'grey',
               marginTop: -3,
             }}>
-            {userDetails && userDetails.email
-              ? userDetails.email
-              : 'Loading...'}
+            {userDetails && userDetails.email ? userDetails.email : ''}
           </Text>
         </View>
         <View
@@ -325,7 +323,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f2f5f6',
   },
   titleWrapper: {
-    paddingVertical: 10,
+    paddingVertical: 7,
     alignItems: 'center',
     backgroundColor: 'white',
     justifyContent: 'center',

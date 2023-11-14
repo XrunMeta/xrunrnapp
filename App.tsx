@@ -10,6 +10,7 @@ import {SafeAreaView, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {AuthProvider} from './src/context/AuthContext/AuthContext';
 import {Navigation, MainTabNavigator} from './src/navigation';
+import Home from './src/screens/HomeScreen';
 
 function App(): JSX.Element {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -38,7 +39,7 @@ function App(): JSX.Element {
   return (
     <AuthProvider>
       <SafeAreaView style={styles.root}>
-        {isLoggedIn ? <MainTabNavigator /> : <Navigation />}
+        {isLoggedIn ? <Home /> : <Navigation />}
       </SafeAreaView>
     </AuthProvider>
   );

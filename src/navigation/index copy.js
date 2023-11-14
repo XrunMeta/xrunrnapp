@@ -75,6 +75,7 @@ export const Navigation = () => {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="ARScreen" component={ARScreen} />
         <Stack.Screen name="AppInformation" component={AppInformation} />
+        <Stack.Screen name="MainTabNavigator" component={MainTabNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
   );
