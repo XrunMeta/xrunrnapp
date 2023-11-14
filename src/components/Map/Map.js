@@ -26,7 +26,7 @@ const MapComponent = ({
   shouldResetMap,
   onResetMap,
   lang,
-  jamal,
+  updateRange,
 }) => {
   const [pin, setPin] = useState(null); // Get User Coordinate
   const [pinTarget, setPinTarget] = useState(0); // Get Target Coordinate
@@ -303,13 +303,6 @@ const MapComponent = ({
     console.log('Marker di klik : ' + item.distance);
 
     const markerIndex = markersData.findIndex(m => m.coin === item.coin);
-    const targetMarkerRef = markerRef.current[markerIndex];
-
-    // console.log('Marker Index : ' + targetMarkerRef);
-
-    // if (targetMarkerRef.current) {
-    //   targetMarkerRef.current.showCallout();
-    // }
 
     setPinTarget({
       latitude: parseFloat(item.lat),
@@ -428,13 +421,13 @@ const MapComponent = ({
                 />
               </Text>
               <Text
-                key={jamal}
+                key={updateRange}
                 style={{
                   fontSize: 11,
                   fontFamily: 'Poppins-Medium',
                   color: '#343a59',
                 }}>
-                {jamal}m
+                {updateRange}m
               </Text>
             </View>
             {/* {console.log('Range Update : ' + localClickedRange)} */}
@@ -479,7 +472,7 @@ const MapComponent = ({
     brandLogo,
     adThumbnail,
     setLocalClickedRange,
-    jamal,
+    updateRange,
     clickedMarker,
   ]);
 
@@ -494,7 +487,7 @@ const MapComponent = ({
           top: '60%',
         }}
         onPress={() => jamsSkuy()}>
-        <Text>Jamalllll : {jamal}</Text>
+        <Text>updateRangellll : {updateRange}</Text>
       </TouchableOpacity> */}
 
       {loading ? (

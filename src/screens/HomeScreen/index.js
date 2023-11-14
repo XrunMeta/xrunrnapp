@@ -220,7 +220,7 @@ export default function Home() {
               shouldResetMap={shouldResetMap}
               onResetMap={() => setShouldResetMap(false)}
               lang={lang}
-              jamal={rangeToMarker}
+              updateRange={rangeToMarker}
             />
           </View>
 
@@ -247,7 +247,7 @@ export default function Home() {
                 position: 'absolute',
                 left: 0,
                 right: 0,
-                bottom: 95, // Atur bottom ke 0 untuk selalu menempel ke bawah
+                bottom: 95,
                 height: 170,
                 pointerEvents: 'none',
               }}>

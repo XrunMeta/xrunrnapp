@@ -16,10 +16,10 @@ const ButtonList = ({label, onPress}) => {
       <View>
         <Text
           style={{
-            fontFamily: 'Poppins-Medium',
-            fontSize: 18,
+            fontFamily: 'Poppins-Regular',
+            fontSize: 13,
             color: 'black',
-            paddingVertical: 20,
+            paddingVertical: 18,
           }}>
           {label}
         </Text>

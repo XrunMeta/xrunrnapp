@@ -16,7 +16,11 @@ import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
 
+// Get Language Data
+const langData = require('../../../lang.json');
+
 const InfoScreen = () => {
+  const [lang, setLang] = useState({});
   const {isLoggedIn, logout} = useAuth();
   const [userName, setUserName] = useState(null);
   const [userDetails, setUserDetails] = useState([]);
@@ -30,10 +34,15 @@ const InfoScreen = () => {
     const fetchData = async () => {
       try {
         const userEmail = await AsyncStorage.getItem('userEmail');
+        const currentLanguage = await AsyncStorage.getItem('currentLanguage');
         const response = await fetch(
           `https://app.xrun.run/gateway.php?act=login-04-email&email=${userEmail}`,
         );
         const data = await response.json();
+
+        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
+        const language = langData[selectedLanguage];
+        setLang(language);
 
         if (data.data === 'true') {
           const fullName = `${data.firstname}${data.lastname}`;
@@ -65,21 +74,29 @@ const InfoScreen = () => {
   }, []);
 
   const onLogout = () => {
-    Alert.alert('Warning', 'Are you sure you want to logout?', [
-      {
-        text: 'Cancel',
-        onPress: () => console.log('Cancel Pressed'),
-        style: 'cancel',
-      },
-      {
-        text: 'OK',
-        onPress: () => {
-          logout();
-          // Go to First Screen
-          // navigation.navigate('First');
+    Alert.alert(
+      `${lang && lang.alert ? lang.alert.title.warning : ''}`,
+      `${
+        lang && lang.screen_info && lang.screen_info.button.logout
+          ? lang.screen_info.button.logout
+          : ''
+      }`,
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
         },
-      },
-    ]);
+        {
+          text: 'OK',
+          onPress: () => {
+            logout();
+            // Go to First Screen
+            // navigation.navigate('First');
+          },
+        },
+      ],
+    );
   };
 
   const onShare = async () => {
@@ -144,7 +161,11 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
           <ButtonBack onClick={onBack} />
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>My Info</Text>
+          <Text style={styles.title}>
+            {lang && lang.screen_info && lang.screen_info.title
+              ? lang.screen_info.title
+              : ''}
+          </Text>
         </View>
       </View>
 
@@ -164,21 +185,24 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
           }}>
           <Text
             style={{
-              fontFamily: 'Poppins-Medium',
-              fontSize: 18,
+              fontFamily: 'Poppins-Regular',
+              fontSize: 13,
               color: 'black',
             }}>
-            {userDetails
+            {userDetails && userDetails.firstname && userDetails.lastname
               ? `${userDetails.firstname}${userDetails.lastname}`
               : 'Loading...'}
           </Text>
           <Text
             style={{
-              fontFamily: 'Poppins-Medium',
-              fontSize: 16,
+              fontFamily: 'Poppins-Regular',
+              fontSize: 11,
               color: 'grey',
+              marginTop: -3,
             }}>
-            {userDetails ? userDetails.email : 'Loading...'}
+            {userDetails && userDetails.email
+              ? userDetails.email
+              : 'Loading...'}
           </Text>
         </View>
         <View
@@ -202,8 +226,8 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
               source={require('../../../assets/images/icon_share.png')}
               resizeMode="contain"
               style={{
-                height: 25,
-                width: 25,
+                height: 15,
+                width: 15,
                 marginLeft: -1,
                 marginRight: 1,
               }}
@@ -223,8 +247,8 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
               source={require('../../../assets/images/icon_logout.png')}
               resizeMode="contain"
               style={{
-                height: 23,
-                width: 23,
+                height: 12,
+                width: 12,
                 marginLeft: 1,
                 marginRight: -1,
                 opacity: 0.5,
@@ -241,12 +265,52 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
           flex: 1,
         }}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <ButtonList label="Modify Information" onPress={onModify} />
-          <ButtonList label="Setting" onPress={onSetting} />
-          <ButtonList label="Clause" onPress={onClause} />
-          <ButtonList label="Customer Service" />
-          <ButtonList label="App Information" onPress={onAppInfo} />
-          <ButtonList label="Recommend" />
+          <ButtonList
+            label={
+              lang && lang.screen_info && lang.screen_info.list.modify
+                ? lang.screen_info.list.modify
+                : ''
+            }
+            onPress={onModify}
+          />
+          <ButtonList
+            label={
+              lang && lang.screen_info && lang.screen_info.list.setting
+                ? lang.screen_info.list.setting
+                : ''
+            }
+            onPress={onSetting}
+          />
+          <ButtonList
+            label={
+              lang && lang.screen_info && lang.screen_info.list.clause
+                ? lang.screen_info.list.clause
+                : ''
+            }
+            onPress={onClause}
+          />
+          <ButtonList
+            label={
+              lang && lang.screen_info && lang.screen_info.list.cs
+                ? lang.screen_info.list.cs
+                : ''
+            }
+          />
+          <ButtonList
+            label={
+              lang && lang.screen_info && lang.screen_info.list.app_info
+                ? lang.screen_info.list.app_info
+                : ''
+            }
+            onPress={onAppInfo}
+          />
+          <ButtonList
+            label={
+              lang && lang.screen_info && lang.screen_info.list.recommend
+                ? lang.screen_info.list.recommend
+                : ''
+            }
+          />
         </ScrollView>
       </View>
     </View>
@@ -270,8 +334,8 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 22,
+    fontFamily: 'Poppins-Bold',
     color: '#051C60',
     margin: 10,
   },

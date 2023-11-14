@@ -140,6 +140,21 @@
         "desc1": "Ada sebuah",
         "desc2": "dengan"
       }
+    },
+
+    "screen_info": {
+      "title": "Info Saya",
+      "list": {
+        "modify": "Ubah Informasi",
+        "setting": "Pengaturan",
+        "clause": "Klausa",
+        "cs": "Layanan Pelanggan",
+        "app_info": "Informasi Aplikasi",
+        "recommend": "Rekomendasi"
+      },
+      "button": {
+        "logout": "Apakah Anda yakin ingin keluar?"
+      }
     }
   },
 
@@ -283,6 +298,21 @@
         "loader": "Loading...",
         "desc1": "There is an",
         "desc2": "with"
+      }
+    },
+
+    "screen_info": {
+      "title": "My Info",
+      "list": {
+        "modify": "Modify Information",
+        "setting": "Setting",
+        "clause": "Clause",
+        "cs": "Customer Service",
+        "app_info": "App Information",
+        "recommend": "Recommend"
+      },
+      "button": {
+        "logout": "Are you sure you want to logout?"
       }
     }
   }
