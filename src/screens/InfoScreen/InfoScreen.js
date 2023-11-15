@@ -73,6 +73,11 @@ const InfoScreen = () => {
     fetchData();
   }, []);
 
+  // Check login status and navigate to SignIn if not logged in
+  if (!isLoggedIn) {
+    navigation.replace('SignIn');
+  }
+
   const onLogout = () => {
     Alert.alert(
       `${lang && lang.alert ? lang.alert.title.warning : ''}`,
@@ -91,8 +96,8 @@ const InfoScreen = () => {
           text: 'OK',
           onPress: () => {
             logout();
-            // Go to First Screen
-            navigation.navigate('First');
+            // Go to SignIn Screen
+            navigation.replace('SignIn');
           },
         },
       ],
@@ -127,7 +132,7 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
   };
 
   const onModify = () => {
-    console.warn('Modify');
+    navigation.navigate('ConfirmPassword');
   };
 
   const onSetting = () => {

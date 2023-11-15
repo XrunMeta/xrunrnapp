@@ -63,7 +63,7 @@ const SignInScreen = () => {
         if (data === 'OK') {
           await AsyncStorage.setItem('userEmail', email);
           login();
-          navigation.navigate('MainTabNavigator');
+          navigation.navigate('Home');
           // Simpan session dan navigasi ke halaman selanjutnya
         } else {
           Alert.alert(
