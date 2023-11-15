@@ -27,6 +27,7 @@ import ClauseForPersonal from './src/screens/ClauseForPersonal/ClauseForPersonal
 import Testing from './src/screens/testing';
 import ConfirmPasswordScreen from './src/screens/ConfirmPasswordScreen';
 import ModifInfoScreen from './src/screens/ModifInfoScreen';
+import TemplateScreen from './src/screens/TemplateScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -78,6 +79,7 @@ export default function App() {
                 component={ConfirmPasswordScreen}
               />
               <Stack.Screen name="ModifInfo" component={ModifInfoScreen} />
+              <Stack.Screen name="Template" component={TemplateScreen} />
             </>
           ) : (
             <>

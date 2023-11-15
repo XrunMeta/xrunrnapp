@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput';
+import CustomInputEdit from '../../components/CustomInputEdit/CustomInputEdit';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import CustomMultipleChecbox from '../../components/CustomCheckbox/CustomMultipleCheckbox';
@@ -32,6 +33,8 @@ const ModifInfoScreen = ({route}) => {
   const {flag, countryCode, country} = route.params || {};
   const [areaData, setAreaData] = useState([]);
   const [isListWrapperVisible, setIsListWrapperVisible] = useState(false);
+  const [tempValue, setTempValue] = useState(0);
+  const [userData, setUserData] = useState({});
 
   const navigation = useNavigation();
 
@@ -64,7 +67,7 @@ const ModifInfoScreen = ({route}) => {
   };
 
   const onBack = () => {
-    navigation.navigate('First');
+    navigation.replace('InfoHome');
   };
 
   const chooseRegion = (flag, countryCode, country) => {
@@ -127,6 +130,18 @@ const ModifInfoScreen = ({route}) => {
         var arrResult = jsonToArr.flat();
         setAreaData(arrResult);
         // setAreaData(jsonData);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+
+    // Get User Information
+    fetch(`https://app.xrun.run/gateway.php?act=app7000-01&member=1102`)
+      .then(response => response.json())
+      .then(jsonData => {
+        var userData = jsonData.data[0];
+
+        setUserData(userData);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
@@ -239,96 +254,164 @@ const ModifInfoScreen = ({route}) => {
   }, [region]);
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={[styles.root]}>
-        <ButtonBack onClick={onBack} />
-
-        {/*  Title */}
+    <View style={[styles.root]}>
+      {/* Title */}
+      <View style={{flexDirection: 'row'}}>
+        <View style={{position: 'absolute', zIndex: 1}}>
+          <ButtonBack onClick={onBack} />
+        </View>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>Modify Information</Text>
         </View>
+      </View>
+
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/*  Field - Last Name */}
+        <CustomInputEdit
+          title="Last Name"
+          label="Last Name"
+          placeholder="Your last name"
+          value={userData.firstname}
+          setValue={setName}
+          content={
+            <View
+              style={{
+                flex: 1,
+                paddingHorizontal: 25,
+                marginTop: 30,
+              }}>
+              <Text
+                style={{
+                  fontFamily: 'Poppins-Medium',
+                  fontSize: 13,
+                  marginBottom: -10,
+                  color: '#343a59',
+                }}>
+                Last Name
+              </Text>
+              <TextInput
+                value={userData.firstname}
+                onChangeText={setName}
+                placeholder="Your last name"
+                placeholderTextColor="#a8a8a7"
+                style={{
+                  height: 40,
+                  paddingBottom: -10,
+                  fontFamily: 'Poppins-Medium',
+                  fontSize: 13,
+                  color: '#343a59',
+                  borderBottomColor: '#cccccc',
+                  borderBottomWidth: 1,
+                  paddingRight: 30,
+                  paddingLeft: -10,
+                }}
+              />
+            </View>
+          }
+        />
 
         {/*  Field - Name */}
-        <CustomInput
-          label={
-            lang && lang.screen_signup && lang.screen_signup.name
-              ? lang.screen_signup.name.label
-              : ''
-          }
-          placeholder={
-            lang && lang.screen_signup && lang.screen_signup.name
-              ? lang.screen_signup.name.placeholder
-              : ''
-          }
-          value={name}
+        <CustomInputEdit
+          title="Name"
+          label="Name"
+          placeholder="Your name"
+          value={userData.lastname}
           setValue={setName}
-          isPassword={false}
+          content={
+            <View
+              style={{
+                flex: 1,
+                paddingHorizontal: 25,
+                marginTop: 30,
+              }}>
+              <Text
+                style={{
+                  fontFamily: 'Poppins-Medium',
+                  fontSize: 13,
+                  marginBottom: -10,
+                  color: '#343a59',
+                }}>
+                Name
+              </Text>
+              <TextInput
+                value={userData.lastname}
+                onChangeText={setName}
+                placeholder="Your name"
+                placeholderTextColor="#a8a8a7"
+                style={{
+                  height: 40,
+                  paddingBottom: -10,
+                  fontFamily: 'Poppins-Medium',
+                  fontSize: 13,
+                  color: '#343a59',
+                  borderBottomColor: '#cccccc',
+                  borderBottomWidth: 1,
+                  paddingRight: 30,
+                  paddingLeft: -10,
+                }}
+              />
+            </View>
+          }
         />
 
         {/*  Field - Email */}
-        <CustomInput
-          label={
-            lang && lang.screen_signup && lang.screen_signup.email
-              ? lang.screen_signup.email.label
-              : ''
-          }
-          placeholder={
-            lang && lang.screen_signup && lang.screen_signup.email
-              ? lang.screen_signup.email.placeholder
-              : ''
-          }
-          value={email}
+        <CustomInputEdit
+          title="Email"
+          label="Email"
+          placeholder="xrun@xrun.run"
+          value={userData.email}
           setValue={onEmailChange}
-          isPassword={false}
-        />
-        {isEmailValid ? null : (
-          <Text
-            style={{
-              alignSelf: 'flex-start',
-              marginLeft: 25,
-              color: 'red',
-              fontFamily: 'Poppins-Medium',
-              fontSize: 13,
-            }}>
-            {lang && lang.screen_signup && lang.screen_signup.validator
-              ? lang.screen_signup.validator.invalidEmail
-              : ''}
-          </Text>
-        )}
-
-        {/*  Field - Password */}
-        <CustomInput
-          label={
-            lang && lang.screen_signup && lang.screen_signup.password
-              ? lang.screen_signup.password.label
-              : ''
+          isDisable={true}
+          content={
+            <View
+              style={{
+                flex: 1,
+                paddingHorizontal: 25,
+                marginTop: 30,
+              }}>
+              <Text
+                style={{
+                  fontFamily: 'Poppins-Medium',
+                  fontSize: 13,
+                  marginBottom: -10,
+                  color: '#343a59',
+                }}>
+                Email
+              </Text>
+              <TextInput
+                value={userData.email}
+                onChangeText={onEmailChange}
+                placeholder="xrun@xrun.run"
+                placeholderTextColor="#a8a8a7"
+                style={{
+                  height: 40,
+                  paddingBottom: -10,
+                  fontFamily: 'Poppins-Medium',
+                  fontSize: 13,
+                  color: '#343a59',
+                  borderBottomColor: '#cccccc',
+                  borderBottomWidth: 1,
+                  paddingRight: 30,
+                  paddingLeft: -10,
+                }}
+              />
+            </View>
           }
-          placeholder={
-            lang && lang.screen_signup && lang.screen_signup.password
-              ? lang.screen_signup.password.placeholder
-              : ''
-          }
-          value={password}
-          setValue={setPassword}
-          secureTextEntry
-          isPassword={true}
         />
 
         {/*  Field - Phone Number */}
         <View style={styles.formGroup}>
-          <Text style={styles.label}>
-            {lang && lang.screen_signup && lang.screen_signup.phone_number
-              ? lang.screen_signup.phone_number.label
-              : ''}
-          </Text>
+          <Text style={styles.label}>Phone Number</Text>
           <View
             style={{
               width: '100%',
               flexDirection: 'row',
+              backgroundColor: '#e5e5e56e',
             }}>
             <Pressable
               style={{flexDirection: 'row', marginBottom: -10}}
-              onPress={() => chooseRegion(flag, countryCode, country)}>
+              onPress={() => chooseRegion(flag, countryCode, country)}
+              disabled={true}>
               <Image
                 resizeMode="contain"
                 style={{
@@ -359,11 +442,47 @@ const ModifInfoScreen = ({route}) => {
             <TextInput
               keyboardType="numeric"
               style={styles.input}
-              setValue={setPhoneNumber}
+              value={userData.mobile}
               onChangeText={text => setPhoneNumber(text)}
+              editable={false}
             />
           </View>
         </View>
+        {/*  Field - Password */}
+        <CustomInput
+          label={
+            lang && lang.screen_signup && lang.screen_signup.password
+              ? lang.screen_signup.password.label
+              : ''
+          }
+          placeholder={
+            lang && lang.screen_signup && lang.screen_signup.password
+              ? lang.screen_signup.password.placeholder
+              : ''
+          }
+          value={password}
+          setValue={setPassword}
+          secureTextEntry
+          isPassword={true}
+        />
+
+        {/*  Field - Age */}
+        <CustomInput
+          label={'Age'}
+          placeholder={'Age'}
+          value={region}
+          setValue={setRegion}
+          isPassword={false}
+        />
+
+        {/*  Field - Gender */}
+        <CustomInput
+          label={'Gender'}
+          placeholder={'Gender'}
+          value={region}
+          setValue={setRegion}
+          isPassword={false}
+        />
 
         {/*  Field - Region */}
         <CustomInput
@@ -381,9 +500,7 @@ const ModifInfoScreen = ({route}) => {
           setValue={setRegion}
           isPassword={false}
         />
-
         {isListWrapperVisible && <ListWrapper onClose={closeButton} />}
-
         {/*  Field - Gender */}
         <View style={[styles.formGroup, {zIndex: -1}]}>
           <Text style={styles.label}>
@@ -408,7 +525,6 @@ const ModifInfoScreen = ({route}) => {
             onCheckChange={genderSelector}
           />
         </View>
-
         {/*  Field - Age */}
         <View style={[styles.formGroup, {zIndex: -1}]}>
           <Text style={styles.label}>
@@ -425,7 +541,6 @@ const ModifInfoScreen = ({route}) => {
             onCheckChange={ageSelector}
           />
         </View>
-
         {/* Field - Referral Email */}
         <CustomInput
           label={
@@ -442,7 +557,6 @@ const ModifInfoScreen = ({route}) => {
           setValue={setRefferalEmail}
           isPassword={false}
         />
-
         {/* Bottom Section */}
         <View style={[styles.bottomSection]}>
           <View style={styles.additionalLogin}>
@@ -463,9 +577,10 @@ const ModifInfoScreen = ({route}) => {
               style={styles.buttonSignUpImage}
             />
           </Pressable>
+          {/* Halo selamat malam semua, hari ini saya merubah logic navigation antar screen sehingga sudah berhasil untuk fungsi logout, saya juga membuat halaman untuk confirm password jika user mau mengubah informasi dirinya dan sudah terhubung ke API, saya juga membuat form untuk mengeditnya. Terimakasih */}
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 };
 
@@ -473,17 +588,22 @@ const styles = StyleSheet.create({
   root: {
     alignItems: 'center',
     flex: 1,
+    backgroundColor: 'white',
   },
   titleWrapper: {
-    width: '100%',
-    paddingHorizontal: 20,
-    marginBottom: -20,
+    paddingVertical: 7,
     alignItems: 'center',
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    flex: 1,
+    elevation: 5,
+    zIndex: 0,
   },
   title: {
     fontFamily: 'Poppins-Bold',
     fontSize: 22,
     color: '#343a59',
+    margin: 10,
   },
   bottomSection: {
     padding: 20,
@@ -533,7 +653,7 @@ const styles = StyleSheet.create({
   input: {
     fontFamily: 'Poppins-Medium',
     fontSize: 13,
-    color: '#343a59',
+    color: '#a8a8a7',
     borderBottomColor: '#cccccc',
     borderBottomWidth: 1,
     paddingHorizontal: 5,
