@@ -18,7 +18,7 @@ const TemplateScreen = ({title, content, onBack, onSave}) => {
   const navigation = useNavigation();
   let ScreenHeight = Dimensions.get('window').height;
 
-  const onSignIn = async () => {};
+  const onSaveChange = async () => {};
 
   const handleBack = () => {
     if (onBack) {
@@ -72,7 +72,7 @@ const TemplateScreen = ({title, content, onBack, onSave}) => {
 
       <View style={[styles.bottomSection]}>
         <View style={styles.additionalLogin}></View>
-        <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
+        <Pressable onPress={onSaveChange} style={styles.buttonSignIn}>
           <Image
             source={require('../../../assets/images/icon_next.png')}
             resizeMode="contain"

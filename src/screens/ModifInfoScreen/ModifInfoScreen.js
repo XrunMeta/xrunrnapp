@@ -8,6 +8,7 @@ import {
   Alert,
   TextInput,
   TouchableWithoutFeedback,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput';
@@ -21,10 +22,13 @@ const langData = require('../../../lang.json');
 
 const ModifInfoScreen = ({route}) => {
   const [lang, setLang] = useState({});
+  const [lastName, setLastName] = useState('');
+  const [tempLastName, setTempLastName] = useState('');
   const [name, setName] = useState('');
+  const [tempName, setTempName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [password, setPassword] = useState('');
   const [region, setRegion] = useState('');
   const [gender, setGender] = useState('pria');
   const [age, setAge] = useState('10');
@@ -35,6 +39,7 @@ const ModifInfoScreen = ({route}) => {
   const [isListWrapperVisible, setIsListWrapperVisible] = useState(false);
   const [tempValue, setTempValue] = useState(0);
   const [userData, setUserData] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   const navigation = useNavigation();
 
@@ -142,6 +147,23 @@ const ModifInfoScreen = ({route}) => {
         var userData = jsonData.data[0];
 
         setUserData(userData);
+        console.log(userData);
+
+        // Lastname
+        setLastName(userData.firstname);
+        setTempLastName(userData.firstname);
+
+        // Firstname
+        setName(userData.lastname);
+        setTempName(userData.lastName);
+
+        // Password
+        var pinChange = formatDate(userData.datepinchanged);
+        setPassword(pinChange);
+
+        // Remove Loading
+        setIsLoading(false);
+        console.log('Fetch udah selesai');
       })
       .catch(error => {
         console.error('Error fetching data:', error);
@@ -253,8 +275,38 @@ const ModifInfoScreen = ({route}) => {
     }
   }, [region]);
 
+  // Format Date
+  const formatDate = dateTimeString => {
+    // Ubah string tanggal dan waktu menjadi objek Date
+    const date = new Date(dateTimeString);
+
+    // Ambil bagian tanggal dalam format YYYY-MM-DD
+    const formattedDate = date.toISOString().split('T')[0];
+
+    return formattedDate;
+  };
+
   return (
     <View style={[styles.root]}>
+      {isLoading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#343a59" />
+          <Text
+            style={{
+              color: 'white',
+              fontFamily: 'Poppins-Regular',
+              fontSize: 13,
+            }}>
+            {lang && lang.screen_map && lang.screen_map.section_marker
+              ? lang.screen_map.section_marker.loader
+              : ''}
+          </Text>
+          {/* Show Loading While Data is Load */}
+        </View>
+      ) : (
+        ''
+      )}
+      {console.log('Gua udah dirender')}
       {/* Title */}
       <View style={{flexDirection: 'row'}}>
         <View style={{position: 'absolute', zIndex: 1}}>
@@ -271,8 +323,10 @@ const ModifInfoScreen = ({route}) => {
           title="Last Name"
           label="Last Name"
           placeholder="Your last name"
-          value={userData.firstname}
-          setValue={setName}
+          value={lastName}
+          setValue={setLastName}
+          onSaveChange={() => setLastName(tempLastName)}
+          onBack={() => setTempLastName(lastName)}
           content={
             <View
               style={{
@@ -290,8 +344,8 @@ const ModifInfoScreen = ({route}) => {
                 Last Name
               </Text>
               <TextInput
-                value={userData.firstname}
-                onChangeText={setName}
+                value={tempLastName}
+                onChangeText={setTempLastName}
                 placeholder="Your last name"
                 placeholderTextColor="#a8a8a7"
                 style={{
@@ -315,8 +369,10 @@ const ModifInfoScreen = ({route}) => {
           title="Name"
           label="Name"
           placeholder="Your name"
-          value={userData.lastname}
+          value={name}
           setValue={setName}
+          onSaveChange={() => setName(tempName)}
+          onBack={() => setTempName(name)}
           content={
             <View
               style={{
@@ -334,8 +390,8 @@ const ModifInfoScreen = ({route}) => {
                 Name
               </Text>
               <TextInput
-                value={userData.lastname}
-                onChangeText={setName}
+                value={tempName}
+                onChangeText={setTempName}
                 placeholder="Your name"
                 placeholderTextColor="#a8a8a7"
                 style={{
@@ -407,9 +463,11 @@ const ModifInfoScreen = ({route}) => {
               width: '100%',
               flexDirection: 'row',
               backgroundColor: '#e5e5e56e',
+              height: 30,
+              marginTop: 5,
             }}>
             <Pressable
-              style={{flexDirection: 'row', marginBottom: -10}}
+              style={{flexDirection: 'row', marginBottom: -5}}
               onPress={() => chooseRegion(flag, countryCode, country)}
               disabled={true}>
               <Image
@@ -417,6 +475,8 @@ const ModifInfoScreen = ({route}) => {
                 style={{
                   width: 35,
                   marginRight: 10,
+                  marginBottom: 5,
+                  marginLeft: 5,
                 }}
                 source={
                   flag == undefined
@@ -448,22 +508,49 @@ const ModifInfoScreen = ({route}) => {
             />
           </View>
         </View>
+
         {/*  Field - Password */}
-        <CustomInput
-          label={
-            lang && lang.screen_signup && lang.screen_signup.password
-              ? lang.screen_signup.password.label
-              : ''
-          }
-          placeholder={
-            lang && lang.screen_signup && lang.screen_signup.password
-              ? lang.screen_signup.password.placeholder
-              : ''
-          }
-          value={password}
+        <CustomInputEdit
+          title="Password"
+          label="Password"
+          placeholder="Your Password"
+          value={'Final change date : ' + password}
           setValue={setPassword}
-          secureTextEntry
-          isPassword={true}
+          content={
+            <View
+              style={{
+                flex: 1,
+                paddingHorizontal: 25,
+                marginTop: 30,
+              }}>
+              <Text
+                style={{
+                  fontFamily: 'Poppins-Medium',
+                  fontSize: 13,
+                  marginBottom: -10,
+                  color: '#343a59',
+                }}>
+                New Password
+              </Text>
+              <TextInput
+                value={''}
+                onChangeText={setPassword}
+                placeholder="Please enter your name password"
+                placeholderTextColor="#a8a8a7"
+                style={{
+                  height: 40,
+                  paddingBottom: -10,
+                  fontFamily: 'Poppins-Medium',
+                  fontSize: 13,
+                  color: '#343a59',
+                  borderBottomColor: '#cccccc',
+                  borderBottomWidth: 1,
+                  paddingRight: 30,
+                  paddingLeft: -10,
+                }}
+              />
+            </View>
+          }
         />
 
         {/*  Field - Age */}
@@ -577,7 +664,7 @@ const ModifInfoScreen = ({route}) => {
               style={styles.buttonSignUpImage}
             />
           </Pressable>
-          {/* Halo selamat malam semua, hari ini saya merubah logic navigation antar screen sehingga sudah berhasil untuk fungsi logout, saya juga membuat halaman untuk confirm password jika user mau mengubah informasi dirinya dan sudah terhubung ke API, saya juga membuat form untuk mengeditnya. Terimakasih */}
+          {/*  */}
         </View>
       </ScrollView>
     </View>
@@ -591,7 +678,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   titleWrapper: {
-    paddingVertical: 7,
+    paddingVertical: 9,
     alignItems: 'center',
     backgroundColor: 'white',
     justifyContent: 'center',
@@ -659,6 +746,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     paddingBottom: -10,
     flex: 1,
+  },
+  loadingContainer: {
+    ...StyleSheet.absoluteFill,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    zIndex: 1,
   },
 });
 

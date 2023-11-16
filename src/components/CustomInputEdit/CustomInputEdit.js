@@ -4,40 +4,38 @@ import {
   Text,
   TouchableOpacity,
   Modal,
-  TextInput,
   StyleSheet,
   Pressable,
   Image,
+  Dimensions,
+  ScrollView,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import TemplateScreen from '../../screens/TemplateScreen';
+import ButtonBack from '../ButtonBack';
 
 const CustomInputEdit = ({
   title,
   label,
   value,
-  setValue,
-  placeholder,
   content,
   isDisable,
+  onSaveChange,
+  onBack,
 }) => {
   const [isModalVisible, setModalVisible] = useState(false);
-  const [tempValue, setTempValue] = useState(value);
-
-  const navigation = useNavigation();
+  let ScreenHeight = Dimensions.get('window').height;
 
   const openModal = () => {
-    setTempValue(value); // Set nilai sementara sesuai dengan nilai awal
     setModalVisible(true);
   };
 
   const closeModal = () => {
     setModalVisible(false);
+    onBack();
   };
 
+  // Logika untuk menyimpan perubahan nilai
   const saveChanges = () => {
-    // Logika untuk menyimpan perubahan nilai
-    setValue(tempValue);
+    onSaveChange();
     closeModal();
   };
 
@@ -65,14 +63,86 @@ const CustomInputEdit = ({
         transparent={true}
         visible={isModalVisible}
         onRequestClose={closeModal}>
+        {/* <ScrollView showsVerticalScrollIndicator={false}> */}
         <View style={styles.modalContainer}>
-          <TemplateScreen
-            title={title}
-            content={content}
-            onBack={closeModal}
-            onSave={saveChanges}
-          />
+          <View
+            style={[
+              {alignItems: 'center', flex: 1, backgroundColor: 'white'},
+              {height: ScreenHeight},
+            ]}>
+            {/* Title */}
+            <View style={{flexDirection: 'row'}}>
+              <View style={{position: 'absolute', zIndex: 1}}>
+                <ButtonBack onClick={closeModal} />
+              </View>
+              <View
+                style={{
+                  paddingVertical: 7,
+                  alignItems: 'center',
+                  backgroundColor: 'white',
+                  justifyContent: 'center',
+                  flex: 1,
+                  elevation: 5,
+                  zIndex: 0,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 22,
+                    fontFamily: 'Poppins-Bold',
+                    color: '#051C60',
+                    margin: 10,
+                  }}>
+                  {title} Modify
+                </Text>
+              </View>
+            </View>
+
+            {/* Content Here */}
+            <View
+              style={{
+                flexDirection: 'row',
+                flex: 1,
+              }}>
+              {content}
+            </View>
+
+            <View
+              style={{
+                padding: 5,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                flex: 1,
+                width: '100%',
+              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignSelf: 'flex-end',
+                  alignItems: 'center',
+                  height: 100,
+                  flex: 1,
+                }}></View>
+              <Pressable
+                onPress={saveChanges}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  alignSelf: 'flex-end',
+                  flexDirection: 'column-reverse',
+                  height: 100,
+                  justifyContent: 'center',
+                  marginRight: 10,
+                }}>
+                <Image
+                  source={require('../../../assets/images/icon_next.png')}
+                  resizeMode="contain"
+                  style={{height: 80, width: 80}}
+                />
+              </Pressable>
+            </View>
+          </View>
         </View>
+        {/* </ScrollView> */}
       </Modal>
     </View>
   );
@@ -108,32 +178,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
-    width: '80%',
-  },
-  modalInput: {
-    height: 40,
-    fontFamily: 'Poppins-Medium',
-    fontSize: 13,
-    color: '#343a59',
-    borderBottomColor: '#cccccc',
-    borderBottomWidth: 1,
-    marginBottom: 20,
-  },
-  modalButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  modalButton: {
-    flex: 1,
-    padding: 10,
-    borderRadius: 5,
-    marginHorizontal: 5,
-    backgroundColor: '#051C60',
   },
 });
 
