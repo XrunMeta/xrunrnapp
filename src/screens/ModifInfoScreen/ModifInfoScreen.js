@@ -9,6 +9,7 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput';
@@ -29,15 +30,16 @@ const ModifInfoScreen = ({route}) => {
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
+  const [age, setAge] = useState('');
+  const [tempAge, setTempAge] = useState('');
+  const [checkedAge, setCheckedAge] = useState(0);
   const [region, setRegion] = useState('');
   const [gender, setGender] = useState('pria');
-  const [age, setAge] = useState('10');
   const [refferalEmail, setRefferalEmail] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(true);
   const {flag, countryCode, country} = route.params || {};
   const [areaData, setAreaData] = useState([]);
   const [isListWrapperVisible, setIsListWrapperVisible] = useState(false);
-  const [tempValue, setTempValue] = useState(0);
   const [userData, setUserData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
@@ -93,15 +95,15 @@ const ModifInfoScreen = ({route}) => {
 
   const ageSelector = getAge => {
     if (getAge == 0) {
-      setAge('10');
+      setTempAge('10');
     } else if (getAge == 1) {
-      setAge('20');
+      setTempAge('20');
     } else if (getAge == 2) {
-      setAge('30');
+      setTempAge('30');
     } else if (getAge == 3) {
-      setAge('40');
+      setTempAge('40');
     } else if (getAge == 4) {
-      setAge('50+');
+      setTempAge('50');
     }
   };
 
@@ -160,6 +162,11 @@ const ModifInfoScreen = ({route}) => {
         // Password
         var pinChange = formatDate(userData.datepinchanged);
         setPassword(pinChange);
+
+        // Age
+        const getAge = justGetNumber(userData.cages);
+        setAge(getAge);
+        setTempAge(getAge);
 
         // Remove Loading
         setIsLoading(false);
@@ -286,6 +293,21 @@ const ModifInfoScreen = ({route}) => {
     return formattedDate;
   };
 
+  const onChangePassword = () => {
+    console.log('Buka halaman');
+    navigation.navigate('ConfirmPasswordEdit');
+  };
+
+  const justGetNumber = str => {
+    // Menggunakan ekspresi reguler untuk menghapus karakter selain angka
+    const angkaPolos = str.replace(/\D/g, '');
+
+    // Mengonversi string yang sudah bersih menjadi nomor
+    const angka = parseInt(angkaPolos);
+
+    return isNaN(angka) ? null : angka; // Mengembalikan null jika tidak ada angka
+  };
+
   return (
     <View style={[styles.root]}>
       {isLoading ? (
@@ -306,7 +328,6 @@ const ModifInfoScreen = ({route}) => {
       ) : (
         ''
       )}
-      {console.log('Gua udah dirender')}
       {/* Title */}
       <View style={{flexDirection: 'row'}}>
         <View style={{position: 'absolute', zIndex: 1}}>
@@ -509,57 +530,76 @@ const ModifInfoScreen = ({route}) => {
           </View>
         </View>
 
-        {/*  Field - Password */}
-        <CustomInputEdit
-          title="Password"
-          label="Password"
-          placeholder="Your Password"
-          value={'Final change date : ' + password}
-          setValue={setPassword}
-          content={
+        {/* Password */}
+        <View style={{width: '100%', paddingHorizontal: 25, marginTop: 30}}>
+          <Text
+            style={{
+              fontFamily: 'Poppins-Medium',
+              fontSize: 13,
+              marginBottom: -10,
+              color: '#343a59',
+              zIndex: 1,
+            }}>
+            Password
+          </Text>
+          <TouchableOpacity onPress={onChangePassword}>
             <View
-              style={{
-                flex: 1,
-                paddingHorizontal: 25,
-                marginTop: 30,
-              }}>
+              style={[
+                {
+                  height: 40,
+                  borderBottomColor: '#cccccc',
+                  borderBottomWidth: 1,
+                  justifyContent: 'center',
+                },
+              ]}>
               <Text
                 style={{
                   fontFamily: 'Poppins-Medium',
                   fontSize: 13,
-                  marginBottom: -10,
                   color: '#343a59',
-                }}>
-                New Password
-              </Text>
-              <TextInput
-                value={''}
-                onChangeText={setPassword}
-                placeholder="Please enter your name password"
-                placeholderTextColor="#a8a8a7"
-                style={{
-                  height: 40,
-                  paddingBottom: -10,
-                  fontFamily: 'Poppins-Medium',
-                  fontSize: 13,
-                  color: '#343a59',
-                  borderBottomColor: '#cccccc',
-                  borderBottomWidth: 1,
                   paddingRight: 30,
                   paddingLeft: -10,
-                }}
-              />
+                }}>
+                Final change date :{' '}
+                <Text
+                  style={{color: '#ffc404', fontFamily: 'Poppins-SemiBold'}}>
+                  {password}
+                </Text>
+              </Text>
             </View>
-          }
-        />
+          </TouchableOpacity>
+        </View>
 
         {/*  Field - Age */}
-        <CustomInput
-          label={'Age'}
-          placeholder={'Age'}
-          value={region}
-          setValue={setRegion}
-          isPassword={false}
+        <CustomInputEdit
+          title="Age"
+          label="Age"
+          placeholder="Age"
+          value={age + 's'}
+          setValue={setAge}
+          onSaveChange={() => {
+            setAge(tempAge);
+          }}
+          onBack={() => setTempAge(age)}
+          content={
+            <View style={[styles.formGroup, {zIndex: -1}]}>
+              <Text style={styles.label}>Age</Text>
+              <CustomMultipleChecbox
+                texts={['10', '20', '30', '40', '50']}
+                count={5}
+                singleCheck={true}
+                wrapperStyle={styles.horizontalChecbox}
+                defaultCheckedIndices={() => {
+                  // Masalah disini soal checked buat di Age Modify
+                  const getCheckedAge = parseInt(age) / 10 - 1;
+                  setCheckedAge(getCheckedAge);
+                  return [getCheckedAge];
+                }}
+                onCheckChange={ageSelector}
+              />
+            </View>
+            // Halo selamat malam semua hari ini saya mengerjakan data parsing dan UI pada last name, name, password (dengan konfirmasi keamanan), dan pilihan umur. Terimakasih
+          }
         />
 
         {/*  Field - Gender */}
@@ -620,7 +660,7 @@ const ModifInfoScreen = ({route}) => {
               : ''}
           </Text>
           <CustomMultipleChecbox
-            texts={['10', '20', '30', '40', '50+']}
+            texts={['10', '20', '30', '40', '50']}
             count={5}
             singleCheck={true}
             wrapperStyle={styles.horizontalChecbox}

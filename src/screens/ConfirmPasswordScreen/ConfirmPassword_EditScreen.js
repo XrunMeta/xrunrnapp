@@ -15,7 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const langData = require('../../../lang.json');
 
-const ConfirmPassword = () => {
+const ConfirmPasswordEdit = () => {
   const [lang, setLang] = useState({});
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -35,7 +35,7 @@ const ConfirmPassword = () => {
         const data = await response.text();
 
         if (data === 'OK') {
-          navigation.replace('ModifInfo');
+          navigation.replace('EditPassword');
         } else {
           Alert.alert('Error', 'password salah');
         }
@@ -109,7 +109,7 @@ const ConfirmPassword = () => {
           marginTop: 5,
         }}>
         <Text style={styles.subTitle}>
-          *Please enter your password for personal information.
+          *Please enter your existing password for security
         </Text>
       </View>
 
@@ -168,16 +168,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 100,
   },
-  normalText: {
-    fontFamily: 'Poppins-Regular',
-    fontSize: 13,
-    color: '#343a59',
-  },
-  emailAuth: {
-    fontFamily: 'Poppins-SemiBold',
-    fontSize: 13,
-    color: '#343a59',
-  },
   buttonSignIn: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -192,4 +182,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ConfirmPassword;
+export default ConfirmPasswordEdit;

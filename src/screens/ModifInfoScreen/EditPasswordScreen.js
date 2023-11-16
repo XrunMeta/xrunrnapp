@@ -1,3 +1,4 @@
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -5,49 +6,32 @@ import {
   Pressable,
   Image,
   Dimensions,
-  Alert,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
-import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CustomInput from '../../components/CustomInput';
 
 const langData = require('../../../lang.json');
 
-const ConfirmPassword = () => {
+const EditPassword = () => {
   const [lang, setLang] = useState({});
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
   const navigation = useNavigation();
-
+  const [password, setPassword] = useState('');
   let ScreenHeight = Dimensions.get('window').height;
 
-  const onSignIn = async () => {
-    if (password.trim() === '') {
-      Alert.alert('Error', 'password gaboleh kosong');
+  const onSaveChange = () => {
+    if (password == '') {
+      alert('Please enter your password');
     } else {
-      try {
-        const response = await fetch(
-          `https://app.xrun.run/gateway.php?act=login-checker&email=${email}&pin=${password}`,
-        );
-        const data = await response.text();
-
-        if (data === 'OK') {
-          navigation.replace('ModifInfo');
-        } else {
-          Alert.alert('Error', 'password salah');
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        Alert.alert('Error', 'An error occurred while logging in');
-      }
+      console.log(`
+      Password Baru : ${password}
+      `);
+      navigation.goBack();
     }
   };
 
-  const onBack = () => {
-    // navigation.navigate('First');
+  const handleBack = () => {
     navigation.goBack();
   };
 
@@ -56,9 +40,6 @@ const ConfirmPassword = () => {
     const getLanguage = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const userEmail = await AsyncStorage.getItem('userEmail');
-
-        setEmail(userEmail);
 
         const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
         const language = langData[selectedLanguage];
@@ -79,43 +60,25 @@ const ConfirmPassword = () => {
       {/* Title */}
       <View style={{flexDirection: 'row'}}>
         <View style={{position: 'absolute', zIndex: 1}}>
-          <ButtonBack onClick={onBack} />
+          <ButtonBack onClick={handleBack} />
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>Confirm Password</Text>
+          <Text style={styles.title}>Password Modify</Text>
         </View>
       </View>
 
       <CustomInput
-        label={
-          lang && lang.screen_signin && lang.screen_signin.password
-            ? lang.screen_signin.password.label
-            : ''
-        }
-        placeholder={
-          lang && lang.screen_signin && lang.screen_signin.password
-            ? lang.screen_signin.password.placeholder
-            : ''
-        }
+        label="New Password"
+        placeholder="Please enter your new password"
         value={password}
         setValue={setPassword}
         secureTextEntry
         isPassword={true}
       />
-      <View
-        style={{
-          width: '100%',
-          paddingHorizontal: 25,
-          marginTop: 5,
-        }}>
-        <Text style={styles.subTitle}>
-          *Please enter your password for personal information.
-        </Text>
-      </View>
 
       <View style={[styles.bottomSection]}>
         <View style={styles.additionalLogin}></View>
-        <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
+        <Pressable onPress={onSaveChange} style={styles.buttonSignIn}>
           <Image
             source={require('../../../assets/images/icon_next.png')}
             resizeMode="contain"
@@ -148,15 +111,8 @@ const styles = StyleSheet.create({
     color: '#051C60',
     margin: 10,
   },
-  subTitle: {
-    fontFamily: 'Poppins-Medium',
-    fontSize: 11,
-    color: '#343a59',
-    marginTop: -3,
-  },
   bottomSection: {
-    padding: 20,
-    paddingBottom: 40,
+    padding: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
     flex: 1,
@@ -167,16 +123,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     alignItems: 'center',
     height: 100,
-  },
-  normalText: {
-    fontFamily: 'Poppins-Regular',
-    fontSize: 13,
-    color: '#343a59',
-  },
-  emailAuth: {
-    fontFamily: 'Poppins-SemiBold',
-    fontSize: 13,
-    color: '#343a59',
+    flex: 1,
   },
   buttonSignIn: {
     flexDirection: 'row',
@@ -185,6 +132,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column-reverse',
     height: 100,
     justifyContent: 'center',
+    marginRight: 10,
   },
   buttonSignInImage: {
     height: 80,
@@ -192,4 +140,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ConfirmPassword;
+export default EditPassword;

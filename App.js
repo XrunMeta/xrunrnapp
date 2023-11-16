@@ -28,6 +28,8 @@ import Testing from './src/screens/testing';
 import ConfirmPasswordScreen from './src/screens/ConfirmPasswordScreen';
 import ModifInfoScreen from './src/screens/ModifInfoScreen';
 import TemplateScreen from './src/screens/TemplateScreen';
+import ConfirmPasswordEdit from './src/screens/ConfirmPasswordScreen/ConfirmPassword_EditScreen';
+import EditPassword from './src/screens/ModifInfoScreen/EditPasswordScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -80,6 +82,11 @@ export default function App() {
               />
               <Stack.Screen name="ModifInfo" component={ModifInfoScreen} />
               <Stack.Screen name="Template" component={TemplateScreen} />
+              <Stack.Screen
+                name="ConfirmPasswordEdit"
+                component={ConfirmPasswordEdit}
+              />
+              <Stack.Screen name="EditPassword" component={EditPassword} />
             </>
           ) : (
             <>
@@ -119,6 +126,11 @@ export default function App() {
                 name="ConfirmPassword"
                 component={ConfirmPasswordScreen}
               />
+              <Stack.Screen
+                name="ConfirmPasswordEdit"
+                component={ConfirmPasswordEdit}
+              />
+              <Stack.Screen name="EditPassword" component={EditPassword} />
             </>
           )}
         </Stack.Navigator>
