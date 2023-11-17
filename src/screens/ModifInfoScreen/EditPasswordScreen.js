@@ -24,10 +24,35 @@ const EditPassword = () => {
     if (password == '') {
       alert('Please enter your password');
     } else {
-      console.log(`
-      Password Baru : ${password}
-      `);
-      navigation.goBack();
+      const savePassword = async () => {
+        try {
+          const apiUrl = `https://app.xrun.run/gateway.php?act=app7163-01&member=1102&pin=${password}`;
+
+          const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              member: 1102,
+              pin: password,
+            }),
+          });
+
+          console.log(response);
+
+          if (!response.ok) {
+            throw new Error('Gagal menyimpan perubahan.');
+          }
+
+          console.log(`Password Baru : ${password}`);
+          navigation.goBack();
+        } catch (error) {
+          console.error('Terjadi kesalahan:', error.message);
+        }
+      };
+
+      savePassword();
     }
   };
 
