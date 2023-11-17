@@ -134,7 +134,7 @@ const CustomInputEdit = ({
                   marginRight: 10,
                 }}>
                 <Image
-                  source={require('../../../assets/images/icon_next.png')}
+                  source={require('../../../assets/images/icon_check.png')}
                   resizeMode="contain"
                   style={{height: 80, width: 80}}
                 />

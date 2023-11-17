@@ -138,7 +138,7 @@ const ModifInfoScreen = ({route}) => {
 
         // Firstname
         setName(userData.lastname);
-        setTempName(userData.lastName);
+        setTempName(userData.lastname);
 
         // Password
         var pinChange = formatDate(userData.datepinchanged);
@@ -199,6 +199,34 @@ const ModifInfoScreen = ({route}) => {
     return isNaN(angka) ? null : angka; // Mengembalikan null jika tidak ada angka
   };
 
+  const saveChangesToAPI = async (
+    act,
+    memberId,
+    additionalKey,
+    additionalValue,
+    bodyData,
+  ) => {
+    try {
+      const apiUrl = `https://app.xrun.run/gateway.php?act=${act}&member=${memberId}&${additionalKey}=${additionalValue}`;
+
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bodyData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Gagal menyimpan perubahan.');
+      }
+
+      console.log('Perubahan berhasil disimpan ke API');
+    } catch (error) {
+      console.error('Terjadi kesalahan:', error.message);
+    }
+  };
+
   return (
     <View style={[styles.root]}>
       {isLoading ? (
@@ -238,7 +266,12 @@ const ModifInfoScreen = ({route}) => {
             placeholder="Your last name"
             value={lastName}
             setValue={setLastName}
-            onSaveChange={() => setLastName(tempLastName)}
+            onSaveChange={() => {
+              setLastName(tempLastName);
+              saveChangesToAPI('app7120-01', 1102, 'firstname', tempLastName, {
+                firstname: tempLastName,
+              });
+            }}
             onBack={() => setTempLastName(lastName)}
             content={
               <View
@@ -284,7 +317,12 @@ const ModifInfoScreen = ({route}) => {
             placeholder="Your name"
             value={name}
             setValue={setName}
-            onSaveChange={() => setName(tempName)}
+            onSaveChange={() => {
+              setName(tempName);
+              saveChangesToAPI('app7130-01', 1102, 'lastname', tempName, {
+                lastname: tempName,
+              });
+            }}
             onBack={() => setTempName(name)}
             content={
               <View
@@ -484,7 +522,6 @@ const ModifInfoScreen = ({route}) => {
                   defaultCheckedIndices={() => {
                     // Masalah disini soal checked buat di Age Modify
                     const getCheckedAge = parseInt(age) / 10 - 1;
-                    setCheckedAge(getCheckedAge);
                     return [getCheckedAge];
                   }}
                   onCheckChange={ageSelector}

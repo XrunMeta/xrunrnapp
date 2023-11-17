@@ -80,7 +80,7 @@ const EditPassword = () => {
         <View style={styles.additionalLogin}></View>
         <Pressable onPress={onSaveChange} style={styles.buttonSignIn}>
           <Image
-            source={require('../../../assets/images/icon_next.png')}
+            source={require('../../../assets/images/icon_check.png')}
             resizeMode="contain"
             style={styles.buttonSignInImage}
           />
