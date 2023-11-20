@@ -292,6 +292,17 @@ const ModifInfoScreen = ({route}) => {
     setCountryModalVisible(false);
   };
 
+  // On Select Area / Region
+  const onSelectArea = selectedArea => {
+    setTempRegion({
+      rDesc: selectedArea.description,
+      rCode: selectedArea.subcode,
+    });
+
+    // Setelah mengirim data, Anda bisa menutup modal
+    setAreaModalVisible(false);
+  };
+
   return (
     <View style={[styles.root]}>
       {isLoading ? (
@@ -764,7 +775,7 @@ const ModifInfoScreen = ({route}) => {
               renderItem={({item}) => (
                 <TouchableOpacity
                   style={styles.modalItem}
-                  onPress={() => onSelectCountry(item)}>
+                  onPress={() => onSelectArea(item)}>
                   <Text style={styles.modalItemText}>{item.description}</Text>
                 </TouchableOpacity>
               )}
