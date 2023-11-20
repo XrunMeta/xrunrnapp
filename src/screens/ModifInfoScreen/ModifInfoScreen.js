@@ -517,10 +517,6 @@ const ModifInfoScreen = ({route}) => {
               saveChangesToAPI('app7170-01', 1102, 'ages', valueAge, {
                 ages: valueAge,
               });
-              console.log(`
-              Age yg di select : ${tempAge}
-              Valuenya : ${valueAge} 
-              `);
               setAge(tempAge);
             }}
             onBack={() => setTempAge(age)}
@@ -551,6 +547,9 @@ const ModifInfoScreen = ({route}) => {
             value={gender == 2110 ? 'Boy/Men' : 'Girl/Women'}
             setValue={setGender}
             onSaveChange={() => {
+              saveChangesToAPI('app7180-01', 1102, 'gender', tempGender, {
+                gender: tempGender,
+              });
               setGender(tempGender);
             }}
             onBack={() => setTempGender(gender)}
