@@ -43,12 +43,10 @@ const ModifInfoScreen = ({route}) => {
   const {flag, countryCode, country} = route.params || {};
   const [userData, setUserData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const [countryModalVisible, setCountryModalVisible] = useState(false);
-  const [areaModalVisible, setAreaModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   const [countries, setCountries] = useState([]);
   const [areas, setAreas] = useState([]);
-  const [dataCountryModal, setDataCountryModal] = useState(null);
-  const [dataAreaModal, setDataAreaModal] = useState(null);
+  const [dataModal, setDataModal] = useState(null);
   const [selectedCountryCode, setSelectedCountryCode] = useState(lcountry.code);
   const [selectedAreas, setSelectedAreas] = useState([]);
 
@@ -249,32 +247,37 @@ const ModifInfoScreen = ({route}) => {
     }
   };
 
-  const openCountryModal = () => {
+  useEffect(() => {
     fetch('https://app.xrun.run/gateway.php?act=countries')
       .then(response => response.json())
       .then(data => {
-        setDataCountryModal(data);
+        setCountries(data);
       })
       .catch(error => {
         console.error('Error fetching countries:', error);
       });
 
-    setCountryModalVisible(true);
-  };
-
-  const openAreaModal = () => {
+    // Memuat data dari API untuk area
     fetch(
       'https://app.xrun.run/gateway.php?act=app7190-01&country=' +
-        lcountry.cCode,
+        (lcountry.cCode ? lcountry.cCode : 62),
     )
       .then(response => response.json())
       .then(data => {
-        setDataAreaModal(data.data);
+        setAreas(data);
       })
       .catch(error => {
         console.error('Error fetching areas:', error);
       });
-    setAreaModalVisible(true);
+  }, []);
+
+  const openModal = data => {
+    if (data === 'country') {
+      setDataModal(countries);
+    } else if (data === 'area') {
+      setDataModal(selectedAreas);
+    }
+    setModalVisible(true);
   };
 
   const onSelectCountry = selectedCountry => {
@@ -283,13 +286,23 @@ const ModifInfoScreen = ({route}) => {
       cCode: selectedCountry.callnumber,
     });
 
-    console.log(`
-      Country Desc : ${selectedCountry.country}
-      Country Code : ${selectedCountry.callnumber}
-    `);
+    // Perbarui state selectedCountryCode
+    setSelectedCountryCode(selectedCountry.callnumber);
+
+    // Panggil API untuk mendapatkan data area sesuai dengan negara yang dipilih
+    fetch(
+      `https://app.xrun.run/gateway.php?act=app7190-01&country=${selectedCountry.callnumber}`,
+    )
+      .then(response => response.json())
+      .then(data => {
+        setSelectedAreas(data);
+      })
+      .catch(error => {
+        console.error('Error fetching areas:', error);
+      });
 
     // Setelah mengirim data, Anda bisa menutup modal
-    setCountryModalVisible(false);
+    setModalVisible(false);
   };
 
   return (
@@ -484,6 +497,7 @@ const ModifInfoScreen = ({route}) => {
               }}>
               <Pressable
                 style={{flexDirection: 'row', marginBottom: -5}}
+                onPress={() => chooseRegion(flag, countryCode, country)}
                 disabled={true}>
                 <Image
                   resizeMode="contain"
@@ -649,7 +663,7 @@ const ModifInfoScreen = ({route}) => {
                     }}>
                     Nationality / Country
                   </Text>
-                  <TouchableOpacity onPress={() => openCountryModal()}>
+                  <TouchableOpacity onPress={() => openModal('country')}>
                     <View
                       style={[
                         {
@@ -685,7 +699,7 @@ const ModifInfoScreen = ({route}) => {
                     }}>
                     Area
                   </Text>
-                  <TouchableOpacity onPress={() => openAreaModal()}>
+                  <TouchableOpacity onPress={() => openModal('area')}>
                     <View
                       style={[
                         {
@@ -715,18 +729,19 @@ const ModifInfoScreen = ({route}) => {
         </View>
       </ScrollView>
 
-      {/* Country Modal */}
+      {/* Modal for Country List */}
       <Modal
         animationType="slide"
         transparent={true}
-        visible={countryModalVisible}
+        visible={modalVisible}
         onRequestClose={() => {
-          setModalCountryVisible(false);
+          setModalVisible(false);
         }}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
+            {console.log('Data Countries : ' + dataModal)}
             <FlatList
-              data={dataCountryModal}
+              data={dataModal}
               keyExtractor={item => item.code}
               renderItem={({item}) => (
                 <TouchableOpacity
@@ -741,38 +756,8 @@ const ModifInfoScreen = ({route}) => {
             />
             <TouchableOpacity
               style={styles.closeButton}
-              onPress={() => setCountryModalVisible(false)}>
-              <Text style={styles.closeButtonText}>Close Country</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      {/* Area Modal */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={areaModalVisible}
-        onRequestClose={() => {
-          setModalAreaVisible(false);
-        }}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <FlatList
-              data={dataAreaModal}
-              keyExtractor={item => item.subcode}
-              renderItem={({item}) => (
-                <TouchableOpacity
-                  style={styles.modalItem}
-                  onPress={() => onSelectCountry(item)}>
-                  <Text style={styles.modalItemText}>{item.description}</Text>
-                </TouchableOpacity>
-              )}
-            />
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => setAreaModalVisible(false)}>
-              <Text style={styles.closeButtonText}>Close Area</Text>
+              onPress={() => setModalVisible(false)}>
+              <Text style={styles.closeButtonText}>Close</Text>
             </TouchableOpacity>
           </View>
         </View>

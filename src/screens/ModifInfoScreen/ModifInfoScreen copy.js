@@ -7,10 +7,9 @@ import {
   Image,
   Alert,
   TextInput,
+  TouchableWithoutFeedback,
   ActivityIndicator,
   TouchableOpacity,
-  Modal,
-  FlatList,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput';
@@ -38,19 +37,9 @@ const ModifInfoScreen = ({route}) => {
   const [tempGender, setTempGender] = useState(0);
   const [region, setRegion] = useState({});
   const [tempRegion, setTempRegion] = useState({});
-  const [lcountry, setlCountry] = useState({});
-  const [ltempCountry, setlTempCountry] = useState({});
   const {flag, countryCode, country} = route.params || {};
   const [userData, setUserData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const [countryModalVisible, setCountryModalVisible] = useState(false);
-  const [areaModalVisible, setAreaModalVisible] = useState(false);
-  const [countries, setCountries] = useState([]);
-  const [areas, setAreas] = useState([]);
-  const [dataCountryModal, setDataCountryModal] = useState(null);
-  const [dataAreaModal, setDataAreaModal] = useState(null);
-  const [selectedCountryCode, setSelectedCountryCode] = useState(lcountry.code);
-  const [selectedAreas, setSelectedAreas] = useState([]);
 
   const navigation = useNavigation();
 
@@ -171,19 +160,14 @@ const ModifInfoScreen = ({route}) => {
         setGender(userData.gender);
         setTempGender(userData.gender);
 
-        // Region & Country
-        var countryData = {
-          cDesc: userData.cdesc,
-          cCode: userData.country,
-        };
-
+        // Region
         var regionData = {
-          rDesc: userData.rdesc,
-          rCode: userData.region,
+          region: userData.region,
+          regionDesc: userData.rdesc,
+          cDesc: userData.cdesc,
+          country: userData.country,
+          countryCode: userData.countrycode,
         };
-
-        setlCountry(countryData);
-        setlTempCountry(countryData);
         setRegion(regionData);
         setTempRegion(regionData);
 
@@ -247,49 +231,6 @@ const ModifInfoScreen = ({route}) => {
     } catch (error) {
       console.error('Terjadi kesalahan:', error.message);
     }
-  };
-
-  const openCountryModal = () => {
-    fetch('https://app.xrun.run/gateway.php?act=countries')
-      .then(response => response.json())
-      .then(data => {
-        setDataCountryModal(data);
-      })
-      .catch(error => {
-        console.error('Error fetching countries:', error);
-      });
-
-    setCountryModalVisible(true);
-  };
-
-  const openAreaModal = () => {
-    fetch(
-      'https://app.xrun.run/gateway.php?act=app7190-01&country=' +
-        lcountry.cCode,
-    )
-      .then(response => response.json())
-      .then(data => {
-        setDataAreaModal(data.data);
-      })
-      .catch(error => {
-        console.error('Error fetching areas:', error);
-      });
-    setAreaModalVisible(true);
-  };
-
-  const onSelectCountry = selectedCountry => {
-    setlTempCountry({
-      cDesc: selectedCountry.country,
-      cCode: selectedCountry.callnumber,
-    });
-
-    console.log(`
-      Country Desc : ${selectedCountry.country}
-      Country Code : ${selectedCountry.callnumber}
-    `);
-
-    // Setelah mengirim data, Anda bisa menutup modal
-    setCountryModalVisible(false);
   };
 
   return (
@@ -484,6 +425,7 @@ const ModifInfoScreen = ({route}) => {
               }}>
               <Pressable
                 style={{flexDirection: 'row', marginBottom: -5}}
+                onPress={() => chooseRegion(flag, countryCode, country)}
                 disabled={true}>
                 <Image
                   resizeMode="contain"
@@ -631,152 +573,93 @@ const ModifInfoScreen = ({route}) => {
             title="Area"
             label="Area"
             placeholder="Your Area"
-            value={region.rDesc}
-            setValue={setRegion.rDesc}
+            value={region.cDesc}
+            setValue={setRegion.cDesc}
             onSaveChange={() => setLastName(tempLastName)}
             onBack={() => setTempLastName(lastName)}
             content={
               <View style={{flex: 1}}>
                 <View
-                  style={{width: '100%', paddingHorizontal: 25, marginTop: 30}}>
+                  style={{
+                    paddingHorizontal: 25,
+                    marginTop: 30,
+                  }}>
+                  {/* <TouchableOpacity onPress={openModal}> */}
+                  <TouchableOpacity>
+                    <Text
+                      style={{
+                        fontFamily: 'Poppins-Medium',
+                        fontSize: 13,
+                        marginBottom: -10,
+                        color: '#343a59',
+                      }}>
+                      Choose your country
+                    </Text>
+                  </TouchableOpacity>
                   <Text
                     style={{
                       fontFamily: 'Poppins-Medium',
                       fontSize: 13,
                       marginBottom: -10,
                       color: '#343a59',
-                      zIndex: 1,
                     }}>
                     Nationality / Country
                   </Text>
-                  <TouchableOpacity onPress={() => openCountryModal()}>
-                    <View
-                      style={[
-                        {
-                          height: 40,
-                          borderBottomColor: '#cccccc',
-                          borderBottomWidth: 1,
-                          justifyContent: 'center',
-                        },
-                      ]}>
-                      <Text
-                        style={{
-                          fontFamily: 'Poppins-Medium',
-                          fontSize: 13,
-                          color: '#343a59',
-                          paddingRight: 30,
-                          paddingLeft: -10,
-                          marginBottom: -7,
-                        }}>
-                        {ltempCountry.cDesc + ` (+${ltempCountry.cCode})`}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
+                  <TextInput
+                    value={tempRegion.cDesc + ` (+${tempRegion.country})`}
+                    onChangeText={setTempRegion.cDesc}
+                    placeholder="Choose your country"
+                    placeholderTextColor="#a8a8a7"
+                    style={{
+                      height: 40,
+                      paddingBottom: -10,
+                      fontFamily: 'Poppins-Medium',
+                      fontSize: 13,
+                      color: '#343a59',
+                      borderBottomColor: '#cccccc',
+                      borderBottomWidth: 1,
+                      paddingRight: 30,
+                      paddingLeft: -10,
+                    }}
+                  />
                 </View>
                 <View
-                  style={{width: '100%', paddingHorizontal: 25, marginTop: 30}}>
+                  style={{
+                    paddingHorizontal: 25,
+                    marginTop: 30,
+                  }}>
                   <Text
                     style={{
                       fontFamily: 'Poppins-Medium',
                       fontSize: 13,
                       marginBottom: -10,
                       color: '#343a59',
-                      zIndex: 1,
                     }}>
                     Area
                   </Text>
-                  <TouchableOpacity onPress={() => openAreaModal()}>
-                    <View
-                      style={[
-                        {
-                          height: 40,
-                          borderBottomColor: '#cccccc',
-                          borderBottomWidth: 1,
-                          justifyContent: 'center',
-                        },
-                      ]}>
-                      <Text
-                        style={{
-                          fontFamily: 'Poppins-Medium',
-                          fontSize: 13,
-                          color: '#343a59',
-                          paddingRight: 30,
-                          paddingLeft: -10,
-                          marginBottom: -7,
-                        }}>
-                        {tempRegion.rDesc}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
+                  <TextInput
+                    value={tempRegion.regionDesc}
+                    onChangeText={setTempLastName}
+                    placeholder="Choose your area"
+                    placeholderTextColor="#a8a8a7"
+                    style={{
+                      height: 40,
+                      paddingBottom: -10,
+                      fontFamily: 'Poppins-Medium',
+                      fontSize: 13,
+                      color: '#343a59',
+                      borderBottomColor: '#cccccc',
+                      borderBottomWidth: 1,
+                      paddingRight: 30,
+                      paddingLeft: -10,
+                    }}
+                  />
                 </View>
               </View>
             }
           />
         </View>
       </ScrollView>
-
-      {/* Country Modal */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={countryModalVisible}
-        onRequestClose={() => {
-          setModalCountryVisible(false);
-        }}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <FlatList
-              data={dataCountryModal}
-              keyExtractor={item => item.code}
-              renderItem={({item}) => (
-                <TouchableOpacity
-                  style={styles.modalItem}
-                  onPress={() => onSelectCountry(item)}>
-                  <Text style={[styles.modalItemText, {marginRight: 10}]}>
-                    +{item.callnumber}
-                  </Text>
-                  <Text style={styles.modalItemText}>{item.country}</Text>
-                </TouchableOpacity>
-              )}
-            />
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => setCountryModalVisible(false)}>
-              <Text style={styles.closeButtonText}>Close Country</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      {/* Area Modal */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={areaModalVisible}
-        onRequestClose={() => {
-          setModalAreaVisible(false);
-        }}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <FlatList
-              data={dataAreaModal}
-              keyExtractor={item => item.subcode}
-              renderItem={({item}) => (
-                <TouchableOpacity
-                  style={styles.modalItem}
-                  onPress={() => onSelectCountry(item)}>
-                  <Text style={styles.modalItemText}>{item.description}</Text>
-                </TouchableOpacity>
-              )}
-            />
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => setAreaModalVisible(false)}>
-              <Text style={styles.closeButtonText}>Close Area</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
     </View>
   );
 };
@@ -839,44 +722,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     zIndex: 1,
-  },
-
-  // Styles for Modal
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    width: '80%',
-    backgroundColor: 'white',
-    padding: 15,
-    borderRadius: 10,
-    marginVertical: 150,
-  },
-  modalItem: {
-    paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    flexDirection: 'row',
-  },
-  modalItemText: {
-    fontSize: 13,
-    fontFamily: 'Poppins-Regular',
-    color: '#343a59',
-  },
-  closeButton: {
-    marginTop: 5,
-    backgroundColor: '#343a59',
-    paddingVertical: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  closeButtonText: {
-    color: 'white',
-    fontSize: 13,
-    fontFamily: 'Poppins-Regular',
   },
 });
 
