@@ -32,6 +32,7 @@ const ModifInfoScreen = ({route}) => {
   const [password, setPassword] = useState('');
   const [age, setAge] = useState('');
   const [tempAge, setTempAge] = useState('');
+  const [valueAge, setValueAge] = useState(2200);
   const [gender, setGender] = useState(0);
   const [tempGender, setTempGender] = useState(0);
   const [region, setRegion] = useState({});
@@ -85,14 +86,19 @@ const ModifInfoScreen = ({route}) => {
   const ageSelector = getAge => {
     if (getAge == 0) {
       setTempAge('10');
+      setValueAge(2210);
     } else if (getAge == 1) {
       setTempAge('20');
+      setValueAge(2220);
     } else if (getAge == 2) {
       setTempAge('30');
+      setValueAge(2230);
     } else if (getAge == 3) {
       setTempAge('40');
+      setValueAge(2240);
     } else if (getAge == 4) {
       setTempAge('50');
+      setValueAge(2250);
     }
   };
 
@@ -148,6 +154,7 @@ const ModifInfoScreen = ({route}) => {
         const getAge = justGetNumber(userData.cages);
         setAge(getAge);
         setTempAge(getAge);
+        setValueAge(userData.ages);
 
         // Gender
         setGender(userData.gender);
@@ -185,7 +192,6 @@ const ModifInfoScreen = ({route}) => {
   };
 
   const onChangePassword = () => {
-    console.log('Buka halaman');
     navigation.navigate('ConfirmPasswordEdit');
   };
 
@@ -508,6 +514,13 @@ const ModifInfoScreen = ({route}) => {
             value={age + 's'}
             setValue={setAge}
             onSaveChange={() => {
+              saveChangesToAPI('app7170-01', 1102, 'ages', valueAge, {
+                ages: valueAge,
+              });
+              console.log(`
+              Age yg di select : ${tempAge}
+              Valuenya : ${valueAge} 
+              `);
               setAge(tempAge);
             }}
             onBack={() => setTempAge(age)}

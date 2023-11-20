@@ -39,6 +39,8 @@ const EditPassword = () => {
             }),
           });
 
+          //
+
           console.log(response);
 
           if (!response.ok) {

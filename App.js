@@ -131,6 +131,7 @@ export default function App() {
                 component={ConfirmPasswordEdit}
               />
               <Stack.Screen name="EditPassword" component={EditPassword} />
+              <Stack.Screen name="ModifInfo" component={ModifInfoScreen} />
             </>
           )}
         </Stack.Navigator>
