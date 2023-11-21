@@ -155,6 +155,19 @@
       "button": {
         "logout": "Apakah Anda yakin ingin keluar?"
       }
+    },
+
+    "screen_confirm_password": {
+      "title": "Konfirmasi Kata Sandi",
+      "label": "Kata Sandi",
+      "placeholder": "Kata Sandi",
+      "note": {
+        "alt1": "Silakan masukkan kata sandi Anda untuk konfirmasi"
+      },
+      "condition": {
+        "empty": "Silakan isi kata sandi Anda",
+        "wrong": "Kata sandi Anda tidak cocok"
+      }
     }
   },
 
@@ -313,6 +326,19 @@
       },
       "button": {
         "logout": "Are you sure you want to logout?"
+      }
+    },
+
+    "screen_confirm_password": {
+      "title": "Confirm Password",
+      "label": "Password",
+      "placeholder": "Password",
+      "note": {
+        "alt1": "Please enter your password for personal information"
+      },
+      "condition": {
+        "empty": "Please fill your password",
+        "wrong": "Your password is doesn't match"
       }
     }
   }

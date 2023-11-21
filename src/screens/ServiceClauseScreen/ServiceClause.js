@@ -68,11 +68,13 @@ const ServiceClause = () => {
           flex: 1,
           paddingHorizontal: 20,
           marginTop: 10,
+          backgroundColor: 'white',
         }}>
         <Text
           style={{
-            fontFamily: 'Poppins-Medium',
-            fontSize: 18,
+            fontFamily: 'Poppins-Regular',
+            fontSize: 13,
+            color: 'black',
             paddingVertical: 20,
           }}>
           {text ? text : 'Loading...'}
@@ -100,8 +102,8 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 22,
+    fontFamily: 'Poppins-Bold',
     color: '#051C60',
     margin: 10,
   },

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   Image,
@@ -11,6 +11,7 @@ import {useAuth} from '../../context/AuthContext/AuthContext';
 import ARScreen from '../ARScreen/ARScreen';
 import MapParent from './MapParentScreen';
 import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const langData = require('../../../lang.json');
 
@@ -25,6 +26,32 @@ export default function Home() {
   const handleTabChange = tabName => {
     setActiveTab(tabName);
   };
+
+  useEffect(() => {
+    // Get Language
+    const getUserData = async () => {
+      try {
+        const userEmail = await AsyncStorage.getItem('userEmail');
+
+        const apiUrl = `https://app.xrun.run/gateway.php?act=login-01&email=${userEmail}&tp=6`;
+        const response = await fetch(apiUrl);
+        const userData = await response.json();
+
+        await AsyncStorage.setItem('userData', JSON.stringify(userData));
+
+        console.log(`
+        Email Bahloooolllll => ${userEmail}
+        Data : ${JSON.stringify(userData)}`);
+      } catch (err) {
+        console.error(
+          'Error retrieving selfCoordinate from AsyncStorage:',
+          err,
+        );
+      }
+    };
+
+    getUserData(); // Get Language
+  }, []);
 
   const renderTabButton = (tabName, icon, text, onPress) => (
     <TouchableOpacity

@@ -328,7 +328,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f2f5f6',
   },
   titleWrapper: {
-    paddingVertical: 7,
+    paddingVertical: 9,
     alignItems: 'center',
     backgroundColor: 'white',
     justifyContent: 'center',

@@ -36,6 +36,7 @@ const ModifInfoScreen = ({route}) => {
 
   const {flag, countryCode} = route.params || {};
   const [userData, setUserData] = useState({});
+  const [astorUserData, setAstorUserData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [countryModalVisible, setCountryModalVisible] = useState(false);
   const [areaModalVisible, setAreaModalVisible] = useState(false);
@@ -90,6 +91,7 @@ const ModifInfoScreen = ({route}) => {
         const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
         const language = langData[selectedLanguage];
         setLang(language);
+        console.log('Language yg dipake : ' + JSON.stringify(language));
       } catch (err) {
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
@@ -100,15 +102,18 @@ const ModifInfoScreen = ({route}) => {
 
     const fetchData = async () => {
       try {
+        // Get User Data from Asyncstorage
+        const astorUserData = await AsyncStorage.getItem('userData');
+        const astorJsonData = JSON.parse(astorUserData);
+        setAstorUserData(astorJsonData);
+
         // Get User Information
         const userResponse = await fetch(
-          'https://app.xrun.run/gateway.php?act=app7000-01&member=1102',
+          `https://app.xrun.run/gateway.php?act=app7000-01&member=${astorJsonData.member}`,
         );
         const userJsonData = await userResponse.json();
         const userData = userJsonData.data[0];
-
         setUserData(userData);
-        console.log(userData);
 
         // Lastname
         setLastName(userData.firstname);
@@ -319,7 +324,7 @@ const ModifInfoScreen = ({route}) => {
                   setLastName(tempLastName);
                   saveChangesToAPI(
                     'app7120-01',
-                    1102,
+                    astorUserData.member,
                     'firstname',
                     tempLastName,
                     {
@@ -376,9 +381,15 @@ const ModifInfoScreen = ({route}) => {
                 setValue={setName}
                 onSaveChange={() => {
                   setName(tempName);
-                  saveChangesToAPI('app7130-01', 1102, 'lastname', tempName, {
-                    lastname: tempName,
-                  });
+                  saveChangesToAPI(
+                    'app7130-01',
+                    astorUserData.member,
+                    'lastname',
+                    tempName,
+                    {
+                      lastname: tempName,
+                    },
+                  );
 
                   return 1;
                 }}
@@ -567,9 +578,15 @@ const ModifInfoScreen = ({route}) => {
                 value={age + 's'}
                 setValue={setAge}
                 onSaveChange={() => {
-                  saveChangesToAPI('app7170-01', 1102, 'ages', valueAge, {
-                    ages: valueAge,
-                  });
+                  saveChangesToAPI(
+                    'app7170-01',
+                    astorUserData.member,
+                    'ages',
+                    valueAge,
+                    {
+                      ages: valueAge,
+                    },
+                  );
                   setAge(tempAge);
 
                   return 1;
@@ -602,9 +619,15 @@ const ModifInfoScreen = ({route}) => {
                 value={gender == 2110 ? 'Boy/Men' : 'Girl/Women'}
                 setValue={setGender}
                 onSaveChange={() => {
-                  saveChangesToAPI('app7180-01', 1102, 'gender', tempGender, {
-                    gender: tempGender,
-                  });
+                  saveChangesToAPI(
+                    'app7180-01',
+                    astorUserData.member,
+                    'gender',
+                    tempGender,
+                    {
+                      gender: tempGender,
+                    },
+                  );
                   setGender(tempGender);
 
                   return 1;
@@ -649,7 +672,7 @@ const ModifInfoScreen = ({route}) => {
 
                     const saveChangeArea = async () => {
                       try {
-                        const apiUrl = `https://app.xrun.run/gateway.php?act=app7190-02&member=1102&country=${tempCountry.cCode}&region=${tempRegion.rCode}`;
+                        const apiUrl = `https://app.xrun.run/gateway.php?act=app7190-02&member=${astorUserData.member}&country=${tempCountry.cCode}&region=${tempRegion.rCode}`;
 
                         const response = await fetch(apiUrl, {
                           method: 'POST',

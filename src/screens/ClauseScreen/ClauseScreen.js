@@ -131,8 +131,8 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 22,
+    fontFamily: 'Poppins-Bold',
     color: '#051C60',
     margin: 10,
   },

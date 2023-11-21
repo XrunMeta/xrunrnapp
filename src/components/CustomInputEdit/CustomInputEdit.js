@@ -78,7 +78,7 @@ const CustomInputEdit = ({
               </View>
               <View
                 style={{
-                  paddingVertical: 7,
+                  paddingVertical: 9,
                   alignItems: 'center',
                   backgroundColor: 'white',
                   justifyContent: 'center',

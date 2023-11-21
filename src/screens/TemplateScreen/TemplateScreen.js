@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   titleWrapper: {
-    paddingVertical: 7,
+    paddingVertical: 9,
     alignItems: 'center',
     backgroundColor: 'white',
     justifyContent: 'center',

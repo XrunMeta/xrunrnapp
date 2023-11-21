@@ -26,7 +26,12 @@ const ConfirmPassword = () => {
 
   const onSignIn = async () => {
     if (password.trim() === '') {
-      Alert.alert('Error', 'password gaboleh kosong');
+      Alert.alert(
+        lang && lang.alert ? lang.alert.title.error : '',
+        lang && lang.screen_confirm_password
+          ? lang.screen_confirm_password.condition.empty
+          : '-',
+      );
     } else {
       try {
         const response = await fetch(
@@ -37,7 +42,12 @@ const ConfirmPassword = () => {
         if (data === 'OK') {
           navigation.replace('ModifInfo');
         } else {
-          Alert.alert('Error', 'password salah');
+          Alert.alert(
+            lang && lang.alert ? lang.alert.title.error : '',
+            lang && lang.screen_confirm_password
+              ? lang.screen_confirm_password.condition.wrong
+              : '-',
+          );
         }
       } catch (error) {
         console.error('Error:', error);
@@ -82,19 +92,23 @@ const ConfirmPassword = () => {
           <ButtonBack onClick={onBack} />
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>Confirm Password</Text>
+          <Text style={styles.title}>
+            {lang && lang.screen_confirm_password
+              ? lang.screen_confirm_password.title
+              : ''}
+          </Text>
         </View>
       </View>
 
       <CustomInput
         label={
-          lang && lang.screen_signin && lang.screen_signin.password
-            ? lang.screen_signin.password.label
+          lang && lang.screen_confirm_password
+            ? lang.screen_confirm_password.label
             : ''
         }
         placeholder={
-          lang && lang.screen_signin && lang.screen_signin.password
-            ? lang.screen_signin.password.placeholder
+          lang && lang.screen_confirm_password
+            ? lang.screen_confirm_password.placeholder
             : ''
         }
         value={password}
@@ -109,7 +123,10 @@ const ConfirmPassword = () => {
           marginTop: 5,
         }}>
         <Text style={styles.subTitle}>
-          *Please enter your password for personal information.
+          *
+          {lang && lang.screen_confirm_password
+            ? lang.screen_confirm_password.note.alt1
+            : ''}
         </Text>
       </View>
 
@@ -134,7 +151,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   titleWrapper: {
-    paddingVertical: 7,
+    paddingVertical: 9,
     alignItems: 'center',
     backgroundColor: 'white',
     justifyContent: 'center',

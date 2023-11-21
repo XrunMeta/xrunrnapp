@@ -19,6 +19,7 @@ const EditPassword = () => {
   const navigation = useNavigation();
   const [password, setPassword] = useState('');
   let ScreenHeight = Dimensions.get('window').height;
+  const [userData, setUserData] = useState({});
 
   const onSaveChange = () => {
     if (password == '') {
@@ -26,7 +27,7 @@ const EditPassword = () => {
     } else {
       const savePassword = async () => {
         try {
-          const apiUrl = `https://app.xrun.run/gateway.php?act=app7163-01&member=1102&pin=${password}`;
+          const apiUrl = `https://app.xrun.run/gateway.php?act=app7163-01&member=${userData.member}&pin=${password}`;
 
           const response = await fetch(apiUrl, {
             method: 'POST',
@@ -34,7 +35,7 @@ const EditPassword = () => {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              member: 1102,
+              member: userData.member,
               pin: password,
             }),
           });
@@ -65,10 +66,14 @@ const EditPassword = () => {
     const getLanguage = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-
         const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
         const language = langData[selectedLanguage];
         setLang(language);
+
+        // Get User Data from Asyncstorage
+        const astorUserData = await AsyncStorage.getItem('userData');
+        const astorJsonData = JSON.parse(astorUserData);
+        setUserData(astorJsonData);
       } catch (err) {
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
@@ -122,7 +127,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   titleWrapper: {
-    paddingVertical: 7,
+    paddingVertical: 9,
     alignItems: 'center',
     backgroundColor: 'white',
     justifyContent: 'center',
