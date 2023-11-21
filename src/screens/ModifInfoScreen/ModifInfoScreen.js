@@ -13,7 +13,6 @@ import {
   FlatList,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
-import CustomInput from '../../components/CustomInput';
 import CustomInputEdit from '../../components/CustomInputEdit/CustomInputEdit';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
@@ -36,21 +35,20 @@ const ModifInfoScreen = ({route}) => {
   const [valueAge, setValueAge] = useState(2200);
   const [gender, setGender] = useState(0);
   const [tempGender, setTempGender] = useState(0);
-  const [region, setRegion] = useState({});
-  const [tempRegion, setTempRegion] = useState({});
-  const [lcountry, setlCountry] = useState({});
-  const [ltempCountry, setlTempCountry] = useState({});
-  const {flag, countryCode, country} = route.params || {};
+
+  const {flag, countryCode} = route.params || {};
   const [userData, setUserData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [countryModalVisible, setCountryModalVisible] = useState(false);
   const [areaModalVisible, setAreaModalVisible] = useState(false);
-  const [countries, setCountries] = useState([]);
-  const [areas, setAreas] = useState([]);
-  const [dataCountryModal, setDataCountryModal] = useState(null);
-  const [dataAreaModal, setDataAreaModal] = useState(null);
-  const [selectedCountryCode, setSelectedCountryCode] = useState(lcountry.code);
-  const [selectedAreas, setSelectedAreas] = useState([]);
+
+  const [region, setRegion] = useState({});
+  const [tempRegion, setTempRegion] = useState({});
+  const [regionData, setRegionData] = useState([]);
+
+  const [country, setCountry] = useState({});
+  const [tempCountry, setTempCountry] = useState({});
+  const [countryData, setCountryData] = useState([]);
 
   const navigation = useNavigation();
 
@@ -84,14 +82,6 @@ const ModifInfoScreen = ({route}) => {
 
   const onBack = () => {
     navigation.replace('InfoHome');
-  };
-
-  const chooseRegion = (flag, countryCode, country) => {
-    navigation.navigate('ChooseRegion', {
-      flag: flag,
-      countryCode: countryCode,
-      country: country,
-    });
   };
 
   const ageSelector = getAge => {
@@ -138,13 +128,14 @@ const ModifInfoScreen = ({route}) => {
       }
     };
 
-    getLanguage();
-
-    // Get User Information
-    fetch(`https://app.xrun.run/gateway.php?act=app7000-01&member=1102`)
-      .then(response => response.json())
-      .then(jsonData => {
-        var userData = jsonData.data[0];
+    const fetchData = async () => {
+      try {
+        // Get User Information
+        const userResponse = await fetch(
+          'https://app.xrun.run/gateway.php?act=app7000-01&member=1102',
+        );
+        const userJsonData = await userResponse.json();
+        const userData = userJsonData.data[0];
 
         setUserData(userData);
         console.log(userData);
@@ -182,18 +173,36 @@ const ModifInfoScreen = ({route}) => {
           rCode: userData.region,
         };
 
-        setlCountry(countryData);
-        setlTempCountry(countryData);
+        setCountry(countryData);
+        setTempCountry(countryData);
         setRegion(regionData);
         setTempRegion(regionData);
+
+        // Get Data Country
+        const countriesResponse = await fetch(
+          'https://app.xrun.run/gateway.php?act=countries',
+        );
+        const countriesData = await countriesResponse.json();
+        setCountryData(countriesData);
+
+        // Get Region Data as Selected Country
+        const regionsResponse = await fetch(
+          'https://app.xrun.run/gateway.php?act=app7190-01&country=' +
+            userData.country,
+        );
+        const regionsData = await regionsResponse.json();
+        setRegionData(regionsData.data);
 
         // Remove Loading
         setIsLoading(false);
         console.log('Fetch udah selesai');
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
+      } catch (error) {
+        console.error('Terjadi kesalahan:', error);
+      }
+    };
+
+    fetchData(); // Get Data from API
+    getLanguage(); // Get Language
   }, []);
 
   // Format Date
@@ -250,43 +259,35 @@ const ModifInfoScreen = ({route}) => {
   };
 
   const openCountryModal = () => {
-    fetch('https://app.xrun.run/gateway.php?act=countries')
-      .then(response => response.json())
-      .then(data => {
-        setDataCountryModal(data);
-      })
-      .catch(error => {
-        console.error('Error fetching countries:', error);
-      });
-
     setCountryModalVisible(true);
   };
 
   const openAreaModal = () => {
-    fetch(
-      'https://app.xrun.run/gateway.php?act=app7190-01&country=' +
-        lcountry.cCode,
-    )
-      .then(response => response.json())
-      .then(data => {
-        setDataAreaModal(data.data);
-      })
-      .catch(error => {
-        console.error('Error fetching areas:', error);
-      });
     setAreaModalVisible(true);
   };
 
   const onSelectCountry = selectedCountry => {
-    setlTempCountry({
+    setTempCountry({
       cDesc: selectedCountry.country,
       cCode: selectedCountry.callnumber,
     });
 
-    console.log(`
-      Country Desc : ${selectedCountry.country}
-      Country Code : ${selectedCountry.callnumber}
-    `);
+    setTempRegion({
+      rDesc: 'Please Select',
+      rCode: 0,
+    });
+
+    fetch(
+      'https://app.xrun.run/gateway.php?act=app7190-01&country=' +
+        selectedCountry.callnumber,
+    )
+      .then(response => response.json())
+      .then(data => {
+        setRegionData(data.data);
+      })
+      .catch(error => {
+        console.error('Error fetching areas:', error);
+      });
 
     // Setelah mengirim data, Anda bisa menutup modal
     setCountryModalVisible(false);
@@ -318,476 +319,523 @@ const ModifInfoScreen = ({route}) => {
               ? lang.screen_map.section_marker.loader
               : ''}
           </Text>
-          {/* Show Loading While Data is Load */}
         </View>
       ) : (
-        ''
-      )}
-      {/* Title */}
-      <View style={{flexDirection: 'row'}}>
-        <View style={{position: 'absolute', zIndex: 1}}>
-          <ButtonBack onClick={onBack} />
-        </View>
-        <View style={styles.titleWrapper}>
-          <Text style={styles.title}>Modify Information</Text>
-        </View>
-      </View>
-
-      <ScrollView showsVerticalScrollIndicator={false} style={{width: '100%'}}>
-        <View style={{paddingBottom: 35}}>
-          {/*  Field - Last Name */}
-          <CustomInputEdit
-            title="Last Name"
-            label="Last Name"
-            placeholder="Your last name"
-            value={lastName}
-            setValue={setLastName}
-            onSaveChange={() => {
-              setLastName(tempLastName);
-              saveChangesToAPI('app7120-01', 1102, 'firstname', tempLastName, {
-                firstname: tempLastName,
-              });
-            }}
-            onBack={() => setTempLastName(lastName)}
-            content={
-              <View
-                style={{
-                  flex: 1,
-                  paddingHorizontal: 25,
-                  marginTop: 30,
-                }}>
-                <Text
-                  style={{
-                    fontFamily: 'Poppins-Medium',
-                    fontSize: 13,
-                    marginBottom: -10,
-                    color: '#343a59',
-                  }}>
-                  Last Name
-                </Text>
-                <TextInput
-                  value={tempLastName}
-                  onChangeText={setTempLastName}
-                  placeholder="Your last name"
-                  placeholderTextColor="#a8a8a7"
-                  style={{
-                    height: 40,
-                    paddingBottom: -10,
-                    fontFamily: 'Poppins-Medium',
-                    fontSize: 13,
-                    color: '#343a59',
-                    borderBottomColor: '#cccccc',
-                    borderBottomWidth: 1,
-                    paddingRight: 30,
-                    paddingLeft: -10,
-                  }}
-                />
-              </View>
-            }
-          />
-
-          {/*  Field - Name */}
-          <CustomInputEdit
-            title="Name"
-            label="Name"
-            placeholder="Your name"
-            value={name}
-            setValue={setName}
-            onSaveChange={() => {
-              setName(tempName);
-              saveChangesToAPI('app7130-01', 1102, 'lastname', tempName, {
-                lastname: tempName,
-              });
-            }}
-            onBack={() => setTempName(name)}
-            content={
-              <View
-                style={{
-                  flex: 1,
-                  paddingHorizontal: 25,
-                  marginTop: 30,
-                }}>
-                <Text
-                  style={{
-                    fontFamily: 'Poppins-Medium',
-                    fontSize: 13,
-                    marginBottom: -10,
-                    color: '#343a59',
-                  }}>
-                  Name
-                </Text>
-                <TextInput
-                  value={tempName}
-                  onChangeText={setTempName}
-                  placeholder="Your name"
-                  placeholderTextColor="#a8a8a7"
-                  style={{
-                    height: 40,
-                    paddingBottom: -10,
-                    fontFamily: 'Poppins-Medium',
-                    fontSize: 13,
-                    color: '#343a59',
-                    borderBottomColor: '#cccccc',
-                    borderBottomWidth: 1,
-                    paddingRight: 30,
-                    paddingLeft: -10,
-                  }}
-                />
-              </View>
-            }
-          />
-
-          {/*  Field - Email */}
-          <CustomInputEdit
-            title="Email"
-            label="Email"
-            placeholder="xrun@xrun.run"
-            value={userData.email}
-            setValue={onEmailChange}
-            isDisable={true}
-            content={
-              <View
-                style={{
-                  flex: 1,
-                  paddingHorizontal: 25,
-                  marginTop: 30,
-                }}>
-                <Text
-                  style={{
-                    fontFamily: 'Poppins-Medium',
-                    fontSize: 13,
-                    marginBottom: -10,
-                    color: '#343a59',
-                  }}>
-                  Email
-                </Text>
-                <TextInput
-                  value={userData.email}
-                  onChangeText={onEmailChange}
-                  placeholder="xrun@xrun.run"
-                  placeholderTextColor="#a8a8a7"
-                  style={{
-                    height: 40,
-                    paddingBottom: -10,
-                    fontFamily: 'Poppins-Medium',
-                    fontSize: 13,
-                    color: '#343a59',
-                    borderBottomColor: '#cccccc',
-                    borderBottomWidth: 1,
-                    paddingRight: 30,
-                    paddingLeft: -10,
-                  }}
-                />
-              </View>
-            }
-          />
-
-          {/*  Field - Phone Number */}
-          <View style={styles.formGroup}>
-            <Text style={styles.label}>Phone Number</Text>
-            <View
-              style={{
-                width: '100%',
-                flexDirection: 'row',
-                backgroundColor: '#e5e5e56e',
-                height: 30,
-                marginTop: 5,
-              }}>
-              <Pressable
-                style={{flexDirection: 'row', marginBottom: -5}}
-                disabled={true}>
-                <Image
-                  resizeMode="contain"
-                  style={{
-                    width: 35,
-                    marginRight: 10,
-                    marginBottom: 5,
-                    marginLeft: 5,
-                  }}
-                  source={
-                    flag == undefined
-                      ? {
-                          uri: 'https://app.xrun.run/flags/id.png',
-                        }
-                      : {
-                          uri: flag,
-                        }
-                  }
-                />
-                <Text
-                  style={{
-                    fontFamily: 'Poppins-Medium',
-                    fontSize: 13,
-                    color: '#a8a8a7',
-                    alignSelf: 'center',
-                    paddingRight: 10,
-                  }}>
-                  +{countryCode == undefined ? '62' : countryCode}
-                </Text>
-              </Pressable>
-              <TextInput
-                keyboardType="numeric"
-                style={styles.input}
-                value={userData.mobile}
-                onChangeText={text => setPhoneNumber(text)}
-                editable={false}
-              />
+        <View style={[[styles.root], {width: '100%'}]}>
+          {console.log(`
+            Countries data : ${countryData.length}
+            Region data    : ${regionData.length}
+          `)}
+          <View style={{flexDirection: 'row'}}>
+            <View style={{position: 'absolute', zIndex: 1}}>
+              <ButtonBack onClick={onBack} />
+            </View>
+            <View style={styles.titleWrapper}>
+              <Text style={styles.title}>Modify Information</Text>
             </View>
           </View>
 
-          {/* Password */}
-          <View style={{width: '100%', paddingHorizontal: 25, marginTop: 30}}>
-            <Text
-              style={{
-                fontFamily: 'Poppins-Medium',
-                fontSize: 13,
-                marginBottom: -10,
-                color: '#343a59',
-                zIndex: 1,
-              }}>
-              Password
-            </Text>
-            <TouchableOpacity onPress={onChangePassword}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            style={{width: '100%'}}>
+            <View style={{paddingBottom: 35}}>
+              <CustomInputEdit
+                title="Last Name"
+                label="Last Name"
+                placeholder="Your last name"
+                value={lastName}
+                setValue={setLastName}
+                onSaveChange={() => {
+                  setLastName(tempLastName);
+                  saveChangesToAPI(
+                    'app7120-01',
+                    1102,
+                    'firstname',
+                    tempLastName,
+                    {
+                      firstname: tempLastName,
+                    },
+                  );
+                }}
+                onBack={() => setTempLastName(lastName)}
+                content={
+                  <View
+                    style={{
+                      flex: 1,
+                      paddingHorizontal: 25,
+                      marginTop: 30,
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: 'Poppins-Medium',
+                        fontSize: 13,
+                        marginBottom: -10,
+                        color: '#343a59',
+                      }}>
+                      Last Name
+                    </Text>
+                    <TextInput
+                      value={tempLastName}
+                      onChangeText={setTempLastName}
+                      placeholder="Your last name"
+                      placeholderTextColor="#a8a8a7"
+                      style={{
+                        height: 40,
+                        paddingBottom: -10,
+                        fontFamily: 'Poppins-Medium',
+                        fontSize: 13,
+                        color: '#343a59',
+                        borderBottomColor: '#cccccc',
+                        borderBottomWidth: 1,
+                        paddingRight: 30,
+                        paddingLeft: -10,
+                      }}
+                    />
+                  </View>
+                }
+              />
+
+              {/*  Field - Name */}
+              <CustomInputEdit
+                title="Name"
+                label="Name"
+                placeholder="Your name"
+                value={name}
+                setValue={setName}
+                onSaveChange={() => {
+                  setName(tempName);
+                  saveChangesToAPI('app7130-01', 1102, 'lastname', tempName, {
+                    lastname: tempName,
+                  });
+                }}
+                onBack={() => setTempName(name)}
+                content={
+                  <View
+                    style={{
+                      flex: 1,
+                      paddingHorizontal: 25,
+                      marginTop: 30,
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: 'Poppins-Medium',
+                        fontSize: 13,
+                        marginBottom: -10,
+                        color: '#343a59',
+                      }}>
+                      Name
+                    </Text>
+                    <TextInput
+                      value={tempName}
+                      onChangeText={setTempName}
+                      placeholder="Your name"
+                      placeholderTextColor="#a8a8a7"
+                      style={{
+                        height: 40,
+                        paddingBottom: -10,
+                        fontFamily: 'Poppins-Medium',
+                        fontSize: 13,
+                        color: '#343a59',
+                        borderBottomColor: '#cccccc',
+                        borderBottomWidth: 1,
+                        paddingRight: 30,
+                        paddingLeft: -10,
+                      }}
+                    />
+                  </View>
+                }
+              />
+
+              {/*  Field - Email */}
+              <CustomInputEdit
+                title="Email"
+                label="Email"
+                placeholder="xrun@xrun.run"
+                value={userData.email}
+                setValue={onEmailChange}
+                isDisable={true}
+                content={
+                  <View
+                    style={{
+                      flex: 1,
+                      paddingHorizontal: 25,
+                      marginTop: 30,
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: 'Poppins-Medium',
+                        fontSize: 13,
+                        marginBottom: -10,
+                        color: '#343a59',
+                      }}>
+                      Email
+                    </Text>
+                    <TextInput
+                      value={userData.email}
+                      onChangeText={onEmailChange}
+                      placeholder="xrun@xrun.run"
+                      placeholderTextColor="#a8a8a7"
+                      style={{
+                        height: 40,
+                        paddingBottom: -10,
+                        fontFamily: 'Poppins-Medium',
+                        fontSize: 13,
+                        color: '#343a59',
+                        borderBottomColor: '#cccccc',
+                        borderBottomWidth: 1,
+                        paddingRight: 30,
+                        paddingLeft: -10,
+                      }}
+                    />
+                  </View>
+                }
+              />
+
+              {/*  Field - Phone Number */}
+              <View style={styles.formGroup}>
+                <Text style={styles.label}>Phone Number</Text>
+                <View
+                  style={{
+                    width: '100%',
+                    flexDirection: 'row',
+                    backgroundColor: '#e5e5e56e',
+                    height: 30,
+                    marginTop: 5,
+                  }}>
+                  <Pressable
+                    style={{flexDirection: 'row', marginBottom: -5}}
+                    disabled={true}>
+                    <Image
+                      resizeMode="contain"
+                      style={{
+                        width: 35,
+                        marginRight: 10,
+                        marginBottom: 5,
+                        marginLeft: 5,
+                      }}
+                      source={
+                        flag == undefined
+                          ? {
+                              uri: 'https://app.xrun.run/flags/id.png',
+                            }
+                          : {
+                              uri: flag,
+                            }
+                      }
+                    />
+                    <Text
+                      style={{
+                        fontFamily: 'Poppins-Medium',
+                        fontSize: 13,
+                        color: '#a8a8a7',
+                        alignSelf: 'center',
+                        paddingRight: 10,
+                      }}>
+                      +{countryCode == undefined ? '62' : countryCode}
+                    </Text>
+                  </Pressable>
+                  <TextInput
+                    keyboardType="numeric"
+                    style={styles.input}
+                    value={userData.mobile}
+                    onChangeText={text => setPhoneNumber(text)}
+                    editable={false}
+                  />
+                </View>
+              </View>
+
+              {/* Password */}
               <View
-                style={[
-                  {
-                    height: 40,
-                    borderBottomColor: '#cccccc',
-                    borderBottomWidth: 1,
-                    justifyContent: 'center',
-                  },
-                ]}>
+                style={{width: '100%', paddingHorizontal: 25, marginTop: 30}}>
                 <Text
                   style={{
                     fontFamily: 'Poppins-Medium',
                     fontSize: 13,
+                    marginBottom: -10,
                     color: '#343a59',
-                    paddingRight: 30,
-                    paddingLeft: -10,
+                    zIndex: 1,
                   }}>
-                  Final change date :{' '}
-                  <Text
-                    style={{color: '#ffc404', fontFamily: 'Poppins-SemiBold'}}>
-                    {password}
-                  </Text>
+                  Password
                 </Text>
+                <TouchableOpacity onPress={onChangePassword}>
+                  <View
+                    style={[
+                      {
+                        height: 40,
+                        borderBottomColor: '#cccccc',
+                        borderBottomWidth: 1,
+                        justifyContent: 'center',
+                      },
+                    ]}>
+                    <Text
+                      style={{
+                        fontFamily: 'Poppins-Medium',
+                        fontSize: 13,
+                        color: '#343a59',
+                        paddingRight: 30,
+                        paddingLeft: -10,
+                      }}>
+                      Final change date :{' '}
+                      <Text
+                        style={{
+                          color: '#ffc404',
+                          fontFamily: 'Poppins-SemiBold',
+                        }}>
+                        {password}
+                      </Text>
+                    </Text>
+                  </View>
+                </TouchableOpacity>
               </View>
-            </TouchableOpacity>
-          </View>
 
-          {/*  Field - Age */}
-          <CustomInputEdit
-            title="Age"
-            label="Age"
-            placeholder="Age"
-            value={age + 's'}
-            setValue={setAge}
-            onSaveChange={() => {
-              saveChangesToAPI('app7170-01', 1102, 'ages', valueAge, {
-                ages: valueAge,
-              });
-              setAge(tempAge);
-            }}
-            onBack={() => setTempAge(age)}
-            content={
-              <View style={[styles.formGroup, {zIndex: -1}]}>
-                <Text style={styles.label}>Age</Text>
-                <CustomMultipleChecbox
-                  texts={['10', '20', '30', '40', '50']}
-                  count={5}
-                  singleCheck={true}
-                  wrapperStyle={styles.horizontalChecbox}
-                  defaultCheckedIndices={() => {
-                    // Masalah disini soal checked buat di Age Modify
-                    const getCheckedAge = parseInt(age) / 10 - 1;
-                    return [getCheckedAge];
-                  }}
-                  onCheckChange={ageSelector}
-                />
-              </View>
-            }
-          />
+              {/*  Field - Age */}
+              <CustomInputEdit
+                title="Age"
+                label="Age"
+                placeholder="Age"
+                value={age + 's'}
+                setValue={setAge}
+                onSaveChange={() => {
+                  saveChangesToAPI('app7170-01', 1102, 'ages', valueAge, {
+                    ages: valueAge,
+                  });
+                  setAge(tempAge);
+                }}
+                onBack={() => setTempAge(age)}
+                content={
+                  <View style={[styles.formGroup, {zIndex: -1}]}>
+                    <Text style={styles.label}>Age</Text>
+                    <CustomMultipleChecbox
+                      texts={['10', '20', '30', '40', '50']}
+                      count={5}
+                      singleCheck={true}
+                      wrapperStyle={styles.horizontalChecbox}
+                      defaultCheckedIndices={() => {
+                        // Masalah disini soal checked buat di Age Modify
+                        const getCheckedAge = parseInt(age) / 10 - 1;
+                        return [getCheckedAge];
+                      }}
+                      onCheckChange={ageSelector}
+                    />
+                  </View>
+                }
+              />
 
-          {/*  Field - Gender */}
-          <CustomInputEdit
-            title="Gender"
-            label="Gender"
-            placeholder="Gender"
-            value={gender == 2110 ? 'Boy/Men' : 'Girl/Women'}
-            setValue={setGender}
-            onSaveChange={() => {
-              saveChangesToAPI('app7180-01', 1102, 'gender', tempGender, {
-                gender: tempGender,
-              });
-              setGender(tempGender);
-            }}
-            onBack={() => setTempGender(gender)}
-            content={
-              <View style={[styles.formGroup, {zIndex: -1}]}>
-                <Text style={styles.label}>Gender</Text>
-                <CustomMultipleChecbox
-                  texts={['Boy/Men', 'Girl/Women']}
-                  count={2}
-                  singleCheck={true}
-                  wrapperStyle={styles.horizontalChecbox}
-                  defaultCheckedIndices={gender == 2110 ? [0] : [1]}
-                  onCheckChange={genderSelector}
-                />
-              </View>
-            }
-          />
+              {/*  Field - Gender */}
+              <CustomInputEdit
+                title="Gender"
+                label="Gender"
+                placeholder="Gender"
+                value={gender == 2110 ? 'Boy/Men' : 'Girl/Women'}
+                setValue={setGender}
+                onSaveChange={() => {
+                  saveChangesToAPI('app7180-01', 1102, 'gender', tempGender, {
+                    gender: tempGender,
+                  });
+                  setGender(tempGender);
+                }}
+                onBack={() => setTempGender(gender)}
+                content={
+                  <View style={[styles.formGroup, {zIndex: -1}]}>
+                    <Text style={styles.label}>Gender</Text>
+                    <CustomMultipleChecbox
+                      texts={['Boy/Men', 'Girl/Women']}
+                      count={2}
+                      singleCheck={true}
+                      wrapperStyle={styles.horizontalChecbox}
+                      defaultCheckedIndices={gender == 2110 ? [0] : [1]}
+                      onCheckChange={genderSelector}
+                    />
+                  </View>
+                }
+              />
 
-          {/*  Field - Area */}
-          <CustomInputEdit
-            title="Area"
-            label="Area"
-            placeholder="Your Area"
-            value={region.rDesc}
-            setValue={setRegion.rDesc}
-            onSaveChange={() => setLastName(tempLastName)}
-            onBack={() => setTempLastName(lastName)}
-            content={
-              <View style={{flex: 1}}>
-                <View
-                  style={{width: '100%', paddingHorizontal: 25, marginTop: 30}}>
-                  <Text
-                    style={{
-                      fontFamily: 'Poppins-Medium',
-                      fontSize: 13,
-                      marginBottom: -10,
-                      color: '#343a59',
-                      zIndex: 1,
-                    }}>
-                    Nationality / Country
-                  </Text>
-                  <TouchableOpacity onPress={() => openCountryModal()}>
+              {/*  Field - Area */}
+              <CustomInputEdit
+                title="Area"
+                label="Area"
+                placeholder="Your Area"
+                value={region.rDesc}
+                setValue={setRegion.rDesc}
+                onSaveChange={() => {
+                  console.log(`
+                    Country Desc : ${tempCountry.cDesc}
+                    Country Code : ${tempCountry.cCode}
+                    Region Desc  : ${tempRegion.rDesc}
+                    Region Code  : ${tempRegion.rCode}
+                  `);
+                }}
+                onBack={() => setTempLastName(lastName)}
+                content={
+                  <View style={{flex: 1}}>
                     <View
-                      style={[
-                        {
-                          height: 40,
-                          borderBottomColor: '#cccccc',
-                          borderBottomWidth: 1,
-                          justifyContent: 'center',
-                        },
-                      ]}>
+                      style={{
+                        width: '100%',
+                        paddingHorizontal: 25,
+                        marginTop: 30,
+                      }}>
                       <Text
                         style={{
                           fontFamily: 'Poppins-Medium',
                           fontSize: 13,
+                          marginBottom: -10,
                           color: '#343a59',
-                          paddingRight: 30,
-                          paddingLeft: -10,
-                          marginBottom: -7,
+                          zIndex: 1,
                         }}>
-                        {ltempCountry.cDesc + ` (+${ltempCountry.cCode})`}
+                        Nationality / Country
                       </Text>
+                      <TouchableOpacity onPress={() => openCountryModal()}>
+                        <View
+                          style={[
+                            {
+                              height: 40,
+                              borderBottomColor: '#cccccc',
+                              borderBottomWidth: 1,
+                              justifyContent: 'center',
+                            },
+                          ]}>
+                          <Text
+                            style={{
+                              fontFamily: 'Poppins-Medium',
+                              fontSize: 13,
+                              color: '#343a59',
+                              paddingRight: 30,
+                              paddingLeft: -10,
+                              marginBottom: -7,
+                            }}>
+                            {tempCountry.cDesc + ` (+${tempCountry.cCode})`}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
                     </View>
-                  </TouchableOpacity>
-                </View>
-                <View
-                  style={{width: '100%', paddingHorizontal: 25, marginTop: 30}}>
-                  <Text
-                    style={{
-                      fontFamily: 'Poppins-Medium',
-                      fontSize: 13,
-                      marginBottom: -10,
-                      color: '#343a59',
-                      zIndex: 1,
-                    }}>
-                    Area
-                  </Text>
-                  <TouchableOpacity onPress={() => openAreaModal()}>
                     <View
-                      style={[
-                        {
-                          height: 40,
-                          borderBottomColor: '#cccccc',
-                          borderBottomWidth: 1,
-                          justifyContent: 'center',
-                        },
-                      ]}>
+                      style={{
+                        width: '100%',
+                        paddingHorizontal: 25,
+                        marginTop: 30,
+                      }}>
                       <Text
                         style={{
                           fontFamily: 'Poppins-Medium',
                           fontSize: 13,
+                          marginBottom: -10,
                           color: '#343a59',
-                          paddingRight: 30,
-                          paddingLeft: -10,
-                          marginBottom: -7,
+                          zIndex: 1,
                         }}>
-                        {tempRegion.rDesc}
+                        Area
+                      </Text>
+                      <TouchableOpacity onPress={() => openAreaModal()}>
+                        <View
+                          style={[
+                            {
+                              height: 40,
+                              borderBottomColor: '#cccccc',
+                              borderBottomWidth: 1,
+                              justifyContent: 'center',
+                            },
+                          ]}>
+                          <Text
+                            style={{
+                              fontFamily: 'Poppins-Medium',
+                              fontSize: 13,
+                              color: '#343a59',
+                              paddingRight: 30,
+                              paddingLeft: -10,
+                              marginBottom: -7,
+                            }}>
+                            {tempRegion.rDesc
+                              ? tempRegion.rDesc
+                              : 'Please Select'}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                }
+              />
+            </View>
+          </ScrollView>
+
+          {/* Country Modal */}
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={countryModalVisible}
+            onRequestClose={() => {
+              setModalCountryVisible(false);
+            }}>
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <FlatList
+                  data={countryData}
+                  keyExtractor={item => item.code}
+                  ListEmptyComponent={() => (
+                    <View style={{marginVertical: 20}}>
+                      <Text style={[styles.normalText, {textAlign: 'center'}]}>
+                        Country tidak ada
                       </Text>
                     </View>
-                  </TouchableOpacity>
-                </View>
+                  )}
+                  renderItem={({item}) => (
+                    <TouchableOpacity
+                      style={styles.modalItem}
+                      onPress={() => onSelectCountry(item)}>
+                      <Text style={[styles.modalItemText, {marginRight: 10}]}>
+                        +{item.callnumber}
+                      </Text>
+                      <Text style={styles.modalItemText}>{item.country}</Text>
+                    </TouchableOpacity>
+                  )}
+                />
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={() => setCountryModalVisible(false)}>
+                  <Text style={styles.closeButtonText}>Close Country</Text>
+                </TouchableOpacity>
               </View>
-            }
-          />
-        </View>
-      </ScrollView>
+            </View>
+          </Modal>
 
-      {/* Country Modal */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={countryModalVisible}
-        onRequestClose={() => {
-          setModalCountryVisible(false);
-        }}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <FlatList
-              data={dataCountryModal}
-              keyExtractor={item => item.code}
-              renderItem={({item}) => (
+          {/* Area Modal */}
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={areaModalVisible}
+            onRequestClose={() => {
+              setModalAreaVisible(false);
+            }}>
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <FlatList
+                  data={regionData}
+                  keyExtractor={item => item.subcode}
+                  ListEmptyComponent={() => (
+                    <View style={{marginVertical: 20}}>
+                      <Text style={[styles.normalText, {textAlign: 'center'}]}>
+                        Area tidak ada
+                      </Text>
+                    </View>
+                  )}
+                  renderItem={({item}) => (
+                    <TouchableOpacity
+                      style={styles.modalItem}
+                      onPress={() => onSelectArea(item)}>
+                      <Text style={styles.modalItemText}>
+                        {item.description}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                />
                 <TouchableOpacity
-                  style={styles.modalItem}
-                  onPress={() => onSelectCountry(item)}>
-                  <Text style={[styles.modalItemText, {marginRight: 10}]}>
-                    +{item.callnumber}
-                  </Text>
-                  <Text style={styles.modalItemText}>{item.country}</Text>
+                  style={styles.closeButton}
+                  onPress={() => setAreaModalVisible(false)}>
+                  <Text style={styles.closeButtonText}>Close Area</Text>
                 </TouchableOpacity>
-              )}
-            />
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => setCountryModalVisible(false)}>
-              <Text style={styles.closeButtonText}>Close Country</Text>
-            </TouchableOpacity>
-          </View>
+              </View>
+            </View>
+          </Modal>
         </View>
-      </Modal>
-
-      {/* Area Modal */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={areaModalVisible}
-        onRequestClose={() => {
-          setModalAreaVisible(false);
-        }}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <FlatList
-              data={dataAreaModal}
-              keyExtractor={item => item.subcode}
-              renderItem={({item}) => (
-                <TouchableOpacity
-                  style={styles.modalItem}
-                  onPress={() => onSelectArea(item)}>
-                  <Text style={styles.modalItemText}>{item.description}</Text>
-                </TouchableOpacity>
-              )}
-            />
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => setAreaModalVisible(false)}>
-              <Text style={styles.closeButtonText}>Close Area</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      )}
     </View>
   );
 };
