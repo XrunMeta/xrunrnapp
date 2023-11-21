@@ -35,8 +35,11 @@ const CustomInputEdit = ({
 
   // Logika untuk menyimpan perubahan nilai
   const saveChanges = () => {
-    onSaveChange();
-    closeModal();
+    const saveResult = onSaveChange();
+    console.log(saveResult);
+    if (saveResult === 1) {
+      closeModal();
+    }
   };
 
   return (
@@ -50,7 +53,6 @@ const CustomInputEdit = ({
               ? {backgroundColor: '#e5e5e56e', height: 30, marginTop: 10}
               : '',
           ]}>
-          {/* <Text style={styles.input}>{value}</Text> */}
           <Text style={[styles.input, isDisable ? {color: '#a8a8a7'} : '']}>
             {value}
           </Text>
@@ -63,7 +65,6 @@ const CustomInputEdit = ({
         transparent={true}
         visible={isModalVisible}
         onRequestClose={closeModal}>
-        {/* <ScrollView showsVerticalScrollIndicator={false}> */}
         <View style={styles.modalContainer}>
           <View
             style={[
@@ -142,7 +143,6 @@ const CustomInputEdit = ({
             </View>
           </View>
         </View>
-        {/* </ScrollView> */}
       </Modal>
     </View>
   );

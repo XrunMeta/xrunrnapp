@@ -27,8 +27,6 @@ const ModifInfoScreen = ({route}) => {
   const [tempLastName, setTempLastName] = useState('');
   const [name, setName] = useState('');
   const [tempName, setTempName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [age, setAge] = useState('');
   const [tempAge, setTempAge] = useState('');
@@ -51,34 +49,6 @@ const ModifInfoScreen = ({route}) => {
   const [countryData, setCountryData] = useState([]);
 
   const navigation = useNavigation();
-
-  const onSignUp = () => {
-    if (name.trim() === '') {
-      Alert.alert('Error', 'Nama harus diisi');
-    } else if (email.trim() === '') {
-      Alert.alert('Error', 'Email harus diisi');
-    } else if (!isValidEmail(email)) {
-      Alert.alert('Error', `Format email tidak valid`);
-    } else if (password.trim() === '') {
-      Alert.alert('Error', 'Password harus diisi');
-    } else if (phoneNumber.trim() === '') {
-      Alert.alert('Error', `Nomor Telepon harus diisi`);
-    } else if (region.trim() === '') {
-      Alert.alert('Error', `Daerah harus diisi`);
-    } else {
-      console.warn('Cek login');
-    }
-  };
-
-  const isValidEmail = email => {
-    const pattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    return pattern.test(email);
-  };
-
-  onEmailChange = text => {
-    setEmail(text);
-    setIsEmailValid(isValidEmail(text));
-  };
 
   const onBack = () => {
     navigation.replace('InfoHome');
@@ -356,6 +326,8 @@ const ModifInfoScreen = ({route}) => {
                       firstname: tempLastName,
                     },
                   );
+
+                  return 1;
                 }}
                 onBack={() => setTempLastName(lastName)}
                 content={
@@ -407,6 +379,8 @@ const ModifInfoScreen = ({route}) => {
                   saveChangesToAPI('app7130-01', 1102, 'lastname', tempName, {
                     lastname: tempName,
                   });
+
+                  return 1;
                 }}
                 onBack={() => setTempName(name)}
                 content={
@@ -452,7 +426,6 @@ const ModifInfoScreen = ({route}) => {
                 label="Email"
                 placeholder="xrun@xrun.run"
                 value={userData.email}
-                setValue={onEmailChange}
                 isDisable={true}
                 content={
                   <View
@@ -472,7 +445,6 @@ const ModifInfoScreen = ({route}) => {
                     </Text>
                     <TextInput
                       value={userData.email}
-                      onChangeText={onEmailChange}
                       placeholder="xrun@xrun.run"
                       placeholderTextColor="#a8a8a7"
                       style={{
@@ -538,7 +510,6 @@ const ModifInfoScreen = ({route}) => {
                     keyboardType="numeric"
                     style={styles.input}
                     value={userData.mobile}
-                    onChangeText={text => setPhoneNumber(text)}
                     editable={false}
                   />
                 </View>
@@ -600,6 +571,8 @@ const ModifInfoScreen = ({route}) => {
                     ages: valueAge,
                   });
                   setAge(tempAge);
+
+                  return 1;
                 }}
                 onBack={() => setTempAge(age)}
                 content={
@@ -633,6 +606,8 @@ const ModifInfoScreen = ({route}) => {
                     gender: tempGender,
                   });
                   setGender(tempGender);
+
+                  return 1;
                 }}
                 onBack={() => setTempGender(gender)}
                 content={
@@ -655,17 +630,70 @@ const ModifInfoScreen = ({route}) => {
                 title="Area"
                 label="Area"
                 placeholder="Your Area"
-                value={region.rDesc}
+                value={country.cDesc + ', ' + region.rDesc}
                 setValue={setRegion.rDesc}
                 onSaveChange={() => {
-                  console.log(`
-                    Country Desc : ${tempCountry.cDesc}
-                    Country Code : ${tempCountry.cCode}
-                    Region Desc  : ${tempRegion.rDesc}
-                    Region Code  : ${tempRegion.rCode}
-                  `);
+                  if (tempRegion.rCode === 0) {
+                    Alert.alert('Error', 'Please select a region.');
+                    return 0;
+                  } else {
+                    setCountry({
+                      cDesc: tempCountry.cDesc,
+                      cCode: tempCountry.cCode,
+                    });
+
+                    setRegion({
+                      rDesc: tempRegion.rDesc,
+                      rCode: tempRegion.rCode,
+                    });
+
+                    const saveChangeArea = async () => {
+                      try {
+                        const apiUrl = `https://app.xrun.run/gateway.php?act=app7190-02&member=1102&country=${tempCountry.cCode}&region=${tempRegion.rCode}`;
+
+                        const response = await fetch(apiUrl, {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify({
+                            country: tempCountry.cCode,
+                            region: tempRegion.rCode,
+                          }),
+                        });
+
+                        if (!response.ok) {
+                          throw new Error('Gagal menyimpan perubahan.');
+                        }
+
+                        console.log(
+                          'Save Success! => ' +
+                            tempCountry.cCode +
+                            ' - ' +
+                            tempRegion.rCode,
+                        );
+                      } catch (error) {
+                        console.error('Terjadi kesalahan:', error.message);
+                      }
+                    };
+
+                    saveChangeArea();
+
+                    return 1;
+                  }
                 }}
-                onBack={() => setTempLastName(lastName)}
+                onBack={() => {
+                  setTempLastName(lastName);
+                  setTempCountry({
+                    cDesc: country.cDesc,
+                    cCode: country.cCode,
+                  });
+
+                  setTempRegion({
+                    rDesc: region.rDesc,
+                    rCode: region.rCode,
+                  });
+                }}
                 content={
                   <View style={{flex: 1}}>
                     <View
