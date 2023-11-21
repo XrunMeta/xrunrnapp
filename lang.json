@@ -168,6 +168,49 @@
         "empty": "Silakan isi kata sandi Anda",
         "wrong": "Kata sandi Anda tidak cocok"
       }
+    },
+
+    "screen_modify_information": {
+      "title": "Ubah Informasi",
+      "lastname": {
+        "label": "Nama Belakang",
+        "placeholder": "Nama belakang Anda"
+      },
+      "name": {
+        "label": "Nama",
+        "placeholder": "Nama Anda"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "xrun@xrun.run"
+      },
+      "phone": {
+        "label": "Nomor Telepon"
+      },
+      "password": {
+        "label": "Kata Sandi",
+        "extstr": "Perubahan terakhir :"
+      },
+      "age": {
+        "label": "Usia"
+      },
+      "gender": {
+        "label": "Jenis Kelamin",
+        "opt1": "Laki-laki",
+        "opt2": "Perempuan"
+      },
+      "area": {
+        "label": "Wilayah",
+        "placeholder": "Wilayah Anda",
+        "empty": "Silakan pilih wilayah",
+        "label_country": "Kebangsaan / Negara",
+        "label_area": "Wilayah"
+      },
+      "modal": {
+        "empty": "Data kosong"
+      },
+      "close": "Tutup",
+      "modify": "Ubah"
     }
   },
 
@@ -340,6 +383,49 @@
         "empty": "Please fill your password",
         "wrong": "Your password is doesn't match"
       }
+    },
+
+    "screen_modify_information": {
+      "title": "Modify Information",
+      "lastname": {
+        "label": "Last Name",
+        "placeholder": "Your last name"
+      },
+      "name": {
+        "label": "Name",
+        "placeholder": "Your name"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "xrun@xrun.run"
+      },
+      "phone": {
+        "label": "Phone Number"
+      },
+      "password": {
+        "label": "Password",
+        "extstr": "Final change date :"
+      },
+      "age": {
+        "label": "Age"
+      },
+      "gender": {
+        "label": "Gender",
+        "opt1": "Boy/Men",
+        "opt2": "Girl/Women"
+      },
+      "area": {
+        "label": "Area",
+        "placeholder": "Your Area",
+        "empty": "Please select a region",
+        "label_country": "Nationality / Country",
+        "label_area": "Area"
+      },
+      "modal": {
+        "empty": "Data is empty"
+      },
+      "close": "Close",
+      "modify": "Modify"
     }
   }
 }
