@@ -225,6 +225,14 @@
     "screen_appInfo": {
       "title": "Informasi Aplikasi",
       "version": "Versi terakhir"
+    },
+
+    "screen_recommend": {
+      "title": "Daftar Rekomendasi",
+      "category": {
+        "regist": "Daftarkan rekomendasi",
+        "random": "Rekomendasi acak"
+      }
     }
   },
 
@@ -454,6 +462,14 @@
     "screen_appInfo": {
       "title": "App Information",
       "version": "Latest version"
+    },
+
+    "screen_recommend": {
+      "title": "Regist Recommender",
+      "category": {
+        "regist": "Regist recommender",
+        "random": "Random recommend"
+      }
     }
   }
 }

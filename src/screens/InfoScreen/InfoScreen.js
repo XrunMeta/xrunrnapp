@@ -154,6 +154,10 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
     navigation.navigate('AppInformation');
   };
 
+  const onRecommend = () => {
+    navigation.navigate('Recommend');
+  };
+
   const onBack = () => {
     navigation.navigate('Home');
   };
@@ -313,6 +317,7 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
                 ? lang.screen_info.list.recommend
                 : ''
             }
+            onPress={onRecommend}
           />
         </ScrollView>
       </View>
