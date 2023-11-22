@@ -84,7 +84,7 @@ const ServiceClause = () => {
           style={{
             fontFamily: 'Poppins-Regular',
             fontSize: 13,
-            color: 'black',
+            color: 'grey',
             paddingVertical: 20,
           }}>
           {text ? text : 'Loading...'}

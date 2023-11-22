@@ -1,11 +1,14 @@
 import {StyleSheet, Text, View, ScrollView} from 'react-native';
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const langData = require('../../../lang.json');
+
 const ClauseForPersonal = () => {
   const [text, setText] = useState('0');
+  const [lang, setLang] = useState('');
 
   const navigation = useNavigation();
 
@@ -22,6 +25,10 @@ const ClauseForPersonal = () => {
           if (language === 'id') {
             apiUrl += '-id';
           }
+
+          const selectedLanguage = language === 'id' ? 'id' : 'eng';
+          const languageData = langData[selectedLanguage];
+          setLang(languageData);
 
           const fetchData = async () => {
             try {
@@ -61,7 +68,9 @@ const ClauseForPersonal = () => {
         </View>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>
-            Clause for Personal Location Information
+            {lang && lang.screen_clause
+              ? lang.screen_clause.category.location
+              : ''}
           </Text>
         </View>
       </View>
@@ -74,9 +83,10 @@ const ClauseForPersonal = () => {
         }}>
         <Text
           style={{
-            fontFamily: 'Poppins-Medium',
-            fontSize: 18,
+            fontFamily: 'Poppins-Regular',
+            fontSize: 13,
             paddingVertical: 20,
+            color: 'grey',
           }}>
           {text ? text : 'Loading...'}
         </Text>
@@ -104,9 +114,9 @@ const styles = StyleSheet.create({
   },
   title: {
     marginLeft: 70,
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 22,
     color: '#051C60',
     margin: 10,
+    fontFamily: 'Poppins-Bold',
   },
 });
