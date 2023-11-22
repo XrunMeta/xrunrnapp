@@ -4,8 +4,11 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const langData = require('../../../lang.json');
+
 const ClauseForUsage = () => {
   const [text, setText] = useState('0');
+  const [lang, setLang] = useState('');
 
   const navigation = useNavigation();
 
@@ -22,6 +25,10 @@ const ClauseForUsage = () => {
           if (language === 'id') {
             apiUrl += '-id';
           }
+
+          const selectedLanguage = language === 'id' ? 'id' : 'eng';
+          const languageData = langData[selectedLanguage];
+          setLang(languageData);
 
           const fetchData = async () => {
             try {
@@ -61,7 +68,9 @@ const ClauseForUsage = () => {
         </View>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>
-            Clause for Usage/Collecting Personal Information
+            {lang && lang.screen_clause
+              ? lang.screen_clause.category.usage
+              : ''}
           </Text>
         </View>
       </View>
@@ -70,11 +79,13 @@ const ClauseForUsage = () => {
           flex: 1,
           paddingHorizontal: 20,
           marginTop: 10,
+          backgroundColor: 'white',
         }}>
         <Text
           style={{
-            fontFamily: 'Poppins-Medium',
-            fontSize: 18,
+            fontFamily: 'Poppins-Regular',
+            fontSize: 13,
+            color: 'grey',
             paddingVertical: 20,
           }}>
           {text ? text : 'Loading...'}
