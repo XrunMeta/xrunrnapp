@@ -211,6 +211,15 @@
       },
       "close": "Tutup",
       "modify": "Ubah"
+    },
+
+    "screen_clause": {
+      "title": "Ketentuan",
+      "category": {
+        "service": "Ketentuan Layanan",
+        "location": "Ketentuan Informasi Lokasi Pribadi",
+        "usage": "Ketentuan Penggunaan/Pengumpulan Informasi Pribadi"
+      }
     }
   },
 
@@ -426,6 +435,15 @@
       },
       "close": "Close",
       "modify": "Modify"
+    },
+
+    "screen_clause": {
+      "title": "Clause",
+      "category": {
+        "service": "Service Clause",
+        "location": "Clause for Personal Location Information",
+        "usage": "Clause for Usage/Collecting Personal Information"
+      }
     }
   }
 }

@@ -1,14 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  Dimensions,
-  TouchableOpacity,
-  Image,
-  Share,
-  Alert,
-} from 'react-native';
+import {StyleSheet, Text, View, ScrollView, Dimensions} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import ButtonList from '../../components/ButtonList/ButtonList';
@@ -16,10 +6,13 @@ import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
 
+const langData = require('../../../lang.json');
+
 const ClauseScreen = () => {
   const {isLoggedIn, logout} = useAuth();
   const [userName, setUserName] = useState(null);
   const [userDetails, setUserDetails] = useState([]);
+  const [lang, setLang] = useState('');
 
   let ScreenHeight = Dimensions.get('window').height;
 
@@ -61,6 +54,24 @@ const ClauseScreen = () => {
       }
     };
 
+    // Get Language
+    const getLanguage = async () => {
+      try {
+        const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+
+        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
+        const language = langData[selectedLanguage];
+        setLang(language);
+      } catch (err) {
+        console.error(
+          'Error retrieving selfCoordinate from AsyncStorage:',
+          err,
+        );
+      }
+    };
+
+    getLanguage();
+
     fetchData();
   }, []);
 
@@ -88,7 +99,9 @@ const ClauseScreen = () => {
           <ButtonBack onClick={onBack} />
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>Clause</Text>
+          <Text style={styles.title}>
+            {lang && lang.screen_clause ? lang.screen_clause.title : ''}
+          </Text>
         </View>
       </View>
 
@@ -99,13 +112,28 @@ const ClauseScreen = () => {
           flex: 1,
         }}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <ButtonList label="Service Clause" onPress={onServiceClause} />
           <ButtonList
-            label="Clause for Personal Location Information"
+            label={
+              lang && lang.screen_clause
+                ? lang.screen_clause.category.service
+                : ''
+            }
+            onPress={onServiceClause}
+          />
+          <ButtonList
+            label={
+              lang && lang.screen_clause
+                ? lang.screen_clause.category.location
+                : ''
+            }
             onPress={onClausePersonal}
           />
           <ButtonList
-            label="Clause for Usage/Collecting Personal Information"
+            label={
+              lang && lang.screen_clause
+                ? lang.screen_clause.category.usage
+                : ''
+            }
             onPress={onClauseUsage}
           />
         </ScrollView>

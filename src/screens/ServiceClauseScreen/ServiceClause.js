@@ -1,11 +1,14 @@
 import {StyleSheet, Text, View, ScrollView} from 'react-native';
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const langData = require('../../../lang.json');
+
 const ServiceClause = () => {
   const [text, setText] = useState('0');
+  const [lang, setLang] = useState('');
 
   const navigation = useNavigation();
 
@@ -15,13 +18,16 @@ const ServiceClause = () => {
       .then(language => {
         // Lakukan sesuatu dengan nilai currentLanguage, misalnya set state atau tindakan lain
         if (language) {
-          console.log('Current Language:', language);
           let apiUrl = 'https://app.xrun.run/gateway.php?act=app7010-01';
 
           // Tambahkan bahasa ke URL jika bahasa adalah "id"
           if (language === 'id') {
             apiUrl += '-id';
           }
+
+          const selectedLanguage = language === 'id' ? 'id' : 'eng';
+          const languageData = langData[selectedLanguage];
+          setLang(languageData);
 
           const fetchData = async () => {
             try {
@@ -60,7 +66,11 @@ const ServiceClause = () => {
           <ButtonBack onClick={onBack} />
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>Service Clause</Text>
+          <Text style={styles.title}>
+            {lang && lang.screen_clause
+              ? lang.screen_clause.category.service
+              : ''}
+          </Text>
         </View>
       </View>
       <ScrollView
