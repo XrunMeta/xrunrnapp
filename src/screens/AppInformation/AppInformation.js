@@ -2,9 +2,13 @@ import {StyleSheet, Text, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const langData = require('../../../lang.json');
 
 const AppInformation = () => {
   const [version, setVersion] = useState('0');
+  const [lang, setLang] = useState('');
 
   const navigation = useNavigation();
 
@@ -27,6 +31,23 @@ const AppInformation = () => {
       }
     };
 
+    // Get Language
+    const getLanguage = async () => {
+      try {
+        const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+
+        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
+        const language = langData[selectedLanguage];
+        setLang(language);
+      } catch (err) {
+        console.error(
+          'Error retrieving selfCoordinate from AsyncStorage:',
+          err,
+        );
+      }
+    };
+
+    getLanguage();
     fetchData();
   });
 
@@ -41,7 +62,9 @@ const AppInformation = () => {
           <ButtonBack onClick={onBack} />
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>App Information</Text>
+          <Text style={styles.title}>
+            {lang && lang.screen_appInfo ? lang.screen_appInfo.title : ''}
+          </Text>
         </View>
       </View>
       <View
@@ -49,14 +72,20 @@ const AppInformation = () => {
           flex: 1,
           alignItems: 'center',
           justifyContent: 'center',
+          backgroundColor: 'white',
+          width: '100%',
+          paddingHorizontal: 20,
+          marginTop: 10,
         }}>
         <Text
           style={{
-            fontFamily: 'Poppins-Medium',
-            fontSize: 18,
+            fontFamily: 'Poppins-Regular',
+            fontSize: 13,
+            color: 'grey',
             paddingVertical: 20,
           }}>
-          Latest version {version ? version.version : '...'}
+          {lang && lang.screen_appInfo ? lang.screen_appInfo.version : ''}{' '}
+          {version ? version.version : '...'}
         </Text>
       </View>
     </View>
@@ -81,8 +110,8 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 22,
+    fontFamily: 'Poppins-Bold',
     color: '#051C60',
     margin: 10,
   },

@@ -220,6 +220,11 @@
         "location": "Ketentuan Informasi Lokasi Pribadi",
         "usage": "Ketentuan Penggunaan/Pengumpulan Informasi Pribadi"
       }
+    },
+
+    "screen_appInfo": {
+      "title": "Informasi Aplikasi",
+      "version": "Versi terakhir"
     }
   },
 
@@ -444,6 +449,11 @@
         "location": "Clause for Personal Location Information",
         "usage": "Clause for Usage/Collecting Personal Information"
       }
+    },
+
+    "screen_appInfo": {
+      "title": "App Information",
+      "version": "Latest version"
     }
   }
 }
