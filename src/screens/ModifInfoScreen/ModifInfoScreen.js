@@ -295,6 +295,7 @@ const ModifInfoScreen = ({route}) => {
           </Text>
         </View>
       ) : (
+        //
         <View style={[[styles.root], {width: '100%'}]}>
           {console.log(`
             Countries data : ${countryData.length}

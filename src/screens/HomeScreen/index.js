@@ -51,7 +51,7 @@ export default function Home() {
     };
 
     getUserData(); // Get Language
-  }, []);
+  }, [isLoggedIn]);
 
   const renderTabButton = (tabName, icon, text, onPress) => (
     <TouchableOpacity
