@@ -35,6 +35,7 @@ import RegistRecommendScreen from './src/screens/RecommendScreen/RegistRedommend
 import RandomRecommendScreen from './src/screens/RecommendScreen/RandomRecommendScreen';
 import CustomerServiceScreen from './src/screens/CustomerServiceScreen/CustomerServiceScreen';
 import CommonProblemScreen from './src/screens/CustomerServiceScreen/CommonProblemScreen';
+import OneProblemScreen from './src/screens/CustomerServiceScreen/OneProblemScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -109,6 +110,7 @@ export default function App() {
                 name="CommonProblem"
                 component={CommonProblemScreen}
               />
+              <Stack.Screen name="OneProblem" component={OneProblemScreen} />
             </>
           ) : (
             <>
@@ -171,6 +173,7 @@ export default function App() {
                 name="CommonProblem"
                 component={CommonProblemScreen}
               />
+              <Stack.Screen name="OneProblem" component={OneProblemScreen} />
             </>
           )}
         </Stack.Navigator>

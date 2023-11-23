@@ -82,8 +82,7 @@ const CustomerServiceScreen = () => {
   };
 
   const onOne = () => {
-    // navigation.navigate('RandomRecommend');
-    console.log('Ke 1:1 Counseling Screen');
+    navigation.navigate('OneProblem');
   };
 
   return (
