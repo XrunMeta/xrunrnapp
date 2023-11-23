@@ -165,6 +165,8 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
     );
     const data = await response.json();
 
+    console.log(data);
+
     setRefEmail(data.email);
 
     if (data.data === 'ok') {
@@ -356,7 +358,11 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
                 ? lang.screen_recommend.add_recommend.already
                 : ''}
             </Text>
-            <Text style={[styles.modalText, {fontFamily: 'Poppins-SemiBold'}]}>
+            <Text
+              style={[
+                styles.modalText,
+                {fontFamily: 'Poppins-SemiBold', marginBottom: 20},
+              ]}>
               {refEmail}
             </Text>
             <TouchableOpacity onPress={closeModal} style={styles.modalButton}>

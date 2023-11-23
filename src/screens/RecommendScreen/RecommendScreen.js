@@ -81,8 +81,8 @@ const RecommendScreen = () => {
     navigation.navigate('RegistRecommend');
   };
 
-  const onClausePersonal = () => {
-    navigation.navigate('PersonalClause');
+  const onRandom = () => {
+    navigation.navigate('RandomRecommend');
   };
 
   return (
@@ -120,7 +120,7 @@ const RecommendScreen = () => {
                 ? lang.screen_recommend.category.random
                 : ''
             }
-            onPress={onClausePersonal}
+            onPress={onRandom}
           />
         </ScrollView>
       </View>

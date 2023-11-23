@@ -484,7 +484,7 @@
         "label": "Referral ID",
         "placeholder": "Please enter your referral ID.",
         "not_found": "ID not found, Please re-enter your referral ID.",
-        "recommended": "recommended",
+        "recommended": "Recommended",
         "already": "You already have a referral history."
       },
       "random_recommend": {
