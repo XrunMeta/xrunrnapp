@@ -14,8 +14,6 @@ const RecommendScreen = () => {
   const [userDetails, setUserDetails] = useState([]);
   const [lang, setLang] = useState('');
 
-  let ScreenHeight = Dimensions.get('window').height;
-
   const navigation = useNavigation();
 
   //   Call API
@@ -79,16 +77,12 @@ const RecommendScreen = () => {
     navigation.navigate('InfoHome');
   };
 
-  const onServiceClause = () => {
-    navigation.navigate('ServiceClause');
+  const onRegist = () => {
+    navigation.navigate('RegistRecommend');
   };
 
   const onClausePersonal = () => {
     navigation.navigate('PersonalClause');
-  };
-
-  const onClauseUsage = () => {
-    navigation.navigate('UsageClause');
   };
 
   return (
@@ -118,7 +112,7 @@ const RecommendScreen = () => {
                 ? lang.screen_recommend.category.regist
                 : ''
             }
-            onPress={onServiceClause}
+            onPress={onRegist}
           />
           <ButtonList
             label={

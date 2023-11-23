@@ -8,6 +8,7 @@ import {
   Image,
   Share,
   Alert,
+  Modal,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -24,6 +25,8 @@ const InfoScreen = () => {
   const {isLoggedIn, logout} = useAuth();
   const [userName, setUserName] = useState(null);
   const [userDetails, setUserDetails] = useState([]);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [refEmail, setRefEmail] = useState('');
 
   let ScreenHeight = Dimensions.get('window').height;
 
@@ -51,6 +54,7 @@ const InfoScreen = () => {
           setUserDetails({
             email: data.email,
             firstname: data.firstname,
+            member: data.member,
             lastname: data.lastname,
             gender: data.gender,
             extrastr: data.extrastr,
@@ -154,12 +158,29 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
     navigation.navigate('AppInformation');
   };
 
-  const onRecommend = () => {
-    navigation.navigate('Recommend');
+  const onRecommend = async () => {
+    // Check is Member has recommended
+    const response = await fetch(
+      `https://app.xrun.run/gateway.php?act=app7420-03&member=${userDetails.member}`,
+    );
+    const data = await response.json();
+
+    setRefEmail(data.email);
+
+    if (data.data === 'ok') {
+      navigation.navigate('Recommend');
+    } else if (data.data === 'over') {
+      setModalVisible(true);
+    }
   };
 
   const onBack = () => {
     navigation.navigate('Home');
+  };
+
+  const closeModal = () => {
+    // Fungsi untuk menutup modal
+    setModalVisible(false);
   };
 
   return (
@@ -321,6 +342,29 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
           />
         </ScrollView>
       </View>
+
+      {/* Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={closeModal}>
+        <View style={styles.modal}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>
+              {lang && lang.screen_recommend
+                ? lang.screen_recommend.add_recommend.already
+                : ''}
+            </Text>
+            <Text style={[styles.modalText, {fontFamily: 'Poppins-SemiBold'}]}>
+              {refEmail}
+            </Text>
+            <TouchableOpacity onPress={closeModal} style={styles.modalButton}>
+              <Text style={styles.modalButtonText}>OK</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -346,5 +390,39 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Bold',
     color: '#051C60',
     margin: 10,
+  },
+
+  // Modal styles
+  modal: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'flex-start',
+  },
+  modalText: {
+    fontSize: 13,
+    textAlign: 'left',
+    color: '#051C60',
+    fontFamily: 'Poppins-Regular',
+  },
+  modalButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginBottom: -20,
+    marginRight: -18,
+    alignSelf: 'flex-end',
+  },
+  modalButtonText: {
+    textAlign: 'center',
+    fontSize: 13,
+    color: '#051C60',
+    fontFamily: 'Poppins-Bold',
   },
 });

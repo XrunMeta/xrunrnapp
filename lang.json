@@ -232,6 +232,16 @@
       "category": {
         "regist": "Daftarkan rekomendasi",
         "random": "Rekomendasi acak"
+      },
+      "add_recommend": {
+        "label": "ID Rekomendasi",
+        "placeholder": "Silakan masukkan ID rekomendasi Anda.",
+        "not_found": "ID tidak ditemukan, Silakan masukkan ID rekomendasi Anda lagi.",
+        "recommended": "Rekomendasi didaftarkan",
+        "already": "Anda sudah memiliki referral ID."
+      },
+      "random_recommend": {
+        "empty": "Silakan pilih sebuah ID."
       }
     }
   },
@@ -469,6 +479,16 @@
       "category": {
         "regist": "Regist recommender",
         "random": "Random recommend"
+      },
+      "add_recommend": {
+        "label": "Referral ID",
+        "placeholder": "Please enter your referral ID.",
+        "not_found": "ID not found, Please re-enter your referral ID.",
+        "recommended": "recommended",
+        "already": "You already have a referral history."
+      },
+      "random_recommend": {
+        "empty": "Please select an ID."
       }
     }
   }
