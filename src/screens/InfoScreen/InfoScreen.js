@@ -176,6 +176,10 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
     }
   };
 
+  const onCustomerService = () => {
+    navigation.navigate('CustomerService');
+  };
+
   const onBack = () => {
     navigation.navigate('Home');
   };
@@ -325,6 +329,7 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
                 ? lang.screen_info.list.cs
                 : ''
             }
+            onPress={onCustomerService}
           />
           <ButtonList
             label={

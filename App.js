@@ -33,6 +33,8 @@ import EditPassword from './src/screens/ModifInfoScreen/EditPasswordScreen';
 import RecommendScreen from './src/screens/RecommendScreen/RecommendScreen';
 import RegistRecommendScreen from './src/screens/RecommendScreen/RegistRedommendScreen';
 import RandomRecommendScreen from './src/screens/RecommendScreen/RandomRecommendScreen';
+import CustomerServiceScreen from './src/screens/CustomerServiceScreen/CustomerServiceScreen';
+import CommonProblemScreen from './src/screens/CustomerServiceScreen/CommonProblemScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -99,6 +101,14 @@ export default function App() {
                 name="RandomRecommend"
                 component={RandomRecommendScreen}
               />
+              <Stack.Screen
+                name="CustomerService"
+                component={CustomerServiceScreen}
+              />
+              <Stack.Screen
+                name="CommonProblem"
+                component={CommonProblemScreen}
+              />
             </>
           ) : (
             <>
@@ -152,6 +162,14 @@ export default function App() {
               <Stack.Screen
                 name="RandomRecommend"
                 component={RandomRecommendScreen}
+              />
+              <Stack.Screen
+                name="CustomerService"
+                component={CustomerServiceScreen}
+              />
+              <Stack.Screen
+                name="CommonProblem"
+                component={CommonProblemScreen}
               />
             </>
           )}

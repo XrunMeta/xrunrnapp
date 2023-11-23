@@ -243,6 +243,16 @@
       "random_recommend": {
         "empty": "Silakan pilih sebuah ID."
       }
+    },
+
+    "screen_cs": {
+      "title": "Layanan Pelanggan",
+      "common": {
+        "title": "Masalah Umum"
+      },
+      "one": {
+        "title": "Konseling 1:1"
+      }
     }
   },
 
@@ -489,6 +499,16 @@
       },
       "random_recommend": {
         "empty": "Please select an ID."
+      }
+    },
+
+    "screen_cs": {
+      "title": "Customer Service",
+      "common": {
+        "title": "Common problem"
+      },
+      "one": {
+        "title": "1:1 Counseling"
       }
     }
   }

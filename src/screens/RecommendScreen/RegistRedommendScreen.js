@@ -60,8 +60,6 @@ const RegistRecommendScreen = () => {
           const apiUrl = `https://app.xrun.run/gateway.php?act=app7410-01&member=${userData.member}&email=${recID}`;
           const response = await fetch(apiUrl);
           const data = await response.json();
-          console.log(apiUrl);
-          console.log(data);
 
           if (data.data === 'no id') {
             Alert.alert(
