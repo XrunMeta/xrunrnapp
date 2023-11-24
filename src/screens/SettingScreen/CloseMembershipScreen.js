@@ -22,7 +22,6 @@ const CloseMembershipScreen = () => {
   const navigation = useNavigation();
   let ScreenHeight = Dimensions.get('window').height;
   const [userData, setUserData] = useState({});
-  const [recommendations, setRecommendations] = useState([]);
   const [checkedRecommendations, setCheckedRecommendations] = useState({});
   const [checkedID, setCheckedID] = useState(null);
   const [reason, setReason] = useState('');
@@ -49,40 +48,8 @@ const CloseMembershipScreen = () => {
       }
     };
 
-    const fetchRecommendations = async () => {
-      try {
-        setRecommendations([
-          {
-            reasonNum: 0,
-            content:
-              lang && lang.screen_setting
-                ? lang.screen_setting.close.select.sel1
-                : '',
-          },
-          {
-            reasonNum: 1,
-            content:
-              lang && lang.screen_setting
-                ? lang.screen_setting.close.select.sel2
-                : '',
-          },
-          {
-            reasonNum: 2,
-            content:
-              lang && lang.screen_setting
-                ? lang.screen_setting.close.select.sel3
-                : '',
-          },
-        ]);
-      } catch (error) {
-        console.error('Error fetching recommendations:', error);
-      } finally {
-        setLoading(false); // Sembunyikan loading setelah fetch selesai
-      }
-    };
-
     getLanguage();
-    fetchRecommendations();
+    setLoading(false);
   }, []);
 
   const onSaveChange = () => {
@@ -95,34 +62,6 @@ const CloseMembershipScreen = () => {
           : '',
       );
     } else {
-      // const registRecommend = async () => {
-      //   try {
-      //     const response = await fetch(
-      //       `https://app.xrun.run/gateway.php?act=app7420-02&posed=${checkedID}&member=${userData.member}`,
-      //     );
-      //     const data = await response.json();
-      //     if (data.data === 'ok') {
-      //       Alert.alert(
-      //         lang && lang.alert ? lang.alert.title.success : '',
-      //         lang && lang.screen_recommend
-      //           ? lang.screen_recommend.add_recommend.recommended
-      //           : '',
-      //       );
-      //       navigation.replace('InfoHome');
-      //     } else {
-      //       Alert.alert(
-      //         lang && lang.alert ? lang.alert.title.warning : '',
-      //         lang && lang.screen_recommend
-      //           ? lang.screen_recommend.add_recommend.already
-      //           : '',
-      //       );
-      //       navigation.replace('InfoHome');
-      //     }
-      //   } catch (error) {
-      //     console.error('Terjadi kesalahan:', error.message);
-      //   }
-      // };
-      // registRecommend();
       console.log(`
         Send Data :
               Checked : ${checkedID}
@@ -135,7 +74,7 @@ const CloseMembershipScreen = () => {
     navigation.goBack();
   };
 
-  const checkBoxToggle = (content, reasonNum) => {
+  const checkBoxToggle = reasonNum => {
     const updatedCheckedState = {...checkedRecommendations};
     const newCheckedState = !updatedCheckedState[reasonNum];
 
@@ -145,12 +84,6 @@ const CloseMembershipScreen = () => {
         updatedCheckedState[key] = false;
       }
     }
-
-    console.log(`
-      Data Checked : 
-          content  : ${content}
-          reasonNum : ${reasonNum}
-    `);
 
     // Check or uncheck the selected recommendation
     updatedCheckedState[reasonNum] = newCheckedState;
@@ -250,50 +183,140 @@ const CloseMembershipScreen = () => {
               width: '100%',
               marginTop: 10,
             }}>
-            {recommendations.map(item => (
-              <TouchableOpacity
-                activeOpacity={1}
-                key={item.reasonNum}
-                onPress={() => checkBoxToggle(item.content, item.reasonNum)}
+            {/* Service Difficult */}
+            <TouchableOpacity
+              activeOpacity={1}
+              key={0}
+              onPress={() => checkBoxToggle(0)}
+              style={{
+                backgroundColor: 'white',
+                paddingRight: 12,
+                paddingLeft: 7,
+                marginHorizontal: 8,
+                borderRadius: 10,
+                ...styles.shadow,
+              }}>
+              <View
                 style={{
-                  backgroundColor: 'white',
-                  paddingRight: 12,
-                  paddingLeft: 7,
-                  marginHorizontal: 8,
-                  borderRadius: 10,
-                  ...styles.shadow,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  alignSelf: 'flex-start',
+                  marginHorizontal: 5,
                 }}>
                 <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    alignSelf: 'flex-start',
-                    marginHorizontal: 5,
-                  }}>
-                  <View
-                    style={[
-                      styles.checkbox,
-                      checkedRecommendations[item.reasonNum]
-                        ? styles.checkedBox
-                        : styles.uncheckedBox,
-                    ]}>
-                    {checkedRecommendations[item.reasonNum] && (
-                      <Text style={styles.checkMark}>✔</Text>
-                    )}
-                  </View>
-                  <Text
-                    onPress={() => checkBoxToggle(item.content, item.reasonNum)}
-                    style={{
-                      fontFamily: 'Poppins-Regular',
-                      fontSize: 13,
-                      color: 'black',
-                      paddingVertical: 5,
-                    }}>
-                    {item.content}
-                  </Text>
+                  style={[
+                    styles.checkbox,
+                    checkedRecommendations[0]
+                      ? styles.checkedBox
+                      : styles.uncheckedBox,
+                  ]}>
+                  {checkedRecommendations[0] && (
+                    <Text style={styles.checkMark}>✔</Text>
+                  )}
                 </View>
-              </TouchableOpacity>
-            ))}
+                <Text
+                  style={{
+                    fontFamily: 'Poppins-Regular',
+                    fontSize: 13,
+                    color: 'black',
+                    paddingVertical: 5,
+                  }}>
+                  {lang && lang.screen_setting
+                    ? lang.screen_setting.close.select.sel1
+                    : ''}
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            {/* Function Difficult */}
+            <TouchableOpacity
+              activeOpacity={1}
+              key={1}
+              onPress={() => checkBoxToggle(1)}
+              style={{
+                backgroundColor: 'white',
+                paddingRight: 12,
+                paddingLeft: 7,
+                marginHorizontal: 8,
+                borderRadius: 10,
+                ...styles.shadow,
+              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  alignSelf: 'flex-start',
+                  marginHorizontal: 5,
+                }}>
+                <View
+                  style={[
+                    styles.checkbox,
+                    checkedRecommendations[1]
+                      ? styles.checkedBox
+                      : styles.uncheckedBox,
+                  ]}>
+                  {checkedRecommendations[1] && (
+                    <Text style={styles.checkMark}>✔</Text>
+                  )}
+                </View>
+                <Text
+                  style={{
+                    fontFamily: 'Poppins-Regular',
+                    fontSize: 13,
+                    color: 'black',
+                    paddingVertical: 5,
+                  }}>
+                  {lang && lang.screen_setting
+                    ? lang.screen_setting.close.select.sel2
+                    : ''}
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            {/* Etc */}
+            <TouchableOpacity
+              activeOpacity={1}
+              key={2}
+              onPress={() => checkBoxToggle(2)}
+              style={{
+                backgroundColor: 'white',
+                paddingRight: 12,
+                paddingLeft: 7,
+                marginHorizontal: 8,
+                borderRadius: 10,
+                ...styles.shadow,
+              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  alignSelf: 'flex-start',
+                  marginHorizontal: 5,
+                }}>
+                <View
+                  style={[
+                    styles.checkbox,
+                    checkedRecommendations[2]
+                      ? styles.checkedBox
+                      : styles.uncheckedBox,
+                  ]}>
+                  {checkedRecommendations[2] && (
+                    <Text style={styles.checkMark}>✔</Text>
+                  )}
+                </View>
+                <Text
+                  style={{
+                    fontFamily: 'Poppins-Regular',
+                    fontSize: 13,
+                    color: 'black',
+                    paddingVertical: 5,
+                  }}>
+                  {lang && lang.screen_setting
+                    ? lang.screen_setting.close.select.sel3
+                    : ''}
+                </Text>
+              </View>
+            </TouchableOpacity>
 
             {/* Close Reason */}
             <TextInput
