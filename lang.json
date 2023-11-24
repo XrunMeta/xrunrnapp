@@ -147,7 +147,7 @@
       "list": {
         "modify": "Ubah Informasi",
         "setting": "Pengaturan",
-        "clause": "Klausa",
+        "clause": "Ketentuan",
         "cs": "Layanan Pelanggan",
         "app_info": "Informasi Aplikasi",
         "recommend": "Rekomendasi"
@@ -252,6 +252,37 @@
       },
       "one": {
         "title": "Pertanyaan 1:1"
+      }
+    },
+
+    "screen_setting": {
+      "title": "Pengaturan",
+      "category": {
+        "basic": {
+          "cat": "Pengaturan Dasar",
+          "device": "Pengaturan Perangkat"
+        },
+        "account": {
+          "cat": "Pengaturan Akun",
+          "logout": "Keluar",
+          "close": "Hapus Akun"
+        }
+      },
+      "close": {
+        "title": "Hapus Akun",
+        "desc": {
+          "clo1": "Seluruh",
+          "clo2": "XRUN ",
+          "clo3": "Anda akan menghilang secara keseluruhan.",
+          "clo4": "Bila hapus akun, semua akun yang terhubung ",
+          "clo5": "akan Terhapus semua."
+        },
+        "select": {
+          "sel1": "Layanan sulit digunakan",
+          "sel2": "Fitur sulit digunakan",
+          "sel3": "Dan lain-lain"
+        },
+        "reason": "Alasan hapus akun"
       }
     }
   },
@@ -509,6 +540,37 @@
       },
       "one": {
         "title": "1:1 Counseling"
+      }
+    },
+
+    "screen_setting": {
+      "title": "Setting",
+      "category": {
+        "basic": {
+          "cat": "Basic setting",
+          "device": "Device authorization letter"
+        },
+        "account": {
+          "cat": "Account setting",
+          "logout": "Log out",
+          "close": "Close membership"
+        }
+      },
+      "close": {
+        "title": "Membership Withdrawal",
+        "desc": {
+          "clo1": "All the ",
+          "clo2": "Coin ",
+          "clo3": "will be gone instantly.",
+          "clo4": "Also, you will no longer",
+          "clo5": "All services will be withdrawn."
+        },
+        "select": {
+          "sel1": "The service is difficult to use",
+          "sel2": "The function is difficult",
+          "sel3": "Etc"
+        },
+        "reason": "Close reason"
       }
     }
   }
