@@ -9,6 +9,7 @@ import {
   Alert,
   TouchableOpacity,
   TextInput,
+  ActivityIndicator,
 } from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
@@ -25,6 +26,7 @@ const CloseMembershipScreen = () => {
   const [checkedRecommendations, setCheckedRecommendations] = useState({});
   const [checkedID, setCheckedID] = useState(null);
   const [reason, setReason] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Get Language
@@ -47,30 +49,36 @@ const CloseMembershipScreen = () => {
       }
     };
 
-    const fetchRecommendations = () => {
-      setRecommendations([
-        {
-          reasonNum: 0,
-          content:
-            lang && lang.screen_setting
-              ? lang.screen_setting.close.select.sel1
-              : '',
-        },
-        {
-          reasonNum: 1,
-          content:
-            lang && lang.screen_setting
-              ? lang.screen_setting.close.select.sel2
-              : '',
-        },
-        {
-          reasonNum: 2,
-          content:
-            lang && lang.screen_setting
-              ? lang.screen_setting.close.select.sel3
-              : '',
-        },
-      ]);
+    const fetchRecommendations = async () => {
+      try {
+        setRecommendations([
+          {
+            reasonNum: 0,
+            content:
+              lang && lang.screen_setting
+                ? lang.screen_setting.close.select.sel1
+                : '',
+          },
+          {
+            reasonNum: 1,
+            content:
+              lang && lang.screen_setting
+                ? lang.screen_setting.close.select.sel2
+                : '',
+          },
+          {
+            reasonNum: 2,
+            content:
+              lang && lang.screen_setting
+                ? lang.screen_setting.close.select.sel3
+                : '',
+          },
+        ]);
+      } catch (error) {
+        console.error('Error fetching recommendations:', error);
+      } finally {
+        setLoading(false); // Sembunyikan loading setelah fetch selesai
+      }
     };
 
     getLanguage();
@@ -157,135 +165,162 @@ const CloseMembershipScreen = () => {
 
   return (
     <View style={[styles.root, {height: ScreenHeight}]}>
-      {/* Title */}
-      <View style={{flexDirection: 'row'}}>
-        <View style={{position: 'absolute', zIndex: 1}}>
-          <ButtonBack onClick={handleBack} />
-        </View>
-        <View style={styles.titleWrapper}>
-          <Text style={styles.title}>
-            {lang && lang.screen_setting ? lang.screen_setting.close.title : ''}
-          </Text>
-        </View>
-      </View>
-
-      <View
-        style={{
-          width: '100%',
-          marginTop: 30,
-          paddingHorizontal: 20,
-        }}>
-        <Text
-          style={{color: 'black', fontFamily: 'Poppins-Regular', fontSize: 18}}>
-          {lang && lang.screen_setting
-            ? lang.screen_setting.close.desc.clo1 + ' '
-            : ''}
-          <Text style={{color: '#ffc404', fontFamily: 'Poppins-Medium'}}>
-            {lang && lang.screen_setting
-              ? lang.screen_setting.close.desc.clo2
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#343a59" />
+          <Text
+            style={{
+              color: 'white',
+              fontFamily: 'Poppins-Regular',
+              fontSize: 13,
+            }}>
+            {lang && lang.screen_map && lang.screen_map.section_marker
+              ? lang.screen_map.section_marker.loader
               : ''}
           </Text>
-          {lang && lang.screen_setting
-            ? lang.screen_setting.close.desc.clo3
-            : ''}
-        </Text>
-        <Text
-          style={{
-            color: 'black',
-            fontFamily: 'Poppins-Regular',
-            fontSize: 13,
-            marginTop: 15,
-          }}>
-          {lang && lang.screen_setting
-            ? lang.screen_setting.close.desc.clo4
-            : ''}
-        </Text>
-        <Text
-          style={{
-            color: '#ffc404',
-            fontFamily: 'Poppins-Medium',
-            fontSize: 13,
-            marginTop: -2,
-          }}>
-          {lang && lang.screen_setting
-            ? lang.screen_setting.close.desc.clo5
-            : ''}
-        </Text>
-      </View>
-
-      <View
-        style={{
-          paddingVertical: 10,
-          width: '100%',
-          marginTop: 10,
-        }}>
-        {recommendations.map(item => (
-          <TouchableOpacity
-            activeOpacity={1}
-            key={item.reasonNum}
-            onPress={() => checkBoxToggle(item.content, item.reasonNum)}
-            style={{
-              backgroundColor: 'white',
-              paddingRight: 12,
-              paddingLeft: 7,
-              marginHorizontal: 8,
-              borderRadius: 10,
-              ...styles.shadow,
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                alignSelf: 'flex-start',
-                marginHorizontal: 5,
-              }}>
-              <View
-                style={[
-                  styles.checkbox,
-                  checkedRecommendations[item.reasonNum]
-                    ? styles.checkedBox
-                    : styles.uncheckedBox,
-                ]}>
-                {checkedRecommendations[item.reasonNum] && (
-                  <Text style={styles.checkMark}>✔</Text>
-                )}
-              </View>
-              <Text
-                onPress={() => checkBoxToggle(item.content, item.reasonNum)}
-                style={{
-                  fontFamily: 'Poppins-Regular',
-                  fontSize: 13,
-                  color: 'black',
-                  paddingVertical: 5,
-                }}>
-                {item.content}
+          {/* Show Loading While Data is Load */}
+        </View>
+      ) : (
+        <View style={{flex: 1, width: '100%'}}>
+          {/* Title */}
+          <View style={{flexDirection: 'row'}}>
+            <View style={{position: 'absolute', zIndex: 1}}>
+              <ButtonBack onClick={handleBack} />
+            </View>
+            <View style={styles.titleWrapper}>
+              <Text style={styles.title}>
+                {lang && lang.screen_setting
+                  ? lang.screen_setting.close.title
+                  : ''}
               </Text>
             </View>
-          </TouchableOpacity>
-        ))}
+          </View>
 
-        {/* Close Reason */}
-        <TextInput
-          value={reason}
-          onChangeText={setReason}
-          placeholder={
-            lang && lang.screen_setting ? lang.screen_setting.close.reason : ''
-          }
-          placeholderTextColor="#a8a8a7"
-          style={styles.input}
-        />
-      </View>
+          <View
+            style={{
+              width: '100%',
+              marginTop: 30,
+              paddingHorizontal: 20,
+            }}>
+            <Text
+              style={{
+                color: 'black',
+                fontFamily: 'Poppins-Regular',
+                fontSize: 18,
+              }}>
+              {lang && lang.screen_setting
+                ? lang.screen_setting.close.desc.clo1 + ' '
+                : ''}
+              <Text style={{color: '#ffc404', fontFamily: 'Poppins-Medium'}}>
+                {lang && lang.screen_setting
+                  ? lang.screen_setting.close.desc.clo2
+                  : ''}
+              </Text>
+              {lang && lang.screen_setting
+                ? lang.screen_setting.close.desc.clo3
+                : ''}
+            </Text>
+            <Text
+              style={{
+                color: 'black',
+                fontFamily: 'Poppins-Regular',
+                fontSize: 13,
+                marginTop: 15,
+              }}>
+              {lang && lang.screen_setting
+                ? lang.screen_setting.close.desc.clo4
+                : ''}
+            </Text>
+            <Text
+              style={{
+                color: '#ffc404',
+                fontFamily: 'Poppins-Medium',
+                fontSize: 13,
+                marginTop: -2,
+              }}>
+              {lang && lang.screen_setting
+                ? lang.screen_setting.close.desc.clo5
+                : ''}
+            </Text>
+          </View>
 
-      <View style={[styles.bottomSection]}>
-        <View style={styles.additionalLogin}></View>
-        <Pressable onPress={onSaveChange} style={styles.buttonSignIn}>
-          <Image
-            source={require('../../../assets/images/icon_next.png')}
-            resizeMode="contain"
-            style={styles.buttonSignInImage}
-          />
-        </Pressable>
-      </View>
+          <View
+            style={{
+              paddingVertical: 10,
+              width: '100%',
+              marginTop: 10,
+            }}>
+            {recommendations.map(item => (
+              <TouchableOpacity
+                activeOpacity={1}
+                key={item.reasonNum}
+                onPress={() => checkBoxToggle(item.content, item.reasonNum)}
+                style={{
+                  backgroundColor: 'white',
+                  paddingRight: 12,
+                  paddingLeft: 7,
+                  marginHorizontal: 8,
+                  borderRadius: 10,
+                  ...styles.shadow,
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    alignSelf: 'flex-start',
+                    marginHorizontal: 5,
+                  }}>
+                  <View
+                    style={[
+                      styles.checkbox,
+                      checkedRecommendations[item.reasonNum]
+                        ? styles.checkedBox
+                        : styles.uncheckedBox,
+                    ]}>
+                    {checkedRecommendations[item.reasonNum] && (
+                      <Text style={styles.checkMark}>✔</Text>
+                    )}
+                  </View>
+                  <Text
+                    onPress={() => checkBoxToggle(item.content, item.reasonNum)}
+                    style={{
+                      fontFamily: 'Poppins-Regular',
+                      fontSize: 13,
+                      color: 'black',
+                      paddingVertical: 5,
+                    }}>
+                    {item.content}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+
+            {/* Close Reason */}
+            <TextInput
+              value={reason}
+              onChangeText={setReason}
+              placeholder={
+                lang && lang.screen_setting
+                  ? lang.screen_setting.close.reason
+                  : ''
+              }
+              placeholderTextColor="#a8a8a7"
+              style={styles.input}
+            />
+          </View>
+
+          <View style={[styles.bottomSection]}>
+            <View style={styles.additionalLogin}></View>
+            <Pressable onPress={onSaveChange} style={styles.buttonSignIn}>
+              <Image
+                source={require('../../../assets/images/icon_next.png')}
+                resizeMode="contain"
+                style={styles.buttonSignInImage}
+              />
+            </Pressable>
+          </View>
+        </View>
+      )}
     </View>
   );
 };
@@ -295,6 +330,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     backgroundColor: 'white',
+  },
+  loadingContainer: {
+    ...StyleSheet.absoluteFill,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    zIndex: 1,
   },
   input: {
     height: 40,
