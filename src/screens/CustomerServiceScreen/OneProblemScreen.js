@@ -20,10 +20,7 @@ const OneProblemScreen = () => {
   const [lang, setLang] = useState({});
   const navigation = useNavigation();
   let ScreenHeight = Dimensions.get('window').height;
-  const [userData, setUserData] = useState({});
   const [recommendations, setRecommendations] = useState([]);
-  const [checkedRecommendations, setCheckedRecommendations] = useState({});
-  const [checkedID, setCheckedID] = useState(0);
 
   useEffect(() => {
     // Get Language
@@ -37,7 +34,13 @@ const OneProblemScreen = () => {
         // Get User Data from Asyncstorage
         const astorUserData = await AsyncStorage.getItem('userData');
         const astorJsonData = JSON.parse(astorUserData);
-        setUserData(astorJsonData);
+
+        // Get List of 1:1 Inquiry
+        const response = await fetch(
+          `https://app.xrun.run/gateway.php?act=app7330-01&member=${astorJsonData.member}`,
+        );
+        const data = await response.json();
+        setRecommendations(data.data);
       } catch (err) {
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
@@ -46,30 +49,7 @@ const OneProblemScreen = () => {
       }
     };
 
-    const fetchRecommendations = async () => {
-      try {
-        const response = await fetch(
-          `https://app.xrun.run/gateway.php?act=app7330-01&member=${userData.member}`,
-        );
-        const data = await response.json();
-
-        console.log('Datanya : ' + JSON.stringify(data.data));
-
-        if (data && data.data.length > 0) {
-          const initialCheckedState = {};
-          data.data.forEach(item => {
-            initialCheckedState[item.board] = false;
-          });
-
-          setRecommendations(data.data);
-        }
-      } catch (error) {
-        console.error('Error fetching recommendations:', error);
-      }
-    };
-
     getLanguage();
-    fetchRecommendations();
   }, []);
 
   const handleBack = () => {
@@ -99,6 +79,7 @@ const OneProblemScreen = () => {
         <ScrollView showsVerticalScrollIndicator={false}>
           {recommendations.map(item => (
             <TouchableOpacity
+              activeOpacity={1}
               key={item.board}
               style={{
                 backgroundColor: 'white',
@@ -115,15 +96,49 @@ const OneProblemScreen = () => {
                   alignSelf: 'flex-start',
                   marginHorizontal: 5,
                 }}>
-                <Text
+                <Image
+                  source={require('../../../assets/images/icon_logout.png')}
+                  resizeMode="contain"
                   style={{
-                    fontFamily: 'Poppins-Regular',
-                    fontSize: 13,
-                    color: 'black',
-                    paddingVertical: 18,
+                    height: 15,
+                    width: 15,
+                    marginRight: 15,
+                    tintColor: '#2d739e',
+                    transform: [{rotate: '180deg'}],
+                  }}
+                />
+                <View
+                  style={{
+                    paddingVertical: 15,
                   }}>
-                  {item.title}
-                </Text>
+                  <View
+                    style={{flexDirection: 'row', gap: 10, marginBottom: -3}}>
+                    <Text
+                      style={{
+                        fontFamily: 'Poppins-Regular',
+                        fontSize: 11,
+                        color: 'grey',
+                      }}>
+                      {item.datetime}
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: 'Poppins-Regular',
+                        fontSize: 11,
+                        color: 'grey',
+                      }}>
+                      {item.time}
+                    </Text>
+                  </View>
+                  <Text
+                    style={{
+                      fontFamily: 'Poppins-Regular',
+                      fontSize: 13,
+                      color: 'black',
+                    }}>
+                    {item.title}
+                  </Text>
+                </View>
               </View>
             </TouchableOpacity>
           ))}
