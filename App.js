@@ -38,6 +38,7 @@ import CommonProblemScreen from './src/screens/CustomerServiceScreen/CommonProbl
 import OneProblemScreen from './src/screens/CustomerServiceScreen/OneProblemScreen';
 import SettingScreen from './src/screens/SettingScreen/SettingScreen';
 import CloseMembershipScreen from './src/screens/SettingScreen/CloseMembershipScreen';
+import CloseConfirmPassword from './src/screens/SettingScreen/ConfirmPasswordScreen_Close';
 
 const Stack = createNativeStackNavigator();
 
@@ -118,6 +119,10 @@ export default function App() {
                 name="CloseMember"
                 component={CloseMembershipScreen}
               />
+              <Stack.Screen
+                name="CloseConfirm"
+                component={CloseConfirmPassword}
+              />
             </>
           ) : (
             <>
@@ -185,6 +190,10 @@ export default function App() {
               <Stack.Screen
                 name="CloseMember"
                 component={CloseMembershipScreen}
+              />
+              <Stack.Screen
+                name="CloseConfirm"
+                component={CloseConfirmPassword}
               />
             </>
           )}

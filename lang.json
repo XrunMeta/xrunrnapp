@@ -282,7 +282,13 @@
           "sel2": "Fitur sulit digunakan",
           "sel3": "Dan lain-lain"
         },
-        "reason": "Alasan hapus akun"
+        "reason": "Alasan hapus akun",
+        "del_title": "Hapus Akun",
+        "del_d1": "Untuk mengamankan peraturan akun,",
+        "del_d2": "Masukan kata sandi untuk hapus akun.",
+        "del_placeholder": "Masukan kata sandi.",
+        "del_empty": "Silahkan masukan kata sandi anda",
+        "del_fail": "Gagal menghapus akun"
       }
     }
   },
@@ -570,7 +576,13 @@
           "sel2": "The function is difficult",
           "sel3": "Etc"
         },
-        "reason": "Close reason"
+        "reason": "Close reason",
+        "del_title": "Close Membership",
+        "del_d1": "For safe acccount management,",
+        "del_d2": "You are receiving a password when you leave.",
+        "del_placeholder": "Please enter your password.",
+        "del_empty": "Please enter your password",
+        "del_fail": "Close membership failed"
       }
     }
   }

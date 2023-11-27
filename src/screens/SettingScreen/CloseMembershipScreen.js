@@ -67,6 +67,7 @@ const CloseMembershipScreen = () => {
               Checked : ${checkedID}
               Reason  : ${reason}
       `);
+      navigation.navigate('CloseConfirm');
     }
   };
 

@@ -10,7 +10,6 @@ const langData = require('../../../lang.json');
 
 const SettingScreen = () => {
   const {isLoggedIn, logout} = useAuth();
-  const [userDetails, setUserDetails] = useState([]);
   const [lang, setLang] = useState('');
 
   const navigation = useNavigation();
