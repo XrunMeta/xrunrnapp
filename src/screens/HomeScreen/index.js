@@ -185,6 +185,9 @@ export default function Home() {
               'Notify',
               require('../../../assets/images/icon_bell.png'),
               'Notify',
+              () => {
+                navigation.navigate('NotifyHome');
+              },
             )}
             {renderTabButton(
               'Info',
