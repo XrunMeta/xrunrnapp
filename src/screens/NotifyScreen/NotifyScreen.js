@@ -8,9 +8,10 @@ import {
   TouchableOpacity,
   TextInput,
   Image,
+  Linking,
 } from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
-import {useNavigation} from '@react-navigation/native';
+import {Link, useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const langData = require('../../../lang.json');
@@ -20,8 +21,8 @@ const NotifyScreen = () => {
   const navigation = useNavigation();
   let ScreenHeight = Dimensions.get('window').height;
   const [notify, setNotify] = useState([]);
-  const [isDescriptionOpen, setIsDescriptionOpen] = useState({});
   const [userData, setUserData] = useState({});
+  const [prevDate, setPrevDate] = useState(null);
 
   const handleBack = () => {
     navigation.goBack();
@@ -50,11 +51,16 @@ const NotifyScreen = () => {
           const reversedNotify = data.data.reverse();
           setNotify(reversedNotify);
 
-          const initialDescriptionState = {};
+          let prevDate = null; // Inisialisasi tanggal sebelumnya
           reversedNotify.forEach(item => {
-            initialDescriptionState[item.board] = false;
+            const currentDate = new Date(item.datetime)
+              .toISOString()
+              .split('T')[0];
+            if (prevDate !== currentDate) {
+              // Tanggal berbeda, update state dan tampilkan teks perbedaan tanggal
+              setPrevDate(currentDate);
+            }
           });
-          setIsDescriptionOpen(initialDescriptionState);
         }
       } catch (err) {
         console.error(
@@ -76,11 +82,24 @@ const NotifyScreen = () => {
     }
   };
 
-  // Fungsi tambahan untuk memformat timestamp (disesuaikan dengan format yang sesuai)
-  const formatTimestamp = timestamp => {
-    // Implementasikan logika format timestamp sesuai kebutuhan
-    // Misalnya, Anda dapat menggunakan library seperti moment.js untuk melakukan ini.
-    return timestamp;
+  const formatDate = timestamp => {
+    const options = {
+      month: '2-digit',
+      day: '2-digit',
+      weekday: 'short',
+    };
+
+    const dateObject = new Date(timestamp);
+    const formattedDate = new Intl.DateTimeFormat('en-US', options).format(
+      dateObject,
+    );
+
+    // MM/DD Date Format
+    const [monthDay, shortDay] = formattedDate.split(', ');
+    const day = shortDay.substring(0, 2);
+    const month = shortDay.substring(3);
+
+    return `${day + '.' + month} (${monthDay})`;
   };
 
   return (
@@ -126,120 +145,170 @@ const NotifyScreen = () => {
             this.scrollView = scrollView;
           }}>
           {notify.map(item => (
-            <View
-              key={item.board}
-              style={[
-                isMyMessage(item.type)
-                  ? styles.myChatBubble
-                  : styles.otherChatBubble,
-                {
-                  flexDirection: 'row',
-                },
-              ]}>
-              {item.type == 9303 ? (
-                ''
-              ) : (
-                <View
+            <View key={item.board}>
+              {/* Tampilkan teks perbedaan tanggal jika tanggal berbeda */}
+              {prevDate !==
+                new Date(item.datetime).toISOString().split('T')[0] && (
+                <Text
                   style={{
-                    backgroundColor: 'white',
-                    height: 32,
-                    padding: 6,
-                    borderRadius: 25,
-                    marginRight: 5,
-                    borderWidth: 1,
-                    borderColor: '#ebebeb',
+                    color: 'white',
+                    fontFamily: 'Poppins-Regular',
+                    fontSize: 11,
+                    backgroundColor: '#89919d73',
+                    borderRadius: 115,
+                    alignSelf: 'center',
+                    paddingTop: 3,
+                    paddingBottom: 1,
+                    paddingHorizontal: 8,
+                    marginBottom: 8,
                   }}>
-                  <Image
-                    source={require('../../../assets/images/logo_xrun.png')}
-                    style={{
-                      height: 18,
-                      width: 18,
-                      resizeMode: 'contain',
-                    }}
-                  />
-                </View>
+                  {formatDate(new Date(item.datetime).toISOString())}
+                </Text>
               )}
-              <View style={styles.chatBubble}>
-                {item.image !== null && (
-                  <Image
-                    source={{
-                      uri: `data:image/jpeg;base64,${item.image}`,
-                    }}
+              <View
+                style={[
+                  isMyMessage(item.type)
+                    ? styles.myChatBubble
+                    : styles.otherChatBubble,
+                  {
+                    flexDirection: 'row',
+                  },
+                ]}>
+                {item.type == 9303 ? (
+                  ''
+                ) : (
+                  <View
                     style={{
-                      height: 150,
-                      width: 'auto',
-                      marginBottom: 15,
-                      borderRadius: 6,
-                    }}
-                  />
-                )}
-                <Text style={styles.chatText}>{item.title}</Text>
-                {item.contents !== null && item.type != 9303 && (
-                  <View>
-                    <Text
-                      style={[
-                        styles.chatText,
-                        {
-                          color: 'grey',
-                          marginTop: 5,
-                        },
-                      ]}>
-                      {item.contents}
-                    </Text>
-
-                    {item.type == 9302 && (
-                      <View>
-                        <Text
-                          style={[
-                            styles.chatText,
-                            {
-                              marginTop: 20,
-                            },
-                          ]}>
-                          {item.datebegin} ~
-                        </Text>
-                        <Text
-                          style={[
-                            styles.chatText,
-                            {
-                              marginTop: -5,
-                            },
-                          ]}>
-                          {item.dateends}
-                        </Text>
-                      </View>
-                    )}
-
-                    <TouchableOpacity
+                      backgroundColor: 'white',
+                      height: 32,
+                      padding: 6,
+                      borderRadius: 25,
+                      marginRight: 5,
+                      borderWidth: 1,
+                      borderColor: '#ebebeb',
+                    }}>
+                    <Image
+                      source={require('../../../assets/images/logo_xrun.png')}
                       style={{
-                        backgroundColor: '#051C60',
-                        marginTop: 15,
-                        marginBottom: 5,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        paddingVertical: 10,
-                        borderRadius: 6,
-                      }}>
-                      <Text
-                        style={{
-                          fontFamily: 'Poppins-SemiBold',
-                          fontSize: 13,
-                          color: 'white',
-                        }}>
-                        {/* Bilal ganteng :D */}
-                        {item.type == 9301
-                          ? 'TAKE A CLOSER LOOK'
-                          : item.type == 9302
-                          ? 'GO TO THE EVENT'
-                          : ''}
-                      </Text>
-                    </TouchableOpacity>
+                        height: 18,
+                        width: 18,
+                        resizeMode: 'contain',
+                      }}
+                    />
                   </View>
                 )}
+                <View style={styles.chatBubble}>
+                  {item.image !== null && (
+                    <Image
+                      source={{
+                        uri: `data:image/jpeg;base64,${item.image}`,
+                      }}
+                      style={{
+                        height: 150,
+                        width: 'auto',
+                        marginBottom: 15,
+                        borderRadius: 6,
+                      }}
+                    />
+                  )}
+                  <Text style={styles.chatText}>{item.title}</Text>
+                  {item.contents !== null && item.type != 9303 && (
+                    <View>
+                      {item.type == 9301 ? (
+                        <Text
+                          style={[
+                            styles.chatText,
+                            {
+                              color: 'grey',
+                              marginTop: 5,
+                            },
+                          ]}
+                          numberOfLines={3} // Set jumlah baris maksimum
+                          ellipsizeMode="tail">
+                          {item.contents}
+                        </Text>
+                      ) : (
+                        <Text
+                          style={[
+                            styles.chatText,
+                            {
+                              color: 'grey',
+                              marginTop: 5,
+                            },
+                          ]}>
+                          {item.contents}
+                        </Text>
+                      )}
 
-                <Text style={styles.timestampText}>
-                  {formatTimestamp(item.time)}
-                </Text>
+                      {item.type == 9302 && (
+                        <View>
+                          <Text
+                            style={[
+                              styles.chatText,
+                              {
+                                marginTop: 20,
+                              },
+                            ]}>
+                            {item.datebegin} ~
+                          </Text>
+                          <Text
+                            style={[
+                              styles.chatText,
+                              {
+                                marginTop: -5,
+                              },
+                            ]}>
+                            {item.dateends}
+                          </Text>
+                        </View>
+                      )}
+
+                      {item.guid == '' ||
+                      (item.guid == null && item.type == 9302) ? (
+                        ''
+                      ) : (
+                        <TouchableOpacity
+                          style={{
+                            backgroundColor: '#051C60',
+                            marginTop: 15,
+                            marginBottom: 5,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            paddingVertical: 10,
+                            borderRadius: 6,
+                          }}
+                          onPress={() => {
+                            const url =
+                              item.type == 9301
+                                ? `https://app.xrun.run/user/notice.php?id=${item.board}`
+                                : item.type == 9302
+                                ? item.guid
+                                : '';
+
+                            Linking.openURL(url).catch(err =>
+                              console.error('Error opening URL : ', err),
+                            );
+                          }}>
+                          <Text
+                            style={{
+                              fontFamily: 'Poppins-SemiBold',
+                              fontSize: 13,
+                              color: 'white',
+                            }}>
+                            {/* Bilal ganteng :D */}
+                            {item.type == 9301
+                              ? 'TAKE A CLOSER LOOK'
+                              : item.type == 9302
+                              ? 'GO TO THE EVENT'
+                              : ''}
+                          </Text>
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  )}
+
+                  <Text style={styles.timestampText}>{item.time}</Text>
+                </View>
               </View>
             </View>
           ))}
