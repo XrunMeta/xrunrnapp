@@ -11,7 +11,7 @@ import {
   Linking,
 } from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
-import {Link, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const langData = require('../../../lang.json');
@@ -23,6 +23,7 @@ const NotifyScreen = () => {
   const [notify, setNotify] = useState([]);
   const [isDescriptionOpen, setIsDescriptionOpen] = useState({});
   const [userData, setUserData] = useState({});
+  const [sendResponse, setSendResponse] = useState(null);
 
   const handleBack = () => {
     navigation.goBack();
