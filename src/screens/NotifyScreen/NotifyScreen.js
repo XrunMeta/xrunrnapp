@@ -9,6 +9,7 @@ import {
   TextInput,
   Image,
   Linking,
+  ActivityIndicator,
 } from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {Link, useNavigation} from '@react-navigation/native';
@@ -23,6 +24,7 @@ const NotifyScreen = () => {
   const [notify, setNotify] = useState([]);
   const [userData, setUserData] = useState({});
   const [prevDate, setPrevDate] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const handleBack = () => {
     navigation.goBack();
@@ -61,6 +63,8 @@ const NotifyScreen = () => {
               setPrevDate(currentDate);
             }
           });
+
+          setLoading(false);
         }
       } catch (err) {
         console.error(
@@ -138,181 +142,199 @@ const NotifyScreen = () => {
           flex: 1,
           width: '100%',
         }}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.chatContainer}
-          ref={scrollView => {
-            this.scrollView = scrollView;
-          }}>
-          {notify.map(item => (
-            <View key={item.board}>
-              {/* Tampilkan teks perbedaan tanggal jika tanggal berbeda */}
-              {prevDate !==
-                new Date(item.datetime).toISOString().split('T')[0] && (
-                <Text
-                  style={{
-                    color: 'white',
-                    fontFamily: 'Poppins-Regular',
-                    fontSize: 11,
-                    backgroundColor: '#89919d73',
-                    borderRadius: 115,
-                    alignSelf: 'center',
-                    paddingTop: 3,
-                    paddingBottom: 1,
-                    paddingHorizontal: 8,
-                    marginBottom: 8,
-                  }}>
-                  {formatDate(new Date(item.datetime).toISOString())}
-                </Text>
-              )}
-              <View
-                style={[
-                  isMyMessage(item.type)
-                    ? styles.myChatBubble
-                    : styles.otherChatBubble,
-                  {
-                    flexDirection: 'row',
-                  },
-                ]}>
-                {item.type == 9303 ? (
-                  ''
-                ) : (
-                  <View
+        {loading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#343a59" />
+            <Text
+              style={{
+                color: 'grey',
+                fontFamily: 'Poppins-Regular',
+                fontSize: 13,
+                alignSelf: 'center',
+              }}>
+              {lang && lang.screen_map && lang.screen_map.section_marker
+                ? lang.screen_map.section_marker.loader
+                : ''}
+            </Text>
+            {/* Show Loading While Data is Load */}
+          </View>
+        ) : (
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.chatContainer}
+            ref={scrollView => {
+              this.scrollView = scrollView;
+            }}>
+            {notify.map(item => (
+              <View key={item.board}>
+                {/* Tampilkan teks perbedaan tanggal jika tanggal berbeda */}
+                {prevDate !==
+                  new Date(item.datetime).toISOString().split('T')[0] && (
+                  <Text
                     style={{
-                      backgroundColor: 'white',
-                      height: 32,
-                      padding: 6,
-                      borderRadius: 25,
-                      marginRight: 5,
-                      borderWidth: 1,
-                      borderColor: '#ebebeb',
+                      color: 'white',
+                      fontFamily: 'Poppins-Regular',
+                      fontSize: 11,
+                      backgroundColor: '#89919d73',
+                      borderRadius: 115,
+                      alignSelf: 'center',
+                      paddingTop: 3,
+                      paddingBottom: 1,
+                      paddingHorizontal: 8,
+                      marginBottom: 8,
                     }}>
-                    <Image
-                      source={require('../../../assets/images/logo_xrun.png')}
-                      style={{
-                        height: 18,
-                        width: 18,
-                        resizeMode: 'contain',
-                      }}
-                    />
-                  </View>
+                    {formatDate(new Date(item.datetime).toISOString())}
+                  </Text>
                 )}
-                <View style={styles.chatBubble}>
-                  {item.image !== null && (
-                    <Image
-                      source={{
-                        uri: `data:image/jpeg;base64,${item.image}`,
-                      }}
+                <View
+                  style={[
+                    isMyMessage(item.type)
+                      ? styles.myChatBubble
+                      : styles.otherChatBubble,
+                    {
+                      flexDirection: 'row',
+                    },
+                  ]}>
+                  {item.type == 9303 ? (
+                    ''
+                  ) : (
+                    <View
                       style={{
-                        height: 150,
-                        width: 'auto',
-                        marginBottom: 15,
-                        borderRadius: 6,
-                      }}
-                    />
-                  )}
-                  <Text style={styles.chatText}>{item.title}</Text>
-                  {item.contents !== null && item.type != 9303 && (
-                    <View>
-                      {item.type == 9301 ? (
-                        <Text
-                          style={[
-                            styles.chatText,
-                            {
-                              color: 'grey',
-                              marginTop: 5,
-                            },
-                          ]}
-                          numberOfLines={3} // Set jumlah baris maksimum
-                          ellipsizeMode="tail">
-                          {item.contents}
-                        </Text>
-                      ) : (
-                        <Text
-                          style={[
-                            styles.chatText,
-                            {
-                              color: 'grey',
-                              marginTop: 5,
-                            },
-                          ]}>
-                          {item.contents}
-                        </Text>
-                      )}
-
-                      {item.type == 9302 && (
-                        <View>
-                          <Text
-                            style={[
-                              styles.chatText,
-                              {
-                                marginTop: 20,
-                              },
-                            ]}>
-                            {item.datebegin} ~
-                          </Text>
-                          <Text
-                            style={[
-                              styles.chatText,
-                              {
-                                marginTop: -5,
-                              },
-                            ]}>
-                            {item.dateends}
-                          </Text>
-                        </View>
-                      )}
-
-                      {item.guid == '' ||
-                      (item.guid == null && item.type == 9302) ? (
-                        ''
-                      ) : (
-                        <TouchableOpacity
-                          style={{
-                            backgroundColor: '#051C60',
-                            marginTop: 15,
-                            marginBottom: 5,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            paddingVertical: 10,
-                            borderRadius: 6,
-                          }}
-                          onPress={() => {
-                            const url =
-                              item.type == 9301
-                                ? `https://app.xrun.run/user/notice.php?id=${item.board}`
-                                : item.type == 9302
-                                ? item.guid
-                                : '';
-
-                            Linking.openURL(url).catch(err =>
-                              console.error('Error opening URL : ', err),
-                            );
-                          }}>
-                          <Text
-                            style={{
-                              fontFamily: 'Poppins-SemiBold',
-                              fontSize: 13,
-                              color: 'white',
-                            }}>
-                            {/* Bilal ganteng :D */}
-                            {item.type == 9301
-                              ? 'TAKE A CLOSER LOOK'
-                              : item.type == 9302
-                              ? 'GO TO THE EVENT'
-                              : ''}
-                          </Text>
-                        </TouchableOpacity>
-                      )}
+                        backgroundColor: 'white',
+                        height: 32,
+                        padding: 6,
+                        borderRadius: 25,
+                        marginRight: 5,
+                        borderWidth: 1,
+                        borderColor: '#ebebeb',
+                      }}>
+                      <Image
+                        source={require('../../../assets/images/logo_xrun.png')}
+                        style={{
+                          height: 18,
+                          width: 18,
+                          resizeMode: 'contain',
+                        }}
+                      />
                     </View>
                   )}
+                  <View style={styles.chatBubble}>
+                    {item.image !== null && (
+                      <Image
+                        source={{
+                          uri: `data:image/jpeg;base64,${item.image}`,
+                        }}
+                        style={{
+                          height: 150,
+                          width: 'auto',
+                          marginBottom: 15,
+                          borderRadius: 6,
+                        }}
+                      />
+                    )}
+                    <Text style={styles.chatText}>{item.title}</Text>
+                    {item.contents !== null && item.type != 9303 && (
+                      <View>
+                        {item.type == 9301 ? (
+                          <Text
+                            style={[
+                              styles.chatText,
+                              {
+                                color: 'grey',
+                                marginTop: 5,
+                              },
+                            ]}
+                            numberOfLines={3} // Set jumlah baris maksimum
+                            ellipsizeMode="tail">
+                            {item.contents}
+                          </Text>
+                        ) : (
+                          <Text
+                            style={[
+                              styles.chatText,
+                              {
+                                color: 'grey',
+                                marginTop: 5,
+                              },
+                            ]}>
+                            {item.contents}
+                          </Text>
+                        )}
 
-                  <Text style={styles.timestampText}>{item.time}</Text>
+                        {item.type == 9302 && (
+                          <View>
+                            <Text
+                              style={[
+                                styles.chatText,
+                                {
+                                  marginTop: 20,
+                                },
+                              ]}>
+                              {item.datebegin} ~
+                            </Text>
+                            <Text
+                              style={[
+                                styles.chatText,
+                                {
+                                  marginTop: -5,
+                                },
+                              ]}>
+                              {item.dateends}
+                            </Text>
+                          </View>
+                        )}
+
+                        {item.guid == '' ||
+                        (item.guid == null && item.type == 9302) ? (
+                          ''
+                        ) : (
+                          <TouchableOpacity
+                            style={{
+                              backgroundColor: '#051C60',
+                              marginTop: 15,
+                              marginBottom: 5,
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              paddingVertical: 10,
+                              borderRadius: 6,
+                            }}
+                            onPress={() => {
+                              const url =
+                                item.type == 9301
+                                  ? `https://app.xrun.run/user/notice.php?id=${item.board}`
+                                  : item.type == 9302
+                                  ? item.guid
+                                  : '';
+
+                              Linking.openURL(url).catch(err =>
+                                console.error('Error opening URL : ', err),
+                              );
+                            }}>
+                            <Text
+                              style={{
+                                fontFamily: 'Poppins-SemiBold',
+                                fontSize: 13,
+                                color: 'white',
+                              }}>
+                              {/* Bilal ganteng :D */}
+                              {item.type == 9301
+                                ? 'TAKE A CLOSER LOOK'
+                                : item.type == 9302
+                                ? 'GO TO THE EVENT'
+                                : ''}
+                            </Text>
+                          </TouchableOpacity>
+                        )}
+                      </View>
+                    )}
+
+                    <Text style={styles.timestampText}>{item.time}</Text>
+                  </View>
                 </View>
               </View>
-            </View>
-          ))}
-        </ScrollView>
+            ))}
+          </ScrollView>
+        )}
       </View>
 
       {/* Chat Input */}
@@ -345,6 +367,12 @@ const styles = StyleSheet.create({
   root: {
     alignItems: 'center',
     flex: 1,
+  },
+  loadingContainer: {
+    ...StyleSheet.absoluteFill,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1,
   },
   titleWrapper: {
     paddingVertical: 9,
