@@ -9,6 +9,7 @@ import {
   TextInput,
   Image,
   Linking,
+  Alert,
 } from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
@@ -63,38 +64,47 @@ const NotifyScreen = () => {
   }, []);
 
   const sendChat = async text => {
-    try {
-      const response = await fetch(
-        `https://app.xrun.run/gateway.php?act=ap6000-02&member=${userData.member}&title=${text}`,
+    setChatText('');
+    if (text.trim() === '') {
+      Alert.alert(
+        lang && lang.alert ? lang.alert.title.error : '',
+        lang && lang.screen_confirm_password
+          ? lang.screen_confirm_password.condition.empty
+          : '-',
       );
-      const data = await response.json();
+    } else {
+      try {
+        const response = await fetch(
+          `https://app.xrun.run/gateway.php?act=ap6000-02&member=${userData.member}&title=${text}`,
+        );
+        const data = await response.json();
 
-      if (data.data[0].count == 1) {
-        const now = new Date();
-        const date = `${now.getFullYear()}-${(now.getMonth() + 1)
-          .toString()
-          .padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
-        const formattedDate = `${now
-          .getHours()
-          .toString()
-          .padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+        if (data.data[0].count == 1) {
+          const now = new Date();
+          const date = `${now.getFullYear()}-${(now.getMonth() + 1)
+            .toString()
+            .padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
+          const formattedDate = `${now
+            .getHours()
+            .toString()
+            .padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
 
-        const newBubble = {
-          board: Date.now().toString(),
-          datetime: new Date().toISOString(),
-          title: chatText,
-          contents: chatText,
-          type: 9303,
-          image: null,
-          time: `${date}\n ${formattedDate}`,
-        };
+          const newBubble = {
+            board: Date.now().toString(),
+            datetime: date,
+            title: chatText,
+            contents: chatText,
+            type: 9303,
+            image: null,
+            time: `${date}\n ${formattedDate}`,
+          };
 
-        // Perbarui state notify dengan bubble chat baru
-        setNotify(prevNotify => [...prevNotify, newBubble]);
-        setChatText('');
+          // Perbarui state notify dengan bubble chat baru
+          setNotify(prevNotify => [...prevNotify, newBubble]);
+        }
+      } catch (error) {
+        console.error('Error sending chat:', error);
       }
-    } catch (error) {
-      console.error('Error sending chat:', error);
     }
   };
 
@@ -169,24 +179,47 @@ const NotifyScreen = () => {
           ref={scrollView => {
             this.scrollView = scrollView;
           }}>
-          {notify.map(item => (
+          {notify.map((item, idx) => (
             <View key={item.board}>
               {/* Text perbedaan tanggal */}
-              <Text
-                style={{
-                  color: 'white',
-                  fontFamily: 'Poppins-Regular',
-                  fontSize: 11,
-                  backgroundColor: '#89919d73',
-                  borderRadius: 115,
-                  alignSelf: 'center',
-                  paddingTop: 3,
-                  paddingBottom: 1,
-                  paddingHorizontal: 8,
-                  marginBottom: 8,
-                }}>
-                {formatDate(new Date(item.datetime).toISOString())}
-              </Text>
+              {(() => {
+                var beforeDate =
+                  idx > 0 ? JSON.stringify(notify[idx - 1].datetime) : '';
+
+                var nowDate = item.datetime;
+
+                var inThisDay = `"${nowDate}"` === beforeDate ? true : false;
+
+                console.log(` 
+                  Index : ${idx} 
+                      Before : ${beforeDate} 
+                      Now    : ${nowDate}
+                      Status : ${inThisDay}
+                `);
+
+                if (inThisDay) {
+                  return '';
+                } else {
+                  return (
+                    <Text
+                      style={{
+                        color: 'white',
+                        fontFamily: 'Poppins-Regular',
+                        fontSize: 11,
+                        backgroundColor: '#89919d73',
+                        borderRadius: 115,
+                        alignSelf: 'center',
+                        paddingTop: 3,
+                        paddingBottom: 1,
+                        paddingHorizontal: 8,
+                        marginBottom: 8,
+                      }}>
+                      {formatDate(new Date(item.datetime).toISOString())}
+                    </Text>
+                  );
+                }
+              })()}
+
               <View
                 style={[
                   isMyMessage(item.type)
