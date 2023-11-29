@@ -92,7 +92,9 @@ export default function Home() {
               'Wallet',
               require('../../../assets/images/icon_wallet.png'),
               'Wallet',
-              () => {},
+              () => {
+                navigation.navigate('WalletHome');
+              },
             )}
             {renderTabButton(
               'Advertise',
