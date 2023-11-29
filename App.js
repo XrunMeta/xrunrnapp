@@ -40,6 +40,7 @@ import SettingScreen from './src/screens/SettingScreen/SettingScreen';
 import CloseMembershipScreen from './src/screens/SettingScreen/CloseMembershipScreen';
 import CloseConfirmPassword from './src/screens/SettingScreen/ConfirmPasswordScreen_Close';
 import NotifyScreen from './src/screens/NotifyScreen/NotifyScreen';
+import WalletScreen from './src/screens/WalletScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -125,6 +126,7 @@ export default function App() {
                 component={CloseConfirmPassword}
               />
               <Stack.Screen name="NotifyHome" component={NotifyScreen} />
+              <Stack.Screen name="WalletHome" component={WalletScreen} />
             </>
           ) : (
             <>
@@ -198,6 +200,7 @@ export default function App() {
                 component={CloseConfirmPassword}
               />
               <Stack.Screen name="NotifyHome" component={NotifyScreen} />
+              <Stack.Screen name="WalletHome" component={WalletScreen} />
             </>
           )}
         </Stack.Navigator>
