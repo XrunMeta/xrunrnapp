@@ -127,7 +127,6 @@ const NotifyScreen = () => {
             .padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
 
           // Bug disini, Jadi kalo ada pesan baru dia gabisa diapus sebab id.boardnya ga valid karna variabel dibawah utk boardnya pake  date. Harusnya dapeting elemen terakhir (Maksudnya ID di Boards) trus ditambahin 1
-
           const newBubble = {
             board: Date.now().toString(),
             datetime: date,
