@@ -26,7 +26,10 @@ const NotifyScreen = () => {
   const [userData, setUserData] = useState({});
   const [chatText, setChatText] = useState('');
   const [loading, setLoading] = useState(true);
-  const [isDelete, setIsDelete] = useState(false);
+
+  const handleBack = () => {
+    navigation.goBack();
+  };
 
   useEffect(() => {
     // Get Language
@@ -64,42 +67,6 @@ const NotifyScreen = () => {
     getLanguage();
   }, []);
 
-  // Back
-  const handleBack = () => {
-    navigation.goBack();
-  };
-
-  // Date Formatting
-  const formatDate = timestamp => {
-    const options = {
-      month: '2-digit',
-      day: '2-digit',
-      weekday: 'short',
-    };
-
-    const dateObject = new Date(timestamp);
-    const formattedDate = new Intl.DateTimeFormat('en-US', options).format(
-      dateObject,
-    );
-
-    // MM/DD Date Format
-    const [monthDay, shortDay] = formattedDate.split(', ');
-    const day = shortDay.substring(0, 2);
-    const month = shortDay.substring(3);
-
-    return `${day + '.' + month} (${monthDay})`;
-  };
-
-  // Message Status Checker
-  const isMyMessage = type => {
-    if (type == 9303) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
-  // Send Chat
   const sendChat = async text => {
     setChatText('');
     if (text.trim() === '') {
@@ -126,8 +93,6 @@ const NotifyScreen = () => {
             .toString()
             .padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
 
-          // Bug disini, Jadi kalo ada pesan baru dia gabisa diapus sebab id.boardnya ga valid karna variabel dibawah utk boardnya pake  date. Harusnya dapeting elemen terakhir (Maksudnya ID di Boards) trus ditambahin 1
-
           const newBubble = {
             board: Date.now().toString(),
             datetime: date,
@@ -138,7 +103,7 @@ const NotifyScreen = () => {
             time: `${date}\n ${formattedDate}`,
           };
 
-          // Update sended chat to screen
+          // Perbarui state notify dengan bubble chat baru
           setNotify(prevNotify => [...prevNotify, newBubble]);
         }
       } catch (error) {
@@ -147,64 +112,33 @@ const NotifyScreen = () => {
     }
   };
 
-  // Delete Chat
-  const deleteChat = async data => {
-    console.log('Bgst -> ' + data.board);
-    try {
-      const response = await fetch(
-        `https://app.xrun.run/gateway.php?act=ap6000-03&member=${userData.member}&board=${data.board}`,
-      );
-      const jsonData = await response.json();
-
-      console.log(JSON.stringify(jsonData));
-
-      if (jsonData.data[0].count == 1) {
-        // Remove clicked Chat
-        setNotify(prevNotify =>
-          prevNotify.filter(item => item.board !== data.board),
-        );
-      }
-    } catch (error) {
-      console.error('Error sending chat:', error);
+  // Fungsi tambahan untuk mengecek apakah pesan berasal dari pengguna saat ini
+  const isMyMessage = type => {
+    if (type == 9303) {
+      return true;
+    } else {
+      return false;
     }
   };
 
-  // Delete All Chat
-  const deleteAllChat = async () => {
-    try {
-      // Show a confirmation alert
-      Alert.alert(
-        'Confirmation',
-        'Are you sure you want to delete all chats?',
-        [
-          {
-            text: 'Cancel',
-            style: 'cancel',
-          },
-          {
-            text: 'OK',
-            onPress: async () => {
-              setIsDelete(false);
+  const formatDate = timestamp => {
+    const options = {
+      month: '2-digit',
+      day: '2-digit',
+      weekday: 'short',
+    };
 
-              const response = await fetch(
-                `https://app.xrun.run/gateway.php?act=ap6000-04delete&member=${userData.member}`,
-              );
-              const jsonData = await response.json();
+    const dateObject = new Date(timestamp);
+    const formattedDate = new Intl.DateTimeFormat('en-US', options).format(
+      dateObject,
+    );
 
-              if (jsonData.data[0].count > 0) {
-                // Remove All Inquiry Chat
-                setNotify(prevNotify =>
-                  prevNotify.filter(item => item.type !== 9303),
-                );
-              }
-            },
-          },
-        ],
-        {cancelable: false},
-      );
-    } catch (error) {
-      console.error('Error sending chat:', error);
-    }
+    // MM/DD Date Format
+    const [monthDay, shortDay] = formattedDate.split(', ');
+    const day = shortDay.substring(0, 2);
+    const month = shortDay.substring(3);
+
+    return `${day + '.' + month} (${monthDay})`;
   };
 
   return (
@@ -212,28 +146,7 @@ const NotifyScreen = () => {
       {/* Title */}
       <View style={{flexDirection: 'row'}}>
         <View style={{position: 'absolute', zIndex: 1}}>
-          {isDelete ? (
-            <TouchableOpacity
-              onPress={() => setIsDelete(false)}
-              style={{
-                alignSelf: 'flex-start',
-                paddingVertical: 20,
-                paddingLeft: 25,
-                paddingRight: 30,
-                marginTop: 5,
-              }}>
-              <Image
-                source={require('../../../assets/images/icon_close_2.png')}
-                resizeMode="contain"
-                style={{
-                  height: 25,
-                  width: 25,
-                }}
-              />
-            </TouchableOpacity>
-          ) : (
-            <ButtonBack onClick={handleBack} />
-          )}
+          <ButtonBack onClick={handleBack} />
         </View>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>Notify</Text>
@@ -244,11 +157,7 @@ const NotifyScreen = () => {
               padding: 15,
             }}
             onPress={() => {
-              if (isDelete) {
-                return deleteAllChat();
-              } else {
-                return setIsDelete(true);
-              }
+              console.log('Delete Boy -> ');
             }}>
             <Text
               style={{
@@ -256,7 +165,7 @@ const NotifyScreen = () => {
                 fontFamily: 'Poppins-SemiBold',
                 fontSize: 16,
               }}>
-              {isDelete ? 'DELETE ALL' : 'DELETE'}
+              DELETE
             </Text>
           </TouchableOpacity>
         </View>
@@ -299,7 +208,16 @@ const NotifyScreen = () => {
 
                   var inThisDay = `"${nowDate}"` === beforeDate ? true : false;
 
-                  if (!inThisDay) {
+                  console.log(` 
+                  Index : ${idx} 
+                      Before : ${beforeDate} 
+                      Now    : ${nowDate}
+                      Status : ${inThisDay}
+                `);
+
+                  if (inThisDay) {
+                    return '';
+                  } else {
                     return (
                       <Text
                         style={{
@@ -464,30 +382,6 @@ const NotifyScreen = () => {
 
                     <Text style={styles.timestampText}>{item.time}</Text>
                   </View>
-                  {item.type == 9303 && isDelete && (
-                    <TouchableOpacity
-                      style={{
-                        backgroundColor: 'white',
-                        height: 32,
-                        padding: 8,
-                        borderRadius: 25,
-                        marginLeft: 5,
-                        borderWidth: 1,
-                        borderColor: '#ebebeb',
-                      }}
-                      onPress={() => {
-                        deleteChat(item);
-                      }}>
-                      <Image
-                        source={require('../../../assets/images/icon_delete.png')}
-                        style={{
-                          height: 15,
-                          width: 15,
-                          resizeMode: 'contain',
-                        }}
-                      />
-                    </TouchableOpacity>
-                  )}
                 </View>
               </View>
             ))}
@@ -496,25 +390,23 @@ const NotifyScreen = () => {
       </View>
 
       {/* Chat Input */}
-      {!isDelete && (
-        <View style={styles.chatInputContainer}>
-          <TextInput
-            style={styles.chatInput}
-            placeholder="Type your question..."
-            placeholderTextColor="grey"
-            value={chatText}
-            onChangeText={setChatText}
-            multiline
-          />
-          <TouchableOpacity
-            style={styles.sendButton}
-            onPress={() => {
-              sendChat(chatText);
-            }}>
-            <Text style={styles.sendButtonText}>Send</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+      <View style={styles.chatInputContainer}>
+        <TextInput
+          style={styles.chatInput}
+          placeholder="Type your question..."
+          placeholderTextColor="grey"
+          value={chatText}
+          onChangeText={setChatText}
+          multiline
+        />
+        <TouchableOpacity
+          style={styles.sendButton}
+          onPress={() => {
+            sendChat(chatText);
+          }}>
+          <Text style={styles.sendButtonText}>Send</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
