@@ -22,7 +22,6 @@ const NotifyScreen = () => {
   let ScreenHeight = Dimensions.get('window').height;
   const [notify, setNotify] = useState([]);
   const [userData, setUserData] = useState({});
-  const [sendResponse, setSendResponse] = useState(null);
   const [chatText, setChatText] = useState('');
 
   const handleBack = () => {
@@ -71,6 +70,15 @@ const NotifyScreen = () => {
       const data = await response.json();
 
       if (data.data[0].count == 1) {
+        const now = new Date();
+        const date = `${now.getFullYear()}-${(now.getMonth() + 1)
+          .toString()
+          .padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
+        const formattedDate = `${now
+          .getHours()
+          .toString()
+          .padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+
         const newBubble = {
           board: Date.now().toString(),
           datetime: new Date().toISOString(),
@@ -78,7 +86,7 @@ const NotifyScreen = () => {
           contents: chatText,
           type: 9303,
           image: null,
-          time: '2023-11-23\n 09:26',
+          time: `${date}\n ${formattedDate}`,
         };
 
         // Perbarui state notify dengan bubble chat baru
@@ -135,7 +143,7 @@ const NotifyScreen = () => {
               padding: 15,
             }}
             onPress={() => {
-              console.log('Delete Boy');
+              console.log('Delete Boy -> ');
             }}>
             <Text
               style={{
