@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useMemo} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,8 @@ import {
   TextInput,
   Image,
   Linking,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
@@ -23,10 +25,8 @@ const NotifyScreen = () => {
   const [notify, setNotify] = useState([]);
   const [userData, setUserData] = useState({});
   const [chatText, setChatText] = useState('');
-
-  const handleBack = () => {
-    navigation.goBack();
-  };
+  const [loading, setLoading] = useState(true);
+  const [isDelete, setIsDelete] = useState(false);
 
   useEffect(() => {
     // Get Language
@@ -51,6 +51,8 @@ const NotifyScreen = () => {
           const reversedNotify = data.data.reverse();
           setNotify(reversedNotify);
         }
+
+        setLoading(false);
       } catch (err) {
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
@@ -62,51 +64,12 @@ const NotifyScreen = () => {
     getLanguage();
   }, []);
 
-  const sendChat = async text => {
-    try {
-      const response = await fetch(
-        `https://app.xrun.run/gateway.php?act=ap6000-02&member=${userData.member}&title=${text}`,
-      );
-      const data = await response.json();
-
-      if (data.data[0].count == 1) {
-        const now = new Date();
-        const date = `${now.getFullYear()}-${(now.getMonth() + 1)
-          .toString()
-          .padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
-        const formattedDate = `${now
-          .getHours()
-          .toString()
-          .padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-
-        const newBubble = {
-          board: Date.now().toString(),
-          datetime: new Date().toISOString(),
-          title: chatText,
-          contents: chatText,
-          type: 9303,
-          image: null,
-          time: `${date}\n ${formattedDate}`,
-        };
-
-        // Perbarui state notify dengan bubble chat baru
-        setNotify(prevNotify => [...prevNotify, newBubble]);
-        setChatText('');
-      }
-    } catch (error) {
-      console.error('Error sending chat:', error);
-    }
+  // Back
+  const handleBack = () => {
+    navigation.goBack();
   };
 
-  // Fungsi tambahan untuk mengecek apakah pesan berasal dari pengguna saat ini
-  const isMyMessage = type => {
-    if (type == 9303) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
+  // Date Formatting
   const formatDate = timestamp => {
     const options = {
       month: '2-digit',
@@ -127,12 +90,149 @@ const NotifyScreen = () => {
     return `${day + '.' + month} (${monthDay})`;
   };
 
+  // Message Status Checker
+  const isMyMessage = type => {
+    if (type == 9303) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  // Send Chat
+  const sendChat = async text => {
+    setChatText('');
+    if (text.trim() === '') {
+      Alert.alert(
+        lang && lang.alert ? lang.alert.title.error : '',
+        lang && lang.screen_confirm_password
+          ? lang.screen_confirm_password.condition.empty
+          : '-',
+      );
+    } else {
+      try {
+        const response = await fetch(
+          `https://app.xrun.run/gateway.php?act=ap6000-02&member=${userData.member}&title=${text}`,
+        );
+        const data = await response.json();
+
+        if (data.data[0].count == 1) {
+          const now = new Date();
+          const date = `${now.getFullYear()}-${(now.getMonth() + 1)
+            .toString()
+            .padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
+          const formattedDate = `${now
+            .getHours()
+            .toString()
+            .padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+
+          // Bug disini, Jadi kalo ada pesan baru dia gabisa diapus sebab id.boardnya ga valid karna variabel dibawah utk boardnya pake  date. Harusnya dapeting elemen terakhir (Maksudnya ID di Boards) trus ditambahin 1
+          const newBubble = {
+            board: Date.now().toString(),
+            datetime: date,
+            title: chatText,
+            contents: chatText,
+            type: 9303,
+            image: null,
+            time: `${date}\n ${formattedDate}`,
+          };
+
+          // Update sended chat to screen
+          setNotify(prevNotify => [...prevNotify, newBubble]);
+        }
+      } catch (error) {
+        console.error('Error sending chat:', error);
+      }
+    }
+  };
+
+  // Delete Chat
+  const deleteChat = async data => {
+    console.log('Bgst -> ' + data.board);
+    try {
+      const response = await fetch(
+        `https://app.xrun.run/gateway.php?act=ap6000-03&member=${userData.member}&board=${data.board}`,
+      );
+      const jsonData = await response.json();
+
+      console.log(JSON.stringify(jsonData));
+
+      if (jsonData.data[0].count == 1) {
+        // Remove clicked Chat
+        setNotify(prevNotify =>
+          prevNotify.filter(item => item.board !== data.board),
+        );
+      }
+    } catch (error) {
+      console.error('Error sending chat:', error);
+    }
+  };
+
+  // Delete All Chat
+  const deleteAllChat = async () => {
+    try {
+      // Show a confirmation alert
+      Alert.alert(
+        'Confirmation',
+        'Are you sure you want to delete all chats?',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {
+            text: 'OK',
+            onPress: async () => {
+              setIsDelete(false);
+
+              const response = await fetch(
+                `https://app.xrun.run/gateway.php?act=ap6000-04delete&member=${userData.member}`,
+              );
+              const jsonData = await response.json();
+
+              if (jsonData.data[0].count > 0) {
+                // Remove All Inquiry Chat
+                setNotify(prevNotify =>
+                  prevNotify.filter(item => item.type !== 9303),
+                );
+              }
+            },
+          },
+        ],
+        {cancelable: false},
+      );
+    } catch (error) {
+      console.error('Error sending chat:', error);
+    }
+  };
+
   return (
     <View style={[styles.root, {height: ScreenHeight}]}>
       {/* Title */}
       <View style={{flexDirection: 'row'}}>
         <View style={{position: 'absolute', zIndex: 1}}>
-          <ButtonBack onClick={handleBack} />
+          {isDelete ? (
+            <TouchableOpacity
+              onPress={() => setIsDelete(false)}
+              style={{
+                alignSelf: 'flex-start',
+                paddingVertical: 20,
+                paddingLeft: 25,
+                paddingRight: 30,
+                marginTop: 5,
+              }}>
+              <Image
+                source={require('../../../assets/images/icon_close_2.png')}
+                resizeMode="contain"
+                style={{
+                  height: 25,
+                  width: 25,
+                }}
+              />
+            </TouchableOpacity>
+          ) : (
+            <ButtonBack onClick={handleBack} />
+          )}
         </View>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>Notify</Text>
@@ -143,7 +243,11 @@ const NotifyScreen = () => {
               padding: 15,
             }}
             onPress={() => {
-              console.log('Delete Boy -> ');
+              if (isDelete) {
+                return deleteAllChat();
+              } else {
+                return setIsDelete(true);
+              }
             }}>
             <Text
               style={{
@@ -151,7 +255,7 @@ const NotifyScreen = () => {
                 fontFamily: 'Poppins-SemiBold',
                 fontSize: 16,
               }}>
-              DELETE
+              {isDelete ? 'DELETE ALL' : 'DELETE'}
             </Text>
           </TouchableOpacity>
         </View>
@@ -163,198 +267,253 @@ const NotifyScreen = () => {
           flex: 1,
           width: '100%',
         }}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.chatContainer}
-          ref={scrollView => {
-            this.scrollView = scrollView;
-          }}>
-          {notify.map(item => (
-            <View key={item.board}>
-              {/* Text perbedaan tanggal */}
-              <Text
-                style={{
-                  color: 'white',
-                  fontFamily: 'Poppins-Regular',
-                  fontSize: 11,
-                  backgroundColor: '#89919d73',
-                  borderRadius: 115,
-                  alignSelf: 'center',
-                  paddingTop: 3,
-                  paddingBottom: 1,
-                  paddingHorizontal: 8,
-                  marginBottom: 8,
-                }}>
-                {formatDate(new Date(item.datetime).toISOString())}
-              </Text>
-              <View
-                style={[
-                  isMyMessage(item.type)
-                    ? styles.myChatBubble
-                    : styles.otherChatBubble,
-                  {
-                    flexDirection: 'row',
-                  },
-                ]}>
-                {item.type == 9303 ? (
-                  ''
-                ) : (
-                  <View
-                    style={{
-                      backgroundColor: 'white',
-                      height: 32,
-                      padding: 6,
-                      borderRadius: 25,
-                      marginRight: 5,
-                      borderWidth: 1,
-                      borderColor: '#ebebeb',
-                    }}>
-                    <Image
-                      source={require('../../../assets/images/logo_xrun.png')}
+        {loading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#343a59" />
+            <Text
+              style={{
+                color: 'grey',
+                fontFamily: 'Poppins-Regular',
+                fontSize: 13,
+              }}>
+              {lang && lang.screen_map && lang.screen_map.section_marker
+                ? lang.screen_map.section_marker.loader
+                : ''}
+            </Text>
+          </View>
+        ) : (
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.chatContainer}
+            ref={scrollView => {
+              this.scrollView = scrollView;
+            }}>
+            {notify.map((item, idx) => (
+              <View key={item.board}>
+                {(() => {
+                  var beforeDate =
+                    idx > 0 ? JSON.stringify(notify[idx - 1].datetime) : '';
+
+                  var nowDate = item.datetime;
+
+                  var inThisDay = `"${nowDate}"` === beforeDate ? true : false;
+
+                  if (!inThisDay) {
+                    return (
+                      <Text
+                        style={{
+                          color: 'white',
+                          fontFamily: 'Poppins-Regular',
+                          fontSize: 11,
+                          backgroundColor: '#89919d73',
+                          borderRadius: 115,
+                          alignSelf: 'center',
+                          paddingTop: 3,
+                          paddingBottom: 1,
+                          paddingHorizontal: 8,
+                          marginBottom: 8,
+                        }}>
+                        {formatDate(new Date(item.datetime).toISOString())}
+                      </Text>
+                    );
+                  }
+                })()}
+
+                <View
+                  style={[
+                    isMyMessage(item.type)
+                      ? styles.myChatBubble
+                      : styles.otherChatBubble,
+                    {
+                      flexDirection: 'row',
+                    },
+                  ]}>
+                  {item.type == 9303 ? (
+                    ''
+                  ) : (
+                    <View
                       style={{
-                        height: 18,
-                        width: 18,
-                        resizeMode: 'contain',
-                      }}
-                    />
-                  </View>
-                )}
-                <View style={styles.chatBubble}>
-                  {item.image !== null && (
-                    <Image
-                      source={{
-                        uri: `data:image/jpeg;base64,${item.image}`,
-                      }}
-                      style={{
-                        height: 150,
-                        width: 'auto',
-                        marginBottom: 15,
-                        borderRadius: 6,
-                      }}
-                    />
-                  )}
-                  <Text style={styles.chatText}>{item.title}</Text>
-                  {item.contents !== null && item.type != 9303 && (
-                    <View>
-                      {item.type == 9301 ? (
-                        <Text
-                          style={[
-                            styles.chatText,
-                            {
-                              color: 'grey',
-                              marginTop: 5,
-                            },
-                          ]}
-                          numberOfLines={3} // Set jumlah baris maksimum
-                          ellipsizeMode="tail">
-                          {item.contents}
-                        </Text>
-                      ) : (
-                        <Text
-                          style={[
-                            styles.chatText,
-                            {
-                              color: 'grey',
-                              marginTop: 5,
-                            },
-                          ]}>
-                          {item.contents}
-                        </Text>
-                      )}
-
-                      {item.type == 9302 && (
-                        <View>
-                          <Text
-                            style={[
-                              styles.chatText,
-                              {
-                                marginTop: 20,
-                              },
-                            ]}>
-                            {item.datebegin} ~
-                          </Text>
-                          <Text
-                            style={[
-                              styles.chatText,
-                              {
-                                marginTop: -5,
-                              },
-                            ]}>
-                            {item.dateends}
-                          </Text>
-                        </View>
-                      )}
-
-                      {item.guid == '' ||
-                      (item.guid == null && item.type == 9302) ? (
-                        ''
-                      ) : (
-                        <TouchableOpacity
-                          style={{
-                            backgroundColor: '#051C60',
-                            marginTop: 15,
-                            marginBottom: 5,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            paddingVertical: 10,
-                            borderRadius: 6,
-                          }}
-                          onPress={() => {
-                            const url =
-                              item.type == 9301
-                                ? `https://app.xrun.run/user/notice.php?id=${item.board}`
-                                : item.type == 9302
-                                ? item.guid
-                                : '';
-
-                            Linking.openURL(url).catch(err =>
-                              console.error('Error opening URL : ', err),
-                            );
-                          }}>
-                          <Text
-                            style={{
-                              fontFamily: 'Poppins-SemiBold',
-                              fontSize: 13,
-                              color: 'white',
-                            }}>
-                            {/* Bilal ganteng :D */}
-                            {item.type == 9301
-                              ? 'TAKE A CLOSER LOOK'
-                              : item.type == 9302
-                              ? 'GO TO THE EVENT'
-                              : ''}
-                          </Text>
-                        </TouchableOpacity>
-                      )}
+                        backgroundColor: 'white',
+                        height: 32,
+                        padding: 6,
+                        borderRadius: 25,
+                        marginRight: 5,
+                        borderWidth: 1,
+                        borderColor: '#ebebeb',
+                      }}>
+                      <Image
+                        source={require('../../../assets/images/logo_xrun.png')}
+                        style={{
+                          height: 18,
+                          width: 18,
+                          resizeMode: 'contain',
+                        }}
+                      />
                     </View>
                   )}
+                  <View style={styles.chatBubble}>
+                    {item.image !== null && (
+                      <Image
+                        source={{
+                          uri: `data:image/jpeg;base64,${item.image}`,
+                        }}
+                        style={{
+                          height: 150,
+                          width: 'auto',
+                          marginBottom: 15,
+                          borderRadius: 6,
+                        }}
+                      />
+                    )}
+                    <Text style={styles.chatText}>{item.title}</Text>
+                    {item.contents !== null && item.type != 9303 && (
+                      <View>
+                        {item.type == 9301 ? (
+                          <Text
+                            style={[
+                              styles.chatText,
+                              {
+                                color: 'grey',
+                                marginTop: 5,
+                              },
+                            ]}
+                            numberOfLines={3}
+                            ellipsizeMode="tail">
+                            {item.contents}
+                          </Text>
+                        ) : (
+                          <Text
+                            style={[
+                              styles.chatText,
+                              {
+                                color: 'grey',
+                                marginTop: 5,
+                              },
+                            ]}>
+                            {item.contents}
+                          </Text>
+                        )}
 
-                  <Text style={styles.timestampText}>{item.time}</Text>
+                        {item.type == 9302 && (
+                          <View>
+                            <Text
+                              style={[
+                                styles.chatText,
+                                {
+                                  marginTop: 20,
+                                },
+                              ]}>
+                              {item.datebegin} ~
+                            </Text>
+                            <Text
+                              style={[
+                                styles.chatText,
+                                {
+                                  marginTop: -5,
+                                },
+                              ]}>
+                              {item.dateends}
+                            </Text>
+                          </View>
+                        )}
+
+                        {item.guid == '' ||
+                        (item.guid == null && item.type == 9302) ? (
+                          ''
+                        ) : (
+                          <TouchableOpacity
+                            style={{
+                              backgroundColor: '#051C60',
+                              marginTop: 15,
+                              marginBottom: 5,
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              paddingVertical: 10,
+                              borderRadius: 6,
+                            }}
+                            onPress={() => {
+                              const url =
+                                item.type == 9301
+                                  ? `https://app.xrun.run/user/notice.php?id=${item.board}`
+                                  : item.type == 9302
+                                  ? item.guid
+                                  : '';
+
+                              Linking.openURL(url).catch(err =>
+                                console.error('Error opening URL : ', err),
+                              );
+                            }}>
+                            <Text
+                              style={{
+                                fontFamily: 'Poppins-SemiBold',
+                                fontSize: 13,
+                                color: 'white',
+                              }}>
+                              {/* Bilal ganteng :D */}
+                              {item.type == 9301
+                                ? 'TAKE A CLOSER LOOK'
+                                : item.type == 9302
+                                ? 'GO TO THE EVENT'
+                                : ''}
+                            </Text>
+                          </TouchableOpacity>
+                        )}
+                      </View>
+                    )}
+
+                    <Text style={styles.timestampText}>{item.time}</Text>
+                  </View>
+                  {item.type == 9303 && isDelete && (
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: 'white',
+                        height: 32,
+                        padding: 8,
+                        borderRadius: 25,
+                        marginLeft: 5,
+                        borderWidth: 1,
+                        borderColor: '#ebebeb',
+                      }}
+                      onPress={() => {
+                        deleteChat(item);
+                      }}>
+                      <Image
+                        source={require('../../../assets/images/icon_delete.png')}
+                        style={{
+                          height: 15,
+                          width: 15,
+                          resizeMode: 'contain',
+                        }}
+                      />
+                    </TouchableOpacity>
+                  )}
                 </View>
               </View>
-            </View>
-          ))}
-        </ScrollView>
+            ))}
+          </ScrollView>
+        )}
       </View>
 
       {/* Chat Input */}
-      <View style={styles.chatInputContainer}>
-        <TextInput
-          style={styles.chatInput}
-          placeholder="Type your question..."
-          placeholderTextColor="grey"
-          value={chatText}
-          onChangeText={setChatText}
-          multiline
-        />
-        <TouchableOpacity
-          style={styles.sendButton}
-          onPress={() => {
-            sendChat(chatText);
-          }}>
-          <Text style={styles.sendButtonText}>Send</Text>
-        </TouchableOpacity>
-      </View>
+      {!isDelete && (
+        <View style={styles.chatInputContainer}>
+          <TextInput
+            style={styles.chatInput}
+            placeholder="Type your question..."
+            placeholderTextColor="grey"
+            value={chatText}
+            onChangeText={setChatText}
+            multiline
+          />
+          <TouchableOpacity
+            style={styles.sendButton}
+            onPress={() => {
+              sendChat(chatText);
+            }}>
+            <Text style={styles.sendButtonText}>Send</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };
@@ -397,7 +556,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 1,
     shadowRadius: 3.5,
-    // elevation: 2,
   },
   chatInputContainer: {
     flexDirection: 'row',
@@ -440,7 +598,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   chatBubble: {
-    maxWidth: '80%', // Maksimum lebar bubel pesan
+    maxWidth: '80%',
     padding: 8,
     backgroundColor: 'white',
     borderRadius: 10,
@@ -449,10 +607,10 @@ const styles = StyleSheet.create({
     borderColor: '#ebebeb',
   },
   myChatBubble: {
-    alignSelf: 'flex-end', // Bubel pesan saya ada di sebelah kanan
+    alignSelf: 'flex-end', // Right Bubble Chat
   },
   otherChatBubble: {
-    alignSelf: 'flex-start', // Bubel pesan lain ada di sebelah kiri
+    alignSelf: 'flex-start', // Left Bubble Chat
   },
   chatText: {
     fontFamily: 'Poppins-Regular',
@@ -464,7 +622,13 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: 'grey',
     marginTop: 5,
-    textAlign: 'right', // Teks timestamp diatur ke kanan
+    textAlign: 'right',
+  },
+  loadingContainer: {
+    ...StyleSheet.absoluteFill,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1,
   },
 });
 
