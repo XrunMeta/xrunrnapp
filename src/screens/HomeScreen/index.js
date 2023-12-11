@@ -100,6 +100,9 @@ export default function Home() {
               'Advertise',
               require('../../../assets/images/icon_advertisement.png'),
               'Advertise',
+              () => {
+                navigation.navigate('AdvertiseHome');
+              },
             )}
 
             <View

@@ -51,7 +51,6 @@ const NotifyScreen = () => {
         if (data && data.data.length > 0) {
           const reversedNotify = data.data.reverse();
           setNotify(reversedNotify);
-          console.log(reversedNotify);
         }
 
         setLoading(false);
@@ -151,14 +150,11 @@ const NotifyScreen = () => {
 
   // Delete Chat
   const deleteChat = async data => {
-    console.log('Bgst -> ' + data.board);
     try {
       const response = await fetch(
         `https://app.xrun.run/gateway.php?act=ap6000-03&member=${userData.member}&board=${data.board}`,
       );
       const jsonData = await response.json();
-
-      console.log(JSON.stringify(jsonData));
 
       if (jsonData.data[0].count == 1) {
         // Remove clicked Chat
