@@ -6,20 +6,49 @@ import {
   TouchableOpacity,
   Image,
   Alert,
+  useWindowDimensions,
 } from 'react-native';
 import React, {useState, useEffect, useRef} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
 import Clipboard from '@react-native-clipboard/clipboard';
+import {TabView, SceneMap} from 'react-native-tab-view';
 
 const langData = require('../../../lang.json');
+
+const FirstRoute = () => <View style={{flex: 1, backgroundColor: '#ff4081'}} />;
+
+const SecondRoute = () => (
+  <View style={{flex: 1, backgroundColor: '#673ab7'}} />
+);
+
+const renderScene = SceneMap({
+  first: FirstRoute,
+  second: SecondRoute,
+});
 
 const WalletScreen = ({navigation}) => {
   const [lang, setLang] = useState({});
   const [isShowTextQRCode, setIsShowTextQRCode] = useState(false);
-  const [hash, setHash] = useState('0xd54D62C609kasdj05d35324f');
+  const [xrunHash, setXrunHash] = useState('0xd54D62C609kasdj05d35324f');
   const viewRef = useRef(null);
   const [positionVerticalDots, setPositionVerticalDots] = useState(0);
+  const layout = useWindowDimensions();
+
+  const cardData = [
+    {
+      title: 'XRUN',
+      possess: 1.87,
+      catch: 44.71,
+      hash: xrunHash,
+    },
+  ];
+
+  const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
+    {key: 'first', title: 'First'},
+    {key: 'second', title: 'Second'},
+  ]);
 
   useEffect(() => {
     // Get Language
@@ -57,13 +86,12 @@ const WalletScreen = ({navigation}) => {
   };
 
   // Mengambil 10 huruf pertama
-  const firstHash = hash.substring(0, 10);
-
+  const firstHash = xrunHash.substring(0, 10);
   // Mengambil 10 huruf terakhir
-  const lastHash = hash.substring(hash.length - 10);
+  const lastHash = xrunHash.substring(xrunHash.length - 10);
 
   const copiedHash = () => {
-    Clipboard.setString(hash);
+    Clipboard.setString(xrunHash);
 
     Alert.alert(
       '',
@@ -96,8 +124,61 @@ const WalletScreen = ({navigation}) => {
       </View>
 
       <View style={styles.subContainer}>
-        {/* Card */}
-        <ScrollView overScrollMode="never">
+        <ScrollView
+          overScrollMode="never"
+          horizontal
+          showsHorizontalScrollIndicator={false}>
+          <View style={styles.card}>
+            <View style={styles.wrapperPartTop}>
+              <Text style={styles.cardName}>XRUN</Text>
+              <View style={styles.wrapperShowQR}>
+                <TouchableOpacity
+                  style={styles.wrapperDots}
+                  activeOpacity={0.6}
+                  onPress={showTextQRCode}
+                  ref={viewRef}>
+                  <View style={styles.dot}></View>
+                  <View style={styles.dot}></View>
+                  <View style={styles.dot}></View>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <View style={styles.containerTextWallet}>
+              <View style={styles.wrapperTextwallet}>
+                <Text style={styles.textWallet}>Possess</Text>
+                <Text style={styles.valueWallet}>1.87</Text>
+                <Text style={styles.textWallet}>XRUN</Text>
+              </View>
+
+              <View style={styles.wrapperTextwallet}>
+                <Text style={styles.textWallet}>Catch</Text>
+                <Text style={styles.valueWallet}>44.71</Text>
+                <Text style={styles.textWallet}>XRUN</Text>
+              </View>
+            </View>
+
+            <View style={styles.wrapperPartBottom}>
+              <View style={styles.wrapperCopiedHash}>
+                <View style={styles.wrapperHash}>
+                  <Text style={styles.hash}>{firstHash}</Text>
+                  <Text style={styles.hash}>...</Text>
+                  <Text style={styles.hash}>{lastHash}</Text>
+                </View>
+                <TouchableOpacity activeOpacity={0.7} onPress={copiedHash}>
+                  <Image
+                    source={require('../../../assets/images/clipboard.png')}
+                  />
+                </TouchableOpacity>
+              </View>
+
+              <Image
+                source={require('../../../assets/images/logo_xrun.png')}
+                style={styles.logo}
+              />
+            </View>
+          </View>
+
           <View style={styles.card}>
             <View style={styles.wrapperPartTop}>
               <Text style={styles.cardName}>XRUN</Text>
@@ -150,7 +231,14 @@ const WalletScreen = ({navigation}) => {
           </View>
         </ScrollView>
 
-        <View></View>
+        <View style={{flex: 1}}>
+          <TabView
+            navigationState={{index, routes}}
+            renderScene={renderScene}
+            onIndexChange={setIndex}
+            initialLayout={{width: layout.width}}
+          />
+        </View>
       </View>
 
       {isShowTextQRCode && (
@@ -193,6 +281,7 @@ const styles = StyleSheet.create({
   subContainer: {
     flex: 1,
     marginTop: 8,
+    marginRight: 0,
   },
   card: {
     backgroundColor: '#177f9a',
@@ -203,6 +292,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     height: 200,
     zIndex: 5,
+    width: 'auto',
   },
   wrapperPartTop: {
     flexDirection: 'row',
