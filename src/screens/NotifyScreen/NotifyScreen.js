@@ -192,9 +192,12 @@ const NotifyScreen = () => {
 
               if (jsonData.data[0].count > 0) {
                 // Remove All Inquiry Chat
-                setNotify(prevNotify =>
-                  prevNotify.filter(item => item.type !== 9303),
-                );
+                setNotify(prevNotify => {
+                  var jams = console.log(`
+                  
+                  `);
+                  prevNotify.filter(item => item.type !== 9303);
+                });
               }
             },
           },
