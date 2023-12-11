@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -27,6 +27,7 @@ const NotifyScreen = () => {
   const [chatText, setChatText] = useState('');
   const [loading, setLoading] = useState(true);
   const [isDelete, setIsDelete] = useState(false);
+  const scrollViewRef = useRef();
 
   useEffect(() => {
     // Get Language
@@ -50,6 +51,7 @@ const NotifyScreen = () => {
         if (data && data.data.length > 0) {
           const reversedNotify = data.data.reverse();
           setNotify(reversedNotify);
+          console.log(reversedNotify);
         }
 
         setLoading(false);
@@ -102,6 +104,7 @@ const NotifyScreen = () => {
   // Send Chat
   const sendChat = async text => {
     setChatText('');
+    scrollViewRef.current.scrollToEnd({animated: true});
     if (text.trim() === '') {
       Alert.alert(
         lang && lang.alert ? lang.alert.title.error : '',
@@ -192,12 +195,9 @@ const NotifyScreen = () => {
 
               if (jsonData.data[0].count > 0) {
                 // Remove All Inquiry Chat
-                setNotify(prevNotify => {
-                  var jams = console.log(`
-                  
-                  `);
-                  prevNotify.filter(item => item.type !== 9303);
-                });
+                setNotify(prevNotify =>
+                  prevNotify.filter(item => item.type !== 9303),
+                );
               }
             },
           },
@@ -288,9 +288,7 @@ const NotifyScreen = () => {
           <ScrollView
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.chatContainer}
-            ref={scrollView => {
-              this.scrollView = scrollView;
-            }}>
+            ref={scrollViewRef}>
             {notify.map((item, idx) => (
               <View key={item.board}>
                 {(() => {
