@@ -584,6 +584,9 @@
         "del_empty": "Please enter your password",
         "del_fail": "Close membership failed"
       }
+    },
+    "screen_wallet": {
+      "title": "My Wallet"
     }
   }
 }
