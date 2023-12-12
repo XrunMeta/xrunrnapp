@@ -10,6 +10,8 @@ import {
   ActivityIndicator,
   useWindowDimensions,
   FlatList,
+  TouchableWithoutFeedback,
+  Pressable,
 } from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
@@ -32,6 +34,12 @@ const AdvertiseScreen = () => {
     {key: 'second', title: 'Mission Completed Advertisement'},
   ]);
   const layout = useWindowDimensions();
+  const [selectedFilter, setSelectedFilter] = useState({
+    desc: 'Newest',
+    value: 0,
+    db: 'datetime',
+  });
+  const [isFilterModalVisible, setFilterModalVisible] = useState(false);
 
   // Back
   const handleBack = () => {
@@ -52,6 +60,9 @@ const AdvertiseScreen = () => {
         const getData = JSON.parse(userData);
 
         setUserData(getData);
+
+        // Example Data from app5010-01
+        // https://paste.sh/K99N6U8X#2HAEgf31aYrOA0bFo0CUjFfA
 
         const response = await fetch(
           `https://app.xrun.run/gateway.php?act=app5010-02&member=${getData.member}`,
@@ -86,6 +97,18 @@ const AdvertiseScreen = () => {
 
   const completedKeyExtractor = (item, index) => item.transaction.toString();
 
+  const selectFilter = (desc, value, db) => {
+    setSelectedFilter({
+      desc: desc,
+      value: value,
+      db: db,
+    });
+
+    setFilterModalVisible(false);
+
+    console.log('Selected -> ' + desc);
+  };
+
   const completedRenderItem = ({item}) => (
     <View style={styles.list} key={item.transaction}>
       <View style={styles.listUpWrapper}>
@@ -106,9 +129,123 @@ const AdvertiseScreen = () => {
     </View>
   );
 
-  const storageRoute = () => (
-    <View style={{flex: 1, backgroundColor: '#673ab7'}} />
-  );
+  const storageRoute = () => {
+    return (
+      <View style={{flex: 1, backgroundColor: '#673ab7'}}>
+        <View
+          style={{
+            backgroundColor: '#f4f4f4',
+            flexDirection: 'row',
+            paddingHorizontal: 20,
+            paddingVertical: 10,
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            position: 'relative',
+          }}>
+          <Text
+            style={{
+              color: 'black',
+              fontFamily: 'Poppins-Regular',
+              fontSize: 13,
+            }}>
+            Total <Text style={{color: 'orange'}}>0</Text>XRUNs.
+          </Text>
+          <TouchableOpacity
+            onPress={() => setFilterModalVisible(true)}
+            style={{
+              backgroundColor: 'white',
+              paddingVertical: 5,
+              paddingHorizontal: 10,
+              borderRadius: 5,
+              elevation: 1,
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <Text
+              style={{
+                color: 'black',
+                fontFamily: 'Poppins-Regular',
+                fontSize: 13,
+                marginBottom: -2,
+              }}>
+              {selectedFilter.desc}
+            </Text>
+            <Image
+              source={require('../../../assets/images/icon_dropdown.png')}
+              style={{
+                tintColor: '#acb5bb',
+                height: 15,
+                width: 10,
+                marginLeft: 10,
+              }}
+            />
+          </TouchableOpacity>
+        </View>
+
+        {isFilterModalVisible && (
+          <TouchableWithoutFeedback
+            onPress={() => {
+              setFilterModalVisible(false);
+            }}
+            style={{
+              flex: 1,
+            }}>
+            <View
+              style={{
+                flex: 1,
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+              }}>
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  position: 'absolute',
+                  right: 20,
+                  top: 42,
+                  elevation: 5,
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  paddingVertical: 5,
+                }}>
+                <Pressable
+                  onPress={() => selectFilter('Newest', 0, 'datetime')}
+                  style={{
+                    paddingVertical: 5,
+                    paddingHorizontal: 10,
+                    borderBottomColor: '#acb5bb',
+                    borderBottomWidth: 1,
+                  }}>
+                  <Text style={styles.normalText}>Newest</Text>
+                </Pressable>
+                <Pressable
+                  onPress={() => selectFilter('Deadline', 1, 'dateleft')}
+                  style={{
+                    paddingVertical: 5,
+                    paddingHorizontal: 10,
+                    borderBottomColor: '#acb5bb',
+                    borderBottomWidth: 1,
+                  }}>
+                  <Text style={styles.normalText}>Deadline</Text>
+                </Pressable>
+                <Pressable
+                  onPress={() => selectFilter('Coin order', 2, 'amount')}
+                  style={{
+                    paddingVertical: 5,
+                    paddingHorizontal: 10,
+                    borderBottomColor: '#acb5bb',
+                  }}>
+                  <Text style={styles.normalText}>Coin order</Text>
+                </Pressable>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+        )}
+      </View>
+    );
+  };
 
   const completedRoute = () => (
     <View
@@ -118,7 +255,9 @@ const AdvertiseScreen = () => {
       {completedAdsLoading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#343a59" />
-          <Text style={styles.normalText}>Loading data, please wait...</Text>
+          <Text style={[styles.normalText, {color: 'grey'}]}>
+            Loading data, please wait...
+          </Text>
         </View>
       ) : (
         <FlatList
@@ -139,7 +278,7 @@ const AdvertiseScreen = () => {
     <TabBar
       {...props}
       indicatorStyle={{backgroundColor: '#051C60', height: 3}}
-      style={{backgroundColor: 'white'}}
+      style={{backgroundColor: 'white', elevation: 0}}
       renderLabel={({route, focused, color}) => (
         <Text
           style={{
@@ -184,28 +323,32 @@ const AdvertiseScreen = () => {
         </View>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>Advertising Storage</Text>
-          <TouchableOpacity
-            style={{
-              position: 'absolute',
-              right: 0,
-              padding: 15,
-            }}
-            onPress={() => {
-              if (isDelete) {
-                return deleteAllChat();
-              } else {
-                return setIsDelete(true);
-              }
-            }}>
-            <Text
+          {index == 0 ? (
+            <TouchableOpacity
               style={{
-                color: '#ffdc04',
-                fontFamily: 'Poppins-SemiBold',
-                fontSize: 13,
+                position: 'absolute',
+                right: 0,
+                padding: 15,
+              }}
+              onPress={() => {
+                if (isDelete) {
+                  return deleteAllChat();
+                } else {
+                  return setIsDelete(true);
+                }
               }}>
-              {isDelete ? 'DELETE ALL' : 'DELETE'}
-            </Text>
-          </TouchableOpacity>
+              <Text
+                style={{
+                  color: '#ffdc04',
+                  fontFamily: 'Poppins-SemiBold',
+                  fontSize: 13,
+                }}>
+                {isDelete ? 'DELETE ALL' : 'DELETE'}
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            ''
+          )}
         </View>
       </View>
 
@@ -224,6 +367,8 @@ const AdvertiseScreen = () => {
           />
         </View>
       </View>
+
+      {/* {isFilterModalVisible && <ListWrapper />} */}
     </View>
   );
 };
@@ -249,7 +394,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   normalText: {
-    color: 'grey',
+    color: 'black',
     fontFamily: 'Poppins-Regular',
     fontSize: 13,
   },
