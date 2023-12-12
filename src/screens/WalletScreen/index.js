@@ -7,6 +7,7 @@ import {
   Alert,
   Dimensions,
   useWindowDimensions,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useState, useEffect, useRef} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -17,116 +18,17 @@ import TableWalletCard from '../../components/TableWallet';
 
 const langData = require('../../../lang.json');
 
-const routeComponent = (cardData, showTextQRCode, refXRUNCard, copiedHash) => {
-  return (
-    <View style={styles.card(cardData.key)} key={cardData.key}>
-      <View style={styles.wrapperPartTop}>
-        <Text style={styles.cardName}>{cardData.title}</Text>
-        <View style={styles.wrapperShowQR}>
-          <TouchableOpacity
-            style={styles.wrapperDots}
-            activeOpacity={0.6}
-            onPress={showTextQRCode}
-            ref={refXRUNCard}>
-            <View style={styles.dot}></View>
-            <View style={styles.dot}></View>
-            <View style={styles.dot}></View>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <View style={styles.containerTextWallet}>
-        <View style={styles.wrapperTextwallet}>
-          <Text style={styles.textWallet}>Possess</Text>
-          <Text style={styles.valueWallet}>{cardData.possess}</Text>
-          <Text style={styles.textWallet}>{cardData.possessText}</Text>
-        </View>
-
-        <View style={styles.wrapperTextwallet}>
-          <Text style={styles.textWallet}>Catch</Text>
-          <Text style={styles.valueWallet}>{cardData.catch}</Text>
-          <Text style={styles.textWallet}>{cardData.catchText}</Text>
-        </View>
-      </View>
-
-      <View style={styles.wrapperPartBottom}>
-        <View style={styles.wrapperCopiedHash}>
-          <View style={styles.wrapperHash}>
-            <Text style={styles.hash}>
-              {cardData.hash.substring(0, 10) +
-                '...' +
-                cardData.hash.substring(cardData.hash.length - 10)}
-            </Text>
-          </View>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => copiedHash(cardData.hash)}>
-            <Image source={require('../../../assets/images/clipboard.png')} />
-          </TouchableOpacity>
-        </View>
-
-        <Image source={cardData.logo} style={styles.logo} />
-      </View>
-    </View>
-  );
-};
-
 const WalletScreen = ({navigation}) => {
   const [lang, setLang] = useState({});
   const [isShowTextQRCode, setIsShowTextQRCode] = useState(false);
-  const [xrunHash, setXrunHash] = useState('0xd54D62C609kasdj05d35324f');
-  const [ethHash, setEthHash] = useState('0xd54D62C60945ffj05d353255');
-  const [digxHash, setDigxHash] = useState('0xd54D62C504kasdj05d3522ac');
-  const refXRUNCard = useRef(null);
   const [positionVerticalDots, setPositionVerticalDots] = useState(0);
   const layout = useWindowDimensions();
   const [currentToken, setCurrentToken] = useState('xrun');
   const [index, setIndex] = useState(0);
-  const cardsData = [
-    {
-      key: 'xrun',
-      title: 'XRUN',
-      possess: 1.87,
-      possessText: 'XRUN',
-      catch: 44.71,
-      catchText: 'XRUN',
-      hash: xrunHash,
-      logo: require('../../../assets/images/logo_xrun.png'),
-    },
-    {
-      key: 'eth',
-      title: 'Ethereum',
-      possess: '0.00',
-      possessText: 'ETH',
-      catch: '0.00',
-      catchText: 'XRUN',
-      hash: ethHash,
-      logo: require('../../../assets/images/eth-icon.png'),
-    },
-    {
-      key: 'digx',
-      title: 'DIGX for AirDrop',
-      possess: '0.00',
-      possessText: 'DIGX',
-      catch: '0.00',
-      catchText: 'XRUN',
-      hash: digxHash,
-      logo: require('../../../assets/images/logo_xrun.png'),
-    },
-  ];
-
-  const renderScene = SceneMap(
-    Object.fromEntries(
-      cardsData.map(card => [
-        card.key,
-        () => routeComponent(card, showTextQRCode, refXRUNCard, copiedHash),
-      ]),
-    ),
-  );
-
-  const [routes] = useState(
-    cardsData.map(card => ({key: card.key, title: card.title})),
-  );
+  const [cardsData, setCardsData] = useState([]);
+  const [routes, setRoutes] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const refLayout = useRef(null);
 
   useEffect(() => {
     // Get Language
@@ -147,17 +49,129 @@ const WalletScreen = ({navigation}) => {
 
     getLanguage();
 
-    // Mengukur posisi dan ukuran View setelah rendering
-    if (refXRUNCard.current) {
-      refXRUNCard.current.measure((x, y, width, height, pageX, pageY) => {
+    // Get data member
+    const getUserData = async () => {
+      try {
+        const userData = await AsyncStorage.getItem('userData');
+        const member = JSON.parse(userData).member;
+
+        // Get data card
+        fetch(
+          `https://app.xrun.run/gateway.php?act=app4000-01-rev&member=${member}`,
+        )
+          .then(response => response.json())
+          .then(result => {
+            setCardsData(result.data);
+            setRoutes(result.data.map(card => ({key: card.symbol})));
+
+            setIsLoading(false);
+          })
+          .catch(error => {
+            Alert.alert('Failed', `${error}`, [
+              {
+                text: 'OK',
+                onPress: () => console.log('Failed get data card'),
+              },
+            ]);
+          });
+      } catch (err) {
+        console.error('Failed to get userData from AsyncStorage:', err);
+      }
+    };
+
+    getUserData();
+  }, []);
+
+  useEffect(() => {
+    // Pastikan cardsData sudah terisi sebelum memanggil getYPosition
+
+    if (cardsData.length > 0 && refLayout.current) {
+      console.log('sip');
+      refLayout.current.measure((x, y, width, height, pageX, pageY) => {
+        console.log(pageY);
         setPositionVerticalDots(pageY);
       });
     }
-  }, []);
+  }, [cardsData]);
+
+  const renderScene = SceneMap(
+    Object.fromEntries(
+      cardsData.map(card => [
+        card.symbol,
+        () => routeComponent(card, showTextQRCode, refLayout, copiedHash),
+      ]),
+    ),
+  );
+
+  const routeComponent = (cardData, showTextQRCode, refLayout, copiedHash) => {
+    const {
+      amount: tempAmount,
+      Wamount: tempWamount,
+      symbol,
+      address,
+      displaystr,
+      symbolimg,
+    } = cardData;
+
+    const Wamount = parseFloat(tempWamount).toFixed(2);
+    const amount = parseFloat(tempAmount).toFixed(2);
+
+    return (
+      <View style={styles.card(symbol)} key={symbol}>
+        <View style={styles.wrapperPartTop}>
+          <Text style={styles.cardName}>{displaystr}</Text>
+          <View style={styles.wrapperShowQR}>
+            <TouchableOpacity
+              style={styles.wrapperDots}
+              activeOpacity={0.6}
+              onPress={showTextQRCode}>
+              <View style={styles.dot}></View>
+              <View style={styles.dot}></View>
+              <View style={styles.dot}></View>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={styles.containerTextWallet}>
+          <View style={styles.wrapperTextwallet}>
+            <Text style={styles.textWallet}>Possess</Text>
+            <Text style={styles.valueWallet}>{Wamount}</Text>
+            <Text style={styles.textWallet}>{symbol}</Text>
+          </View>
+
+          <View style={styles.wrapperTextwallet}>
+            <Text style={styles.textWallet}>Catch</Text>
+            <Text style={styles.valueWallet}>{amount}</Text>
+            <Text style={styles.textWallet}>XRUN</Text>
+          </View>
+        </View>
+
+        <View style={styles.wrapperPartBottom}>
+          <View style={styles.wrapperCopiedHash}>
+            <View style={styles.wrapperHash}>
+              <Text style={styles.hash}>
+                {address.substring(0, 10) +
+                  '...' +
+                  address.substring(address.length - 10)}
+              </Text>
+            </View>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => copiedHash(address)}>
+              <Image source={require('../../../assets/images/clipboard.png')} />
+            </TouchableOpacity>
+          </View>
+
+          <Image
+            source={{uri: `data:image/jpeg;base64,${symbolimg}`}}
+            style={styles.logo}
+          />
+        </View>
+      </View>
+    );
+  };
 
   const handleKeyCard = index => {
-    console.log(index);
-
     switch (index) {
       case 0:
         setCurrentToken('xrun');
@@ -202,6 +216,13 @@ const WalletScreen = ({navigation}) => {
 
   return (
     <View style={styles.container}>
+      {/* Loading */}
+      {isLoading && (
+        <View style={styles.loading}>
+          <ActivityIndicator size={'large'} color={'#fff'} />
+        </View>
+      )}
+
       <View style={{flexDirection: 'row'}}>
         <View style={{position: 'absolute', zIndex: 1}}>
           <ButtonBack onClick={onBack} />
@@ -215,23 +236,25 @@ const WalletScreen = ({navigation}) => {
         </View>
       </View>
 
-      <View style={styles.containerCard}>
-        <TabView
-          navigationState={{index, routes}}
-          renderScene={renderScene}
-          onIndexChange={index => {
-            setIndex(index);
-            handleKeyCard(index);
-          }}
-          initialLayout={{width: layout.width}}
-          renderTabBar={() => null}
-          lazy
-          overScrollMode={'never'}
-        />
-      </View>
+      <View style={{flex: 1}}>
+        <View style={styles.containerCard}>
+          <TabView
+            navigationState={{index, routes}}
+            renderScene={renderScene}
+            onIndexChange={index => {
+              setIndex(index);
+              handleKeyCard(index);
+            }}
+            initialLayout={{width: layout.width}}
+            renderTabBar={() => null}
+            lazy
+            overScrollMode={'never'}
+          />
+        </View>
 
-      <View style={styles.containerTable}>
-        <TableWalletCard currentToken={currentToken} />
+        <View style={styles.containerTable}>
+          <TableWalletCard currentToken={currentToken} />
+        </View>
       </View>
 
       {isShowTextQRCode && (
@@ -258,13 +281,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#f3f4f6',
   },
   containerCard: {
-    flex: 0.93,
+    flex: 0.5,
   },
   containerTable: {
     flex: 1,
-    flexGrow: 2,
   },
-
   titleWrapper: {
     paddingVertical: 9,
     alignItems: 'center',
@@ -282,7 +303,7 @@ const styles = StyleSheet.create({
   },
   card: token => ({
     backgroundColor:
-      token === 'xrun' ? '#177f9a' : token === 'eth' ? '#a74248' : '#343b58',
+      token === 'XRUN' ? '#177f9a' : token === 'ETH' ? '#a74248' : '#343b58',
     marginHorizontal: 36,
     marginTop: 20,
     padding: 20,
@@ -325,7 +346,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     borderRadius: 4,
     zIndex: 2,
-    top: positionY + 50,
+    top: positionY + 140,
     right: 56,
   }),
   backgroundShowQR: {
@@ -335,7 +356,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    // backgroundColor: 'red',
   },
   textQRCode: {
     fontFamily: 'Poppins-Medium',
@@ -381,5 +401,16 @@ const styles = StyleSheet.create({
     height: 48,
     width: 48,
     marginTop: -28,
+  },
+  loading: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    zIndex: 999,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
