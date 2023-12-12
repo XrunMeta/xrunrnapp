@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -6,13 +6,10 @@ import {
   Dimensions,
   ScrollView,
   TouchableOpacity,
-  TextInput,
   Image,
-  Linking,
-  Alert,
   ActivityIndicator,
   useWindowDimensions,
-  StatusBar,
+  FlatList,
 } from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
@@ -27,7 +24,6 @@ const AdvertiseScreen = () => {
   let ScreenHeight = Dimensions.get('window').height;
   const [completedAds, setCompletedAds] = useState([]);
   const [userData, setUserData] = useState({});
-  const [chatText, setChatText] = useState('');
   const [completedAdsLoading, setCompletedAdsLoading] = useState(true);
   const [isDelete, setIsDelete] = useState(false);
   const [index, setIndex] = useState(0);
@@ -35,7 +31,6 @@ const AdvertiseScreen = () => {
     {key: 'first', title: 'An Advertisement in Storage'},
     {key: 'second', title: 'Mission Completed Advertisement'},
   ]);
-  const scrollViewRef = useRef();
   const layout = useWindowDimensions();
 
   // Back
@@ -89,6 +84,28 @@ const AdvertiseScreen = () => {
     getLanguage();
   }, []);
 
+  const completedKeyExtractor = (item, index) => item.transaction.toString();
+
+  const completedRenderItem = ({item}) => (
+    <View style={styles.list} key={item.transaction}>
+      <View style={styles.listUpWrapper}>
+        <Text
+          style={[styles.mediumText, {width: 160}]}
+          ellipsizeMode="tail"
+          numberOfLines={1}>
+          {item.title}
+        </Text>
+        <Text style={styles.smallText}>
+          {item.extracode === '9416' ? item.statusPending : item.statusSuccess}
+        </Text>
+      </View>
+      <View style={[styles.listUpWrapper, {marginTop: -6}]}>
+        <Text style={styles.smallText}>{item.datetime}</Text>
+        <Text style={styles.mediumText}>{item.coin}</Text>
+      </View>
+    </View>
+  );
+
   const storageRoute = () => (
     <View style={{flex: 1, backgroundColor: '#673ab7'}} />
   );
@@ -104,25 +121,11 @@ const AdvertiseScreen = () => {
           <Text style={styles.normalText}>Loading data, please wait...</Text>
         </View>
       ) : (
-        <ScrollView style={{marginTop: 5}}>
-          {completedAds.map((ad, index) => (
-            <View style={styles.list} key={ad.transaction}>
-              <View style={styles.listUpWrapper}>
-                <Text
-                  style={[styles.mediumText, {width: 160}]}
-                  ellipsizeMode="tail"
-                  numberOfLines={1}>
-                  {ad.title}
-                </Text>
-                <Text style={styles.smallText}>{ad.statusPending}</Text>
-              </View>
-              <View style={[styles.listUpWrapper, {marginTop: -6}]}>
-                <Text style={styles.smallText}>{ad.datetime}</Text>
-                <Text style={styles.mediumText}>{ad.coin}</Text>
-              </View>
-            </View>
-          ))}
-        </ScrollView>
+        <FlatList
+          data={completedAds}
+          keyExtractor={completedKeyExtractor}
+          renderItem={completedRenderItem}
+        />
       )}
     </View>
   );
@@ -150,65 +153,6 @@ const AdvertiseScreen = () => {
       )}
     />
   );
-
-  // Putus Disnini
-
-  // Delete Chat
-  const deleteChat = async data => {
-    try {
-      const response = await fetch(
-        `https://app.xrun.run/gateway.php?act=ap6000-03&member=${userData.member}&board=${data.board}`,
-      );
-      const jsonData = await response.json();
-
-      if (jsonData.data[0].count == 1) {
-        // Remove clicked Chat
-        setCompletedAds(prevNotify =>
-          prevNotify.filter(item => item.board !== data.board),
-        );
-      }
-    } catch (error) {
-      console.error('Error sending chat:', error);
-    }
-  };
-
-  // Delete All Chat
-  const deleteAllChat = async () => {
-    try {
-      // Show a confirmation alert
-      Alert.alert(
-        'Confirmation',
-        'Are you sure you want to delete all chats?',
-        [
-          {
-            text: 'Cancel',
-            style: 'cancel',
-          },
-          {
-            text: 'OK',
-            onPress: async () => {
-              setIsDelete(false);
-
-              const response = await fetch(
-                `https://app.xrun.run/gateway.php?act=ap6000-04delete&member=${userData.member}`,
-              );
-              const jsonData = await response.json();
-
-              if (jsonData.data[0].count > 0) {
-                // Remove All Inquiry Chat
-                setCompletedAds(prevNotify =>
-                  prevNotify.filter(item => item.type !== 9303),
-                );
-              }
-            },
-          },
-        ],
-        {cancelable: false},
-      );
-    } catch (error) {
-      console.error('Error sending chat:', error);
-    }
-  };
 
   return (
     <View style={[styles.root, {height: ScreenHeight}]}>
@@ -337,22 +281,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
   },
-  // tabBar: {
-  //   flexDirection: 'row',
-  //   backgroundColor: '#051C60', // Ganti dengan warna latar belakang yang diinginkan
-  //   height: 50,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  // },
-  // tabItem: {
-  //   flex: 1,
-  //   alignItems: 'center',
-  // },
-  // tabText: {
-  //   fontFamily: 'Poppins-Regular',
-  //   fontSize: 13,
-  //   color: 'black', // Ganti dengan warna teks yang diinginkan
-  // },
 });
 
 export default AdvertiseScreen;
