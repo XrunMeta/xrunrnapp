@@ -10,6 +10,7 @@ import {
   Dimensions,
   Modal,
   TouchableOpacity,
+  BackHandler,
 } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import {useNavigation} from '@react-navigation/native';
@@ -25,7 +26,7 @@ const FirstScreenV2 = () => {
   const [lang, setLang] = useState({});
   const navigation = useNavigation();
   const [activeIndex, setActiveIndex] = useState(0);
-  const [modalVisible, setModalVisible] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
 
   // Get Map Initial Geolocation
   const getCurrentLocation = async () => {
@@ -51,12 +52,13 @@ const FirstScreenV2 = () => {
       try {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-          {
-            title: 'Izin Lokasi',
-            message:
-              'Aplikasi memerlukan izin akses lokasi untuk fungsi tertentu.',
-            buttonPositive: 'Izinkan',
-          },
+          // {
+          //   title: 'Izin Lokasi',
+          //   message:
+          //     'Aplikasi memerlukan izin akses lokasi untuk fungsi tertentu.',
+          //   buttonPositive: 'Izinkan',
+          //   buttonNegative: 'Exit',
+          // },
         );
 
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
@@ -130,14 +132,6 @@ const FirstScreenV2 = () => {
     navigation.navigate('SignUp');
   };
 
-  const onJoinMobile = () => {
-    navigation.navigate('SignUp');
-  };
-
-  const onResetPressed = () => {
-    navigation.navigate('ForgotPassword');
-  };
-
   const images = [
     require('../../../assets/images/image_firstSlider1.png'),
     require('../../../assets/images/image_firstSlider2.png'),
@@ -149,13 +143,11 @@ const FirstScreenV2 = () => {
   );
 
   const exitApp = () => {
-    // Logika keluar dari aplikasi (Anda dapat menyesuaikan ini sesuai kebutuhan Anda)
-    console.log('Exit App');
+    BackHandler.exitApp();
   };
 
   const openAppSettings = () => {
-    // Logika membuka pengaturan aplikasi (Anda dapat menyesuaikan ini sesuai kebutuhan Anda)
-    console.log('Open App Settings');
+    Linking.openSettings();
   };
 
   return (
@@ -407,24 +399,23 @@ const styles = StyleSheet.create({
   modalCard: {
     backgroundColor: 'white',
     borderRadius: 5,
-    alignItems: 'center',
+    alignItems: 'left',
     justifyContent: 'center',
-    paddingHorizontal: 15,
-    paddingVertical: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
     marginHorizontal: 10,
   },
   modalTitle: {
     fontSize: 22,
     color: '#343a59',
     fontFamily: 'Poppins-Bold',
-    marginBottom: 10,
   },
   modalDescription: {
     fontSize: 13,
     color: '#343a59',
     fontFamily: 'Poppins-Regular',
     marginBottom: 20,
-    textAlign: 'center',
+    textAlign: 'left',
   },
 });
 
