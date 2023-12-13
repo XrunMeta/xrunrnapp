@@ -1,25 +1,7 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useState} from 'react';
-
-const [userData, setUserData] = useState({});
-
-const getUserData = async () => {
-  try {
-    // Get User Data from Asyncstorage
-    const userData = await AsyncStorage.getItem('userData');
-    const jsonUserData = JSON.parse(userData);
-    setUserData(jsonUserData);
-  } catch (err) {
-    console.error('Error retrieving selfCoordinate from AsyncStorage:', err);
-  }
-};
-
-getUserData();
-
 // Get Coin as Lat Lng
-export const fetchMarkerData = async (latitude, longitude) => {
+export const fetchMarkerData = async (latitude, longitude, member) => {
   try {
-    const apiUrl = `https://app.xrun.run/gateway.php?act=coinmapping&member=${userData.member}&lat=${latitude}&lng=${longitude}&limit=30`;
+    const apiUrl = `https://app.xrun.run/gateway.php?act=coinmapping&member=${member}&lat=${latitude}&lng=${longitude}&limit=30`;
     const response = await fetch(apiUrl);
     if (response.ok) {
       const data = await response.json();

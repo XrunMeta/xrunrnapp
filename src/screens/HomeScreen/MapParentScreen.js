@@ -152,18 +152,8 @@ export default function MapParent() {
     setShouldResetMap(true);
   };
 
-  const handleTabChange = tabName => {
-    setActiveTab(tabName);
-    console.log(tabName);
-    // if (tabName === 'Home') {
-    //   navigation.navigate('MapHome');
-    // } else if (tabName === 'Camera') {
-    //   navigation.navigate('AR');
-    // }
-  };
-
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1, marginBottom: 70}}>
       {isLoggedIn ? (
         <View style={styles.root}>
           {/* Header */}
@@ -389,7 +379,7 @@ export default function MapParent() {
                 style={{
                   alignItems: 'center',
                   justifyContent: 'center',
-                  marginTop: -30,
+                  marginTop: -55,
                   marginBottom: -20,
                   paddingHorizontal: 90,
                   paddingBottom: 20,
@@ -429,7 +419,6 @@ export default function MapParent() {
                   }}>
                   <Text style={styles.subTitle}>{rangeToMarker || 0}m</Text>
                   <Text style={styles.desc}>
-                    Badjingan
                     <Text style={{fontFamily: 'Poppins-Bold'}}>XRUN</Text>{' '}
                     {lang &&
                     lang.screen_map &&
