@@ -58,9 +58,11 @@ const MapComponent = ({
   const getSelfCoordinate = async () => {
     try {
       const selfCoordinate = await AsyncStorage.getItem('selfCoordinate');
+      const userData = await AsyncStorage.getItem('userData');
 
       if (selfCoordinate !== null) {
         const coordinate = JSON.parse(selfCoordinate);
+        const getUserData = JSON.parse(userData);
 
         setPin(coordinate);
 
@@ -68,6 +70,7 @@ const MapComponent = ({
         const data = await fetchMarkerData(
           coordinate.latitude,
           coordinate.longitude,
+          getUserData.member,
         );
 
         if (data) {

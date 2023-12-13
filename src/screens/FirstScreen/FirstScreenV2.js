@@ -57,6 +57,7 @@ const FirstScreenV2 = () => {
         );
 
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log('Lokasi diijinin boy');
           // Izin diberikan, dapatkan koordinat
           Geolocation.getCurrentPosition(
             position => {
@@ -70,6 +71,13 @@ const FirstScreenV2 = () => {
               ).catch(err => {
                 console.error('Error saving location: ', err);
               });
+
+              var jams = JSON.stringify({
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+              });
+
+              console.log('FSV2' + jams);
             },
             error => {
               console.error(error);
