@@ -43,6 +43,7 @@ import NotifyScreen from './src/screens/NotifyScreen/NotifyScreen';
 import WalletScreen from './src/screens/WalletScreen';
 import AdvertiseScreen from './src/screens/AdvertiseScreen/AdvertiseScreen';
 import SendWalletScreen from './src/screens/SendWalletScreen';
+import ShowAdScreen from './src/screens/AdvertiseScreen/ShowAdScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -128,6 +129,7 @@ export default function App() {
           {/* Wallet */}
           <Stack.Screen name="WalletHome" component={WalletScreen} />
           <Stack.Screen name="SendWallet" component={SendWalletScreen} />
+          <Stack.Screen name="ShowAd" component={ShowAdScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </AuthProvider>

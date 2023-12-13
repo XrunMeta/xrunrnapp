@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   Dimensions,
-  ScrollView,
   TouchableOpacity,
   Image,
   ActivityIndicator,
@@ -114,6 +113,10 @@ const AdvertiseScreen = () => {
     console.log('Selected -> ' + desc);
   };
 
+  const onStorage = txid => {
+    navigation.navigate('ShowAd', {txid: txid});
+  };
+
   const completedRenderItem = ({item}) => (
     <View style={styles.list} key={item.transaction}>
       <View style={styles.listUpWrapper}>
@@ -136,6 +139,7 @@ const AdvertiseScreen = () => {
 
   const storageRenderItem = ({item}) => (
     <TouchableOpacity
+      onPress={() => onStorage(item.transaction)}
       style={styles.storageList}
       activeOpacity={0.9}
       key={item.transaction}>
@@ -188,7 +192,7 @@ const AdvertiseScreen = () => {
               </Text>
               <Text style={styles.listNormalText}> {item.symbol}</Text>
             </View>
-            <Text style={styles.listNormalText}>{item.dateends} XRUN</Text>
+            <Text style={styles.listNormalText}>{item.dateends} 까지</Text>
           </View>
         </View>
       </View>
@@ -197,7 +201,7 @@ const AdvertiseScreen = () => {
 
   const storageRoute = () => {
     return (
-      <View style={{flex: 1, backgroundColor: '#673ab7'}}>
+      <View style={{flex: 1}}>
         {/* Tab Info */}
         <View
           style={{
