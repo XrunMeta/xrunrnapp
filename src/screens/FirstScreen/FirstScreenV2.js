@@ -8,6 +8,9 @@ import {
   Platform,
   PermissionsAndroid,
   Dimensions,
+  Modal,
+  TouchableOpacity,
+  BackHandler,
 } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import React, {useState, useEffect} from 'react';
@@ -21,6 +24,7 @@ const langData = require('../../../lang.json');
 const FirstScreenV2 = ({navigation}) => {
   const [lang, setLang] = useState({});
   const [activeIndex, setActiveIndex] = useState(0);
+  const [modalVisible, setModalVisible] = useState(false);
 
   // Get Map Initial Geolocation
   const getCurrentLocation = async () => {
@@ -46,12 +50,13 @@ const FirstScreenV2 = ({navigation}) => {
       try {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-          {
-            title: 'Izin Lokasi',
-            message:
-              'Aplikasi memerlukan izin akses lokasi untuk fungsi tertentu.',
-            buttonPositive: 'Izinkan',
-          },
+          // {
+          //   title: 'Izin Lokasi',
+          //   message:
+          //     'Aplikasi memerlukan izin akses lokasi untuk fungsi tertentu.',
+          //   buttonPositive: 'Izinkan',
+          //   buttonNegative: 'Exit',
+          // },
         );
 
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
@@ -84,6 +89,7 @@ const FirstScreenV2 = ({navigation}) => {
           );
         } else {
           // Izin ditolak, beri tahu pengguna atau lakukan tindakan lain
+          setModalVisible(true);
         }
       } catch (error) {
         console.error(error);
@@ -139,14 +145,6 @@ const FirstScreenV2 = ({navigation}) => {
     navigation.navigate('SignUp');
   };
 
-  const onJoinMobile = () => {
-    navigation.navigate('SignUp');
-  };
-
-  const onResetPressed = () => {
-    navigation.navigate('ForgotPassword');
-  };
-
   const images = [
     require('../../../assets/images/image_firstSlider1.png'),
     require('../../../assets/images/image_firstSlider2.png'),
@@ -156,6 +154,14 @@ const FirstScreenV2 = ({navigation}) => {
   const renderImage = ({item}) => (
     <Image source={item} style={styles.sliderImage} resizeMode="cover" />
   );
+
+  const exitApp = () => {
+    BackHandler.exitApp();
+  };
+
+  const openAppSettings = () => {
+    Linking.openSettings();
+  };
 
   return (
     <View style={styles.root}>
@@ -267,6 +273,56 @@ const FirstScreenV2 = ({navigation}) => {
             : ''}
         </Text>
       </View>
+
+      {modalVisible && (
+        <Modal
+          transparent={true}
+          animationType="slide"
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalCard}>
+              <Text style={styles.modalTitle}>Notice</Text>
+              <Text style={styles.modalDescription}>
+                You may use this app with permission required.
+              </Text>
+              <View
+                style={{
+                  alignItems: 'flex-end',
+                  justifyContent: 'flex-end',
+                  alignSelf: 'flex-end',
+                  gap: 10,
+                  marginTop: 10,
+                }}>
+                <TouchableOpacity onPress={exitApp}>
+                  <Text
+                    style={{
+                      color: 'black',
+                      fontFamily: 'Poppins-SemiBold',
+                      fontSize: 13,
+                      textAlign: 'right',
+                      paddingLeft: 10,
+                    }}>
+                    Exit
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={openAppSettings}>
+                  <Text
+                    style={{
+                      color: 'black',
+                      fontFamily: 'Poppins-SemiBold',
+                      fontSize: 13,
+                      textAlign: 'right',
+                      paddingLeft: 10,
+                    }}>
+                    Device Authorization Letter
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+      )}
     </View>
   );
 };
@@ -344,6 +400,35 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     fontSize: 13,
     position: 'relative',
+  },
+  modalContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    // backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    zIndex: 10,
+  },
+  modalCard: {
+    backgroundColor: 'white',
+    borderRadius: 5,
+    alignItems: 'left',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    marginHorizontal: 10,
+  },
+  modalTitle: {
+    fontSize: 22,
+    color: '#343a59',
+    fontFamily: 'Poppins-Bold',
+  },
+  modalDescription: {
+    fontSize: 13,
+    color: '#343a59',
+    fontFamily: 'Poppins-Regular',
+    marginBottom: 20,
+    textAlign: 'left',
   },
 });
 
