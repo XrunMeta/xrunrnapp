@@ -425,7 +425,7 @@ const styles = StyleSheet.create({
   },
   modalDescription: {
     fontSize: 13,
-    color: '#343a59',
+    color: 'black',
     fontFamily: 'Poppins-Regular',
     marginBottom: 20,
     textAlign: 'left',
