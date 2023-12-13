@@ -8,6 +8,8 @@ import {
   Platform,
   PermissionsAndroid,
   Dimensions,
+  Modal,
+  TouchableOpacity,
 } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import {useNavigation} from '@react-navigation/native';
@@ -23,6 +25,7 @@ const FirstScreenV2 = () => {
   const [lang, setLang] = useState({});
   const navigation = useNavigation();
   const [activeIndex, setActiveIndex] = useState(0);
+  const [modalVisible, setModalVisible] = useState(true);
 
   // Get Map Initial Geolocation
   const getCurrentLocation = async () => {
@@ -86,6 +89,7 @@ const FirstScreenV2 = () => {
           );
         } else {
           // Izin ditolak, beri tahu pengguna atau lakukan tindakan lain
+          setModalVisible(true);
         }
       } catch (error) {
         console.error(error);
@@ -143,6 +147,16 @@ const FirstScreenV2 = () => {
   const renderImage = ({item}) => (
     <Image source={item} style={styles.sliderImage} resizeMode="cover" />
   );
+
+  const exitApp = () => {
+    // Logika keluar dari aplikasi (Anda dapat menyesuaikan ini sesuai kebutuhan Anda)
+    console.log('Exit App');
+  };
+
+  const openAppSettings = () => {
+    // Logika membuka pengaturan aplikasi (Anda dapat menyesuaikan ini sesuai kebutuhan Anda)
+    console.log('Open App Settings');
+  };
 
   return (
     <View style={styles.root}>
@@ -254,6 +268,56 @@ const FirstScreenV2 = () => {
             : ''}
         </Text>
       </View>
+
+      {modalVisible && (
+        <Modal
+          transparent={true}
+          animationType="slide"
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalCard}>
+              <Text style={styles.modalTitle}>Notice</Text>
+              <Text style={styles.modalDescription}>
+                You may use this app with permission required.
+              </Text>
+              <View
+                style={{
+                  alignItems: 'flex-end',
+                  justifyContent: 'flex-end',
+                  alignSelf: 'flex-end',
+                  gap: 10,
+                  marginTop: 10,
+                }}>
+                <TouchableOpacity onPress={exitApp}>
+                  <Text
+                    style={{
+                      color: 'black',
+                      fontFamily: 'Poppins-SemiBold',
+                      fontSize: 13,
+                      textAlign: 'right',
+                      paddingLeft: 10,
+                    }}>
+                    Exit
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={openAppSettings}>
+                  <Text
+                    style={{
+                      color: 'black',
+                      fontFamily: 'Poppins-SemiBold',
+                      fontSize: 13,
+                      textAlign: 'right',
+                      paddingLeft: 10,
+                    }}>
+                    Device Authorization Letter
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+      )}
     </View>
   );
 };
@@ -331,6 +395,36 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     fontSize: 13,
     position: 'relative',
+  },
+  modalContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    // backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    zIndex: 10,
+  },
+  modalCard: {
+    backgroundColor: 'white',
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 15,
+    paddingVertical: 20,
+    marginHorizontal: 10,
+  },
+  modalTitle: {
+    fontSize: 22,
+    color: '#343a59',
+    fontFamily: 'Poppins-Bold',
+    marginBottom: 10,
+  },
+  modalDescription: {
+    fontSize: 13,
+    color: '#343a59',
+    fontFamily: 'Poppins-Regular',
+    marginBottom: 20,
+    textAlign: 'center',
   },
 });
 

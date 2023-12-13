@@ -489,7 +489,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 50,
     zIndex: 1,
-    backgroundColor: 'pink',
+    backgroundColor: 'white',
   },
   mapPointButton: {
     alignItems: 'center',

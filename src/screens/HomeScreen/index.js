@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   bottomTabContainer: {
-    backgroundColor: 'pink',
+    backgroundColor: 'white',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
