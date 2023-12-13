@@ -17,6 +17,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
+import jsonData from '../../../testAds';
 
 const langData = require('../../../lang.json');
 
@@ -24,9 +25,11 @@ const AdvertiseScreen = () => {
   const [lang, setLang] = useState({});
   const navigation = useNavigation();
   let ScreenHeight = Dimensions.get('window').height;
-  const [completedAds, setCompletedAds] = useState([]);
   const [userData, setUserData] = useState({});
+  const [completedAds, setCompletedAds] = useState([]);
   const [completedAdsLoading, setCompletedAdsLoading] = useState(true);
+  const [storageAds, setStorageAds] = useState([]);
+  const [storageAdsLoading, setStorageAdsLoading] = useState(true);
   const [isDelete, setIsDelete] = useState(false);
   const [index, setIndex] = useState(0);
   const [routes] = useState([
@@ -81,6 +84,7 @@ const AdvertiseScreen = () => {
           }));
 
           setCompletedAds(filteredAds);
+          setStorageAds(jsonData.data);
         }
 
         setCompletedAdsLoading(false);
@@ -96,6 +100,7 @@ const AdvertiseScreen = () => {
   }, []);
 
   const completedKeyExtractor = (item, index) => item.transaction.toString();
+  const storageKeyExtractor = (item, index) => item.transaction.toString();
 
   const selectFilter = (desc, value, db) => {
     setSelectedFilter({
@@ -129,9 +134,71 @@ const AdvertiseScreen = () => {
     </View>
   );
 
+  const storageRenderItem = ({item}) => (
+    <TouchableOpacity
+      style={styles.storageList}
+      activeOpacity={0.9}
+      key={item.transaction}>
+      <View
+        style={{
+          flexDirection: 'row',
+          gap: 10,
+          alignItems: 'center',
+        }}>
+        <Image
+          source={{
+            uri: `data:image/jpeg;base64,${item.symbolimg}`,
+          }}
+          style={{
+            height: 35,
+            width: 35,
+            resizeMode: 'contain',
+          }}
+        />
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+          }}>
+          <Text
+            numberOfLines={1}
+            style={[styles.listBigText, {marginBottom: -3}]}>
+            {item.symbol}
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'flex-end',
+              justifyContent: 'space-between',
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'flex-end',
+              }}>
+              <Text
+                style={[
+                  styles.listBigText,
+                  {
+                    marginBottom: -8,
+                    marginTop: -9,
+                  },
+                ]}>
+                {item.amount}
+              </Text>
+              <Text style={styles.listNormalText}> {item.symbol}</Text>
+            </View>
+            <Text style={styles.listNormalText}>{item.dateends} XRUN</Text>
+          </View>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+
   const storageRoute = () => {
     return (
       <View style={{flex: 1, backgroundColor: '#673ab7'}}>
+        {/* Tab Info */}
         <View
           style={{
             backgroundColor: '#f4f4f4',
@@ -148,7 +215,8 @@ const AdvertiseScreen = () => {
               fontFamily: 'Poppins-Regular',
               fontSize: 13,
             }}>
-            Total <Text style={{color: 'orange'}}>0</Text>XRUNs.
+            Total <Text style={{color: 'orange'}}>{storageAds.length}</Text>
+            XRUNs.
           </Text>
           <TouchableOpacity
             onPress={() => setFilterModalVisible(true)}
@@ -181,6 +249,22 @@ const AdvertiseScreen = () => {
             />
           </TouchableOpacity>
         </View>
+
+        {/* List Storage Ads */}
+        {completedAdsLoading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#343a59" />
+            <Text style={[styles.normalText, {color: 'grey'}]}>
+              Loading data, please wait...
+            </Text>
+          </View>
+        ) : (
+          <FlatList
+            data={storageAds}
+            keyExtractor={storageKeyExtractor}
+            renderItem={storageRenderItem}
+          />
+        )}
 
         {isFilterModalVisible && (
           <TouchableWithoutFeedback
@@ -425,6 +509,24 @@ const styles = StyleSheet.create({
   listUpWrapper: {
     justifyContent: 'space-between',
     flexDirection: 'row',
+  },
+  storageList: {
+    backgroundColor: 'white',
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    borderBottomColor: 'red',
+    borderBottomWidth: 1.5,
+  },
+  listBigText: {
+    color: 'grey',
+    fontFamily: 'Poppins-Regular',
+    fontSize: 20,
+  },
+  listNormalText: {
+    color: 'grey',
+    fontFamily: 'Poppins-Regular',
+    fontSize: 13,
+    marginBottom: -3,
   },
 });
 
