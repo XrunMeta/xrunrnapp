@@ -73,146 +73,61 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator screenOptions={{headerShown: false}}>
           {console.log('Status Login  di Apps: ' + isLoggedIn)}
-          {isLoggedIn ? (
-            <>
-              <Stack.Screen name="Home" component={Home} />
-              <Stack.Screen name="ARScreen" component={ARScreen} />
-              <Stack.Screen name="SignIn" component={SignInScreen} />
-              {/* Category -> Info */}
-              <Stack.Screen name="InfoHome" component={InfoScreen} />
-              <Stack.Screen name="AppInformation" component={AppInformation} />
-              <Stack.Screen name="Clause" component={ClauseScreen} />
-              <Stack.Screen name="ServiceClause" component={ServiceClause} />
-              <Stack.Screen name="UsageClause" component={ClauseForUsage} />
-              <Stack.Screen
-                name="PersonalClause"
-                component={ClauseForPersonal}
-              />
-              <Stack.Screen name="PersonalPolicy" component={PersonalPolicy} />
-              <Stack.Screen
-                name="ConfirmPassword"
-                component={ConfirmPasswordScreen}
-              />
-              <Stack.Screen name="ModifInfo" component={ModifInfoScreen} />
-              <Stack.Screen name="Template" component={TemplateScreen} />
-              <Stack.Screen
-                name="ConfirmPasswordEdit"
-                component={ConfirmPasswordEdit}
-              />
-              <Stack.Screen name="EditPassword" component={EditPassword} />
-              <Stack.Screen name="Recommend" component={RecommendScreen} />
-              <Stack.Screen
-                name="RegistRecommend"
-                component={RegistRecommendScreen}
-              />
-              <Stack.Screen
-                name="RandomRecommend"
-                component={RandomRecommendScreen}
-              />
-              <Stack.Screen
-                name="CustomerService"
-                component={CustomerServiceScreen}
-              />
-              <Stack.Screen
-                name="CommonProblem"
-                component={CommonProblemScreen}
-              />
-              <Stack.Screen name="OneProblem" component={OneProblemScreen} />
-              <Stack.Screen name="Setting" component={SettingScreen} />
-              <Stack.Screen
-                name="CloseMember"
-                component={CloseMembershipScreen}
-              />
-              <Stack.Screen
-                name="CloseConfirm"
-                component={CloseConfirmPassword}
-              />
-              <Stack.Screen name="NotifyHome" component={NotifyScreen} />
-              <Stack.Screen name="AdvertiseHome" component={AdvertiseScreen} />
+          <Stack.Screen name="First" component={FirstScreen} />
+          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="ARScreen" component={ARScreen} />
+          <Stack.Screen name="SignIn" component={SignInScreen} />
+          <Stack.Screen name="SignUp" component={SignUpScreen} />
+          <Stack.Screen name="EmailAuth" component={EmailAuthScreen} />
+          <Stack.Screen name="EmailVerif" component={EmailVerificationScreen} />
+          <Stack.Screen name="ChooseRegion" component={ChooseRegionScreen} />
+          <Stack.Screen name="ConfirmEmail" component={ConfirmEmailScreen} />
+          <Stack.Screen
+            name="ForgotPassword"
+            component={ForgotPasswordScreen}
+          />
+          <Stack.Screen name="NewPassword" component={NewPasswordScreen} />
+          {/* Category -> Info */}
+          <Stack.Screen name="InfoHome" component={InfoScreen} />
+          <Stack.Screen name="AppInformation" component={AppInformation} />
+          <Stack.Screen name="Clause" component={ClauseScreen} />
+          <Stack.Screen name="ServiceClause" component={ServiceClause} />
+          <Stack.Screen name="UsageClause" component={ClauseForUsage} />
+          <Stack.Screen name="PersonalClause" component={ClauseForPersonal} />
+          <Stack.Screen
+            name="ConfirmPassword"
+            component={ConfirmPasswordScreen}
+          />
+          <Stack.Screen
+            name="ConfirmPasswordEdit"
+            component={ConfirmPasswordEdit}
+          />
+          <Stack.Screen name="EditPassword" component={EditPassword} />
+          <Stack.Screen name="ModifInfo" component={ModifInfoScreen} />
+          <Stack.Screen name="Recommend" component={RecommendScreen} />
+          <Stack.Screen
+            name="RegistRecommend"
+            component={RegistRecommendScreen}
+          />
+          <Stack.Screen
+            name="RandomRecommend"
+            component={RandomRecommendScreen}
+          />
+          <Stack.Screen
+            name="CustomerService"
+            component={CustomerServiceScreen}
+          />
+          <Stack.Screen name="CommonProblem" component={CommonProblemScreen} />
+          <Stack.Screen name="OneProblem" component={OneProblemScreen} />
+          <Stack.Screen name="Setting" component={SettingScreen} />
+          <Stack.Screen name="CloseMember" component={CloseMembershipScreen} />
+          <Stack.Screen name="CloseConfirm" component={CloseConfirmPassword} />
+          <Stack.Screen name="NotifyHome" component={NotifyScreen} />
+          <Stack.Screen name="AdvertiseHome" component={AdvertiseScreen} />
 
-              {/* Wallet */}
-              <Stack.Screen name="WalletHome" component={WalletScreen} />
-              <Stack.Screen name="SendWallet" component={SendWalletScreen} />
-            </>
-          ) : (
-            <>
-              <Stack.Screen name="First" component={FirstScreen} />
-              <Stack.Screen name="SignIn" component={SignInScreen} />
-              <Stack.Screen name="SignUp" component={SignUpScreen} />
-              <Stack.Screen name="EmailAuth" component={EmailAuthScreen} />
-              <Stack.Screen
-                name="EmailVerif"
-                component={EmailVerificationScreen}
-              />
-              <Stack.Screen
-                name="ChooseRegion"
-                component={ChooseRegionScreen}
-              />
-              <Stack.Screen
-                name="ConfirmEmail"
-                component={ConfirmEmailScreen}
-              />
-              <Stack.Screen
-                name="ForgotPassword"
-                component={ForgotPasswordScreen}
-              />
-              <Stack.Screen name="NewPassword" component={NewPasswordScreen} />
-              <Stack.Screen name="Home" component={Home} />
-              {/* Category -> Info */}
-              <Stack.Screen name="InfoHome" component={InfoScreen} />
-              <Stack.Screen name="AppInformation" component={AppInformation} />
-              <Stack.Screen name="Clause" component={ClauseScreen} />
-              <Stack.Screen name="ServiceClause" component={ServiceClause} />
-              <Stack.Screen name="UsageClause" component={ClauseForUsage} />
-              <Stack.Screen
-                name="PersonalClause"
-                component={ClauseForPersonal}
-              />
-              <Stack.Screen
-                name="ConfirmPassword"
-                component={ConfirmPasswordScreen}
-              />
-              <Stack.Screen
-                name="ConfirmPasswordEdit"
-                component={ConfirmPasswordEdit}
-              />
-              <Stack.Screen name="EditPassword" component={EditPassword} />
-              <Stack.Screen name="ModifInfo" component={ModifInfoScreen} />
-              <Stack.Screen name="Recommend" component={RecommendScreen} />
-              <Stack.Screen
-                name="RegistRecommend"
-                component={RegistRecommendScreen}
-              />
-              <Stack.Screen
-                name="RandomRecommend"
-                component={RandomRecommendScreen}
-              />
-              <Stack.Screen
-                name="CustomerService"
-                component={CustomerServiceScreen}
-              />
-              <Stack.Screen
-                name="CommonProblem"
-                component={CommonProblemScreen}
-              />
-              <Stack.Screen name="OneProblem" component={OneProblemScreen} />
-              <Stack.Screen name="Setting" component={SettingScreen} />
-              <Stack.Screen
-                name="CloseMember"
-                component={CloseMembershipScreen}
-              />
-              <Stack.Screen
-                name="CloseConfirm"
-                component={CloseConfirmPassword}
-              />
-              <Stack.Screen name="NotifyHome" component={NotifyScreen} />
-              <Stack.Screen name="AdvertiseHome" component={AdvertiseScreen} />
-
-              {/* Wallet */}
-              <Stack.Screen name="WalletHome" component={WalletScreen} />
-              <Stack.Screen name="SendWallet" component={SendWalletScreen} />
-            </>
-          )}
+          {/* Wallet */}
+          <Stack.Screen name="WalletHome" component={WalletScreen} />
+          <Stack.Screen name="SendWallet" component={SendWalletScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </AuthProvider>

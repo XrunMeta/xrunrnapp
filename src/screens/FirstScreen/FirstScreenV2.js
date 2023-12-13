@@ -10,7 +10,6 @@ import {
   Dimensions,
 } from 'react-native';
 import CustomButton from '../../components/CustomButton';
-import {useNavigation} from '@react-navigation/native';
 import React, {useState, useEffect} from 'react';
 import * as RNLocalize from 'react-native-localize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -19,9 +18,8 @@ import Geolocation from 'react-native-geolocation-service';
 // Get Language Data
 const langData = require('../../../lang.json');
 
-const FirstScreenV2 = () => {
+const FirstScreenV2 = ({navigation}) => {
   const [lang, setLang] = useState({});
-  const navigation = useNavigation();
   const [activeIndex, setActiveIndex] = useState(0);
 
   // Get Map Initial Geolocation
@@ -87,6 +85,21 @@ const FirstScreenV2 = () => {
 
   // Panggil fungsi ini saat Anda ingin mendapatkan koordinat
   getCurrentLocation();
+
+  useEffect(() => {
+    const checkIsLoggedIn = async () => {
+      const isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
+      if (isLoggedIn) {
+        navigation.reset({routes: [{name: 'Home'}]});
+        return;
+      } else {
+        // navigation.reset({routes: [{name: 'First'}]});
+      }
+    };
+
+    checkIsLoggedIn();
+  }, []);
+  console.log('ok');
 
   const setCurrentLanguage = async language => {
     try {
