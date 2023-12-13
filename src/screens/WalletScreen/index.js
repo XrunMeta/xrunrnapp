@@ -28,6 +28,7 @@ const WalletScreen = ({navigation}) => {
   const [cardsData, setCardsData] = useState([]);
   const [routes, setRoutes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isShowQRCodeWallet, setIsShowQRCodeWallet] = useState(false);
   const refLayout = useRef(null);
 
   useEffect(() => {
@@ -254,7 +255,10 @@ const WalletScreen = ({navigation}) => {
         <>
           <TouchableOpacity
             activeOpacity={0.9}
-            style={styles.showQRButton(positionVerticalDots)}>
+            style={styles.showQRButton(positionVerticalDots)}
+            onPress={() => {
+              setIsShowQRCodeWallet(true);
+            }}>
             <Text style={styles.textQRCode}>QR Code</Text>
           </TouchableOpacity>
 
@@ -262,6 +266,32 @@ const WalletScreen = ({navigation}) => {
             onPress={hideTextQRCode}
             style={styles.backgroundShowQR}></TouchableOpacity>
         </>
+      )}
+
+      {isShowQRCodeWallet && (
+        <View style={styles.wrapperShowQRWallet}>
+          <View style={styles.showQRWallet}>
+            <View style={styles.partTopShowQR}>
+              <Text>XRUNe</Text>
+              <View>
+                <Text style={styles.hash}>
+                  {'0x99e2773FC1607A113B3532dcD964969067E9f03f'.substring(
+                    0,
+                    20,
+                  ) + '...'}
+                </Text>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={() => copiedHash(address)}>
+                  <Image
+                    source={require('../../../assets/images/clipboard.png')}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View></View>
+          </View>
+        </View>
       )}
     </View>
   );
@@ -403,5 +433,22 @@ const styles = StyleSheet.create({
     zIndex: 999,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  wrapperShowQRWallet: {
+    position: 'absolute',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 2,
+  },
+  showQRWallet: {
+    backgroundColor: '#fff',
+  },
+  partTopShowQR: {
+    backgroundColor: '#343b58',
   },
 });
