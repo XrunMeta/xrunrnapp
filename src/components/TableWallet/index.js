@@ -251,7 +251,7 @@ export const TableWalletCard = ({currentToken}) => {
             Transactional Information/
           </Text>
         </TouchableOpacity>
-        {currentToken != 'digx' ? (
+        {currentToken !== 'DIGX' ? (
           <>
             <TouchableOpacity
               activeOpacity={0.6}
@@ -264,7 +264,7 @@ export const TableWalletCard = ({currentToken}) => {
               <Text style={styles.textHead}>SEND</Text>
             </TouchableOpacity>
 
-            {currentToken === 'xrun' ? (
+            {currentToken === 'XRUN' ? (
               <TouchableOpacity
                 activeOpacity={0.6}
                 style={styles.contentTextHead}>

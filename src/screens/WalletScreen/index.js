@@ -116,8 +116,18 @@ const WalletScreen = ({navigation}) => {
     const Wamount = parseFloat(tempWamount).toFixed(2);
     const amount = parseFloat(tempAmount).toFixed(2);
 
+    // Hexa colors wallet
+    const walletColors = {
+      XRUN: '#187f9a',
+      ETH: '#a84249',
+      DIGX: '#343b58',
+      RUN: '#DEA936',
+    };
+
     return (
-      <View style={styles.card(symbol)} key={symbol}>
+      <View
+        style={[styles.card, {backgroundColor: walletColors[symbol]}]}
+        key={symbol}>
         <View style={styles.wrapperPartTop}>
           <Text style={styles.cardName}>{displaystr}</Text>
           <View style={styles.wrapperShowQR}>
@@ -169,23 +179,6 @@ const WalletScreen = ({navigation}) => {
         </View>
       </View>
     );
-  };
-
-  const handleKeyCard = index => {
-    switch (index) {
-      case 0:
-        setCurrentToken('xrun');
-        break;
-      case 1:
-        setCurrentToken('eth');
-        break;
-      case 2:
-        setCurrentToken('digx');
-        break;
-      default:
-        setCurrentToken('xrun');
-        break;
-    }
   };
 
   const showTextQRCode = () => {
@@ -243,7 +236,7 @@ const WalletScreen = ({navigation}) => {
             renderScene={renderScene}
             onIndexChange={index => {
               setIndex(index);
-              handleKeyCard(index);
+              setCurrentToken(routes[index].key);
             }}
             initialLayout={{width: layout.width}}
             renderTabBar={() => null}
@@ -301,9 +294,7 @@ const styles = StyleSheet.create({
     color: '#051C60',
     margin: 10,
   },
-  card: token => ({
-    backgroundColor:
-      token === 'XRUN' ? '#177f9a' : token === 'ETH' ? '#a74248' : '#343b58',
+  card: {
     marginHorizontal: 36,
     marginTop: 20,
     padding: 20,
@@ -312,7 +303,7 @@ const styles = StyleSheet.create({
     height: 200,
     zIndex: 5,
     width: Dimensions.get('window').width - 72,
-  }),
+  },
   wrapperPartTop: {
     flexDirection: 'row',
     justifyContent: 'space-between',
