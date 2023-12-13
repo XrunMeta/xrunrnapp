@@ -222,11 +222,11 @@ const renderScene = SceneMap({
   transitionHistory: TransitionHistory,
 });
 
-export const TableWalletCard = ({currentToken}) => {
+export const TableWalletCard = ({currentCurrency}) => {
+  console.log(currentCurrency);
   const navigation = useNavigation();
   const [currentDaysTransactional, setCurrentDaysTransactional] = useState(14);
   const layout = useWindowDimensions();
-
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     {key: 'totalHistory', title: 'Total History'},
@@ -251,20 +251,20 @@ export const TableWalletCard = ({currentToken}) => {
             Transactional Information/
           </Text>
         </TouchableOpacity>
-        {currentToken !== 'DIGX' ? (
+        {currentCurrency !== '4' ? (
           <>
             <TouchableOpacity
               activeOpacity={0.6}
               style={styles.contentTextHead}
               onPress={() =>
                 navigation.navigate('SendWallet', {
-                  currentToken,
+                  currentCurrency,
                 })
               }>
               <Text style={styles.textHead}>SEND</Text>
             </TouchableOpacity>
 
-            {currentToken === 'XRUN' ? (
+            {currentCurrency === '1' ? (
               <TouchableOpacity
                 activeOpacity={0.6}
                 style={styles.contentTextHead}>
@@ -407,20 +407,22 @@ const styles = StyleSheet.create({
     color: 'black',
     marginBottom: 10,
     fontFamily: 'Poppins-Regular',
+    fontSize: 13,
   },
   date: {
-    fontSize: 13,
+    fontSize: 11,
     fontFamily: 'Poppins-Regular',
     color: '#aaa',
   },
   price: {
-    fontSize: 16,
+    fontSize: 15,
     fontFamily: 'Poppins-Regular',
     color: 'black',
     textAlign: 'right',
     marginBottom: 10,
   },
   status: {
+    fontSize: 12,
     color: '#999',
   },
 });
