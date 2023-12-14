@@ -100,13 +100,6 @@ const AdvertiseScreen = () => {
     getLanguage();
   }, []);
 
-  useEffect(() => {
-    console.log(
-      'Data Checked Recommendation => ' +
-        JSON.stringify(checkedRecommendations),
-    );
-  }, [checkedRecommendations, selectedFilter]);
-
   const completedKeyExtractor = (item, index) => item.transaction.toString();
   const storageKeyExtractor = (item, index) => item.transaction.toString();
 
@@ -154,8 +147,6 @@ const AdvertiseScreen = () => {
   const onStorage = txid => {
     navigation.navigate('ShowAd', {txid: txid});
   };
-
-  const checkAds = txid => {};
 
   const completedRenderItem = ({item}) => (
     <View style={styles.list} key={item.transaction}>
@@ -490,7 +481,7 @@ const AdvertiseScreen = () => {
       {/* Title */}
       <View style={{flexDirection: 'row', zIndex: 1}}>
         <View style={{position: 'absolute', zIndex: 1}}>
-          {isDelete ? (
+          {isDelete && index == 0 ? (
             <TouchableOpacity
               onPress={() => {
                 setIsDelete(false);
