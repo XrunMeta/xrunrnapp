@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   Image,
   Alert,
-  Dimensions,
   useWindowDimensions,
   ActivityIndicator,
 } from 'react-native';
@@ -20,17 +19,26 @@ const langData = require('../../../lang.json');
 
 const WalletScreen = ({navigation}) => {
   const [lang, setLang] = useState({});
-  const [isShowTextQRCode, setIsShowTextQRCode] = useState(false);
-  const [positionVerticalDots, setPositionVerticalDots] = useState(0);
   const layout = useWindowDimensions();
+  const [member, setMember] = useState(null);
   const [currentCurrency, setCurrentCurrency] = useState('1');
   const [index, setIndex] = useState(0);
   const [cardsData, setCardsData] = useState([]);
   const [routes, setRoutes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const refLayout = useRef(null);
+  const [currencies, setCurrencies] = useState([]);
+
+  // State show text "QR Code"
+  const [isShowTextQRCode, setIsShowTextQRCode] = useState(false);
+  const [positionVerticalDots, setPositionVerticalDots] = useState(0);
+
+  // State for show QR
   const [isShowQRCodeWallet, setIsShowQRCodeWallet] = useState(false);
   const [addressWalletQR, setAddressWalletQR] = useState('');
-  const refLayout = useRef(null);
+
+  // State for send to component TableWallet => Total history, transfer history, Received details, Transition history
+  const [transactioalnHistory, setTransactioalnHistory] = useState([]);
 
   useEffect(() => {
     // Get Language
@@ -56,17 +64,26 @@ const WalletScreen = ({navigation}) => {
       try {
         const userData = await AsyncStorage.getItem('userData');
         const member = JSON.parse(userData).member;
+        setMember(member);
 
         // Get data wallet
         fetch(
           `https://app.xrun.run/gateway.php?act=app4000-01-rev&member=${member}`,
+          {
+            method: 'POST',
+          },
         )
           .then(response => response.json())
           .then(result => {
             setCardsData(result.data);
 
+            // Get wallet currency user
+            const tempCurrencies = result.data.map(
+              tempResult => tempResult.currency,
+            );
+            setCurrencies(tempCurrencies);
+
             setRoutes(result.data.map(card => ({key: card.currency})));
-            setIsLoading(false);
           })
           .catch(error => {
             Alert.alert('Failed', `${error}`, [
@@ -75,6 +92,7 @@ const WalletScreen = ({navigation}) => {
                 onPress: () => console.log('Failed get data card'),
               },
             ]);
+            setIsLoading(false);
           });
       } catch (err) {
         console.error('Failed to get userData from AsyncStorage:', err);
@@ -91,6 +109,35 @@ const WalletScreen = ({navigation}) => {
       });
     }
   }, [cardsData]);
+
+  useEffect(() => {
+    currencies.forEach(currency => {
+      fetch(
+        `https://app.xrun.run/gateway.php?act=app4200-05&startwith=0&member=${member}&currency=${currency}&daysbefore=30`,
+        {
+          method: 'POST',
+        },
+      )
+        .then(response => response.json())
+        .then(result => {
+          setTransactioalnHistory(prevData => [
+            ...prevData,
+            ...result.data.map(transaction => ({...transaction, currency})),
+          ]);
+          setIsLoading(false);
+        })
+        .catch(error => {
+          Alert.alert('Failed', `${error}`, [
+            {
+              text: 'OK',
+              onPress: () =>
+                console.log('Failed get data Transactional history'),
+            },
+          ]);
+          setIsLoading(false);
+        });
+    });
+  }, [currencies, member]);
 
   const renderScene = SceneMap(
     Object.fromEntries(
@@ -245,10 +292,14 @@ const WalletScreen = ({navigation}) => {
         </View>
 
         <View style={styles.containerTable}>
-          <TableWalletCard currentCurrency={currentCurrency} />
+          <TableWalletCard
+            currentCurrency={currentCurrency}
+            transactionalHistory={transactioalnHistory}
+          />
         </View>
       </View>
 
+      {/* Show/Hide text "QR Code" */}
       {isShowTextQRCode && (
         <>
           <TouchableOpacity
@@ -267,6 +318,7 @@ const WalletScreen = ({navigation}) => {
         </>
       )}
 
+      {/* Show/Hide popup QR */}
       {isShowQRCodeWallet && (
         <View style={styles.wrapperShowQRWallet}>
           <View style={styles.showQRWallet}>
@@ -303,10 +355,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#f3f4f6',
   },
   containerCard: {
-    flex: 1,
+    height: 240,
   },
   containerTable: {
-    flex: 1.8,
+    flex: 1,
+    height: 400,
   },
   titleWrapper: {
     paddingVertical: 9,
@@ -324,14 +377,13 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   card: {
-    marginHorizontal: 36,
+    marginHorizontal: 28,
     marginTop: 20,
     padding: 20,
     paddingTop: 0,
     borderRadius: 8,
     height: 200,
     zIndex: 5,
-    width: Dimensions.get('window').width - 72,
   },
   wrapperPartTop: {
     flexDirection: 'row',
@@ -420,7 +472,7 @@ const styles = StyleSheet.create({
   logo: {
     height: 40,
     width: 40,
-    marginTop: -28,
+    marginTop: -20,
   },
   loading: {
     position: 'absolute',

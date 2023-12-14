@@ -39,61 +39,44 @@ const renderTabBar = props => (
 );
 
 // Content TabView
-const TotalHistory = () => (
+const TotalHistory = ({transactionalHistory}) => (
   <ScrollView
     showsVerticalScrollIndicator={false}
     style={{paddingHorizontal: 28}}
     overScrollMode="never">
-    <View style={styles.wrapperItemTable}>
-      <View>
-        <Text style={styles.details}>Withdrawal details</Text>
-        <Text style={styles.date}>2023-11-22 11:39:04</Text>
-      </View>
-      <View>
-        <Text style={styles.price}>-0.6 XRUN</Text>
-        <Text style={styles.status}>Withdrawal not approved</Text>
-      </View>
-    </View>
-    <View style={styles.wrapperItemTable}>
-      <View>
-        <Text style={styles.details}>Withdrawal details</Text>
-        <Text style={styles.date}>2023-11-22 11:39:04</Text>
-      </View>
-      <View>
-        <Text style={styles.price}>-0.6 XRUN</Text>
-        <Text style={styles.status}>Withdrawal not approved</Text>
-      </View>
-    </View>
-    <View style={styles.wrapperItemTable}>
-      <View>
-        <Text style={styles.details}>Withdrawal details</Text>
-        <Text style={styles.date}>2023-11-22 11:39:04</Text>
-      </View>
-      <View>
-        <Text style={styles.price}>-0.6 XRUN</Text>
-        <Text style={styles.status}>Withdrawal not approved</Text>
-      </View>
-    </View>
-    <View style={styles.wrapperItemTable}>
-      <View>
-        <Text style={styles.details}>Withdrawal details</Text>
-        <Text style={styles.date}>2023-11-22 11:39:04</Text>
-      </View>
-      <View>
-        <Text style={styles.price}>-0.6 XRUN</Text>
-        <Text style={styles.status}>Withdrawal not approved</Text>
-      </View>
-    </View>
-    <View style={styles.wrapperItemTable}>
-      <View>
-        <Text style={styles.details}>Withdrawal details</Text>
-        <Text style={styles.date}>2023-11-22 11:39:04</Text>
-      </View>
-      <View>
-        <Text style={styles.price}>-0.6 XRUN</Text>
-        <Text style={styles.status}>Withdrawal not approved</Text>
-      </View>
-    </View>
+    {transactionalHistory.map((transactionHistory, index) => {
+      const {transaction, datetime, time, amount, symbol, extracode, action} =
+        transactionHistory;
+
+      return (
+        <View style={styles.wrapperItemTable} key={index}>
+          <View>
+            <Text style={styles.details}>
+              {action == 3304
+                ? 'Completed'
+                : action == 3651
+                ? 'Withdrawal details'
+                : 'Development test'}
+            </Text>
+            <Text style={styles.date}>
+              {datetime} {time}
+            </Text>
+          </View>
+          <View>
+            <Text style={styles.price}>
+              {amount} {symbol}
+            </Text>
+            <Text style={styles.status}>
+              {extracode == 9453
+                ? '-'
+                : extracode == 9001
+                ? 'Withdrawal approval'
+                : 'Withdrawal not approved'}
+            </Text>
+          </View>
+        </View>
+      );
+    })}
   </ScrollView>
 );
 
@@ -215,17 +198,16 @@ const ReceivedDetails = () => (
 
 const TransitionHistory = () => <View style={{flex: 1}} />;
 
-const renderScene = SceneMap({
-  totalHistory: TotalHistory,
-  transferHistory: TransferHistory,
-  receivedDetails: ReceivedDetails,
-  transitionHistory: TransitionHistory,
-});
+export const TableWalletCard = ({currentCurrency, transactionalHistory}) => {
+  const filterTransactionalByCurrency = transactionalHistory.filter(
+    transactionalByCurrency =>
+      transactionalByCurrency.currency == currentCurrency,
+  );
 
-export const TableWalletCard = ({currentCurrency}) => {
-  console.log(currentCurrency);
+  console.log(filterTransactionalByCurrency);
+
   const navigation = useNavigation();
-  const [currentDaysTransactional, setCurrentDaysTransactional] = useState(14);
+  const [currentDaysTransactional, setCurrentDaysTransactional] = useState(7);
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
   const [routes] = useState([
@@ -234,6 +216,15 @@ export const TableWalletCard = ({currentCurrency}) => {
     {key: 'receivedDetails', title: 'Received details'},
     {key: 'transitionHistory', title: 'Transition History'},
   ]);
+
+  const renderScene = SceneMap({
+    totalHistory: () => (
+      <TotalHistory transactionalHistory={filterTransactionalByCurrency} />
+    ),
+    transferHistory: TransferHistory,
+    receivedDetails: ReceivedDetails,
+    transitionHistory: TransitionHistory,
+  });
 
   const currentDaysBackground = '#fedc00';
 
@@ -339,7 +330,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingRight: 36,
-    marginTop: 20,
+    // marginTop: 20,
   },
   contentTextHead: {
     flex: 1,
@@ -350,14 +341,13 @@ const styles = StyleSheet.create({
   },
   textHead: {
     textAlign: 'center',
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Poppins-Medium',
     fontSize: 15,
     color: 'black',
   },
   contentTextHeadDefault: {
     backgroundColor: 'white',
-    paddingHorizontal: 20,
-    paddingVertical: 2,
+    paddingHorizontal: 16,
     maxWidth: 200,
     shadowColor: '#000',
     shadowOffset: {
@@ -370,9 +360,8 @@ const styles = StyleSheet.create({
   },
   contentTable: {
     backgroundColor: 'white',
-    marginTop: -2,
     flex: 1,
-    paddingTop: 24,
+    paddingTop: 22,
   },
   wrapperDate: {
     flexDirection: 'row',
@@ -386,13 +375,13 @@ const styles = StyleSheet.create({
     paddingBottom: 2,
   },
   textDay: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Poppins-Medium',
     fontSize: 15,
     color: 'black',
   },
   wrapperTabView: {
     flex: 1,
-    marginTop: 10,
+    marginTop: 4,
   },
   wrapperItemTable: {
     flexDirection: 'row',
