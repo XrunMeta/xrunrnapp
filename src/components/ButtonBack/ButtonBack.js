@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   btnBack: {
     alignSelf: 'flex-start',
     paddingVertical: 20,
-    paddingLeft: 25,
+    paddingLeft: 14,
     paddingRight: 30,
   },
 });
