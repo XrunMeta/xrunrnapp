@@ -100,6 +100,13 @@ const AdvertiseScreen = () => {
     getLanguage();
   }, []);
 
+  useEffect(() => {
+    console.log(
+      'Data Checked Recommendation => ' +
+        JSON.stringify(checkedRecommendations),
+    );
+  }, [checkedRecommendations, selectedFilter]);
+
   const completedKeyExtractor = (item, index) => item.transaction.toString();
   const storageKeyExtractor = (item, index) => item.transaction.toString();
 
@@ -130,6 +137,8 @@ const AdvertiseScreen = () => {
     });
 
     setFilterModalVisible(false);
+    setCheckedRecommendations({});
+    setSelectedAds([]);
 
     // Memanggil API berdasarkan filter yang dipilih
     if (value == 0) {
