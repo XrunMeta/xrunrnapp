@@ -11,6 +11,7 @@ import {
   FlatList,
   TouchableWithoutFeedback,
   Pressable,
+  Alert,
 } from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
@@ -83,8 +84,8 @@ const AdvertiseScreen = () => {
 
           setCompletedAds(filteredAds);
 
-          // fetchAdsData('datetime', getData.member);
-          setStorageAds(jsonData.data);
+          fetchAdsData('datetime', getData.member);
+          // setStorageAds(jsonData.data);
         }
 
         setCompletedAdsLoading(false);
@@ -135,8 +136,8 @@ const AdvertiseScreen = () => {
 
     // Memanggil API berdasarkan filter yang dipilih
     if (value == 0) {
-      // fetchAdsData('datetime', userData.member);
-      setStorageAds(jsonData.data);
+      fetchAdsData('datetime', userData.member);
+      // setStorageAds(jsonData.data);
     } else if (value == 1) {
       fetchAdsData('dateleft', userData.member);
     } else if (value == 2) {
@@ -183,8 +184,106 @@ const AdvertiseScreen = () => {
     setCheckedRecommendations(updatedCheckedAds);
   };
 
-  const deleteSelectedAds = selectedItems => {
+  const deleteAllChat = async () => {
+    Alert.alert(
+      'Warning',
+      'Are you sure to delete all?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: async () => {
+            try {
+              const response = await fetch(
+                `https://app.xrun.run/gateway.php?act=app5010-03-deleteall&member=${userData.member}`,
+              );
+              const data = await response.json();
+
+              if (data && data.data && data.data.length > 0) {
+                const count = data.data[0].count;
+
+                // Tampilkan alert sesuai dengan nilai count
+                if (count > 0) {
+                  // Sukses, tampilkan alert sukses
+                  Alert.alert('Sukses', 'Iklan berhasil dihapus', [
+                    {text: 'Oke'},
+                  ]);
+
+                  // Exit from Delete Mode and back to normal mode
+                  setIsDelete(false);
+                  setFilterModalVisible(false);
+                  setCheckedRecommendations({});
+                  setSelectedAds([]);
+                  fetchAdsData('datetime', userData.member);
+
+                  setSelectedFilter({
+                    desc: 'Newest',
+                    value: 0,
+                    db: 'datetime',
+                  });
+                } else {
+                  // Gagal, tampilkan alert gagal
+                  Alert.alert('Gagal', 'Gagal menghapus iklan', [
+                    {text: 'Oke'},
+                  ]);
+                }
+              } else {
+                // Tangani kondisi tidak ada data
+                Alert.alert('Gagal', 'Gagal menghapus iklan', [{text: 'Oke'}]);
+              }
+            } catch (err) {
+              console.error('Error fetching ads data:', err);
+            }
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
+  const deleteSelectedAds = async selectedItems => {
     console.log('Hapus ID => ' + selectedItems);
+
+    try {
+      const response = await fetch(
+        `https://app.xrun.run/gateway.php?act=app5010-03-delete&transaction=${selectedItems}`,
+      );
+      const data = await response.json();
+
+      if (data && data.data && data.data.length > 0) {
+        const count = data.data[0].count;
+
+        // Tampilkan alert sesuai dengan nilai count
+        if (count > 0) {
+          // Sukses, tampilkan alert sukses
+          Alert.alert('Sukses', 'Iklan berhasil dihapus', [{text: 'Oke'}]);
+
+          // Exit from Delete Mode and back to normal mode
+          setIsDelete(false);
+          setFilterModalVisible(false);
+          setCheckedRecommendations({});
+          setSelectedAds([]);
+          fetchAdsData('datetime', userData.member);
+
+          setSelectedFilter({
+            desc: 'Newest',
+            value: 0,
+            db: 'datetime',
+          });
+        } else {
+          // Gagal, tampilkan alert gagal
+          Alert.alert('Gagal', 'Gagal menghapus iklan', [{text: 'Oke'}]);
+        }
+      } else {
+        // Tangani kondisi tidak ada data
+        Alert.alert('Gagal', 'Gagal menghapus iklan', [{text: 'Oke'}]);
+      }
+    } catch (err) {
+      console.error('Error fetching ads data:', err);
+    }
   };
 
   const storageRenderItem = ({item}) => (
