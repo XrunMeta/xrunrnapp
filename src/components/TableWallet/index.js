@@ -212,15 +212,6 @@ export const TableWalletCard = ({currentCurrency, transactionalHistory}) => {
     {key: 'transitionHistory', title: 'Transition History'},
   ]);
 
-  const renderScene = SceneMap({
-    totalHistory: () => (
-      <TotalHistory transactionalHistory={filterTransactionalByCurrency} />
-    ),
-    transferHistory: TransferHistory,
-    receivedDetails: ReceivedDetails,
-    transitionHistory: TransitionHistory,
-  });
-
   const currentDate = new Date();
 
   const filterTransactionalByCurrency = transactionalHistory
@@ -242,6 +233,15 @@ export const TableWalletCard = ({currentCurrency, transactionalHistory}) => {
       // Return true jika transaksi terjadi dalam 7 hari terakhir
       return daysDifference <= currentDaysTransactional;
     });
+
+  const renderScene = SceneMap({
+    totalHistory: () => (
+      <TotalHistory transactionalHistory={filterTransactionalByCurrency} />
+    ),
+    transferHistory: TransferHistory,
+    receivedDetails: ReceivedDetails,
+    transitionHistory: TransitionHistory,
+  });
 
   const currentDaysBackground = '#fedc00';
 
@@ -364,8 +364,9 @@ const styles = StyleSheet.create({
   },
   contentTextHeadDefault: {
     backgroundColor: 'white',
-    paddingHorizontal: 16,
     maxWidth: 200,
+    paddingHorizontal: 16,
+    paddingVertical: 4,
     shadowColor: '#000',
     shadowOffset: {
       width: 5,
@@ -428,7 +429,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   status: {
-    fontSize: 12,
     color: '#999',
     textAlign: 'right',
   },
