@@ -29,7 +29,6 @@ const AdvertiseScreen = () => {
   const [completedAdsLoading, setCompletedAdsLoading] = useState(true);
   const [storageAds, setStorageAds] = useState([]);
   const [storageAdsLoading, setStorageAdsLoading] = useState(true);
-  const [isDelete, setIsDelete] = useState(false);
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     {key: 'first', title: 'An Advertisement in Storage'},
@@ -42,6 +41,9 @@ const AdvertiseScreen = () => {
     db: 'datetime',
   });
   const [isFilterModalVisible, setFilterModalVisible] = useState(false);
+  const [checkedRecommendations, setCheckedRecommendations] = useState({});
+  const [isDelete, setIsDelete] = useState(false);
+  const [selectedAds, setSelectedAds] = useState([]);
 
   // Back
   const handleBack = () => {
@@ -63,9 +65,6 @@ const AdvertiseScreen = () => {
 
         setUserData(getData);
 
-        // Example Data from app5010-01
-        // https://paste.sh/K99N6U8X#2HAEgf31aYrOA0bFo0CUjFfA
-
         const response = await fetch(
           `https://app.xrun.run/gateway.php?act=app5010-02&member=${getData.member}`,
         );
@@ -83,10 +82,13 @@ const AdvertiseScreen = () => {
           }));
 
           setCompletedAds(filteredAds);
+
+          // fetchAdsData('datetime', getData.member);
           setStorageAds(jsonData.data);
         }
 
         setCompletedAdsLoading(false);
+        setStorageAdsLoading(false);
       } catch (err) {
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
@@ -101,6 +103,25 @@ const AdvertiseScreen = () => {
   const completedKeyExtractor = (item, index) => item.transaction.toString();
   const storageKeyExtractor = (item, index) => item.transaction.toString();
 
+  const fetchAdsData = async (orderField, member) => {
+    try {
+      const response = await fetch(
+        `https://app.xrun.run/gateway.php?act=app5010-01&orderField=${orderField}&member=${member}`,
+      );
+      const data = await response.json();
+
+      console.log('Jumlah data Ads Storage -> ' + data.data.length);
+
+      if (data) {
+        setStorageAds(data.data);
+      }
+
+      setStorageAdsLoading(false);
+    } catch (err) {
+      console.error('Error fetching ads data:', err);
+    }
+  };
+
   const selectFilter = (desc, value, db) => {
     setSelectedFilter({
       desc: desc,
@@ -110,12 +131,22 @@ const AdvertiseScreen = () => {
 
     setFilterModalVisible(false);
 
-    console.log('Selected -> ' + desc);
+    // Memanggil API berdasarkan filter yang dipilih
+    if (value == 0) {
+      // fetchAdsData('datetime', userData.member);
+      setStorageAds(jsonData.data);
+    } else if (value == 1) {
+      fetchAdsData('dateleft', userData.member);
+    } else if (value == 2) {
+      fetchAdsData('amount', userData.member);
+    }
   };
 
   const onStorage = txid => {
     navigation.navigate('ShowAd', {txid: txid});
   };
+
+  const checkAds = txid => {};
 
   const completedRenderItem = ({item}) => (
     <View style={styles.list} key={item.transaction}>
@@ -137,9 +168,32 @@ const AdvertiseScreen = () => {
     </View>
   );
 
+  const toggleCheckbox = txid => {
+    const updatedCheckedAds = {...checkedRecommendations};
+    updatedCheckedAds[txid] = !updatedCheckedAds[txid];
+
+    const selectedAdsSet = new Set(selectedAds);
+    if (updatedCheckedAds[txid]) {
+      selectedAdsSet.add(txid);
+    } else {
+      selectedAdsSet.delete(txid);
+    }
+
+    setSelectedAds(Array.from(selectedAdsSet));
+    setCheckedRecommendations(updatedCheckedAds);
+  };
+
+  const deleteSelectedAds = selectedItems => {
+    console.log('Hapus ID => ' + selectedItems);
+  };
+
   const storageRenderItem = ({item}) => (
     <TouchableOpacity
-      onPress={() => onStorage(item.transaction)}
+      onPress={() =>
+        isDelete
+          ? toggleCheckbox(item.transaction)
+          : onStorage(item.transaction)
+      }
       style={styles.storageList}
       activeOpacity={0.9}
       key={item.transaction}>
@@ -149,6 +203,19 @@ const AdvertiseScreen = () => {
           gap: 10,
           alignItems: 'center',
         }}>
+        {isDelete && (
+          <View
+            style={[
+              styles.checkbox,
+              checkedRecommendations[item.transaction]
+                ? styles.checkedBox
+                : styles.uncheckedBox,
+            ]}>
+            {checkedRecommendations[item.transaction] && (
+              <Text style={styles.checkMark}>✔</Text>
+            )}
+          </View>
+        )}
         <Image
           source={{
             uri: `data:image/jpeg;base64,${item.symbolimg}`,
@@ -199,7 +266,7 @@ const AdvertiseScreen = () => {
     </TouchableOpacity>
   );
 
-  const storageRoute = () => {
+  const storageRoute = (deleteMode, selectedItems) => {
     return (
       <View style={{flex: 1}}>
         {/* Tab Info */}
@@ -255,19 +322,47 @@ const AdvertiseScreen = () => {
         </View>
 
         {/* List Storage Ads */}
-        {completedAdsLoading ? (
+        {storageAdsLoading ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#343a59" />
             <Text style={[styles.normalText, {color: 'grey'}]}>
               Loading data, please wait...
             </Text>
           </View>
+        ) : storageAds.length === 0 ? (
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>No data available</Text>
+          </View>
         ) : (
-          <FlatList
-            data={storageAds}
-            keyExtractor={storageKeyExtractor}
-            renderItem={storageRenderItem}
-          />
+          <View>
+            <FlatList
+              data={storageAds}
+              keyExtractor={storageKeyExtractor}
+              renderItem={storageRenderItem}
+            />
+            {deleteMode && (
+              <TouchableOpacity
+                onPress={() => deleteSelectedAds(selectedItems)}
+                style={{
+                  backgroundColor: '#051C60',
+                  paddingVertical: 20,
+                  position: 'absolute',
+                  bottom: 45,
+                  right: 0,
+                  left: 0,
+                }}>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontFamily: 'Poppins-SemiBold',
+                    textAlign: 'center',
+                  }}>
+                  DELETE{' '}
+                  {selectedItems.length > 0 ? `(${selectedItems.length})` : ''}
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
         )}
 
         {isFilterModalVisible && (
@@ -358,7 +453,7 @@ const AdvertiseScreen = () => {
   );
 
   const renderScene = SceneMap({
-    first: storageRoute,
+    first: () => storageRoute(isDelete, selectedAds),
     second: completedRoute,
   });
 
@@ -388,7 +483,11 @@ const AdvertiseScreen = () => {
         <View style={{position: 'absolute', zIndex: 1}}>
           {isDelete ? (
             <TouchableOpacity
-              onPress={() => setIsDelete(false)}
+              onPress={() => {
+                setIsDelete(false);
+                setCheckedRecommendations({});
+                setSelectedAds([]);
+              }}
               style={{
                 alignSelf: 'flex-start',
                 paddingVertical: 20,
@@ -531,6 +630,40 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
     fontSize: 13,
     marginBottom: -3,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyText: {
+    color: 'grey',
+    fontFamily: 'Poppins-Regular',
+    fontSize: 13,
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderWidth: 2,
+    borderRadius: 4,
+    marginRight: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: -2,
+  },
+  checkedBox: {
+    backgroundColor: '#343a59',
+    borderColor: '#343a59',
+  },
+  uncheckedBox: {
+    backgroundColor: 'transparent',
+    borderColor: '#343a59',
+  },
+  checkMark: {
+    color: 'white',
+    fontSize: 11,
+    marginTop: -2,
+    fontWeight: 'bold',
   },
 });
 
