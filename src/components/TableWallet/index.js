@@ -44,39 +44,41 @@ const TotalHistory = ({transactionalHistory}) => (
     showsVerticalScrollIndicator={false}
     style={{paddingHorizontal: 28}}
     overScrollMode="never">
-    {transactionalHistory.map((transactionHistory, index) => {
-      const {transaction, datetime, time, amount, symbol, extracode, action} =
-        transactionHistory;
+    {transactionalHistory.length > 0 ? (
+      transactionalHistory.map((transactionHistory, index) => {
+        const {datetime, time, amount, symbol, extracode, action} =
+          transactionHistory;
 
-      return (
-        <View style={styles.wrapperItemTable} key={index}>
-          <View>
-            <Text style={styles.details}>
-              {action == 3304
-                ? 'Completed'
-                : action == 3651
-                ? 'Withdrawal details'
-                : 'Development test'}
-            </Text>
-            <Text style={styles.date}>
-              {datetime} {time}
-            </Text>
+        return (
+          <View style={styles.wrapperItemTable} key={index}>
+            <View>
+              <Text style={styles.details}>
+                {action == 3304
+                  ? 'Completed'
+                  : action == 3651
+                  ? 'Withdrawal details'
+                  : 'Development test'}
+              </Text>
+              <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
+            </View>
+            <View>
+              <Text style={styles.price}>
+                {amount} {symbol}
+              </Text>
+              <Text style={styles.status}>
+                {extracode == 9416
+                  ? '-'
+                  : extracode == 9001
+                  ? 'Withdrawal approval'
+                  : 'Withdrawal not approved'}
+              </Text>
+            </View>
           </View>
-          <View>
-            <Text style={styles.price}>
-              {amount} {symbol}
-            </Text>
-            <Text style={styles.status}>
-              {extracode == 9453
-                ? '-'
-                : extracode == 9001
-                ? 'Withdrawal approval'
-                : 'Withdrawal not approved'}
-            </Text>
-          </View>
-        </View>
-      );
-    })}
+        );
+      })
+    ) : (
+      <Text style={styles.textNotFoundHistory}>History not found</Text>
+    )}
   </ScrollView>
 );
 
@@ -199,13 +201,6 @@ const ReceivedDetails = () => (
 const TransitionHistory = () => <View style={{flex: 1}} />;
 
 export const TableWalletCard = ({currentCurrency, transactionalHistory}) => {
-  const filterTransactionalByCurrency = transactionalHistory.filter(
-    transactionalByCurrency =>
-      transactionalByCurrency.currency == currentCurrency,
-  );
-
-  console.log(filterTransactionalByCurrency);
-
   const navigation = useNavigation();
   const [currentDaysTransactional, setCurrentDaysTransactional] = useState(7);
   const layout = useWindowDimensions();
@@ -225,6 +220,28 @@ export const TableWalletCard = ({currentCurrency, transactionalHistory}) => {
     receivedDetails: ReceivedDetails,
     transitionHistory: TransitionHistory,
   });
+
+  const currentDate = new Date();
+
+  const filterTransactionalByCurrency = transactionalHistory
+    .filter(
+      transactionalByCurrency =>
+        transactionalByCurrency.currency == currentCurrency,
+    )
+    .filter(transaction => {
+      const transactionDateTime = new Date(
+        `${transaction.datetime}T${transaction.time}`,
+      );
+
+      // Hitung perbedaan waktu dalam milidetik
+      const timeDifference = currentDate - transactionDateTime;
+
+      // Konversi perbedaan waktu dari milidetik ke hari
+      const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
+
+      // Return true jika transaksi terjadi dalam 7 hari terakhir
+      return daysDifference <= currentDaysTransactional;
+    });
 
   const currentDaysBackground = '#fedc00';
 
@@ -413,5 +430,15 @@ const styles = StyleSheet.create({
   status: {
     fontSize: 12,
     color: '#999',
+    textAlign: 'right',
+  },
+  textNotFoundHistory: {
+    fontFamily: 'Poppins-Regular',
+    color: '#ccc',
+    textAlign: 'center',
+    paddingTop: 20,
+    borderBottomColor: '#bbb',
+    borderBottomWidth: 0.55,
+    paddingBottom: 10,
   },
 });

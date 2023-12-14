@@ -120,10 +120,7 @@ const WalletScreen = ({navigation}) => {
       )
         .then(response => response.json())
         .then(result => {
-          setTransactioalnHistory(prevData => [
-            ...prevData,
-            ...result.data.map(transaction => ({...transaction, currency})),
-          ]);
+          setTransactioalnHistory(prevData => [...prevData, ...result.data]);
           setIsLoading(false);
         })
         .catch(error => {
