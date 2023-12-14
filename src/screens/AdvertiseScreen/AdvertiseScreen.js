@@ -592,7 +592,7 @@ const AdvertiseScreen = () => {
                 paddingVertical: 20,
                 paddingLeft: 25,
                 paddingRight: 30,
-                marginTop: 5,
+                marginTop: 4,
               }}>
               <Image
                 source={require('../../../assets/images/icon_close_2.png')}
@@ -629,7 +629,10 @@ const AdvertiseScreen = () => {
                   fontFamily: 'Poppins-SemiBold',
                   fontSize: 13,
                 }}>
-                {isDelete ? 'DELETE ALL' : 'DELETE'}
+                {isDelete
+                  ? `DELETE
+    ALL`
+                  : 'DELETE'}
               </Text>
             </TouchableOpacity>
           ) : (
@@ -678,6 +681,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Bold',
     color: '#051C60',
     margin: 10,
+    marginLeft: -10,
   },
   normalText: {
     color: 'black',
