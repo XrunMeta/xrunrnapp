@@ -23,12 +23,13 @@ const WalletScreen = ({navigation}) => {
   const [isShowTextQRCode, setIsShowTextQRCode] = useState(false);
   const [positionVerticalDots, setPositionVerticalDots] = useState(0);
   const layout = useWindowDimensions();
-  const [currentToken, setCurrentToken] = useState('xrun');
+  const [currentCurrency, setCurrentCurrency] = useState('1');
   const [index, setIndex] = useState(0);
   const [cardsData, setCardsData] = useState([]);
   const [routes, setRoutes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isShowQRCodeWallet, setIsShowQRCodeWallet] = useState(false);
+  const [addressWalletQR, setAddressWalletQR] = useState('');
   const refLayout = useRef(null);
 
   useEffect(() => {
@@ -56,15 +57,15 @@ const WalletScreen = ({navigation}) => {
         const userData = await AsyncStorage.getItem('userData');
         const member = JSON.parse(userData).member;
 
-        // Get data card
+        // Get data wallet
         fetch(
           `https://app.xrun.run/gateway.php?act=app4000-01-rev&member=${member}`,
         )
           .then(response => response.json())
           .then(result => {
             setCardsData(result.data);
-            setRoutes(result.data.map(card => ({key: card.symbol})));
 
+            setRoutes(result.data.map(card => ({key: card.currency})));
             setIsLoading(false);
           })
           .catch(error => {
@@ -84,12 +85,8 @@ const WalletScreen = ({navigation}) => {
   }, []);
 
   useEffect(() => {
-    // Pastikan cardsData sudah terisi sebelum memanggil getYPosition
-
     if (cardsData.length > 0 && refLayout.current) {
-      console.log('sip');
       refLayout.current.measure((x, y, width, height, pageX, pageY) => {
-        console.log(pageY);
         setPositionVerticalDots(pageY);
       });
     }
@@ -97,14 +94,14 @@ const WalletScreen = ({navigation}) => {
 
   const renderScene = SceneMap(
     Object.fromEntries(
-      cardsData.map(card => [
-        card.symbol,
-        () => routeComponent(card, showTextQRCode, refLayout, copiedHash),
+      cardsData.map(cardData => [
+        cardData.currency,
+        () => routeComponent(cardData, copiedHash, handleShowQR),
       ]),
     ),
   );
 
-  const routeComponent = (cardData, showTextQRCode, refLayout, copiedHash) => {
+  const routeComponent = (cardData, copiedHash, handleShowQR) => {
     const {
       amount: tempAmount,
       Wamount: tempWamount,
@@ -112,6 +109,7 @@ const WalletScreen = ({navigation}) => {
       address,
       displaystr,
       symbolimg,
+      currency,
     } = cardData;
 
     const Wamount = parseFloat(tempWamount).toFixed(2);
@@ -128,14 +126,14 @@ const WalletScreen = ({navigation}) => {
     return (
       <View
         style={[styles.card, {backgroundColor: walletColors[symbol]}]}
-        key={symbol}>
+        key={currency}>
         <View style={styles.wrapperPartTop}>
           <Text style={styles.cardName}>{displaystr}</Text>
           <View style={styles.wrapperShowQR}>
             <TouchableOpacity
               style={styles.wrapperDots}
               activeOpacity={0.6}
-              onPress={showTextQRCode}>
+              onPress={() => handleShowQR(cardData)}>
               <View style={styles.dot}></View>
               <View style={styles.dot}></View>
               <View style={styles.dot}></View>
@@ -182,7 +180,8 @@ const WalletScreen = ({navigation}) => {
     );
   };
 
-  const showTextQRCode = () => {
+  const handleShowQR = cardData => {
+    console.log(cardData);
     setIsShowTextQRCode(true);
   };
 
@@ -237,17 +236,16 @@ const WalletScreen = ({navigation}) => {
             renderScene={renderScene}
             onIndexChange={index => {
               setIndex(index);
-              setCurrentToken(routes[index].key);
+              setCurrentCurrency(routes[index].key);
             }}
             initialLayout={{width: layout.width}}
             renderTabBar={() => null}
-            lazy
             overScrollMode={'never'}
           />
         </View>
 
         <View style={styles.containerTable}>
-          <TableWalletCard currentToken={currentToken} />
+          <TableWalletCard currentCurrency={currentCurrency} />
         </View>
       </View>
 
@@ -257,6 +255,7 @@ const WalletScreen = ({navigation}) => {
             activeOpacity={0.9}
             style={styles.showQRButton(positionVerticalDots)}
             onPress={() => {
+              setIsShowTextQRCode(false);
               setIsShowQRCodeWallet(true);
             }}>
             <Text style={styles.textQRCode}>QR Code</Text>
@@ -273,8 +272,8 @@ const WalletScreen = ({navigation}) => {
           <View style={styles.showQRWallet}>
             <View style={styles.partTopShowQR}>
               <Text>XRUNe</Text>
-              <View>
-                <Text style={styles.hash}>
+              <View style={styles.wrapperCopiedHash}>
+                <Text style={styles.showQRHash}>
                   {'0x99e2773FC1607A113B3532dcD964969067E9f03f'.substring(
                     0,
                     20,
@@ -304,10 +303,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#f3f4f6',
   },
   containerCard: {
-    flex: 0.5,
+    flex: 1,
   },
   containerTable: {
-    flex: 1,
+    flex: 1.8,
   },
   titleWrapper: {
     paddingVertical: 9,
@@ -416,11 +415,11 @@ const styles = StyleSheet.create({
   hash: {
     color: 'white',
     fontFamily: 'Poppins-Regular',
-    fontSize: 13,
+    fontSize: 11,
   },
   logo: {
-    height: 48,
-    width: 48,
+    height: 40,
+    width: 40,
     marginTop: -28,
   },
   loading: {
@@ -450,5 +449,10 @@ const styles = StyleSheet.create({
   },
   partTopShowQR: {
     backgroundColor: '#343b58',
+  },
+  showQRHash: {
+    fontSize: 13,
+    fontFamily: 'Poppins-Regular',
+    color: '#fff',
   },
 });
