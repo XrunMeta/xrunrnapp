@@ -84,8 +84,8 @@ const AdvertiseScreen = () => {
 
           setCompletedAds(filteredAds);
 
-          fetchAdsData('datetime', getData.member);
-          // setStorageAds(jsonData.data);
+          // fetchAdsData('datetime', getData.member);
+          setStorageAds(jsonData.data);
         }
 
         setCompletedAdsLoading(false);
