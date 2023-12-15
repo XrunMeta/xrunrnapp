@@ -14,6 +14,7 @@ import ButtonBack from '../../components/ButtonBack';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {TabView, SceneMap} from 'react-native-tab-view';
 import TableWalletCard from '../../components/TableWallet';
+import {funcTransactionalInformation} from '../../../utils';
 
 const langData = require('../../../lang.json');
 
@@ -38,7 +39,7 @@ const WalletScreen = ({navigation}) => {
   const [addressWalletQR, setAddressWalletQR] = useState('');
 
   // State for send to component TableWallet => Total history, transfer history, Received details, Transition history
-  const [transactioalnHistory, setTransactioalnHistory] = useState([]);
+  const [transactionalInformation, setTransactionalInformation] = useState([]);
 
   useEffect(() => {
     // Get Language
@@ -81,9 +82,10 @@ const WalletScreen = ({navigation}) => {
             const tempCurrencies = result.data.map(
               tempResult => tempResult.currency,
             );
-            setCurrencies(tempCurrencies);
 
+            setCurrencies(tempCurrencies);
             setRoutes(result.data.map(card => ({key: card.currency})));
+            setIsLoading(false);
           })
           .catch(error => {
             Alert.alert('Failed', `${error}`, [
@@ -111,29 +113,13 @@ const WalletScreen = ({navigation}) => {
   }, [cardsData]);
 
   useEffect(() => {
-    currencies.forEach(currency => {
-      fetch(
-        `https://app.xrun.run/gateway.php?act=app4200-05&startwith=0&member=${member}&currency=${currency}&daysbefore=30`,
-        {
-          method: 'POST',
-        },
-      )
-        .then(response => response.json())
-        .then(result => {
-          setTransactioalnHistory(prevData => [...prevData, ...result.data]);
-          setIsLoading(false);
-        })
-        .catch(error => {
-          Alert.alert('Failed', `${error}`, [
-            {
-              text: 'OK',
-              onPress: () =>
-                console.log('Failed get data Transactional history'),
-            },
-          ]);
-          setIsLoading(false);
-        });
-    });
+    // * Function get data Total history, transfer history, received details and transition history
+    funcTransactionalInformation(
+      member,
+      currencies,
+      setTransactionalInformation,
+      Alert,
+    );
   }, [currencies, member]);
 
   const renderScene = SceneMap(
@@ -291,7 +277,7 @@ const WalletScreen = ({navigation}) => {
         <View style={styles.containerTable}>
           <TableWalletCard
             currentCurrency={currentCurrency}
-            transactionalHistory={transactioalnHistory}
+            transactionalInformation={transactionalInformation}
           />
         </View>
       </View>
@@ -352,6 +338,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f3f4f6',
   },
   containerCard: {
+    backgroundColor: 'red',
     height: 240,
   },
   containerTable: {

@@ -39,13 +39,13 @@ const renderTabBar = props => (
 );
 
 // Content TabView
-const TotalHistory = ({transactionalHistory}) => (
+const TotalHistory = ({totalHistory}) => (
   <ScrollView
     showsVerticalScrollIndicator={false}
     style={{paddingHorizontal: 28}}
     overScrollMode="never">
-    {transactionalHistory.length > 0 ? (
-      transactionalHistory.map((transactionHistory, index) => {
+    {totalHistory.length > 0 ? (
+      totalHistory.map((transactionHistory, index) => {
         const {datetime, time, amount, symbol, extracode, action} =
           transactionHistory;
 
@@ -70,7 +70,9 @@ const TotalHistory = ({transactionalHistory}) => (
                   ? '-'
                   : extracode == 9001
                   ? 'Withdrawal approval'
-                  : 'Withdrawal not approved'}
+                  : extracode == 9002
+                  ? 'Withdrawal not approved'
+                  : 'Transfer completed'}
               </Text>
             </View>
           </View>
@@ -82,128 +84,145 @@ const TotalHistory = ({transactionalHistory}) => (
   </ScrollView>
 );
 
-const TransferHistory = () => (
+const TransferHistory = ({transferHistory}) => (
   <ScrollView
     showsVerticalScrollIndicator={false}
     style={{paddingHorizontal: 28}}
     overScrollMode="never">
-    <View style={styles.wrapperItemTable}>
-      <View>
-        <Text style={styles.details}>Withdrawal details</Text>
-        <Text style={styles.date}>2023-11-22 11:39:04</Text>
-      </View>
-      <View>
-        <Text style={styles.price}>-0.6 XRUN</Text>
-        <Text style={styles.status}>Transfer completed</Text>
-      </View>
-    </View>
-    <View style={styles.wrapperItemTable}>
-      <View>
-        <Text style={styles.details}>Withdrawal details</Text>
-        <Text style={styles.date}>2023-11-22 11:39:04</Text>
-      </View>
-      <View>
-        <Text style={styles.price}>-0.6 XRUN</Text>
-        <Text style={styles.status}>Transfer completed</Text>
-      </View>
-    </View>
-    <View style={styles.wrapperItemTable}>
-      <View>
-        <Text style={styles.details}>Withdrawal details</Text>
-        <Text style={styles.date}>2023-11-22 11:39:04</Text>
-      </View>
-      <View>
-        <Text style={styles.price}>-0.6 XRUN</Text>
-        <Text style={styles.status}>Transfer completed</Text>
-      </View>
-    </View>
-    <View style={styles.wrapperItemTable}>
-      <View>
-        <Text style={styles.details}>Withdrawal details</Text>
-        <Text style={styles.date}>2023-11-22 11:39:04</Text>
-      </View>
-      <View>
-        <Text style={styles.price}>-0.6 XRUN</Text>
-        <Text style={styles.status}>Transfer completed</Text>
-      </View>
-    </View>
-    <View style={styles.wrapperItemTable}>
-      <View>
-        <Text style={styles.details}>Withdrawal details</Text>
-        <Text style={styles.date}>2023-11-22 11:39:04</Text>
-      </View>
-      <View>
-        <Text style={styles.price}>-0.6 XRUN</Text>
-        <Text style={styles.status}>Transfer completed</Text>
-      </View>
-    </View>
+    {transferHistory.length > 0 ? (
+      transferHistory.map((transactionHistory, index) => {
+        const {datetime, time, amount, symbol, extracode, action} =
+          transactionHistory;
+
+        return (
+          <View style={styles.wrapperItemTable} key={index}>
+            <View>
+              <Text style={styles.details}>
+                {action == 3304
+                  ? 'Completed'
+                  : action == 3651
+                  ? 'Withdrawal details'
+                  : 'Development test'}
+              </Text>
+              <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
+            </View>
+            <View>
+              <Text style={styles.price}>
+                {amount} {symbol}
+              </Text>
+              <Text style={styles.status}>
+                {extracode == 9416
+                  ? '-'
+                  : extracode == 9001
+                  ? 'Withdrawal approval'
+                  : extracode == 9002
+                  ? 'Withdrawal not approved'
+                  : 'Transfer completed'}
+              </Text>
+            </View>
+          </View>
+        );
+      })
+    ) : (
+      <Text style={styles.textNotFoundHistory}>History not found</Text>
+    )}
   </ScrollView>
 );
 
-const ReceivedDetails = () => (
+const ReceivedDetails = ({receivedDetails}) => (
   <ScrollView
     showsVerticalScrollIndicator={false}
     style={{paddingHorizontal: 28}}
     overScrollMode="never">
-    <View style={styles.wrapperItemTable}>
-      <View>
-        <Text style={styles.details}>Completed</Text>
-        <Text style={styles.date}>2023-11-22 11:39:04</Text>
-      </View>
-      <View>
-        <Text style={styles.price}>0.048 XRUN</Text>
-        <Text style={styles.status}>Transfer Completed</Text>
-      </View>
-    </View>
-    <View style={styles.wrapperItemTable}>
-      <View>
-        <Text style={styles.details}>Completed</Text>
-        <Text style={styles.date}>2023-11-22 11:39:04</Text>
-      </View>
-      <View>
-        <Text style={styles.price}>0.048 XRUN</Text>
-        <Text style={styles.status}>Transfer Completed</Text>
-      </View>
-    </View>
-    <View style={styles.wrapperItemTable}>
-      <View>
-        <Text style={styles.details}>Completed</Text>
-        <Text style={styles.date}>2023-11-22 11:39:04</Text>
-      </View>
-      <View>
-        <Text style={styles.price}>0.048 XRUN</Text>
-        <Text style={styles.status}>Transfer Completed</Text>
-      </View>
-    </View>
-    <View style={styles.wrapperItemTable}>
-      <View>
-        <Text style={styles.details}>Completed</Text>
-        <Text style={styles.date}>2023-11-22 11:39:04</Text>
-      </View>
-      <View>
-        <Text style={styles.price}>0.048 XRUN</Text>
-        <Text style={styles.status}>Transfer Completed</Text>
-      </View>
-    </View>
-    <View style={styles.wrapperItemTable}>
-      <View>
-        <Text style={styles.details}>Completed</Text>
-        <Text style={styles.date}>2023-11-22 11:39:04</Text>
-      </View>
-      <View>
-        <Text style={styles.price}>0.048 XRUN</Text>
-        <Text style={styles.status}>Transfer Completed</Text>
-      </View>
-    </View>
+    {receivedDetails.length > 0 ? (
+      receivedDetails.map((transactionHistory, index) => {
+        const {datetime, time, amount, symbol, extracode, action} =
+          transactionHistory;
+
+        return (
+          <View style={styles.wrapperItemTable} key={index}>
+            <View>
+              <Text style={styles.details}>
+                {action == 3304
+                  ? 'Completed'
+                  : action == 3651
+                  ? 'Withdrawal details'
+                  : 'Development test'}
+              </Text>
+              <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
+            </View>
+            <View>
+              <Text style={styles.price}>
+                {amount} {symbol}
+              </Text>
+              <Text style={styles.status}>
+                {extracode == 9416
+                  ? '-'
+                  : extracode == 9001
+                  ? 'Withdrawal approval'
+                  : extracode == 9002
+                  ? 'Withdrawal not approved'
+                  : 'Transfer completed'}
+              </Text>
+            </View>
+          </View>
+        );
+      })
+    ) : (
+      <Text style={styles.textNotFoundHistory}>History not found</Text>
+    )}
   </ScrollView>
 );
 
-const TransitionHistory = () => <View style={{flex: 1}} />;
+const TransitionHistory = ({transitionHistory}) => (
+  <ScrollView
+    showsVerticalScrollIndicator={false}
+    style={{paddingHorizontal: 28}}
+    overScrollMode="never">
+    {transitionHistory.length > 0 ? (
+      transitionHistory.map((transactionHistory, index) => {
+        const {datetime, time, amount, symbol, extracode, action} =
+          transactionHistory;
 
-export const TableWalletCard = ({currentCurrency, transactionalHistory}) => {
+        return (
+          <View style={styles.wrapperItemTable} key={index}>
+            <View>
+              <Text style={styles.details}>
+                {action == 3304
+                  ? 'Completed'
+                  : action == 3651
+                  ? 'Withdrawal details'
+                  : 'Development test'}
+              </Text>
+              <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
+            </View>
+            <View>
+              <Text style={styles.price}>
+                {amount} {symbol}
+              </Text>
+              <Text style={styles.status}>
+                {extracode == 9416
+                  ? '-'
+                  : extracode == 9001
+                  ? 'Withdrawal approval'
+                  : extracode == 9002
+                  ? 'Withdrawal not approved'
+                  : 'Transfer completed'}
+              </Text>
+            </View>
+          </View>
+        );
+      })
+    ) : (
+      <Text style={styles.textNotFoundHistory}>History not found</Text>
+    )}
+  </ScrollView>
+);
+
+const TableWalletCard = ({currentCurrency, transactionalInformation}) => {
   const navigation = useNavigation();
-  const [currentDaysTransactional, setCurrentDaysTransactional] = useState(7);
   const layout = useWindowDimensions();
+  const [currentDaysTransactional, setCurrentDaysTransactional] = useState(7);
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     {key: 'totalHistory', title: 'Total History'},
@@ -212,35 +231,65 @@ export const TableWalletCard = ({currentCurrency, transactionalHistory}) => {
     {key: 'transitionHistory', title: 'Transition History'},
   ]);
 
+  const {totalHistory, transferHistory, receivedDetails, transitionHistory} =
+    transactionalInformation;
+
+  // Check if data transactionalInformation still empty / not
+  if (
+    !transactionalInformation ||
+    !totalHistory ||
+    !transferHistory ||
+    !receivedDetails ||
+    !transitionHistory
+  ) {
+    console.log('Nunggu dulu yak bang data nya sampe');
+    return;
+  }
+
   const currentDate = new Date();
 
-  const filterTransactionalByCurrency = transactionalHistory
-    .filter(
-      transactionalByCurrency =>
-        transactionalByCurrency.currency == currentCurrency,
-    )
-    .filter(transaction => {
-      const transactionDateTime = new Date(
-        `${transaction.datetime}T${transaction.time}`,
-      );
+  const filterTransactionalByCurrency = data => {
+    const dataTransactional = data
+      .filter(
+        transactionalByCurrency =>
+          transactionalByCurrency.currency == currentCurrency,
+      )
+      .filter(transaction => {
+        const transactionDateTime = new Date(
+          `${transaction.datetime}T${transaction.time}`,
+        );
 
-      // Hitung perbedaan waktu dalam milidetik
-      const timeDifference = currentDate - transactionDateTime;
+        // Hitung perbedaan waktu dalam milidetik
+        const timeDifference = currentDate - transactionDateTime;
 
-      // Konversi perbedaan waktu dari milidetik ke hari
-      const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
+        // Konversi perbedaan waktu dari milidetik ke hari
+        const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
 
-      // Return true jika transaksi terjadi dalam 7 hari terakhir
-      return daysDifference <= currentDaysTransactional;
-    });
+        // Return true jika transaksi terjadi dalam 7 hari terakhir
+        return daysDifference <= currentDaysTransactional;
+      });
+
+    return dataTransactional;
+  };
+
+  // Filter by currency
+  const filterTotalHistory = filterTransactionalByCurrency(totalHistory);
+  const filterTransferHistory = filterTransactionalByCurrency(transferHistory);
+  const filterReceivedDetails = filterTransactionalByCurrency(receivedDetails);
+  const filterTransitionHistory =
+    filterTransactionalByCurrency(transitionHistory);
 
   const renderScene = SceneMap({
-    totalHistory: () => (
-      <TotalHistory transactionalHistory={filterTransactionalByCurrency} />
+    totalHistory: () => <TotalHistory totalHistory={filterTotalHistory} />,
+    transferHistory: () => (
+      <TransferHistory transferHistory={filterTransferHistory} />
     ),
-    transferHistory: TransferHistory,
-    receivedDetails: ReceivedDetails,
-    transitionHistory: TransitionHistory,
+    receivedDetails: () => (
+      <ReceivedDetails receivedDetails={filterReceivedDetails} />
+    ),
+    transitionHistory: () => (
+      <TransitionHistory transitionHistory={filterTransitionHistory} />
+    ),
   });
 
   const currentDaysBackground = '#fedc00';
