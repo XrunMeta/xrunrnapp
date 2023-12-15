@@ -625,7 +625,8 @@ const AdvertiseScreen = () => {
               }}>
               <Text
                 style={{
-                  color: '#ffdc04',
+                  // color: '#ffdc04',
+                  color: 'orange',
                   fontFamily: 'Poppins-SemiBold',
                   fontSize: 13,
                 }}>
