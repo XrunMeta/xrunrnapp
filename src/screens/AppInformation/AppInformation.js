@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const langData = require('../../../lang.json');
 
 const AppInformation = () => {
-  const [version, setVersion] = useState('0');
+  const [version, setVersion] = useState('');
   const [lang, setLang] = useState('');
 
   const navigation = useNavigation();
