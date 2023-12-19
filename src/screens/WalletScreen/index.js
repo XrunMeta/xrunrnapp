@@ -15,6 +15,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import {TabView, SceneMap} from 'react-native-tab-view';
 import TableWalletCard from '../../components/TableWallet';
 import {funcTransactionalInformation} from '../../../utils';
+import ShowQRWallet from '../../components/ShowQRWallet';
 
 const langData = require('../../../lang.json');
 
@@ -36,7 +37,7 @@ const WalletScreen = ({navigation}) => {
 
   // State for show QR
   const [isShowQRCodeWallet, setIsShowQRCodeWallet] = useState(false);
-  const [addressWalletQR, setAddressWalletQR] = useState('');
+  const [cardDataQR, setCardDataQR] = useState([]);
 
   // State for send to component TableWallet => Total history, transfer history, Received details, Transition history
   const [transactionalInformation, setTransactionalInformation] = useState([]);
@@ -88,10 +89,10 @@ const WalletScreen = ({navigation}) => {
             setIsLoading(false);
           })
           .catch(error => {
-            Alert.alert('Failed', `${error}`, [
+            Alert.alert('Failed', 'Get your wallet, please try again later', [
               {
                 text: 'OK',
-                onPress: () => console.log('Failed get data card'),
+                onPress: () => console.log('Failed get wallet data: ', error),
               },
             ]);
             setIsLoading(false);
@@ -211,7 +212,7 @@ const WalletScreen = ({navigation}) => {
   };
 
   const handleShowQR = cardData => {
-    console.log(cardData);
+    setCardDataQR(cardData);
     setIsShowTextQRCode(true);
   };
 
@@ -303,29 +304,10 @@ const WalletScreen = ({navigation}) => {
 
       {/* Show/Hide popup QR */}
       {isShowQRCodeWallet && (
-        <View style={styles.wrapperShowQRWallet}>
-          <View style={styles.showQRWallet}>
-            <View style={styles.partTopShowQR}>
-              <Text>XRUNe</Text>
-              <View style={styles.wrapperCopiedHash}>
-                <Text style={styles.showQRHash}>
-                  {'0x99e2773FC1607A113B3532dcD964969067E9f03f'.substring(
-                    0,
-                    20,
-                  ) + '...'}
-                </Text>
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  onPress={() => copiedHash(address)}>
-                  <Image
-                    source={require('../../../assets/images/clipboard.png')}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View></View>
-          </View>
-        </View>
+        <ShowQRWallet
+          cardDataQR={cardDataQR}
+          setIsShowQRCodeWallet={setIsShowQRCodeWallet}
+        />
       )}
     </View>
   );
@@ -338,7 +320,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f3f4f6',
   },
   containerCard: {
-    backgroundColor: 'red',
     height: 240,
   },
   containerTable: {
@@ -468,27 +449,5 @@ const styles = StyleSheet.create({
     zIndex: 999,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  wrapperShowQRWallet: {
-    position: 'absolute',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    zIndex: 2,
-  },
-  showQRWallet: {
-    backgroundColor: '#fff',
-  },
-  partTopShowQR: {
-    backgroundColor: '#343b58',
-  },
-  showQRHash: {
-    fontSize: 13,
-    fontFamily: 'Poppins-Regular',
-    color: '#fff',
   },
 });
