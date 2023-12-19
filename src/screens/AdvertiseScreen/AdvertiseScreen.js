@@ -55,6 +55,7 @@ const AdvertiseScreen = () => {
     // Get Language
     const getLanguage = async () => {
       try {
+        console.log('Dapetin API di awal nih bray');
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
         const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
         const language = langData[selectedLanguage];
@@ -105,6 +106,7 @@ const AdvertiseScreen = () => {
   const storageKeyExtractor = (item, index) => item.transaction.toString();
 
   const fetchAdsData = async (orderField, member) => {
+    console.log('Call API nih bray');
     try {
       const response = await fetch(
         `https://app.xrun.run/gateway.php?act=app5010-01&orderField=${orderField}&member=${member}`,
@@ -145,8 +147,12 @@ const AdvertiseScreen = () => {
     }
   };
 
-  const onStorage = txid => {
-    navigation.navigate('ShowAd', {txid: txid});
+  const onStorage = (memberID, advertisement, coin) => {
+    navigation.replace('ShowAd', {
+      member: memberID,
+      advertisement: advertisement,
+      coin: coin,
+    });
   };
 
   const completedRenderItem = ({item}) => (
@@ -291,7 +297,7 @@ const AdvertiseScreen = () => {
       onPress={() =>
         isDelete
           ? toggleCheckbox(item.transaction)
-          : onStorage(item.transaction)
+          : onStorage(userData.member, item.advertisement, item.coin)
       }
       style={styles.storageList}
       activeOpacity={0.9}
