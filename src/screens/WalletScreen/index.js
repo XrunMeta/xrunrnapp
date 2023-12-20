@@ -24,6 +24,7 @@ const WalletScreen = ({navigation}) => {
   const layout = useWindowDimensions();
   const [member, setMember] = useState(null);
   const [currentCurrency, setCurrentCurrency] = useState('1');
+  const [dataWallet, setDataWallet] = useState({});
   const [index, setIndex] = useState(0);
   const [cardsData, setCardsData] = useState([]);
   const [routes, setRoutes] = useState([]);
@@ -111,7 +112,18 @@ const WalletScreen = ({navigation}) => {
         setPositionVerticalDots(pageY);
       });
     }
+
+    // Get data current currency/wallet
+    const filterDataWallet = cardsData.filter(wallet => wallet.currency == 1);
+    setDataWallet(filterDataWallet[0]);
   }, [cardsData]);
+
+  useEffect(() => {
+    const filterDataWallet = cardsData.filter(
+      wallet => wallet.currency == currentCurrency,
+    );
+    setDataWallet(filterDataWallet[0]);
+  }, [currentCurrency]);
 
   useEffect(() => {
     // * Function get data Total history, transfer history, received details and transition history
@@ -277,6 +289,7 @@ const WalletScreen = ({navigation}) => {
 
         <View style={styles.containerTable}>
           <TableWalletCard
+            dataWallet={dataWallet}
             currentCurrency={currentCurrency}
             transactionalInformation={transactionalInformation}
           />

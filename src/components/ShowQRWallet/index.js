@@ -6,8 +6,8 @@ import {
   TouchableOpacity,
   Image,
   Alert,
-  PermissionsAndroid,
   Platform,
+  PermissionsAndroid,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -15,13 +15,16 @@ import Share from 'react-native-share';
 import RNFetchBlob from 'rn-fetch-blob';
 
 const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet}) => {
-  const [donwloadDisable, setDownloadDisable] = useState(false);
+  const [downloadDisable, setDownloadDisable] = useState(true);
+  const [shareDisable, setShareDisable] = useState(true);
   const apiQRCode = 'https://api.qrserver.com/v1/create-qr-code/';
   const [qrCodeData, setQrCodeData] = useState(null);
+
   // Animated notification in QR
   const [fadeAnim] = useState(new Animated.Value(0));
 
   useEffect(() => {
+    // Convert image qr code to base64
     const fetchData = async () => {
       try {
         const response = await fetch(
@@ -30,6 +33,8 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet}) => {
         const data = await response.blob();
         const base64Data = await convertBlobToBase64(data);
         setQrCodeData(base64Data);
+        setDownloadDisable(false);
+        setShareDisable(false);
       } catch (error) {
         console.error('Error fetching QR code data:', error);
       }
@@ -99,9 +104,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet}) => {
 
     // Function to check the platform
     // If Platform is Android then check for permissions.
-    if (Platform.OS === 'ios') {
-      downloadFile();
-    } else {
+    if (Platform.OS === 'android' && Platform.Version < 33) {
       try {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
@@ -122,6 +125,8 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet}) => {
         // To handle permission related exception
         console.log('++++' + err);
       }
+    } else {
+      downloadFile();
     }
   };
 
@@ -236,10 +241,11 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet}) => {
             <TouchableOpacity
               activeOpacity={0.7}
               style={styles.wrapperActionIconQR}
+              disabled={shareDisable ? true : false}
               onPress={() => shareQRWallet(cardDataQR.address)}>
               <Image
                 source={require('../../../assets/images/icon_share.png')}
-                style={styles.iconAction}
+                style={[styles.iconAction, shareDisable && {opacity: 0.2}]}
               />
             </TouchableOpacity>
 
@@ -248,10 +254,10 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet}) => {
               activeOpacity={0.7}
               style={styles.wrapperActionIconQR}
               onPress={checkPermission}
-              disabled={donwloadDisable ? true : false}>
+              disabled={downloadDisable ? true : false}>
               <Image
                 source={require('../../../assets/images/download-2-line.png')}
-                style={styles.iconAction}
+                style={[styles.iconAction, downloadDisable && {opacity: 0.2}]}
               />
             </TouchableOpacity>
           </View>
