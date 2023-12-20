@@ -40,7 +40,7 @@ const SettingScreen = () => {
   };
 
   const onDevice = () => {
-    navigation.navigate('CommonProblem');
+    // navigation.navigate('CommonProblem');
   };
 
   const onLogout = () => {

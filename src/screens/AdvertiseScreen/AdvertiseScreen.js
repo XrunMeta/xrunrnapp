@@ -85,8 +85,8 @@ const AdvertiseScreen = () => {
 
           setCompletedAds(filteredAds);
 
-          // fetchAdsData('datetime', getData.member);
-          setStorageAds(jsonData.data);
+          fetchAdsData('datetime', getData.member);
+          // setStorageAds(jsonData.data);
         }
 
         setCompletedAdsLoading(false);
@@ -546,6 +546,10 @@ const AdvertiseScreen = () => {
           <Text style={[styles.normalText, {color: 'grey'}]}>
             Loading data, please wait...
           </Text>
+        </View>
+      ) : completedAds.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>No data available</Text>
         </View>
       ) : (
         <FlatList
