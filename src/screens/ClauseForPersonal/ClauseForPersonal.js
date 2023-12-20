@@ -7,7 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const langData = require('../../../lang.json');
 
 const ClauseForPersonal = () => {
-  const [text, setText] = useState('0');
+  const [text, setText] = useState('');
   const [lang, setLang] = useState('');
 
   const navigation = useNavigation();
@@ -80,6 +80,7 @@ const ClauseForPersonal = () => {
           paddingHorizontal: 20,
           backgroundColor: 'white',
           marginTop: 10,
+          width: '100%',
         }}>
         <Text
           style={{
