@@ -219,10 +219,15 @@ const TransitionHistory = ({transitionHistory}) => (
   </ScrollView>
 );
 
-const TableWalletCard = ({currentCurrency, transactionalInformation}) => {
+const TableWalletCard = ({
+  dataWallet,
+  currentCurrency,
+  transactionalInformation,
+}) => {
   const navigation = useNavigation();
   const layout = useWindowDimensions();
   const [currentDaysTransactional, setCurrentDaysTransactional] = useState(7);
+
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     {key: 'totalHistory', title: 'Total History'},
@@ -315,7 +320,7 @@ const TableWalletCard = ({currentCurrency, transactionalInformation}) => {
               style={styles.contentTextHead}
               onPress={() =>
                 navigation.navigate('SendWallet', {
-                  currentCurrency,
+                  dataWallet,
                 })
               }>
               <Text style={styles.textHead}>SEND</Text>
