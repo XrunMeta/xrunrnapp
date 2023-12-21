@@ -5,6 +5,8 @@ import {
   TouchableOpacity,
   Image,
   KeyboardAvoidingView,
+  Alert,
+  ScrollView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
@@ -39,14 +41,32 @@ const SendWalletScreen = ({navigation, route}) => {
     };
 
     getLanguage();
-  });
+  }, []);
+
+  useEffect(() => {
+    if (amount !== '' && address !== '') {
+      setIconNextIsDisabled(false);
+    } else {
+      setIconNextIsDisabled(true);
+    }
+  }, [amount, address]);
 
   const onBack = () => {
     navigation.navigate('WalletHome');
   };
 
+  const onSend = () => {
+    if (amount === '') {
+      Alert.alert('Warning', 'Amount jangan kosong bang');
+    } else if (address === '') {
+      Alert.alert('Warning', 'Address jangan kosong bang');
+    } else {
+      setIconNextIsDisabled(false);
+    }
+  };
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={{flexDirection: 'row'}}>
         <View style={{position: 'absolute', zIndex: 1}}>
           <ButtonBack onClick={onBack} />
@@ -65,7 +85,12 @@ const SendWalletScreen = ({navigation, route}) => {
           <Text style={styles.currencyName}>XRUN</Text>
           <View style={styles.partScanQR}>
             <Text style={styles.balance}>Balance: 1.869 XRUN</Text>
-            <View style={styles.scanQRCode}></View>
+            <TouchableOpacity style={styles.scanQRCode} activeOpacity={0.7}>
+              <Image
+                source={require('../../../assets/images/scanqr.png')}
+                style={{width: 36, height: 36}}
+              />
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -119,7 +144,7 @@ const SendWalletScreen = ({navigation, route}) => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{flex: 1}}>
         <TouchableOpacity
-          onPress={() => console.log('ok')}
+          onPress={onSend}
           style={styles.button}
           activeOpacity={0.6}>
           <Image
@@ -133,7 +158,7 @@ const SendWalletScreen = ({navigation, route}) => {
           />
         </TouchableOpacity>
       </KeyboardAvoidingView>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -178,20 +203,27 @@ const styles = StyleSheet.create({
   partBottom: {
     paddingHorizontal: 28,
     paddingTop: 24,
-    paddingBottom: 100,
+    paddingBottom: 80,
   },
   button: {
     flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    flexDirection: 'column-reverse',
     height: 100,
     marginHorizontal: 24,
-    marginTop: 40,
-    justifyContent: 'center',
+    marginTop: 30,
+    marginBottom: 10,
+    justifyContent: 'flex-end',
   },
   buttonImage: {
     height: 100,
     width: 100,
+  },
+  partScanQR: {
+    flexDirection: 'row',
+    gap: 14,
+    alignItems: 'center',
+  },
+  scanQRCode: {
+    backgroundColor: '#fff',
+    width: 36,
   },
 });
