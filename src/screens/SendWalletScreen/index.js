@@ -7,12 +7,18 @@ import {
   KeyboardAvoidingView,
   Alert,
   ScrollView,
+  PermissionsAndroid,
+  Linking,
+  Animated,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
+import QRCodeScanner from 'react-native-qrcode-scanner';
+import {RNCamera} from 'react-native-camera';
 import ButtonBack from '../../components/ButtonBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInputWallet from '../../components/CustomInputWallet';
 import CustomDropdownWallet from '../../components/CustomDropdownWallet';
+
 const langData = require('../../../lang.json');
 
 const SendWalletScreen = ({navigation, route}) => {
@@ -22,6 +28,11 @@ const SendWalletScreen = ({navigation, route}) => {
   const [address, setAddress] = useState('');
   const {dataWallet} = route.params;
   const [selectedExchange, setSelectedExchange] = useState('');
+  const [isVisibleReadQR, setIsVisibleReadQR] = useState(false);
+
+  // Animated notification in QR
+  const [fadeAnim] = useState(new Animated.Value(0));
+  const [zIndexAnim, setZIndexAnim] = useState(-1);
 
   useEffect(() => {
     // Get Language
@@ -41,6 +52,27 @@ const SendWalletScreen = ({navigation, route}) => {
     };
 
     getLanguage();
+  }, []);
+
+  useEffect(() => {
+    const requestCameraPermission = async () => {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+        );
+
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log('Camera permission granted');
+        } else {
+          Linking.openSettings();
+          console.log('Camera permission not granted');
+        }
+      } catch (error) {
+        console.error('Failed to request camera permission:', error);
+      }
+    };
+
+    requestCameraPermission();
   }, []);
 
   useEffect(() => {
@@ -65,6 +97,42 @@ const SendWalletScreen = ({navigation, route}) => {
     }
   };
 
+  const onQRCodeScan = () => {
+    setIsVisibleReadQR(true);
+  };
+
+  const handleQRCodeRead = ({data}) => {
+    setAddress(data);
+    fadeIn();
+    setZIndexAnim(1);
+    setIsVisibleReadQR(false);
+  };
+
+  // Animation
+  const fadeIn = () => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      fadeOut();
+    });
+  };
+
+  const fadeOut = () => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 6000,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      setZIndexAnim(-1);
+    });
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={{flexDirection: 'row'}}>
@@ -82,13 +150,18 @@ const SendWalletScreen = ({navigation, route}) => {
 
       <View style={{height: '70%', backgroundColor: '#fff'}}>
         <View style={styles.partTop}>
-          <Text style={styles.currencyName}>XRUN</Text>
+          <Text style={styles.currencyName}>{dataWallet.symbol}</Text>
           <View style={styles.partScanQR}>
-            <Text style={styles.balance}>Balance: 1.869 XRUN</Text>
-            <TouchableOpacity style={styles.scanQRCode} activeOpacity={0.7}>
+            <Text style={styles.balance}>
+              Balance: {parseFloat(dataWallet.Wamount)} {dataWallet.symbol}
+            </Text>
+            <TouchableOpacity
+              style={styles.scanQRCode}
+              activeOpacity={0.7}
+              onPress={onQRCodeScan}>
               <Image
                 source={require('../../../assets/images/scanqr.png')}
-                style={{width: 36, height: 36}}
+                style={{width: 30, height: 30}}
               />
             </TouchableOpacity>
           </View>
@@ -158,6 +231,62 @@ const SendWalletScreen = ({navigation, route}) => {
           />
         </TouchableOpacity>
       </KeyboardAvoidingView>
+
+      {/* Scan QR code */}
+      {isVisibleReadQR && (
+        <QRCodeScanner
+          containerStyle={{
+            position: 'absolute',
+            flex: 1,
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 20,
+            backgroundColor: '#fff',
+          }}
+          showMarker={true}
+          onRead={handleQRCodeRead}
+          flashMode={RNCamera.Constants.FlashMode.off}
+          bottomContent={
+            <View style={styles.wrapperTextScanQR}>
+              <Text style={styles.textScanQR}>Scanning QR Code</Text>
+            </View>
+          }
+        />
+      )}
+
+      <Animated.View
+        style={{
+          alignItems: 'center',
+          position: 'absolute',
+          bottom: 40,
+          right: 0,
+          left: 0,
+          zIndex: zIndexAnim,
+          opacity: fadeAnim,
+        }}>
+        <View
+          style={{
+            backgroundColor: 'rgb(65, 65, 65)',
+            paddingHorizontal: 20,
+            paddingVertical: 10,
+            borderRadius: 24,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 10,
+            maxWidth: 300,
+          }}>
+          <Image
+            source={require('../../../assets/images/xrun_round.png')}
+            style={{width: 28, height: 28}}
+          />
+          <Text style={styles.notificationTextInQR}>
+            Scanned: 0x30a9B3fcFCc0aD66B70f2d473b39a35252002d89
+          </Text>
+        </View>
+      </Animated.View>
     </ScrollView>
   );
 };
@@ -199,6 +328,7 @@ const styles = StyleSheet.create({
   balance: {
     color: '#fff',
     fontFamily: 'Poppins-Regular',
+    fontSize: 12,
   },
   partBottom: {
     paddingHorizontal: 28,
@@ -207,23 +337,37 @@ const styles = StyleSheet.create({
   },
   button: {
     flexDirection: 'row',
-    height: 100,
-    marginHorizontal: 24,
+    marginLeft: 'auto',
+    marginRight: 24,
     marginTop: 30,
     marginBottom: 10,
     justifyContent: 'flex-end',
   },
   buttonImage: {
-    height: 100,
-    width: 100,
+    height: 95,
+    width: 95,
   },
   partScanQR: {
     flexDirection: 'row',
-    gap: 14,
+    gap: 10,
     alignItems: 'center',
   },
   scanQRCode: {
     backgroundColor: '#fff',
-    width: 36,
+    width: 30,
+  },
+  wrapperTextScanQR: {
+    position: 'absolute',
+    bottom: 40,
+  },
+  textScanQR: {
+    color: '#555',
+    fontFamily: 'Poppins-Regular',
+  },
+  notificationTextInQR: {
+    color: '#fff',
+    fontFamily: 'Poppins-Regular',
+    margin: 0,
+    maxWidth: 240,
   },
 });
