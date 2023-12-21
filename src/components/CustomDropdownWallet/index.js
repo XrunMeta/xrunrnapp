@@ -57,17 +57,15 @@ const styles = StyleSheet.create({
   },
   label: {
     color: '#505050',
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: 'Poppins-Regular',
   },
   containerInput: {
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
-    fontSize: 152,
   },
   input: {
     fontFamily: 'Poppins-Regular',
-    fontSize: 16,
     color: '#555',
     backgroundColor: '#fff',
   },

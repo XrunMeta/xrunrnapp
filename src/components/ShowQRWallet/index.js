@@ -109,9 +109,9 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet}) => {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
           {
-            title: 'Storage Permission Required',
-            message:
-              'Application needs access to your storage to download File',
+            // title: 'Storage Permission Required',
+            // message:
+            //   'Application needs access to your storage to download File',
           },
         );
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
@@ -266,26 +266,33 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet}) => {
 
       <Animated.View
         style={{
+          alignItems: 'center',
           opacity: fadeAnim,
           position: 'absolute',
           bottom: 40,
-          backgroundColor: 'rgb(65, 65, 65)',
-          paddingHorizontal: 20,
-          paddingVertical: 10,
-          borderRadius: 24,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 10,
-          maxWidth: 300,
+          right: 0,
+          left: 0,
         }}>
-        <Image
-          source={require('../../../assets/images/xrun_round.png')}
-          style={{width: 28, height: 28}}
-        />
-        <Text style={styles.notificationTextInQR}>
-          The wallet address has been copied
-        </Text>
+        <View
+          style={{
+            backgroundColor: 'rgb(65, 65, 65)',
+            paddingHorizontal: 20,
+            paddingVertical: 10,
+            borderRadius: 24,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 10,
+            maxWidth: 300,
+          }}>
+          <Image
+            source={require('../../../assets/images/xrun_round.png')}
+            style={{width: 28, height: 28}}
+          />
+          <Text style={styles.notificationTextInQR}>
+            The wallet address has been copied
+          </Text>
+        </View>
       </Animated.View>
     </View>
   );
@@ -386,7 +393,7 @@ const styles = StyleSheet.create({
   notificationTextInQR: {
     color: '#fff',
     fontFamily: 'Poppins-Regular',
-    fontSize: 16,
     margin: 0,
+    maxWidth: 240,
   },
 });

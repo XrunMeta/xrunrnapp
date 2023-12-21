@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   },
   label: {
     color: '#505050',
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: 'Poppins-Regular',
   },
   input: {
@@ -33,6 +33,5 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ddd',
     fontFamily: 'Poppins-Regular',
     color: '#555',
-    fontSize: 15,
   },
 });
