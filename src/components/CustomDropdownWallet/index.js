@@ -16,6 +16,10 @@ const CustomDropdownWallet = ({
     'KuCoin',
     'DigiFinex',
     'TokoCrypto',
+    'FTX',
+    'CoinBase',
+    'Houbi',
+    'Other Market',
   ];
 
   return (
@@ -25,8 +29,9 @@ const CustomDropdownWallet = ({
         <Picker
           selectedValue={selectedExchange}
           onValueChange={itemValue => onSelectedExchange(itemValue)}
-          style={styles.input}
-          dropdownIconColor={'#292D32'}>
+          dropdownIconColor={'#555'}
+          mode="dropdown"
+          selectionColor={'#555'}>
           {dropdownProducts.map((dropdownProduct, index) => {
             const value = dropdownProduct.toLowerCase().split(' ').join('-');
 
@@ -62,7 +67,8 @@ const styles = StyleSheet.create({
   },
   input: {
     fontFamily: 'Poppins-Regular',
-    color: '#555',
     fontSize: 16,
+    color: '#555',
+    backgroundColor: '#fff',
   },
 });
