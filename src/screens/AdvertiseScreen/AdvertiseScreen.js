@@ -18,6 +18,7 @@ import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import jsonData from '../../../testAds';
+import {URL_API} from '../../../utils';
 
 const langData = require('../../../lang.json');
 
@@ -68,7 +69,7 @@ const AdvertiseScreen = () => {
         setUserData(getData);
 
         const response = await fetch(
-          `https://app.xrun.run/gateway.php?act=app5010-02&member=${getData.member}`,
+          `${URL_API}&act=app5010-02&member=${getData.member}`,
         );
         const data = await response.json();
 
@@ -109,7 +110,7 @@ const AdvertiseScreen = () => {
     console.log('Call API nih bray');
     try {
       const response = await fetch(
-        `https://app.xrun.run/gateway.php?act=app5010-01&orderField=${orderField}&member=${member}`,
+        `${URL_API}&act=app5010-01&orderField=${orderField}&member=${member}`,
       );
       const data = await response.json();
 
@@ -204,7 +205,7 @@ const AdvertiseScreen = () => {
           onPress: async () => {
             try {
               const response = await fetch(
-                `https://app.xrun.run/gateway.php?act=app5010-03-deleteall&member=${userData.member}`,
+                `${URL_API}&act=app5010-03-deleteall&member=${userData.member}`,
               );
               const data = await response.json();
 
@@ -255,7 +256,7 @@ const AdvertiseScreen = () => {
 
     try {
       const response = await fetch(
-        `https://app.xrun.run/gateway.php?act=app5010-03-delete&transaction=${selectedItems}`,
+        `${URL_API}&act=app5010-03-delete&transaction=${selectedItems}`,
       );
       const data = await response.json();
 

@@ -11,6 +11,7 @@ import {
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {URL_API} from '../../../utils';
 
 const langData = require('../../../lang.json');
 
@@ -35,7 +36,7 @@ const OneProblemScreen = () => {
 
         // Get List of 1:1 Inquiry
         const response = await fetch(
-          `https://app.xrun.run/gateway.php?act=app7330-01&member=${astorJsonData.member}`,
+          `${URL_API}&act=app7330-01&member=${astorJsonData.member}`,
         );
         const data = await response.json();
         setRecommendations(data.data);

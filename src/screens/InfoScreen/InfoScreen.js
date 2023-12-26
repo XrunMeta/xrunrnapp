@@ -16,6 +16,7 @@ import ButtonList from '../../components/ButtonList/ButtonList';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
+import {URL_API} from '../../../utils';
 
 // Get Language Data
 const langData = require('../../../lang.json');
@@ -39,7 +40,7 @@ const InfoScreen = () => {
         const userEmail = await AsyncStorage.getItem('userEmail');
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
         const response = await fetch(
-          `https://app.xrun.run/gateway.php?act=login-04-email&email=${userEmail}`,
+          `${URL_API}&act=login-04-email&email=${userEmail}`,
         );
         const data = await response.json();
 
@@ -154,7 +155,7 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
   const onRecommend = async () => {
     // Check is Member has recommended
     const response = await fetch(
-      `https://app.xrun.run/gateway.php?act=app7420-03&member=${userDetails.member}`,
+      `${URL_API}&act=app7420-03&member=${userDetails.member}`,
     );
     const data = await response.json();
 

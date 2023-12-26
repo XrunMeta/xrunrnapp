@@ -1,7 +1,9 @@
+import {URL_API} from '../../../utils';
+
 // Get Coin as Lat Lng
 export const fetchMarkerData = async (latitude, longitude, member) => {
   try {
-    const apiUrl = `https://app.xrun.run/gateway.php?act=coinmapping&member=${member}&lat=${latitude}&lng=${longitude}&limit=30`;
+    const apiUrl = `${URL_API}&act=coinmapping&member=${member}&lat=${latitude}&lng=${longitude}&limit=30`;
     const response = await fetch(apiUrl);
     if (response.ok) {
       const data = await response.json();

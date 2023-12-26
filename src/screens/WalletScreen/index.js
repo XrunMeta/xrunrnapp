@@ -14,21 +14,23 @@ import ButtonBack from '../../components/ButtonBack';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {TabView, SceneMap} from 'react-native-tab-view';
 import TableWalletCard from '../../components/TableWallet';
-import {funcTransactionalInformation} from '../../../utils';
-
+import {URL_API, coinTrace, funcTransactionalInformation} from '../../../utils';
+import ShowQRWallet from '../../components/ShowQRWallet';
 const langData = require('../../../lang.json');
 
 const WalletScreen = ({navigation}) => {
   const [lang, setLang] = useState({});
   const layout = useWindowDimensions();
-  const [member, setMember] = useState(null);
+  const [member, setMember] = useState('');
   const [currentCurrency, setCurrentCurrency] = useState('1');
+  const [dataWallet, setDataWallet] = useState({});
   const [index, setIndex] = useState(0);
   const [cardsData, setCardsData] = useState([]);
   const [routes, setRoutes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const refLayout = useRef(null);
   const [currencies, setCurrencies] = useState([]);
+  const [cointrace, setCointrace] = useState([]);
 
   // State show text "QR Code"
   const [isShowTextQRCode, setIsShowTextQRCode] = useState(false);
@@ -36,7 +38,7 @@ const WalletScreen = ({navigation}) => {
 
   // State for show QR
   const [isShowQRCodeWallet, setIsShowQRCodeWallet] = useState(false);
-  const [addressWalletQR, setAddressWalletQR] = useState('');
+  const [cardDataQR, setCardDataQR] = useState([]);
 
   // State for send to component TableWallet => Total history, transfer history, Received details, Transition history
   const [transactionalInformation, setTransactionalInformation] = useState([]);
@@ -68,12 +70,9 @@ const WalletScreen = ({navigation}) => {
         setMember(member);
 
         // Get data wallet
-        fetch(
-          `https://app.xrun.run/gateway.php?act=app4000-01-rev&member=${member}`,
-          {
-            method: 'POST',
-          },
-        )
+        fetch(`${URL_API}&act=app4000-01-rev&member=${member}`, {
+          method: 'POST',
+        })
           .then(response => response.json())
           .then(result => {
             setCardsData(result.data);
@@ -85,13 +84,14 @@ const WalletScreen = ({navigation}) => {
 
             setCurrencies(tempCurrencies);
             setRoutes(result.data.map(card => ({key: card.currency})));
+
             setIsLoading(false);
           })
           .catch(error => {
-            Alert.alert('Failed', `${error}`, [
+            Alert.alert('Failed', 'Get your wallet, please try again later', [
               {
                 text: 'OK',
-                onPress: () => console.log('Failed get data card'),
+                onPress: () => console.log('Failed get wallet data: ', error),
               },
             ]);
             setIsLoading(false);
@@ -102,6 +102,9 @@ const WalletScreen = ({navigation}) => {
     };
 
     getUserData();
+
+    // Cointrace
+    coinTrace(setCointrace, Alert);
   }, []);
 
   useEffect(() => {
@@ -110,7 +113,18 @@ const WalletScreen = ({navigation}) => {
         setPositionVerticalDots(pageY);
       });
     }
+
+    // Get data current currency/wallet
+    const filterDataWallet = cardsData.filter(wallet => wallet.currency == 1);
+    setDataWallet(filterDataWallet[0]);
   }, [cardsData]);
+
+  useEffect(() => {
+    const filterDataWallet = cardsData.filter(
+      wallet => wallet.currency == currentCurrency,
+    );
+    setDataWallet(filterDataWallet[0]);
+  }, [currentCurrency]);
 
   useEffect(() => {
     // * Function get data Total history, transfer history, received details and transition history
@@ -151,11 +165,13 @@ const WalletScreen = ({navigation}) => {
       ETH: '#a84249',
       DIGX: '#343b58',
       RUN: '#DEA936',
+      MEMP: '#343b58',
     };
 
+    const walletColor = walletColors[symbol] || walletColors['DIGX'];
     return (
       <View
-        style={[styles.card, {backgroundColor: walletColors[symbol]}]}
+        style={[styles.card, {backgroundColor: walletColor}]}
         key={currency}>
         <View style={styles.wrapperPartTop}>
           <Text style={styles.cardName}>{displaystr}</Text>
@@ -181,7 +197,7 @@ const WalletScreen = ({navigation}) => {
           <View style={styles.wrapperTextwallet}>
             <Text style={styles.textWallet}>Catch</Text>
             <Text style={styles.valueWallet}>{amount}</Text>
-            <Text style={styles.textWallet}>XRUN</Text>
+            <Text style={styles.textWallet}>{symbol}</Text>
           </View>
         </View>
 
@@ -211,7 +227,7 @@ const WalletScreen = ({navigation}) => {
   };
 
   const handleShowQR = cardData => {
-    console.log(cardData);
+    setCardDataQR(cardData);
     setIsShowTextQRCode(true);
   };
 
@@ -276,8 +292,10 @@ const WalletScreen = ({navigation}) => {
 
         <View style={styles.containerTable}>
           <TableWalletCard
+            dataWallet={dataWallet}
             currentCurrency={currentCurrency}
             transactionalInformation={transactionalInformation}
+            coinTrace={cointrace}
           />
         </View>
       </View>
@@ -303,29 +321,10 @@ const WalletScreen = ({navigation}) => {
 
       {/* Show/Hide popup QR */}
       {isShowQRCodeWallet && (
-        <View style={styles.wrapperShowQRWallet}>
-          <View style={styles.showQRWallet}>
-            <View style={styles.partTopShowQR}>
-              <Text>XRUNe</Text>
-              <View style={styles.wrapperCopiedHash}>
-                <Text style={styles.showQRHash}>
-                  {'0x99e2773FC1607A113B3532dcD964969067E9f03f'.substring(
-                    0,
-                    20,
-                  ) + '...'}
-                </Text>
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  onPress={() => copiedHash(address)}>
-                  <Image
-                    source={require('../../../assets/images/clipboard.png')}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View></View>
-          </View>
-        </View>
+        <ShowQRWallet
+          cardDataQR={cardDataQR}
+          setIsShowQRCodeWallet={setIsShowQRCodeWallet}
+        />
       )}
     </View>
   );
@@ -338,7 +337,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f3f4f6',
   },
   containerCard: {
-    backgroundColor: 'red',
     height: 240,
   },
   containerTable: {
@@ -468,27 +466,5 @@ const styles = StyleSheet.create({
     zIndex: 999,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  wrapperShowQRWallet: {
-    position: 'absolute',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    zIndex: 2,
-  },
-  showQRWallet: {
-    backgroundColor: '#fff',
-  },
-  partTopShowQR: {
-    backgroundColor: '#343b58',
-  },
-  showQRHash: {
-    fontSize: 13,
-    fontFamily: 'Poppins-Regular',
-    color: '#fff',
   },
 });
