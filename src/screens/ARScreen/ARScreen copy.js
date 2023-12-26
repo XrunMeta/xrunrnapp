@@ -9,7 +9,6 @@ import {
   Image,
   ImageBackground,
   Text,
-  Dimensions,
 } from 'react-native';
 import {Camera, useCameraDevice} from 'react-native-vision-camera';
 import Animated, {
@@ -18,18 +17,13 @@ import Animated, {
   withSpring,
   Easing,
   withRepeat,
-  withSequence,
 } from 'react-native-reanimated';
 
 function ARScreen() {
   const [isCameraReady, setCameraReady] = useState(false);
   const device = useCameraDevice('back');
   const [coins, setCoins] = useState([]);
-  const bouncingCoinTranslateY = useSharedValue(-250);
-  const blinkOpacity = useSharedValue(1);
-  const {width: WINDOW_WIDTH, height: WINDOW_HEIGHT} = Dimensions.get('window');
-  const COIN_WIDTH = 150; // Ganti dengan lebar gambar koin Anda
-  const COIN_HEIGHT = 275; // Ganti dengan tinggi gambar koin Anda
+  const bouncingCoinTranslateY = useSharedValue(-200);
 
   const jsonData = [
     {id: 1, data: 'Data 1'},
@@ -78,10 +72,6 @@ function ARScreen() {
     );
   };
 
-  const animateBlink = () => {
-    blinkOpacity.value = withRepeat(withSpring(0, {duration: 500}), -1, true);
-  };
-
   useEffect(() => {
     let currentIndex = 0;
 
@@ -92,24 +82,14 @@ function ARScreen() {
         shuffledData.length - currentIndex,
         Math.floor(Math.random() * 5) + 1,
       );
-
-      const itemsToDisplay = shuffledData
-        .slice(currentIndex, currentIndex + displayCount)
-        .map(item => ({
-          ...item,
-          position: {
-            x: Math.random() * (WINDOW_WIDTH - COIN_WIDTH),
-            y: Math.random() * (WINDOW_HEIGHT - COIN_HEIGHT),
-          },
-        }));
-
+      const itemsToDisplay = shuffledData.slice(
+        currentIndex,
+        currentIndex + displayCount,
+      );
       setCoins(itemsToDisplay);
 
       // Animasikan setiap koin
       animateBouncingCoin();
-
-      // Mulai animasi blink setiap kali koin berubah
-      animateBlink();
 
       setTimeout(() => {
         setCoins([]);
@@ -122,7 +102,7 @@ function ARScreen() {
 
     // Hentikan interval ketika komponen di-unmount
     return () => clearInterval(intervalId);
-  }, [jsonData, coins]); // Perubahan coins ditambahkan di sini
+  }, [jsonData]);
 
   const bouncingCoinAnimatedStyle = useAnimatedStyle(() => {
     return {
@@ -130,15 +110,10 @@ function ARScreen() {
     };
   });
 
-  const blinkAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      opacity: blinkOpacity.value,
-    };
-  });
-
   return (
     <SafeAreaView style={styles.container}>
-      <View>
+      <StatusBar backgroundColor={'green'} />
+      <View style={{backgroundColor: 'pink'}}>
         {isCameraReady && device && (
           <>
             <Camera
@@ -164,11 +139,8 @@ function ARScreen() {
                   key={item.id}
                   style={[
                     {
-                      position: 'absolute',
-                      left: item.position.x,
-                      top: item.position.y,
                       width: 150,
-                      height: 275,
+                      backgroundColor: 'pink',
                     },
                     bouncingCoinAnimatedStyle,
                   ]}>
@@ -178,16 +150,13 @@ function ARScreen() {
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}>
-                      <Animated.Image
+                      <Image
                         source={require('../../../assets/images/icon_catch.png')}
-                        style={[
-                          {
-                            resizeMode: 'contain',
-                            height: 140,
-                            width: 140,
-                          },
-                          blinkAnimatedStyle,
-                        ]}
+                        style={{
+                          resizeMode: 'contain',
+                          height: 140,
+                          width: 140,
+                        }}
                       />
                       <ImageBackground
                         source={require('../../../assets/images/image_arcoin_wrapper.png')}
