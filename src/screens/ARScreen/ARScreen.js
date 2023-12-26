@@ -149,7 +149,7 @@ function ARScreen() {
               }}
               device={device}
               isActive={true}
-              photo={true}></Camera>
+              photo={false}></Camera>
             <View
               style={{
                 position: 'absolute',
