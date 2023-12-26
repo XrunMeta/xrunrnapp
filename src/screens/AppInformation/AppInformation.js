@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {URL_API} from '../../../utils';
 
 const langData = require('../../../lang.json');
 
@@ -15,9 +16,7 @@ const AppInformation = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          `https://app.xrun.run/gateway.php?act=version`,
-        );
+        const response = await fetch(`${URL_API}&act=version`);
         const data = await response.json();
 
         if (data) {

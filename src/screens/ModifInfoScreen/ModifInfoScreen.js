@@ -18,6 +18,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import CustomMultipleChecbox from '../../components/CustomCheckbox/CustomMultipleCheckbox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {URL_API} from '../../../utils';
 
 const langData = require('../../../lang.json');
 
@@ -108,7 +109,7 @@ const ModifInfoScreen = ({route}) => {
 
         // Get User Information
         const userResponse = await fetch(
-          `https://app.xrun.run/gateway.php?act=app7000-01&member=${astorJsonData.member}`,
+          `${URL_API}&act=app7000-01&member=${astorJsonData.member}`,
         );
         const userJsonData = await userResponse.json();
         const userData = userJsonData.data[0];
@@ -153,16 +154,13 @@ const ModifInfoScreen = ({route}) => {
         setTempRegion(regionData);
 
         // Get Data Country
-        const countriesResponse = await fetch(
-          'https://app.xrun.run/gateway.php?act=countries',
-        );
+        const countriesResponse = await fetch(`${URL_API}&act=countries`);
         const countriesData = await countriesResponse.json();
         setCountryData(countriesData);
 
         // Get Region Data as Selected Country
         const regionsResponse = await fetch(
-          'https://app.xrun.run/gateway.php?act=app7190-01&country=' +
-            userData.country,
+          `${URL_API}&act=app7190-01&country=${userData.country}`,
         );
         const regionsData = await regionsResponse.json();
         setRegionData(regionsData.data);
@@ -212,7 +210,7 @@ const ModifInfoScreen = ({route}) => {
     bodyData,
   ) => {
     try {
-      const apiUrl = `https://app.xrun.run/gateway.php?act=${act}&member=${memberId}&${additionalKey}=${additionalValue}`;
+      const apiUrl = `${URL_API}&act=${act}&member=${memberId}&${additionalKey}=${additionalValue}`;
 
       const response = await fetch(apiUrl, {
         method: 'POST',
@@ -251,10 +249,7 @@ const ModifInfoScreen = ({route}) => {
       rCode: 0,
     });
 
-    fetch(
-      'https://app.xrun.run/gateway.php?act=app7190-01&country=' +
-        selectedCountry.callnumber,
-    )
+    fetch(`${URL_API}&act=app7190-01&country=${selectedCountry.callnumber}`)
       .then(response => response.json())
       .then(data => {
         setRegionData(data.data);
@@ -797,7 +792,7 @@ const ModifInfoScreen = ({route}) => {
 
                     const saveChangeArea = async () => {
                       try {
-                        const apiUrl = `https://app.xrun.run/gateway.php?act=app7190-02&member=${astorUserData.member}&country=${tempCountry.cCode}&region=${tempRegion.rCode}`;
+                        const apiUrl = `${URL_API}&act=app7190-02&member=${astorUserData.member}&country=${tempCountry.cCode}&region=${tempRegion.rCode}`;
 
                         const response = await fetch(apiUrl, {
                           method: 'POST',

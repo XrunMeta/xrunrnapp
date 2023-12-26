@@ -11,6 +11,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInput from '../../components/CustomInput';
+import {URL_API} from '../../../utils';
 
 const langData = require('../../../lang.json');
 
@@ -27,7 +28,7 @@ const EditPassword = () => {
     } else {
       const savePassword = async () => {
         try {
-          const apiUrl = `https://app.xrun.run/gateway.php?act=app7163-01&member=${userData.member}&pin=${password}`;
+          const apiUrl = `${URL_API}&act=app7163-01&member=${userData.member}&pin=${password}`;
 
           const response = await fetch(apiUrl, {
             method: 'POST',

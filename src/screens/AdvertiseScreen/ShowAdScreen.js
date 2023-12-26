@@ -1,6 +1,7 @@
 import {Modal, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useInterstitialAd, TestIds} from '@react-native-admob/admob';
+import {URL_API} from '../../../utils';
 
 const realAD = 'ca-app-pub-9457909979646034/7873165988';
 
@@ -63,7 +64,7 @@ const ShowAdScreen = ({route, navigation}) => {
       const coinAcquiring = async () => {
         try {
           const response = await fetch(
-            `https://app.xrun.run/gateway.php?act=app3100-01&advertisement=${advertisement}&coin=${coin}&member=${coin}`,
+            `${URL_API}&act=app3100-01&advertisement=${advertisement}&coin=${coin}&member=${coin}`,
           );
           const data = await response.json();
           console.log('bgst -> ' + JSON.stringify(data.data[0]));

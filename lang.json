@@ -587,6 +587,14 @@
     },
     "screen_wallet": {
       "title": "My Wallet"
+    },
+    "screen_send": {
+      "title": "Send",
+      "label_amount": "Amount to send",
+      "amount_placeholder": "Please enter the amount to be sent.",
+      "label_address": "Address to send",
+      "address_placeholder": "Please enter the address to be sent.",
+      "label_exchange": "Stock exchange"
     }
   }
 }

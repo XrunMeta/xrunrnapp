@@ -12,6 +12,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInput from '../../components/CustomInput';
+import {URL_API} from '../../../utils';
 
 const langData = require('../../../lang.json');
 
@@ -57,7 +58,7 @@ const RegistRecommendScreen = () => {
     } else {
       const registRecommend = async () => {
         try {
-          const apiUrl = `https://app.xrun.run/gateway.php?act=app7410-01&member=${userData.member}&email=${recID}`;
+          const apiUrl = `${URL_API}&act=app7410-01&member=${userData.member}&email=${recID}`;
           const response = await fetch(apiUrl);
           const data = await response.json();
 

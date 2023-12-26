@@ -48,7 +48,6 @@ const TotalHistory = ({totalHistory}) => (
       totalHistory.map((transactionHistory, index) => {
         const {datetime, time, amount, symbol, extracode, action} =
           transactionHistory;
-
         return (
           <View style={styles.wrapperItemTable} key={index}>
             <View>
@@ -57,7 +56,7 @@ const TotalHistory = ({totalHistory}) => (
                   ? 'Completed'
                   : action == 3651
                   ? 'Withdrawal details'
-                  : 'Development test'}
+                  : 'Transfer'}
               </Text>
               <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
             </View>
@@ -102,7 +101,7 @@ const TransferHistory = ({transferHistory}) => (
                   ? 'Completed'
                   : action == 3651
                   ? 'Withdrawal details'
-                  : 'Development test'}
+                  : 'Transfer'}
               </Text>
               <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
             </View>
@@ -147,7 +146,7 @@ const ReceivedDetails = ({receivedDetails}) => (
                   ? 'Completed'
                   : action == 3651
                   ? 'Withdrawal details'
-                  : 'Development test'}
+                  : 'Transfer'}
               </Text>
               <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
             </View>
@@ -192,7 +191,7 @@ const TransitionHistory = ({transitionHistory}) => (
                   ? 'Completed'
                   : action == 3651
                   ? 'Withdrawal details'
-                  : 'Development test'}
+                  : 'Transfer'}
               </Text>
               <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
             </View>
@@ -219,10 +218,16 @@ const TransitionHistory = ({transitionHistory}) => (
   </ScrollView>
 );
 
-const TableWalletCard = ({currentCurrency, transactionalInformation}) => {
+const TableWalletCard = ({
+  dataWallet,
+  currentCurrency,
+  transactionalInformation,
+  coinTrace,
+}) => {
   const navigation = useNavigation();
   const layout = useWindowDimensions();
   const [currentDaysTransactional, setCurrentDaysTransactional] = useState(7);
+
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     {key: 'totalHistory', title: 'Total History'},
@@ -315,7 +320,8 @@ const TableWalletCard = ({currentCurrency, transactionalInformation}) => {
               style={styles.contentTextHead}
               onPress={() =>
                 navigation.navigate('SendWallet', {
-                  currentCurrency,
+                  dataWallet,
+                  cointrace: coinTrace,
                 })
               }>
               <Text style={styles.textHead}>SEND</Text>

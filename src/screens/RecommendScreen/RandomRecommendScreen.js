@@ -13,6 +13,7 @@ import {
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {URL_API} from '../../../utils';
 
 const langData = require('../../../lang.json');
 
@@ -48,9 +49,7 @@ const RandomRecommendScreen = () => {
 
     const fetchRecommendations = async () => {
       try {
-        const response = await fetch(
-          'https://app.xrun.run/gateway.php?act=app7420-01',
-        );
+        const response = await fetch(`${URL_API}&act=app7420-01`);
         const data = await response.json();
 
         if (data && data.data.length > 0) {
@@ -83,7 +82,7 @@ const RandomRecommendScreen = () => {
       const registRecommend = async () => {
         try {
           const response = await fetch(
-            `https://app.xrun.run/gateway.php?act=app7420-02&posed=${checkedID}&member=${userData.member}`,
+            `${URL_API}&act=app7420-02&posed=${checkedID}&member=${userData.member}`,
           );
           const data = await response.json();
 
