@@ -6,22 +6,8 @@ const CustomDropdownWallet = ({
   label,
   onSelectedExchange,
   selectedExchange,
+  cointrace,
 }) => {
-  const dropdownProducts = [
-    'Binance',
-    'Bithumb',
-    'Bitmarket',
-    'Indodax',
-    'Upbit',
-    'KuCoin',
-    'DigiFinex',
-    'TokoCrypto',
-    'FTX',
-    'CoinBase',
-    'Houbi',
-    'Other Market',
-  ];
-
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}</Text>
@@ -32,15 +18,13 @@ const CustomDropdownWallet = ({
           dropdownIconColor={'#555'}
           mode="dropdown"
           selectionColor={'#555'}>
-          {dropdownProducts.map((dropdownProduct, index) => {
-            const value = dropdownProduct.toLowerCase().split(' ').join('-');
-
+          {cointrace.map(coin => {
             return (
               <Picker.Item
                 style={styles.input}
-                label={dropdownProduct}
-                key={index}
-                value={value}
+                label={coin.description}
+                key={coin.code}
+                value={coin.code}
               />
             );
           })}
