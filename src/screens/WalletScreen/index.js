@@ -14,15 +14,14 @@ import ButtonBack from '../../components/ButtonBack';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {TabView, SceneMap} from 'react-native-tab-view';
 import TableWalletCard from '../../components/TableWallet';
-import {funcTransactionalInformation} from '../../../utils';
+import {coinTrace, funcTransactionalInformation} from '../../../utils';
 import ShowQRWallet from '../../components/ShowQRWallet';
-
 const langData = require('../../../lang.json');
 
 const WalletScreen = ({navigation}) => {
   const [lang, setLang] = useState({});
   const layout = useWindowDimensions();
-  const [member, setMember] = useState(null);
+  const [member, setMember] = useState('');
   const [currentCurrency, setCurrentCurrency] = useState('1');
   const [dataWallet, setDataWallet] = useState({});
   const [index, setIndex] = useState(0);
@@ -31,6 +30,7 @@ const WalletScreen = ({navigation}) => {
   const [isLoading, setIsLoading] = useState(true);
   const refLayout = useRef(null);
   const [currencies, setCurrencies] = useState([]);
+  const [cointrace, setCointrace] = useState([]);
 
   // State show text "QR Code"
   const [isShowTextQRCode, setIsShowTextQRCode] = useState(false);
@@ -87,6 +87,7 @@ const WalletScreen = ({navigation}) => {
 
             setCurrencies(tempCurrencies);
             setRoutes(result.data.map(card => ({key: card.currency})));
+
             setIsLoading(false);
           })
           .catch(error => {
@@ -104,6 +105,9 @@ const WalletScreen = ({navigation}) => {
     };
 
     getUserData();
+
+    // Cointrace
+    coinTrace(setCointrace, Alert);
   }, []);
 
   useEffect(() => {
@@ -292,6 +296,7 @@ const WalletScreen = ({navigation}) => {
             dataWallet={dataWallet}
             currentCurrency={currentCurrency}
             transactionalInformation={transactionalInformation}
+            coinTrace={cointrace}
           />
         </View>
       </View>
