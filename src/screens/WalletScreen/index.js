@@ -165,11 +165,13 @@ const WalletScreen = ({navigation}) => {
       ETH: '#a84249',
       DIGX: '#343b58',
       RUN: '#DEA936',
+      MEMP: '#343b58',
     };
 
+    const walletColor = walletColors[symbol] || walletColors['DIGX'];
     return (
       <View
-        style={[styles.card, {backgroundColor: walletColors[symbol]}]}
+        style={[styles.card, {backgroundColor: walletColor}]}
         key={currency}>
         <View style={styles.wrapperPartTop}>
           <Text style={styles.cardName}>{displaystr}</Text>
@@ -195,7 +197,7 @@ const WalletScreen = ({navigation}) => {
           <View style={styles.wrapperTextwallet}>
             <Text style={styles.textWallet}>Catch</Text>
             <Text style={styles.valueWallet}>{amount}</Text>
-            <Text style={styles.textWallet}>XRUN</Text>
+            <Text style={styles.textWallet}>{symbol}</Text>
           </View>
         </View>
 
