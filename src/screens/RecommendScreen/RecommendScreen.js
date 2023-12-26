@@ -22,7 +22,7 @@ const RecommendScreen = () => {
       try {
         const userEmail = await AsyncStorage.getItem('userEmail');
         const response = await fetch(
-          `https://app.xrun.run/gateway.php?act=login-04-email&email=${userEmail}`,
+          `${URL_API}&act=login-04-email&email=${userEmail}`,
         );
         const data = await response.json();
 

@@ -18,6 +18,7 @@ import ButtonBack from '../../components/ButtonBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInputWallet from '../../components/CustomInputWallet';
 import CustomDropdownWallet from '../../components/CustomDropdownWallet';
+import {URL_API} from '../../../utils';
 
 const langData = require('../../../lang.json');
 
@@ -120,7 +121,7 @@ const SendWalletScreen = ({navigation, route}) => {
     } else {
       const currency = dataWallet.currency;
       fetch(
-        `https://app.xrun.run/gateway.php?act=ap4300-03&member=${member}&addrto=${address}&currency=${currency}&amount=${amount}&coinmarket=${selectedExchange}`,
+        `${URL_API}&act=ap4300-03&member=${member}&addrto=${address}&currency=${currency}&amount=${amount}&coinmarket=${selectedExchange}`,
         {
           method: 'POST',
         },

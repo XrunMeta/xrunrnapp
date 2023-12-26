@@ -14,7 +14,7 @@ import ButtonBack from '../../components/ButtonBack';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {TabView, SceneMap} from 'react-native-tab-view';
 import TableWalletCard from '../../components/TableWallet';
-import {coinTrace, funcTransactionalInformation} from '../../../utils';
+import {URL_API, coinTrace, funcTransactionalInformation} from '../../../utils';
 import ShowQRWallet from '../../components/ShowQRWallet';
 const langData = require('../../../lang.json');
 
@@ -70,12 +70,9 @@ const WalletScreen = ({navigation}) => {
         setMember(member);
 
         // Get data wallet
-        fetch(
-          `https://app.xrun.run/gateway.php?act=app4000-01-rev&member=${member}`,
-          {
-            method: 'POST',
-          },
-        )
+        fetch(`${URL_API}&act=app4000-01-rev&member=${member}`, {
+          method: 'POST',
+        })
           .then(response => response.json())
           .then(result => {
             setCardsData(result.data);

@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {URL_API} from '../../../utils';
 
 const langData = require('../../../lang.json');
 
@@ -19,7 +20,7 @@ const ClauseForPersonal = () => {
         // Lakukan sesuatu dengan nilai currentLanguage, misalnya set state atau tindakan lain
         if (language) {
           console.log('Current Language:', language);
-          let apiUrl = 'https://app.xrun.run/gateway.php?act=app7010-01';
+          let apiUrl = `${URL_API}&act=app7010-01`;
 
           // Tambahkan bahasa ke URL jika bahasa adalah "id"
           if (language === 'id') {

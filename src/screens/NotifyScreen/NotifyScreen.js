@@ -15,6 +15,7 @@ import {
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {URL_API} from '../../../utils';
 
 const langData = require('../../../lang.json');
 
@@ -44,7 +45,7 @@ const NotifyScreen = () => {
         setUserData(getData);
 
         const response = await fetch(
-          `https://app.xrun.run/gateway.php?act=ap6000-01&member=${getData.member}&start=0`,
+          `${URL_API}&act=ap6000-01&member=${getData.member}&start=0`,
         );
         const data = await response.json();
 
@@ -114,7 +115,7 @@ const NotifyScreen = () => {
     } else {
       try {
         const response = await fetch(
-          `https://app.xrun.run/gateway.php?act=ap6000-02&member=${userData.member}&title=${text}`,
+          `${URL_API}&act=ap6000-02&member=${userData.member}&title=${text}`,
         );
         const data = await response.json();
 
@@ -152,7 +153,7 @@ const NotifyScreen = () => {
   const deleteChat = async data => {
     try {
       const response = await fetch(
-        `https://app.xrun.run/gateway.php?act=ap6000-03&member=${userData.member}&board=${data.board}`,
+        `${URL_API}&act=ap6000-03&member=${userData.member}&board=${data.board}`,
       );
       const jsonData = await response.json();
 
@@ -185,7 +186,7 @@ const NotifyScreen = () => {
               setIsDelete(false);
 
               const response = await fetch(
-                `https://app.xrun.run/gateway.php?act=ap6000-04delete&member=${userData.member}`,
+                `${URL_API}&act=ap6000-04delete&member=${userData.member}`,
               );
               const jsonData = await response.json();
 
