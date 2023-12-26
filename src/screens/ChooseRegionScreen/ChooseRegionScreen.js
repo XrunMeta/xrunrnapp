@@ -13,6 +13,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import CustomListItem from '../../components/CustomButton/CustomListItem';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {URL_API} from '../../../utils';
 
 const langData = require('../../../lang.json');
 
@@ -35,7 +36,7 @@ const ChooseRegionScreen = ({route}) => {
 
   useEffect(() => {
     // Get Country List
-    fetch('https://app.xrun.run/gateway.php?act=countries')
+    fetch(`${URL_API}&act=countries`)
       .then(response => response.json())
       .then(jsonData => {
         setData(jsonData);

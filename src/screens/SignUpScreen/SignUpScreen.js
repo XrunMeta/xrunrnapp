@@ -15,6 +15,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import CustomMultipleChecbox from '../../components/CustomCheckbox/CustomMultipleCheckbox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {URL_API} from '../../../utils';
 
 const langData = require('../../../lang.json');
 
@@ -116,11 +117,7 @@ const SignUpScreen = ({route}) => {
 
     getLanguage();
 
-    fetch(
-      `https://app.xrun.run/gateway.php?act=app7190-01&country=${
-        countryCode ? countryCode : 62
-      }`,
-    )
+    fetch(`${URL_API}&act=app7190-01&country=${countryCode ? countryCode : 62}`)
       .then(response => response.json())
       .then(jsonData => {
         var jsonToArr = Object.values(jsonData);
@@ -135,11 +132,7 @@ const SignUpScreen = ({route}) => {
 
   // Get Update Area Data
   useEffect(() => {
-    fetch(
-      `https://app.xrun.run/gateway.php?act=app7190-01&country=${
-        countryCode ? countryCode : 62
-      }`,
-    )
+    fetch(`${URL_API}&act=app7190-01&country=${countryCode ? countryCode : 62}`)
       .then(response => response.json())
       .then(jsonData => {
         var jsonToArr = Object.values(jsonData);

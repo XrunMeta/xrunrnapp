@@ -12,6 +12,7 @@ import ARScreen from '../ARScreen/ARScreen';
 import MapParent from './MapParentScreen';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {URL_API} from '../../../utils';
 
 const langData = require('../../../lang.json');
 
@@ -33,7 +34,7 @@ export default function Home() {
       try {
         const userEmail = await AsyncStorage.getItem('userEmail');
 
-        const apiUrl = `https://app.xrun.run/gateway.php?act=login-01&email=${userEmail}&tp=6`;
+        const apiUrl = `${URL_API}&act=login-01&email=${userEmail}&tp=6`;
         const response = await fetch(apiUrl);
         const userData = await response.json();
 
@@ -84,12 +85,7 @@ export default function Home() {
     <SafeAreaView style={{flex: 1}}>
       {isLoggedIn ? (
         <View style={styles.root}>
-          {activeTab === 'Map' ? (
-            // <MapParent />
-            ''
-          ) : (
-            <ARScreen />
-          )}
+          {activeTab === 'Map' ? <MapParent /> : ''}
 
           {/* Bottom Tab Navigator */}
           <View style={styles.bottomTabContainer}>
