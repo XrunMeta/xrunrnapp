@@ -26,9 +26,10 @@ const SendWalletScreen = ({navigation, route}) => {
   const [iconNextIsDisabled, setIconNextIsDisabled] = useState(true);
   const [amount, setAmount] = useState('');
   const [address, setAddress] = useState('');
-  const {dataWallet} = route.params;
-  const [selectedExchange, setSelectedExchange] = useState('');
+  const {dataWallet, cointrace} = route.params;
+  const [selectedExchange, setSelectedExchange] = useState('360001');
   const [isVisibleReadQR, setIsVisibleReadQR] = useState(false);
+  const [member, setMember] = useState('');
 
   // Animated notification in QR
   const [fadeAnim] = useState(new Animated.Value(0));
@@ -52,6 +53,19 @@ const SendWalletScreen = ({navigation, route}) => {
     };
 
     getLanguage();
+
+    // Get data member
+    const getUserData = async () => {
+      try {
+        const userData = await AsyncStorage.getItem('userData');
+        const member = JSON.parse(userData).member;
+        setMember(member);
+      } catch (error) {
+        console.error('Failed to get userData from AsyncStorage:', err);
+      }
+    };
+
+    getUserData();
   }, []);
 
   useEffect(() => {
@@ -76,10 +90,12 @@ const SendWalletScreen = ({navigation, route}) => {
   }, []);
 
   useEffect(() => {
-    if (amount !== '' && address !== '') {
-      setIconNextIsDisabled(false);
-    } else {
+    if (amount === '') {
       setIconNextIsDisabled(true);
+    } else if (address === '' || address.length < 40) {
+      setIconNextIsDisabled(true);
+    } else {
+      setIconNextIsDisabled(false);
     }
   }, [amount, address]);
 
@@ -88,12 +104,38 @@ const SendWalletScreen = ({navigation, route}) => {
   };
 
   const onSend = () => {
+    const floatAmount = parseFloat(amount).toString();
+    const balance = parseFloat(dataWallet.Wamount).toString();
+
     if (amount === '') {
-      Alert.alert('Warning', 'Amount jangan kosong bang');
+      Alert.alert('Warning', 'Please enter the amount to be sent.');
+    } else if (floatAmount == 0) {
+      Alert.alert('Warning', 'Please enter an amount greater than zero.');
+    } else if (amount > balance) {
+      Alert.alert('Warning', 'There is not enough money(or bank balance).');
     } else if (address === '') {
-      Alert.alert('Warning', 'Address jangan kosong bang');
+      Alert.alert('Warning', 'Please enter the address to be sent.');
+    } else if (address.length < 40) {
+      Alert.alert('Warning', 'Address less than 40 letters.');
     } else {
-      setIconNextIsDisabled(false);
+      const currency = dataWallet.currency;
+      fetch(
+        `https://app.xrun.run/gateway.php?act=ap4300-03&member=${member}&addrto=${address}&currency=${currency}&amount=${amount}&coinmarket=${selectedExchange}`,
+        {
+          method: 'POST',
+        },
+      )
+        .then(response => response.json())
+        .then(result => {
+          console.log(`Berhasil, datanya: ${result}`);
+        })
+        .catch(error => {
+          Alert.alert(
+            'Failed',
+            'There is server communication error. Please try again in a moment.',
+          );
+          console.log(`Failed send: ${error}`);
+        });
     }
   };
 
@@ -209,6 +251,7 @@ const SendWalletScreen = ({navigation, route}) => {
               setSelectedExchange(value);
             }}
             selectedExchange={selectedExchange}
+            cointrace={cointrace}
           />
         </View>
       </View>
@@ -250,7 +293,7 @@ const SendWalletScreen = ({navigation, route}) => {
           flashMode={RNCamera.Constants.FlashMode.off}
           bottomContent={
             <View style={styles.wrapperTextScanQR}>
-              <Text style={styles.textScanQR}>Scanning QR Code</Text>
+              <Text style={styles.textScanQR}>Scan Account</Text>
             </View>
           }
         />
@@ -282,9 +325,7 @@ const SendWalletScreen = ({navigation, route}) => {
             source={require('../../../assets/images/xrun_round.png')}
             style={{width: 28, height: 28}}
           />
-          <Text style={styles.notificationTextInQR}>
-            Scanned: 0x30a9B3fcFCc0aD66B70f2d473b39a35252002d89
-          </Text>
+          <Text style={styles.notificationTextInQR}>Scanned: {address}</Text>
         </View>
       </Animated.View>
     </ScrollView>
