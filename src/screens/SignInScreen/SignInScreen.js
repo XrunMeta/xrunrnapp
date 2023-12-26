@@ -15,6 +15,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {MainTabNavigator} from '../../navigation';
+import {URL_API} from '../../../utils';
 
 const langData = require('../../../lang.json');
 
@@ -56,7 +57,7 @@ const SignInScreen = () => {
     } else {
       try {
         const response = await fetch(
-          `https://app.xrun.run/gateway.php?act=login-checker&email=${email}&pin=${password}`,
+          `${URL_API}&act=login-checker&email=${email}&pin=${password}`,
         );
         const data = await response.text();
 
