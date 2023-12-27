@@ -267,11 +267,10 @@ const SendWalletScreen = ({navigation, route}) => {
   };
 
   const handleQRCodeRead = ({data}) => {
-    // setAddress(data);
-    // fadeIn();
-    // setZIndexAnim(1);
-    // setIsVisibleReadQR(false);
-    console.log('Ahay');
+    setAddress(data);
+    fadeIn();
+    setZIndexAnim(1);
+    setIsVisibleReadQR(false);
   };
 
   // Animation
@@ -412,23 +411,23 @@ const SendWalletScreen = ({navigation, route}) => {
           style={{
             position: 'absolute',
             top: 0,
-            left: 0,
-            right: 0,
             bottom: 0,
+            right: 0,
+            left: 0,
             zIndex: 20,
-            backgroundColor: '#fff',
-          }}
-          showMarker={true}
-          markerStyle={{borderColor: '#26d2ff'}}
-          cameraStyle={{height: '100%'}}
-          onRead={handleQRCodeRead}
-          checkAndroid6Permissions={true}
-          bottomContent={
-            <View style={styles.wrapperTextScanQR}>
-              <Text style={styles.textScanQR}>Scan Account</Text>
-            </View>
-          }
-        />
+          }}>
+          <QRCodeScanner
+            showMarker={true}
+            markerStyle={{borderColor: '#26d2ff'}}
+            cameraStyle={{height: '100%'}}
+            onRead={handleQRCodeRead}
+            bottomContent={
+              <View style={styles.wrapperTextScanQR}>
+                <Text style={styles.textScanQR}>Scan Account</Text>
+              </View>
+            }
+          />
+        </View>
       )}
 
       <Animated.View

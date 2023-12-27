@@ -79,7 +79,7 @@ const CompleteSend = ({navigation, route}) => {
 
       <View
         style={{
-          paddingHorizontal: 30,
+          paddingHorizontal: 20,
           backgroundColor: '#fff',
           paddingVertical: 10,
         }}>
