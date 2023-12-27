@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Image,
+  Alert,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -38,6 +39,7 @@ const CompleteSend = ({navigation, route}) => {
 
   const copiedTXID = hash => {
     Clipboard.setString(hash);
+    Alert.alert('', 'The TXID has been copied. Use it wherever you want.');
     console.log(`Hash: ${hash}`);
   };
 
