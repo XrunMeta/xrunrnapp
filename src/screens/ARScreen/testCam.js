@@ -12,13 +12,11 @@ function TestCam() {
   const device = useCameraDevice('back'); // 'back' or 'front' for camera position
 
   const onInitialized = () => {
-    console.log('Camera initialized!');
     setIsCameraInitialized(true);
   };
 
   const onError = error => {
     console.error(error);
-    console.log('Error ni boy');
   };
 
   useEffect(() => {
@@ -29,7 +27,6 @@ function TestCam() {
 
   return (
     <View style={styles.container}>
-      {console.log('Device Info -> ' + JSON.stringify(device))}
       {device != null && (
         <SafeAreaView>
           {/* <Camera

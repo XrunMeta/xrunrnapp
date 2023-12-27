@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -9,7 +9,8 @@ import {
   ImageBackground,
   Text,
   Dimensions,
-  Button,
+  PermissionsAndroid,
+  ActivityIndicator,
 } from 'react-native';
 import {Camera, useCameraDevice} from 'react-native-vision-camera';
 import Animated, {
@@ -38,6 +39,7 @@ function ARScreen() {
   const [userData, setUserData] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
   const [flash, setFlash] = useState('on');
+  const [catchShow, setCatchShow] = useState(0);
 
   const jsonData = [
     {id: 1, data: 'Data 1'},
@@ -54,23 +56,39 @@ function ARScreen() {
     {id: 12, data: 'Data 12'},
   ];
 
-  useEffect(() => {
-    // Writing the getPermissions function to get the permissions
-    async function getPermissions() {
-      const cameraPermissionStatus = await Camera.getCameraPermissionStatus();
-      console.log(
-        'cameraPermission permission status: ',
-        cameraPermissionStatus,
+  const getCamPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: 'Camera Permission',
+          message:
+            'XRUN needs access to your camera ' +
+            'so you can enjoy AR and Catch the Coin!',
+          buttonPositive: 'OK',
+          buttonNegative: 'Cancel',
+        },
       );
 
-      if (cameraPermissionStatus === 'granted') {
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('Kamera diijinin boy');
+
         setCameraReady(true);
         setCameraPermission('granted');
       } else {
-        setCameraPermission('denied');
+        // RNRestart.restart();
+        // setCameraPermission('denied');
+        console.log('Kamera ga diizinin');
+        Linking.openSettings();
       }
+    } catch (error) {
+      console.error(error);
     }
+  };
 
+  getCamPermission();
+
+  useEffect(() => {
     const getUserData = async () => {
       try {
         const storedUserData = await AsyncStorage.getItem('userData');
@@ -84,18 +102,7 @@ function ARScreen() {
     };
 
     getUserData();
-    getPermissions();
   }, []);
-
-  const requestCameraPermission = async () => {
-    const status = await Camera.getCameraPermissionStatus();
-    console.log('Izin kamera gua klik nih bro -> ', status);
-    if (status === 'granted') {
-      setCameraPermission('granted');
-      setCameraReady(true);
-      RNRestart.restart();
-    }
-  };
 
   // Coordinate User Listener
   useEffect(() => {
@@ -107,7 +114,7 @@ function ARScreen() {
           longitude: position.coords.longitude,
         };
 
-        // setUserLocation(userCoordinate);
+        setUserLocation(userCoordinate);
 
         console.log(`
             Lat : ${userCoordinate.latitude}
@@ -132,7 +139,7 @@ function ARScreen() {
     // Update AR Coin from API
     if (userLocation && userData) {
       const {latitude, longitude} = userLocation;
-      // getARCoin(userData.member, latitude, longitude);
+      getARCoin(userData.member, latitude, longitude);
     }
   }, [userLocation, userData]);
 
@@ -192,14 +199,23 @@ function ARScreen() {
   };
 
   const animateBlink = () => {
-    blinkOpacity.value = withRepeat(withSpring(0, {duration: 500}), -1, true);
+    blinkOpacity.value = withRepeat(
+      withSpring(0, {duration: 500}),
+      -1,
+      true,
+      (_, isFinished) => {
+        if (isFinished) {
+          blinkOpacity.value = 1; // Setel kembali opacity ke nilai awal setelah selesai
+        }
+      },
+    );
   };
 
   useEffect(() => {
     let currentIndex = 0;
 
     const displayItems = () => {
-      const shuffledData = [...jsonData].sort(() => Math.random() - 0.5);
+      const shuffledData = [...coinAPI].sort(() => Math.random() - 0.5);
 
       const displayCount = Math.min(
         shuffledData.length - currentIndex,
@@ -226,6 +242,8 @@ function ARScreen() {
 
       setTimeout(() => {
         setCoins([]);
+        bouncingCoinTranslateY.value = -250;
+        blinkOpacity.value = 1;
       }, 3000);
 
       currentIndex = (currentIndex + displayCount) % shuffledData.length;
@@ -234,8 +252,12 @@ function ARScreen() {
     const intervalId = setInterval(displayItems, 4000);
 
     // Hentikan interval ketika komponen di-unmount
-    return () => clearInterval(intervalId);
-  }, [jsonData, coins]); // Perubahan coins ditambahkan di sini
+    return () => {
+      clearInterval(intervalId);
+      // bouncingCoinTranslateY.value = -250;
+      // blinkOpacity.value = 1;
+    };
+  }, [coinAPI, coins]); // Perubahan coins ditambahkan di sini
 
   const bouncingCoinAnimatedStyle = useAnimatedStyle(() => {
     return {
@@ -254,15 +276,6 @@ function ARScreen() {
       <View>
         {cameraPermission === 'granted' && isCameraReady && device && (
           <>
-            {/* <Camera
-              style={{
-                position: 'relative',
-                width: '100%',
-                height: '100%',
-              }}
-              device={device}
-              isActive={true}
-              photo={true}></Camera> */}
             <Camera
               fps={25}
               torch={flash === 'on' ? 'on' : 'off'}
@@ -279,7 +292,7 @@ function ARScreen() {
             <View
               style={{
                 position: 'absolute',
-                backgroundColor: '#001a477a',
+                // backgroundColor: '#001a477a',
                 top: 0,
                 bottom: 0,
                 left: 0,
@@ -287,7 +300,7 @@ function ARScreen() {
               }}>
               {coins.map((item, index) => (
                 <Animated.View
-                  key={item.id}
+                  key={item.coin}
                   style={[
                     {
                       position: 'absolute',
@@ -304,17 +317,29 @@ function ARScreen() {
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}>
-                      <Animated.Image
-                        source={require('../../../assets/images/icon_catch.png')}
-                        style={[
-                          {
-                            resizeMode: 'contain',
-                            height: 140,
-                            width: 140,
-                          },
-                          blinkAnimatedStyle,
-                        ]}
-                      />
+                      {item.distance < 30 && (
+                        <>
+                          {/* {(() => {
+                            if (catchShow == 3) {
+                              console.log('Udah 3');
+                            } else {
+                              setCatchShow(catchShow + 1);
+                              console.log('Belummmmmm -> ' + catchShow);
+                            }
+                          })()} */}
+                          <Animated.Image
+                            source={require('../../../assets/images/icon_catch.png')}
+                            style={[
+                              {
+                                resizeMode: 'contain',
+                                height: 140,
+                                width: 140,
+                              },
+                              blinkAnimatedStyle,
+                            ]}
+                          />
+                        </>
+                      )}
                       <ImageBackground
                         source={require('../../../assets/images/image_arcoin_wrapper.png')}
                         style={{
@@ -339,7 +364,9 @@ function ARScreen() {
                             fontSize: 16,
                             color: 'white',
                           }}>
-                          0.05XRUN
+                          {/* 0.05XRUN */}
+                          {item.coins}
+                          {item.title}
                         </Text>
                         <Text
                           style={{
@@ -348,7 +375,8 @@ function ARScreen() {
                             color: 'grey',
                             marginTop: -7,
                           }}>
-                          2M
+                          {/* 2M */}
+                          {item.distance}M
                         </Text>
                       </ImageBackground>
                     </View>
@@ -371,7 +399,7 @@ function ARScreen() {
                 borderRadius: 5,
                 elevation: 3,
               }}
-              onPress={() => requestCameraPermission()}>
+              onPress={() => getCamPermission()}>
               <Text
                 style={{
                   fontFamily: 'Poppins-Medium',
