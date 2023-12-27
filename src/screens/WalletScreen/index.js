@@ -383,7 +383,7 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 0,
     borderRadius: 8,
-    height: 200,
+    height: 195,
     zIndex: 5,
   },
   wrapperPartTop: {
