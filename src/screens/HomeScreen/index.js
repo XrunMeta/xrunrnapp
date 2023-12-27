@@ -10,6 +10,7 @@ import {
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import ARScreen from '../ARScreen/ARScreen';
 import MapParent from './MapParentScreen';
+import TestCam from '../ARScreen/testCam';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API} from '../../../utils';
@@ -86,7 +87,7 @@ export default function Home() {
       {isLoggedIn ? (
         <View style={styles.root}>
           {activeTab === 'Map' ? (
-            ''
+            <TestCam />
           ) : (
             // <MapParent />
             <ARScreen />

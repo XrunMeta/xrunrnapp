@@ -247,10 +247,11 @@ const SendWalletScreen = ({navigation, route}) => {
   };
 
   const handleQRCodeRead = ({data}) => {
-    setAddress(data);
-    fadeIn();
-    setZIndexAnim(1);
-    setIsVisibleReadQR(false);
+    // setAddress(data);
+    // fadeIn();
+    // setZIndexAnim(1);
+    // setIsVisibleReadQR(false);
+    console.log('Ahay');
   };
 
   // Animation
