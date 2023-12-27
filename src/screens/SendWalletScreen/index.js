@@ -278,26 +278,40 @@ const SendWalletScreen = ({navigation, route}) => {
 
       {/* Scan QR code */}
       {isVisibleReadQR && (
-        <QRCodeScanner
-          containerStyle={{
+        <View
+          style={{
             position: 'absolute',
-            flex: 1,
             top: 0,
             left: 0,
             right: 0,
             bottom: 0,
             zIndex: 20,
-            backgroundColor: '#fff',
-          }}
-          showMarker={true}
-          onRead={handleQRCodeRead}
-          flashMode={RNCamera.Constants.FlashMode.off}
-          bottomContent={
-            <View style={styles.wrapperTextScanQR}>
-              <Text style={styles.textScanQR}>Scan Account</Text>
-            </View>
-          }
-        />
+            flex: 1,
+            marginBottom: 0,
+            paddingBottom: 0,
+            backgroundColor: 'pink',
+          }}>
+          <QRCodeScanner
+            containerStyle={{
+              marginBottom: 0,
+              paddingBottom: 0,
+              backgroundColor: 'cadetblue',
+            }}
+            cameraStyle={{
+              height: '100%',
+              marginBottom: 0,
+              paddingBottom: 0,
+            }}
+            showMarker={true}
+            onRead={handleQRCodeRead}
+            flashMode={RNCamera.Constants.FlashMode.off}
+            bottomContent={
+              <View style={styles.wrapperTextScanQR}>
+                <Text style={styles.textScanQR}>Scan Account</Text>
+              </View>
+            }
+          />
+        </View>
       )}
 
       <Animated.View
