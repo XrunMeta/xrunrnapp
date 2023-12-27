@@ -222,12 +222,11 @@ const TableWalletCard = ({
   dataWallet,
   currentCurrency,
   transactionalInformation,
-  coinTrace,
 }) => {
   const navigation = useNavigation();
   const layout = useWindowDimensions();
   const [currentDaysTransactional, setCurrentDaysTransactional] = useState(7);
-
+  const [loading, setLoading] = useState(false);
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     {key: 'totalHistory', title: 'Total History'},
@@ -247,7 +246,9 @@ const TableWalletCard = ({
     !receivedDetails ||
     !transitionHistory
   ) {
-    console.log('Nunggu dulu yak bang data nya sampe');
+    console.log(
+      'Waiting data Total History, Transfer History, Received Details, and Transition History',
+    );
     return;
   }
 
@@ -321,7 +322,6 @@ const TableWalletCard = ({
               onPress={() =>
                 navigation.navigate('SendWallet', {
                   dataWallet,
-                  cointrace: coinTrace,
                 })
               }>
               <Text style={styles.textHead}>SEND</Text>
