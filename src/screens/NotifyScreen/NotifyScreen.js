@@ -157,11 +157,15 @@ const NotifyScreen = () => {
       );
       const jsonData = await response.json();
 
+      console.log(jsonData);
+
       if (jsonData.data[0].count == 1) {
         // Remove clicked Chat
         setNotify(prevNotify =>
           prevNotify.filter(item => item.board !== data.board),
         );
+      } else {
+        console.log('GHagal coy -> ' + data.board);
       }
     } catch (error) {
       console.error('Error sending chat:', error);
