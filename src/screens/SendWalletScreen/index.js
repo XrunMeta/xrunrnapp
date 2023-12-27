@@ -10,10 +10,10 @@ import {
   Linking,
   Animated,
   ActivityIndicator,
+  BackHandler,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import QRCodeScanner from 'react-native-qrcode-scanner';
-import {RNCamera} from 'react-native-camera';
 import ButtonBack from '../../components/ButtonBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInputWallet from '../../components/CustomInputWallet';
@@ -109,6 +109,26 @@ const SendWalletScreen = ({navigation, route}) => {
 
     requestCameraPermission();
   }, []);
+
+  const handleBackPress = () => {
+    if (isVisibleReadQR) {
+      setIsVisibleReadQR(false);
+      return true;
+    } else {
+      navigation.navigate('WalletHome');
+      return true;
+    }
+  };
+
+  // User press back
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      handleBackPress,
+    );
+
+    return () => backHandler.remove();
+  }, [isVisibleReadQR]);
 
   useEffect(() => {
     if (amount === '') {
@@ -399,8 +419,10 @@ const SendWalletScreen = ({navigation, route}) => {
             backgroundColor: '#fff',
           }}
           showMarker={true}
+          markerStyle={{borderColor: '#26d2ff'}}
           cameraStyle={{height: '100%'}}
           onRead={handleQRCodeRead}
+          checkAndroid6Permissions={true}
           bottomContent={
             <View style={styles.wrapperTextScanQR}>
               <Text style={styles.textScanQR}>Scan Account</Text>
