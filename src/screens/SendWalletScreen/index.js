@@ -267,10 +267,11 @@ const SendWalletScreen = ({navigation, route}) => {
   };
 
   const handleQRCodeRead = ({data}) => {
-    setAddress(data);
-    fadeIn();
-    setZIndexAnim(1);
-    setIsVisibleReadQR(false);
+    // setAddress(data);
+    // fadeIn();
+    // setZIndexAnim(1);
+    // setIsVisibleReadQR(false);
+    console.log('Ahay');
   };
 
   // Animation
@@ -407,10 +408,9 @@ const SendWalletScreen = ({navigation, route}) => {
 
       {/* Scan QR code */}
       {isVisibleReadQR && (
-        <QRCodeScanner
-          containerStyle={{
+        <View
+          style={{
             position: 'absolute',
-            flex: 1,
             top: 0,
             left: 0,
             right: 0,

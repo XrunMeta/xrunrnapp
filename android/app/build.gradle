@@ -125,6 +125,9 @@ dependencies {
     implementation("com.facebook.react:react-android")
     implementation project(':react-native-sensors')
 
+    // RN Restarter
+    implementation project(':react-native-restart')
+
     // Google AdMob
     implementation("com.google.android.gms:play-services-ads:22.6.0")
 

@@ -9,7 +9,6 @@ import {
   ImageBackground,
   Text,
   Dimensions,
-  Button,
 } from 'react-native';
 import {Camera, useCameraDevice} from 'react-native-vision-camera';
 import Animated, {
@@ -22,11 +21,9 @@ import Animated, {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
 import {URL_API} from '../../../utils';
-import RNRestart from 'react-native-restart';
 
 function ARScreen() {
   const [isCameraReady, setCameraReady] = useState(false);
-  const [cameraPermission, setCameraPermission] = useState('pending');
   const device = useCameraDevice('back');
   const [coins, setCoins] = useState([]);
   const [coinAPI, setCoinAPI] = useState([]);
@@ -37,6 +34,7 @@ function ARScreen() {
   const COIN_HEIGHT = 275; // Ganti dengan tinggi gambar koin Anda
   const [userData, setUserData] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
+  const [intervalId, setIntervalId] = useState(null);
 
   const jsonData = [
     {id: 1, data: 'Data 1'},
@@ -56,18 +54,10 @@ function ARScreen() {
   useEffect(() => {
     // Writing the getPermissions function to get the permissions
     async function getPermissions() {
-      const cameraPermissionStatus = await Camera.getCameraPermissionStatus();
-      console.log(
-        'cameraPermission permission status: ',
-        cameraPermissionStatus,
-      );
-
-      if (cameraPermissionStatus === 'granted') {
-        setCameraReady(true);
-        setCameraPermission('granted');
-      } else {
-        setCameraPermission('denied');
-      }
+      const cameraPermission = await Camera.getCameraPermissionStatus();
+      console.log('cameraPermission permission status: ', cameraPermission);
+      if (cameraPermission !== 'granted') await Linking.openSettings();
+      else setCameraReady(true);
     }
 
     const getUserData = async () => {
@@ -86,16 +76,6 @@ function ARScreen() {
     getPermissions();
   }, []);
 
-  const requestCameraPermission = async () => {
-    const status = await Camera.getCameraPermissionStatus();
-    console.log('Izin kamera gua klik nih bro -> ', status);
-    if (status === 'granted') {
-      setCameraPermission('granted');
-      setCameraReady(true);
-      RNRestart.restart();
-    }
-  };
-
   // Coordinate User Listener
   useEffect(() => {
     const watchId = Geolocation.watchPosition(
@@ -106,7 +86,7 @@ function ARScreen() {
           longitude: position.coords.longitude,
         };
 
-        // setUserLocation(userCoordinate);
+        setUserLocation(userCoordinate);
 
         console.log(`
             Lat : ${userCoordinate.latitude}
@@ -131,7 +111,7 @@ function ARScreen() {
     // Update AR Coin from API
     if (userLocation && userData) {
       const {latitude, longitude} = userLocation;
-      // getARCoin(userData.member, latitude, longitude);
+      getARCoin(userData.member, latitude, longitude);
     }
   }, [userLocation, userData]);
 
@@ -176,7 +156,7 @@ function ARScreen() {
 
   const animateBouncingCoin = () => {
     bouncingCoinTranslateY.value = withRepeat(
-      withSpring(10, {
+      withSpring(-250, {
         mass: 2.1,
         damping: 10,
         stiffness: 192,
@@ -198,7 +178,7 @@ function ARScreen() {
     let currentIndex = 0;
 
     const displayItems = () => {
-      const shuffledData = [...jsonData].sort(() => Math.random() - 0.5);
+      const shuffledData = [...coinAPI].sort(() => Math.random() - 0.5);
 
       const displayCount = Math.min(
         shuffledData.length - currentIndex,
@@ -230,11 +210,12 @@ function ARScreen() {
       currentIndex = (currentIndex + displayCount) % shuffledData.length;
     };
 
-    const intervalId = setInterval(displayItems, 4000);
+    const newIntervalId = setInterval(displayItems, 4000);
+    setIntervalId(newIntervalId);
 
     // Hentikan interval ketika komponen di-unmount
-    return () => clearInterval(intervalId);
-  }, [jsonData, coins]); // Perubahan coins ditambahkan di sini
+    return () => clearInterval(newIntervalId);
+  }, [coinAPI]); // Perubahan coins ditambahkan di sini
 
   const bouncingCoinAnimatedStyle = useAnimatedStyle(() => {
     return {
@@ -251,9 +232,9 @@ function ARScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        {cameraPermission === 'granted' && isCameraReady && device && (
+        {isCameraReady && device && (
           <>
-            {/* <Camera
+            <Camera
               style={{
                 position: 'relative',
                 width: '100%',
@@ -261,7 +242,7 @@ function ARScreen() {
               }}
               device={device}
               isActive={true}
-              photo={true}></Camera> */}
+              photo={false}></Camera>
             <View
               style={{
                 position: 'absolute',
@@ -273,7 +254,7 @@ function ARScreen() {
               }}>
               {coins.map((item, index) => (
                 <Animated.View
-                  key={item.id}
+                  key={item.coin}
                   style={[
                     {
                       position: 'absolute',
@@ -325,7 +306,8 @@ function ARScreen() {
                             fontSize: 16,
                             color: 'white',
                           }}>
-                          0.05XRUN
+                          {item.coins}
+                          {item.brand}
                         </Text>
                         <Text
                           style={{
@@ -334,7 +316,7 @@ function ARScreen() {
                             color: 'grey',
                             marginTop: -7,
                           }}>
-                          2M
+                          {item.distance}M
                         </Text>
                       </ImageBackground>
                     </View>
@@ -344,32 +326,6 @@ function ARScreen() {
             </View>
           </>
         )}
-        {cameraPermission === 'denied' && (
-          <View style={styles.permissionDeniedContainer}>
-            <Text style={styles.permissionDeniedText}>
-              Please allow access to the camera to continue.
-            </Text>
-            <TouchableOpacity
-              style={{
-                backgroundColor: '#051C60',
-                paddingHorizontal: 12,
-                paddingVertical: 7,
-                borderRadius: 5,
-                elevation: 3,
-              }}
-              onPress={() => requestCameraPermission()}>
-              <Text
-                style={{
-                  fontFamily: 'Poppins-Medium',
-                  marginBottom: -3,
-                  color: 'white',
-                }}>
-                Allow Camera
-              </Text>
-            </TouchableOpacity>
-            {console.log('Status Kamera -> ' + cameraPermission)}
-          </View>
-        )}
       </View>
     </SafeAreaView>
   );
@@ -378,18 +334,6 @@ function ARScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  permissionDeniedContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100%',
-  },
-  permissionDeniedText: {
-    fontSize: 16,
-    fontFamily: 'Poppins-Medium',
-    marginBottom: 20,
-    textAlign: 'center',
-    color: 'black',
   },
 });
 
