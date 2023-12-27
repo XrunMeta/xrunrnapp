@@ -37,6 +37,7 @@ function ARScreen() {
   const COIN_HEIGHT = 275; // Ganti dengan tinggi gambar koin Anda
   const [userData, setUserData] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
+  const [flash, setFlash] = useState('on');
 
   const jsonData = [
     {id: 1, data: 'Data 1'},
@@ -262,6 +263,19 @@ function ARScreen() {
               device={device}
               isActive={true}
               photo={true}></Camera> */}
+            <Camera
+              fps={25}
+              torch={flash === 'on' ? 'on' : 'off'}
+              onInitialized={() => setTimeout(() => setFlash('off'), 1000)}
+              style={{
+                position: 'relative',
+                width: '100%',
+                height: '100%',
+              }}
+              device={device}
+              isActive={true}
+              lowLightBoost={false}
+            />
             <View
               style={{
                 position: 'absolute',
