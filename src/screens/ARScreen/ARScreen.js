@@ -253,7 +253,7 @@ function ARScreen() {
       <View>
         {cameraPermission === 'granted' && isCameraReady && device && (
           <>
-            <Camera
+            {/* <Camera
               style={{
                 position: 'relative',
                 width: '100%',
@@ -261,7 +261,7 @@ function ARScreen() {
               }}
               device={device}
               isActive={true}
-              photo={false}></Camera>
+              photo={true}></Camera> */}
             <View
               style={{
                 position: 'absolute',
