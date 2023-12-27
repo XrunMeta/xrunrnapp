@@ -7,8 +7,10 @@ import {
   Alert,
   useWindowDimensions,
   ActivityIndicator,
+  ScrollView,
+  RefreshControl,
 } from 'react-native';
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect, useRef, useCallback} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -28,6 +30,7 @@ const WalletScreen = ({navigation}) => {
   const [cardsData, setCardsData] = useState([]);
   const [routes, setRoutes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const refLayout = useRef(null);
   const [currencies, setCurrencies] = useState([]);
   const [currenciesFetched, setCurrenciesFetched] = useState(false);
@@ -62,46 +65,46 @@ const WalletScreen = ({navigation}) => {
 
     getLanguage();
 
-    // Get data member
-    const getUserData = async () => {
-      try {
-        const userData = await AsyncStorage.getItem('userData');
-        const member = JSON.parse(userData).member;
-        setMember(member);
-
-        // Get data wallet
-        fetch(`${URL_API}&act=app4000-01-rev&member=${member}`, {
-          method: 'POST',
-        })
-          .then(response => response.json())
-          .then(result => {
-            setCardsData(result.data);
-
-            // Get wallet currency user
-            const tempCurrencies = result.data.map(
-              tempResult => tempResult.currency,
-            );
-
-            setCurrencies(tempCurrencies);
-            setRoutes(result.data.map(card => ({key: card.currency})));
-          })
-          .catch(error => {
-            Alert.alert('Failed', 'Get your wallet, please try again later', [
-              {
-                text: 'OK',
-                onPress: () => console.log('Failed get wallet data: ', error),
-              },
-            ]);
-            setIsLoading(false);
-          });
-      } catch (err) {
-        console.error('Failed to get userData from AsyncStorage:', err);
-        setIsLoading(false);
-      }
-    };
-
     getUserData();
   }, []);
+
+  // Get data member
+  const getUserData = async () => {
+    try {
+      const userData = await AsyncStorage.getItem('userData');
+      const member = JSON.parse(userData).member;
+      setMember(member);
+
+      // Get data wallet
+      fetch(`${URL_API}&act=app4000-01-rev&member=${member}`, {
+        method: 'POST',
+      })
+        .then(response => response.json())
+        .then(result => {
+          setCardsData(result.data);
+
+          // Get wallet currency user
+          const tempCurrencies = result.data.map(
+            tempResult => tempResult.currency,
+          );
+
+          setCurrencies(tempCurrencies);
+          setRoutes(result.data.map(card => ({key: card.currency})));
+        })
+        .catch(error => {
+          Alert.alert('Failed', 'Get your wallet, please try again later', [
+            {
+              text: 'OK',
+              onPress: () => console.log('Failed get wallet data: ', error),
+            },
+          ]);
+          setIsLoading(false);
+        });
+    } catch (err) {
+      console.error('Failed to get userData from AsyncStorage:', err);
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (cardsData.length > 0 && refLayout.current) {
@@ -273,6 +276,21 @@ const WalletScreen = ({navigation}) => {
     navigation.navigate('Home');
   };
 
+  const onRefresh = useCallback(() => {
+    setIsLoading(true);
+
+    if (!isLoading) {
+      funcTransactionalInformation(
+        member,
+        currencies,
+        setTransactionalInformation,
+        Alert,
+      ).then(() => {
+        setIsLoading(false);
+      });
+    }
+  }, [isLoading]);
+
   return (
     <View style={styles.container}>
       {/* Loading */}
@@ -297,17 +315,25 @@ const WalletScreen = ({navigation}) => {
 
       <View style={{flex: 1}}>
         <View style={styles.containerCard}>
-          <TabView
-            navigationState={{index, routes}}
-            renderScene={renderScene}
-            onIndexChange={index => {
-              setIndex(index);
-              setCurrentCurrency(routes[index].key);
-            }}
-            initialLayout={{width: layout.width}}
-            renderTabBar={() => null}
-            overScrollMode={'never'}
-          />
+          <ScrollView
+            style={{flex: 1}}
+            refreshControl={
+              <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
+            }>
+            <View style={styles.containerCard}>
+              <TabView
+                navigationState={{index, routes}}
+                renderScene={renderScene}
+                onIndexChange={index => {
+                  setIndex(index);
+                  setCurrentCurrency(routes[index].key);
+                }}
+                initialLayout={{width: layout.width}}
+                renderTabBar={() => null}
+                overScrollMode={'never'}
+              />
+            </View>
+          </ScrollView>
         </View>
 
         <View style={styles.containerTable}>
@@ -360,7 +386,6 @@ const styles = StyleSheet.create({
   },
   containerTable: {
     flex: 1,
-    height: 400,
   },
   titleWrapper: {
     paddingVertical: 9,
