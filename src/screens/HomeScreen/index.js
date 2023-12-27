@@ -86,9 +86,9 @@ export default function Home() {
       {isLoggedIn ? (
         <View style={styles.root}>
           {activeTab === 'Map' ? (
-            // <MapParent />
-            ''
+            <ARScreen />
           ) : (
+            // <MapParent />
             <ARScreen />
           )}
 
