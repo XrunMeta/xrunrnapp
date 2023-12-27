@@ -6,10 +6,10 @@ import {
   Image,
   KeyboardAvoidingView,
   Alert,
-  ScrollView,
   PermissionsAndroid,
   Linking,
   Animated,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import QRCodeScanner from 'react-native-qrcode-scanner';
@@ -27,10 +27,12 @@ const SendWalletScreen = ({navigation, route}) => {
   const [iconNextIsDisabled, setIconNextIsDisabled] = useState(true);
   const [amount, setAmount] = useState('');
   const [address, setAddress] = useState('');
-  const {dataWallet, cointrace} = route.params;
+  const {dataWallet} = route.params;
   const [selectedExchange, setSelectedExchange] = useState('360001');
   const [isVisibleReadQR, setIsVisibleReadQR] = useState(false);
-  const [member, setMember] = useState('');
+  const [dataMember, setDataMember] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [cointrace, setCointrace] = useState([]);
 
   // Animated notification in QR
   const [fadeAnim] = useState(new Animated.Value(0));
@@ -59,14 +61,32 @@ const SendWalletScreen = ({navigation, route}) => {
     const getUserData = async () => {
       try {
         const userData = await AsyncStorage.getItem('userData');
-        const member = JSON.parse(userData).member;
-        setMember(member);
+        const dataMember = JSON.parse(userData);
+        setDataMember(dataMember);
       } catch (error) {
         console.error('Failed to get userData from AsyncStorage:', err);
       }
     };
 
     getUserData();
+  }, []);
+
+  // List stock exchange
+  useEffect(() => {
+    const cointrace = async () => {
+      try {
+        const response = await fetch(`${URL_API}&act=ap4300-cointrace`);
+        const result = await response.json();
+        setCointrace(result.data);
+        setIsLoading(false);
+      } catch (err) {
+        setIsLoading(false);
+        Alert.alert('Error get data cointrace: ', err);
+        console.log('Error get data cointrace: ', err);
+      }
+    };
+
+    cointrace();
   }, []);
 
   useEffect(() => {
@@ -93,6 +113,8 @@ const SendWalletScreen = ({navigation, route}) => {
   useEffect(() => {
     if (amount === '') {
       setIconNextIsDisabled(true);
+    } else if (amount == 0) {
+      setIconNextIsDisabled(true);
     } else if (address === '' || address.length < 40) {
       setIconNextIsDisabled(true);
     } else {
@@ -105,12 +127,11 @@ const SendWalletScreen = ({navigation, route}) => {
   };
 
   const onSend = () => {
-    const floatAmount = parseFloat(amount).toString();
     const balance = parseFloat(dataWallet.Wamount).toString();
 
     if (amount === '') {
       Alert.alert('Warning', 'Please enter the amount to be sent.');
-    } else if (floatAmount == 0) {
+    } else if (amount == 0) {
       Alert.alert('Warning', 'Please enter an amount greater than zero.');
     } else if (amount > balance) {
       Alert.alert('Warning', 'There is not enough money(or bank balance).');
@@ -119,23 +140,104 @@ const SendWalletScreen = ({navigation, route}) => {
     } else if (address.length < 40) {
       Alert.alert('Warning', 'Address less than 40 letters.');
     } else {
+      setIsLoading(true);
       const currency = dataWallet.currency;
+      // Get limit transfer
       fetch(
-        `${URL_API}&act=ap4300-03&member=${member}&addrto=${address}&currency=${currency}&amount=${amount}&coinmarket=${selectedExchange}`,
+        `${URL_API}&act=ap4300-getLimitTransfer&member=${dataMember.member}&currency=${currency}&amountrq=${amount}`,
         {
           method: 'POST',
         },
       )
         .then(response => response.json())
         .then(result => {
-          console.log(`Berhasil, datanya: ${result}`);
+          const {available, amountrq} = result;
+
+          if (available === 'FALSE') {
+            setIsLoading(false);
+            Alert.alert(
+              'Failed',
+              'Check the current amount and make sure you have enough money in your wallet including gas (transfer fee)',
+            );
+          } else {
+            console.log(`${parseFloat(result.amount)} vs ${amountrq}`);
+
+            if (currency == 11) {
+              setIsLoading(true);
+
+              // Check email
+              fetch(`${URL_API}&act=check-02-email&email=${dataMember.email}`, {
+                method: 'POST',
+              })
+                .then(result => result.json())
+                .then(response => {
+                  const {status} = response;
+                  if (status == 'false') {
+                    Alert.alert('Failed', 'Sending verification code');
+                  } else {
+                    setIsLoading(false);
+                  }
+                })
+                .catch(err => {
+                  Alert.alert('Failed', 'Check email failed: ', err);
+                  console.log('Check email failed: ', err);
+                });
+            } else {
+              fetch(
+                // Transfer by stock exchange
+                `${URL_API}&act=ap4300-03&member=${dataMember.member}&addrto=${address}&currency=${currency}&amount=${amount}&coinmarket=${selectedExchange}`,
+                {
+                  method: 'POST',
+                },
+              )
+                .then(result => result.json())
+                .then(() => {
+                  const token = currency == 1 ? 'xr' : 'et';
+
+                  // Transfer coin
+                  fetch(
+                    `${URL_API}&act=postTransfer&member=${dataMember.member}&to=${address}&token=${token}&amount=${amount}`,
+                    {
+                      method: 'POST',
+                    },
+                  )
+                    .then(result => result.json())
+                    .then(response => {
+                      const {status, hash} = response;
+                      console.log(`Status: ${status}, Hash: ${hash}`);
+
+                      if (status == 'success') {
+                        setIsLoading(false);
+                        setAddress('');
+                        setAmount('');
+                        setSelectedExchange('36001');
+                        navigation.navigate('CompleteSend', {
+                          amount,
+                          addrto: address,
+                          txid: hash,
+                          symbol: dataWallet.symbol,
+                          balance,
+                        });
+                      } else {
+                        setIsLoading(false);
+                        Alert.alert('', 'Blockchain has problem or delay.');
+                      }
+                    })
+                    .catch(err => {
+                      Alert.alert('Failed', 'Transfer failed: ', err);
+                      console.log('Transfer failed postTransfer: ', err);
+                    });
+                })
+                .catch(err => {
+                  Alert.alert('Failed', 'Transfer failed: ', err);
+                  console.log('Transfer failed ap4300-03: ', err);
+                });
+            }
+          }
         })
-        .catch(error => {
-          Alert.alert(
-            'Failed',
-            'There is server communication error. Please try again in a moment.',
-          );
-          console.log(`Failed send: ${error}`);
+        .catch(err => {
+          Alert.alert('Failed', 'Check limit transfer failed: ', err);
+          setIsLoading(false);
         });
     }
   };
@@ -177,7 +279,14 @@ const SendWalletScreen = ({navigation, route}) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
+      {/* Loading */}
+      {isLoading && (
+        <View style={styles.loading}>
+          <ActivityIndicator size={'large'} color={'#fff'} />
+        </View>
+      )}
+
       <View style={{flexDirection: 'row'}}>
         <View style={{position: 'absolute', zIndex: 1}}>
           <ButtonBack onClick={onBack} />
@@ -191,7 +300,7 @@ const SendWalletScreen = ({navigation, route}) => {
         </View>
       </View>
 
-      <View style={{height: '70%', backgroundColor: '#fff'}}>
+      <View style={{backgroundColor: '#fff'}}>
         <View style={styles.partTop}>
           <Text style={styles.currencyName}>{dataWallet.symbol}</Text>
           <View style={styles.partScanQR}>
@@ -286,32 +395,17 @@ const SendWalletScreen = ({navigation, route}) => {
             right: 0,
             bottom: 0,
             zIndex: 20,
-            flex: 1,
-            marginBottom: 0,
-            paddingBottom: 0,
-            backgroundColor: 'pink',
-          }}>
-          <QRCodeScanner
-            containerStyle={{
-              marginBottom: 0,
-              paddingBottom: 0,
-              backgroundColor: 'cadetblue',
-            }}
-            cameraStyle={{
-              height: '100%',
-              marginBottom: 0,
-              paddingBottom: 0,
-            }}
-            showMarker={true}
-            onRead={handleQRCodeRead}
-            flashMode={RNCamera.Constants.FlashMode.off}
-            bottomContent={
-              <View style={styles.wrapperTextScanQR}>
-                <Text style={styles.textScanQR}>Scan Account</Text>
-              </View>
-            }
-          />
-        </View>
+            backgroundColor: '#fff',
+          }}
+          showMarker={true}
+          cameraStyle={{height: '100%'}}
+          onRead={handleQRCodeRead}
+          bottomContent={
+            <View style={styles.wrapperTextScanQR}>
+              <Text style={styles.textScanQR}>Scan Account</Text>
+            </View>
+          }
+        />
       )}
 
       <Animated.View
@@ -343,7 +437,7 @@ const SendWalletScreen = ({navigation, route}) => {
           <Text style={styles.notificationTextInQR}>Scanned: {address}</Text>
         </View>
       </Animated.View>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -417,7 +511,7 @@ const styles = StyleSheet.create({
     bottom: 40,
   },
   textScanQR: {
-    color: '#555',
+    color: '#fff',
     fontFamily: 'Poppins-Regular',
   },
   notificationTextInQR: {
@@ -425,5 +519,16 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
     margin: 0,
     maxWidth: 240,
+  },
+  loading: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    zIndex: 999,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

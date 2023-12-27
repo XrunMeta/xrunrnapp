@@ -14,7 +14,7 @@ import ButtonBack from '../../components/ButtonBack';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {TabView, SceneMap} from 'react-native-tab-view';
 import TableWalletCard from '../../components/TableWallet';
-import {URL_API, coinTrace, funcTransactionalInformation} from '../../../utils';
+import {URL_API, funcTransactionalInformation} from '../../../utils';
 import ShowQRWallet from '../../components/ShowQRWallet';
 const langData = require('../../../lang.json');
 
@@ -30,7 +30,7 @@ const WalletScreen = ({navigation}) => {
   const [isLoading, setIsLoading] = useState(true);
   const refLayout = useRef(null);
   const [currencies, setCurrencies] = useState([]);
-  const [cointrace, setCointrace] = useState([]);
+  const [currenciesFetched, setCurrenciesFetched] = useState(false);
 
   // State show text "QR Code"
   const [isShowTextQRCode, setIsShowTextQRCode] = useState(false);
@@ -84,8 +84,6 @@ const WalletScreen = ({navigation}) => {
 
             setCurrencies(tempCurrencies);
             setRoutes(result.data.map(card => ({key: card.currency})));
-
-            setIsLoading(false);
           })
           .catch(error => {
             Alert.alert('Failed', 'Get your wallet, please try again later', [
@@ -98,13 +96,11 @@ const WalletScreen = ({navigation}) => {
           });
       } catch (err) {
         console.error('Failed to get userData from AsyncStorage:', err);
+        setIsLoading(false);
       }
     };
 
     getUserData();
-
-    // Cointrace
-    coinTrace(setCointrace, Alert);
   }, []);
 
   useEffect(() => {
@@ -127,14 +123,29 @@ const WalletScreen = ({navigation}) => {
   }, [currentCurrency]);
 
   useEffect(() => {
-    // * Function get data Total history, transfer history, received details and transition history
-    funcTransactionalInformation(
-      member,
-      currencies,
-      setTransactionalInformation,
-      Alert,
-    );
-  }, [currencies, member]);
+    if (currencies.length > 0 && !currenciesFetched) {
+      // * Function get data Total history, transfer history, received details and transition history
+      funcTransactionalInformation(
+        member,
+        currencies,
+        setTransactionalInformation,
+        Alert,
+      );
+
+      setCurrenciesFetched(true);
+    }
+  }, [currencies, member, currenciesFetched]);
+
+  // Set loading false if, data transactional success load
+  useEffect(() => {
+    const transactionalInformationLenght = Object.keys(
+      transactionalInformation,
+    ).length;
+
+    if (transactionalInformationLenght >= 4) {
+      setIsLoading(false);
+    }
+  }, [transactionalInformation]);
 
   const renderScene = SceneMap(
     Object.fromEntries(
@@ -154,6 +165,8 @@ const WalletScreen = ({navigation}) => {
       displaystr,
       symbolimg,
       currency,
+      Eamount,
+      countrysymbol,
     } = cardData;
 
     const Wamount = parseFloat(tempWamount).toFixed(2);
@@ -197,7 +210,14 @@ const WalletScreen = ({navigation}) => {
           <View style={styles.wrapperTextwallet}>
             <Text style={styles.textWallet}>Catch</Text>
             <Text style={styles.valueWallet}>{amount}</Text>
-            <Text style={styles.textWallet}>{symbol}</Text>
+            <Text style={styles.textWallet}>
+              {symbol}{' '}
+              {symbol === 'XRUN'
+                ? `≈${parseFloat(Eamount)
+                    .toString()
+                    .substring(0, 9)}${countrysymbol}`
+                : ''}
+            </Text>
           </View>
         </View>
 
@@ -295,7 +315,6 @@ const WalletScreen = ({navigation}) => {
             dataWallet={dataWallet}
             currentCurrency={currentCurrency}
             transactionalInformation={transactionalInformation}
-            coinTrace={cointrace}
           />
         </View>
       </View>
@@ -374,7 +393,6 @@ const styles = StyleSheet.create({
   cardName: {
     color: 'white',
     fontFamily: 'Poppins-Regular',
-    fontSize: 15,
     paddingTop: 20,
   },
   wrapperShowQR: {
@@ -417,7 +435,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   containerTextWallet: {
-    marginTop: 28,
+    marginTop: 20,
   },
   wrapperTextwallet: {
     flexDirection: 'row',
@@ -427,12 +445,12 @@ const styles = StyleSheet.create({
   textWallet: {
     color: 'white',
     fontFamily: 'Poppins-Regular',
-    fontSize: 15,
+    fontSize: 13,
   },
   valueWallet: {
     color: 'white',
     fontFamily: 'Poppins-Medium',
-    fontSize: 22,
+    fontSize: 20,
   },
   wrapperPartBottom: {
     marginTop: 13,
@@ -454,7 +472,7 @@ const styles = StyleSheet.create({
   logo: {
     height: 40,
     width: 40,
-    marginTop: -20,
+    marginTop: -6,
   },
   loading: {
     position: 'absolute',
