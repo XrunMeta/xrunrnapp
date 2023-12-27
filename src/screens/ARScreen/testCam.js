@@ -1,11 +1,13 @@
 import React, {useRef, useState, useEffect} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, SafeAreaView} from 'react-native';
 import {CameraRuntimeError, useCameraDevice} from 'react-native-vision-camera';
 import {Camera} from 'react-native-vision-camera';
 
 function TestCam() {
   const cameraRef = useRef(null);
   const [isCameraInitialized, setIsCameraInitialized] = useState(false);
+  const [camActive, setCamActive] = useState(false);
+  const [flash, setFlash] = useState('on');
 
   const device = useCameraDevice('back'); // 'back' or 'front' for camera position
 
@@ -27,20 +29,31 @@ function TestCam() {
 
   return (
     <View style={styles.container}>
+      {console.log('Device Info -> ' + JSON.stringify(device))}
       {device != null && (
-        <Camera
-          ref={cameraRef}
-          style={styles.cameraPreview}
-          device={device}
-          onInitialized={onInitialized}
-          onError={onError}
-          orientation="portrait"
-          photo={true}
-          video={false}
-          audio={false}
-          fps={30}
-          isActive={true}
-        />
+        <SafeAreaView>
+          {/* <Camera
+            ref={cameraRef}
+            style={styles.cameraPreview}
+            device={device}
+            onInitialized={onInitialized}
+            onError={onError}
+            orientation="portrait"
+            photo={true}
+            fps={30}
+            isActive={true}
+            flash={true}
+          /> */}
+          {/* <Camera
+            fps={25}
+            torch={flash === 'on' ? 'on' : 'off'}
+            onInitialized={() => setTimeout(() => setFlash('off'), 1000)}
+            style={styles.cameraPreview}
+            device={device}
+            isActive={true}
+            lowLightBoost={false}
+          /> */}
+        </SafeAreaView>
       )}
     </View>
   );
