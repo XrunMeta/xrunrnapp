@@ -24,6 +24,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
 import {URL_API} from '../../../utils';
 import RNRestart from 'react-native-restart';
+import {useNavigation} from '@react-navigation/native';
 
 function ARScreen() {
   const [isCameraReady, setCameraReady] = useState(false);
@@ -40,6 +41,7 @@ function ARScreen() {
   const [userLocation, setUserLocation] = useState(null);
   const [flash, setFlash] = useState('on');
   const [catchShow, setCatchShow] = useState(0);
+  const navigation = useNavigation();
 
   const jsonData = [
     {id: 1, data: 'Data 1'},
@@ -178,8 +180,14 @@ function ARScreen() {
     }
   };
 
-  const clickedCoin = item => {
-    console.log('Coin Clicked -> ', item);
+  const clickedCoin = (memberID, advertisement, coin) => {
+    navigation.replace('ShowAd', {
+      screenName: 'Home',
+      member: memberID,
+      advertisement: advertisement,
+      coin: coin,
+      coinScreen: true,
+    });
   };
 
   const animateBouncingCoin = () => {
@@ -247,6 +255,16 @@ function ARScreen() {
       }, 3000);
 
       currentIndex = (currentIndex + displayCount) % shuffledData.length;
+
+      // Catch Image Showing
+      var appendedCatchShow = catchShow + 1;
+      if (appendedCatchShow <= 3) {
+        setCatchShow(appendedCatchShow);
+      } else {
+        setCatchShow(0);
+      }
+
+      console.log('Jumlah Catch Show -> ' + appendedCatchShow);
     };
 
     const intervalId = setInterval(displayItems, 4000);
@@ -311,22 +329,21 @@ function ARScreen() {
                     },
                     bouncingCoinAnimatedStyle,
                   ]}>
-                  <TouchableOpacity onPress={() => clickedCoin('Jamal')}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      clickedCoin(
+                        userData.member,
+                        item.advertisement,
+                        item.coin,
+                      )
+                    }>
                     <View
                       style={{
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}>
-                      {item.distance < 30 && (
+                      {parseFloat(item.distance) < 30 && (
                         <>
-                          {/* {(() => {
-                            if (catchShow == 3) {
-                              console.log('Udah 3');
-                            } else {
-                              setCatchShow(catchShow + 1);
-                              console.log('Belummmmmm -> ' + catchShow);
-                            }
-                          })()} */}
                           <Animated.Image
                             source={require('../../../assets/images/icon_catch.png')}
                             style={[
@@ -351,7 +368,9 @@ function ARScreen() {
                           justifyContent: 'center',
                         }}>
                         <Image
-                          source={require('../../../assets/images/logo_xrun.png')}
+                          source={{
+                            uri: `data:image/jpeg;base64,${item.adthumbnail2}`,
+                          }}
                           style={{
                             height: 50,
                             width: 50,
