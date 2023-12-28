@@ -92,7 +92,7 @@ const TotalHistory = ({totalHistory}) => (
             extracode = 'Withdrawal approval';
             break;
           case '9002':
-            extracode = 'Withdrawal Withdrawal not approved';
+            extracode = 'Withdrawal not approved';
             break;
           default:
             extracode = 'Transfer completed';
@@ -110,15 +110,7 @@ const TotalHistory = ({totalHistory}) => (
                 <Text style={styles.price}>{amount} </Text>
                 <Text style={styles.price}>{symbol}</Text>
               </View>
-              <Text style={styles.status}>
-                {extracode == 9416
-                  ? '-'
-                  : extracode == 9001
-                  ? 'Withdrawal approval'
-                  : extracode == 9002
-                  ? 'Withdrawal not approved'
-                  : 'Transfer completed'}
-              </Text>
+              <Text style={styles.status}>{extracode}</Text>
             </View>
           </View>
         );
@@ -182,10 +174,10 @@ const TransferHistory = ({transferHistory}) => (
             extracode = 'Withdrawal approval';
             break;
           case '9002':
-            extracode = 'Withdrawal Withdrawal not approved';
+            extracode = 'Withdrawal not approved';
             break;
           default:
-            extracode = 'Transfer completed';
+            extracode = '';
             break;
         }
 
@@ -199,15 +191,7 @@ const TransferHistory = ({transferHistory}) => (
               <Text style={styles.price}>
                 {amount} {symbol}
               </Text>
-              <Text style={styles.status}>
-                {extracode == 9416
-                  ? '-'
-                  : extracode == 9001
-                  ? 'Withdrawal approval'
-                  : extracode == 9002
-                  ? 'Withdrawal not approved'
-                  : 'Transfer completed'}
-              </Text>
+              <Text style={styles.status}>{extracode}</Text>
             </View>
           </View>
         );
@@ -271,7 +255,7 @@ const ReceivedDetails = ({receivedDetails}) => (
             extracode = 'Withdrawal approval';
             break;
           case '9002':
-            extracode = 'Withdrawal Withdrawal not approved';
+            extracode = 'Withdrawal not approved';
             break;
           default:
             extracode = 'Transfer completed';
@@ -288,15 +272,7 @@ const ReceivedDetails = ({receivedDetails}) => (
               <Text style={styles.price}>
                 {amount} {symbol}
               </Text>
-              <Text style={styles.status}>
-                {extracode == 9416
-                  ? '-'
-                  : extracode == 9001
-                  ? 'Withdrawal approval'
-                  : extracode == 9002
-                  ? 'Withdrawal not approved'
-                  : 'Transfer completed'}
-              </Text>
+              <Text style={styles.status}>{extracode}</Text>
             </View>
           </View>
         );
@@ -360,10 +336,10 @@ const TransitionHistory = ({transitionHistory}) => (
             extracode = 'Withdrawal approval';
             break;
           case '9002':
-            extracode = 'Withdrawal Withdrawal not approved';
+            extracode = 'Withdrawal not approved';
             break;
           default:
-            extracode = 'Transfer completed';
+            extracode = '';
             break;
         }
 
@@ -377,15 +353,7 @@ const TransitionHistory = ({transitionHistory}) => (
               <Text style={styles.price}>
                 {amount} {symbol}
               </Text>
-              <Text style={styles.status}>
-                {extracode == 9416
-                  ? '-'
-                  : extracode == 9001
-                  ? 'Withdrawal approval'
-                  : extracode == 9002
-                  ? 'Withdrawal not approved'
-                  : 'Transfer completed'}
-              </Text>
+              <Text style={styles.status}>{extracode}</Text>
             </View>
           </View>
         );
@@ -482,6 +450,13 @@ const TableWalletCard = ({
     setCurrentDaysTransactional(days);
   };
 
+  // Go to page conversion request
+  const conversionRequest = () => {
+    navigation.navigate('ConversionRequest', {
+      dataWallet,
+    });
+  };
+
   return (
     <View style={{flex: 1}}>
       <View style={styles.wrapperTextHead}>
@@ -508,13 +483,15 @@ const TableWalletCard = ({
             {currentCurrency === '1' ? (
               <TouchableOpacity
                 activeOpacity={0.6}
-                style={styles.contentTextHead}>
+                style={styles.contentTextHead}
+                onPress={conversionRequest}>
                 <Text style={styles.textHead}>CHANGE</Text>
               </TouchableOpacity>
             ) : (
               <TouchableOpacity
                 activeOpacity={0.6}
-                style={styles.contentTextHead}>
+                style={styles.contentTextHead}
+                onPress={conversionRequest}>
                 <Text style={styles.textHead}>EXCHANGE</Text>
               </TouchableOpacity>
             )}
