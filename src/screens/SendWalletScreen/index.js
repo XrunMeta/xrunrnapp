@@ -290,7 +290,7 @@ const SendWalletScreen = ({navigation, route}) => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 0,
-        duration: 6000,
+        duration: 4000,
         useNativeDriver: true,
       }),
     ]).start(() => {

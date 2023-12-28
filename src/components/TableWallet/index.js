@@ -45,25 +45,71 @@ const TotalHistory = ({totalHistory}) => (
     style={{paddingHorizontal: 28}}
     overScrollMode="never">
     {totalHistory.length > 0 ? (
-      totalHistory.map((transactionHistory, index) => {
-        const {datetime, time, amount, symbol, extracode, action} =
-          transactionHistory;
+      totalHistory.map((totalHistory, index) => {
+        const {
+          datetime,
+          time,
+          amount,
+          symbol,
+          extracode: tempExtracode,
+          action: tempAction,
+        } = totalHistory;
+        let action;
+        let extracode;
+
+        switch (tempAction) {
+          case '3304':
+            action = 'Completed';
+            break;
+          case '3651':
+            action = 'Withdrawal details';
+            break;
+          case '3305':
+            action = 'Transfer';
+            break;
+          case '3306':
+            action = 'Conversion';
+            break;
+          case '3307':
+            action = 'Exchange';
+            break;
+          case '3308':
+            action = 'Exchange completed';
+            break;
+          default:
+            action = 'Transfer';
+            break;
+        }
+
+        switch (tempExtracode) {
+          case '9453':
+            extracode = 'Transfer failed';
+            break;
+          case '9416':
+            extracode = '-';
+            break;
+          case '9001':
+            extracode = 'Withdrawal approval';
+            break;
+          case '9002':
+            extracode = 'Withdrawal Withdrawal not approved';
+            break;
+          default:
+            extracode = 'Transfer completed';
+            break;
+        }
+
         return (
           <View style={styles.wrapperItemTable} key={index}>
             <View>
-              <Text style={styles.details}>
-                {action == 3304
-                  ? 'Completed'
-                  : action == 3651
-                  ? 'Withdrawal details'
-                  : 'Transfer'}
-              </Text>
+              <Text style={styles.details}>{action}</Text>
               <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
             </View>
             <View>
-              <Text style={styles.price}>
-                {amount} {symbol}
-              </Text>
+              <View style={styles.wrapperPrice}>
+                <Text style={styles.price}>{amount} </Text>
+                <Text style={styles.price}>{symbol}</Text>
+              </View>
               <Text style={styles.status}>
                 {extracode == 9416
                   ? '-'
@@ -89,20 +135,64 @@ const TransferHistory = ({transferHistory}) => (
     style={{paddingHorizontal: 28}}
     overScrollMode="never">
     {transferHistory.length > 0 ? (
-      transferHistory.map((transactionHistory, index) => {
-        const {datetime, time, amount, symbol, extracode, action} =
-          transactionHistory;
+      transferHistory.map((transferHistory, index) => {
+        const {
+          datetime,
+          time,
+          amount,
+          symbol,
+          extracode: tempExtracode,
+          action: tempAction,
+        } = transferHistory;
+        let action;
+        let extracode;
+
+        switch (tempAction) {
+          case '3304':
+            action = 'Completed';
+            break;
+          case '3651':
+            action = 'Withdrawal details';
+            break;
+          case '3305':
+            action = 'Transfer';
+            break;
+          case '3306':
+            action = 'Conversion';
+            break;
+          case '3307':
+            action = 'Exchange';
+            break;
+          case '3308':
+            action = 'Exchange completed';
+            break;
+          default:
+            action = 'Transfer';
+            break;
+        }
+
+        switch (tempExtracode) {
+          case '9453':
+            extracode = 'Transfer failed';
+            break;
+          case '9416':
+            extracode = '-';
+            break;
+          case '9001':
+            extracode = 'Withdrawal approval';
+            break;
+          case '9002':
+            extracode = 'Withdrawal Withdrawal not approved';
+            break;
+          default:
+            extracode = 'Transfer completed';
+            break;
+        }
 
         return (
           <View style={styles.wrapperItemTable} key={index}>
             <View>
-              <Text style={styles.details}>
-                {action == 3304
-                  ? 'Completed'
-                  : action == 3651
-                  ? 'Withdrawal details'
-                  : 'Transfer'}
-              </Text>
+              <Text style={styles.details}>{action}</Text>
               <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
             </View>
             <View>
@@ -134,20 +224,64 @@ const ReceivedDetails = ({receivedDetails}) => (
     style={{paddingHorizontal: 28}}
     overScrollMode="never">
     {receivedDetails.length > 0 ? (
-      receivedDetails.map((transactionHistory, index) => {
-        const {datetime, time, amount, symbol, extracode, action} =
-          transactionHistory;
+      receivedDetails.map((receivedDetail, index) => {
+        const {
+          datetime,
+          time,
+          amount,
+          symbol,
+          extracode: tempExtracode,
+          action: tempAction,
+        } = receivedDetail;
+        let action;
+        let extracode;
+
+        switch (tempAction) {
+          case '3304':
+            action = 'Completed';
+            break;
+          case '3651':
+            action = 'Withdrawal details';
+            break;
+          case '3305':
+            action = 'Transfer';
+            break;
+          case '3306':
+            action = 'Conversion';
+            break;
+          case '3307':
+            action = 'Exchange';
+            break;
+          case '3308':
+            action = 'Exchange completed';
+            break;
+          default:
+            action = 'Transfer';
+            break;
+        }
+
+        switch (tempExtracode) {
+          case '9453':
+            extracode = 'Transfer failed';
+            break;
+          case '9416':
+            extracode = '-';
+            break;
+          case '9001':
+            extracode = 'Withdrawal approval';
+            break;
+          case '9002':
+            extracode = 'Withdrawal Withdrawal not approved';
+            break;
+          default:
+            extracode = 'Transfer completed';
+            break;
+        }
 
         return (
           <View style={styles.wrapperItemTable} key={index}>
             <View>
-              <Text style={styles.details}>
-                {action == 3304
-                  ? 'Completed'
-                  : action == 3651
-                  ? 'Withdrawal details'
-                  : 'Transfer'}
-              </Text>
+              <Text style={styles.details}>{action}</Text>
               <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
             </View>
             <View>
@@ -179,20 +313,64 @@ const TransitionHistory = ({transitionHistory}) => (
     style={{paddingHorizontal: 28}}
     overScrollMode="never">
     {transitionHistory.length > 0 ? (
-      transitionHistory.map((transactionHistory, index) => {
-        const {datetime, time, amount, symbol, extracode, action} =
-          transactionHistory;
+      transitionHistory.map((transitionHistory, index) => {
+        const {
+          datetime,
+          time,
+          amount,
+          symbol,
+          extracode: tempExtracode,
+          action: tempAction,
+        } = transitionHistory;
+        let action;
+        let extracode;
+
+        switch (tempAction) {
+          case '3304':
+            action = 'Completed';
+            break;
+          case '3651':
+            action = 'Withdrawal details';
+            break;
+          case '3305':
+            action = 'Transfer';
+            break;
+          case '3306':
+            action = 'Conversion';
+            break;
+          case '3307':
+            action = 'Exchange';
+            break;
+          case '3308':
+            action = 'Exchange completed';
+            break;
+          default:
+            action = 'Transfer';
+            break;
+        }
+
+        switch (tempExtracode) {
+          case '9453':
+            extracode = 'Transfer failed';
+            break;
+          case '9416':
+            extracode = '-';
+            break;
+          case '9001':
+            extracode = 'Withdrawal approval';
+            break;
+          case '9002':
+            extracode = 'Withdrawal Withdrawal not approved';
+            break;
+          default:
+            extracode = 'Transfer completed';
+            break;
+        }
 
         return (
           <View style={styles.wrapperItemTable} key={index}>
             <View>
-              <Text style={styles.details}>
-                {action == 3304
-                  ? 'Completed'
-                  : action == 3651
-                  ? 'Withdrawal details'
-                  : 'Transfer'}
-              </Text>
+              <Text style={styles.details}>{action}</Text>
               <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
             </View>
             <View>
@@ -459,7 +637,7 @@ const styles = StyleSheet.create({
   wrapperItemTable: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    gap: 10,
     borderBottomColor: '#bbb',
     borderBottomWidth: 0.55,
     paddingBottom: 10,
@@ -469,23 +647,28 @@ const styles = StyleSheet.create({
     color: 'black',
     marginBottom: 10,
     fontFamily: 'Poppins-Regular',
-    fontSize: 13,
+    fontSize: 12,
   },
   date: {
     fontSize: 11,
     fontFamily: 'Poppins-Regular',
     color: '#aaa',
   },
+  wrapperPrice: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginBottom: 10,
+  },
   price: {
-    fontSize: 15,
+    fontSize: 13,
     fontFamily: 'Poppins-Regular',
     color: 'black',
     textAlign: 'right',
-    marginBottom: 10,
   },
   status: {
     color: '#999',
     textAlign: 'right',
+    fontSize: 13,
   },
   textNotFoundHistory: {
     fontFamily: 'Poppins-Regular',
