@@ -21,7 +21,7 @@ const CustomModal = ({visible, text, onOK}) => {
 };
 
 const ShowAdScreen = ({route, navigation}) => {
-  const {member, advertisement, coin} = route.params;
+  const {screenName, member, advertisement, coin, coinScreen} = route.params;
   const {adLoaded, adDismissed, show} = useInterstitialAd(
     // TestIds.INTERSTITIAL,
     realAD,
@@ -37,7 +37,15 @@ const ShowAdScreen = ({route, navigation}) => {
 
   const handleOKPress = () => {
     setModalVisible(false);
-    navigation.replace('AdvertiseHome');
+    console.log('Apakah ini coin screen? ' + coinScreen);
+
+    if (coinScreen == true) {
+      navigation.replace(screenName, {
+        sendActiveTab: 'Camera',
+      });
+    } else {
+      navigation.replace(screenName);
+    }
   };
 
   useEffect(() => {

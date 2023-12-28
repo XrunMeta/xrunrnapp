@@ -150,9 +150,11 @@ const AdvertiseScreen = () => {
 
   const onStorage = (memberID, advertisement, coin) => {
     navigation.replace('ShowAd', {
+      screenName: 'AdvertiseHome',
       member: memberID,
       advertisement: advertisement,
       coin: coin,
+      coinScreen: false,
     });
   };
 
