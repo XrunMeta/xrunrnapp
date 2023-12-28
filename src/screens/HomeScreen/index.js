@@ -17,7 +17,8 @@ import {URL_API} from '../../../utils';
 
 const langData = require('../../../lang.json');
 
-export default function Home() {
+export default function Home({route}) {
+  const {sendActiveTab} = route.params || {};
   const {isLoggedIn} = useAuth();
   console.log('Status Login di Home : ' + isLoggedIn);
   const [activeTab, setActiveTab] = useState('Map');
@@ -28,6 +29,13 @@ export default function Home() {
   const handleTabChange = tabName => {
     setActiveTab(tabName);
   };
+
+  useEffect(() => {
+    if (sendActiveTab) {
+      console.log('Di Home Screen disuruh buka Tab -> ' + sendActiveTab);
+      setActiveTab(sendActiveTab);
+    }
+  }, [sendActiveTab]);
 
   useEffect(() => {
     // Get Language
