@@ -18,6 +18,7 @@ import {TabView, SceneMap} from 'react-native-tab-view';
 import TableWalletCard from '../../components/TableWallet';
 import {URL_API, funcTransactionalInformation} from '../../../utils';
 import ShowQRWallet from '../../components/ShowQRWallet';
+
 const langData = require('../../../lang.json');
 
 const WalletScreen = ({navigation}) => {
@@ -206,13 +207,17 @@ const WalletScreen = ({navigation}) => {
         <View style={styles.containerTextWallet}>
           <View style={styles.wrapperTextwallet}>
             <Text style={styles.textWallet}>Possess</Text>
-            <Text style={styles.valueWallet}>{Wamount}</Text>
+            <Text style={styles.valueWallet}>
+              {Wamount.replaceAll('.', ',')}
+            </Text>
             <Text style={styles.textWallet}>{symbol}</Text>
           </View>
 
           <View style={styles.wrapperTextwallet}>
             <Text style={styles.textWallet}>Catch</Text>
-            <Text style={styles.valueWallet}>{amount}</Text>
+            <Text style={styles.valueWallet}>
+              {amount.replaceAll('.', ',')}
+            </Text>
             <Text style={styles.textWallet}>
               {symbol}{' '}
               {symbol === 'XRUN'
@@ -305,11 +310,7 @@ const WalletScreen = ({navigation}) => {
           <ButtonBack onClick={onBack} />
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>
-            {lang && lang.screen_wallet && lang.screen_wallet.title
-              ? lang.screen_wallet.title
-              : ''}
-          </Text>
+          <Text style={styles.title}>My Wallet</Text>
         </View>
       </View>
 
