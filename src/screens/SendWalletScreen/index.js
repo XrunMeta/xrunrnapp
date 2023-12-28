@@ -312,11 +312,7 @@ const SendWalletScreen = ({navigation, route}) => {
           <ButtonBack onClick={onBack} />
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>
-            {lang && lang.screen_send && lang.screen_send.title
-              ? lang.screen_send.title
-              : ''}
-          </Text>
+          <Text style={styles.title}>Send</Text>
         </View>
       </View>
 
@@ -344,39 +340,19 @@ const SendWalletScreen = ({navigation, route}) => {
             value={amount}
             setValue={setAmount}
             isNumber
-            label={
-              lang && lang.screen_send && lang.screen_send.label_amount
-                ? lang.screen_send.label_amount
-                : ''
-            }
-            placeholder={
-              lang && lang.screen_send && lang.screen_send.amount_placeholder
-                ? lang.screen_send.amount_placeholder
-                : ''
-            }
+            label={'Amount to send'}
+            placeholder={'Please enter the amount to be sent.'}
           />
 
           <CustomInputWallet
             value={address}
             setValue={setAddress}
-            label={
-              lang && lang.screen_send && lang.screen_send.label_address
-                ? lang.screen_send.label_address
-                : ''
-            }
-            placeholder={
-              lang && lang.screen_send && lang.screen_send.address_placeholder
-                ? lang.screen_send.address_placeholder
-                : ''
-            }
+            label={'Address to send'}
+            placeholder={'Please enter the address to be sent.'}
           />
 
           <CustomDropdownWallet
-            label={
-              lang && lang.screen_send && lang.screen_send.label_exchange
-                ? lang.screen_send.label_exchange
-                : ''
-            }
+            label={'Stock exchange'}
             onSelectedExchange={value => {
               setSelectedExchange(value);
             }}

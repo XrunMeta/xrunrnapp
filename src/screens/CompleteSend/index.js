@@ -47,13 +47,7 @@ const CompleteSend = ({navigation, route}) => {
     <View style={{flex: 1, backgroundColor: '#f3f4f6'}}>
       <View style={{flexDirection: 'row'}}>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>
-            {lang &&
-            lang.screen_complete_send &&
-            lang.screen_complete_send.title
-              ? lang.screen_complete_send.title
-              : ''}
-          </Text>
+          <Text style={styles.title}>Transfer Completed</Text>
         </View>
       </View>
       <View
