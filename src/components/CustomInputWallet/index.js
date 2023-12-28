@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   label: {
-    color: '#505050',
+    color: '#555',
     fontSize: 16,
     fontFamily: 'Poppins-Regular',
   },
