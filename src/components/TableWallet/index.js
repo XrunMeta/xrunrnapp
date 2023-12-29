@@ -453,7 +453,7 @@ const TableWalletCard = ({
   // Go to page conversion request
   const conversionRequest = () => {
     navigation.navigate('ConversionRequest', {
-      dataWallet,
+      currency: dataWallet.currency,
     });
   };
 
