@@ -586,7 +586,9 @@
       }
     },
     "screen_wallet": {
-      "title": "My Wallet"
+      "title": "My Wallet",
+      "possess": "Possess",
+      "catch": "Catch"
     },
     "screen_send": {
       "title": "Send",
