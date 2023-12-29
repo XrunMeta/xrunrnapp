@@ -493,7 +493,7 @@ const styles = StyleSheet.create({
   hash: {
     color: 'white',
     fontFamily: 'Poppins-Regular',
-    fontSize: 11,
+    fontSize: 12,
   },
   logo: {
     height: 40,
