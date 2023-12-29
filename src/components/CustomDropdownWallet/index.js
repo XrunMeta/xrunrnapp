@@ -17,7 +17,7 @@ const CustomDropdownWallet = ({
           onValueChange={itemValue => onSelectedExchange(itemValue)}
           dropdownIconColor={'#555'}
           mode="dropdown"
-          selectionColor={'#555'}>
+          selectionColor={'#000'}>
           {cointrace.map(coin => {
             return (
               <Picker.Item
@@ -40,8 +40,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   label: {
-    color: '#555',
-    fontSize: 16,
+    color: '#000',
     fontFamily: 'Poppins-Regular',
   },
   containerInput: {
@@ -50,7 +49,8 @@ const styles = StyleSheet.create({
   },
   input: {
     fontFamily: 'Poppins-Regular',
-    color: '#555',
+    color: '#000',
     backgroundColor: '#fff',
+    fontSize: 13,
   },
 });
