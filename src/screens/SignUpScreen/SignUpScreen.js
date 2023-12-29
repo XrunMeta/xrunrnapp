@@ -36,7 +36,7 @@ const SignUpScreen = ({route}) => {
 
   const navigation = useNavigation();
 
-  const onSignUp = () => {
+  const onSignUp = async () => {
     if (name.trim() === '') {
       Alert.alert('Error', 'Nama harus diisi');
     } else if (email.trim() === '') {
@@ -50,7 +50,31 @@ const SignUpScreen = ({route}) => {
     } else if (region.trim() === '') {
       Alert.alert('Error', `Daerah harus diisi`);
     } else {
-      console.warn('Cek login');
+      // Pemanggilan API ke link yang diberikan
+      const apiUrl = `${URL_API}&act=login-checker-email&email=${email}`;
+      console.log(apiUrl);
+
+      try {
+        // Melakukan pemanggilan API dengan menggunakan fetch
+        const response = await fetch(apiUrl);
+        const responseData = await response.json();
+
+        // Handle respon dari API sesuai kebutuhan
+        console.log('Response from API:', JSON.stringify(responseData));
+
+        // Lanjutkan logika Anda di sini berdasarkan respon dari API
+        if (responseData.success) {
+          console.warn('Cek login');
+        } else {
+          Alert.alert(
+            'Error',
+            'Gagal melakukan pendaftaran. Email sudah digunakan.',
+          );
+        }
+      } catch (error) {
+        console.error('Error during API call:', error);
+        Alert.alert('Error', 'Gagal melakukan pendaftaran. Terjadi kesalahan.');
+      }
     }
   };
 
