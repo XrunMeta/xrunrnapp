@@ -482,6 +482,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 28,
     paddingTop: 24,
     paddingBottom: 80,
+    gap: 30,
   },
   button: {
     flexDirection: 'row',
