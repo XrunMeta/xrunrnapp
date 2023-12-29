@@ -45,6 +45,7 @@ import AdvertiseScreen from './src/screens/AdvertiseScreen/AdvertiseScreen';
 import SendWalletScreen from './src/screens/SendWalletScreen';
 import ShowAdScreen from './src/screens/AdvertiseScreen/ShowAdScreen';
 import CompleteSend from './src/screens/CompleteSend';
+import ConversionRequest from './src/screens/ConversionRequestWalletScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -132,6 +133,10 @@ export default function App() {
           <Stack.Screen name="SendWallet" component={SendWalletScreen} />
           <Stack.Screen name="ShowAd" component={ShowAdScreen} />
           <Stack.Screen name="CompleteSend" component={CompleteSend} />
+          <Stack.Screen
+            name="ConversionRequest"
+            component={ConversionRequest}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </AuthProvider>
