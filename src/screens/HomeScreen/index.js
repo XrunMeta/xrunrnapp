@@ -94,12 +94,7 @@ export default function Home({route}) {
     <SafeAreaView style={{flex: 1}}>
       {isLoggedIn ? (
         <View style={styles.root}>
-          {activeTab === 'Map' ? (
-            <TestCam />
-          ) : (
-            // <MapParent />
-            <ARScreen />
-          )}
+          {activeTab === 'Map' ? <MapParent /> : <ARScreen />}
 
           {/* Bottom Tab Navigator */}
           <View style={styles.bottomTabContainer}>
