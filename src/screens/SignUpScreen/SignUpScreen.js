@@ -21,16 +21,17 @@ const langData = require('../../../lang.json');
 
 const SignUpScreen = ({route}) => {
   const [lang, setLang] = useState({});
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [name, setName] = useState('bTest');
+  const [email, setEmail] = useState('ggg@hhh.coms');
+  const [password, setPassword] = useState('Bilal123');
+  const [phoneNumber, setPhoneNumber] = useState('081298486647');
   const [region, setRegion] = useState('');
+  const [regionID, setRegionID] = useState(0);
   const [gender, setGender] = useState('pria');
   const [age, setAge] = useState('10');
-  const [refferalEmail, setRefferalEmail] = useState('');
+  const [refferalEmail, setRefferalEmail] = useState('ggg@hhh.com');
   const [isEmailValid, setIsEmailValid] = useState(true);
-  const {flag, countryCode, country} = route.params || {};
+  const {flag, countryCode = 62, country, code = 'ID'} = route.params || {};
   const [areaData, setAreaData] = useState([]);
   const [isListWrapperVisible, setIsListWrapperVisible] = useState(false);
 
@@ -47,33 +48,121 @@ const SignUpScreen = ({route}) => {
       Alert.alert('Error', 'Password harus diisi');
     } else if (phoneNumber.trim() === '') {
       Alert.alert('Error', `Nomor Telepon harus diisi`);
-    } else if (region.trim() === '') {
+    } else if (regionID == 0) {
       Alert.alert('Error', `Daerah harus diisi`);
     } else {
       // Pemanggilan API ke link yang diberikan
       const apiUrl = `${URL_API}&act=login-checker-email&email=${email}`;
-      console.log(apiUrl);
 
       try {
-        // Melakukan pemanggilan API dengan menggunakan fetch
+        // Check is email duplicate
         const response = await fetch(apiUrl);
-        const responseData = await response.json();
+        const responseData = await response.text();
 
-        // Handle respon dari API sesuai kebutuhan
-        console.log('Response from API:', JSON.stringify(responseData));
+        if (responseData === 'OK') {
+          // Check Refferal is empty
+          if (refferalEmail.trim() === '') {
+            console.log('Kosong');
+          } else {
+            const referURL = `${URL_API}&act=ap1810-i01&email=${refferalEmail}`;
 
-        // Lanjutkan logika Anda di sini berdasarkan respon dari API
-        if (responseData.success) {
-          console.warn('Cek login');
+            try {
+              // Check is email referral is verified
+              const referRes = await fetch(referURL);
+              const referData = await referRes.json();
+
+              // Do Signup
+              if (referData.result === 'true') {
+                const joinRefMem = referData.member;
+                const joinName = name.toString().split(' ');
+                const joinFirstName = joinName[0];
+                const joinLastName = joinName.slice(1).join(' ') || '';
+                const joinGender = gender === 'pria' ? 2110 : 2111;
+                const joinMobile = phoneNumber.toString();
+                const joinAges =
+                  age === '10'
+                    ? 2210
+                    : age === '20'
+                    ? 2220
+                    : age === '30'
+                    ? 2230
+                    : age === '40'
+                    ? 2240
+                    : 2250;
+                const joinRegion = regionID.toString();
+                const joinPin = password.toString();
+
+                const joinAPI =
+                  `${URL_API}&act=login-06-joinAndAccount` +
+                  `&email=${email}` +
+                  `&pin=${joinPin}` +
+                  `&firstname=${joinFirstName}` +
+                  `&lastname=${joinLastName}` +
+                  `&gender=${joinGender}` +
+                  `&mobile=${joinMobile}` +
+                  `&mobilecode=${countryCode}` +
+                  `&countrycode=${code}` +
+                  `&country=${countryCode}` +
+                  `&region=${joinRegion}` +
+                  `&age=${joinAges}` +
+                  `&recommand=${joinRefMem}`;
+
+                console.log(joinAPI);
+
+                try {
+                  const joinRes = await fetch(joinAPI);
+                  const joinData = await joinRes.json();
+
+                  // Lanjutkan logika Anda berdasarkan respon dari API
+                  if (joinData.data === 'ok') {
+                    navigation.navigate('EmailVerif', {
+                      dataEmail: email,
+                    });
+                  } else {
+                    Alert.alert(
+                      'Failed',
+                      "It's a server problem. Please try in a few minutes.",
+                    );
+                    navigation.navigate('First');
+                  }
+                } catch (error) {
+                  console.error('Error during API call:', error);
+                  Alert.alert(
+                    'Error',
+                    "It's a server problem. Please try in a few minutes.",
+                  );
+                }
+              } else if (referData.result === 'false') {
+                setRefferalEmail('');
+                Alert.alert('Failed', 'Please verify the recommended email');
+              } else {
+                Alert.alert(
+                  'Error',
+                  'There is a server communication error. Please try again...',
+                );
+              }
+            } catch (error) {
+              console.error('Error during API call:', error);
+              Alert.alert(
+                'Error',
+                'There is a server communication error. Please try again...',
+              );
+            }
+          }
+        } else if (responseData === 'NO') {
+          Alert.alert('Failed', 'Duplicated email');
         } else {
           Alert.alert(
             'Error',
-            'Gagal melakukan pendaftaran. Email sudah digunakan.',
+            'There is a server communication error. Please try again...',
           );
         }
       } catch (error) {
         console.error('Error during API call:', error);
-        Alert.alert('Error', 'Gagal melakukan pendaftaran. Terjadi kesalahan.');
+        Alert.alert(
+          'Error',
+          'There is a server communication error. Please try again...',
+        );
       }
     }
   };
@@ -141,7 +230,7 @@ const SignUpScreen = ({route}) => {
 
     getLanguage();
 
-    fetch(`${URL_API}&act=app7190-01&country=${countryCode ? countryCode : 62}`)
+    fetch(`${URL_API}&act=app7190-01&country=${countryCode}`)
       .then(response => response.json())
       .then(jsonData => {
         var jsonToArr = Object.values(jsonData);
@@ -223,6 +312,7 @@ const SignUpScreen = ({route}) => {
                   key={index}
                   onPress={() => {
                     setRegion(item.description);
+                    setRegionID(item.subcode);
                     setIsListWrapperVisible(false);
                   }}>
                   {console.log(item.description)}
@@ -380,6 +470,7 @@ const SignUpScreen = ({route}) => {
             <TextInput
               keyboardType="numeric"
               style={styles.input}
+              value={phoneNumber}
               setValue={setPhoneNumber}
               onChangeText={text => setPhoneNumber(text)}
             />
