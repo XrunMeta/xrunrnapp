@@ -128,7 +128,7 @@ const ModifInfoScreen = ({route}) => {
         setPassword(pinChange);
 
         // Age
-        const getAge = justGetNumber(userData.cages);
+        const getAge = justGetNumber(userData.cages ? userData : '');
         setAge(getAge);
         setTempAge(getAge);
         setValueAge(userData.ages);
@@ -644,7 +644,7 @@ const ModifInfoScreen = ({route}) => {
                     ? lang.screen_modify_information.age.label
                     : ''
                 }
-                value={age + 's'}
+                value={age == null ? '-' : age + 's'}
                 setValue={setAge}
                 onSaveChange={() => {
                   saveChangesToAPI(
@@ -768,7 +768,11 @@ const ModifInfoScreen = ({route}) => {
                     ? lang.screen_modify_information.area.placeholder
                     : ''
                 }
-                value={country.cDesc + ', ' + region.rDesc}
+                value={
+                  country.cDesc == null
+                    ? '-'
+                    : country.cDesc + ', ' + region.rDesc
+                }
                 setValue={setRegion.rDesc}
                 onSaveChange={() => {
                   if (tempRegion.rCode === 0) {

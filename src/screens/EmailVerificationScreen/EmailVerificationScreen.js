@@ -107,7 +107,7 @@ const EmailVerificationScreen = () => {
   // ########## Countdown ##########
   const Countdown = () => {
     // const [seconds, setSeconds] = useState(599); // Duration
-    const [seconds, setSeconds] = useState(10);
+    const [seconds, setSeconds] = useState(599);
 
     useEffect(() => {
       const timer = setInterval(() => {
@@ -129,11 +129,11 @@ const EmailVerificationScreen = () => {
       <View style={styles.container}>
         {seconds > 0 ? (
           <Text style={styles.disableText}>
-            {formattedMinutes}:{formattedSeconds} Kirimkan kode verifikasi
+            Please send your code in {formattedMinutes}:{formattedSeconds}
           </Text>
         ) : (
           <Pressable onPress={onProblem} style={styles.resetPassword}>
-            <Text style={styles.emailAuth}>Terjadi masalah</Text>
+            <Text style={styles.emailAuth}>A problem has occured</Text>
           </Pressable>
         )}
       </View>
@@ -159,9 +159,9 @@ const EmailVerificationScreen = () => {
                   style={{height: 25}}
                 />
               </TouchableOpacity>
-              <CustomButton text="Kirim ulang kode" />
+              <CustomButton text="Send code again" />
               <CustomButton
-                text="Masuk dengan kata sandi"
+                text="Login with password"
                 onPress={onBack}
                 type="SECONDARY"
               />
@@ -180,7 +180,9 @@ const EmailVerificationScreen = () => {
 
         {/* Text Section */}
         <View style={styles.textWrapper}>
-          <Text style={styles.normalText}>Masukan kode verifikasi 6 angka</Text>
+          <Text style={styles.normalText}>
+            Enter the 6 digit verification code
+          </Text>
           <Text style={styles.boldText}>{dataEmail}</Text>
         </View>
 

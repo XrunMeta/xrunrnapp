@@ -120,32 +120,28 @@ const NotifyScreen = () => {
         const data = await response.json();
 
         if (data.data[0].count == 1) {
-          const now = new Date();
-          const date = `${now.getFullYear()}-${(now.getMonth() + 1)
-            .toString()
-            .padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
-          const formattedDate = `${now
-            .getHours()
-            .toString()
-            .padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-
-          // Bug disini, Jadi kalo ada pesan baru dia gabisa diapus sebab id.boardnya ga valid karna variabel dibawah utk boardnya pake  date. Harusnya dapeting elemen terakhir (Maksudnya ID di Boards) trus ditambahin 1
-          const newBubble = {
-            board: Date.now().toString(),
-            datetime: date,
-            title: chatText,
-            contents: chatText,
-            type: 9303,
-            image: null,
-            time: `${date}\n ${formattedDate}`,
-          };
-
-          // Update sended chat to screen
-          setNotify(prevNotify => [...prevNotify, newBubble]);
+          refreshChatView();
         }
       } catch (error) {
         console.error('Error sending chat:', error);
       }
+    }
+  };
+
+  // Fungsi untuk memperbarui tampilan chat
+  const refreshChatView = async () => {
+    try {
+      const response = await fetch(
+        `${URL_API}&act=ap6000-01&member=${userData.member}&start=0`,
+      );
+      const data = await response.json();
+
+      if (data && data.data.length > 0) {
+        const reversedNotify = data.data.reverse();
+        setNotify(reversedNotify);
+      }
+    } catch (err) {
+      console.error('Error retrieving chat data:', err);
     }
   };
 

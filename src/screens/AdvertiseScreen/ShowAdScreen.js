@@ -75,11 +75,11 @@ const ShowAdScreen = ({route, navigation}) => {
             `${URL_API}&act=app3100-01&advertisement=${advertisement}&coin=${coin}&member=${coin}`,
           );
           const data = await response.json();
-          console.log('bgst -> ' + JSON.stringify(data.data[0]));
+          console.log('Coin Acq Response -> ' + JSON.stringify(data.data[0]));
 
           // If Success
-          if (data && data.data[0].count > 0) {
-            setModalText('Coin Acquired Successfully!');
+          if (data && parseInt(data.data[0].count) > 0) {
+            setModalText(`Coin Acquired Successfully!`);
             setModalVisible(true);
           } else {
             setModalText('Coin Acquisition Failed.');

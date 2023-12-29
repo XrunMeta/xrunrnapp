@@ -73,7 +73,7 @@ function ARScreen() {
       );
 
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('Kamera diijinin boy');
+        // console.log('Kamera diijinin boy');
 
         setCameraReady(true);
         setCameraPermission('granted');
