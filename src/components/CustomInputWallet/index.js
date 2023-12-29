@@ -1,16 +1,24 @@
 import {StyleSheet, Text, View, TextInput} from 'react-native';
 import React from 'react';
 
-const CustomInputWallet = ({label, value, setValue, placeholder, isNumber}) => {
+const CustomInputWallet = ({
+  label,
+  value,
+  setValue,
+  placeholder,
+  isNumber,
+  labelVisible = true,
+  customFontSize = 13,
+}) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
+      {labelVisible && <Text style={styles.label}>{label}</Text>}
       <TextInput
         value={value}
         onChangeText={setValue}
         placeholder={placeholder}
         placeholderTextColor="#a8a8a7"
-        style={styles.input}
+        style={styles.input(customFontSize)}
         keyboardType={isNumber ? 'numeric' : 'default'}
       />
     </View>
@@ -19,19 +27,16 @@ const CustomInputWallet = ({label, value, setValue, placeholder, isNumber}) => {
 
 export default CustomInputWallet;
 const styles = StyleSheet.create({
-  container: {
-    marginBottom: 30,
-  },
   label: {
     color: '#000',
     fontFamily: 'Poppins-Regular',
   },
-  input: {
+  input: customFontSize => ({
     borderBottomWidth: 1,
     paddingLeft: 10,
     borderBottomColor: '#ddd',
     fontFamily: 'Poppins-Regular',
-    color: '#555',
-    fontSize: 13,
-  },
+    color: '#000',
+    fontSize: customFontSize,
+  }),
 });
