@@ -72,6 +72,7 @@ const ChooseRegionScreen = ({route}) => {
       flag: item.lcode,
       countryCode: item.callnumber,
       country: item.country,
+      code: item.code,
     });
   };
 
