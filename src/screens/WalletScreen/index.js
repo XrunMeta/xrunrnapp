@@ -51,10 +51,28 @@ const WalletScreen = ({navigation}) => {
     // Get Language
     const getLanguage = async () => {
       try {
+        let tempLang;
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
 
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
+        switch (currentLanguage) {
+          case 'id':
+            tempLang = 'id';
+            break;
+          case 'en':
+            tempLang = 'eng';
+            break;
+          case 'kr':
+            tempLang = 'kr';
+            break;
+          case 'cn':
+            tempLang = 'cn';
+            break;
+          default:
+            tempLang = 'id';
+            break;
+        }
+
+        const language = langData[tempLang];
         setLang(language);
       } catch (err) {
         console.error(
@@ -93,12 +111,29 @@ const WalletScreen = ({navigation}) => {
           setRoutes(result.data.map(card => ({key: card.currency})));
         })
         .catch(error => {
-          Alert.alert('Failed', 'Get your wallet, please try again later', [
-            {
-              text: 'OK',
-              onPress: () => console.log('Failed get wallet data: ', error),
-            },
-          ]);
+          Alert.alert(
+            `${
+              lang && lang.screen_wallet && lang.screen_wallet.failed_alert
+                ? lang.screen_wallet.failed_alert
+                : ''
+            }`,
+            `${
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.failed_getwallet_alert
+                ? lang.screen_wallet.failed_getwallet_alert
+                : ''
+            }`,
+            [
+              {
+                text:
+                  lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
+                    ? lang.screen_wallet.confirm_alert
+                    : '',
+                onPress: () => console.log('Failed get wallet data: ', error),
+              },
+            ],
+          );
           setIsLoading(false);
         });
     } catch (err) {
@@ -206,7 +241,11 @@ const WalletScreen = ({navigation}) => {
 
         <View style={styles.containerTextWallet}>
           <View style={styles.wrapperTextwallet}>
-            <Text style={styles.textWallet}>Possess</Text>
+            <Text style={styles.textWallet}>
+              {lang && lang.screen_wallet && lang.screen_wallet.possess
+                ? lang.screen_wallet.possess
+                : ''}
+            </Text>
             <Text style={styles.valueWallet}>
               {Wamount.replaceAll('.', ',')}
             </Text>
@@ -214,7 +253,11 @@ const WalletScreen = ({navigation}) => {
           </View>
 
           <View style={styles.wrapperTextwallet}>
-            <Text style={styles.textWallet}>Catch</Text>
+            <Text style={styles.textWallet}>
+              {lang && lang.screen_wallet && lang.screen_wallet.catch
+                ? lang.screen_wallet.catch
+                : ''}
+            </Text>
             <Text style={styles.valueWallet}>
               {amount.replaceAll('.', ',')}
             </Text>
@@ -268,10 +311,15 @@ const WalletScreen = ({navigation}) => {
 
     Alert.alert(
       '',
-      'The wallet address has been copied. Use it wherever you want.',
+      lang && lang.screen_wallet && lang.screen_wallet.copy_qrcode
+        ? lang.screen_wallet.copy_qrcode
+        : '',
       [
         {
-          text: 'OK',
+          text:
+            lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
+              ? lang.screen_wallet.confirm_alert
+              : '',
         },
       ],
     );
@@ -310,7 +358,11 @@ const WalletScreen = ({navigation}) => {
           <ButtonBack onClick={onBack} />
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>My Wallet</Text>
+          <Text style={styles.title}>
+            {lang && lang.screen_wallet && lang.screen_wallet.title
+              ? lang.screen_wallet.title
+              : ''}
+          </Text>
         </View>
       </View>
 
@@ -342,6 +394,7 @@ const WalletScreen = ({navigation}) => {
             dataWallet={dataWallet}
             currentCurrency={currentCurrency}
             transactionalInformation={transactionalInformation}
+            lang={lang}
           />
         </View>
       </View>
@@ -356,7 +409,11 @@ const WalletScreen = ({navigation}) => {
               setIsShowTextQRCode(false);
               setIsShowQRCodeWallet(true);
             }}>
-            <Text style={styles.textQRCode}>QR Code</Text>
+            <Text style={styles.textQRCode}>
+              {lang && lang.screen_wallet && lang.screen_wallet.qrcode_show
+                ? lang.screen_wallet.qrcode_show
+                : ''}
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -370,6 +427,7 @@ const WalletScreen = ({navigation}) => {
         <ShowQRWallet
           cardDataQR={cardDataQR}
           setIsShowQRCodeWallet={setIsShowQRCodeWallet}
+          lang={lang}
         />
       )}
     </View>

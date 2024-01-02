@@ -14,7 +14,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import Share from 'react-native-share';
 import RNFetchBlob from 'rn-fetch-blob';
 
-const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet}) => {
+const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
   const [downloadDisable, setDownloadDisable] = useState(true);
   const [shareDisable, setShareDisable] = useState(true);
   const apiQRCode = 'https://api.qrserver.com/v1/create-qr-code/';
@@ -61,15 +61,14 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet}) => {
       duration: 1000,
       useNativeDriver: true,
     }).start(() => {
-      // Callback ini akan dijalankan setelah animasi selesai
-      fadeOut(); // Panggil fungsi fadeOut untuk menghilangkan setelah fadeIn selesai
+      fadeOut();
     });
   };
 
   const fadeOut = () => {
     Animated.timing(fadeAnim, {
       toValue: 0,
-      duration: 6000,
+      duration: 4000,
       useNativeDriver: true,
     }).start();
   };
@@ -81,6 +80,8 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet}) => {
 
   // Share QR
   const shareQRWallet = async hash => {
+    setShareDisable(true);
+
     try {
       const options = {
         message: hash,
@@ -90,11 +91,14 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet}) => {
       const result = await Share.open(options);
 
       if (result.app) {
-        console.log(`Berhasil berbagi dengan ${result.app}`);
+        console.log(`Successfully shared with ${result.app}`);
       } else {
-        console.log('Berhasil berbagi');
+        console.log('Successfully shared');
       }
+
+      setShareDisable(false);
     } catch (error) {
+      setShareDisable(false);
       console.log('Error sharing QR Code:', error.message);
     }
   };
@@ -108,11 +112,6 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet}) => {
       try {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-          {
-            // title: 'Storage Permission Required',
-            // message:
-            //   'Application needs access to your storage to download File',
-          },
         );
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
           // Start downloading
@@ -164,11 +163,18 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet}) => {
       // Alert after successful downloading
       console.log('res -> ', JSON.stringify(res));
       Alert.alert(
-        'Success',
-        `${fileName} Image is saved successfully. Please check the gallery`,
+        '',
+        `${fileName} ${
+          lang && lang.screen_wallet && lang.screen_wallet.download_qrcode_show
+            ? lang.screen_wallet.download_qrcode_show
+            : ''
+        }`,
         [
           {
-            text: 'OK',
+            text:
+              lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
+                ? lang.screen_wallet.confirm_alert
+                : '',
             onPress: () => {
               setDownloadDisable(false);
             },
@@ -177,14 +183,27 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet}) => {
       );
     } catch (error) {
       console.error('Error downloading qr code:', error);
-      Alert.alert('Failed', 'Failed to download qr code.', [
-        {
-          text: 'OK',
-          onPress: () => {
-            setDownloadDisable(false);
+      Alert.alert(
+        '',
+        `${
+          lang &&
+          lang.screen_wallet &&
+          lang.screen_wallet.failed_download_qrcode_alert
+            ? lang.screen_wallet.failed_download_qrcode_alert
+            : ''
+        }`,
+        [
+          {
+            text:
+              lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
+                ? lang.screen_wallet.confirm_alert
+                : '',
+            onPress: () => {
+              setDownloadDisable(false);
+            },
           },
-        },
-      ]);
+        ],
+      );
     }
   };
 
@@ -290,7 +309,9 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet}) => {
             style={{width: 28, height: 28}}
           />
           <Text style={styles.notificationTextInQR}>
-            The wallet address has been copied
+            {lang && lang.screen_wallet && lang.screen_wallet.copy_qrcode_show
+              ? lang.screen_wallet.copy_qrcode_show
+              : ''}
           </Text>
         </View>
       </Animated.View>

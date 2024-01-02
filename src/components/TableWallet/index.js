@@ -6,7 +6,7 @@ import {
   useWindowDimensions,
   ScrollView,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 
@@ -39,7 +39,7 @@ const renderTabBar = props => (
 );
 
 // Content TabView
-const TotalHistory = ({totalHistory}) => (
+const TotalHistory = ({totalHistory, lang}) => (
   <ScrollView
     showsVerticalScrollIndicator={false}
     style={{paddingHorizontal: 28}}
@@ -59,43 +59,98 @@ const TotalHistory = ({totalHistory}) => (
 
         switch (tempAction) {
           case '3304':
-            action = 'Completed';
+            action =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_action3304
+                ? lang.screen_wallet.history_action3304
+                : '';
             break;
           case '3651':
-            action = 'Withdrawal details';
+            action =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_action3651
+                ? lang.screen_wallet.history_action3651
+                : '';
             break;
           case '3305':
-            action = 'Transfer';
+            action =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_action3305
+                ? lang.screen_wallet.history_action3305
+                : '';
             break;
           case '3306':
-            action = 'Conversion';
+            action =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_action3306
+                ? lang.screen_wallet.history_action3306
+                : '';
             break;
           case '3307':
-            action = 'Exchange';
+            action =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_action3307
+                ? lang.screen_wallet.history_action3307
+                : '';
             break;
           case '3308':
-            action = 'Exchange completed';
+            action =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_action3308
+                ? lang.screen_wallet.history_action3308
+                : '';
             break;
           default:
-            action = 'Transfer';
+            action =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_action3305
+                ? lang.screen_wallet.history_action3305
+                : '';
             break;
         }
 
         switch (tempExtracode) {
           case '9453':
-            extracode = 'Transfer failed';
+            extracode =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_extracode9453
+                ? lang.screen_wallet.history_extracode9453
+                : '';
             break;
           case '9416':
             extracode = '-';
             break;
           case '9001':
-            extracode = 'Withdrawal approval';
+            extracode =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_extracode9001
+                ? lang.screen_wallet.history_extracode9001
+                : '';
             break;
           case '9002':
-            extracode = 'Withdrawal not approved';
+            extracode =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_extracode9002
+                ? lang.screen_wallet.history_extracode9002
+                : '';
             break;
           default:
-            extracode = 'Transfer completed';
+            extracode =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_extracodesuccess
+                ? lang.screen_wallet.history_extracodesuccess
+                : '';
             break;
         }
 
@@ -116,12 +171,16 @@ const TotalHistory = ({totalHistory}) => (
         );
       })
     ) : (
-      <Text style={styles.textNotFoundHistory}>History not found</Text>
+      <Text style={styles.textNotFoundHistory}>
+        {lang && lang.screen_wallet && lang.screen_wallet.history_not_found
+          ? lang.screen_wallet.history_not_found
+          : ''}
+      </Text>
     )}
   </ScrollView>
 );
 
-const TransferHistory = ({transferHistory}) => (
+const TransferHistory = ({transferHistory, lang}) => (
   <ScrollView
     showsVerticalScrollIndicator={false}
     style={{paddingHorizontal: 28}}
@@ -141,45 +200,102 @@ const TransferHistory = ({transferHistory}) => (
 
         switch (tempAction) {
           case '3304':
-            action = 'Completed';
+            action =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_action3304
+                ? lang.screen_wallet.history_action3304
+                : '';
             break;
           case '3651':
-            action = 'Withdrawal details';
+            action =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_action3651
+                ? lang.screen_wallet.history_action3651
+                : '';
             break;
           case '3305':
-            action = 'Transfer';
+            action =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_action3305
+                ? lang.screen_wallet.history_action3305
+                : '';
             break;
           case '3306':
-            action = 'Conversion';
+            action =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_action3306
+                ? lang.screen_wallet.history_action3306
+                : '';
             break;
           case '3307':
-            action = 'Exchange';
+            action =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_action3307
+                ? lang.screen_wallet.history_action3307
+                : '';
             break;
           case '3308':
-            action = 'Exchange completed';
+            action =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_action3308
+                ? lang.screen_wallet.history_action3308
+                : '';
             break;
           default:
-            action = 'Transfer';
+            action =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_action3305
+                ? lang.screen_wallet.history_action3305
+                : '';
             break;
         }
 
-        switch (tempExtracode) {
-          case '9453':
-            extracode = 'Transfer failed';
-            break;
-          case '9416':
-            extracode = '-';
-            break;
-          case '9001':
-            extracode = 'Withdrawal approval';
-            break;
-          case '9002':
-            extracode = 'Withdrawal not approved';
-            break;
-          default:
-            extracode = '';
-            break;
-        }
+        // switch (tempExtracode) {
+        //   case '9453':
+        //     extracode =
+        //       lang &&
+        //       lang.screen_wallet &&
+        //       lang.screen_wallet.history_extracode9453
+        //         ? lang.screen_wallet.history_extracode9453
+        //         : '';
+        //     break;
+        //   case '9416':
+        //     extracode = '-';
+        //     break;
+        //   case '9001':
+        //     extracode =
+        //       lang &&
+        //       lang.screen_wallet &&
+        //       lang.screen_wallet.history_extracode9001
+        //         ? lang.screen_wallet.history_extracode9001
+        //         : '';
+        //     break;
+        //   case '9002':
+        //     extracode =
+        //       lang &&
+        //       lang.screen_wallet &&
+        //       lang.screen_wallet.history_extracode9002
+        //         ? lang.screen_wallet.history_extracode9002
+        //         : '';
+        //     break;
+        //   default:
+        //     extracode =
+        //       lang &&
+        //       lang.screen_wallet &&
+        //       lang.screen_wallet.history_extracodesuccess
+        //         ? lang.screen_wallet.history_extracodesuccess
+        //         : '';
+        //     break;
+        // }
+
+        extracode = '';
 
         return (
           <View style={styles.wrapperItemTable} key={index}>
@@ -197,12 +313,16 @@ const TransferHistory = ({transferHistory}) => (
         );
       })
     ) : (
-      <Text style={styles.textNotFoundHistory}>History not found</Text>
+      <Text style={styles.textNotFoundHistory}>
+        {lang && lang.screen_wallet && lang.screen_wallet.history_not_found
+          ? lang.screen_wallet.history_not_found
+          : ''}
+      </Text>
     )}
   </ScrollView>
 );
 
-const ReceivedDetails = ({receivedDetails}) => (
+const ReceivedDetails = ({receivedDetails, lang}) => (
   <ScrollView
     showsVerticalScrollIndicator={false}
     style={{paddingHorizontal: 28}}
@@ -222,43 +342,98 @@ const ReceivedDetails = ({receivedDetails}) => (
 
         switch (tempAction) {
           case '3304':
-            action = 'Completed';
+            action =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_action3304
+                ? lang.screen_wallet.history_action3304
+                : '';
             break;
           case '3651':
-            action = 'Withdrawal details';
+            action =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_action3651
+                ? lang.screen_wallet.history_action3651
+                : '';
             break;
           case '3305':
-            action = 'Transfer';
+            action =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_action3305
+                ? lang.screen_wallet.history_action3305
+                : '';
             break;
           case '3306':
-            action = 'Conversion';
+            action =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_action3306
+                ? lang.screen_wallet.history_action3306
+                : '';
             break;
           case '3307':
-            action = 'Exchange';
+            action =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_action3307
+                ? lang.screen_wallet.history_action3307
+                : '';
             break;
           case '3308':
-            action = 'Exchange completed';
+            action =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_action3308
+                ? lang.screen_wallet.history_action3308
+                : '';
             break;
           default:
-            action = 'Transfer';
+            action =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_action3305
+                ? lang.screen_wallet.history_action3305
+                : '';
             break;
         }
 
         switch (tempExtracode) {
           case '9453':
-            extracode = 'Transfer failed';
+            extracode =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_extracode9453
+                ? lang.screen_wallet.history_extracode9453
+                : '';
             break;
           case '9416':
             extracode = '-';
             break;
           case '9001':
-            extracode = 'Withdrawal approval';
+            extracode =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_extracode9001
+                ? lang.screen_wallet.history_extracode9001
+                : '';
             break;
           case '9002':
-            extracode = 'Withdrawal not approved';
+            extracode =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_extracode9002
+                ? lang.screen_wallet.history_extracode9002
+                : '';
             break;
           default:
-            extracode = 'Transfer completed';
+            extracode =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_extracodesuccess
+                ? lang.screen_wallet.history_extracodesuccess
+                : '';
             break;
         }
 
@@ -278,12 +453,16 @@ const ReceivedDetails = ({receivedDetails}) => (
         );
       })
     ) : (
-      <Text style={styles.textNotFoundHistory}>History not found</Text>
+      <Text style={styles.textNotFoundHistory}>
+        {lang && lang.screen_wallet && lang.screen_wallet.history_not_found
+          ? lang.screen_wallet.history_not_found
+          : ''}
+      </Text>
     )}
   </ScrollView>
 );
 
-const TransitionHistory = ({transitionHistory}) => (
+const TransitionHistory = ({transitionHistory, lang}) => (
   <ScrollView
     showsVerticalScrollIndicator={false}
     style={{paddingHorizontal: 28}}
@@ -303,45 +482,102 @@ const TransitionHistory = ({transitionHistory}) => (
 
         switch (tempAction) {
           case '3304':
-            action = 'Completed';
+            action =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_action3304
+                ? lang.screen_wallet.history_action3304
+                : '';
             break;
           case '3651':
-            action = 'Withdrawal details';
+            action =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_action3651
+                ? lang.screen_wallet.history_action3651
+                : '';
             break;
           case '3305':
-            action = 'Transfer';
+            action =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_action3305
+                ? lang.screen_wallet.history_action3305
+                : '';
             break;
           case '3306':
-            action = 'Conversion';
+            action =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_action3306
+                ? lang.screen_wallet.history_action3306
+                : '';
             break;
           case '3307':
-            action = 'Exchange';
+            action =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_action3307
+                ? lang.screen_wallet.history_action3307
+                : '';
             break;
           case '3308':
-            action = 'Exchange completed';
+            action =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_action3308
+                ? lang.screen_wallet.history_action3308
+                : '';
             break;
           default:
-            action = 'Transfer';
+            action =
+              lang &&
+              lang.screen_wallet &&
+              lang.screen_wallet.history_action3305
+                ? lang.screen_wallet.history_action3305
+                : '';
             break;
         }
 
-        switch (tempExtracode) {
-          case '9453':
-            extracode = 'Transfer failed';
-            break;
-          case '9416':
-            extracode = '-';
-            break;
-          case '9001':
-            extracode = 'Withdrawal approval';
-            break;
-          case '9002':
-            extracode = 'Withdrawal not approved';
-            break;
-          default:
-            extracode = '';
-            break;
-        }
+        // switch (tempExtracode) {
+        //   case '9453':
+        //     extracode =
+        //       lang &&
+        //       lang.screen_wallet &&
+        //       lang.screen_wallet.history_extracode9453
+        //         ? lang.screen_wallet.history_extracode9453
+        //         : '';
+        //     break;
+        //   case '9416':
+        //     extracode = '-';
+        //     break;
+        //   case '9001':
+        //     extracode =
+        //       lang &&
+        //       lang.screen_wallet &&
+        //       lang.screen_wallet.history_extracode9001
+        //         ? lang.screen_wallet.history_extracode9001
+        //         : '';
+        //     break;
+        //   case '9002':
+        //     extracode =
+        //       lang &&
+        //       lang.screen_wallet &&
+        //       lang.screen_wallet.history_extracode9002
+        //         ? lang.screen_wallet.history_extracode9002
+        //         : '';
+        //     break;
+        //   default:
+        //     extracode =
+        //       lang &&
+        //       lang.screen_wallet &&
+        //       lang.screen_wallet.history_extracodesuccess
+        //         ? lang.screen_wallet.history_extracodesuccess
+        //         : '';
+        //     break;
+        // }
+
+        extracode = '';
 
         return (
           <View style={styles.wrapperItemTable} key={index}>
@@ -359,7 +595,11 @@ const TransitionHistory = ({transitionHistory}) => (
         );
       })
     ) : (
-      <Text style={styles.textNotFoundHistory}>History not found</Text>
+      <Text style={styles.textNotFoundHistory}>
+        {lang && lang.screen_wallet && lang.screen_wallet.history_not_found
+          ? lang.screen_wallet.history_not_found
+          : ''}
+      </Text>
     )}
   </ScrollView>
 );
@@ -368,18 +608,47 @@ const TableWalletCard = ({
   dataWallet,
   currentCurrency,
   transactionalInformation,
+  lang,
 }) => {
   const navigation = useNavigation();
   const layout = useWindowDimensions();
   const [currentDaysTransactional, setCurrentDaysTransactional] = useState(7);
   const [loading, setLoading] = useState(false);
   const [index, setIndex] = useState(0);
-  const [routes] = useState([
-    {key: 'totalHistory', title: 'Total History'},
-    {key: 'transferHistory', title: 'Transfer History'},
-    {key: 'receivedDetails', title: 'Received details'},
-    {key: 'transitionHistory', title: 'Transition History'},
-  ]);
+  const [routes, setRoutes] = useState([]);
+
+  useEffect(() => {
+    setRoutes([
+      {
+        key: 'totalHistory',
+        title:
+          lang && lang.screen_wallet && lang.screen_wallet.total_history
+            ? lang.screen_wallet.total_history
+            : '',
+      },
+      {
+        key: 'transferHistory',
+        title:
+          lang && lang.screen_wallet && lang.screen_wallet.transfer_history
+            ? lang.screen_wallet.transfer_history
+            : '',
+      },
+      {
+        key: 'receivedDetails',
+        title:
+          lang && lang.screen_wallet && lang.screen_wallet.received_details
+            ? lang.screen_wallet.received_details
+            : '',
+      },
+      {
+        key: 'transitionHistory',
+        title:
+          lang && lang.screen_wallet && lang.screen_wallet.transition_history
+            ? lang.screen_wallet.transition_history
+            : '',
+      },
+    ]);
+  }, [lang]);
 
   const {totalHistory, transferHistory, receivedDetails, transitionHistory} =
     transactionalInformation;
@@ -432,15 +701,20 @@ const TableWalletCard = ({
     filterTransactionalByCurrency(transitionHistory);
 
   const renderScene = SceneMap({
-    totalHistory: () => <TotalHistory totalHistory={filterTotalHistory} />,
+    totalHistory: () => (
+      <TotalHistory totalHistory={filterTotalHistory} lang={lang} />
+    ),
     transferHistory: () => (
-      <TransferHistory transferHistory={filterTransferHistory} />
+      <TransferHistory transferHistory={filterTransferHistory} lang={lang} />
     ),
     receivedDetails: () => (
-      <ReceivedDetails receivedDetails={filterReceivedDetails} />
+      <ReceivedDetails receivedDetails={filterReceivedDetails} lang={lang} />
     ),
     transitionHistory: () => (
-      <TransitionHistory transitionHistory={filterTransitionHistory} />
+      <TransitionHistory
+        transitionHistory={filterTransitionHistory}
+        lang={lang}
+      />
     ),
   });
 
@@ -464,7 +738,11 @@ const TableWalletCard = ({
           style={styles.contentTextHeadDefault}
           activeOpacity={0.7}>
           <Text style={[styles.textHead, styles.textHeadDefault]}>
-            Transactional Information/
+            {lang &&
+            lang.screen_wallet &&
+            lang.screen_wallet.table_head_transaction
+              ? lang.screen_wallet.table_head_transaction
+              : ''}
           </Text>
         </TouchableOpacity>
         {currentCurrency !== '4' ? (
@@ -477,7 +755,13 @@ const TableWalletCard = ({
                   dataWallet,
                 })
               }>
-              <Text style={styles.textHead}>SEND</Text>
+              <Text style={styles.textHead}>
+                {lang &&
+                lang.screen_wallet &&
+                lang.screen_wallet.table_head_send
+                  ? lang.screen_wallet.table_head_send
+                  : ''}
+              </Text>
             </TouchableOpacity>
 
             {currentCurrency === '1' ? (
@@ -485,7 +769,14 @@ const TableWalletCard = ({
                 activeOpacity={0.6}
                 style={styles.contentTextHead}
                 onPress={conversionRequest}>
-                <Text style={styles.textHead}>CHANGE</Text>
+                <Text style={styles.textHead}>
+                  {' '}
+                  {lang &&
+                  lang.screen_wallet &&
+                  lang.screen_wallet.table_head_change
+                    ? lang.screen_wallet.table_head_change
+                    : ''}
+                </Text>
               </TouchableOpacity>
             ) : (
               <TouchableOpacity
@@ -510,7 +801,12 @@ const TableWalletCard = ({
                 backgroundColor: currentDaysBackground,
               },
             ]}>
-            <Text style={styles.textDay}>7DAYS</Text>
+            <Text style={styles.textDay}>
+              7{' '}
+              {lang && lang.screen_wallet && lang.screen_wallet.table_days
+                ? lang.screen_wallet.table_days
+                : ''}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={1}
@@ -521,7 +817,12 @@ const TableWalletCard = ({
                 backgroundColor: currentDaysBackground,
               },
             ]}>
-            <Text style={styles.textDay}>14DAYS</Text>
+            <Text style={styles.textDay}>
+              14{' '}
+              {lang && lang.screen_wallet && lang.screen_wallet.table_days
+                ? lang.screen_wallet.table_days
+                : ''}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={1}
@@ -532,7 +833,12 @@ const TableWalletCard = ({
                 backgroundColor: currentDaysBackground,
               },
             ]}>
-            <Text style={styles.textDay}>30DAYS</Text>
+            <Text style={styles.textDay}>
+              30{' '}
+              {lang && lang.screen_wallet && lang.screen_wallet.table_days
+                ? lang.screen_wallet.table_days
+                : ''}
+            </Text>
           </TouchableOpacity>
         </View>
 
@@ -557,7 +863,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingRight: 36,
-    // marginTop: 20,
   },
   contentTextHead: {
     flex: 1,
@@ -570,7 +875,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'Poppins-Medium',
     fontSize: 15,
-    color: 'black',
+    color: '#000',
+    minWidth: 80,
   },
   contentTextHeadDefault: {
     backgroundColor: 'white',
@@ -625,6 +931,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontFamily: 'Poppins-Regular',
     fontSize: 12,
+    maxWidth: 150,
   },
   date: {
     fontSize: 11,
