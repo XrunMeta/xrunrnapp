@@ -770,7 +770,6 @@ const TableWalletCard = ({
                 style={styles.contentTextHead}
                 onPress={conversionRequest}>
                 <Text style={styles.textHead}>
-                  {' '}
                   {lang &&
                   lang.screen_wallet &&
                   lang.screen_wallet.table_head_change
@@ -783,7 +782,13 @@ const TableWalletCard = ({
                 activeOpacity={0.6}
                 style={styles.contentTextHead}
                 onPress={conversionRequest}>
-                <Text style={styles.textHead}>EXCHANGE</Text>
+                <Text style={styles.textHead}>
+                  {lang &&
+                  lang.screen_wallet &&
+                  lang.screen_wallet.table_head_exchange
+                    ? lang.screen_wallet.table_head_exchange
+                    : ''}
+                </Text>
               </TouchableOpacity>
             )}
           </>
