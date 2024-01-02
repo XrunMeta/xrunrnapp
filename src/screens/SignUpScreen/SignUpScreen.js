@@ -89,7 +89,7 @@ const SignUpScreen = ({route}) => {
               const joinPin = password.toString();
 
               const joinAPI =
-                `${URL_API}&=login-06-joinAndAccactount` +
+                `${URL_API}&act=login-06-joinAndAccount` +
                 `&email=${email}` +
                 `&pin=${joinPin}` +
                 `&firstname=${joinFirstName}` +
