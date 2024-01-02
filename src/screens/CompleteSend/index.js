@@ -21,10 +21,28 @@ const CompleteSend = ({navigation, route}) => {
     // Get Language
     const getLanguage = async () => {
       try {
+        let tempLang;
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
 
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
+        switch (currentLanguage) {
+          case 'id':
+            tempLang = 'id';
+            break;
+          case 'en':
+            tempLang = 'eng';
+            break;
+          case 'kr':
+            tempLang = 'kr';
+            break;
+          case 'cn':
+            tempLang = 'cn';
+            break;
+          default:
+            tempLang = 'id';
+            break;
+        }
+
+        const language = langData[tempLang];
         setLang(language);
       } catch (err) {
         console.error(
