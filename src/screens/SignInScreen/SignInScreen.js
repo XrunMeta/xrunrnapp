@@ -2,7 +2,6 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   Pressable,
   Image,
   Dimensions,
@@ -14,7 +13,6 @@ import ButtonBack from '../../components/ButtonBack/';
 import {useNavigation} from '@react-navigation/native';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {MainTabNavigator} from '../../navigation';
 import {URL_API} from '../../../utils';
 
 const langData = require('../../../lang.json');
@@ -22,8 +20,6 @@ const langData = require('../../../lang.json');
 const SignInScreen = () => {
   const [lang, setLang] = useState({});
   const {isLoggedIn, login} = useAuth();
-  // const [email, setEmail] = useState('ggg@hhh.com');
-  // const [password, setPassword] = useState('111!!!aaaAAA');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(true);
