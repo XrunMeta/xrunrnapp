@@ -65,7 +65,13 @@ const CompleteSend = ({navigation, route}) => {
     <View style={{flex: 1, backgroundColor: '#f3f4f6'}}>
       <View style={{flexDirection: 'row'}}>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>Transfer Completed</Text>
+          <Text style={styles.title}>
+            {lang &&
+            lang.screen_complete_send &&
+            lang.screen_complete_send.title
+              ? lang.screen_complete_send.title
+              : ''}
+          </Text>
         </View>
       </View>
       <View
@@ -81,11 +87,17 @@ const CompleteSend = ({navigation, route}) => {
             fontFamily: 'Poppins-Regular',
             color: '#e05c2b',
           }}>
-          Send{' '}
+          {lang && lang.screen_wallet && lang.screen_wallet.table_head_send
+            ? lang.screen_wallet.table_head_send
+            : ''}{' '}
         </Text>
         <Text
           style={{fontSize: 16, fontFamily: 'Poppins-Regular', color: '#555'}}>
-          is complete.
+          {lang &&
+          lang.screen_complete_send &&
+          lang.screen_complete_send.complete_send
+            ? lang.screen_complete_send.complete_send
+            : ''}
         </Text>
       </View>
 
@@ -109,7 +121,11 @@ const CompleteSend = ({navigation, route}) => {
               fontFamily: 'Poppins-Regular',
               color: '#555',
             }}>
-            Wallet Address
+            {lang &&
+            lang.screen_complete_send &&
+            lang.screen_complete_send.wallet_address
+              ? lang.screen_complete_send.wallet_address
+              : ''}
           </Text>
           <Text
             style={{
@@ -135,7 +151,11 @@ const CompleteSend = ({navigation, route}) => {
               fontFamily: 'Poppins-Regular',
               color: '#555',
             }}>
-            Transfer amount
+            {lang &&
+            lang.screen_complete_send &&
+            lang.screen_complete_send.amount_send
+              ? lang.screen_complete_send.amount_send
+              : ''}
           </Text>
           <Text
             style={{

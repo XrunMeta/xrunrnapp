@@ -336,6 +336,13 @@
       "send_address_less": "Alamat kurang dari 40 huruf.",
       "send_enough_money": "Periksa jumlah saat ini dan pastikan Anda memiliki cukup uang di dompet Anda termasuk bahan bakar (biaya transfer)",
       "send_verification_code": "Mengirim kode verifikasi"
+    },
+    "screen_complete_send": {
+      "title": "Berhasil mengirimkan XRUN .",
+      "copy_txid": "TXID berhasil di salin.Silakan tempel untuk menggunakan.",
+      "complete_send": "Telah sukses",
+      "wallet_address": "Alamat Dompet",
+      "amount_send": "Jumlah Terkirim"
     }
   },
 
@@ -678,7 +685,11 @@
       "send_verification_code": "Sending verification code"
     },
     "screen_complete_send": {
-      "title": "Transfer Completed"
+      "title": "Transfer Completed",
+      "copy_txid": "The TXID has been copied. Use it wherever you want.",
+      "complete_send": "is complete",
+      "wallet_address": "Wallet address",
+      "amount_send": "Transfer amount"
     }
   }
 }
