@@ -44,6 +44,8 @@ const InfoScreen = () => {
         );
         const data = await response.json();
 
+        console.log('Info Screen -> ' + JSON.stringify(data));
+
         const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
         const language = langData[selectedLanguage];
         setLang(language);

@@ -21,17 +21,17 @@ const langData = require('../../../lang.json');
 
 const SignUpScreen = ({route}) => {
   const [lang, setLang] = useState({});
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [name, setName] = useState('bTest');
+  const [email, setEmail] = useState('ggg@hhh.coms');
+  const [password, setPassword] = useState('Bilal123');
+  const [phoneNumber, setPhoneNumber] = useState('081298486647');
   const [region, setRegion] = useState('');
   const [regionID, setRegionID] = useState(0);
   const [gender, setGender] = useState('pria');
   const [age, setAge] = useState('10');
-  const [refferalEmail, setRefferalEmail] = useState('');
+  const [refferalEmail, setRefferalEmail] = useState('ggg@hhh.com');
   const [isEmailValid, setIsEmailValid] = useState(true);
-  const {flag, countryCode = 82, country, code = 'KR'} = route.params || {};
+  const {flag, countryCode = 62, country, code = 'ID'} = route.params || {};
   const [areaData, setAreaData] = useState([]);
   const [isListWrapperVisible, setIsListWrapperVisible] = useState(false);
 
@@ -60,71 +60,95 @@ const SignUpScreen = ({route}) => {
         const responseData = await response.text();
 
         if (responseData === 'OK') {
-          const referURL = `${URL_API}&act=ap1810-i01&email=${refferalEmail}`;
+          // Check Refferal is empty
+          if (refferalEmail.trim() === '') {
+            console.log('Kosong');
+          } else {
+            const referURL = `${URL_API}&act=ap1810-i01&email=${refferalEmail}`;
 
-          try {
-            // Check is email referral is verified
-            const referRes = await fetch(referURL);
-            const referData = await referRes.json();
+            try {
+              // Check is email referral is verified
+              const referRes = await fetch(referURL);
+              const referData = await referRes.json();
 
-            // Do Signup
-            if (referData.result === 'true') {
-              const joinRefMem = referData.member;
-              const joinName = name.toString().split(' ');
-              const joinFirstName = joinName[0];
-              const joinLastName = joinName.slice(1).join(' ') || '';
-              const joinGender = gender === 'pria' ? 2110 : 2111;
-              const joinMobile = phoneNumber.toString();
-              const joinAges =
-                age === '10'
-                  ? 2210
-                  : age === '20'
-                  ? 2220
-                  : age === '30'
-                  ? 2230
-                  : age === '40'
-                  ? 2240
-                  : 2250;
-              const joinRegion = regionID.toString();
-              const joinPin = password.toString();
+              // Do Signup
+              if (referData.result === 'true') {
+                const joinRefMem = referData.member;
+                const joinName = name.toString().split(' ');
+                const joinFirstName = joinName[0];
+                const joinLastName = joinName.slice(1).join(' ') || '';
+                const joinGender = gender === 'pria' ? 2110 : 2111;
+                const joinMobile = phoneNumber.toString();
+                const joinAges =
+                  age === '10'
+                    ? 2210
+                    : age === '20'
+                    ? 2220
+                    : age === '30'
+                    ? 2230
+                    : age === '40'
+                    ? 2240
+                    : 2250;
+                const joinRegion = regionID.toString();
+                const joinPin = password.toString();
 
-              const joinAPI =
-                `${URL_API}&=login-06-joinAndAccactount` +
-                `&email=${email}` +
-                `&pin=${joinPin}` +
-                `&firstname=${joinFirstName}` +
-                `&lastname=${joinLastName}` +
-                `&gender=${joinGender}` +
-                `&mobile=${joinMobile}` +
-                `&mobilecode=${countryCode}` +
-                `&countrycode=${code}` +
-                `&country=${countryCode}` +
-                `&region=${joinRegion}` +
-                `&age=${joinAges}` +
-                `&recommand=${joinRefMem}`;
+                const joinAPI =
+                  `${URL_API}&act=login-06-joinAndAccount` +
+                  `&email=${email}` +
+                  `&pin=${joinPin}` +
+                  `&firstname=${joinFirstName}` +
+                  `&lastname=${joinLastName}` +
+                  `&gender=${joinGender}` +
+                  `&mobile=${joinMobile}` +
+                  `&mobilecode=${countryCode}` +
+                  `&countrycode=${code}` +
+                  `&country=${countryCode}` +
+                  `&region=${joinRegion}` +
+                  `&age=${joinAges}` +
+                  `&recommand=${joinRefMem}`;
 
-              console.log(joinAPI);
+                console.log(joinAPI);
 
-              navigation.navigate('EmailVerif', {
-                dataEmail: email,
-                pin: joinPin,
-                signupUrl: joinAPI,
-              });
-            } else if (referData.result === 'false') {
-              setRefferalEmail('');
-              Alert.alert('Failed', 'Please verify the recommended email');
-            } else {
+                try {
+                  const joinRes = await fetch(joinAPI);
+                  const joinData = await joinRes.json();
+
+                  // Lanjutkan logika Anda berdasarkan respon dari API
+                  if (joinData.data === 'ok') {
+                    navigation.navigate('EmailVerif', {
+                      dataEmail: email,
+                      pin: joinPin,
+                    });
+                  } else {
+                    Alert.alert(
+                      'Failed',
+                      "It's a server problem. Please try in a few minutes.",
+                    );
+                    navigation.navigate('First');
+                  }
+                } catch (error) {
+                  console.error('Error during API call:', error);
+                  Alert.alert(
+                    'Error',
+                    "It's a server problem. Please try in a few minutes.",
+                  );
+                }
+              } else if (referData.result === 'false') {
+                setRefferalEmail('');
+                Alert.alert('Failed', 'Please verify the recommended email');
+              } else {
+                Alert.alert(
+                  'Error',
+                  'There is a server communication error. Please try again...',
+                );
+              }
+            } catch (error) {
+              console.error('Error during API call:', error);
               Alert.alert(
                 'Error',
                 'There is a server communication error. Please try again...',
               );
             }
-          } catch (error) {
-            console.error('Error during API call:', error);
-            Alert.alert(
-              'Error',
-              'There is a server communication error. Please try again...',
-            );
           }
         } else if (responseData === 'NO') {
           Alert.alert('Failed', 'Duplicated email');
@@ -222,7 +246,7 @@ const SignUpScreen = ({route}) => {
 
   // Get Update Area Data
   useEffect(() => {
-    fetch(`${URL_API}&act=app7190-01&country=${countryCode ? countryCode : 82}`)
+    fetch(`${URL_API}&act=app7190-01&country=${countryCode ? countryCode : 62}`)
       .then(response => response.json())
       .then(jsonData => {
         var jsonToArr = Object.values(jsonData);
@@ -426,7 +450,7 @@ const SignUpScreen = ({route}) => {
                 source={
                   flag == undefined
                     ? {
-                        uri: 'https://app.xrun.run/flags/kr.png',
+                        uri: 'https://app.xrun.run/flags/id.png',
                       }
                     : {
                         uri: flag,
@@ -441,7 +465,7 @@ const SignUpScreen = ({route}) => {
                   alignSelf: 'center',
                   paddingRight: 10,
                 }}>
-                +{countryCode == undefined ? '82' : countryCode}
+                +{countryCode == undefined ? '62' : countryCode}
               </Text>
             </Pressable>
             <TextInput
