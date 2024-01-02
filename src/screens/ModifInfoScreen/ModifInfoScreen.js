@@ -128,7 +128,7 @@ const ModifInfoScreen = ({route}) => {
         setPassword(pinChange);
 
         // Age
-        const getAge = justGetNumber(userData.cages ? userData : '');
+        const getAge = justGetNumber(userData.cages ? userData.cages : '');
         setAge(getAge);
         setTempAge(getAge);
         setValueAge(userData.ages);

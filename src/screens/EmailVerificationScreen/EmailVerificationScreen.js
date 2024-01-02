@@ -17,28 +17,15 @@ import React, {useState, useRef, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import CustomButton from '../../components/CustomButton/';
-
-// ########## Send Code (Refresh Page) ##########
-const RepeatablePage = () => {
-  const [count, setCount] = useState(0);
-
-  const resetPage = () => {
-    setCount(0);
-  };
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Page Content</Text>
-      <Text style={styles.text}>Count: {count}</Text>
-      <Button title="Increment Count" onPress={() => setCount(count + 1)} />
-      <Button title="Reset Page" onPress={resetPage} />
-    </View>
-  );
-};
+import {URL_API} from '../../../utils';
+import {useAuth} from '../../context/AuthContext/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // ########## Main Function ##########
 const EmailVerificationScreen = () => {
-  const [email, setEmail] = useState('');
+  const route = useRoute();
+  const {isLoggedIn, login} = useAuth();
+  const {dataEmail, pin, signupUrl} = route.params;
   const [verificationCode, setVerificationCode] = useState([
     '',
     '',
@@ -49,17 +36,99 @@ const EmailVerificationScreen = () => {
   ]);
   const [activeIndex, setActiveIndex] = useState(0);
   const navigation = useNavigation();
-  const route = useRoute();
   const [modalVisible, setModalVisible] = useState(false);
-
   let ScreenHeight = Dimensions.get('window').height;
 
-  const onBack = () => {
-    navigation.navigate('SignIn');
+  const emailAuth = async () => {
+    try {
+      const response = await fetch(
+        `${URL_API}&act=login-02-email&email=${dataEmail}`,
+      );
+      const responseData = await response.text(); // Convert response to JSON
+
+      if (responseData.data === 'false') {
+        Alert.alert('Failed', 'Please enter your email');
+      } else {
+        console.log('Kode dikirim boy');
+        console.log(signupUrl);
+      }
+    } catch (error) {
+      // Handle network errors or other exceptions
+      console.error('Error during emailAuth:', error);
+    }
   };
 
-  const onSignIn = () => {
-    console.warn('Go to next page');
+  useEffect(() => {
+    emailAuth();
+  }, []);
+
+  const onBack = () => {
+    navigation.navigate('SignUp');
+  };
+
+  const onSignIn = async () => {
+    const getAuthCode = verificationCode.join('');
+
+    // Check Email & Auth Code Relational
+    try {
+      const responseAuth = await fetch(
+        `${URL_API}&act=login-03-email&email=${dataEmail}&code=${getAuthCode}`,
+      );
+      const responseAuthData = await responseAuth.json();
+
+      console.log(JSON.stringify(responseAuthData));
+
+      if (responseAuthData.data === 'false') {
+        Alert.alert('Failed', 'Your Auth Code is Wrong');
+      } else {
+        // Do SignUp
+        try {
+          const joinRes = await fetch(signupUrl);
+          const joinData = await joinRes.json();
+
+          console.log('Ini SignUp Response -> ' + JSON.stringify(joinData));
+
+          if (joinData.data === 'ok') {
+            // Check is Registered? If yes do login
+            try {
+              const responseLogin = await fetch(
+                `${URL_API}&act=login-checker&email=${dataEmail}&pin=${pin}`,
+              );
+              const responseLoginData = await responseLogin.text();
+
+              if (responseLoginData === 'OK') {
+                await AsyncStorage.setItem('userEmail', dataEmail);
+                login();
+                navigation.replace('SuccessJoin');
+              } else {
+                Alert.alert(
+                  'Failed',
+                  "It's a server problem. Please try in a few minutes.",
+                );
+              }
+            } catch (error) {
+              // Handle network errors or other exceptions
+              console.error('Error during Check Login Email & Pin:', error);
+            }
+          } else {
+            Alert.alert(
+              'Failed',
+              "It's a server problem. Please try in a few minutes.",
+            );
+            navigation.navigate('First');
+          }
+        } catch (error) {
+          console.error('Error during Signup:', error);
+          Alert.alert(
+            'Error',
+            "It's a server problem. Please try in a few minutes.",
+          );
+        }
+      }
+    } catch (error) {
+      // Handle network errors or other exceptions
+      console.error('Error during Check Auth Code:', error);
+    }
   };
 
   const onSignInDisabled = () => {
@@ -70,9 +139,13 @@ const EmailVerificationScreen = () => {
     setModalVisible(!modalVisible);
   };
 
-  const {dataEmail} = route.params;
-
   const toggleModal = () => {
+    setModalVisible(!modalVisible);
+  };
+
+  // Send Code Auth Again
+  const sendCodeAgain = () => {
+    emailAuth();
     setModalVisible(!modalVisible);
   };
 
@@ -102,12 +175,11 @@ const EmailVerificationScreen = () => {
   };
 
   const isCodeComplete = verificationCode.every(code => code !== '');
-  // ########## Input Verification Code ##########
 
   // ########## Countdown ##########
   const Countdown = () => {
     // const [seconds, setSeconds] = useState(599); // Duration
-    const [seconds, setSeconds] = useState(599);
+    const [seconds, setSeconds] = useState(5);
 
     useEffect(() => {
       const timer = setInterval(() => {
@@ -139,7 +211,6 @@ const EmailVerificationScreen = () => {
       </View>
     );
   };
-  // ########## Countdown ##########
 
   // ########## Help Modal ##########
   const SliderModal = ({visible, onClose}) => {
@@ -159,7 +230,7 @@ const EmailVerificationScreen = () => {
                   style={{height: 25}}
                 />
               </TouchableOpacity>
-              <CustomButton text="Send code again" />
+              <CustomButton onPress={sendCodeAgain} text="Send code again" />
               <CustomButton
                 text="Login with password"
                 onPress={onBack}
@@ -171,7 +242,6 @@ const EmailVerificationScreen = () => {
       </Modal>
     );
   };
-  // ########## Help Modal ##########
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -295,7 +365,7 @@ const styles = StyleSheet.create({
   },
   disableText: {
     fontFamily: 'Poppins-Regular',
-    fontSize: 15,
+    fontSize: 13,
     color: '#aeb1b5',
   },
   codeInputContainer: {
@@ -315,16 +385,6 @@ const styles = StyleSheet.create({
     borderColor: '#cdced4',
     marginHorizontal: 5,
     textAlign: 'center',
-  },
-  submitButton: {
-    marginTop: 20,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 5,
-  },
-  submitButtonText: {
-    color: 'white',
-    fontSize: 16,
   },
   activeInput: {
     borderColor: '#343a59',

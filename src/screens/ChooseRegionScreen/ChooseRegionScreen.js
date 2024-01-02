@@ -110,7 +110,7 @@ const ChooseRegionScreen = ({route}) => {
             source={
               flag == undefined
                 ? {
-                    uri: 'https://app.xrun.run/flags/id.png',
+                    uri: 'https://app.xrun.run/flags/kr.png',
                   }
                 : {
                     uri: flag,
@@ -118,10 +118,10 @@ const ChooseRegionScreen = ({route}) => {
             }
           />
           <Text style={styles.mediumText}>
-            {country == undefined ? 'Indonesia' : country}
+            {country == undefined ? 'Korea' : country}
           </Text>
           <Text style={styles.mediumText}>
-            (+{countryCode == undefined ? '62' : countryCode})
+            (+{countryCode == undefined ? '82' : countryCode})
           </Text>
         </View>
       </View>
@@ -134,6 +134,7 @@ const ChooseRegionScreen = ({route}) => {
               ? lang.screen_country.placeholder
               : ''
           }
+          placeholderTextColor="lightgrey"
           style={[styles.mediumText, {flex: 1}]}
           value={searchText}
           onChangeText={text => setSearchText(text)}

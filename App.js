@@ -46,6 +46,7 @@ import SendWalletScreen from './src/screens/SendWalletScreen';
 import ShowAdScreen from './src/screens/AdvertiseScreen/ShowAdScreen';
 import CompleteSend from './src/screens/CompleteSend';
 import ConversionRequest from './src/screens/ConversionRequestWalletScreen';
+import SuccessJoinScreen from './src/screens/EmailVerificationScreen/SuccessJoinScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -90,6 +91,8 @@ export default function App() {
             component={ForgotPasswordScreen}
           />
           <Stack.Screen name="NewPassword" component={NewPasswordScreen} />
+          <Stack.Screen name="SuccessJoin" component={SuccessJoinScreen} />
+
           {/* Category -> Info */}
           <Stack.Screen name="InfoHome" component={InfoScreen} />
           <Stack.Screen name="AppInformation" component={AppInformation} />

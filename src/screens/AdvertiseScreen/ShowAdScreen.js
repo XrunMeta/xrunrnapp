@@ -72,7 +72,7 @@ const ShowAdScreen = ({route, navigation}) => {
       const coinAcquiring = async () => {
         try {
           const response = await fetch(
-            `${URL_API}&act=app3100-01&advertisement=${advertisement}&coin=${coin}&member=${coin}`,
+            `${URL_API}&act=app3100-01&advertisement=${advertisement}&coin=${coin}&member=${member}`,
           );
           const data = await response.json();
           console.log('Coin Acq Response -> ' + JSON.stringify(data.data[0]));

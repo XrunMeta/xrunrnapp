@@ -5,6 +5,7 @@ import ButtonList from '../../components/ButtonList/ButtonList';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
+import {URL_API} from '../../../utils';
 
 const langData = require('../../../lang.json');
 
