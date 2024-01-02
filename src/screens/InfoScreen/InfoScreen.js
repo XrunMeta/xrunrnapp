@@ -221,7 +221,7 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
               fontSize: 13,
               color: 'black',
             }}>
-            {userDetails && userDetails.firstname && userDetails.lastname
+            {userDetails && userDetails.firstname
               ? `${userDetails.firstname}${userDetails.lastname}`
               : 'Loading...'}
           </Text>
