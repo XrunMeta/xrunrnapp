@@ -882,6 +882,10 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#000',
     minWidth: 80,
+    textTransform: 'uppercase',
+  },
+  textHeadDefault: {
+    textTransform: 'none',
   },
   contentTextHeadDefault: {
     backgroundColor: 'white',
