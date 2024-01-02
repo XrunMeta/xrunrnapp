@@ -300,9 +300,9 @@
       "download_qrcode_show": "Gambar telah berhasil disimpan. Lihat galeri.",
       "copy_qrcode": "Alamat dompet berhasil di salin.Silakan tempel untuk menggunakan.",
       "table_head_transaction": "Mutasi",
-      "table_head_send": "KIRIM",
-      "table_head_change": "MENGUBAH",
-      "table_head_exchange": "PENUKARAN",
+      "table_head_send": "Kirim",
+      "table_head_change": "Mengubah",
+      "table_head_exchange": "Penukaran",
       "table_days": "HARI",
       "total_history": "Semua",
       "transfer_history": "Penarikan",
@@ -323,6 +323,19 @@
       "failed_getwallet_alert": "Untuk dapatkan dompet Anda, silakan coba lagi nanti",
       "failed_alert": "Gagal",
       "failed_download_qrcode_alert": "Gagal untuk mengunduh qr code"
+    },
+    "screen_send": {
+      "send_amount_label": "Amount",
+      "send_amount_placeholder": "Masukan jumlah yang ingin di kirimkan.",
+      "send_address_label": "To",
+      "send_address_placeholder": "Masukan Alamat Pengiriman.",
+      "send_balance": "Saldo :",
+      "send_stock_exchange_label": "Stock exchange",
+      "send_amount_greater_zero": "Harap masukkan jumlah yang lebih besar dari 0.",
+      "send_balance_not_enough": "Saldo tidak mencukupi.",
+      "send_address_less": "Alamat kurang dari 40 huruf.",
+      "send_enough_money": "Periksa jumlah saat ini dan pastikan Anda memiliki cukup uang di dompet Anda termasuk bahan bakar (biaya transfer)",
+      "send_verification_code": "Mengirim kode verifikasi"
     }
   },
 
@@ -627,9 +640,9 @@
       "download_qrcode_show": "Image is saved successfully. Please check the gallery.",
       "copy_qrcode": "The wallet address has been copied. Use it wherever you want.",
       "table_head_transaction": "Transactional information/Transactional bill",
-      "table_head_send": "SEND",
-      "table_head_change": "CHANGE",
-      "table_head_exchange": "EXCHANGE",
+      "table_head_send": "Send",
+      "table_head_change": "Change",
+      "table_head_exchange": "Exchange",
       "table_days": "DAYS",
       "total_history": "Total History",
       "transfer_history": "Transfer History",
@@ -652,12 +665,17 @@
       "failed_download_qrcode_alert": "Failed to download qr code"
     },
     "screen_send": {
-      "title": "Send",
-      "label_amount": "Amount to send",
-      "amount_placeholder": "Please enter the amount to be sent.",
-      "label_address": "Address to send",
-      "address_placeholder": "Please enter the address to be sent.",
-      "label_exchange": "Stock exchange"
+      "send_amount_label": "Amount to send",
+      "send_amount_placeholder": "Please enter the amount to be sent.",
+      "send_address_label": "Address to send",
+      "send_address_placeholder": "Please enter the address to be sent.",
+      "send_balance": "Balance :",
+      "send_stock_exchange_label": "Stock exchange",
+      "send_amount_greater_zero": "Please enter an amount greater than zero.",
+      "send_balance_not_enough": "There is not enough money(or bank balance).",
+      "send_address_less": "Address less than 40 letters.",
+      "send_enough_money": "Check the current amount and make sure you have enough money in your wallet including gas (transfer fee)",
+      "send_verification_code": "Sending verification code"
     },
     "screen_complete_send": {
       "title": "Transfer Completed"

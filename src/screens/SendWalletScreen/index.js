@@ -11,6 +11,7 @@ import {
   Animated,
   ActivityIndicator,
   BackHandler,
+  ScrollView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import QRCodeScanner from 'react-native-qrcode-scanner';
@@ -150,15 +151,80 @@ const SendWalletScreen = ({navigation, route}) => {
     const balance = parseFloat(dataWallet.Wamount).toString();
 
     if (amount === '') {
-      Alert.alert('Warning', 'Please enter the amount to be sent.');
+      Alert.alert(
+        '',
+        lang && lang.screen_send && lang.screen_send.send_amount_placeholder
+          ? lang.screen_send.send_amount_placeholder
+          : '',
+        [
+          {
+            text:
+              lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
+                ? lang.screen_wallet.confirm_alert
+                : '',
+          },
+        ],
+      );
     } else if (amount == 0) {
-      Alert.alert('Warning', 'Please enter an amount greater than zero.');
+      Alert.alert(
+        '',
+        lang && lang.screen_send && lang.screen_send.send_amount_greater_zero
+          ? lang.screen_send.send_amount_greater_zero
+          : '',
+        [
+          {
+            text:
+              lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
+                ? lang.screen_wallet.confirm_alert
+                : '',
+          },
+        ],
+      );
     } else if (amount > balance) {
-      Alert.alert('Warning', 'There is not enough money(or bank balance).');
+      Alert.alert(
+        '',
+        lang && lang.screen_send && lang.screen_send.send_balance_not_enough
+          ? lang.screen_send.send_balance_not_enough
+          : '',
+        [
+          {
+            text:
+              lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
+                ? lang.screen_wallet.confirm_alert
+                : '',
+          },
+        ],
+      );
     } else if (address === '') {
-      Alert.alert('Warning', 'Please enter the address to be sent.');
+      Alert.alert(
+        '',
+        lang && lang.screen_send && lang.screen_send.send_address_placeholder
+          ? lang.screen_send.send_address_placeholder
+          : '',
+        [
+          {
+            text:
+              lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
+                ? lang.screen_wallet.confirm_alert
+                : '',
+          },
+        ],
+      );
     } else if (address.length < 40) {
-      Alert.alert('Warning', 'Address less than 40 letters.');
+      Alert.alert(
+        '',
+        lang && lang.screen_send && lang.screen_send.send_address_less
+          ? lang.screen_send.send_address_less
+          : '',
+        [
+          {
+            text:
+              lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
+                ? lang.screen_wallet.confirm_alert
+                : '',
+          },
+        ],
+      );
     } else {
       setIsLoading(true);
       const currency = dataWallet.currency;
@@ -176,8 +242,10 @@ const SendWalletScreen = ({navigation, route}) => {
           if (available === 'FALSE') {
             setIsLoading(false);
             Alert.alert(
-              'Failed',
-              'Check the current amount and make sure you have enough money in your wallet including gas (transfer fee)',
+              '',
+              lang && lang.screen_send && lang.screen_send.send_enough_money
+                ? lang.screen_send.send_enough_money
+                : '',
             );
           } else {
             console.log(`${parseFloat(result.amount)} vs ${amountrq}`);
@@ -193,13 +261,20 @@ const SendWalletScreen = ({navigation, route}) => {
                 .then(response => {
                   const {status} = response;
                   if (status == 'false') {
-                    Alert.alert('Failed', 'Sending verification code');
+                    Alert.alert(
+                      '',
+                      lang &&
+                        lang.screen_send &&
+                        lang.screen_send.send_verification_code
+                        ? lang.screen_send.send_verification_code
+                        : '',
+                    );
                   } else {
                     setIsLoading(false);
                   }
                 })
                 .catch(err => {
-                  Alert.alert('Failed', 'Check email failed: ', err);
+                  Alert.alert('', 'Check email failed: ', err);
                   console.log('Check email failed: ', err);
                 });
             } else {
@@ -244,19 +319,19 @@ const SendWalletScreen = ({navigation, route}) => {
                       }
                     })
                     .catch(err => {
-                      Alert.alert('Failed', 'Transfer failed: ', err);
+                      Alert.alert('', 'Transfer failed: ', err);
                       console.log('Transfer failed postTransfer: ', err);
                     });
                 })
                 .catch(err => {
-                  Alert.alert('Failed', 'Transfer failed: ', err);
+                  Alert.alert('', 'Transfer failed: ', err);
                   console.log('Transfer failed ap4300-03: ', err);
                 });
             }
           }
         })
         .catch(err => {
-          Alert.alert('Failed', 'Check limit transfer failed: ', err);
+          Alert.alert('', 'Check limit transfer failed: ', err);
           setIsLoading(false);
         });
     }
@@ -312,74 +387,100 @@ const SendWalletScreen = ({navigation, route}) => {
           <ButtonBack onClick={onBack} />
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>Send</Text>
+          <Text style={styles.title}>
+            {lang && lang.screen_wallet && lang.screen_wallet.table_head_send
+              ? lang.screen_wallet.table_head_send
+              : ''}
+          </Text>
         </View>
       </View>
 
-      <View style={{backgroundColor: '#fff'}}>
-        <View style={styles.partTop}>
-          <Text style={styles.currencyName}>{dataWallet.symbol}</Text>
-          <View style={styles.partScanQR}>
-            <Text style={styles.balance}>
-              Balance: {parseFloat(dataWallet.Wamount)} {dataWallet.symbol}
-            </Text>
-            <TouchableOpacity
-              style={styles.scanQRCode}
-              activeOpacity={0.7}
-              onPress={onQRCodeScan}>
-              <Image
-                source={require('../../../assets/images/scanqr.png')}
-                style={{width: 30, height: 30}}
-              />
-            </TouchableOpacity>
+      <ScrollView overScrollMode="never">
+        <View style={{backgroundColor: '#fff'}}>
+          <View style={styles.partTop}>
+            <Text style={styles.currencyName}>{dataWallet.symbol}</Text>
+            <View style={styles.partScanQR}>
+              <Text style={styles.balance}>
+                Balance: {parseFloat(dataWallet.Wamount)} {dataWallet.symbol}
+              </Text>
+              <TouchableOpacity
+                style={styles.scanQRCode}
+                activeOpacity={0.7}
+                onPress={onQRCodeScan}>
+                <Image
+                  source={require('../../../assets/images/scanqr.png')}
+                  style={{width: 30, height: 30}}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={styles.partBottom}>
+            <CustomInputWallet
+              value={amount}
+              setValue={setAmount}
+              isNumber
+              label={`${
+                lang && lang.screen_send && lang.screen_send.send_amount_label
+                  ? lang.screen_send.send_amount_label
+                  : ''
+              }`}
+              placeholder={`${
+                lang &&
+                lang.screen_send &&
+                lang.screen_send.send_amount_placeholder
+                  ? lang.screen_send.send_amount_placeholder
+                  : ''
+              }`}
+            />
+
+            <CustomInputWallet
+              value={address}
+              setValue={setAddress}
+              label={`${
+                lang && lang.screen_send && lang.screen_send.send_address_label
+                  ? lang.screen_send.send_address_label
+                  : ''
+              }`}
+              placeholder={`${
+                lang &&
+                lang.screen_send &&
+                lang.screen_send.send_address_placeholder
+                  ? lang.screen_send.send_address_placeholder
+                  : ''
+              }`}
+            />
+
+            <CustomDropdownWallet
+              label={'Stock exchange'}
+              onSelectedExchange={value => {
+                setSelectedExchange(value);
+              }}
+              selectedExchange={selectedExchange}
+              cointrace={cointrace}
+            />
           </View>
         </View>
 
-        <View style={styles.partBottom}>
-          <CustomInputWallet
-            value={amount}
-            setValue={setAmount}
-            isNumber
-            label={'Amount to send'}
-            placeholder={'Please enter the amount to be sent.'}
-          />
-
-          <CustomInputWallet
-            value={address}
-            setValue={setAddress}
-            label={'Address to send'}
-            placeholder={'Please enter the address to be sent.'}
-          />
-
-          <CustomDropdownWallet
-            label={'Stock exchange'}
-            onSelectedExchange={value => {
-              setSelectedExchange(value);
-            }}
-            selectedExchange={selectedExchange}
-            cointrace={cointrace}
-          />
-        </View>
-      </View>
-
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{flex: 1}}>
-        <TouchableOpacity
-          onPress={onSend}
-          style={styles.button}
-          activeOpacity={0.6}>
-          <Image
-            source={
-              iconNextIsDisabled
-                ? require('../../../assets/images/icon_nextDisable.png')
-                : require('../../../assets/images/icon_next.png')
-            }
-            resizeMode="contain"
-            style={styles.buttonImage}
-          />
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={{flex: 1}}>
+          <TouchableOpacity
+            onPress={onSend}
+            style={styles.button}
+            activeOpacity={0.6}>
+            <Image
+              source={
+                iconNextIsDisabled
+                  ? require('../../../assets/images/icon_nextDisable.png')
+                  : require('../../../assets/images/icon_next.png')
+              }
+              resizeMode="contain"
+              style={styles.buttonImage}
+            />
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+      </ScrollView>
 
       {/* Scan QR code */}
       {isVisibleReadQR && (
