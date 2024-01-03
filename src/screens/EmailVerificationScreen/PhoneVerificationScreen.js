@@ -16,24 +16,17 @@ import {
 import React, {useState, useRef, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import CustomButton from '../../components/CustomButton/';
+import CustomButton from '../../components/CustomButton';
 import {URL_API} from '../../../utils';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // ########## Main Function ##########
-const EmailVerificationScreen = () => {
+const PhoneVerificationScreen = () => {
   const route = useRoute();
   const {isLoggedIn, login} = useAuth();
-  const {dataEmail, pin, signupUrl, mobile} = route.params;
-  const [verificationCode, setVerificationCode] = useState([
-    '',
-    '',
-    '',
-    '',
-    '',
-    '',
-  ]);
+  const {mobile} = route.params;
+  const [verificationCode, setVerificationCode] = useState(['', '', '', '']);
   const [activeIndex, setActiveIndex] = useState(0);
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
@@ -42,7 +35,7 @@ const EmailVerificationScreen = () => {
   const emailAuth = async () => {
     try {
       const response = await fetch(
-        `${URL_API}&act=login-02-email&email=${dataEmail}`,
+        `${URL_API}&act=login-02-email&email=${mobile}`,
       );
       const responseData = await response.text(); // Convert response to JSON
 
@@ -59,7 +52,7 @@ const EmailVerificationScreen = () => {
   };
 
   useEffect(() => {
-    emailAuth();
+    // emailAuth();
   }, []);
 
   const onBack = () => {
@@ -67,9 +60,7 @@ const EmailVerificationScreen = () => {
   };
 
   const onLoginPassword = () => {
-    navigation.replace('SignPassword', {
-      mobile: mobile,
-    });
+    navigation.replace('SignIn');
   };
 
   const onSignIn = async () => {
@@ -78,7 +69,7 @@ const EmailVerificationScreen = () => {
     // Check Email & Auth Code Relational
     try {
       const responseAuth = await fetch(
-        `${URL_API}&act=login-03-email&email=${dataEmail}&code=${getAuthCode}`,
+        `${URL_API}&act=login-03-email&email=${mobile}&code=${getAuthCode}`,
       );
       const responseAuthData = await responseAuth.json();
 
@@ -98,12 +89,12 @@ const EmailVerificationScreen = () => {
             // Check is Registered? If yes do login
             try {
               const responseLogin = await fetch(
-                `${URL_API}&act=login-checker&email=${dataEmail}&pin=${pin}`,
+                `${URL_API}&act=login-checker&email=${mobile}&pin=${pin}`,
               );
               const responseLoginData = await responseLogin.text();
 
               if (responseLoginData === 'OK') {
-                await AsyncStorage.setItem('userEmail', dataEmail);
+                // await AsyncStorage.setItem('userEmail', mobile);
                 login();
                 navigation.replace('SuccessJoin');
               } else {
@@ -257,9 +248,9 @@ const EmailVerificationScreen = () => {
         {/* Text Section */}
         <View style={styles.textWrapper}>
           <Text style={styles.normalText}>
-            Enter the 6 digit verification code
+            Please enter the next 4 digit code sent.
           </Text>
-          <Text style={styles.boldText}>{dataEmail}</Text>
+          <Text style={styles.boldText}>{mobile}</Text>
         </View>
 
         {/* Code Input */}
@@ -272,9 +263,9 @@ const EmailVerificationScreen = () => {
                 styles.codeInput,
                 activeIndex === index && styles.activeInput,
               ]}
-              value={code}
               placeholder="0"
               placeholderTextColor="grey"
+              value={code}
               onChangeText={text => handleInputChange(text, index)}
               onKeyPress={({nativeEvent}) => {
                 if (nativeEvent.key === 'Backspace') {
@@ -378,7 +369,6 @@ const styles = StyleSheet.create({
   },
   codeInputContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
     width: '100%',
     padding: 20,
   },
@@ -422,4 +412,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EmailVerificationScreen;
+export default PhoneVerificationScreen;

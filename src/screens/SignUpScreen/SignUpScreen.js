@@ -21,10 +21,10 @@ const langData = require('../../../lang.json');
 
 const SignUpScreen = ({route}) => {
   const [lang, setLang] = useState({});
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [name, setName] = useState('Bilal');
+  const [email, setEmail] = useState('bilal@gmail.com');
+  const [password, setPassword] = useState('Qwerty123');
+  const [phoneNumber, setPhoneNumber] = useState('81298486648');
   const [region, setRegion] = useState('');
   const [regionID, setRegionID] = useState(0);
   const [gender, setGender] = useState('pria');
@@ -109,6 +109,7 @@ const SignUpScreen = ({route}) => {
                 dataEmail: email,
                 pin: joinPin,
                 signupUrl: joinAPI,
+                mobile: joinMobile,
               });
             } else if (referData.result === 'false') {
               setRefferalEmail('');
