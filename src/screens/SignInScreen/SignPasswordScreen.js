@@ -106,7 +106,7 @@ const SignPasswordScreen = () => {
 
   const onNotExist = () => {
     navigation.navigate('PhoneVerif', {
-      mobile: mobile,
+      mobile: userData.mobile,
     });
   };
 
