@@ -9,6 +9,7 @@ import FirstScreen from './src/screens/FirstScreen/';
 import SignInScreen from './src/screens/SignInScreen/';
 import EmailAuthScreen from './src/screens/EmailAuthScreen/';
 import EmailVerificationScreen from './src/screens/EmailVerificationScreen/';
+import PhoneVerificationScreen from './src/screens/EmailVerificationScreen/PhoneVerificationScreen';
 import SignUpScreen from './src/screens/SignUpScreen/';
 import ConfirmEmailScreen from './src/screens/ConfirmEmailScreen/';
 import ForgotPasswordScreen from './src/screens/ForgotPasswordScreen/';
@@ -47,6 +48,7 @@ import ShowAdScreen from './src/screens/AdvertiseScreen/ShowAdScreen';
 import CompleteSend from './src/screens/CompleteSend';
 import ConversionRequest from './src/screens/ConversionRequestWalletScreen';
 import SuccessJoinScreen from './src/screens/EmailVerificationScreen/SuccessJoinScreen';
+import SignPasswordScreen from './src/screens/SignInScreen/SignPasswordScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -84,6 +86,7 @@ export default function App() {
           <Stack.Screen name="SignUp" component={SignUpScreen} />
           <Stack.Screen name="EmailAuth" component={EmailAuthScreen} />
           <Stack.Screen name="EmailVerif" component={EmailVerificationScreen} />
+          <Stack.Screen name="PhoneVerif" component={PhoneVerificationScreen} />
           <Stack.Screen name="ChooseRegion" component={ChooseRegionScreen} />
           <Stack.Screen name="ConfirmEmail" component={ConfirmEmailScreen} />
           <Stack.Screen
@@ -92,6 +95,7 @@ export default function App() {
           />
           <Stack.Screen name="NewPassword" component={NewPasswordScreen} />
           <Stack.Screen name="SuccessJoin" component={SuccessJoinScreen} />
+          <Stack.Screen name="SignPassword" component={SignPasswordScreen} />
 
           {/* Category -> Info */}
           <Stack.Screen name="InfoHome" component={InfoScreen} />

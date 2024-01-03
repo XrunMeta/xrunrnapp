@@ -60,10 +60,12 @@ const SignInScreen = () => {
         if (data === 'OK') {
           await AsyncStorage.setItem('userEmail', email);
           login();
+
           navigation.reset({
             index: 0,
             routes: [{name: 'Home'}],
           });
+
           // Simpan session dan navigasi ke halaman selanjutnya
         } else {
           Alert.alert(
