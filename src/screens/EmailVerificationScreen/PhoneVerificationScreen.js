@@ -34,25 +34,24 @@ const PhoneVerificationScreen = () => {
 
   const emailAuth = async () => {
     try {
-      const response = await fetch(
-        `${URL_API}&act=login-02-email&email=${mobile}`,
-      );
-      const responseData = await response.text(); // Convert response to JSON
+      const response = await fetch(`${URL_API}&act=login-02&mobile=${mobile}`);
+      const responseData = await response.json(); // Convert response to JSON
 
-      if (responseData.data === 'false') {
-        Alert.alert('Failed', 'Please enter your email');
-      } else {
+      console.log(responseData.data);
+
+      if (responseData.data === 'ok') {
         console.log('Kode dikirim boy');
-        console.log(signupUrl);
+      } else {
+        Alert.alert('Failed', 'Please enter your number');
       }
     } catch (error) {
       // Handle network errors or other exceptions
-      console.error('Error during emailAuth:', error);
+      console.error('Error during Phone Auth:', error);
     }
   };
 
   useEffect(() => {
-    // emailAuth();
+    emailAuth();
   }, []);
 
   const onBack = () => {
@@ -66,62 +65,72 @@ const PhoneVerificationScreen = () => {
   const onSignIn = async () => {
     const getAuthCode = verificationCode.join('');
 
+    console.log(
+      'Url API login-03 -> ' +
+        `${URL_API}&act=login-03&mobile=${mobile}&code=${getAuthCode}`,
+    );
+
     // Check Email & Auth Code Relational
     try {
       const responseAuth = await fetch(
-        `${URL_API}&act=login-03-email&email=${mobile}&code=${getAuthCode}`,
+        `${URL_API}&act=login-03&mobile=${mobile}&code=${getAuthCode}`,
       );
-      const responseAuthData = await responseAuth.json();
+      const responseAuthText = await responseAuth.text();
 
-      console.log(JSON.stringify(responseAuthData));
+      // Pisahkan objek JSON
+      const responseObjects = responseAuthText.split('Jamal');
 
-      if (responseAuthData.data === 'false') {
-        Alert.alert('Failed', 'Your Auth Code is Wrong');
-      } else {
-        // Do SignUp
-        try {
-          const joinRes = await fetch(signupUrl);
-          const joinData = await joinRes.json();
+      // Bentuk kembali setiap objek JSON
+      responseObjects.forEach(async (responseObject, index) => {
+        let formattedResponse = responseObject;
 
-          console.log('Ini SignUp Response -> ' + JSON.stringify(joinData));
+        // // Tambahkan kurung kurawal di depan dan belakang
+        // if (index !== 0) {
+        //   formattedResponse = '{' + formattedResponse;
+        // }
+        // if (index !== responseObjects.length - 1) {
+        //   formattedResponse = formattedResponse + '}';
+        // }
 
-          if (joinData.data === 'ok') {
-            // Check is Registered? If yes do login
-            try {
-              const responseLogin = await fetch(
-                `${URL_API}&act=login-checker&email=${mobile}&pin=${pin}`,
-              );
-              const responseLoginData = await responseLogin.text();
+        console.log('Hahaydde -> ' + formattedResponse);
 
-              if (responseLoginData === 'OK') {
-                // await AsyncStorage.setItem('userEmail', mobile);
-                login();
-                navigation.replace('SuccessJoin');
-              } else {
-                Alert.alert(
-                  'Failed',
-                  "It's a server problem. Please try in a few minutes.",
-                );
-              }
-            } catch (error) {
-              // Handle network errors or other exceptions
-              console.error('Error during Check Login Email & Pin:', error);
-            }
-          } else {
-            Alert.alert(
-              'Failed',
-              "It's a server problem. Please try in a few minutes.",
-            );
-            navigation.navigate('First');
-          }
-        } catch (error) {
-          console.error('Error during Signup:', error);
-          Alert.alert(
-            'Error',
-            "It's a server problem. Please try in a few minutes.",
-          );
-        }
-      }
+        // try {
+        //   const parsedResponse = JSON.parse(formattedResponse);
+        //   console.log('Hasilnya -> ' + JSON.stringify(parsedResponse));
+        // } catch (error) {
+        //   console.error('Error parsing JSON:', error);
+        // }
+      });
+
+      // if (responseAuthData.data === 'false') {
+      //   // When auth code is false
+      //   Alert.alert('Failed', 'Your Auth Code is Wrong');
+      // } else if (responseAuthData.data === 'login') {
+      //   // Try to login
+      //   try {
+      //     const responseLogin = await fetch(
+      //       `${URL_API}&act=login-01&tp=2&mobile=${mobile}`,
+      //     );
+      //     const responseLoginData = await responseLogin.json();
+
+      //     console.log(responseLoginData);
+
+      //     // if (responseLoginData === 'OK') {
+      //     //   // await AsyncStorage.setItem('userEmail', mobile);
+      //     //   login();
+      //     //   navigation.replace('SuccessJoin');
+      //     // } else {
+      //     //   Alert.alert(
+      //     //     'Failed',
+      //     //     "It's a server problem. Please try in a few minutes.",
+      //     //   );
+      //     // }
+      //   } catch (error) {
+      //     console.error('Error during Check Login with Mobile:', error);
+      //   }
+      // } else {
+      //   console.log('ke halaman berikutnya (ap1700)');
+      // }
     } catch (error) {
       // Handle network errors or other exceptions
       console.error('Error during Check Auth Code:', error);
@@ -155,7 +164,7 @@ const PhoneVerificationScreen = () => {
 
     setVerificationCode(newCode);
 
-    if (text != '' && index < 5) {
+    if (text != '' && index < 3) {
       inputRefs.current[index + 1].focus();
     }
   };
