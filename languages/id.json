@@ -1,0 +1,349 @@
+{
+  "alert": {
+    "title": {
+      "error": "Error",
+      "fail": "Gagal",
+      "warning": "Peringatan",
+      "info": "Info",
+      "success": "Berhasil"
+    }
+  },
+
+  "screen_first": {
+    "title": {
+      "1": "Dapatkan Rewardnya",
+      "2": "Dan Ciptakan Momenmu!"
+    },
+    "login": "Masuk",
+    "signUp": "Ayo XRUN, Daftar Sekarang",
+    "tos": {
+      "1": "Silakan baca",
+      "2": "serta",
+      "3": "di bawah ini untuk mengetahui tentang fitur dan",
+      "4": "yang disediakan oleh aplikasi ini"
+    },
+    "terms": "syarat & ketentuan",
+    "privacy": "kebijakan privasi",
+    "information": "penggunaan informasi"
+  },
+
+  "screen_signin": {
+    "title": "Masuk Via Email",
+    "subTitle": "Ayo Masuk Sekarang 'Catch Me'",
+    "email": {
+      "label": "Email",
+      "placeholder": "xrun@xrun.run"
+    },
+    "password": {
+      "label": "Kata sandi",
+      "placeholder": "Kata sandi"
+    },
+    "authcode": {
+      "label": "Coba",
+      "link": "EMAIL AUTENTIKASI"
+    },
+    "validator": "Email anda tidak valid",
+    "alert": {
+      "emptyEmail": "Tolong isi email anda",
+      "emptyPassword": "Tolong isi kata sandi anda",
+      "invalidEmail": "Email anda tidak valid"
+    },
+    "failedLogin": "Email & Password tidak cocok"
+  },
+
+  "screen_signup": {
+    "title": "Registrasi",
+    "name": {
+      "label": "Nama",
+      "placeholder": "Nama"
+    },
+    "email": {
+      "label": "Email",
+      "placeholder": "xrun@xrun.run"
+    },
+    "password": {
+      "label": "Kata Sandi",
+      "placeholder": "Masukan kata sandi baru anda"
+    },
+    "phone_number": {
+      "label": "Nomor Telepon"
+    },
+    "area": {
+      "label": "Daerah",
+      "placeholder": "Cari berdasarkan wilayah anda"
+    },
+    "gender": {
+      "label": "Jenis Kelamin",
+      "male": "Pria",
+      "female": "Wanita"
+    },
+    "age": {
+      "label": "Umur"
+    },
+    "referral": {
+      "label": "Rujukan Email",
+      "placeholder": "xrun@xrun.run"
+    },
+    "add_desc": {
+      "ad1": "Masukan kode referral untuk",
+      "ad2": "mendapatkan bonus spesial XRUN"
+    },
+    "validator": {
+      "emptyName": "Nama harus diisi",
+      "emptyEmail": "Email harus diisi",
+      "invalidEmail": "Format email tidak valid",
+      "emptyPassword": "Password harus diisi",
+      "emptyArea": "Daerah harus diisi"
+    }
+  },
+
+  "screen_emailAuth": {
+    "email": {
+      "label": "Masukan Email anda",
+      "placeholder": "xrun@xrun.run"
+    },
+    "alert": {
+      "emptyEmail": "Tolong isi email anda",
+      "invalidEmail": "Email anda tidak valid"
+    }
+  },
+
+  "screen_emailVerification": {
+    "email": {
+      "label": "Masukan kode verifikasi 6 digit"
+    },
+    "timer": "kirim ulang"
+  },
+
+  "screen_country": {
+    "title": "Pemilihan Negara",
+    "current_country": "Lokasi Sekarang",
+    "placeholder": "Silakan cari negara anda"
+  },
+
+  "screen_map": {
+    "section_card_shadow": {
+      "radius": "Dalam radius 1000 meter",
+      "amount": "Ada",
+      "and": "dan",
+      "getable": "dapat diperoleh",
+      "event": "XRUN Event",
+      "diamond": "Diamond"
+    },
+    "section_slider_card": {
+      "desc1": "Ada XRUN dari",
+      "desc2": "yang dapat diperoleh."
+    },
+    "section_marker": {
+      "loader": "Memuat...",
+      "desc1": "Ada sebuah",
+      "desc2": "dengan"
+    }
+  },
+
+  "screen_info": {
+    "title": "Info Saya",
+    "list": {
+      "modify": "Ubah Informasi",
+      "setting": "Pengaturan",
+      "clause": "Ketentuan",
+      "cs": "Layanan Pelanggan",
+      "app_info": "Informasi Aplikasi",
+      "recommend": "Rekomendasi"
+    },
+    "button": {
+      "logout": "Apakah Anda yakin ingin keluar?"
+    }
+  },
+
+  "screen_confirm_password": {
+    "title": "Konfirmasi Kata Sandi",
+    "label": "Kata Sandi",
+    "placeholder": "Kata Sandi",
+    "note": {
+      "alt1": "Silakan masukkan kata sandi Anda untuk konfirmasi"
+    },
+    "condition": {
+      "empty": "Silakan isi kata sandi Anda",
+      "wrong": "Kata sandi Anda tidak cocok"
+    }
+  },
+
+  "screen_modify_information": {
+    "title": "Ubah Informasi",
+    "lastname": {
+      "label": "Nama Belakang",
+      "placeholder": "Nama belakang Anda"
+    },
+    "name": {
+      "label": "Nama",
+      "placeholder": "Nama Anda"
+    },
+    "email": {
+      "label": "Email",
+      "placeholder": "xrun@xrun.run"
+    },
+    "phone": {
+      "label": "Nomor Telepon"
+    },
+    "password": {
+      "label": "Kata Sandi",
+      "extstr": "Perubahan terakhir :"
+    },
+    "age": {
+      "label": "Usia"
+    },
+    "gender": {
+      "label": "Jenis Kelamin",
+      "opt1": "Laki-laki",
+      "opt2": "Perempuan"
+    },
+    "area": {
+      "label": "Wilayah",
+      "placeholder": "Wilayah Anda",
+      "empty": "Silakan pilih wilayah",
+      "label_country": "Kebangsaan / Negara",
+      "label_area": "Wilayah"
+    },
+    "modal": {
+      "empty": "Data kosong"
+    },
+    "close": "Tutup",
+    "modify": "Ubah"
+  },
+
+  "screen_clause": {
+    "title": "Ketentuan",
+    "category": {
+      "service": "Ketentuan Layanan",
+      "location": "Ketentuan Informasi Lokasi Pribadi",
+      "usage": "Ketentuan Penggunaan/Pengumpulan Informasi Pribadi"
+    }
+  },
+
+  "screen_appInfo": {
+    "title": "Informasi Aplikasi",
+    "version": "Versi terakhir"
+  },
+
+  "screen_recommend": {
+    "title": "Daftar Rekomendasi",
+    "category": {
+      "regist": "Daftarkan rekomendasi",
+      "random": "Rekomendasi acak"
+    },
+    "add_recommend": {
+      "label": "ID Rekomendasi",
+      "placeholder": "Silakan masukkan ID rekomendasi Anda.",
+      "not_found": "ID tidak ditemukan, Silakan masukkan ID rekomendasi Anda lagi.",
+      "recommended": "Rekomendasi didaftarkan",
+      "already": "Anda sudah memiliki referral ID."
+    },
+    "random_recommend": {
+      "empty": "Silakan pilih sebuah ID."
+    }
+  },
+
+  "screen_cs": {
+    "title": "Layanan Pelanggan",
+    "common": {
+      "title": "Masalah Umum"
+    },
+    "one": {
+      "title": "Pertanyaan 1:1"
+    }
+  },
+
+  "screen_setting": {
+    "title": "Pengaturan",
+    "category": {
+      "basic": {
+        "cat": "Pengaturan Dasar",
+        "device": "Pengaturan Perangkat"
+      },
+      "account": {
+        "cat": "Pengaturan Akun",
+        "logout": "Keluar",
+        "close": "Hapus Akun"
+      }
+    },
+    "close": {
+      "title": "Hapus Akun",
+      "desc": {
+        "clo1": "Seluruh",
+        "clo2": "XRUN ",
+        "clo3": "Anda akan menghilang secara keseluruhan.",
+        "clo4": "Bila hapus akun, semua akun yang terhubung ",
+        "clo5": "akan Terhapus semua."
+      },
+      "select": {
+        "sel1": "Layanan sulit digunakan",
+        "sel2": "Fitur sulit digunakan",
+        "sel3": "Dan lain-lain"
+      },
+      "reason": "Alasan hapus akun",
+      "del_title": "Hapus Akun",
+      "del_d1": "Untuk mengamankan peraturan akun,",
+      "del_d2": "Masukan kata sandi untuk hapus akun.",
+      "del_placeholder": "Masukan kata sandi.",
+      "del_empty": "Silahkan masukan kata sandi anda",
+      "del_fail": "Gagal menghapus akun"
+    }
+  },
+  "screen_wallet": {
+    "title": "Dompet",
+    "possess": "Milik",
+    "catch": "Catch",
+    "qrcode_show": "Melihat QR Code",
+    "copy_qrcode_show": "Berhasil menyalinkan alamat dompet.",
+    "download_qrcode_show": "Gambar telah berhasil disimpan. Lihat galeri.",
+    "copy_qrcode": "Alamat dompet berhasil di salin.Silakan tempel untuk menggunakan.",
+    "table_head_transaction": "Mutasi",
+    "table_head_send": "Kirim",
+    "table_head_change": "Mengubah",
+    "table_head_exchange": "Penukaran",
+    "table_days": "HARI",
+    "total_history": "Semua",
+    "transfer_history": "Penarikan",
+    "received_details": "Setoran",
+    "transition_history": "Mutasi Penukaran",
+    "history_action3304": "Berhasil mendapatkan XRUN",
+    "history_action3651": "Riwayat Penarikan",
+    "history_action3305": "Mengirimkan XRUN",
+    "history_action3306": "Penukaran XRUN",
+    "history_action3307": "Pencairan XRUN",
+    "history_action3308": "Pencairan Berhasil",
+    "history_extracode9453": "Gagal mengirimkan",
+    "history_extracode9001": "Penarikan Berhasil",
+    "history_extracode9002": "Penarikan Gagal",
+    "history_extracodesuccess": "Penyelesaian",
+    "history_not_found": "Histori tidak ditemukan",
+    "confirm_alert": "MENGONFIRMASI",
+    "failed_getwallet_alert": "Untuk dapatkan dompet Anda, silakan coba lagi nanti",
+    "failed_alert": "Gagal",
+    "failed_download_qrcode_alert": "Gagal untuk mengunduh qr code"
+  },
+  "screen_send": {
+    "send_amount_label": "Amount",
+    "send_amount_placeholder": "Masukan jumlah yang ingin di kirimkan.",
+    "send_address_label": "To",
+    "send_address_placeholder": "Masukan Alamat Pengiriman.",
+    "send_balance": "Saldo :",
+    "send_stock_exchange_label": "Stock exchange",
+    "send_amount_greater_zero": "Harap masukkan jumlah yang lebih besar dari 0.",
+    "send_balance_not_enough": "Saldo tidak mencukupi.",
+    "send_address_less": "Alamat kurang dari 40 huruf.",
+    "send_enough_money": "Periksa jumlah saat ini dan pastikan Anda memiliki cukup uang di dompet Anda termasuk bahan bakar (biaya transfer)",
+    "send_verification_code": "Mengirim kode verifikasi"
+  },
+  "screen_complete_send": {
+    "title": "Berhasil mengirimkan XRUN .",
+    "copy_txid": "TXID berhasil di salin.Silakan tempel untuk menggunakan.",
+    "complete_send": "Telah sukses",
+    "wallet_address": "Alamat Dompet",
+    "amount_send": "Jumlah Terkirim"
+  },
+  "popup": {
+    "notice": "Mohon maaf kepada user XRUN.\n\nKami akan melakukan testing periode\nDan sekaligus maintenance.\n\nMaintenance kurang lebih :\n\n1. Meluaskan coin di seluruh Indonesia.\n\n2. Untuk mengurangi error pada saat tangkap coin dan nonton iklan.\n\n3. Free Coin untuk User yang mengisi Referral.\n\n*Test Periode kami akan berjalan sampai Akhir bulan Aug tanggal 31 2022"
+  }
+}

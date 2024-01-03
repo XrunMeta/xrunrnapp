@@ -21,8 +21,6 @@ import CustomInputWallet from '../../components/CustomInputWallet';
 import CustomDropdownWallet from '../../components/CustomDropdownWallet';
 import {URL_API} from '../../../utils';
 
-const langData = require('../../../lang.json');
-
 const SendWalletScreen = ({navigation, route}) => {
   const [lang, setLang] = useState({});
   const [iconNextIsDisabled, setIconNextIsDisabled] = useState(true);
@@ -43,28 +41,28 @@ const SendWalletScreen = ({navigation, route}) => {
     // Get Language
     const getLanguage = async () => {
       try {
-        let tempLang;
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+        let langData;
 
         switch (currentLanguage) {
           case 'id':
-            tempLang = 'id';
+            langData = require('../../../languages/id.json');
             break;
           case 'en':
-            tempLang = 'eng';
+            langData = require('../../../languages/en.json');
             break;
-          case 'kr':
-            tempLang = 'kr';
+          case 'ko':
+            langData = require('../../../languages/ko.json');
             break;
-          case 'cn':
-            tempLang = 'cn';
+          case 'zh':
+            langData = require('../../../languages/zh.json');
             break;
           default:
-            tempLang = 'id';
+            langData = require('../../../languages/en.json');
             break;
         }
 
-        const language = langData[tempLang];
+        const language = langData;
         setLang(language);
       } catch (err) {
         console.error(

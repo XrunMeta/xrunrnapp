@@ -1,0 +1,349 @@
+{
+  "alert": {
+    "title": {
+      "error": "错误",
+      "fail": "失败",
+      "warning": "警告",
+      "info": "信息",
+      "success": "成功"
+    }
+  },
+
+  "screen_first": {
+    "title": {
+      "1": "获取您的奖励",
+      "2": "并创造属于您的时刻！"
+    },
+    "login": "登录",
+    "signUp": "让我们XRUN，注册我",
+    "tos": {
+      "1": "请阅读",
+      "2": "和",
+      "3": "下面了解此应用程序提供的功能和",
+      "4": "隐私政策"
+    },
+    "terms": "条款和条件",
+    "privacy": "隐私政策",
+    "information": "信息使用"
+  },
+
+  "screen_signin": {
+    "title": "通过电子邮件登录",
+    "subTitle": "让我们快速登录 '抓住我'",
+    "email": {
+      "label": "电子邮件",
+      "placeholder": "xrun@xrun.run"
+    },
+    "password": {
+      "label": "密码",
+      "placeholder": "密码"
+    },
+    "authcode": {
+      "label": "试试",
+      "link": "电子邮件验证码"
+    },
+    "validator": "您的电子邮件无效",
+    "alert": {
+      "emptyEmail": "请插入您的电子邮件",
+      "emptyPassword": "请填写您的密码",
+      "invalidEmail": "您的电子邮件无效"
+    },
+    "failedLogin": "无效的电子邮件和密码"
+  },
+
+  "screen_signup": {
+    "title": "注册",
+    "name": {
+      "label": "名字",
+      "placeholder": "名字"
+    },
+    "email": {
+      "label": "电子邮件",
+      "placeholder": "xrun@xrun.run"
+    },
+    "password": {
+      "label": "密码",
+      "placeholder": "输入您的新密码"
+    },
+    "phone_number": {
+      "label": "电话号码"
+    },
+    "area": {
+      "label": "地区",
+      "placeholder": "按您的地区搜索"
+    },
+    "gender": {
+      "label": "性别",
+      "male": "男性",
+      "female": "女性"
+    },
+    "age": {
+      "label": "年龄"
+    },
+    "referral": {
+      "label": "推荐会员电子邮件",
+      "placeholder": "xrun@xrun.run"
+    },
+    "add_desc": {
+      "ad1": "输入推荐代码以获取",
+      "ad2": "特别的XRUN奖金"
+    },
+    "validator": {
+      "emptyName": "名字是必需的",
+      "emptyEmail": "需要电子邮件",
+      "invalidEmail": "电子邮件格式无效",
+      "emptyPassword": "密码是必需的",
+      "emptyArea": "必须填写地区"
+    }
+  },
+
+  "screen_emailAuth": {
+    "email": {
+      "label": "输入您的电子邮件",
+      "placeholder": "xrun@xrun.run"
+    },
+    "alert": {
+      "emptyEmail": "请插入您的电子邮件",
+      "invalidEmail": "您的电子邮件无效"
+    }
+  },
+
+  "screen_emailVerification": {
+    "email": {
+      "label": "输入6位验证码"
+    },
+    "timer": "重新发送"
+  },
+
+  "screen_country": {
+    "title": "国家选择",
+    "current_country": "当前位置",
+    "placeholder": "搜索国家"
+  },
+
+  "screen_map": {
+    "section_card_shadow": {
+      "radius": "在1000米半径内",
+      "amount": "有",
+      "and": "和",
+      "getable": "可以获得",
+      "event": "XRUN活动",
+      "diamond": "钻石"
+    },
+    "section_slider_card": {
+      "desc1": "有一个XRUN",
+      "desc2": "可以获得的。"
+    },
+    "section_marker": {
+      "loader": "加载中...",
+      "desc1": "有一个",
+      "desc2": "与"
+    }
+  },
+
+  "screen_info": {
+    "title": "我的信息",
+    "list": {
+      "modify": "修改信息",
+      "setting": "设置",
+      "clause": "条款",
+      "cs": "客户服务",
+      "app_info": "应用程序信息",
+      "recommend": "推荐"
+    },
+    "button": {
+      "logout": "您确定要注销吗？"
+    }
+  },
+
+  "screen_confirm_password": {
+    "title": "确认密码",
+    "label": "密码",
+    "placeholder": "密码",
+    "note": {
+      "alt1": "请为个人信息输入您的密码"
+    },
+    "condition": {
+      "empty": "请填写您的密码",
+      "wrong": "您的密码不匹配"
+    }
+  },
+
+  "screen_modify_information": {
+    "title": "修改信息",
+    "lastname": {
+      "label": "姓",
+      "placeholder": "您的姓氏"
+    },
+    "name": {
+      "label": "名字",
+      "placeholder": "您的名字"
+    },
+    "email": {
+      "label": "电子邮件",
+      "placeholder": "xrun@xrun.run"
+    },
+    "phone": {
+      "label": "电话号码"
+    },
+    "password": {
+      "label": "密码",
+      "extstr": "最终更改日期："
+    },
+    "age": {
+      "label": "年龄"
+    },
+    "gender": {
+      "label": "性别",
+      "opt1": "男孩/男人",
+      "opt2": "女孩/女人"
+    },
+    "area": {
+      "label": "地区",
+      "placeholder": "您的地区",
+      "empty": "请选择一个地区",
+      "label_country": "国籍/国家",
+      "label_area": "地区"
+    },
+    "modal": {
+      "empty": "数据为空"
+    },
+    "close": "关闭",
+    "modify": "修改"
+  },
+
+  "screen_clause": {
+    "title": "条款",
+    "category": {
+      "service": "服务条款",
+      "location": "个人位置信息条款",
+      "usage": "使用/收集个人信息条款"
+    }
+  },
+
+  "screen_appInfo": {
+    "title": "应用程序信息",
+    "version": "最新版本"
+  },
+
+  "screen_recommend": {
+    "title": "注册推荐人",
+    "category": {
+      "regist": "注册推荐人",
+      "random": "随机推荐"
+    },
+    "add_recommend": {
+      "label": "推荐人ID",
+      "placeholder": "请输入您的推荐人ID。",
+      "not_found": "找不到ID，请重新输入您的推荐人ID。",
+      "recommended": "推荐",
+      "already": "您已经有推荐历史。"
+    },
+    "random_recommend": {
+      "empty": "请选择一个ID。"
+    }
+  },
+
+  "screen_cs": {
+    "title": "客户服务",
+    "common": {
+      "title": "常见问题"
+    },
+    "one": {
+      "title": "1:1咨询"
+    }
+  },
+
+  "screen_setting": {
+    "title": "设置",
+    "category": {
+      "basic": {
+        "cat": "基本设置",
+        "device": "设备授权书"
+      },
+      "account": {
+        "cat": "帐户设置",
+        "logout": "登出",
+        "close": "关闭会员资格"
+      }
+    },
+    "close": {
+      "title": "会员退出",
+      "desc": {
+        "clo1": "所有",
+        "clo2": "硬币",
+        "clo3": "将立即消失。",
+        "clo4": "此外，您将不再",
+        "clo5": "所有服务将被撤回。"
+      },
+      "select": {
+        "sel1": "服务难以使用",
+        "sel2": "功能困难",
+        "sel3": "等"
+      },
+      "reason": "关闭原因",
+      "del_title": "关闭会员资格",
+      "del_d1": "为了安全的账户管理，",
+      "del_d2": "您在离开时将收到密码。",
+      "del_placeholder": "请输入您的密码。",
+      "del_empty": "请输入您的密码",
+      "del_fail": "关闭会员资格失败"
+    }
+  },
+  "screen_wallet": {
+    "title": "我的钱包",
+    "possess": "拥有",
+    "catch": "捕捉",
+    "qrcode_show": "二维码",
+    "copy_qrcode_show": "钱包地址已复制。",
+    "download_qrcode_show": "图像保存成功，请检查画廊。",
+    "copy_qrcode": "钱包地址已复制。随时使用。",
+    "table_head_transaction": "交易信息/交易账单",
+    "table_head_send": "发送",
+    "table_head_change": "更改",
+    "table_head_exchange": "兑换",
+    "table_days": "天",
+    "total_history": "总历史",
+    "transfer_history": "转账历史",
+    "received_details": "收到的详情",
+    "transition_history": "过渡历史",
+    "history_action3651": "提款详情",
+    "history_action3304": "已完成",
+    "history_action3305": "转账",
+    "history_action3306": "转换",
+    "history_action3307": "兑换",
+    "history_action3308": "兑换完成",
+    "history_extracode9453": "转账失败",
+    "history_extracode9001": "提款批准",
+    "history_extracode9002": "提款未批准",
+    "history_extracodesuccess": "转账完成",
+    "history_not_found": "找不到历史记录",
+    "confirm_alert": "确认",
+    "failed_getwallet_alert": "获取您的钱包失败，请稍后重试",
+    "failed_alert": "失败",
+    "failed_download_qrcode_alert": "无法下载二维码"
+  },
+  "screen_send": {
+    "send_amount_label": "发送金额",
+    "send_amount_placeholder": "请输入要发送的金额。",
+    "send_address_label": "发送地址",
+    "send_address_placeholder": "请输入要发送的地址。",
+    "send_balance": "余额：",
+    "send_stock_exchange_label": "股票交易所",
+    "send_amount_greater_zero": "请输入大于零的金额。",
+    "send_balance_not_enough": "没有足够的钱（或银行余额）。",
+    "send_address_less": "地址少于40个字母。",
+    "send_enough_money": "检查当前金额，并确保您的钱包中有足够的钱，包括燃气费（转账费）",
+    "send_verification_code": "发送验证码"
+  },
+  "screen_complete_send": {
+    "title": "转账完成",
+    "copy_txid": "TXID已复制。随时使用。",
+    "complete_send": "已完成",
+    "wallet_address": "钱包地址",
+    "amount_send": "转账金额"
+  },
+  "popup": {
+    "notice": "向用户XRUN致以诚挚的歉意。\n\n我们将进行测试期间并同时进行维护。\n\n维护内容如下：\n\n1. 在整个印度尼西亚扩大硬币。\n\n2. 减少捕捉硬币和观看广告时的错误。\n\n3. 为填写推荐的用户提供免费硬币。\n\n* 我们的测试期将持续到2022年8月31日。"
+  }
+}
