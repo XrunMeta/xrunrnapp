@@ -101,11 +101,14 @@ const SignPasswordScreen = () => {
   };
 
   const onPassMiss = () => {
-    navigation.navigate('EmailAuth');
+    navigation.navigate('PasswordMissed');
   };
 
   const onNotExist = () => {
-    navigation.navigate('PhoneVerif', {
+    // navigation.navigate('PhoneVerif', {
+    //   mobile: userData.mobile,
+    // });
+    navigation.navigate('PhoneLogin', {
       mobile: userData.mobile,
     });
   };

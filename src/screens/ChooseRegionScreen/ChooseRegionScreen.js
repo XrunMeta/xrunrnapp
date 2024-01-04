@@ -20,15 +20,30 @@ const langData = require('../../../lang.json');
 const ChooseRegionScreen = ({route}) => {
   const [lang, setLang] = useState({});
   const navigation = useNavigation();
-  const {flag, countryCode, country} = route.params || {};
+  const {
+    flag,
+    countryCode,
+    country,
+    screenName = false,
+    mobile,
+  } = route.params || {};
   const [isLoading, setIsLoading] = useState(true);
 
   const onBack = (flag, cCountryCode, cCountry) => {
-    navigation.navigate('SignUp', {
-      flag: flag,
-      countryCode: cCountryCode,
-      country: cCountry,
-    });
+    if (screenName) {
+      navigation.navigate('PhoneLogin', {
+        flag: flag,
+        countryCode: cCountryCode,
+        country: cCountry,
+        mobile: mobile,
+      });
+    } else {
+      navigation.navigate('SignUp', {
+        flag: flag,
+        countryCode: cCountryCode,
+        country: cCountry,
+      });
+    }
   };
 
   // ########## Looping Region List
@@ -63,17 +78,28 @@ const ChooseRegionScreen = ({route}) => {
       }
     };
 
+    console.log('Status Screen Name -> ' + screenName);
+
     getLanguage();
   }, []);
 
   // ########## Choose Region
   const chooseRegion = item => {
-    navigation.navigate('SignUp', {
-      flag: item.lcode,
-      countryCode: item.callnumber,
-      country: item.country,
-      code: item.code,
-    });
+    if (screenName) {
+      navigation.navigate('PhoneLogin', {
+        flag: item.lcode,
+        countryCode: item.callnumber,
+        country: item.country,
+        mobile: mobile,
+      });
+    } else {
+      navigation.navigate('SignUp', {
+        flag: item.lcode,
+        countryCode: item.callnumber,
+        country: item.country,
+        code: item.code,
+      });
+    }
   };
 
   // ########## Search Function
