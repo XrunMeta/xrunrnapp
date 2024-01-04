@@ -368,7 +368,7 @@ const styles = StyleSheet.create({
   },
   emailAuth: {
     fontFamily: 'Poppins-SemiBold',
-    fontSize: 15,
+    fontSize: 13,
     color: '#343a59',
   },
   disableText: {

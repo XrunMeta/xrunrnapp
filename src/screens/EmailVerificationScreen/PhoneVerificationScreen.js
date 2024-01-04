@@ -32,7 +32,7 @@ const PhoneVerificationScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
   let ScreenHeight = Dimensions.get('window').height;
 
-  const emailAuth = async () => {
+  const phoneAuth = async () => {
     try {
       const response = await fetch(`${URL_API}&act=login-02&mobile=${mobile}`);
       const responseData = await response.json(); // Convert response to JSON
@@ -51,24 +51,15 @@ const PhoneVerificationScreen = () => {
   };
 
   useEffect(() => {
-    emailAuth();
+    phoneAuth();
   }, []);
 
   const onBack = () => {
-    navigation.navigate('First');
-  };
-
-  const onLoginPassword = () => {
-    navigation.replace('SignIn');
+    navigation.replace('PhoneLogin');
   };
 
   const onSignIn = async () => {
     const getAuthCode = verificationCode.join('');
-
-    console.log(
-      'Url API login-03 -> ' +
-        `${URL_API}&act=login-03&mobile=${mobile}&code=${getAuthCode}`,
-    );
 
     // Check Email & Auth Code Relational
     try {
@@ -76,61 +67,42 @@ const PhoneVerificationScreen = () => {
         `${URL_API}&act=login-03&mobile=${mobile}&code=${getAuthCode}`,
       );
       const responseAuthText = await responseAuth.text();
+      const responseObjects = responseAuthText.split('}');
+      const firstResObj = JSON.parse(responseObjects[0] + '}');
 
-      // Pisahkan objek JSON
-      const responseObjects = responseAuthText.split('Jamal');
+      if (firstResObj.data === 'false') {
+        // Invalid Number
+        Alert.alert('Failed', 'Invalid Number');
+      } else if (firstResObj.data === 'login') {
+        // Login Automatically
+        try {
+          const responseLogin = await fetch(
+            `${URL_API}&act=login-01&tp=2&mobile=${mobile}`,
+          );
+          const responseLoginData = await responseLogin.json();
 
-      // Bentuk kembali setiap objek JSON
-      responseObjects.forEach(async (responseObject, index) => {
-        let formattedResponse = responseObject;
+          console.log(
+            JSON.stringify(responseLoginData) +
+              ' -> data:' +
+              responseLoginData.data,
+          );
 
-        // // Tambahkan kurung kurawal di depan dan belakang
-        // if (index !== 0) {
-        //   formattedResponse = '{' + formattedResponse;
-        // }
-        // if (index !== responseObjects.length - 1) {
-        //   formattedResponse = formattedResponse + '}';
-        // }
+          if (responseLoginData.data === 'false') {
+            console.log('ke halaman berikutnya (ap1700)');
+          }
 
-        console.log('Hahaydde -> ' + formattedResponse);
-
-        // try {
-        //   const parsedResponse = JSON.parse(formattedResponse);
-        //   console.log('Hasilnya -> ' + JSON.stringify(parsedResponse));
-        // } catch (error) {
-        //   console.error('Error parsing JSON:', error);
-        // }
-      });
-
-      // if (responseAuthData.data === 'false') {
-      //   // When auth code is false
-      //   Alert.alert('Failed', 'Your Auth Code is Wrong');
-      // } else if (responseAuthData.data === 'login') {
-      //   // Try to login
-      //   try {
-      //     const responseLogin = await fetch(
-      //       `${URL_API}&act=login-01&tp=2&mobile=${mobile}`,
-      //     );
-      //     const responseLoginData = await responseLogin.json();
-
-      //     console.log(responseLoginData);
-
-      //     // if (responseLoginData === 'OK') {
-      //     //   // await AsyncStorage.setItem('userEmail', mobile);
-      //     //   login();
-      //     //   navigation.replace('SuccessJoin');
-      //     // } else {
-      //     //   Alert.alert(
-      //     //     'Failed',
-      //     //     "It's a server problem. Please try in a few minutes.",
-      //     //   );
-      //     // }
-      //   } catch (error) {
-      //     console.error('Error during Check Login with Mobile:', error);
-      //   }
-      // } else {
-      //   console.log('ke halaman berikutnya (ap1700)');
-      // }
+          // Do Login Auth
+          login();
+          navigation.reset({
+            index: 0,
+            routes: [{name: 'Home'}],
+          });
+        } catch (error) {
+          console.error('Error during Check Login with Mobile:', error);
+        }
+      } else {
+        console.log('ke halaman berikutnya (ap1700)');
+      }
     } catch (error) {
       // Handle network errors or other exceptions
       console.error('Error during Check Auth Code:', error);
@@ -151,7 +123,7 @@ const PhoneVerificationScreen = () => {
 
   // Send Code Auth Again
   const sendCodeAgain = () => {
-    emailAuth();
+    phoneAuth();
     setModalVisible(!modalVisible);
   };
 
@@ -236,12 +208,7 @@ const PhoneVerificationScreen = () => {
                   style={{height: 25}}
                 />
               </TouchableOpacity>
-              <CustomButton onPress={sendCodeAgain} text="Send code again" />
-              <CustomButton
-                text="Login with password"
-                onPress={onLoginPassword}
-                type="SECONDARY"
-              />
+              <CustomButton onPress={sendCodeAgain} text="RE-SEND" />
             </View>
           </View>
         </TouchableWithoutFeedback>
