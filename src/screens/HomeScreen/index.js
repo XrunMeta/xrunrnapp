@@ -23,6 +23,7 @@ export default function Home({route}) {
   console.log('Status Login di Home : ' + isLoggedIn);
   const [activeTab, setActiveTab] = useState('Map');
   const [openScreen, setOpenScreen] = useState();
+  const [popupNotif, setPopupNotif] = useState(true);
 
   const navigation = useNavigation();
 
@@ -97,23 +98,6 @@ export default function Home({route}) {
 
     getUserData(); // Get Language
   }, [isLoggedIn]);
-
-  useEffect(() => {
-    if (lang.popup) {
-      Alert.alert(
-        '',
-        lang && lang.popup && lang.popup.notice ? lang.popup.notice : '',
-        [
-          {
-            text:
-              lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
-                ? lang.screen_wallet.confirm_alert
-                : '',
-          },
-        ],
-      );
-    }
-  }, [lang]);
 
   const renderTabButton = (tabName, icon, text, onPress) => (
     <TouchableOpacity
