@@ -19,8 +19,6 @@ import TableWalletCard from '../../components/TableWallet';
 import {URL_API, funcTransactionalInformation} from '../../../utils';
 import ShowQRWallet from '../../components/ShowQRWallet';
 
-const langData = require('../../../lang.json');
-
 const WalletScreen = ({navigation}) => {
   const [lang, setLang] = useState({});
   const layout = useWindowDimensions();
@@ -46,33 +44,35 @@ const WalletScreen = ({navigation}) => {
 
   // State for send to component TableWallet => Total history, transfer history, Received details, Transition history
   const [transactionalInformation, setTransactionalInformation] = useState([]);
+  const [emptyWallet, setEmptyWallet] = useState(false);
 
   useEffect(() => {
     // Get Language
     const getLanguage = async () => {
       try {
-        let tempLang;
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+        let langData;
+        console.log(currentLanguage);
 
         switch (currentLanguage) {
           case 'id':
-            tempLang = 'id';
+            langData = require('../../../languages/id.json');
             break;
           case 'en':
-            tempLang = 'eng';
+            langData = require('../../../languages/en.json');
             break;
-          case 'kr':
-            tempLang = 'kr';
+          case 'ko':
+            langData = require('../../../languages/ko.json');
             break;
-          case 'cn':
-            tempLang = 'cn';
+          case 'zh':
+            langData = require('../../../languages/zh.json');
             break;
           default:
-            tempLang = 'id';
+            langData = require('../../../languages/en.json');
             break;
         }
 
-        const language = langData[tempLang];
+        const language = langData;
         setLang(language);
       } catch (err) {
         console.error(
@@ -182,6 +182,10 @@ const WalletScreen = ({navigation}) => {
     ).length;
 
     if (transactionalInformationLenght >= 4) {
+      if (transactionalInformation.totalHistory.length > 0) {
+        setEmptyWallet(true);
+      }
+
       setIsLoading(false);
     }
   }, [transactionalInformation]);
@@ -374,17 +378,19 @@ const WalletScreen = ({navigation}) => {
               <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
             }>
             <View style={styles.containerCard}>
-              <TabView
-                navigationState={{index, routes}}
-                renderScene={renderScene}
-                onIndexChange={index => {
-                  setIndex(index);
-                  setCurrentCurrency(routes[index].key);
-                }}
-                initialLayout={{width: layout.width}}
-                renderTabBar={() => null}
-                overScrollMode={'never'}
-              />
+              {emptyWallet && (
+                <TabView
+                  navigationState={{index, routes}}
+                  renderScene={renderScene}
+                  onIndexChange={index => {
+                    setIndex(index);
+                    setCurrentCurrency(routes[index].key);
+                  }}
+                  initialLayout={{width: layout.width}}
+                  renderTabBar={() => null}
+                  overScrollMode={'never'}
+                />
+              )}
             </View>
           </ScrollView>
         </View>

@@ -11,8 +11,6 @@ import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Clipboard from '@react-native-clipboard/clipboard';
 
-const langData = require('../../../lang.json');
-
 const CompleteSend = ({navigation, route}) => {
   const [lang, setLang] = useState({});
   const {addrto, amount, symbol, txid} = route.params;
@@ -21,28 +19,28 @@ const CompleteSend = ({navigation, route}) => {
     // Get Language
     const getLanguage = async () => {
       try {
-        let tempLang;
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+        let langData;
 
         switch (currentLanguage) {
           case 'id':
-            tempLang = 'id';
+            langData = require('../../../languages/id.json');
             break;
           case 'en':
-            tempLang = 'eng';
+            langData = require('../../../languages/en.json');
             break;
-          case 'kr':
-            tempLang = 'kr';
+          case 'ko':
+            langData = require('../../../languages/ko.json');
             break;
-          case 'cn':
-            tempLang = 'cn';
+          case 'zh':
+            langData = require('../../../languages/zh.json');
             break;
           default:
-            tempLang = 'id';
+            langData = require('../../../languages/en.json');
             break;
         }
 
-        const language = langData[tempLang];
+        const language = langData;
         setLang(language);
       } catch (err) {
         console.error(
