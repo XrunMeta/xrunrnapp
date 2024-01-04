@@ -366,25 +366,21 @@ const SendWalletScreen = ({navigation, route}) => {
 
   // Animation
   const fadeIn = () => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 1000,
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start(() => {
       fadeOut();
     });
   };
 
   const fadeOut = () => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 4000,
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 2000,
+      useNativeDriver: true,
+    }).start(() => {
       setZIndexAnim(-1);
     });
   };
@@ -508,6 +504,7 @@ const SendWalletScreen = ({navigation, route}) => {
             right: 0,
             left: 0,
             zIndex: 20,
+            backgroundColor: '#000',
           }}>
           <QRCodeScanner
             showMarker={true}
@@ -523,7 +520,7 @@ const SendWalletScreen = ({navigation, route}) => {
         </View>
       )}
 
-      <Animated.View
+      {/* <Animated.View
         style={{
           alignItems: 'center',
           position: 'absolute',
@@ -551,7 +548,7 @@ const SendWalletScreen = ({navigation, route}) => {
           />
           <Text style={styles.notificationTextInQR}>Scanned: {address}</Text>
         </View>
-      </Animated.View>
+      </Animated.View> */}
     </View>
   );
 };

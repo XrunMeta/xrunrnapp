@@ -22,7 +22,7 @@ const renderTabBar = props => (
       borderBottomColor: '#bbb',
       borderBottomWidth: 0.5,
     }}
-    renderLabel={({route, focused, color}) => (
+    renderLabel={({route, focused}) => (
       <Text
         style={{
           color: focused ? '#383b50' : '#bbb',
@@ -613,9 +613,9 @@ const TableWalletCard = ({
   const navigation = useNavigation();
   const layout = useWindowDimensions();
   const [currentDaysTransactional, setCurrentDaysTransactional] = useState(7);
-  const [loading, setLoading] = useState(false);
   const [index, setIndex] = useState(0);
   const [routes, setRoutes] = useState([]);
+  console.log('ol');
 
   useEffect(() => {
     setRoutes([
@@ -676,9 +676,7 @@ const TableWalletCard = ({
           transactionalByCurrency.currency == currentCurrency,
       )
       .filter(transaction => {
-        const transactionDateTime = new Date(
-          `${transaction.datetime}T${transaction.time}`,
-        );
+        const transactionDateTime = new Date(`${transaction.datetime}`);
 
         // Hitung perbedaan waktu dalam milidetik
         const timeDifference = currentDate - transactionDateTime;
