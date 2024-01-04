@@ -1,0 +1,349 @@
+{
+  "alert": {
+    "title": {
+      "error": "에러",
+      "fail": "실패",
+      "warning": "주의",
+      "info": "정보",
+      "success": "성공"
+    }
+  },
+
+  "screen_first": {
+    "title": {
+      "1": "보상 받기",
+      "2": "그리고 순간을 만들어보세요!"
+    },
+    "login": "로그인",
+    "signUp": "XRUN 시작, 가입하기",
+    "tos": {
+      "1": "아래를 읽어주십시오",
+      "2": "그리고",
+      "3": "이 앱에서 제공하는 기능 및",
+      "4": "제공되는 사항에 대해 알아보기"
+    },
+    "terms": "이용 약관",
+    "privacy": "개인 정보 보호 정책",
+    "information": "정보 사용"
+  },
+
+  "screen_signin": {
+    "title": "이메일로 로그인",
+    "subTitle": "빠르게 로그인해보세요 'Catch Me'",
+    "email": {
+      "label": "이메일",
+      "placeholder": "xrun@xrun.run"
+    },
+    "password": {
+      "label": "비밀번호",
+      "placeholder": "비밀번호"
+    },
+    "authcode": {
+      "label": "시도",
+      "link": "이메일 인증코드"
+    },
+    "validator": "이메일이 유효하지 않습니다",
+    "alert": {
+      "emptyEmail": "이메일을 입력하세요",
+      "emptyPassword": "비밀번호를 입력하세요",
+      "invalidEmail": "이메일이 유효하지 않습니다"
+    },
+    "failedLogin": "유효하지 않은 이메일 및 비밀번호"
+  },
+
+  "screen_signup": {
+    "title": "가입",
+    "name": {
+      "label": "이름",
+      "placeholder": "이름"
+    },
+    "email": {
+      "label": "이메일",
+      "placeholder": "xrun@xrun.run"
+    },
+    "password": {
+      "label": "비밀번호",
+      "placeholder": "새 비밀번호 입력"
+    },
+    "phone_number": {
+      "label": "전화번호"
+    },
+    "area": {
+      "label": "지역",
+      "placeholder": "지역 검색"
+    },
+    "gender": {
+      "label": "성별",
+      "male": "남성",
+      "female": "여성"
+    },
+    "age": {
+      "label": "나이"
+    },
+    "referral": {
+      "label": "추천 회원 이메일",
+      "placeholder": "xrun@xrun.run"
+    },
+    "add_desc": {
+      "ad1": "특별한 XRUN 보너스를 받으려면",
+      "ad2": "추천 코드를 입력하세요"
+    },
+    "validator": {
+      "emptyName": "이름은 필수 입력 항목입니다",
+      "emptyEmail": "이메일은 필수 입력 항목입니다",
+      "invalidEmail": "유효하지 않은 이메일 형식입니다",
+      "emptyPassword": "비밀번호는 필수 입력 항목입니다",
+      "emptyArea": "지역을 선택하세요"
+    }
+  },
+
+  "screen_emailAuth": {
+    "email": {
+      "label": "이메일 입력",
+      "placeholder": "xrun@xrun.run"
+    },
+    "alert": {
+      "emptyEmail": "이메일을 입력하세요",
+      "invalidEmail": "이메일이 유효하지 않습니다"
+    }
+  },
+
+  "screen_emailVerification": {
+    "email": {
+      "label": "6자리 확인 코드 입력"
+    },
+    "timer": "재전송"
+  },
+
+  "screen_country": {
+    "title": "국가 선택",
+    "current_country": "현재 위치",
+    "placeholder": "국가 검색"
+  },
+
+  "screen_map": {
+    "section_card_shadow": {
+      "radius": "1000 미터 반경 내에서",
+      "amount": "총",
+      "and": "및",
+      "getable": "얻을 수 있음",
+      "event": "XRUN 이벤트",
+      "diamond": "다이아몬드"
+    },
+    "section_slider_card": {
+      "desc1": "획득 가능한 XRUN이",
+      "desc2": "가 있습니다."
+    },
+    "section_marker": {
+      "loader": "로딩 중...",
+      "desc1": "가 있는",
+      "desc2": "이 있습니다."
+    }
+  },
+
+  "screen_info": {
+    "title": "내 정보",
+    "list": {
+      "modify": "정보 수정",
+      "setting": "설정",
+      "clause": "조항",
+      "cs": "고객 서비스",
+      "app_info": "앱 정보",
+      "recommend": "추천"
+    },
+    "button": {
+      "logout": "로그아웃 하시겠습니까?"
+    }
+  },
+
+  "screen_confirm_password": {
+    "title": "비밀번호 확인",
+    "label": "비밀번호",
+    "placeholder": "비밀번호",
+    "note": {
+      "alt1": "개인 정보를 위해 비밀번호를 입력하세요."
+    },
+    "condition": {
+      "empty": "비밀번호를 입력하세요",
+      "wrong": "비밀번호가 일치하지 않습니다"
+    }
+  },
+
+  "screen_modify_information": {
+    "title": "정보 수정",
+    "lastname": {
+      "label": "성",
+      "placeholder": "성"
+    },
+    "name": {
+      "label": "이름",
+      "placeholder": "이름"
+    },
+    "email": {
+      "label": "이메일",
+      "placeholder": "xrun@xrun.run"
+    },
+    "phone": {
+      "label": "전화번호"
+    },
+    "password": {
+      "label": "비밀번호",
+      "extstr": "최종 변경 날짜 :"
+    },
+    "age": {
+      "label": "나이"
+    },
+    "gender": {
+      "label": "성별",
+      "opt1": "남자/남성",
+      "opt2": "여자/여성"
+    },
+    "area": {
+      "label": "지역",
+      "placeholder": "귀하의 지역 선택",
+      "empty": "지역을 선택하세요",
+      "label_country": "국적 / 국가",
+      "label_area": "지역"
+    },
+    "modal": {
+      "empty": "데이터가 비어 있습니다"
+    },
+    "close": "닫기",
+    "modify": "수정"
+  },
+
+  "screen_clause": {
+    "title": "조항",
+    "category": {
+      "service": "서비스 조항",
+      "location": "개인 위치 정보 조항",
+      "usage": "개인 정보 수집 및 사용 조항"
+    }
+  },
+
+  "screen_appInfo": {
+    "title": "앱 정보",
+    "version": "최신 버전"
+  },
+
+  "screen_recommend": {
+    "title": "추천자 등록",
+    "category": {
+      "regist": "추천자 등록",
+      "random": "랜덤 추천"
+    },
+    "add_recommend": {
+      "label": "추천 ID",
+      "placeholder": "추천 ID를 입력하세요.",
+      "not_found": "ID를 찾을 수 없습니다. 추천 ID를 다시 입력하세요.",
+      "recommended": "추천됨",
+      "already": "이미 추천 이력이 있습니다."
+    },
+    "random_recommend": {
+      "empty": "ID를 선택하세요."
+    }
+  },
+
+  "screen_cs": {
+    "title": "고객 서비스",
+    "common": {
+      "title": "일반 문제"
+    },
+    "one": {
+      "title": "1:1 상담"
+    }
+  },
+
+  "screen_setting": {
+    "title": "설정",
+    "category": {
+      "basic": {
+        "cat": "기본 설정",
+        "device": "장치 승인 편지"
+      },
+      "account": {
+        "cat": "계정 설정",
+        "logout": "로그아웃",
+        "close": "멤버십 해지"
+      }
+    },
+    "close": {
+      "title": "멤버십 해지",
+      "desc": {
+        "clo1": "모든 ",
+        "clo2": "코인 ",
+        "clo3": "즉시 소멸됩니다.",
+        "clo4": "또한 더 이상",
+        "clo5": "모든 서비스가 해지됩니다."
+      },
+      "select": {
+        "sel1": "서비스 사용이 어려움",
+        "sel2": "기능이 어려움",
+        "sel3": "기타"
+      },
+      "reason": "해지 사유",
+      "del_title": "멤버십 해지",
+      "del_d1": "안전한 계정 관리를 위해",
+      "del_d2": "나가실 때 비밀번호를 입력 중입니다.",
+      "del_placeholder": "비밀번호를 입력하세요.",
+      "del_empty": "비밀번호를 입력하세요",
+      "del_fail": "멤버십 해지 실패"
+    }
+  },
+  "screen_wallet": {
+    "title": "내 지갑",
+    "possess": "소지하다",
+    "catch": "잡다",
+    "qrcode_show": "QR 코드",
+    "copy_qrcode_show": "지갑 주소가 복사되었습니다.",
+    "download_qrcode_show": "이미지가 성공적으로 저장되었습니다. 갤러리를 확인해주세요.",
+    "copy_qrcode": "지갑 주소가 복사되었습니다. 원하는 곳에서 사용하세요.",
+    "table_head_transaction": "거래 정보/거래 내역",
+    "table_head_send": "보내기",
+    "table_head_change": "변경",
+    "table_head_exchange": "교환",
+    "table_days": "일",
+    "total_history": "총 기록",
+    "transfer_history": "이체 내역",
+    "received_details": "수신 세부 정보",
+    "transition_history": "전이 내역",
+    "history_action3651": "출금 세부 사항",
+    "history_action3304": "완료됨",
+    "history_action3305": "이체",
+    "history_action3306": "변환",
+    "history_action3307": "교환",
+    "history_action3308": "교환 완료",
+    "history_extracode9453": "이체 실패",
+    "history_extracode9001": "출금 승인",
+    "history_extracode9002": "출금 미승인",
+    "history_extracodesuccess": "이체 완료",
+    "history_not_found": "기록을 찾을 수 없음",
+    "confirm_alert": "확인",
+    "failed_getwallet_alert": "지갑을 가져오기 위해 나중에 다시 시도하세요",
+    "failed_alert": "실패",
+    "failed_download_qrcode_alert": "QR 코드 다운로드 실패"
+  },
+  "screen_send": {
+    "send_amount_label": "보낼 금액",
+    "send_amount_placeholder": "보낼 금액을 입력하세요.",
+    "send_address_label": "보낼 주소",
+    "send_address_placeholder": "보낼 주소를 입력하세요.",
+    "send_balance": "잔액 :",
+    "send_stock_exchange_label": "주식 거래소",
+    "send_amount_greater_zero": "0보다 큰 금액을 입력하세요.",
+    "send_balance_not_enough": "돈이 부족하거나 (은행 잔고 포함) 충분한 돈이 있는지 확인하세요.",
+    "send_address_less": "주소는 40자 이하로 입력하세요.",
+    "send_enough_money": "현재 금액을 확인하고 지갑에 충분한 돈이 있는지 확인하세요 (전송 수수료 포함)",
+    "send_verification_code": "인증 코드 전송 중"
+  },
+  "screen_complete_send": {
+    "title": "이체 완료",
+    "copy_txid": "TXID가 복사되었습니다. 원하는 곳에서 사용하세요.",
+    "complete_send": "이(가) 완료되었습니다",
+    "wallet_address": "지갑 주소",
+    "amount_send": "이체 금액"
+  },
+  "popup": {
+    "notice": "사용자 XRUN에게 사과드립니다.\n\n우리는 테스트 기간을 진행하고 동시에 유지보수를 진행할 것입니다.\n\n유지보수 내용은 다음과 같습니다:\n\n1. 인도네시아 전체에서 코인을 확장합니다.\n\n2. 코인 캡처 및 광고 시청 중 발생하는 오류를 줄입니다.\n\n3. 추천을 기입한 사용자에게 무료 코인을 제공합니다.\n\n* 테스트 기간은 2022년 8월 31일까지 진행될 예정입니다."
+  }
+}

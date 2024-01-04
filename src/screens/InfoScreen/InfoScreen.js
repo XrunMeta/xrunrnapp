@@ -104,7 +104,10 @@ const InfoScreen = () => {
           onPress: () => {
             logout();
             // Go to SignIn Screen
-            navigation.replace('SignIn');
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'SignIn'}],
+            });
           },
         },
       ],

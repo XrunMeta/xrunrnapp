@@ -1,0 +1,349 @@
+{
+  "alert": {
+    "title": {
+      "error": "Error",
+      "fail": "Failed",
+      "warning": "Warning",
+      "info": "Info",
+      "success": "Success"
+    }
+  },
+
+  "screen_first": {
+    "title": {
+      "1": "Get Your Rewards",
+      "2": "And Create Your Moments!"
+    },
+    "login": "Log In",
+    "signUp": "Let's XRUN, Sign me up",
+    "tos": {
+      "1": "Please read",
+      "2": "and",
+      "3": "below to find out about the features and",
+      "4": "provided by this app"
+    },
+    "terms": "the terms & conditions",
+    "privacy": "privacy policy",
+    "information": "information use"
+  },
+
+  "screen_signin": {
+    "title": "Login Via E-mail",
+    "subTitle": "Let's Login Quickly 'Catch Me'",
+    "email": {
+      "label": "Email",
+      "placeholder": "xrun@xrun.run"
+    },
+    "password": {
+      "label": "Password",
+      "placeholder": "Password"
+    },
+    "authcode": {
+      "label": "Try",
+      "link": "EMAIL AUTHCODE"
+    },
+    "validator": "Your Email is not Valid",
+    "alert": {
+      "emptyEmail": "Please insert your email",
+      "emptyPassword": "Please fill your password",
+      "invalidEmail": "Your email is not valid"
+    },
+    "failedLogin": "Invalid Email & Password"
+  },
+
+  "screen_signup": {
+    "title": "Registration",
+    "name": {
+      "label": "Name",
+      "placeholder": "Name"
+    },
+    "email": {
+      "label": "Email",
+      "placeholder": "xrun@xrun.run"
+    },
+    "password": {
+      "label": "Password",
+      "placeholder": "Enter your new password"
+    },
+    "phone_number": {
+      "label": "Phone Number"
+    },
+    "area": {
+      "label": "Region",
+      "placeholder": "Search by your region"
+    },
+    "gender": {
+      "label": "Gender",
+      "male": "Male",
+      "female": "Female"
+    },
+    "age": {
+      "label": "Age"
+    },
+    "referral": {
+      "label": "Referral Member Email",
+      "placeholder": "xrun@xrun.run"
+    },
+    "add_desc": {
+      "ad1": "Enter referral code for",
+      "ad2": "get a special XRUN bonus"
+    },
+    "validator": {
+      "emptyName": "Name is required",
+      "emptyEmail": "Email required",
+      "invalidEmail": "Invalid email format",
+      "emptyPassword": "Password is required",
+      "emptyArea": "Area must be filled"
+    }
+  },
+
+  "screen_emailAuth": {
+    "email": {
+      "label": "Enter your Email",
+      "placeholder": "xrun@xrun.run"
+    },
+    "alert": {
+      "emptyEmail": "Please insert your email",
+      "invalidEmail": "Your email is not valid"
+    }
+  },
+
+  "screen_emailVerification": {
+    "email": {
+      "label": "Enter 6-digit Verification Code"
+    },
+    "timer": "resend"
+  },
+
+  "screen_country": {
+    "title": "Country Selection",
+    "current_country": "Current Location",
+    "placeholder": "Search for a country"
+  },
+
+  "screen_map": {
+    "section_card_shadow": {
+      "radius": "Within a radius of 1000 meters",
+      "amount": "There are",
+      "and": "and",
+      "getable": "can be optained",
+      "event": "XRUN Event",
+      "diamond": "Diamond"
+    },
+    "section_slider_card": {
+      "desc1": "There is a XRUN of",
+      "desc2": "that can be acquired."
+    },
+    "section_marker": {
+      "loader": "Loading...",
+      "desc1": "There is an",
+      "desc2": "with"
+    }
+  },
+
+  "screen_info": {
+    "title": "My Info",
+    "list": {
+      "modify": "Modify Information",
+      "setting": "Setting",
+      "clause": "Clause",
+      "cs": "Customer Service",
+      "app_info": "App Information",
+      "recommend": "Recommend"
+    },
+    "button": {
+      "logout": "Are you sure you want to logout?"
+    }
+  },
+
+  "screen_confirm_password": {
+    "title": "Confirm Password",
+    "label": "Password",
+    "placeholder": "Password",
+    "note": {
+      "alt1": "Please enter your password for personal information"
+    },
+    "condition": {
+      "empty": "Please fill your password",
+      "wrong": "Your password is doesn't match"
+    }
+  },
+
+  "screen_modify_information": {
+    "title": "Modify Information",
+    "lastname": {
+      "label": "Last Name",
+      "placeholder": "Your last name"
+    },
+    "name": {
+      "label": "Name",
+      "placeholder": "Your name"
+    },
+    "email": {
+      "label": "Email",
+      "placeholder": "xrun@xrun.run"
+    },
+    "phone": {
+      "label": "Phone Number"
+    },
+    "password": {
+      "label": "Password",
+      "extstr": "Final change date :"
+    },
+    "age": {
+      "label": "Age"
+    },
+    "gender": {
+      "label": "Gender",
+      "opt1": "Boy/Men",
+      "opt2": "Girl/Women"
+    },
+    "area": {
+      "label": "Area",
+      "placeholder": "Your Area",
+      "empty": "Please select a region",
+      "label_country": "Nationality / Country",
+      "label_area": "Area"
+    },
+    "modal": {
+      "empty": "Data is empty"
+    },
+    "close": "Close",
+    "modify": "Modify"
+  },
+
+  "screen_clause": {
+    "title": "Clause",
+    "category": {
+      "service": "Service Clause",
+      "location": "Clause for Personal Location Information",
+      "usage": "Clause for Usage/Collecting Personal Information"
+    }
+  },
+
+  "screen_appInfo": {
+    "title": "App Information",
+    "version": "Latest version"
+  },
+
+  "screen_recommend": {
+    "title": "Regist Recommender",
+    "category": {
+      "regist": "Regist recommender",
+      "random": "Random recommend"
+    },
+    "add_recommend": {
+      "label": "Referral ID",
+      "placeholder": "Please enter your referral ID.",
+      "not_found": "ID not found, Please re-enter your referral ID.",
+      "recommended": "Recommended",
+      "already": "You already have a referral history."
+    },
+    "random_recommend": {
+      "empty": "Please select an ID."
+    }
+  },
+
+  "screen_cs": {
+    "title": "Customer Service",
+    "common": {
+      "title": "Common problem"
+    },
+    "one": {
+      "title": "1:1 Counseling"
+    }
+  },
+
+  "screen_setting": {
+    "title": "Setting",
+    "category": {
+      "basic": {
+        "cat": "Basic setting",
+        "device": "Device authorization letter"
+      },
+      "account": {
+        "cat": "Account setting",
+        "logout": "Log out",
+        "close": "Close membership"
+      }
+    },
+    "close": {
+      "title": "Membership Withdrawal",
+      "desc": {
+        "clo1": "All the ",
+        "clo2": "Coin ",
+        "clo3": "will be gone instantly.",
+        "clo4": "Also, you will no longer",
+        "clo5": "All services will be withdrawn."
+      },
+      "select": {
+        "sel1": "The service is difficult to use",
+        "sel2": "The function is difficult",
+        "sel3": "Etc"
+      },
+      "reason": "Close reason",
+      "del_title": "Close Membership",
+      "del_d1": "For safe acccount management,",
+      "del_d2": "You are receiving a password when you leave.",
+      "del_placeholder": "Please enter your password.",
+      "del_empty": "Please enter your password",
+      "del_fail": "Close membership failed"
+    }
+  },
+  "screen_wallet": {
+    "title": "My Wallet",
+    "possess": "Possess",
+    "catch": "Catch",
+    "qrcode_show": "QR Code",
+    "copy_qrcode_show": "The wallet address has been copied.",
+    "download_qrcode_show": "Image is saved successfully. Please check the gallery.",
+    "copy_qrcode": "The wallet address has been copied. Use it wherever you want.",
+    "table_head_transaction": "Transactional information/Transactional bill",
+    "table_head_send": "Send",
+    "table_head_change": "Change",
+    "table_head_exchange": "Exchange",
+    "table_days": "DAYS",
+    "total_history": "Total History",
+    "transfer_history": "Transfer History",
+    "received_details": "Received Details",
+    "transition_history": "Transition History",
+    "history_action3651": "Withdrawal details",
+    "history_action3304": "Completed",
+    "history_action3305": "Transfer",
+    "history_action3306": "Conversion",
+    "history_action3307": "Exchange",
+    "history_action3308": "Exchange completed",
+    "history_extracode9453": "Transfer failed",
+    "history_extracode9001": "Withdrawal approval",
+    "history_extracode9002": "Withdrawal not approved",
+    "history_extracodesuccess": "Transfer completed",
+    "history_not_found": "History not found",
+    "confirm_alert": "OK",
+    "failed_getwallet_alert": "For get your wallet, please try again later",
+    "failed_alert": "Failed",
+    "failed_download_qrcode_alert": "Failed to download qr code"
+  },
+  "screen_send": {
+    "send_amount_label": "Amount to send",
+    "send_amount_placeholder": "Please enter the amount to be sent.",
+    "send_address_label": "Address to send",
+    "send_address_placeholder": "Please enter the address to be sent.",
+    "send_balance": "Balance :",
+    "send_stock_exchange_label": "Stock exchange",
+    "send_amount_greater_zero": "Please enter an amount greater than zero.",
+    "send_balance_not_enough": "There is not enough money(or bank balance).",
+    "send_address_less": "Address less than 40 letters.",
+    "send_enough_money": "Check the current amount and make sure you have enough money in your wallet including gas (transfer fee)",
+    "send_verification_code": "Sending verification code"
+  },
+  "screen_complete_send": {
+    "title": "Transfer Completed",
+    "copy_txid": "The TXID has been copied. Use it wherever you want.",
+    "complete_send": "is complete",
+    "wallet_address": "Wallet address",
+    "amount_send": "Transfer amount"
+  },
+  "popup": {
+    "notice": "We apologize to user XRUN.\n\nWe will conduct a testing period\nand simultaneous maintenance.\n\nMaintenance includes:\n\n1. Expanding coins throughout Indonesia.\n\n2. To reduce errors during coin capture and ad watching.\n\n3. Free Coins for users who fill in Referral.\n\n*Our testing period will run until the end of August on the 31st, 2022"
+  }
+}

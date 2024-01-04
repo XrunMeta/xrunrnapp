@@ -11,6 +11,7 @@ import {
   Modal,
   TouchableOpacity,
   BackHandler,
+  Alert,
 } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import React, {useState, useEffect} from 'react';
@@ -19,7 +20,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
 
 // Get Language Data
-const langData = require('../../../lang.json');
 
 const FirstScreenV2 = ({navigation}) => {
   const [lang, setLang] = useState({});
@@ -113,7 +113,6 @@ const FirstScreenV2 = ({navigation}) => {
 
     checkIsLoggedIn();
   }, []);
-  console.log('ok');
 
   const setCurrentLanguage = async language => {
     try {
@@ -131,11 +130,46 @@ const FirstScreenV2 = ({navigation}) => {
   useEffect(() => {
     const deviceLanguage = RNLocalize.getLocales()[0].languageCode;
     setCurrentLanguage(deviceLanguage);
+    let langData;
 
-    const selectedLanguage = deviceLanguage === 'id' ? 'id' : 'eng';
-    const language = langData[selectedLanguage];
+    switch (deviceLanguage) {
+      case 'id':
+        langData = require('../../../languages/id.json');
+        break;
+      case 'en':
+        langData = require('../../../languages/en.json');
+        break;
+      case 'ko':
+        langData = require('../../../languages/ko.json');
+        break;
+      case 'zh':
+        langData = require('../../../languages/zh.json');
+        break;
+      default:
+        langData = require('../../../languages/en.json');
+        break;
+    }
+
+    const language = langData;
     setLang(language);
   }, []);
+
+  useEffect(() => {
+    if (lang.popup) {
+      Alert.alert(
+        '',
+        lang && lang.popup && lang.popup.notice ? lang.popup.notice : '',
+        [
+          {
+            text:
+              lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
+                ? lang.screen_wallet.confirm_alert
+                : '',
+          },
+        ],
+      );
+    }
+  }, [lang]);
 
   const onSignIn = () => {
     navigation.navigate('SignIn');
