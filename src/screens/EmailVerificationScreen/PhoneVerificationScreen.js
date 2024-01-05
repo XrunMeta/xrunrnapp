@@ -91,6 +91,7 @@ const PhoneVerificationScreen = () => {
             console.log('ke halaman berikutnya (ap1700)');
           }
 
+          await AsyncStorage.setItem('userEmail', responseLoginData.email);
           // Do Login Auth
           login();
           navigation.reset({
