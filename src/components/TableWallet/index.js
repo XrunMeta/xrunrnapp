@@ -4,7 +4,7 @@ import {
   View,
   TouchableOpacity,
   useWindowDimensions,
-  ScrollView,
+  FlatList,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -39,570 +39,443 @@ const renderTabBar = props => (
 );
 
 // Content TabView
-const TotalHistory = ({totalHistory, lang}) => (
-  <ScrollView
-    showsVerticalScrollIndicator={false}
-    style={{paddingHorizontal: 28}}
-    overScrollMode="never">
-    {totalHistory.length > 0 ? (
-      totalHistory.map((totalHistory, index) => {
-        const {
-          datetime,
-          time,
-          amount,
-          symbol,
-          extracode: tempExtracode,
-          action: tempAction,
-        } = totalHistory;
-        let action;
-        let extracode;
+const TotalHistory = ({totalHistory, lang}) => {
+  const renderItem = ({item}) => {
+    const {
+      datetime,
+      time,
+      amount,
+      symbol,
+      extracode: tempExtracode,
+      action: tempAction,
+    } = item;
 
-        switch (tempAction) {
-          case '3304':
-            action =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_action3304
-                ? lang.screen_wallet.history_action3304
-                : '';
-            break;
-          case '3651':
-            action =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_action3651
-                ? lang.screen_wallet.history_action3651
-                : '';
-            break;
-          case '3305':
-            action =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_action3305
-                ? lang.screen_wallet.history_action3305
-                : '';
-            break;
-          case '3306':
-            action =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_action3306
-                ? lang.screen_wallet.history_action3306
-                : '';
-            break;
-          case '3307':
-            action =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_action3307
-                ? lang.screen_wallet.history_action3307
-                : '';
-            break;
-          case '3308':
-            action =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_action3308
-                ? lang.screen_wallet.history_action3308
-                : '';
-            break;
-          default:
-            action =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_action3305
-                ? lang.screen_wallet.history_action3305
-                : '';
-            break;
-        }
+    let action;
+    let extracode;
 
-        switch (tempExtracode) {
-          case '9453':
-            extracode =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_extracode9453
-                ? lang.screen_wallet.history_extracode9453
-                : '';
-            break;
-          case '9416':
-            extracode = '-';
-            break;
-          case '9001':
-            extracode =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_extracode9001
-                ? lang.screen_wallet.history_extracode9001
-                : '';
-            break;
-          case '9002':
-            extracode =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_extracode9002
-                ? lang.screen_wallet.history_extracode9002
-                : '';
-            break;
-          default:
-            extracode =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_extracodesuccess
-                ? lang.screen_wallet.history_extracodesuccess
-                : '';
-            break;
-        }
+    switch (tempAction) {
+      case '3304':
+        action =
+          lang && lang.screen_wallet && lang.screen_wallet.history_action3304
+            ? lang.screen_wallet.history_action3304
+            : '';
+        break;
+      case '3651':
+        action =
+          lang && lang.screen_wallet && lang.screen_wallet.history_action3651
+            ? lang.screen_wallet.history_action3651
+            : '';
+        break;
+      case '3305':
+        action =
+          lang && lang.screen_wallet && lang.screen_wallet.history_action3305
+            ? lang.screen_wallet.history_action3305
+            : '';
+        break;
+      case '3306':
+        action =
+          lang && lang.screen_wallet && lang.screen_wallet.history_action3306
+            ? lang.screen_wallet.history_action3306
+            : '';
+        break;
+      case '3307':
+        action =
+          lang && lang.screen_wallet && lang.screen_wallet.history_action3307
+            ? lang.screen_wallet.history_action3307
+            : '';
+        break;
+      case '3308':
+        action =
+          lang && lang.screen_wallet && lang.screen_wallet.history_action3308
+            ? lang.screen_wallet.history_action3308
+            : '';
+        break;
+      default:
+        action =
+          lang && lang.screen_wallet && lang.screen_wallet.history_action3305
+            ? lang.screen_wallet.history_action3305
+            : '';
+        break;
+    }
 
-        return (
-          <View style={styles.wrapperItemTable} key={index}>
-            <View>
-              <Text style={styles.details}>{action}</Text>
-              <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
-            </View>
-            <View>
-              <View style={styles.wrapperPrice}>
-                <Text style={styles.price}>{amount} </Text>
-                <Text style={styles.price}>{symbol}</Text>
-              </View>
-              <Text style={styles.status}>{extracode}</Text>
-            </View>
+    switch (tempExtracode) {
+      case '9453':
+        extracode =
+          lang && lang.screen_wallet && lang.screen_wallet.history_extracode9453
+            ? lang.screen_wallet.history_extracode9453
+            : '';
+        break;
+      case '9416':
+        extracode = '-';
+        break;
+      case '9001':
+        extracode =
+          lang && lang.screen_wallet && lang.screen_wallet.history_extracode9001
+            ? lang.screen_wallet.history_extracode9001
+            : '';
+        break;
+      case '9002':
+        extracode =
+          lang && lang.screen_wallet && lang.screen_wallet.history_extracode9002
+            ? lang.screen_wallet.history_extracode9002
+            : '';
+        break;
+      default:
+        extracode =
+          lang &&
+          lang.screen_wallet &&
+          lang.screen_wallet.history_extracodesuccess
+            ? lang.screen_wallet.history_extracodesuccess
+            : '';
+        break;
+    }
+
+    return (
+      <View style={styles.wrapperItemTable}>
+        <View>
+          <Text style={styles.details}>{action}</Text>
+          <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
+        </View>
+        <View>
+          <View style={styles.wrapperPrice}>
+            <Text style={styles.price}>{amount} </Text>
+            <Text style={styles.price}>{symbol}</Text>
           </View>
-        );
-      })
-    ) : (
-      <Text style={styles.textNotFoundHistory}>
-        {lang && lang.screen_wallet && lang.screen_wallet.history_not_found
-          ? lang.screen_wallet.history_not_found
-          : ''}
-      </Text>
-    )}
-  </ScrollView>
-);
+          <Text style={styles.status}>{extracode}</Text>
+        </View>
+      </View>
+    );
+  };
 
-const TransferHistory = ({transferHistory, lang}) => (
-  <ScrollView
-    showsVerticalScrollIndicator={false}
-    style={{paddingHorizontal: 28}}
-    overScrollMode="never">
-    {transferHistory.length > 0 ? (
-      transferHistory.map((transferHistory, index) => {
-        const {
-          datetime,
-          time,
-          amount,
-          symbol,
-          extracode: tempExtracode,
-          action: tempAction,
-        } = transferHistory;
-        let action;
-        let extracode;
+  const renderEmptyList = () => (
+    <Text style={styles.textNotFoundHistory}>
+      {lang && lang.screen_wallet && lang.screen_wallet.history_not_found
+        ? lang.screen_wallet.history_not_found
+        : ''}
+    </Text>
+  );
 
-        switch (tempAction) {
-          case '3304':
-            action =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_action3304
-                ? lang.screen_wallet.history_action3304
-                : '';
-            break;
-          case '3651':
-            action =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_action3651
-                ? lang.screen_wallet.history_action3651
-                : '';
-            break;
-          case '3305':
-            action =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_action3305
-                ? lang.screen_wallet.history_action3305
-                : '';
-            break;
-          case '3306':
-            action =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_action3306
-                ? lang.screen_wallet.history_action3306
-                : '';
-            break;
-          case '3307':
-            action =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_action3307
-                ? lang.screen_wallet.history_action3307
-                : '';
-            break;
-          case '3308':
-            action =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_action3308
-                ? lang.screen_wallet.history_action3308
-                : '';
-            break;
-          default:
-            action =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_action3305
-                ? lang.screen_wallet.history_action3305
-                : '';
-            break;
-        }
+  return (
+    <FlatList
+      data={totalHistory}
+      keyExtractor={(_, index) => index.toString()}
+      renderItem={renderItem}
+      ListEmptyComponent={renderEmptyList}
+      showsVerticalScrollIndicator={false}
+      style={{paddingHorizontal: 28}}
+      overScrollMode="never"
+    />
+  );
+};
 
-        // switch (tempExtracode) {
-        //   case '9453':
-        //     extracode =
-        //       lang &&
-        //       lang.screen_wallet &&
-        //       lang.screen_wallet.history_extracode9453
-        //         ? lang.screen_wallet.history_extracode9453
-        //         : '';
-        //     break;
-        //   case '9416':
-        //     extracode = '-';
-        //     break;
-        //   case '9001':
-        //     extracode =
-        //       lang &&
-        //       lang.screen_wallet &&
-        //       lang.screen_wallet.history_extracode9001
-        //         ? lang.screen_wallet.history_extracode9001
-        //         : '';
-        //     break;
-        //   case '9002':
-        //     extracode =
-        //       lang &&
-        //       lang.screen_wallet &&
-        //       lang.screen_wallet.history_extracode9002
-        //         ? lang.screen_wallet.history_extracode9002
-        //         : '';
-        //     break;
-        //   default:
-        //     extracode =
-        //       lang &&
-        //       lang.screen_wallet &&
-        //       lang.screen_wallet.history_extracodesuccess
-        //         ? lang.screen_wallet.history_extracodesuccess
-        //         : '';
-        //     break;
-        // }
+const TransferHistory = ({transferHistory, lang}) => {
+  const renderItem = ({item}) => {
+    const {datetime, time, amount, symbol, action: tempAction} = item;
 
-        extracode = '';
+    let action;
+    let extracode;
 
-        return (
-          <View style={styles.wrapperItemTable} key={index}>
-            <View>
-              <Text style={styles.details}>{action}</Text>
-              <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
-            </View>
-            <View>
-              <Text style={styles.price}>
-                {amount} {symbol}
-              </Text>
-              <Text style={styles.status}>{extracode}</Text>
-            </View>
+    switch (tempAction) {
+      case '3304':
+        action =
+          lang && lang.screen_wallet && lang.screen_wallet.history_action3304
+            ? lang.screen_wallet.history_action3304
+            : '';
+        break;
+      case '3651':
+        action =
+          lang && lang.screen_wallet && lang.screen_wallet.history_action3651
+            ? lang.screen_wallet.history_action3651
+            : '';
+        break;
+      case '3305':
+        action =
+          lang && lang.screen_wallet && lang.screen_wallet.history_action3305
+            ? lang.screen_wallet.history_action3305
+            : '';
+        break;
+      case '3306':
+        action =
+          lang && lang.screen_wallet && lang.screen_wallet.history_action3306
+            ? lang.screen_wallet.history_action3306
+            : '';
+        break;
+      case '3307':
+        action =
+          lang && lang.screen_wallet && lang.screen_wallet.history_action3307
+            ? lang.screen_wallet.history_action3307
+            : '';
+        break;
+      case '3308':
+        action =
+          lang && lang.screen_wallet && lang.screen_wallet.history_action3308
+            ? lang.screen_wallet.history_action3308
+            : '';
+        break;
+      default:
+        action =
+          lang && lang.screen_wallet && lang.screen_wallet.history_action3305
+            ? lang.screen_wallet.history_action3305
+            : '';
+        break;
+    }
+
+    return (
+      <View style={styles.wrapperItemTable}>
+        <View>
+          <Text style={styles.details}>{action}</Text>
+          <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
+        </View>
+        <View>
+          <View style={styles.wrapperPrice}>
+            <Text style={styles.price}>{amount} </Text>
+            <Text style={styles.price}>{symbol}</Text>
           </View>
-        );
-      })
-    ) : (
-      <Text style={styles.textNotFoundHistory}>
-        {lang && lang.screen_wallet && lang.screen_wallet.history_not_found
-          ? lang.screen_wallet.history_not_found
-          : ''}
-      </Text>
-    )}
-  </ScrollView>
-);
+          <Text style={styles.status}>{extracode}</Text>
+        </View>
+      </View>
+    );
+  };
 
-const ReceivedDetails = ({receivedDetails, lang}) => (
-  <ScrollView
-    showsVerticalScrollIndicator={false}
-    style={{paddingHorizontal: 28}}
-    overScrollMode="never">
-    {receivedDetails.length > 0 ? (
-      receivedDetails.map((receivedDetail, index) => {
-        const {
-          datetime,
-          time,
-          amount,
-          symbol,
-          extracode: tempExtracode,
-          action: tempAction,
-        } = receivedDetail;
-        let action;
-        let extracode;
+  const renderEmptyList = () => (
+    <Text style={styles.textNotFoundHistory}>
+      {lang && lang.screen_wallet && lang.screen_wallet.history_not_found
+        ? lang.screen_wallet.history_not_found
+        : ''}
+    </Text>
+  );
 
-        switch (tempAction) {
-          case '3304':
-            action =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_action3304
-                ? lang.screen_wallet.history_action3304
-                : '';
-            break;
-          case '3651':
-            action =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_action3651
-                ? lang.screen_wallet.history_action3651
-                : '';
-            break;
-          case '3305':
-            action =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_action3305
-                ? lang.screen_wallet.history_action3305
-                : '';
-            break;
-          case '3306':
-            action =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_action3306
-                ? lang.screen_wallet.history_action3306
-                : '';
-            break;
-          case '3307':
-            action =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_action3307
-                ? lang.screen_wallet.history_action3307
-                : '';
-            break;
-          case '3308':
-            action =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_action3308
-                ? lang.screen_wallet.history_action3308
-                : '';
-            break;
-          default:
-            action =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_action3305
-                ? lang.screen_wallet.history_action3305
-                : '';
-            break;
-        }
+  return (
+    <FlatList
+      data={transferHistory}
+      keyExtractor={(_, index) => index.toString()}
+      renderItem={renderItem}
+      ListEmptyComponent={renderEmptyList}
+      showsVerticalScrollIndicator={false}
+      style={{paddingHorizontal: 28}}
+      overScrollMode="never"
+    />
+  );
+};
 
-        switch (tempExtracode) {
-          case '9453':
-            extracode =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_extracode9453
-                ? lang.screen_wallet.history_extracode9453
-                : '';
-            break;
-          case '9416':
-            extracode = '-';
-            break;
-          case '9001':
-            extracode =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_extracode9001
-                ? lang.screen_wallet.history_extracode9001
-                : '';
-            break;
-          case '9002':
-            extracode =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_extracode9002
-                ? lang.screen_wallet.history_extracode9002
-                : '';
-            break;
-          default:
-            extracode =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_extracodesuccess
-                ? lang.screen_wallet.history_extracodesuccess
-                : '';
-            break;
-        }
+const ReceivedDetails = ({receivedDetails, lang}) => {
+  const renderItem = ({item}) => {
+    const {
+      datetime,
+      time,
+      amount,
+      symbol,
+      extracode: tempExtracode,
+      action: tempAction,
+    } = item;
 
-        return (
-          <View style={styles.wrapperItemTable} key={index}>
-            <View>
-              <Text style={styles.details}>{action}</Text>
-              <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
-            </View>
-            <View>
-              <Text style={styles.price}>
-                {amount} {symbol}
-              </Text>
-              <Text style={styles.status}>{extracode}</Text>
-            </View>
+    let action;
+    let extracode;
+
+    switch (tempAction) {
+      case '3304':
+        action =
+          lang && lang.screen_wallet && lang.screen_wallet.history_action3304
+            ? lang.screen_wallet.history_action3304
+            : '';
+        break;
+      case '3651':
+        action =
+          lang && lang.screen_wallet && lang.screen_wallet.history_action3651
+            ? lang.screen_wallet.history_action3651
+            : '';
+        break;
+      case '3305':
+        action =
+          lang && lang.screen_wallet && lang.screen_wallet.history_action3305
+            ? lang.screen_wallet.history_action3305
+            : '';
+        break;
+      case '3306':
+        action =
+          lang && lang.screen_wallet && lang.screen_wallet.history_action3306
+            ? lang.screen_wallet.history_action3306
+            : '';
+        break;
+      case '3307':
+        action =
+          lang && lang.screen_wallet && lang.screen_wallet.history_action3307
+            ? lang.screen_wallet.history_action3307
+            : '';
+        break;
+      case '3308':
+        action =
+          lang && lang.screen_wallet && lang.screen_wallet.history_action3308
+            ? lang.screen_wallet.history_action3308
+            : '';
+        break;
+      default:
+        action =
+          lang && lang.screen_wallet && lang.screen_wallet.history_action3305
+            ? lang.screen_wallet.history_action3305
+            : '';
+        break;
+    }
+
+    switch (tempExtracode) {
+      case '9453':
+        extracode =
+          lang && lang.screen_wallet && lang.screen_wallet.history_extracode9453
+            ? lang.screen_wallet.history_extracode9453
+            : '';
+        break;
+      case '9416':
+        extracode = '-';
+        break;
+      case '9001':
+        extracode =
+          lang && lang.screen_wallet && lang.screen_wallet.history_extracode9001
+            ? lang.screen_wallet.history_extracode9001
+            : '';
+        break;
+      case '9002':
+        extracode =
+          lang && lang.screen_wallet && lang.screen_wallet.history_extracode9002
+            ? lang.screen_wallet.history_extracode9002
+            : '';
+        break;
+      default:
+        extracode =
+          lang &&
+          lang.screen_wallet &&
+          lang.screen_wallet.history_extracodesuccess
+            ? lang.screen_wallet.history_extracodesuccess
+            : '';
+        break;
+    }
+
+    return (
+      <View style={styles.wrapperItemTable}>
+        <View>
+          <Text style={styles.details}>{action}</Text>
+          <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
+        </View>
+        <View>
+          <View style={styles.wrapperPrice}>
+            <Text style={styles.price}>{amount} </Text>
+            <Text style={styles.price}>{symbol}</Text>
           </View>
-        );
-      })
-    ) : (
-      <Text style={styles.textNotFoundHistory}>
-        {lang && lang.screen_wallet && lang.screen_wallet.history_not_found
-          ? lang.screen_wallet.history_not_found
-          : ''}
-      </Text>
-    )}
-  </ScrollView>
-);
+          <Text style={styles.status}>{extracode}</Text>
+        </View>
+      </View>
+    );
+  };
 
-const TransitionHistory = ({transitionHistory, lang}) => (
-  <ScrollView
-    showsVerticalScrollIndicator={false}
-    style={{paddingHorizontal: 28}}
-    overScrollMode="never">
-    {transitionHistory.length > 0 ? (
-      transitionHistory.map((transitionHistory, index) => {
-        const {
-          datetime,
-          time,
-          amount,
-          symbol,
-          extracode: tempExtracode,
-          action: tempAction,
-        } = transitionHistory;
-        let action;
-        let extracode;
+  const renderEmptyList = () => (
+    <Text style={styles.textNotFoundHistory}>
+      {lang && lang.screen_wallet && lang.screen_wallet.history_not_found
+        ? lang.screen_wallet.history_not_found
+        : ''}
+    </Text>
+  );
 
-        switch (tempAction) {
-          case '3304':
-            action =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_action3304
-                ? lang.screen_wallet.history_action3304
-                : '';
-            break;
-          case '3651':
-            action =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_action3651
-                ? lang.screen_wallet.history_action3651
-                : '';
-            break;
-          case '3305':
-            action =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_action3305
-                ? lang.screen_wallet.history_action3305
-                : '';
-            break;
-          case '3306':
-            action =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_action3306
-                ? lang.screen_wallet.history_action3306
-                : '';
-            break;
-          case '3307':
-            action =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_action3307
-                ? lang.screen_wallet.history_action3307
-                : '';
-            break;
-          case '3308':
-            action =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_action3308
-                ? lang.screen_wallet.history_action3308
-                : '';
-            break;
-          default:
-            action =
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.history_action3305
-                ? lang.screen_wallet.history_action3305
-                : '';
-            break;
-        }
+  return (
+    <FlatList
+      data={receivedDetails}
+      keyExtractor={(_, index) => index.toString()}
+      renderItem={renderItem}
+      ListEmptyComponent={renderEmptyList}
+      showsVerticalScrollIndicator={false}
+      style={{paddingHorizontal: 28}}
+      overScrollMode="never"
+    />
+  );
+};
 
-        // switch (tempExtracode) {
-        //   case '9453':
-        //     extracode =
-        //       lang &&
-        //       lang.screen_wallet &&
-        //       lang.screen_wallet.history_extracode9453
-        //         ? lang.screen_wallet.history_extracode9453
-        //         : '';
-        //     break;
-        //   case '9416':
-        //     extracode = '-';
-        //     break;
-        //   case '9001':
-        //     extracode =
-        //       lang &&
-        //       lang.screen_wallet &&
-        //       lang.screen_wallet.history_extracode9001
-        //         ? lang.screen_wallet.history_extracode9001
-        //         : '';
-        //     break;
-        //   case '9002':
-        //     extracode =
-        //       lang &&
-        //       lang.screen_wallet &&
-        //       lang.screen_wallet.history_extracode9002
-        //         ? lang.screen_wallet.history_extracode9002
-        //         : '';
-        //     break;
-        //   default:
-        //     extracode =
-        //       lang &&
-        //       lang.screen_wallet &&
-        //       lang.screen_wallet.history_extracodesuccess
-        //         ? lang.screen_wallet.history_extracodesuccess
-        //         : '';
-        //     break;
-        // }
+const TransitionHistory = ({transitionHistory, lang}) => {
+  const renderItem = ({item}) => {
+    const {datetime, time, amount, symbol, action: tempAction} = item;
 
-        extracode = '';
+    let action;
+    let extracode;
 
-        return (
-          <View style={styles.wrapperItemTable} key={index}>
-            <View>
-              <Text style={styles.details}>{action}</Text>
-              <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
-            </View>
-            <View>
-              <Text style={styles.price}>
-                {amount} {symbol}
-              </Text>
-              <Text style={styles.status}>{extracode}</Text>
-            </View>
+    switch (tempAction) {
+      case '3304':
+        action =
+          lang && lang.screen_wallet && lang.screen_wallet.history_action3304
+            ? lang.screen_wallet.history_action3304
+            : '';
+        break;
+      case '3651':
+        action =
+          lang && lang.screen_wallet && lang.screen_wallet.history_action3651
+            ? lang.screen_wallet.history_action3651
+            : '';
+        break;
+      case '3305':
+        action =
+          lang && lang.screen_wallet && lang.screen_wallet.history_action3305
+            ? lang.screen_wallet.history_action3305
+            : '';
+        break;
+      case '3306':
+        action =
+          lang && lang.screen_wallet && lang.screen_wallet.history_action3306
+            ? lang.screen_wallet.history_action3306
+            : '';
+        break;
+      case '3307':
+        action =
+          lang && lang.screen_wallet && lang.screen_wallet.history_action3307
+            ? lang.screen_wallet.history_action3307
+            : '';
+        break;
+      case '3308':
+        action =
+          lang && lang.screen_wallet && lang.screen_wallet.history_action3308
+            ? lang.screen_wallet.history_action3308
+            : '';
+        break;
+      default:
+        action =
+          lang && lang.screen_wallet && lang.screen_wallet.history_action3305
+            ? lang.screen_wallet.history_action3305
+            : '';
+        break;
+    }
+
+    return (
+      <View style={styles.wrapperItemTable}>
+        <View>
+          <Text style={styles.details}>{action}</Text>
+          <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
+        </View>
+        <View>
+          <View style={styles.wrapperPrice}>
+            <Text style={styles.price}>{amount} </Text>
+            <Text style={styles.price}>{symbol}</Text>
           </View>
-        );
-      })
-    ) : (
-      <Text style={styles.textNotFoundHistory}>
-        {lang && lang.screen_wallet && lang.screen_wallet.history_not_found
-          ? lang.screen_wallet.history_not_found
-          : ''}
-      </Text>
-    )}
-  </ScrollView>
-);
+          <Text style={styles.status}>{extracode}</Text>
+        </View>
+      </View>
+    );
+  };
+
+  const renderEmptyList = () => (
+    <Text style={styles.textNotFoundHistory}>
+      {lang && lang.screen_wallet && lang.screen_wallet.history_not_found
+        ? lang.screen_wallet.history_not_found
+        : ''}
+    </Text>
+  );
+
+  return (
+    <FlatList
+      data={transitionHistory}
+      keyExtractor={(_, index) => index.toString()}
+      renderItem={renderItem}
+      ListEmptyComponent={renderEmptyList}
+      showsVerticalScrollIndicator={false}
+      style={{paddingHorizontal: 28}}
+      overScrollMode="never"
+    />
+  );
+};
 
 const TableWalletCard = ({
   dataWallet,
@@ -615,7 +488,6 @@ const TableWalletCard = ({
   const [currentDaysTransactional, setCurrentDaysTransactional] = useState(7);
   const [index, setIndex] = useState(0);
   const [routes, setRoutes] = useState([]);
-  console.log('ol');
 
   useEffect(() => {
     setRoutes([
