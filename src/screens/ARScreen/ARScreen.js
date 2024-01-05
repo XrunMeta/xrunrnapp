@@ -10,7 +10,7 @@ import {
   Text,
   Dimensions,
   PermissionsAndroid,
-  ActivityIndicator,
+  Pressable,
 } from 'react-native';
 import {Camera, useCameraDevice} from 'react-native-vision-camera';
 import Animated, {
@@ -23,10 +23,13 @@ import Animated, {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
 import {URL_API} from '../../../utils';
-import RNRestart from 'react-native-restart';
 import {useNavigation} from '@react-navigation/native';
+import LinearGradient from 'react-native-linear-gradient';
+
+const langData = require('../../../lang.json');
 
 function ARScreen() {
+  const [lang, setLang] = useState({});
   const [isCameraReady, setCameraReady] = useState(false);
   const [cameraPermission, setCameraPermission] = useState('pending');
   const device = useCameraDevice('back');
@@ -42,21 +45,9 @@ function ARScreen() {
   const [flash, setFlash] = useState('on');
   const [catchShow, setCatchShow] = useState(0);
   const navigation = useNavigation();
-
-  const jsonData = [
-    {id: 1, data: 'Data 1'},
-    {id: 2, data: 'Data 2'},
-    {id: 3, data: 'Data 3'},
-    {id: 4, data: 'Data 4'},
-    {id: 5, data: 'Data 5'},
-    {id: 6, data: 'Data 6'},
-    {id: 7, data: 'Data 7'},
-    {id: 8, data: 'Data 8'},
-    {id: 9, data: 'Data 9'},
-    {id: 10, data: 'Data 10'},
-    {id: 11, data: 'Data 11'},
-    {id: 12, data: 'Data 12'},
-  ];
+  const [brandCount, setBrandCount] = useState(0);
+  const [bigCoin, setBigCoin] = useState(0);
+  const [markerCount, setMarkerCount] = useState(0);
 
   const getCamPermission = async () => {
     try {
@@ -94,6 +85,12 @@ function ARScreen() {
     const getUserData = async () => {
       try {
         const storedUserData = await AsyncStorage.getItem('userData');
+        const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+
+        // Set Language
+        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
+        const language = langData[selectedLanguage];
+        setLang(language);
         setUserData(JSON.parse(storedUserData));
       } catch (err) {
         console.error(
@@ -402,6 +399,180 @@ function ARScreen() {
                   </TouchableOpacity>
                 </Animated.View>
               ))}
+            </View>
+            <View
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                right: 0,
+                top: 0,
+                left: 0,
+                zIndex: 10,
+              }}>
+              {/* XRUN Amount that Shown on Map Screen */}
+              <View
+                style={[
+                  {
+                    position: 'absolute',
+                    bottom: -20,
+                    left: 0,
+                    right: 0,
+                    // transform: [{translateY: 110}],
+                  },
+                ]}>
+                <LinearGradient
+                  colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.8)']}
+                  start={{x: 0, y: 0}} // From Gradien
+                  end={{x: 0, y: 1}} // To Gradien
+                  style={{
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    paddingHorizontal: 20,
+                    flexDirection: 'row',
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    bottom: 95,
+                    height: 170,
+                    pointerEvents: 'none',
+                  }}>
+                  <View style={{marginBottom: -20}}>
+                    <Text
+                      style={{
+                        fontFamily: 'Poppins-Medium',
+                        fontSize: 10.5,
+                        color: 'white',
+                      }}>
+                      {lang &&
+                      lang.screen_map &&
+                      lang.screen_map.section_card_shadow
+                        ? lang.screen_map.section_card_shadow.radius
+                        : ''}
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: 'Poppins-Medium',
+                        fontSize: 13,
+                        color: 'white',
+                      }}>
+                      {lang &&
+                      lang.screen_map &&
+                      lang.screen_map.section_card_shadow
+                        ? lang.screen_map.section_card_shadow.amount + ' '
+                        : ''}
+                      <Text
+                        style={{
+                          fontFamily: 'Poppins-Bold',
+                        }}>
+                        {brandCount} XRUN
+                      </Text>{' '}
+                      {lang &&
+                      lang.screen_map &&
+                      lang.screen_map.section_card_shadow
+                        ? lang.screen_map.section_card_shadow.and + ' '
+                        : ''}
+                      <Text
+                        style={{
+                          fontFamily: 'Poppins-Bold',
+                        }}>
+                        {coinAPI.length} BIG XRUN{' '}
+                      </Text>
+                      {'\n'}
+                      {lang &&
+                      lang.screen_map &&
+                      lang.screen_map.section_card_shadow
+                        ? lang.screen_map.section_card_shadow.getable
+                        : ''}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      flex: 1,
+                      alignItems: 'flex-end',
+                      marginBottom: -38,
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: 'Poppins-Medium',
+                        fontSize: 13,
+                        color: 'white',
+                      }}>
+                      {lang &&
+                      lang.screen_map &&
+                      lang.screen_map.section_card_shadow
+                        ? lang.screen_map.section_card_shadow.event
+                        : ''}
+                    </Text>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                      }}>
+                      <Image
+                        source={require('../../../assets/images/icon_diamond_white.png')}
+                        style={{height: 13, tintColor: '#ffdc04'}}
+                        resizeMode="contain"
+                      />
+                      <Text
+                        style={{
+                          fontFamily: 'Poppins-Bold',
+                          fontSize: 13,
+                          color: '#ffdc04',
+                          marginTop: -4,
+                        }}>
+                        {lang &&
+                        lang.screen_map &&
+                        lang.screen_map.section_card_shadow
+                          ? lang.screen_map.section_card_shadow.diamond + ' '
+                          : ''}
+                        {bigCoin}
+                      </Text>
+                    </View>
+                  </View>
+                </LinearGradient>
+              </View>
+
+              <View
+                style={{
+                  position: 'absolute',
+                  bottom: 74,
+                  left: 0,
+                  right: 0,
+                  zIndex: 1,
+                }}>
+                <View
+                  style={{
+                    backgroundColor: '#e4e8e8',
+                    paddingHorizontal: 20,
+                    paddingVertical: 15,
+                    borderTopStartRadius: 30,
+                    borderTopEndRadius: 30,
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: 35,
+                    zIndex: -2,
+                  }}>
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginTop: -15,
+                      marginBottom: -20,
+                      paddingHorizontal: 90,
+                      paddingBottom: 20,
+                      paddingTop: 15,
+                      zIndex: 1,
+                    }}>
+                    <Image
+                      source={require('../../../assets/images/icon_bottom.png')}
+                      resizeMode="contain"
+                      style={{
+                        width: 20,
+                      }}
+                    />
+                  </View>
+                </View>
+              </View>
             </View>
           </>
         )}
