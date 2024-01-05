@@ -260,6 +260,7 @@ export default function Home({route}) {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
+    zIndex: 1000,
   },
   buttonTabItem: {
     flex: 1,

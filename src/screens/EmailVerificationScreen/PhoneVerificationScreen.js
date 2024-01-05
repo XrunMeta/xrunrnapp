@@ -89,15 +89,15 @@ const PhoneVerificationScreen = () => {
 
           if (responseLoginData.data === 'false') {
             console.log('ke halaman berikutnya (ap1700)');
+          } else {
+            await AsyncStorage.setItem('userEmail', responseLoginData.email);
+            // Do Login Auth
+            login();
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'Home'}],
+            });
           }
-
-          await AsyncStorage.setItem('userEmail', responseLoginData.email);
-          // Do Login Auth
-          login();
-          navigation.reset({
-            index: 0,
-            routes: [{name: 'Home'}],
-          });
         } catch (error) {
           console.error('Error during Check Login with Mobile:', error);
         }
