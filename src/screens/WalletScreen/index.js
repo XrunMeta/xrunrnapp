@@ -29,7 +29,6 @@ const WalletScreen = ({navigation}) => {
   const [cardsData, setCardsData] = useState([]);
   const [routes, setRoutes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
   const refLayout = useRef(null);
   const [currencies, setCurrencies] = useState([]);
   const [currenciesFetched, setCurrenciesFetched] = useState(false);
@@ -347,6 +346,8 @@ const WalletScreen = ({navigation}) => {
       });
     }
   }, [isLoading]);
+
+  const refreshing = false;
 
   return (
     <View style={styles.container}>
