@@ -167,6 +167,29 @@ function ARScreen() {
           isbigcoin: item.isbigcoin,
         }));
 
+        let brandcount = 0;
+        let currentBrand = null;
+        responseData.data.forEach(item => {
+          const brand = item.advertisement;
+
+          // Make sure Brand(Advertisement) isn't duplicate
+          if (brand !== currentBrand) {
+            currentBrand = brand;
+            brandcount++;
+          }
+        });
+
+        const getBigCoin = responseData.data.filter(
+          item => item.isbigcoin === '1',
+        ).length;
+
+        console.log(`
+          Jumlah Big Coin ada -> ${getBigCoin}
+          Jumlah Brand Count ada -> ${brandcount}
+        `);
+
+        setBigCoin(getBigCoin);
+        setBrandCount(brandcount);
         setCoinAPI(coinsData);
         console.log('Hasil API ada -> ' + coinsData.length);
       } else {
@@ -541,7 +564,7 @@ function ARScreen() {
                 }}>
                 <View
                   style={{
-                    backgroundColor: '#e4e8e8',
+                    backgroundColor: '#adadad',
                     paddingHorizontal: 20,
                     paddingVertical: 15,
                     borderTopStartRadius: 30,
@@ -568,6 +591,7 @@ function ARScreen() {
                       resizeMode="contain"
                       style={{
                         width: 20,
+                        tintColor: '#7a7a7a',
                       }}
                     />
                   </View>

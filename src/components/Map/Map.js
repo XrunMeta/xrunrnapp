@@ -157,11 +157,6 @@ const MapComponent = ({
 
           // Save BLOB to State
           const imagePromises = data.data.map(async item => {
-            // const brandLogo = await saveBlobAsImage(
-            //   item.brandlogo,
-            //   `${item.coin}.png`,
-            // );
-
             const adThumbnail = await saveBlobAsImage(
               item.adthumbnail2,
               `${item.coin}.png`,
