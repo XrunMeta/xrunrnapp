@@ -355,6 +355,15 @@ const WalletScreen = ({navigation}) => {
       {isLoading && (
         <View style={styles.loading}>
           <ActivityIndicator size={'large'} color={'#fff'} />
+          <Text
+            style={{
+              color: '#fff',
+              fontFamily: 'Poppins-Regular',
+              fontSize: 13,
+              marginTop: 10,
+            }}>
+            Loading...
+          </Text>
         </View>
       )}
 
