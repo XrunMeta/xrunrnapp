@@ -13,6 +13,7 @@ import React, {useEffect, useState} from 'react';
 import Clipboard from '@react-native-clipboard/clipboard';
 import Share from 'react-native-share';
 import RNFetchBlob from 'rn-fetch-blob';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
   const [downloadDisable, setDownloadDisable] = useState(true);
@@ -24,18 +25,28 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
   const [fadeAnim] = useState(new Animated.Value(0));
 
   useEffect(() => {
-    // Convert image qr code to base64
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          `${apiQRCode}?size=110x110&data=${cardDataQR.address}&margin=10`,
-        );
-        const data = await response.blob();
-        const base64Data = await convertBlobToBase64(data);
-        setQrCodeData(base64Data);
-        setDownloadDisable(false);
-        setShareDisable(false);
+        const qrWallet = await AsyncStorage.getItem('qrWallet');
+
+        if (!qrWallet) {
+          // Convert image qr code to base64
+          const response = await fetch(
+            `${apiQRCode}?size=110x110&data=${cardDataQR.address}&margin=10`,
+          );
+          const data = await response.blob();
+          const base64Data = await convertBlobToBase64(data);
+          await AsyncStorage.setItem('qrWallet', base64Data);
+          setQrCodeData(base64Data);
+          setDownloadDisable(false);
+          setShareDisable(false);
+        } else {
+          setQrCodeData(qrWallet);
+          setDownloadDisable(false);
+          setShareDisable(false);
+        }
       } catch (error) {
+        Alert.alert('', 'Error fetching QR code data');
         console.error('Error fetching QR code data:', error);
       }
     };
