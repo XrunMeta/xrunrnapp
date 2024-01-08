@@ -92,24 +92,14 @@ const SendWalletScreen = ({navigation, route}) => {
   useEffect(() => {
     const cointrace = async () => {
       try {
-        const getCointrace = await AsyncStorage.getItem('cointrace');
-
         const response = await fetch(`${URL_API}&act=ap4300-cointrace`);
         const result = await response.json();
-        const isDataUpdated = JSON.stringify(result.data) !== getCointrace;
-
-        if (!getCointrace || isDataUpdated) {
-          setCointrace(result.data);
-          await AsyncStorage.setItem('cointrace', JSON.stringify(result.data));
-          setIsLoading(false);
-        } else {
-          setIsLoading(false);
-          setCointrace(JSON.parse(getCointrace));
-        }
+        setCointrace(result.data);
+        setIsLoading(false);
       } catch (err) {
         setIsLoading(false);
-        Alert.alert('Error get data cointrace: ', err);
-        console.log('Error get data cointrace: ', err);
+        Alert.alert('Error get data listCrypto: ', err);
+        console.log('Error get data listCrypto: ', err);
       }
     };
 
