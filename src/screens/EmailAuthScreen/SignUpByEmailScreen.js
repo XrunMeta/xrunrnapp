@@ -13,21 +13,22 @@ import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {URL_API} from '../../../utils';
 
 const langData = require('../../../lang.json');
 
-const EmailAuthScreen = () => {
+const SignUpByEmailScreen = () => {
   const [lang, setLang] = useState({});
   const [email, setEmail] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(true);
   const route = useRoute();
-  const {screenBack} = route.params;
+  const {mobile} = route.params;
 
   const navigation = useNavigation();
 
   let ScreenHeight = Dimensions.get('window').height;
 
-  const onSignIn = () => {
+  const onSignIn = async () => {
     if (email.trim() === '') {
       Alert.alert(
         'Error',
@@ -43,7 +44,27 @@ const EmailAuthScreen = () => {
           : '',
       );
     } else {
-      navigation.navigate('EmailVerif', {dataEmail: email});
+      try {
+        const apiUrl = `${URL_API}&act=login-checker-email&email=${email}`;
+        const response = await fetch(apiUrl);
+        const responseData = await response.text();
+
+        console.log('RespAPI login-checker-email -> ' + responseData);
+
+        if (responseData === 'OK') {
+          navigation.navigate('SignupCreatePassword', {
+            mobile: mobile,
+            email: email,
+          });
+        } else {
+          // Jika gagal, tampilkan pesan kesalahan
+          Alert.alert('Failed', 'Email occupied');
+        }
+      } catch (error) {
+        // Handle network errors or other exceptions
+        console.error('Error during API request:', error);
+        Alert.alert('Error', 'An error occurred. Please try again.');
+      }
     }
   };
 
@@ -58,7 +79,9 @@ const EmailAuthScreen = () => {
   };
 
   const onBack = () => {
-    navigation.navigate(screenBack);
+    navigation.replace('PhoneVerif', {
+      mobile: mobile,
+    });
   };
 
   useEffect(() => {
@@ -155,4 +178,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EmailAuthScreen;
+export default SignUpByEmailScreen;

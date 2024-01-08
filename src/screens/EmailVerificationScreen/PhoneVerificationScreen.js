@@ -70,9 +70,12 @@ const PhoneVerificationScreen = () => {
       const responseObjects = responseAuthText.split('}');
       const firstResObj = JSON.parse(responseObjects[0] + '}');
 
+      console.log('RespAPI login-03 -> ' + JSON.stringify(firstResObj));
+
       if (firstResObj.data === 'false') {
         // Invalid Number
         Alert.alert('Failed', 'Invalid Number');
+        navigation.navigate('SignupByEmail', {mobile: mobile});
       } else if (firstResObj.data === 'login') {
         // Login Automatically
         try {
@@ -89,6 +92,7 @@ const PhoneVerificationScreen = () => {
 
           if (responseLoginData.data === 'false') {
             console.log('ke halaman berikutnya (ap1700)');
+            navigation.navigate('SignupByEmail', {mobile: mobile});
           } else {
             await AsyncStorage.setItem('userEmail', responseLoginData.email);
             // Do Login Auth
@@ -103,6 +107,7 @@ const PhoneVerificationScreen = () => {
         }
       } else {
         console.log('ke halaman berikutnya (ap1700)');
+        navigation.navigate('SignupByEmail', {screenBack: 'First'});
       }
     } catch (error) {
       // Handle network errors or other exceptions

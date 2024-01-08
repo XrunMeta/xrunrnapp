@@ -13,52 +13,52 @@ import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {URL_API} from '../../../utils';
 
 const langData = require('../../../lang.json');
 
-const EmailAuthScreen = () => {
+const SignUpCreatePassword = () => {
   const [lang, setLang] = useState({});
-  const [email, setEmail] = useState('');
-  const [isEmailValid, setIsEmailValid] = useState(true);
+  const [password, setPassword] = useState('');
+  const [isPasswordValid, setPasswordValid] = useState(true);
   const route = useRoute();
-  const {screenBack} = route.params;
+  const {mobile, email} = route.params;
 
   const navigation = useNavigation();
-
   let ScreenHeight = Dimensions.get('window').height;
 
-  const onSignIn = () => {
-    if (email.trim() === '') {
+  const onSignIn = async () => {
+    if (password.trim() === '') {
       Alert.alert(
         'Error',
         lang && lang.screen_emailAuth && lang.screen_emailAuth.alert
-          ? lang.screen_emailAuth.alert.emptyEmail
+          ? lang.screen_emailAuth.alert.emptyPassword
           : '',
       );
-    } else if (!isValidEmail(email)) {
-      Alert.alert(
-        'Error',
-        lang && lang.screen_emailAuth && lang.screen_emailAuth.alert
-          ? lang.screen_emailAuth.alert.invalidEmail
-          : '',
-      );
+    } else if (!isValidPassword(password)) {
+      Alert.alert('Error', 'Your password is not valid');
     } else {
-      navigation.navigate('EmailVerif', {dataEmail: email});
+      // navigation.navigate('NAMA SCREEN DISINI', {
+      //   mobile: mobile,
+      //   email: email,
+      //   pin: password,
+      // });
+      console.log('Pergi ke ap1720');
     }
   };
 
-  const isValidEmail = email => {
-    const pattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    return pattern.test(email);
+  const isValidPassword = password => {
+    const pattern = /^(?=.*\d)(?=.*[~`!@#$%\^&*()-])(?=.*[a-zA-Z]).{8,20}$/;
+    return pattern.test(password);
   };
 
-  onEmailChange = text => {
-    setEmail(text);
-    setIsEmailValid(isValidEmail(text));
+  onPasswordChange = text => {
+    setPassword(text);
+    setPasswordValid(isValidPassword(text));
   };
 
   const onBack = () => {
-    navigation.navigate(screenBack);
+    navigation.goBack();
   };
 
   useEffect(() => {
@@ -86,33 +86,34 @@ const EmailAuthScreen = () => {
       <View style={[styles.root, {height: ScreenHeight}]}>
         <ButtonBack onClick={onBack} />
 
+        {/*  Field - Password */}
         <CustomInput
           label={
-            lang && lang.screen_emailAuth && lang.screen_emailAuth.email
-              ? lang.screen_emailAuth.email.label
+            lang && lang.screen_signup && lang.screen_signup.password
+              ? lang.screen_signup.password.label
               : ''
           }
           placeholder={
-            lang && lang.screen_emailAuth && lang.screen_emailAuth.email
-              ? lang.screen_emailAuth.email.placeholder
+            lang && lang.screen_signup && lang.screen_signup.password
+              ? lang.screen_signup.password.placeholder
               : ''
           }
-          value={email}
-          setValue={onEmailChange}
-          isPassword={false}
+          value={password}
+          setValue={onPasswordChange}
+          secureTextEntry
+          isPassword={true}
         />
-        {isEmailValid ? null : (
-          <Text
-            style={{
-              alignSelf: 'flex-start',
-              marginLeft: 25,
-              color: 'red',
-            }}>
-            {lang && lang.screen_emailAuth && lang.screen_emailAuth.alert
-              ? lang.screen_emailAuth.alert.invalidEmail
-              : ''}
-          </Text>
-        )}
+        <Text
+          style={{
+            alignSelf: 'flex-start',
+            marginLeft: 25,
+            color: isPasswordValid ? 'black' : 'red',
+            fontFamily: 'Poppins-Regular',
+            fontSize: 11,
+          }}>
+          *Alphanumeric, numeric, special combination of symbols, more than 8
+          digits
+        </Text>
 
         <View style={[styles.bottomSection]}>
           <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
@@ -155,4 +156,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EmailAuthScreen;
+export default SignUpCreatePassword;

@@ -51,6 +51,8 @@ import SuccessJoinScreen from './src/screens/EmailVerificationScreen/SuccessJoin
 import SignPasswordScreen from './src/screens/SignInScreen/SignPasswordScreen';
 import PhoneLoginScreen from './src/screens/EmailVerificationScreen/PhoneLogin';
 import PasswordMissedScreen from './src/screens/EmailVerificationScreen/PasswordMissed';
+import SignUpByEmailScreen from './src/screens/EmailAuthScreen/SignUpByEmailScreen';
+import SignUpCreatePassword from './src/screens/EmailAuthScreen/SignUpCreatePasswordScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -102,6 +104,11 @@ export default function App() {
           <Stack.Screen
             name="PasswordMissed"
             component={PasswordMissedScreen}
+          />
+          <Stack.Screen name="SignupByEmail" component={SignUpByEmailScreen} />
+          <Stack.Screen
+            name="SignupCreatePassword"
+            component={SignUpCreatePassword}
           />
 
           {/* Category -> Info */}

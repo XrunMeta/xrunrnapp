@@ -14,6 +14,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API} from '../../../utils';
+import {screensEnabled} from 'react-native-screens';
 
 const langData = require('../../../lang.json');
 
@@ -91,7 +92,7 @@ const SignInScreen = () => {
   };
 
   const onEmailAuth = () => {
-    navigation.navigate('EmailAuth');
+    navigation.navigate('EmailAuth', {screenBack: 'SignIn'});
   };
 
   const onBack = () => {
