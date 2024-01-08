@@ -98,8 +98,8 @@ const SendWalletScreen = ({navigation, route}) => {
         setIsLoading(false);
       } catch (err) {
         setIsLoading(false);
-        Alert.alert('Error get data cointrace: ', err);
-        console.log('Error get data cointrace: ', err);
+        Alert.alert('Error get data listCrypto: ', err);
+        console.log('Error get data listCrypto: ', err);
       }
     };
 
@@ -391,6 +391,15 @@ const SendWalletScreen = ({navigation, route}) => {
       {isLoading && (
         <View style={styles.loading}>
           <ActivityIndicator size={'large'} color={'#fff'} />
+          <Text
+            style={{
+              color: '#fff',
+              fontFamily: 'Poppins-Regular',
+              fontSize: 13,
+              marginTop: 10,
+            }}>
+            Loading...
+          </Text>
         </View>
       )}
 
