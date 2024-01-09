@@ -264,8 +264,6 @@ const SendWalletScreen = ({navigation, route}) => {
                 : '',
             );
           } else {
-            console.log(`${parseFloat(result.amount)} vs ${amountrq}`);
-
             if (currency == 11) {
               setIsLoading(true);
 
