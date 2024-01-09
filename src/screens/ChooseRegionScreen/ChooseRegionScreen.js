@@ -21,6 +21,7 @@ const ChooseRegionScreen = ({route}) => {
   const [lang, setLang] = useState({});
   const navigation = useNavigation();
   const {
+    code,
     flag,
     countryCode,
     country,
@@ -29,9 +30,10 @@ const ChooseRegionScreen = ({route}) => {
   } = route.params || {};
   const [isLoading, setIsLoading] = useState(true);
 
-  const onBack = (flag, cCountryCode, cCountry) => {
+  const onBack = (code, flag, cCountryCode, cCountry) => {
     if (screenName) {
       navigation.navigate('PhoneLogin', {
+        code: code,
         flag: flag,
         countryCode: cCountryCode,
         country: cCountry,
@@ -85,8 +87,10 @@ const ChooseRegionScreen = ({route}) => {
 
   // ########## Choose Region
   const chooseRegion = item => {
+    console.log(JSON.stringify(item));
     if (screenName) {
       navigation.navigate('PhoneLogin', {
+        code: item.code,
         flag: item.lcode,
         countryCode: item.callnumber,
         country: item.country,
@@ -107,7 +111,7 @@ const ChooseRegionScreen = ({route}) => {
 
   return (
     <View style={[styles.root]}>
-      <ButtonBack onClick={() => onBack(flag, countryCode, country)} />
+      <ButtonBack onClick={() => onBack(code, flag, countryCode, country)} />
 
       <View style={styles.titleWrapper}>
         <Text style={styles.title}>

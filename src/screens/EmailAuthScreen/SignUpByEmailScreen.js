@@ -22,7 +22,7 @@ const SignUpByEmailScreen = () => {
   const [email, setEmail] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(true);
   const route = useRoute();
-  const {mobile} = route.params;
+  const {mobile, mobilecode, countrycode} = route.params;
 
   const navigation = useNavigation();
 
@@ -54,11 +54,22 @@ const SignUpByEmailScreen = () => {
         if (responseData === 'OK') {
           navigation.navigate('SignupCreatePassword', {
             mobile: mobile,
+            mobilecode: mobilecode,
+            countrycode: countrycode,
             email: email,
           });
+
+          console.log(`
+            Data dikirim (EmailScreen) :
+              Mobile  => ${mobile}
+              MobCode => ${mobilecode}
+              CouCode => ${countrycode}
+              Email   => ${email}
+          `);
         } else {
           // Jika gagal, tampilkan pesan kesalahan
           Alert.alert('Failed', 'Email occupied');
+          setEmail('');
         }
       } catch (error) {
         // Handle network errors or other exceptions

@@ -17,7 +17,13 @@ const langData = require('../../../lang.json');
 const PhoneLoginScreen = ({route}) => {
   const [lang, setLang] = useState({});
   const [phoneNumber, setPhoneNumber] = useState('');
-  const {flag, countryCode = 82, country, mobile} = route.params || {};
+  const {
+    code = 'KR',
+    flag,
+    countryCode = 82,
+    country,
+    mobile,
+  } = route.params || {};
 
   const navigation = useNavigation();
 
@@ -46,8 +52,17 @@ const PhoneLoginScreen = ({route}) => {
       Alert.alert('Error', `Nomor Telepon harus diisi`);
     } else {
       navigation.navigate('PhoneVerif', {
+        mobilecode: countryCode,
         mobile: phoneNumber,
+        countrycode: code,
       });
+
+      console.log(`
+      Data dikirim (Phone Login)
+        MobileCode  => ${countryCode}
+        Mobile      => ${phoneNumber}
+        CountryCode => ${code}
+      `);
     }
   };
 
@@ -64,7 +79,17 @@ const PhoneLoginScreen = ({route}) => {
       country: country,
       mobile: mobile,
       screenName: true,
+      code: code,
     });
+
+    console.log(`
+      flag: ${flag}
+      countryCode: ${countryCode}
+      country: ${country}
+      mobile: ${mobile}
+      screenName: ${true}
+      code: ${code}
+    `);
   };
 
   return (
