@@ -53,6 +53,8 @@ import PhoneLoginScreen from './src/screens/EmailVerificationScreen/PhoneLogin';
 import PasswordMissedScreen from './src/screens/EmailVerificationScreen/PasswordMissed';
 import SignUpByEmailScreen from './src/screens/EmailAuthScreen/SignUpByEmailScreen';
 import SignUpCreatePassword from './src/screens/EmailAuthScreen/SignUpCreatePasswordScreen';
+import SignUpCreateName from './src/screens/EmailAuthScreen/SignUpCreateNameScreen';
+import SignUpCreateGender from './src/screens/EmailAuthScreen/SignUpCreateGenderScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -109,6 +111,11 @@ export default function App() {
           <Stack.Screen
             name="SignupCreatePassword"
             component={SignUpCreatePassword}
+          />
+          <Stack.Screen name="SignupCreateName" component={SignUpCreateName} />
+          <Stack.Screen
+            name="SignupCreateGender"
+            component={SignUpCreateGender}
           />
 
           {/* Category -> Info */}
