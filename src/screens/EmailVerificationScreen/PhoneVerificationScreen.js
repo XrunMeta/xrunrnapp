@@ -25,7 +25,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const PhoneVerificationScreen = () => {
   const route = useRoute();
   const {isLoggedIn, login} = useAuth();
-  const {mobile} = route.params;
+  const {mobile, mobilecode, countrycode} = route.params;
   const [verificationCode, setVerificationCode] = useState(['', '', '', '']);
   const [activeIndex, setActiveIndex] = useState(0);
   const navigation = useNavigation();
@@ -75,7 +75,18 @@ const PhoneVerificationScreen = () => {
       if (firstResObj.data === 'false') {
         // Invalid Number
         Alert.alert('Failed', 'Invalid Number');
-        navigation.navigate('SignupByEmail', {mobile: mobile});
+        navigation.navigate('SignupByEmail', {
+          mobile: mobile,
+          mobilecode: mobilecode,
+          countrycode: countrycode,
+        });
+
+        console.log(`
+          Data dikirim (Phone Verif) :
+            Mobile  => ${mobile}
+            MobCode => ${mobilecode}
+            CouCode => ${countrycode}
+        `);
       } else if (firstResObj.data === 'login') {
         // Login Automatically
         try {
