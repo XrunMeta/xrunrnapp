@@ -22,7 +22,7 @@ const SignUpCreatePassword = () => {
   const [password, setPassword] = useState('');
   const [isPasswordValid, setPasswordValid] = useState(true);
   const route = useRoute();
-  const {mobile, email} = route.params;
+  const {mobile, mobilecode, countrycode, email} = route.params;
 
   const navigation = useNavigation();
   let ScreenHeight = Dimensions.get('window').height;
@@ -38,12 +38,22 @@ const SignUpCreatePassword = () => {
     } else if (!isValidPassword(password)) {
       Alert.alert('Error', 'Your password is not valid');
     } else {
-      // navigation.navigate('NAMA SCREEN DISINI', {
-      //   mobile: mobile,
-      //   email: email,
-      //   pin: password,
-      // });
-      console.log('Pergi ke ap1720');
+      navigation.navigate('SignupCreateName', {
+        mobile: mobile,
+        mobilecode: mobilecode,
+        countrycode: countrycode,
+        email: email,
+        pin: password,
+      });
+
+      console.log(`
+        Data dikirim (Create Password) : 
+          Mobile  => ${mobile}
+          MobCode => ${mobilecode}
+          CouCode => ${countrycode}
+          Email   => ${email}
+          Pin     => ${password}
+      `);
     }
   };
 

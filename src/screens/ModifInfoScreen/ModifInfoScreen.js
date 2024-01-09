@@ -771,7 +771,7 @@ const ModifInfoScreen = ({route}) => {
                 value={
                   country.cDesc == null
                     ? '-'
-                    : country.cDesc + ', ' + region.rDesc
+                    : country.cDesc + (region.rDesc ? ', ' + region.rDesc : '')
                 }
                 setValue={setRegion.rDesc}
                 onSaveChange={() => {
