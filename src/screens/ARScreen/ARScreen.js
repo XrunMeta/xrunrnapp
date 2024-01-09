@@ -431,12 +431,14 @@ function ARScreen() {
                 top: 0,
                 left: 0,
                 zIndex: 10,
+                pointerEvents: 'none',
               }}>
               {/* XRUN Amount that Shown on Map Screen */}
               <View
                 style={[
                   {
                     position: 'absolute',
+                    pointerEvents: 'none',
                     bottom: -20,
                     left: 0,
                     right: 0,
@@ -561,6 +563,7 @@ function ARScreen() {
                   left: 0,
                   right: 0,
                   zIndex: 1,
+                  pointerEvents: 'none',
                 }}>
                 <View
                   style={{
