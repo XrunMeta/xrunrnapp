@@ -225,7 +225,9 @@ const CompleteSend = ({navigation, route}) => {
         style={{flex: 1}}>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('WalletHome');
+            navigation.navigate('WalletHome', {
+              completeSend: 'true',
+            });
           }}
           style={styles.button}
           activeOpacity={0.6}>
