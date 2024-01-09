@@ -5,10 +5,18 @@ import {
   TouchableOpacity,
   useWindowDimensions,
   FlatList,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
+import {
+  funcReceivedDetails,
+  funcTotalHistory,
+  funcTransferHistory,
+  funcTransitionHistory,
+} from '../../../utils';
 
 // Custom TabBar
 const renderTabBar = props => (
@@ -39,7 +47,20 @@ const renderTabBar = props => (
 );
 
 // Content TabView
+
 const TotalHistory = ({totalHistory, lang}) => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (totalHistory.length > 0) {
+        setLoading(false);
+      } else {
+        setLoading(false);
+      }
+    }, 100);
+  }, [totalHistory]);
+
   const renderItem = ({item}) => {
     const {
       datetime,
@@ -147,13 +168,29 @@ const TotalHistory = ({totalHistory, lang}) => {
     );
   };
 
-  const renderEmptyList = () => (
-    <Text style={styles.textNotFoundHistory}>
-      {lang && lang.screen_wallet && lang.screen_wallet.history_not_found
-        ? lang.screen_wallet.history_not_found
-        : ''}
-    </Text>
-  );
+  const renderEmptyList = () => {
+    if (loading) {
+      return (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: 40,
+          }}>
+          <ActivityIndicator size="large" color="#ccc" />
+        </View>
+      );
+    } else {
+      return (
+        <Text style={styles.textNotFoundHistory}>
+          {lang && lang.screen_wallet && lang.screen_wallet.history_not_found
+            ? lang.screen_wallet.history_not_found
+            : ''}
+        </Text>
+      );
+    }
+  };
 
   return (
     <FlatList
@@ -164,11 +201,24 @@ const TotalHistory = ({totalHistory, lang}) => {
       showsVerticalScrollIndicator={false}
       style={{paddingHorizontal: 28}}
       overScrollMode="never"
+      initialNumToRender={20}
     />
   );
 };
 
 const TransferHistory = ({transferHistory, lang}) => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (transferHistory.length === 0) {
+        setLoading(false);
+      } else {
+        setLoading(false);
+      }
+    }, 100);
+  }, [transferHistory]);
+
   const renderItem = ({item}) => {
     const {datetime, time, amount, symbol, action: tempAction} = item;
 
@@ -237,13 +287,29 @@ const TransferHistory = ({transferHistory, lang}) => {
     );
   };
 
-  const renderEmptyList = () => (
-    <Text style={styles.textNotFoundHistory}>
-      {lang && lang.screen_wallet && lang.screen_wallet.history_not_found
-        ? lang.screen_wallet.history_not_found
-        : ''}
-    </Text>
-  );
+  const renderEmptyList = () => {
+    if (loading) {
+      return (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: 40,
+          }}>
+          <ActivityIndicator size="large" color="#ccc" />
+        </View>
+      );
+    } else {
+      return (
+        <Text style={styles.textNotFoundHistory}>
+          {lang && lang.screen_wallet && lang.screen_wallet.history_not_found
+            ? lang.screen_wallet.history_not_found
+            : ''}
+        </Text>
+      );
+    }
+  };
 
   return (
     <FlatList
@@ -254,11 +320,23 @@ const TransferHistory = ({transferHistory, lang}) => {
       showsVerticalScrollIndicator={false}
       style={{paddingHorizontal: 28}}
       overScrollMode="never"
+      initialNumToRender={20}
     />
   );
 };
 
 const ReceivedDetails = ({receivedDetails, lang}) => {
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    setTimeout(() => {
+      if (receivedDetails.length === 0) {
+        setLoading(false);
+      } else {
+        setLoading(false);
+      }
+    }, 100);
+  }, [receivedDetails]);
+
   const renderItem = ({item}) => {
     const {
       datetime,
@@ -366,13 +444,29 @@ const ReceivedDetails = ({receivedDetails, lang}) => {
     );
   };
 
-  const renderEmptyList = () => (
-    <Text style={styles.textNotFoundHistory}>
-      {lang && lang.screen_wallet && lang.screen_wallet.history_not_found
-        ? lang.screen_wallet.history_not_found
-        : ''}
-    </Text>
-  );
+  const renderEmptyList = () => {
+    if (loading) {
+      return (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: 40,
+          }}>
+          <ActivityIndicator size="large" color="#ccc" />
+        </View>
+      );
+    } else {
+      return (
+        <Text style={styles.textNotFoundHistory}>
+          {lang && lang.screen_wallet && lang.screen_wallet.history_not_found
+            ? lang.screen_wallet.history_not_found
+            : ''}
+        </Text>
+      );
+    }
+  };
 
   return (
     <FlatList
@@ -383,11 +477,23 @@ const ReceivedDetails = ({receivedDetails, lang}) => {
       showsVerticalScrollIndicator={false}
       style={{paddingHorizontal: 28}}
       overScrollMode="never"
+      initialNumToRender={20}
     />
   );
 };
 
 const TransitionHistory = ({transitionHistory, lang}) => {
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    setTimeout(() => {
+      if (transitionHistory.length === 0) {
+        setLoading(false);
+      } else {
+        setLoading(false);
+      }
+    }, 100);
+  }, [transitionHistory]);
+
   const renderItem = ({item}) => {
     const {datetime, time, amount, symbol, action: tempAction} = item;
 
@@ -456,13 +562,29 @@ const TransitionHistory = ({transitionHistory, lang}) => {
     );
   };
 
-  const renderEmptyList = () => (
-    <Text style={styles.textNotFoundHistory}>
-      {lang && lang.screen_wallet && lang.screen_wallet.history_not_found
-        ? lang.screen_wallet.history_not_found
-        : ''}
-    </Text>
-  );
+  const renderEmptyList = () => {
+    if (loading) {
+      return (
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: 40,
+          }}>
+          <ActivityIndicator size="large" color="#ccc" />
+        </View>
+      );
+    } else {
+      return (
+        <Text style={styles.textNotFoundHistory}>
+          {lang && lang.screen_wallet && lang.screen_wallet.history_not_found
+            ? lang.screen_wallet.history_not_found
+            : ''}
+        </Text>
+      );
+    }
+  };
 
   return (
     <FlatList
@@ -473,21 +595,39 @@ const TransitionHistory = ({transitionHistory, lang}) => {
       showsVerticalScrollIndicator={false}
       style={{paddingHorizontal: 28}}
       overScrollMode="never"
+      initialNumToRender={20}
     />
   );
 };
 
 const TableWalletCard = ({
+  member,
   dataWallet,
   currentCurrency,
-  transactionalInformation,
   lang,
+  setEmptyWallet,
+  route,
 }) => {
   const navigation = useNavigation();
   const layout = useWindowDimensions();
   const [currentDaysTransactional, setCurrentDaysTransactional] = useState(7);
   const [index, setIndex] = useState(0);
   const [routes, setRoutes] = useState([]);
+
+  // Transaction
+  const [totalHistory, setTotalHistory] = useState([]);
+  const [transferHistory, setTransferHistory] = useState([]);
+  const [receivedDetails, setReceivedDetails] = useState([]);
+  const [transitionHistory, setTransitionHistory] = useState([]);
+
+  useEffect(() => {
+    if (route.params !== undefined) {
+      if (route.params.completeSend === 'true') {
+        const key = routes[index].key;
+        getDataTransaction(key);
+      }
+    }
+  }, [route]);
 
   useEffect(() => {
     setRoutes([
@@ -522,83 +662,124 @@ const TableWalletCard = ({
     ]);
   }, [lang]);
 
-  const {totalHistory, transferHistory, receivedDetails, transitionHistory} =
-    transactionalInformation;
+  // Hit API for transaction if user change days
+  useEffect(() => {
+    const funcTransaction = async () => {
+      try {
+        if (member !== '') {
+          if (routes.length > 0) {
+            const key = routes[index].key;
+            getDataTransaction(key);
+          }
+        }
+      } catch (err) {
+        console.log(`Failed get transaction: ${err}`);
+        Alert.alert('', `Failed get transaction: ${err}`);
+      }
+    };
 
-  // Check if data transactionalInformation still empty / not
-  if (
-    !transactionalInformation ||
-    !totalHistory ||
-    !transferHistory ||
-    !receivedDetails ||
-    !transitionHistory
-  ) {
-    console.log(
-      'Waiting data Total History, Transfer History, Received Details, and Transition History',
-    );
-    return;
-  }
+    funcTransaction();
+  }, [member, currentCurrency, currentDaysTransactional]);
 
-  const currentDate = new Date();
-
-  const filterTransactionalByCurrency = data => {
-    const dataTransactional = data
-      .filter(
-        transactionalByCurrency =>
-          transactionalByCurrency.currency == currentCurrency,
-      )
-      .filter(transaction => {
-        const transactionDateTime = new Date(`${transaction.datetime}`);
-
-        // Hitung perbedaan waktu dalam milidetik
-        const timeDifference = currentDate - transactionDateTime;
-
-        // Konversi perbedaan waktu dari milidetik ke hari
-        const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
-
-        // Return true jika transaksi terjadi dalam 7 hari terakhir
-        return daysDifference <= currentDaysTransactional;
-      });
-
-    return dataTransactional;
-  };
-
-  // Filter by currency
-  const filterTotalHistory = filterTransactionalByCurrency(totalHistory);
-  const filterTransferHistory = filterTransactionalByCurrency(transferHistory);
-  const filterReceivedDetails = filterTransactionalByCurrency(receivedDetails);
-  const filterTransitionHistory =
-    filterTransactionalByCurrency(transitionHistory);
+  useEffect(() => {
+    if (totalHistory.length === 0 && currentCurrency == 1) {
+      setEmptyWallet(true);
+    } else {
+      setEmptyWallet(false);
+    }
+  }, [totalHistory]);
 
   const renderScene = SceneMap({
     totalHistory: () => (
-      <TotalHistory totalHistory={filterTotalHistory} lang={lang} />
+      <TotalHistory totalHistory={totalHistory} lang={lang} />
     ),
     transferHistory: () => (
-      <TransferHistory transferHistory={filterTransferHistory} lang={lang} />
+      <TransferHistory transferHistory={transferHistory} lang={lang} />
     ),
     receivedDetails: () => (
-      <ReceivedDetails receivedDetails={filterReceivedDetails} lang={lang} />
+      <ReceivedDetails receivedDetails={receivedDetails} lang={lang} />
     ),
     transitionHistory: () => (
-      <TransitionHistory
-        transitionHistory={filterTransitionHistory}
-        lang={lang}
-      />
+      <TransitionHistory transitionHistory={transitionHistory} lang={lang} />
     ),
   });
 
-  const currentDaysBackground = '#fedc00';
+  // Function for hit API transaction
+  const getDataTransaction = useMemo(() => {
+    return async key => {
+      try {
+        switch (key) {
+          case 'totalHistory':
+            const totalHistory = await funcTotalHistory(
+              undefined,
+              undefined,
+              member,
+              currentCurrency,
+              currentDaysTransactional,
+            );
 
-  const changeCurrentDaysTransactional = days => {
-    setCurrentDaysTransactional(days);
-  };
+            setTotalHistory(totalHistory);
+            break;
+          case 'transferHistory':
+            const transferHistory = await funcTransferHistory(
+              undefined,
+              undefined,
+              member,
+              currentCurrency,
+              currentDaysTransactional,
+            );
+
+            setTransferHistory(transferHistory);
+            break;
+          case 'receivedDetails':
+            const receivedDetails = await funcReceivedDetails(
+              undefined,
+              undefined,
+              member,
+              currentCurrency,
+              currentDaysTransactional,
+            );
+            setReceivedDetails(receivedDetails);
+            break;
+          case 'transitionHistory':
+            const transitionHistory = await funcTransitionHistory(
+              undefined,
+              undefined,
+              member,
+              currentCurrency,
+              currentDaysTransactional,
+            );
+
+            setTransitionHistory(transitionHistory);
+            break;
+          default:
+            console.log(`Failed get transaction ${key}: ${err}`);
+            Alert.alert('', `Failed get transaction ${key}: ${err}`);
+            break;
+        }
+      } catch (err) {
+        console.log(`Failed get transaction ${key}: ${err}`);
+        Alert.alert('', `Failed get transaction ${key}: ${err}`);
+      }
+    };
+  });
 
   // Go to page conversion request
   const conversionRequest = () => {
     navigation.navigate('ConversionRequest', {
       currency: dataWallet.currency,
     });
+  };
+
+  // Set state change days value
+  const currentDaysBackground = '#fedc00';
+  const changeCurrentDaysTransactional = days => {
+    setCurrentDaysTransactional(days);
+  };
+
+  // Hit API for transaction if user swipe table
+  const onSwipeTransaction = async key => {
+    getDataTransaction(key);
   };
 
   return (
@@ -724,6 +905,11 @@ const TableWalletCard = ({
             onIndexChange={setIndex}
             initialLayout={{width: layout.width}}
             renderTabBar={renderTabBar}
+            onSwipeEnd={() => {
+              const key = routes[index].key;
+              onSwipeTransaction(key);
+            }}
+            lazy
           />
         </View>
       </View>

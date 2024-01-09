@@ -10,16 +10,16 @@ import {
   ScrollView,
   RefreshControl,
 } from 'react-native';
-import React, {useState, useEffect, useRef, useCallback} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {TabView, SceneMap} from 'react-native-tab-view';
 import TableWalletCard from '../../components/TableWallet';
-import {URL_API, funcTransactionalInformation} from '../../../utils';
+import {URL_API} from '../../../utils';
 import ShowQRWallet from '../../components/ShowQRWallet';
 
-const WalletScreen = ({navigation}) => {
+const WalletScreen = ({navigation, route}) => {
   const [lang, setLang] = useState({});
   const layout = useWindowDimensions();
   const [member, setMember] = useState('');
@@ -30,8 +30,6 @@ const WalletScreen = ({navigation}) => {
   const [routes, setRoutes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const refLayout = useRef(null);
-  const [currencies, setCurrencies] = useState([]);
-  const [currenciesFetched, setCurrenciesFetched] = useState(false);
 
   // State show text "QR Code"
   const [isShowTextQRCode, setIsShowTextQRCode] = useState(false);
@@ -42,7 +40,6 @@ const WalletScreen = ({navigation}) => {
   const [cardDataQR, setCardDataQR] = useState([]);
 
   // State for send to component TableWallet => Total history, transfer history, Received details, Transition history
-  const [transactionalInformation, setTransactionalInformation] = useState([]);
   const [emptyWallet, setEmptyWallet] = useState(false);
 
   useEffect(() => {
@@ -51,7 +48,6 @@ const WalletScreen = ({navigation}) => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
         let langData;
-        console.log(currentLanguage);
 
         switch (currentLanguage) {
           case 'id':
@@ -100,13 +96,7 @@ const WalletScreen = ({navigation}) => {
         .then(response => response.json())
         .then(result => {
           setCardsData(result.data);
-
-          // Get wallet currency user
-          const tempCurrencies = result.data.map(
-            tempResult => tempResult.currency,
-          );
-
-          setCurrencies(tempCurrencies);
+          setIsLoading(false);
           setRoutes(result.data.map(card => ({key: card.currency})));
         })
         .catch(error => {
@@ -159,35 +149,6 @@ const WalletScreen = ({navigation}) => {
     );
     setDataWallet(filterDataWallet[0]);
   }, [currentCurrency]);
-
-  useEffect(() => {
-    if (currencies.length > 0 && !currenciesFetched) {
-      // * Function get data Total history, transfer history, received details and transition history
-      funcTransactionalInformation(
-        member,
-        currencies,
-        setTransactionalInformation,
-        Alert,
-      );
-
-      setCurrenciesFetched(true);
-    }
-  }, [currencies, member, currenciesFetched]);
-
-  // Set loading false if, data transactional success load
-  useEffect(() => {
-    const transactionalInformationLenght = Object.keys(
-      transactionalInformation,
-    ).length;
-
-    if (transactionalInformationLenght >= 4) {
-      if (transactionalInformation.totalHistory.length > 0) {
-        setEmptyWallet(true);
-      }
-
-      setIsLoading(false);
-    }
-  }, [transactionalInformation]);
 
   const renderScene = SceneMap(
     Object.fromEntries(
@@ -332,21 +293,6 @@ const WalletScreen = ({navigation}) => {
     navigation.navigate('Home');
   };
 
-  const onRefresh = useCallback(() => {
-    setIsLoading(true);
-
-    if (!isLoading) {
-      funcTransactionalInformation(
-        member,
-        currencies,
-        setTransactionalInformation,
-        Alert,
-      ).then(() => {
-        setIsLoading(false);
-      });
-    }
-  }, [isLoading]);
-
   const refreshing = false;
 
   return (
@@ -382,13 +328,9 @@ const WalletScreen = ({navigation}) => {
 
       <View style={{flex: 1}}>
         <View style={styles.containerCard}>
-          <ScrollView
-            style={{flex: 1}}
-            refreshControl={
-              <RefreshControl onRefresh={onRefresh} refreshing={refreshing} />
-            }>
+          <ScrollView style={{flex: 1}}>
             <View style={styles.containerCard}>
-              {emptyWallet && (
+              {emptyWallet || (
                 <TabView
                   navigationState={{index, routes}}
                   renderScene={renderScene}
@@ -407,10 +349,12 @@ const WalletScreen = ({navigation}) => {
 
         <View style={styles.containerTable}>
           <TableWalletCard
+            member={member}
             dataWallet={dataWallet}
             currentCurrency={currentCurrency}
-            transactionalInformation={transactionalInformation}
             lang={lang}
+            setEmptyWallet={setEmptyWallet}
+            route={route}
           />
         </View>
       </View>
