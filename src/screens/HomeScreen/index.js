@@ -101,7 +101,7 @@ export default function Home({route}) {
     getUserData(); // Get Language
   }, [isLoggedIn]);
 
-  // User press back
+  // User press back, show notif want exit app or not
   const handleBackPress = () => {
     if (isFocused) {
       Alert.alert('', 'Are you sure you want to exit the app?', [
