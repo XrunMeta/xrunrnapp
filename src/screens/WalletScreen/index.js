@@ -79,57 +79,73 @@ const WalletScreen = ({navigation, route}) => {
 
     getLanguage();
 
-    getUserData();
+    const getMember = async () => {
+      try {
+        const userData = await AsyncStorage.getItem('userData');
+        const member = JSON.parse(userData).member;
+        setMember(member);
+      } catch (err) {
+        console.log(`Failed get member from async storage: ${err}`);
+        Alert.alert('', `Failed get member from async storage`);
+      }
+    };
+
+    getMember();
   }, []);
 
-  // Get data member
-  const getUserData = async () => {
-    try {
-      const userData = await AsyncStorage.getItem('userData');
-      const member = JSON.parse(userData).member;
-      setMember(member);
+  useEffect(() => {
+    // Get data member
+    const getUserData = async () => {
+      try {
+        if (member !== '') {
+          // Get data wallet
+          fetch(`${URL_API}&act=app4000-01-rev&member=${member}`, {
+            method: 'POST',
+          })
+            .then(response => response.json())
+            .then(result => {
+              setCardsData(result.data);
+              setIsLoading(false);
+              setRoutes(result.data.map(card => ({key: card.currency})));
+            })
+            .catch(error => {
+              Alert.alert(
+                `${
+                  lang && lang.screen_wallet && lang.screen_wallet.failed_alert
+                    ? lang.screen_wallet.failed_alert
+                    : ''
+                }`,
+                `${
+                  lang &&
+                  lang.screen_wallet &&
+                  lang.screen_wallet.failed_getwallet_alert
+                    ? lang.screen_wallet.failed_getwallet_alert
+                    : ''
+                }`,
+                [
+                  {
+                    text:
+                      lang &&
+                      lang.screen_wallet &&
+                      lang.screen_wallet.confirm_alert
+                        ? lang.screen_wallet.confirm_alert
+                        : '',
+                    onPress: () =>
+                      console.log('Failed get wallet data: ', error),
+                  },
+                ],
+              );
+              setIsLoading(false);
+            });
+        }
+      } catch (err) {
+        console.error('Failed to get userData from AsyncStorage:', err);
+        setIsLoading(false);
+      }
+    };
 
-      // Get data wallet
-      fetch(`${URL_API}&act=app4000-01-rev&member=${member}`, {
-        method: 'POST',
-      })
-        .then(response => response.json())
-        .then(result => {
-          setCardsData(result.data);
-          setIsLoading(false);
-          setRoutes(result.data.map(card => ({key: card.currency})));
-        })
-        .catch(error => {
-          Alert.alert(
-            `${
-              lang && lang.screen_wallet && lang.screen_wallet.failed_alert
-                ? lang.screen_wallet.failed_alert
-                : ''
-            }`,
-            `${
-              lang &&
-              lang.screen_wallet &&
-              lang.screen_wallet.failed_getwallet_alert
-                ? lang.screen_wallet.failed_getwallet_alert
-                : ''
-            }`,
-            [
-              {
-                text:
-                  lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
-                    ? lang.screen_wallet.confirm_alert
-                    : '',
-                onPress: () => console.log('Failed get wallet data: ', error),
-              },
-            ],
-          );
-          setIsLoading(false);
-        });
-    } catch (err) {
-      console.error('Failed to get userData from AsyncStorage:', err);
-      setIsLoading(false);
-    }
-  };
+    getUserData();
+  }, [member]);
 
   useEffect(() => {
     if (cardsData.length > 0 && refLayout.current) {
@@ -147,6 +163,7 @@ const WalletScreen = ({navigation, route}) => {
     const filterDataWallet = cardsData.filter(
       wallet => wallet.currency == currentCurrency,
     );
+
     setDataWallet(filterDataWallet[0]);
   }, [currentCurrency]);
 
