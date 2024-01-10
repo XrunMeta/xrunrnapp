@@ -7,12 +7,13 @@ import {
   View,
   TouchableOpacity,
   Alert,
+  BackHandler,
 } from 'react-native';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import ARScreen from '../ARScreen/ARScreen';
 import MapParent from './MapParentScreen';
 import TestCam from '../ARScreen/testCam';
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API} from '../../../utils';
 
@@ -24,6 +25,7 @@ export default function Home({route}) {
   const [activeTab, setActiveTab] = useState('Map');
   const [openScreen, setOpenScreen] = useState();
   const [popupNotif, setPopupNotif] = useState(true);
+  const isFocused = useIsFocused();
 
   const navigation = useNavigation();
 
@@ -98,6 +100,35 @@ export default function Home({route}) {
 
     getUserData(); // Get Language
   }, [isLoggedIn]);
+
+  // User press back
+  const handleBackPress = () => {
+    if (isFocused) {
+      Alert.alert('', 'Are you sure you want to exit the app?', [
+        {
+          text: 'CANCEL',
+        },
+        {
+          text: 'OK',
+          onPress: () => {
+            BackHandler.exitApp();
+          },
+        },
+      ]);
+      return true;
+    }
+
+    return false;
+  };
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      handleBackPress,
+    );
+
+    return () => backHandler.remove();
+  }, [isFocused]);
 
   const renderTabButton = (tabName, icon, text, onPress) => (
     <TouchableOpacity
