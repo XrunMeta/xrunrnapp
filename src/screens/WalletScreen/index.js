@@ -293,8 +293,6 @@ const WalletScreen = ({navigation, route}) => {
     navigation.navigate('Home');
   };
 
-  const refreshing = false;
-
   return (
     <View style={styles.container}>
       {/* Loading */}
