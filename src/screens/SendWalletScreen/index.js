@@ -527,7 +527,7 @@ const SendWalletScreen = ({navigation, route}) => {
         </View>
       )}
 
-      {/* <Animated.View
+      <Animated.View
         style={{
           alignItems: 'center',
           position: 'absolute',
@@ -555,7 +555,7 @@ const SendWalletScreen = ({navigation, route}) => {
           />
           <Text style={styles.notificationTextInQR}>Scanned: {address}</Text>
         </View>
-      </Animated.View> */}
+      </Animated.View>
     </View>
   );
 };
