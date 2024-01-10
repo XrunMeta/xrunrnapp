@@ -202,6 +202,7 @@ const TotalHistory = ({totalHistory, lang}) => {
       style={{paddingHorizontal: 28}}
       overScrollMode="never"
       initialNumToRender={20}
+      windowSize={20}
     />
   );
 };
@@ -321,6 +322,7 @@ const TransferHistory = ({transferHistory, lang}) => {
       style={{paddingHorizontal: 28}}
       overScrollMode="never"
       initialNumToRender={20}
+      windowSize={20}
     />
   );
 };
@@ -478,6 +480,7 @@ const ReceivedDetails = ({receivedDetails, lang}) => {
       style={{paddingHorizontal: 28}}
       overScrollMode="never"
       initialNumToRender={20}
+      windowSize={20}
     />
   );
 };
@@ -596,6 +599,7 @@ const TransitionHistory = ({transitionHistory, lang}) => {
       style={{paddingHorizontal: 28}}
       overScrollMode="never"
       initialNumToRender={20}
+      windowSize={20}
     />
   );
 };
