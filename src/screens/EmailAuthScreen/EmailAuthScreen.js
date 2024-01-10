@@ -7,12 +7,14 @@ import {
   Image,
   Dimensions,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {URL_API} from '../../../utils';
 
 const langData = require('../../../lang.json');
 
@@ -22,12 +24,13 @@ const EmailAuthScreen = () => {
   const [isEmailValid, setIsEmailValid] = useState(true);
   const route = useRoute();
   const {screenBack} = route.params;
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigation = useNavigation();
 
   let ScreenHeight = Dimensions.get('window').height;
 
-  const onSignIn = () => {
+  const onSignIn = async () => {
     if (email.trim() === '') {
       Alert.alert(
         'Error',
@@ -43,7 +46,81 @@ const EmailAuthScreen = () => {
           : '',
       );
     } else {
-      navigation.navigate('EmailVerif', {dataEmail: email});
+      try {
+        const apiUrl = `${URL_API}&act=login-02-email&email=${email}`;
+        let responseReceived = false; // Flag Response Receiver
+
+        const waitForResponse = async () => {
+          try {
+            const response = await fetch(apiUrl);
+            const responseData = await response.json();
+            console.log(
+              'RespAPI login-02-email -> ' + JSON.stringify(responseData),
+            );
+
+            // Update Flag to true
+            responseReceived = true;
+            return responseData;
+          } catch (error) {
+            setIsLoading(true);
+
+            return {
+              data: 'error',
+              value: "It's a server problem. Please try in a few minutes",
+            };
+          }
+        };
+
+        const result = await Promise.race([
+          waitForResponse(),
+          new Promise(resolve => setTimeout(() => resolve(null), 5000)),
+        ]);
+
+        if (result !== null) {
+          console.log('Result.data -> ' + result.data);
+          if (result.data === 'true') {
+            setIsLoading(false);
+
+            navigation.navigate('EmailVerifLogin', {
+              dataEmail: email,
+            });
+          } else if (result.data === 'error') {
+            Alert.alert(
+              'Error',
+              "It's a server problem. Please try in a few minutes",
+              [
+                {
+                  text: 'OK',
+                  onPress: () => {
+                    navigation.replace('First');
+                  },
+                },
+              ],
+            );
+            setEmail('');
+          } else {
+            Alert.alert('Error', 'Invalid email');
+            setEmail('');
+          }
+        } else {
+          Alert.alert(
+            'Error',
+            "It's a server problem. Please try in a few minutes",
+            [
+              {
+                text: 'OK',
+                onPress: () => {
+                  navigation.replace('First'); // Ganti 'First' dengan nama layar pertama yang sesuai
+                },
+              },
+            ],
+          );
+        }
+      } catch (error) {
+        // Handle network errors or other exceptions
+        console.error('Error during API request:', error);
+        Alert.alert('Error', 'An error occurred. Please try again.');
+      }
     }
   };
 
@@ -124,6 +201,18 @@ const EmailAuthScreen = () => {
           </Pressable>
         </View>
       </View>
+      {isLoading && (
+        <View
+          style={{
+            ...StyleSheet.absoluteFill,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 1,
+          }}>
+          <ActivityIndicator size="large" color="#343a59" />
+        </View>
+      )}
     </ScrollView>
   );
 };
