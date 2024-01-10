@@ -55,6 +55,7 @@ import SignUpByEmailScreen from './src/screens/EmailAuthScreen/SignUpByEmailScre
 import SignUpCreatePassword from './src/screens/EmailAuthScreen/SignUpCreatePasswordScreen';
 import SignUpCreateName from './src/screens/EmailAuthScreen/SignUpCreateNameScreen';
 import SignUpCreateGender from './src/screens/EmailAuthScreen/SignUpCreateGenderScreen';
+import EmailVerificationLoginScreen from './src/screens/EmailVerificationScreen/EmailVerificationLoginScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -92,6 +93,10 @@ export default function App() {
           <Stack.Screen name="SignUp" component={SignUpScreen} />
           <Stack.Screen name="EmailAuth" component={EmailAuthScreen} />
           <Stack.Screen name="EmailVerif" component={EmailVerificationScreen} />
+          <Stack.Screen
+            name="EmailVerifLogin"
+            component={EmailVerificationLoginScreen}
+          />
           <Stack.Screen name="PhoneVerif" component={PhoneVerificationScreen} />
           <Stack.Screen name="PhoneLogin" component={PhoneLoginScreen} />
           <Stack.Screen name="ChooseRegion" component={ChooseRegionScreen} />
