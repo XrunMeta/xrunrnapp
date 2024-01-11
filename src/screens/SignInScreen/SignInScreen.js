@@ -6,6 +6,7 @@ import {
   Image,
   Dimensions,
   Alert,
+  ScrollView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput/';
@@ -54,11 +55,17 @@ const SignInScreen = () => {
     } else {
       try {
         const response = await fetch(
-          `${URL_API}&act=login-checker&email=${email}&pin=${password}`,
+          // `${URL_API}&act=login-checker&email=${email}&pin=${password}`,
+          `${URL_API}&act=login-01&tp=4&email=${email}&pin=${password}`,
         );
-        const data = await response.text();
+        const data = await response.json();
 
-        if (data === 'OK') {
+        if (data.data === 'false') {
+          Alert.alert(
+            'Error',
+            lang && lang.screen_signin ? lang.screen_signin.failedLogin : '',
+          );
+        } else {
           await AsyncStorage.setItem('userEmail', email);
           login();
 
@@ -66,13 +73,6 @@ const SignInScreen = () => {
             index: 0,
             routes: [{name: 'Home'}],
           });
-
-          // Simpan session dan navigasi ke halaman selanjutnya
-        } else {
-          Alert.alert(
-            'Error',
-            lang && lang.screen_signin ? lang.screen_signin.failedLogin : '',
-          );
         }
       } catch (error) {
         console.error('Error:', error);
@@ -120,97 +120,97 @@ const SignInScreen = () => {
   }, []);
 
   return (
-    // <ScrollView showsVerticalScrollIndicator={false}>
-    <View style={[styles.root, {height: ScreenHeight}]}>
-      <ButtonBack onClick={onBack} />
+    <ScrollView showsVerticalScrollIndicator={false} scrollEnabled={false}>
+      <View style={[styles.root, {height: ScreenHeight}]}>
+        <ButtonBack onClick={onBack} />
 
-      <View style={styles.titleWrapper}>
-        {/* <Text style={styles.title}>Login Via E-mail</Text> */}
-        <Text style={styles.title}>
-          {lang && lang.screen_signin && lang.screen_signin.title
-            ? lang.screen_signin.title
-            : ''}
-        </Text>
-        <Text style={styles.subTitle}>
-          {lang && lang.screen_signin && lang.screen_signin.subTitle
-            ? lang.screen_signin.subTitle
-            : ''}
-        </Text>
-      </View>
-
-      <CustomInput
-        label={
-          lang && lang.screen_signin && lang.screen_signin.email
-            ? lang.screen_signin.email.label
-            : ''
-        }
-        placeholder={
-          lang && lang.screen_signin && lang.screen_signin.email
-            ? lang.screen_signin.email.placeholder
-            : ''
-        }
-        value={email}
-        // setValue={setEmail}
-        setValue={onEmailChange}
-        isPassword={false}
-      />
-      {isEmailValid ? null : (
-        <Text
-          style={{
-            alignSelf: 'flex-start',
-            marginLeft: 25,
-            color: 'red',
-            fontFamily: 'Poppins-Regular',
-            fontSize: 13,
-          }}>
-          {lang && lang.screen_signin && lang.screen_signin.validator
-            ? lang.screen_signin.validator
-            : ''}
-        </Text>
-      )}
-
-      <CustomInput
-        label={
-          lang && lang.screen_signin && lang.screen_signin.password
-            ? lang.screen_signin.password.label
-            : ''
-        }
-        placeholder={
-          lang && lang.screen_signin && lang.screen_signin.password
-            ? lang.screen_signin.password.placeholder
-            : ''
-        }
-        value={password}
-        setValue={setPassword}
-        secureTextEntry
-        isPassword={true}
-      />
-
-      <View style={[styles.bottomSection]}>
-        <View style={styles.additionalLogin}>
-          <Text style={styles.normalText}>
-            {lang && lang.screen_signin && lang.screen_signin.authcode
-              ? lang.screen_signin.authcode.label + ' '
+        <View style={styles.titleWrapper}>
+          {/* <Text style={styles.title}>Login Via E-mail</Text> */}
+          <Text style={styles.title}>
+            {lang && lang.screen_signin && lang.screen_signin.title
+              ? lang.screen_signin.title
               : ''}
           </Text>
-          <Pressable onPress={onEmailAuth} style={styles.resetPassword}>
-            <Text style={styles.emailAuth}>
+          <Text style={styles.subTitle}>
+            {lang && lang.screen_signin && lang.screen_signin.subTitle
+              ? lang.screen_signin.subTitle
+              : ''}
+          </Text>
+        </View>
+
+        <CustomInput
+          label={
+            lang && lang.screen_signin && lang.screen_signin.email
+              ? lang.screen_signin.email.label
+              : ''
+          }
+          placeholder={
+            lang && lang.screen_signin && lang.screen_signin.email
+              ? lang.screen_signin.email.placeholder
+              : ''
+          }
+          value={email}
+          // setValue={setEmail}
+          setValue={onEmailChange}
+          isPassword={false}
+        />
+        {isEmailValid ? null : (
+          <Text
+            style={{
+              alignSelf: 'flex-start',
+              marginLeft: 25,
+              color: 'red',
+              fontFamily: 'Poppins-Regular',
+              fontSize: 13,
+            }}>
+            {lang && lang.screen_signin && lang.screen_signin.validator
+              ? lang.screen_signin.validator
+              : ''}
+          </Text>
+        )}
+
+        <CustomInput
+          label={
+            lang && lang.screen_signin && lang.screen_signin.password
+              ? lang.screen_signin.password.label
+              : ''
+          }
+          placeholder={
+            lang && lang.screen_signin && lang.screen_signin.password
+              ? lang.screen_signin.password.placeholder
+              : ''
+          }
+          value={password}
+          setValue={setPassword}
+          secureTextEntry
+          isPassword={true}
+        />
+
+        <View style={[styles.bottomSection]}>
+          <View style={styles.additionalLogin}>
+            <Text style={styles.normalText}>
               {lang && lang.screen_signin && lang.screen_signin.authcode
-                ? lang.screen_signin.authcode.link
+                ? lang.screen_signin.authcode.label + ' '
                 : ''}
             </Text>
+            <Pressable onPress={onEmailAuth} style={styles.resetPassword}>
+              <Text style={styles.emailAuth}>
+                {lang && lang.screen_signin && lang.screen_signin.authcode
+                  ? lang.screen_signin.authcode.link
+                  : ''}
+              </Text>
+            </Pressable>
+          </View>
+          <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
+            <Image
+              source={require('../../../assets/images/icon_next.png')}
+              resizeMode="contain"
+              style={styles.buttonSignInImage}
+            />
           </Pressable>
         </View>
-        <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
-          <Image
-            source={require('../../../assets/images/icon_next.png')}
-            resizeMode="contain"
-            style={styles.buttonSignInImage}
-          />
-        </Pressable>
       </View>
-    </View>
-    // </ScrollView>
+    </ScrollView>
   );
 };
 
