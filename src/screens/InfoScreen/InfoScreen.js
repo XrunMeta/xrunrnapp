@@ -37,23 +37,17 @@ const InfoScreen = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userEmail = await AsyncStorage.getItem('userEmail');
+        const userData = await AsyncStorage.getItem('userData');
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const response = await fetch(
-          `${URL_API}&act=login-04-email&email=${userEmail}`,
-        );
-        const data = await response.json();
 
-        console.log('Info Screen -> ' + JSON.stringify(data));
-
+        console.log('Info Screen -> ' + userData);
         const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
         const language = langData[selectedLanguage];
         setLang(language);
 
-        if (data.data === 'true') {
-          const fullName = `${data.firstname}${data.lastname}`;
-          setUserName(fullName);
+        const data = JSON.parse(userData);
 
+        if (data.data === 'true') {
           setUserDetails({
             email: data.email,
             firstname: data.firstname,
@@ -66,11 +60,6 @@ const InfoScreen = () => {
             region: data.region,
             ages: data.ages,
           });
-
-          await AsyncStorage.setItem(
-            'userDetails',
-            JSON.stringify(userDetails),
-          );
         }
       } catch (err) {
         console.error('Error fetching user data: ', err);

@@ -12,7 +12,6 @@ const langData = require('../../../lang.json');
 const ClauseScreen = () => {
   const {isLoggedIn, logout} = useAuth();
   const [userName, setUserName] = useState(null);
-  const [userDetails, setUserDetails] = useState([]);
   const [lang, setLang] = useState('');
 
   let ScreenHeight = Dimensions.get('window').height;
@@ -21,40 +20,6 @@ const ClauseScreen = () => {
 
   //   Call API
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const userEmail = await AsyncStorage.getItem('userEmail');
-        const response = await fetch(
-          `${URL_API}&act=login-04-email&email=${userEmail}`,
-        );
-        const data = await response.json();
-
-        if (data.data === 'true') {
-          const fullName = `${data.firstname}${data.lastname}`;
-          setUserName(fullName);
-
-          setUserDetails({
-            email: data.email,
-            firstname: data.firstname,
-            lastname: data.lastname,
-            gender: data.gender,
-            extrastr: data.extrastr,
-            country: data.country,
-            countrycode: data.countrycode,
-            region: data.region,
-            ages: data.ages,
-          });
-
-          await AsyncStorage.setItem(
-            'userDetails',
-            JSON.stringify(userDetails),
-          );
-        }
-      } catch (err) {
-        console.error('Error fetching user data: ', err);
-      }
-    };
-
     // Get Language
     const getLanguage = async () => {
       try {
@@ -72,8 +37,6 @@ const ClauseScreen = () => {
     };
 
     getLanguage();
-
-    fetchData();
   }, []);
 
   const onBack = () => {
