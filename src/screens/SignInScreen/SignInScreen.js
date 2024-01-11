@@ -55,11 +55,17 @@ const SignInScreen = () => {
     } else {
       try {
         const response = await fetch(
-          `${URL_API}&act=login-checker&email=${email}&pin=${password}`,
+          // `${URL_API}&act=login-checker&email=${email}&pin=${password}`,
+          `${URL_API}&act=login-01&tp=4&email=${email}&pin=${password}`,
         );
-        const data = await response.text();
+        const data = await response.json();
 
-        if (data === 'OK') {
+        if (data.data === 'false') {
+          Alert.alert(
+            'Error',
+            lang && lang.screen_signin ? lang.screen_signin.failedLogin : '',
+          );
+        } else {
           await AsyncStorage.setItem('userEmail', email);
           login();
 
@@ -67,13 +73,6 @@ const SignInScreen = () => {
             index: 0,
             routes: [{name: 'Home'}],
           });
-
-          // Simpan session dan navigasi ke halaman selanjutnya
-        } else {
-          Alert.alert(
-            'Error',
-            lang && lang.screen_signin ? lang.screen_signin.failedLogin : '',
-          );
         }
       } catch (error) {
         console.error('Error:', error);

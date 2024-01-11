@@ -257,7 +257,10 @@ export default function MapParent() {
                 height: 170,
                 pointerEvents: 'none',
               }}>
-              <View style={{marginBottom: -20}}>
+              <View
+                style={{
+                  marginBottom: -20,
+                }}>
                 <Text
                   style={{
                     fontFamily: 'Poppins-Medium',
@@ -276,6 +279,7 @@ export default function MapParent() {
                       fontFamily: 'Poppins-Medium',
                       fontSize: 13,
                       color: 'white',
+                      flexWrap: 'wrap',
                     }}>
                     {lang &&
                     lang.screen_map &&
