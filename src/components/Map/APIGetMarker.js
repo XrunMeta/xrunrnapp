@@ -22,7 +22,7 @@ const fetchImageFromApi = async adthumbnail => {
 // Get Coin as Lat Lng
 export const fetchMarkerData = async (latitude, longitude, member) => {
   try {
-    const apiUrl = `${URL_API}&act=coinmapping&member=${member}&lat=${latitude}&lng=${longitude}&limit=30`;
+    const apiUrl = `${URL_API}&act=app2000-01&member=${member}&lat=${latitude}&lng=${longitude}&limit=120`;
     const response = await fetch(apiUrl);
 
     if (response.ok) {
