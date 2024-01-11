@@ -397,7 +397,7 @@ export default function MapParent() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   marginTop: -55,
-                  marginBottom: -20,
+                  marginBottom: -30,
                   paddingHorizontal: 90,
                   paddingBottom: 20,
                   paddingTop: 35,
