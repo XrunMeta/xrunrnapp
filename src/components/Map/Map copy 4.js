@@ -6,14 +6,7 @@ import React, {
   useMemo,
   createRef,
 } from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  Image,
-  ActivityIndicator,
-  PermissionsAndroid,
-} from 'react-native';
+import {View, StyleSheet, Text, Image, ActivityIndicator} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE, Callout} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -34,7 +27,6 @@ const MapComponent = ({
   onResetMap,
   lang,
   updateRange,
-  GPSActive = true,
 }) => {
   const [pin, setPin] = useState(null); // Get User Coordinate
   const [pinTarget, setPinTarget] = useState(0); // Get Target Coordinate
@@ -54,37 +46,12 @@ const MapComponent = ({
     Number.MAX_VALUE,
   );
   const [localClickedRange, setLocalClickedRange] = useState(0);
-  const [isNotificationDisplayed, setNotificationDisplayed] = useState(false);
 
   // Blob to base64 PNG Converter
   const saveBlobAsImage = async (blob, filename) => {
     const path = `${RNFetchBlob.fs.dirs.CacheDir}/${filename}`;
     await RNFetchBlob.fs.writeFile(path, blob, 'base64');
     return path;
-  };
-
-  const locationPermitChecker = async () => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          title: 'Izin Lokasi',
-          message:
-            'Aplikasi memerlukan izin akses lokasi untuk fungsi tertentu.',
-          buttonPositive: 'Izinkan',
-          buttonNegative: 'Exit',
-        },
-      );
-
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('Izin dikasih bro');
-      } else {
-        // Izin ditolak, beri tahu pengguna atau lakukan tindakan lain
-        console.log('Izin ditolak bro');
-      }
-    } catch (err) {
-      console.error(err);
-    }
   };
 
   // Get Self Cordinate from AsyncStorage
@@ -224,71 +191,8 @@ const MapComponent = ({
 
   // 1 Time Use Effect
   useEffect(() => {
-    locationPermitChecker();
     getSelfCoordinate();
   }, []);
-
-  useEffect(() => {
-    const checkLocationPermission = async () => {
-      try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-          {
-            title: 'Izin Lokasi',
-            message:
-              'Aplikasi memerlukan izin akses lokasi untuk fungsi tertentu.',
-            buttonPositive: 'Izinkan',
-            buttonNegative: 'Exit',
-          },
-        );
-
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          console.log('Izin diberikan');
-          startLocationUpdates();
-        } else {
-          console.log('Izin ditolak');
-          // Izin ditolak, beri tahu pengguna atau lakukan tindakan lain
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    const startLocationUpdates = () => {
-      Geolocation.watchPosition(
-        position => {
-          // Handle lokasi berubah
-          console.log('Lokasi berubah:', position);
-        },
-        error => {
-          console.error('Error dalam mendapatkan lokasi:', error) +
-            ' ---> ' +
-            Geolocation.STATUS_CODES?.LocationUnavailable;
-
-          // Jika error adalah karena GPS mati dan notifikasi belum ditampilkan
-          if (
-            !isNotificationDisplayed &&
-            error.code === Geolocation.STATUS_CODES?.LocationUnavailable
-          ) {
-            alert('GPS mati, harap aktifkan GPS untuk melanjutkan.');
-            setNotificationDisplayed(true);
-            GPSActive(false);
-          }
-        },
-        {
-          enableHighAccuracy: true,
-          distanceFilter: 10,
-        },
-      );
-    };
-
-    checkLocationPermission();
-
-    // Cleanup effect
-    return () => {
-      Geolocation.stopObserving();
-    };
-  }, [isNotificationDisplayed]);
 
   // As 'pin' change useEffect
   const handlePinChange = useCallback(
@@ -573,6 +477,17 @@ const MapComponent = ({
   // Main Return
   return (
     <View style={styles.container}>
+      {/* <TouchableOpacity
+        style={{
+          backgroundColor: 'pink',
+          zIndex: 10,
+          position: 'absolute',
+          top: '60%',
+        }}
+        onPress={() => jamsSkuy()}>
+        <Text>updateRangellll : {updateRange}</Text>
+      </TouchableOpacity> */}
+
       {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#343a59" />
