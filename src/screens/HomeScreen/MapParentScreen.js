@@ -50,6 +50,7 @@ export default function MapParent() {
     transform: [{translateY: offset.value}],
   })); // Slider Card Translate Animation
   const [activeTab, setActiveTab] = useState('Home');
+  const [GPSActive, setGPSActive] = useState(false);
 
   const arrowStyle = useAnimatedStyle(() => {
     if (pin) {
@@ -224,6 +225,8 @@ export default function MapParent() {
               onResetMap={() => setShouldResetMap(false)}
               lang={lang}
               updateRange={rangeToMarker}
+              // GPSActive={GPSActive => setGPSActive(GPSActive)}
+              GPSActive={GPSActive => console.log('Status GPS -> ' + GPSActive)}
             />
           </View>
 
@@ -254,7 +257,10 @@ export default function MapParent() {
                 height: 170,
                 pointerEvents: 'none',
               }}>
-              <View style={{marginBottom: -20}}>
+              <View
+                style={{
+                  marginBottom: -20,
+                }}>
                 <Text
                   style={{
                     fontFamily: 'Poppins-Medium',
@@ -267,41 +273,54 @@ export default function MapParent() {
                     ? lang.screen_map.section_card_shadow.radius
                     : ''}
                 </Text>
-                <Text
-                  style={{
-                    fontFamily: 'Poppins-Medium',
-                    fontSize: 13,
-                    color: 'white',
-                  }}>
-                  {lang &&
-                  lang.screen_map &&
-                  lang.screen_map.section_card_shadow
-                    ? lang.screen_map.section_card_shadow.amount + ' '
-                    : ''}
+                {markerCount > 0 ? (
                   <Text
                     style={{
-                      fontFamily: 'Poppins-Bold',
+                      fontFamily: 'Poppins-Medium',
+                      fontSize: 13,
+                      color: 'white',
+                      flexWrap: 'wrap',
                     }}>
-                    {brandCount} XRUN
-                  </Text>{' '}
-                  {lang &&
-                  lang.screen_map &&
-                  lang.screen_map.section_card_shadow
-                    ? lang.screen_map.section_card_shadow.and + ' '
-                    : ''}
-                  <Text
-                    style={{
-                      fontFamily: 'Poppins-Bold',
-                    }}>
-                    {markerCount} BIG XRUN{' '}
+                    {lang &&
+                    lang.screen_map &&
+                    lang.screen_map.section_card_shadow
+                      ? lang.screen_map.section_card_shadow.amount + ' '
+                      : ''}
+                    <Text
+                      style={{
+                        fontFamily: 'Poppins-Bold',
+                      }}>
+                      {brandCount} XRUN
+                    </Text>{' '}
+                    {lang &&
+                    lang.screen_map &&
+                    lang.screen_map.section_card_shadow
+                      ? lang.screen_map.section_card_shadow.and + ' '
+                      : ''}
+                    <Text
+                      style={{
+                        fontFamily: 'Poppins-Bold',
+                      }}>
+                      {markerCount} BIG XRUN{' '}
+                    </Text>
+                    {'\n'}
+                    {lang &&
+                    lang.screen_map &&
+                    lang.screen_map.section_card_shadow
+                      ? lang.screen_map.section_card_shadow.getable
+                      : ''}
                   </Text>
-                  {'\n'}
-                  {lang &&
-                  lang.screen_map &&
-                  lang.screen_map.section_card_shadow
-                    ? lang.screen_map.section_card_shadow.getable
-                    : ''}
-                </Text>
+                ) : (
+                  <Text
+                    style={{
+                      fontFamily: 'Poppins-Medium',
+                      fontSize: 13,
+                      color: 'white',
+                      marginBottom: 3,
+                    }}>
+                    There are no XRUN {'\n'}at close range.
+                  </Text>
+                )}
               </View>
               <View
                 style={{
@@ -314,6 +333,8 @@ export default function MapParent() {
                     fontFamily: 'Poppins-Medium',
                     fontSize: 13,
                     color: 'white',
+                    marginTop: 1,
+                    marginBottom: -2,
                   }}>
                   {lang &&
                   lang.screen_map &&
@@ -380,10 +401,10 @@ export default function MapParent() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   marginTop: -55,
-                  marginBottom: -20,
+                  marginBottom: -30,
                   paddingHorizontal: 90,
                   paddingBottom: 20,
-                  paddingTop: 15,
+                  paddingTop: 35,
                   zIndex: 1,
                 }}>
                 <Image
@@ -419,6 +440,13 @@ export default function MapParent() {
                   }}>
                   <Text style={styles.subTitle}>{rangeToMarker || 0}m</Text>
                   <Text style={styles.desc}>
+                    <Text style={styles.desc}>
+                      {lang &&
+                      lang.screen_map &&
+                      lang.screen_map.section_slider_card
+                        ? lang.screen_map.section_slider_card.desc1
+                        : ''}
+                    </Text>{' '}
                     <Text style={{fontFamily: 'Poppins-Bold'}}>XRUN</Text>{' '}
                     {lang &&
                     lang.screen_map &&
