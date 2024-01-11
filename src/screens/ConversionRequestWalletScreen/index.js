@@ -152,6 +152,7 @@ const ConversionRequest = ({navigation, route}) => {
         setSubcurrency('5203');
         break;
       default:
+        setSubcurrency('5205');
         break;
     }
   };
