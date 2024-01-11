@@ -50,6 +50,7 @@ export default function MapParent() {
     transform: [{translateY: offset.value}],
   })); // Slider Card Translate Animation
   const [activeTab, setActiveTab] = useState('Home');
+  const [GPSActive, setGPSActive] = useState(false);
 
   const arrowStyle = useAnimatedStyle(() => {
     if (pin) {
@@ -224,6 +225,8 @@ export default function MapParent() {
               onResetMap={() => setShouldResetMap(false)}
               lang={lang}
               updateRange={rangeToMarker}
+              // GPSActive={GPSActive => setGPSActive(GPSActive)}
+              GPSActive={GPSActive => console.log('Status GPS -> ' + GPSActive)}
             />
           </View>
 
