@@ -44,11 +44,17 @@
     },
     "validator": "Your Email is not Valid",
     "alert": {
+      "error": "Error",
+      "fail": "Failed",
+      "warning": "Warning",
+      "info": "Info",
+      "success": "Success",
       "emptyEmail": "Please insert your email",
       "emptyPassword": "Please fill your password",
       "invalidEmail": "Your email is not valid"
     },
-    "failedLogin": "Invalid Email & Password"
+    "failedLogin": "Invalid Email & Password",
+    "errorLogin": "An error occurred while loggin in"
   },
 
   "screen_signup": {

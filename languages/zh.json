@@ -29,7 +29,7 @@
 
   "screen_signin": {
     "title": "通过电子邮件登录",
-    "subTitle": "让我们快速登录 '抓住我'",
+    "subTitle": "让我们快速登录 'Catch Me'",
     "email": {
       "label": "电子邮件",
       "placeholder": "xrun@xrun.run"
@@ -44,11 +44,17 @@
     },
     "validator": "您的电子邮件无效",
     "alert": {
+      "error": "Error",
+      "fail": "Failed",
+      "warning": "Warning",
+      "info": "Info",
+      "success": "Success",
       "emptyEmail": "请插入您的电子邮件",
       "emptyPassword": "请填写您的密码",
       "invalidEmail": "您的电子邮件无效"
     },
-    "failedLogin": "无效的电子邮件和密码"
+    "failedLogin": "无效的电子邮件和密码",
+    "errorLogin": "登入時發生錯誤"
   },
 
   "screen_signup": {
