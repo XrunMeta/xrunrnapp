@@ -47,20 +47,18 @@ const InfoScreen = () => {
 
         const data = JSON.parse(userData);
 
-        if (data.data === 'true') {
-          setUserDetails({
-            email: data.email,
-            firstname: data.firstname,
-            member: data.member,
-            lastname: data.lastname,
-            gender: data.gender,
-            extrastr: data.extrastr,
-            country: data.country,
-            countrycode: data.countrycode,
-            region: data.region,
-            ages: data.ages,
-          });
-        }
+        setUserDetails({
+          email: data.email,
+          firstname: data.firstname,
+          member: data.member,
+          lastname: data.lastname,
+          gender: data.gender,
+          extrastr: data.extrastr,
+          country: data.country,
+          countrycode: data.countrycode,
+          region: data.region,
+          ages: data.ages,
+        });
       } catch (err) {
         console.error('Error fetching user data: ', err);
       }

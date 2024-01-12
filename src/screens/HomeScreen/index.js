@@ -80,16 +80,11 @@ export default function Home({route}) {
     const getUserData = async () => {
       try {
         const userEmail = await AsyncStorage.getItem('userEmail');
-
-        const apiUrl = `${URL_API}&act=login-01&email=${userEmail}&tp=6`;
-        const response = await fetch(apiUrl);
-        const userData = await response.json();
-
-        await AsyncStorage.setItem('userData', JSON.stringify(userData));
+        const userData = await AsyncStorage.getItem('userData');
 
         console.log(`
-        Email Bahloooolllll => ${userEmail}
-        Data : ${JSON.stringify(userData)}`);
+          Email Bahloooolllll => ${userEmail}
+          Data : ${userData}`);
       } catch (err) {
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',

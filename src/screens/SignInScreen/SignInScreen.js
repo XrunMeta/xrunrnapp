@@ -67,6 +67,7 @@ const SignInScreen = () => {
           );
         } else {
           await AsyncStorage.setItem('userEmail', email);
+          await AsyncStorage.setItem('userData', JSON.stringify(data));
           login();
 
           navigation.reset({
