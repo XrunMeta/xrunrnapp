@@ -271,21 +271,13 @@ function ARScreen() {
 
       const itemsToDisplay = shuffledData
         .slice(currentIndex, currentIndex + displayCount)
-        .map(item => {
-          // const rotation = Math.random() * 360; // Menetapkan rotasi acak untuk koin
-          const rotation = Math.random() * compassHeading; // Menetapkan rotasi acak untuk koin
-          const x = (Math.random() - 0.5) * (WINDOW_WIDTH - COIN_WIDTH); // Menetapkan posisi X acak untuk koin
-          const y = (Math.random() - 0.5) * (WINDOW_HEIGHT - COIN_HEIGHT); // Menetapkan posisi Y acak untuk koin
-
-          return {
-            ...item,
-            position: {
-              x,
-              y,
-            },
-            rotation,
-          };
-        });
+        .map(item => ({
+          ...item,
+          position: {
+            x: Math.random() * (WINDOW_WIDTH - COIN_WIDTH),
+            y: Math.random() * (WINDOW_HEIGHT - COIN_HEIGHT),
+          },
+        }));
 
       setCoins(itemsToDisplay);
 
@@ -373,16 +365,6 @@ function ARScreen() {
                       top: item.position.y,
                       width: 150,
                       height: 275,
-                      display:
-                        item.rotation >= 30 && item.rotation <= 100
-                          ? 'block'
-                          : item.rotation >= 130 && item.rotation <= 180
-                          ? 'block'
-                          : item.rotation >= 210 && item.rotation <= 300
-                          ? 'block'
-                          : item.rotation >= 330 && rotation <= 360
-                          ? 'block'
-                          : 'none',
                     },
                     bouncingCoinAnimatedStyle,
                   ]}>
@@ -454,7 +436,6 @@ function ARScreen() {
                           {/* 2M */}
                           {item.distance}M
                         </Text>
-                        {console.log('Rotasi Coin -> ' + item.rotation)}
                       </ImageBackground>
                     </View>
                   </TouchableOpacity>
