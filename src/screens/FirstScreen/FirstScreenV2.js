@@ -50,13 +50,6 @@ const FirstScreenV2 = ({navigation}) => {
       try {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-          // {
-          //   title: 'Izin Lokasi',
-          //   message:
-          //     'Aplikasi memerlukan izin akses lokasi untuk fungsi tertentu.',
-          //   buttonPositive: 'Izinkan',
-          //   buttonNegative: 'Exit',
-          // },
         );
 
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
@@ -400,10 +393,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   sliderImage: {
-    width: Dimensions.get('window').width * 0.86, // 86% width of screen
+    width: Dimensions.get('window').width * 0.85, // 86% width of screen
     height: '95%',
     borderRadius: 10,
     marginHorizontal: 5,
+    marginLeft: 10,
   },
   sliderNavigator: {
     flexDirection: 'row',
@@ -419,7 +413,7 @@ const styles = StyleSheet.create({
   descWrapper: {
     alignItems: 'center',
     width: '100%',
-    marginTop: 30,
+    marginTop: 15,
   },
   text: {
     fontFamily: 'Poppins-Regular',
