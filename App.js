@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {AuthProvider} from './src/context/AuthContext/AuthContext';
-import Router from './src/navigation/MainNavigation';
+import Router from './src/navigation/Router';
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
