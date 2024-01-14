@@ -46,7 +46,7 @@ import SendWalletScreen from '../screens/SendWalletScreen';
 import ShowAdScreen from '../screens/AdvertiseScreen/ShowAdScreen';
 import CompleteSend from '../screens/CompleteSend';
 import ConversionRequest from '../screens/ConversionRequestWalletScreen';
-import {TouchableWithoutFeedback, View} from 'react-native';
+import {View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API} from '../../utils';
@@ -59,124 +59,113 @@ export default Router = () => {
     const value = await AsyncStorage.getItem('isLoggedIn');
 
     console.log(`Auto logout: ${value}`);
-    // if (value === 'true') {
-    //   const userData = await AsyncStorage.getItem('userData');
-    //   const {firstname, member, extrastr} = JSON.parse(userData);
-    //   const request = await fetch(
-    //     `${URL_API}&act=''&member=${member}&ss=${extrastr}`,
-    //   );
+    if (value === 'true') {
+      const userData = await AsyncStorage.getItem('userData');
+      const {firstname, member, extrastr} = JSON.parse(userData);
+      const request = await fetch(
+        `${URL_API}&act=''&member=${member}&ss=${extrastr}`,
+      );
 
-    //   let response = await request.text();
+      let response = await request.text();
 
-    //   if (response !== "not exist''") {
-    //     const {result} = JSON.parse(response);
-    //     if (result === 'logout') {
-    //       console.log(`Success auto logout: {
-    //           firstname: ${firstname}
-    //           member: ${member}
-    //           extrastr: ${extrastr}
-    //         }`);
-    //       await AsyncStorage.removeItem('isLoggedIn');
-    //       // Go to SignIn Screen
-    //       navigation.reset({
-    //         index: 0,
-    //         routes: [{name: 'First'}],
-    //       });
-    //     }
-    //   }
-    // }
+      if (response !== "not exist''") {
+        const {result} = JSON.parse(response);
+        if (result === 'logout') {
+          console.log(`Success auto logout: {
+              firstname: ${firstname}
+              member: ${member}
+              extrastr: ${extrastr}
+            }`);
+          await AsyncStorage.removeItem('isLoggedIn');
+          // Go to SignIn Screen
+          navigation.reset({
+            index: 0,
+            routes: [{name: 'First'}],
+          });
+        }
+      }
+    }
   };
 
   return (
-    <TouchableWithoutFeedback onPress={logoutUser}>
-      <View style={{flex: 1}}>
-        <Stack.Navigator screenOptions={{headerShown: false}}>
-          <Stack.Screen name="First" component={FirstScreen} />
-          <Stack.Screen name="Home" component={Home} />
-          <Stack.Screen name="ARScreen" component={ARScreen} />
-          <Stack.Screen name="SignIn" component={SignInScreen} />
-          <Stack.Screen name="SignUp" component={SignUpScreen} />
-          <Stack.Screen name="EmailAuth" component={EmailAuthScreen} />
-          <Stack.Screen name="EmailVerif" component={EmailVerificationScreen} />
-          <Stack.Screen
-            name="EmailVerifLogin"
-            component={EmailVerificationLoginScreen}
-          />
-          <Stack.Screen name="PhoneVerif" component={PhoneVerificationScreen} />
-          <Stack.Screen name="PhoneLogin" component={PhoneLoginScreen} />
-          <Stack.Screen name="ChooseRegion" component={ChooseRegionScreen} />
-          <Stack.Screen name="ConfirmEmail" component={ConfirmEmailScreen} />
-          <Stack.Screen
-            name="ForgotPassword"
-            component={ForgotPasswordScreen}
-          />
-          <Stack.Screen name="NewPassword" component={NewPasswordScreen} />
-          <Stack.Screen name="SuccessJoin" component={SuccessJoinScreen} />
-          <Stack.Screen name="SignPassword" component={SignPasswordScreen} />
-          <Stack.Screen
-            name="PasswordMissed"
-            component={PasswordMissedScreen}
-          />
-          <Stack.Screen name="SignupByEmail" component={SignUpByEmailScreen} />
-          <Stack.Screen
-            name="SignupCreatePassword"
-            component={SignUpCreatePassword}
-          />
-          <Stack.Screen name="SignupCreateName" component={SignUpCreateName} />
-          <Stack.Screen
-            name="SignupCreateGender"
-            component={SignUpCreateGender}
-          />
+    <View style={{flex: 1}} onTouchStart={logoutUser}>
+      <Stack.Navigator screenOptions={{headerShown: false}}>
+        <Stack.Screen name="First" component={FirstScreen} />
+        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="ARScreen" component={ARScreen} />
+        <Stack.Screen name="SignIn" component={SignInScreen} />
+        <Stack.Screen name="SignUp" component={SignUpScreen} />
+        <Stack.Screen name="EmailAuth" component={EmailAuthScreen} />
+        <Stack.Screen name="EmailVerif" component={EmailVerificationScreen} />
+        <Stack.Screen
+          name="EmailVerifLogin"
+          component={EmailVerificationLoginScreen}
+        />
+        <Stack.Screen name="PhoneVerif" component={PhoneVerificationScreen} />
+        <Stack.Screen name="PhoneLogin" component={PhoneLoginScreen} />
+        <Stack.Screen name="ChooseRegion" component={ChooseRegionScreen} />
+        <Stack.Screen name="ConfirmEmail" component={ConfirmEmailScreen} />
+        <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+        <Stack.Screen name="NewPassword" component={NewPasswordScreen} />
+        <Stack.Screen name="SuccessJoin" component={SuccessJoinScreen} />
+        <Stack.Screen name="SignPassword" component={SignPasswordScreen} />
+        <Stack.Screen name="PasswordMissed" component={PasswordMissedScreen} />
+        <Stack.Screen name="SignupByEmail" component={SignUpByEmailScreen} />
+        <Stack.Screen
+          name="SignupCreatePassword"
+          component={SignUpCreatePassword}
+        />
+        <Stack.Screen name="SignupCreateName" component={SignUpCreateName} />
+        <Stack.Screen
+          name="SignupCreateGender"
+          component={SignUpCreateGender}
+        />
 
-          {/* Category -> Info */}
-          <Stack.Screen name="InfoHome" component={InfoScreen} />
-          <Stack.Screen name="AppInformation" component={AppInformation} />
-          <Stack.Screen name="Clause" component={ClauseScreen} />
-          <Stack.Screen name="ServiceClause" component={ServiceClause} />
-          <Stack.Screen name="UsageClause" component={ClauseForUsage} />
-          <Stack.Screen name="PersonalClause" component={ClauseForPersonal} />
-          <Stack.Screen
-            name="ConfirmPassword"
-            component={ConfirmPasswordScreen}
-          />
-          <Stack.Screen
-            name="ConfirmPasswordEdit"
-            component={ConfirmPasswordEdit}
-          />
-          <Stack.Screen name="EditPassword" component={EditPassword} />
-          <Stack.Screen name="ModifInfo" component={ModifInfoScreen} />
-          <Stack.Screen name="Recommend" component={RecommendScreen} />
-          <Stack.Screen
-            name="RegistRecommend"
-            component={RegistRecommendScreen}
-          />
-          <Stack.Screen
-            name="RandomRecommend"
-            component={RandomRecommendScreen}
-          />
-          <Stack.Screen
-            name="CustomerService"
-            component={CustomerServiceScreen}
-          />
-          <Stack.Screen name="CommonProblem" component={CommonProblemScreen} />
-          <Stack.Screen name="OneProblem" component={OneProblemScreen} />
-          <Stack.Screen name="Setting" component={SettingScreen} />
-          <Stack.Screen name="CloseMember" component={CloseMembershipScreen} />
-          <Stack.Screen name="CloseConfirm" component={CloseConfirmPassword} />
-          <Stack.Screen name="NotifyHome" component={NotifyScreen} />
-          <Stack.Screen name="AdvertiseHome" component={AdvertiseScreen} />
+        {/* Category -> Info */}
+        <Stack.Screen name="InfoHome" component={InfoScreen} />
+        <Stack.Screen name="AppInformation" component={AppInformation} />
+        <Stack.Screen name="Clause" component={ClauseScreen} />
+        <Stack.Screen name="ServiceClause" component={ServiceClause} />
+        <Stack.Screen name="UsageClause" component={ClauseForUsage} />
+        <Stack.Screen name="PersonalClause" component={ClauseForPersonal} />
+        <Stack.Screen
+          name="ConfirmPassword"
+          component={ConfirmPasswordScreen}
+        />
+        <Stack.Screen
+          name="ConfirmPasswordEdit"
+          component={ConfirmPasswordEdit}
+        />
+        <Stack.Screen name="EditPassword" component={EditPassword} />
+        <Stack.Screen name="ModifInfo" component={ModifInfoScreen} />
+        <Stack.Screen name="Recommend" component={RecommendScreen} />
+        <Stack.Screen
+          name="RegistRecommend"
+          component={RegistRecommendScreen}
+        />
+        <Stack.Screen
+          name="RandomRecommend"
+          component={RandomRecommendScreen}
+        />
+        <Stack.Screen
+          name="CustomerService"
+          component={CustomerServiceScreen}
+        />
+        <Stack.Screen name="CommonProblem" component={CommonProblemScreen} />
+        <Stack.Screen name="OneProblem" component={OneProblemScreen} />
+        <Stack.Screen name="Setting" component={SettingScreen} />
+        <Stack.Screen name="CloseMember" component={CloseMembershipScreen} />
+        <Stack.Screen name="CloseConfirm" component={CloseConfirmPassword} />
+        <Stack.Screen name="NotifyHome" component={NotifyScreen} />
+        <Stack.Screen name="AdvertiseHome" component={AdvertiseScreen} />
 
-          {/* Wallet */}
-          <Stack.Screen name="WalletHome" component={WalletScreen} />
-          <Stack.Screen name="SendWallet" component={SendWalletScreen} />
-          <Stack.Screen name="ShowAd" component={ShowAdScreen} />
-          <Stack.Screen name="CompleteSend" component={CompleteSend} />
-          <Stack.Screen
-            name="ConversionRequest"
-            component={ConversionRequest}
-          />
-        </Stack.Navigator>
-      </View>
-    </TouchableWithoutFeedback>
+        {/* Wallet */}
+        <Stack.Screen name="WalletHome" component={WalletScreen} />
+        <Stack.Screen name="SendWallet" component={SendWalletScreen} />
+        <Stack.Screen name="ShowAd" component={ShowAdScreen} />
+        <Stack.Screen name="CompleteSend" component={CompleteSend} />
+        <Stack.Screen name="ConversionRequest" component={ConversionRequest} />
+      </Stack.Navigator>
+    </View>
   );
 };
