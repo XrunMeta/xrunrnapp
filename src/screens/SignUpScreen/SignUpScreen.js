@@ -15,16 +15,16 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import CustomMultipleChecbox from '../../components/CustomCheckbox/CustomMultipleCheckbox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API} from '../../../utils';
+import {URL_API, getLanguage} from '../../../utils';
 
 const langData = require('../../../lang.json');
 
 const SignUpScreen = ({route}) => {
   const [lang, setLang] = useState({});
-  const [name, setName] = useState('Bilal');
-  const [email, setEmail] = useState('bilal@gmail.com');
-  const [password, setPassword] = useState('Qwerty123');
-  const [phoneNumber, setPhoneNumber] = useState('81298486648');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [region, setRegion] = useState('');
   const [regionID, setRegionID] = useState(0);
   const [gender, setGender] = useState('pria');
@@ -190,23 +190,20 @@ const SignUpScreen = ({route}) => {
   };
 
   useEffect(() => {
-    // Get Language
-    const getLanguage = async () => {
+    // Get Language Data
+    const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+        const screenLang = await getLanguage(currentLanguage, 'screen_signup');
 
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
-        setLang(language);
+        // Set your language state
+        setLang(screenLang);
       } catch (err) {
-        console.error(
-          'Error retrieving selfCoordinate from AsyncStorage:',
-          err,
-        );
+        console.error('Error in fetchData:', err);
       }
     };
 
-    getLanguage();
+    fetchData();
 
     fetch(`${URL_API}&act=app7190-01&country=${countryCode}`)
       .then(response => response.json())
@@ -214,7 +211,6 @@ const SignUpScreen = ({route}) => {
         var jsonToArr = Object.values(jsonData);
         var arrResult = jsonToArr.flat();
         setAreaData(arrResult);
-        // setAreaData(jsonData);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
@@ -331,24 +327,14 @@ const SignUpScreen = ({route}) => {
         {/*  Title */}
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>
-            {lang && lang.screen_signup && lang.screen_signup.title
-              ? lang.screen_signup.title
-              : ''}
+            {lang && lang.title ? lang.title : ''}
           </Text>
         </View>
 
         {/*  Field - Name */}
         <CustomInput
-          label={
-            lang && lang.screen_signup && lang.screen_signup.name
-              ? lang.screen_signup.name.label
-              : ''
-          }
-          placeholder={
-            lang && lang.screen_signup && lang.screen_signup.name
-              ? lang.screen_signup.name.placeholder
-              : ''
-          }
+          label={lang && lang.name ? lang.name.label : ''}
+          placeholder={lang && lang.name ? lang.name.placeholder : ''}
           value={name}
           setValue={setName}
           isPassword={false}
@@ -356,16 +342,8 @@ const SignUpScreen = ({route}) => {
 
         {/*  Field - Email */}
         <CustomInput
-          label={
-            lang && lang.screen_signup && lang.screen_signup.email
-              ? lang.screen_signup.email.label
-              : ''
-          }
-          placeholder={
-            lang && lang.screen_signup && lang.screen_signup.email
-              ? lang.screen_signup.email.placeholder
-              : ''
-          }
+          label={lang && lang.email ? lang.email.label : ''}
+          placeholder={lang && lang.email ? lang.email.placeholder : ''}
           value={email}
           setValue={onEmailChange}
           isPassword={false}
@@ -379,24 +357,14 @@ const SignUpScreen = ({route}) => {
               fontFamily: 'Poppins-Medium',
               fontSize: 13,
             }}>
-            {lang && lang.screen_signup && lang.screen_signup.validator
-              ? lang.screen_signup.validator.invalidEmail
-              : ''}
+            {lang && lang.validator ? lang.validator.invalidEmail : ''}
           </Text>
         )}
 
         {/*  Field - Password */}
         <CustomInput
-          label={
-            lang && lang.screen_signup && lang.screen_signup.password
-              ? lang.screen_signup.password.label
-              : ''
-          }
-          placeholder={
-            lang && lang.screen_signup && lang.screen_signup.password
-              ? lang.screen_signup.password.placeholder
-              : ''
-          }
+          label={lang && lang.password ? lang.password.label : ''}
+          placeholder={lang && lang.password ? lang.password.placeholder : ''}
           value={password}
           setValue={setPassword}
           secureTextEntry
@@ -406,9 +374,7 @@ const SignUpScreen = ({route}) => {
         {/*  Field - Phone Number */}
         <View style={styles.formGroup}>
           <Text style={styles.label}>
-            {lang && lang.screen_signup && lang.screen_signup.phone_number
-              ? lang.screen_signup.phone_number.label
-              : ''}
+            {lang && lang.phone_number ? lang.phone_number.label : ''}
           </Text>
           <View
             style={{
@@ -457,16 +423,8 @@ const SignUpScreen = ({route}) => {
 
         {/*  Field - Region */}
         <CustomInput
-          label={
-            lang && lang.screen_signup && lang.screen_signup.area
-              ? lang.screen_signup.area.label
-              : ''
-          }
-          placeholder={
-            lang && lang.screen_signup && lang.screen_signup.area
-              ? lang.screen_signup.area.placeholder
-              : ''
-          }
+          label={lang && lang.area ? lang.area.label : ''}
+          placeholder={lang && lang.area ? lang.area.placeholder : ''}
           value={region}
           setValue={setRegion}
           isPassword={false}
@@ -477,18 +435,12 @@ const SignUpScreen = ({route}) => {
         {/*  Field - Gender */}
         <View style={[styles.formGroup, {zIndex: -1}]}>
           <Text style={styles.label}>
-            {lang && lang.screen_signup && lang.screen_signup.gender
-              ? lang.screen_signup.gender.label
-              : ''}
+            {lang && lang.gender ? lang.gender.label : ''}
           </Text>
           <CustomMultipleChecbox
             texts={[
-              lang && lang.screen_signup && lang.screen_signup.gender
-                ? lang.screen_signup.gender.male
-                : '',
-              lang && lang.screen_signup && lang.screen_signup.gender
-                ? lang.screen_signup.gender.female
-                : '',
+              lang && lang.gender ? lang.gender.male : '',
+              lang && lang.gender ? lang.gender.female : '',
               ,
             ]}
             count={2}
@@ -502,9 +454,7 @@ const SignUpScreen = ({route}) => {
         {/*  Field - Age */}
         <View style={[styles.formGroup, {zIndex: -1}]}>
           <Text style={styles.label}>
-            {lang && lang.screen_signup && lang.screen_signup.age
-              ? lang.screen_signup.age.label
-              : ''}
+            {lang && lang.age ? lang.age.label : ''}
           </Text>
           <CustomMultipleChecbox
             texts={['10', '20', '30', '40', '50+']}
@@ -518,16 +468,8 @@ const SignUpScreen = ({route}) => {
 
         {/* Field - Referral Email */}
         <CustomInput
-          label={
-            lang && lang.screen_signup && lang.screen_signup.referral
-              ? lang.screen_signup.referral.label
-              : ''
-          }
-          placeholder={
-            lang && lang.screen_signup && lang.screen_signup.referral
-              ? lang.screen_signup.referral.placeholder
-              : ''
-          }
+          label={lang && lang.referral ? lang.referral.label : ''}
+          placeholder={lang && lang.referral ? lang.referral.placeholder : ''}
           value={refferalEmail}
           setValue={setRefferalEmail}
           isPassword={false}
@@ -537,13 +479,8 @@ const SignUpScreen = ({route}) => {
         <View style={[styles.bottomSection]}>
           <View style={styles.additionalLogin}>
             <Text style={styles.normalText}>
-              {lang && lang.screen_signup && lang.screen_signup.add_desc
-                ? lang.screen_signup.add_desc.ad1
-                : ''}{' '}
-              {'\n'}
-              {lang && lang.screen_signup && lang.screen_signup.add_desc
-                ? lang.screen_signup.add_desc.ad2
-                : ''}
+              {lang && lang.add_desc ? lang.add_desc.ad1 : ''} {'\n'}
+              {lang && lang.add_desc ? lang.add_desc.ad2 : ''}
             </Text>
           </View>
           <Pressable onPress={onSignUp} style={styles.buttonSignUp}>
@@ -577,6 +514,7 @@ const styles = StyleSheet.create({
   },
   bottomSection: {
     padding: 20,
+    paddingBottom: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',

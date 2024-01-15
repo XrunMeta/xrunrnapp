@@ -44,11 +44,17 @@
     },
     "validator": "Email anda tidak valid",
     "alert": {
+      "error": "Error",
+      "fail": "Gagal",
+      "warning": "Peringatan",
+      "info": "Info",
+      "success": "Berhasil",
       "emptyEmail": "Tolong isi email anda",
       "emptyPassword": "Tolong isi kata sandi anda",
       "invalidEmail": "Email anda tidak valid"
     },
-    "failedLogin": "Email & Password tidak cocok"
+    "failedLogin": "Email & Password tidak cocok",
+    "errorLogin": "Terjadi error saat mencoba login"
   },
 
   "screen_signup": {
