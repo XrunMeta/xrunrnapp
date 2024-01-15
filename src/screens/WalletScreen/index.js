@@ -8,7 +8,6 @@ import {
   useWindowDimensions,
   ActivityIndicator,
   ScrollView,
-  RefreshControl,
 } from 'react-native';
 import React, {useState, useEffect, useRef} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -16,7 +15,7 @@ import ButtonBack from '../../components/ButtonBack';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {TabView, SceneMap} from 'react-native-tab-view';
 import TableWalletCard from '../../components/TableWallet';
-import {URL_API} from '../../../utils';
+import {URL_API, getLanguage} from '../../../utils';
 import ShowQRWallet from '../../components/ShowQRWallet';
 
 const WalletScreen = ({navigation, route}) => {
@@ -43,41 +42,20 @@ const WalletScreen = ({navigation, route}) => {
   const [emptyWallet, setEmptyWallet] = useState(false);
 
   useEffect(() => {
-    // Get Language
-    const getLanguage = async () => {
+    // Get Language Data
+    const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        let langData;
+        const screenLang = await getLanguage(currentLanguage, 'screen_wallet');
 
-        switch (currentLanguage) {
-          case 'id':
-            langData = require('../../../languages/id.json');
-            break;
-          case 'en':
-            langData = require('../../../languages/en.json');
-            break;
-          case 'ko':
-            langData = require('../../../languages/ko.json');
-            break;
-          case 'zh':
-            langData = require('../../../languages/zh.json');
-            break;
-          default:
-            langData = require('../../../languages/en.json');
-            break;
-        }
-
-        const language = langData;
-        setLang(language);
+        // Set your language state
+        setLang(screenLang);
       } catch (err) {
-        console.error(
-          'Error retrieving selfCoordinate from AsyncStorage:',
-          err,
-        );
+        console.error('Error in fetchData:', err);
       }
     };
 
-    getLanguage();
+    fetchData();
 
     const getMember = async () => {
       try {
@@ -110,26 +88,13 @@ const WalletScreen = ({navigation, route}) => {
             })
             .catch(error => {
               Alert.alert(
+                `${lang.failed_alert ? lang.failed_alert : ''}`,
                 `${
-                  lang && lang.screen_wallet && lang.screen_wallet.failed_alert
-                    ? lang.screen_wallet.failed_alert
-                    : ''
-                }`,
-                `${
-                  lang &&
-                  lang.screen_wallet &&
-                  lang.screen_wallet.failed_getwallet_alert
-                    ? lang.screen_wallet.failed_getwallet_alert
-                    : ''
+                  lang.failed_getwallet_alert ? lang.failed_getwallet_alert : ''
                 }`,
                 [
                   {
-                    text:
-                      lang &&
-                      lang.screen_wallet &&
-                      lang.screen_wallet.confirm_alert
-                        ? lang.screen_wallet.confirm_alert
-                        : '',
+                    text: lang.confirm_alert ? lang.confirm_alert : '',
                     onPress: () =>
                       console.log('Failed get wallet data: ', error),
                   },
@@ -223,9 +188,7 @@ const WalletScreen = ({navigation, route}) => {
         <View style={styles.containerTextWallet}>
           <View style={styles.wrapperTextwallet}>
             <Text style={styles.textWallet}>
-              {lang && lang.screen_wallet && lang.screen_wallet.possess
-                ? lang.screen_wallet.possess
-                : ''}
+              {lang.possess ? lang.possess : ''}
             </Text>
             <Text style={styles.valueWallet}>
               {Wamount.replaceAll('.', ',')}
@@ -235,9 +198,7 @@ const WalletScreen = ({navigation, route}) => {
 
           <View style={styles.wrapperTextwallet}>
             <Text style={styles.textWallet}>
-              {lang && lang.screen_wallet && lang.screen_wallet.catch
-                ? lang.screen_wallet.catch
-                : ''}
+              {lang.catch ? lang.catch : ''}
             </Text>
             <Text style={styles.valueWallet}>
               {amount.replaceAll('.', ',')}
@@ -290,20 +251,11 @@ const WalletScreen = ({navigation, route}) => {
   const copiedHash = hash => {
     Clipboard.setString(hash);
 
-    Alert.alert(
-      '',
-      lang && lang.screen_wallet && lang.screen_wallet.copy_qrcode
-        ? lang.screen_wallet.copy_qrcode
-        : '',
-      [
-        {
-          text:
-            lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
-              ? lang.screen_wallet.confirm_alert
-              : '',
-        },
-      ],
-    );
+    Alert.alert('', lang.copy_qrcode ? lang.copy_qrcode : '', [
+      {
+        text: lang.confirm_alert ? lang.confirm_alert : '',
+      },
+    ]);
   };
 
   const onBack = () => {
@@ -333,11 +285,7 @@ const WalletScreen = ({navigation, route}) => {
           <ButtonBack onClick={onBack} />
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>
-            {lang && lang.screen_wallet && lang.screen_wallet.title
-              ? lang.screen_wallet.title
-              : ''}
-          </Text>
+          <Text style={styles.title}>{lang.title ? lang.title : ''}</Text>
         </View>
       </View>
 
@@ -385,9 +333,7 @@ const WalletScreen = ({navigation, route}) => {
               setIsShowQRCodeWallet(true);
             }}>
             <Text style={styles.textQRCode}>
-              {lang && lang.screen_wallet && lang.screen_wallet.qrcode_show
-                ? lang.screen_wallet.qrcode_show
-                : ''}
+              {lang.qrcode_show ? lang.qrcode_show : ''}
             </Text>
           </TouchableOpacity>
 
