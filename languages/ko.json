@@ -160,6 +160,19 @@
     }
   },
 
+  "screen_passwordMissed": {
+    "email": {
+      "label": "가입한 이메일 주소를 입력하세요",
+      "placeholder": "이메일 주소를 작성하세요"
+    },
+    "notif": {
+      "emptyEmail": "이메일 주소를 입력하세요",
+      "invalidEmail": "유효하지 않은 이메일입니다",
+      "sended": "시스템이 이메일을 보내 비밀번호를 변경하도록 안내했습니다.",
+      "errorServer": "서버 통신 오류가 발생했습니다. 다시 시도하세요..."
+    }
+  },
+
   "screen_country": {
     "title": "국가 선택",
     "current_country": "현재 위치",

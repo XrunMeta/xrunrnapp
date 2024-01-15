@@ -160,6 +160,19 @@
     }
   },
 
+  "screen_passwordMissed": {
+    "email": {
+      "label": "Enter the e-mail address you registered",
+      "placeholder": "Write down your e-mail address"
+    },
+    "notif": {
+      "emptyEmail": "Please insert your email",
+      "invalidEmail": "Your email is not valid",
+      "sended": "System sent you an email to change your password in that email.",
+      "errorServer": "There is a server communication error. Please try again..."
+    }
+  },
+
   "screen_country": {
     "title": "Country Selection",
     "current_country": "Current Location",

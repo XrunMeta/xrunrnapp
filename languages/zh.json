@@ -160,6 +160,19 @@
     }
   },
 
+  "screen_passwordMissed": {
+    "email": {
+      "label": "请输入您注册的电子邮件地址",
+      "placeholder": "填写您的电子邮件地址"
+    },
+    "notif": {
+      "emptyEmail": "请插入您的电子邮件",
+      "invalidEmail": "您的电子邮件无效",
+      "sended": "系统已经向您发送了一封电子邮件，以更改您的密码。",
+      "errorServer": "存在与服务器通信的错误。请重试..."
+    }
+  },
+
   "screen_country": {
     "title": "国家选择",
     "current_country": "当前位置",

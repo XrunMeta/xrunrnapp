@@ -13,9 +13,7 @@ import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API} from '../../../utils';
-
-const langData = require('../../../lang.json');
+import {getLanguage} from '../../../utils';
 
 const PasswordMissedScreen = () => {
   const [lang, setLang] = useState({});
@@ -27,19 +25,9 @@ const PasswordMissedScreen = () => {
 
   const onSignIn = async () => {
     if (email.trim() === '') {
-      Alert.alert(
-        'Error',
-        lang && lang.screen_emailAuth && lang.screen_emailAuth.alert
-          ? lang.screen_emailAuth.alert.emptyEmail
-          : '',
-      );
+      Alert.alert('Error', lang.notif.emptyEmail);
     } else if (!isValidEmail(email)) {
-      Alert.alert(
-        'Error',
-        lang && lang.screen_emailAuth && lang.screen_emailAuth.alert
-          ? lang.screen_emailAuth.alert.invalidEmail
-          : '',
-      );
+      Alert.alert('Error', lang.notif.invalidEmail);
     } else {
       try {
         const apiUrl = 'https://app.xrun.run/phpmail/sendmail.php';
@@ -59,7 +47,7 @@ const PasswordMissedScreen = () => {
         // Menampilkan alert
         Alert.alert(
           'Success',
-          'System sent you an email to change your password in that email.',
+          lang.notif.sended,
           [
             {
               text: 'OK',
@@ -79,7 +67,7 @@ const PasswordMissedScreen = () => {
       } catch (error) {
         // Handle network errors or other exceptions
         console.error('Error during API request:', error);
-        Alert.alert('Error', 'An error occurred. Please try again.');
+        Alert.alert('Error', lang.notif.errorServer);
       }
     }
   };
@@ -89,7 +77,7 @@ const PasswordMissedScreen = () => {
     return pattern.test(email);
   };
 
-  onEmailChange = text => {
+  const onEmailChange = text => {
     setEmail(text);
     setIsEmailValid(isValidEmail(text));
   };
@@ -100,13 +88,15 @@ const PasswordMissedScreen = () => {
 
   useEffect(() => {
     // Get Language
-    const getLanguage = async () => {
+    const fetchLangData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+        const screenLang = await getLanguage(
+          currentLanguage,
+          'screen_passwordMissed',
+        );
 
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
-        setLang(language);
+        setLang(screenLang);
       } catch (err) {
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
@@ -115,7 +105,7 @@ const PasswordMissedScreen = () => {
       }
     };
 
-    getLanguage();
+    fetchLangData();
   }, []);
 
   return (
@@ -124,10 +114,9 @@ const PasswordMissedScreen = () => {
         <ButtonBack onClick={onBack} />
 
         <CustomInput
-          label="Enter the e-mail address you registered"
-          placeholder="Write down your e-mail address"
+          label={lang && lang.email ? lang.email.label : ''}
+          placeholder={lang && lang.email ? lang.email.placeholder : ''}
           value={email}
-          jamala
           setValue={onEmailChange}
           isPassword={false}
         />
@@ -138,9 +127,7 @@ const PasswordMissedScreen = () => {
               marginLeft: 25,
               color: 'red',
             }}>
-            {lang && lang.screen_emailAuth && lang.screen_emailAuth.alert
-              ? lang.screen_emailAuth.alert.invalidEmail
-              : ''}
+            {lang && lang.email ? lang.notif.invalidEmail : ''}
           </Text>
         )}
 
