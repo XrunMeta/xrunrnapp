@@ -97,10 +97,13 @@
     "validator": {
       "emptyName": "Nama harus diisi",
       "emptyEmail": "Email harus diisi",
+      "duplicatedEmail": "Email sudah ada",
       "invalidEmail": "Format email tidak valid",
       "emptyPassword": "Password harus diisi",
       "emptyPhone": "Nomor telepon harus diisi",
-      "emptyArea": "Daerah harus diisi"
+      "emptyArea": "Daerah harus diisi",
+      "invalidRecommend": "Harap verifikasi email yang direkomendasikan",
+      "errorServer": "Ada kesalahan komunikasi server. Silakan coba lagi..."
     }
   },
 
@@ -130,6 +133,30 @@
       "invalidEmail": "Harap masukkan email Anda",
       "wrongCode": "Kode Otentikasi Anda Salah",
       "errorServer": "Terjadi kesalahan komunikasi server. Harap coba lagi..."
+    }
+  },
+
+  "screen_loginWithPassword": {
+    "title": "Selamat datang kembali",
+    "subtitle": "Silakan masuk untuk melanjutkan",
+    "input": {
+      "password": {
+        "label": "Kata Sandi",
+        "placeholder": "Silakan masukkan kata sandi Anda"
+      },
+      "missing": {
+        "btn": "KATA SANDI",
+        "text": "terlupa"
+      },
+      "notExist": {
+        "btn": "AKUN",
+        "text": "tidak ada"
+      }
+    },
+    "notif": {
+      "wrong": "Tidak dapat masuk. Silakan periksa kata sandi Anda",
+      "errorServer": "Terjadi kesalahan komunikasi dengan server. Silakan coba lagi...",
+      "emptyPassword": "Silakan isi kata sandi Anda"
     }
   },
 
