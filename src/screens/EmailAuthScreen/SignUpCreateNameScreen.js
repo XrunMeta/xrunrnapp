@@ -15,8 +15,6 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getLanguage} from '../../../utils';
 
-const langData = require('../../../lang.json');
-
 const SignUpCreateName = () => {
   const route = useRoute();
   const [lang, setLang] = useState({});
