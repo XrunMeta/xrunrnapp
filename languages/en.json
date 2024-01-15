@@ -183,6 +183,15 @@
     "field_phoneNumber": {
       "label": "Please enter a phone number",
       "empty": "Phone number is required"
+    },
+    "field_phoneVerif": {
+      "label": "Please enter the next 4 digit code sent",
+      "on": "Please send your code in",
+      "off": "A problem has occured",
+      "sendAgain": "RE-SEND",
+      "emptyCode": "Please complete the verification code",
+      "invalidNumber": "Invalid Number",
+      "emptyNumber": "Please enter your number"
     }
   },
 
