@@ -33,6 +33,7 @@ const ConversionRequest = ({navigation, route}) => {
   const [popupConversion, setPopupConversion] = useState(false);
   const [conversionTargetConverted, setConversionTargetConverted] = useState(0);
   const [conversionRequest, setConversionRequest] = useState(0);
+  const [isNaNCoverted, setIsNaNConverted] = useState(false);
 
   useEffect(() => {
     // Get Language
@@ -90,9 +91,9 @@ const ConversionRequest = ({navigation, route}) => {
   }, [dataMember]);
 
   useEffect(() => {
-    if (amount === '') {
+    if (amount === '' || amount === '-') {
       setIconNextIsDisabled(true);
-    } else if (amount == 0) {
+    } else if (amount == 0 || amount < 0) {
       setIconNextIsDisabled(true);
     } else {
       setIconNextIsDisabled(false);
@@ -104,30 +105,40 @@ const ConversionRequest = ({navigation, route}) => {
   };
 
   const onSend = () => {
-    if (amount === '') {
+    if (amount === '' || amount === '-') {
       Alert.alert('Warning', 'Invalid input.');
     } else if (parseFloat(amount) > parseFloat(balance)) {
       Alert.alert('Warning', 'Insufficient coin acquired.');
-    } else if (amount < 0) {
+    } else if (amount == 0 || amount < 0) {
       Alert.alert('Warning', 'Please enter the coin above 0.');
     } else {
       // setAmount('');
       setPopupConversion(true);
       setConversionRequest(parseFloat(amount));
       Keyboard.dismiss();
+      let totalConverted;
 
       switch (activeNetwork) {
         case 'ETH':
-          setConversionTargetConverted(parseFloat(amount) * (450 / 2139400.0));
+          totalConverted = parseFloat(amount) * (450 / 2139400.0);
+          setConversionTargetConverted(totalConverted);
+          setIsNaNConverted(isNaN(totalConverted));
           break;
         case 'TRX':
-          setConversionTargetConverted(parseFloat(amount) * (450 / 86.0));
+          totalConverted = parseFloat(amount) * (450 / 86.0);
+          setConversionTargetConverted(totalConverted);
+          setIsNaNConverted(isNaN(totalConverted));
           break;
         case 'MATIC':
-          setConversionTargetConverted(parseFloat(amount) * (450 / 1230.0));
+          totalConverted = parseFloat(amount) * (450 / 1230.0);
+          setConversionTargetConverted(totalConverted);
+          setIsNaNConverted(isNaN(totalConverted));
           break;
         default:
-          setConversionTargetConverted(parseFloat(amount) * (450 / 2139400.0));
+          // Default ETH
+          totalConverted = parseFloat(amount) * (450 / 2139400.0);
+          setConversionTargetConverted(totalConverted);
+          setIsNaNConverted(isNaN(totalConverted));
           break;
       }
     }
@@ -154,6 +165,49 @@ const ConversionRequest = ({navigation, route}) => {
       default:
         setSubcurrency('5205');
         break;
+    }
+  };
+
+  const confirmConversion = () => {
+    if (isNaNCoverted) {
+      Alert.alert('', 'Invalid input amount.');
+      setPopupConversion(false);
+    } else if (address === '') {
+      Alert.alert(
+        '',
+        lang && lang.screen_send && lang.screen_send.send_address_placeholder
+          ? lang.screen_send.send_address_placeholder
+          : '',
+        [
+          {
+            text:
+              lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
+                ? lang.screen_wallet.confirm_alert
+                : '',
+          },
+        ],
+      );
+      setPopupConversion(false);
+    } else if (address.length < 40) {
+      Alert.alert(
+        '',
+        lang && lang.screen_send && lang.screen_send.send_address_less
+          ? lang.screen_send.send_address_less
+          : '',
+        [
+          {
+            text:
+              lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
+                ? lang.screen_wallet.confirm_alert
+                : '',
+          },
+        ],
+      );
+      setPopupConversion(false);
+    } else {
+      setIsLoading(true);
+
+      // fetch(`${URL_API}&`)
     }
   };
 
@@ -307,7 +361,8 @@ const ConversionRequest = ({navigation, route}) => {
                 style={[
                   styles.buttonConfirm,
                   {backgroundColor: '#343c5a', flex: 1.5},
-                ]}>
+                ]}
+                onPress={confirmConversion}>
                 <Text style={[styles.textButtonConfirm, {color: '#fff'}]}>
                   OK
                 </Text>
