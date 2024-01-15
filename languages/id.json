@@ -117,9 +117,20 @@
 
   "screen_emailVerification": {
     "email": {
-      "label": "Masukan kode verifikasi 6 digit"
+      "label": "Masukkan kode verifikasi 6 digit"
     },
-    "timer": "kirim ulang"
+    "timer": {
+      "on": "Harap kirim kode Anda dalam",
+      "off": "Terjadi masalah",
+      "sendAgain": "Kirim kode lagi",
+      "loginPassword": "Masuk dengan kata sandi"
+    },
+    "notif": {
+      "emptyCode": "Harap lengkapi kode verifikasi",
+      "invalidEmail": "Harap masukkan email Anda",
+      "wrongCode": "Kode Otentikasi Anda Salah",
+      "errorServer": "Terjadi kesalahan komunikasi server. Harap coba lagi..."
+    }
   },
 
   "screen_country": {
