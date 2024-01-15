@@ -91,10 +91,10 @@ const SignInScreen = () => {
     const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const jams = await getLanguage(currentLanguage, 'screen_signin');
+        const screenLang = await getLanguage(currentLanguage, 'screen_signin');
 
         // Set your language state
-        setLang(jams);
+        setLang(screenLang);
       } catch (err) {
         console.error('Error in fetchData:', err);
       }
