@@ -192,6 +192,14 @@
       "emptyCode": "Please complete the verification code",
       "invalidNumber": "Invalid Number",
       "emptyNumber": "Please enter your number"
+    },
+    "field_email": {
+      "label": "Enter your Email",
+      "placeholder": "xrun@xrun.run",
+      "emptyEmail": "Please insert your email",
+      "invalidEmail": "Your email is not valid",
+      "occupiedEmail": "Email occupied",
+      "errorServer": "There is a server communication error. Please try again..."
     }
   },
 

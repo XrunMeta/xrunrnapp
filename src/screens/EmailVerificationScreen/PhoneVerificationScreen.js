@@ -94,11 +94,11 @@ const PhoneVerificationScreen = () => {
       if (firstResObj.data === 'false') {
         // Invalid Number
         Alert.alert('Failed', lang.field_phoneVerif.invalidNumber);
-        // navigation.navigate('SignupByEmail', {
-        //   mobile: mobile,
-        //   mobilecode: mobilecode,
-        //   countrycode: countrycode,
-        // });
+        navigation.navigate('SignupByEmail', {
+          mobile: mobile,
+          mobilecode: mobilecode,
+          countrycode: countrycode,
+        });
 
         console.log(`
           Data dikirim (Phone Verif) :
