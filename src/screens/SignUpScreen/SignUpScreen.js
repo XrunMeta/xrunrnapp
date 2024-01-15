@@ -17,8 +17,6 @@ import CustomMultipleChecbox from '../../components/CustomCheckbox/CustomMultipl
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API, getLanguage} from '../../../utils';
 
-const langData = require('../../../lang.json');
-
 const SignUpScreen = ({route}) => {
   const [lang, setLang] = useState({});
   const [name, setName] = useState('');
@@ -39,17 +37,17 @@ const SignUpScreen = ({route}) => {
 
   const onSignUp = async () => {
     if (name.trim() === '') {
-      Alert.alert('Error', 'Nama harus diisi');
+      Alert.alert('Error', lang.validator.emptyName);
     } else if (email.trim() === '') {
-      Alert.alert('Error', 'Email harus diisi');
+      Alert.alert('Error', lang.validator.emptyEmail);
     } else if (!isValidEmail(email)) {
-      Alert.alert('Error', `Format email tidak valid`);
+      Alert.alert('Error', lang.validator.invalidEmail);
     } else if (password.trim() === '') {
-      Alert.alert('Error', 'Password harus diisi');
+      Alert.alert('Error', lang.validator.emptyPassword);
     } else if (phoneNumber.trim() === '') {
-      Alert.alert('Error', `Nomor Telepon harus diisi`);
+      Alert.alert('Error', lang.validator.emptyPhone);
     } else if (regionID == 0) {
-      Alert.alert('Error', `Daerah harus diisi`);
+      Alert.alert('Error', lang.validator.emptyArea);
     } else {
       // Pemanggilan API ke link yang diberikan
       const apiUrl = `${URL_API}&act=login-checker-email&email=${email}`;
@@ -113,34 +111,22 @@ const SignUpScreen = ({route}) => {
               });
             } else if (referData.result === 'false') {
               setRefferalEmail('');
-              Alert.alert('Failed', 'Please verify the recommended email');
+              Alert.alert('Failed', lang.validator.invalidRecommend);
             } else {
-              Alert.alert(
-                'Error',
-                'There is a server communication error. Please try again...',
-              );
+              Alert.alert('Error', lang.validator.errorServer);
             }
           } catch (error) {
             console.error('Error during API call:', error);
-            Alert.alert(
-              'Error',
-              'There is a server communication error. Please try again...',
-            );
+            Alert.alert('Error', lang.validator.errorServer);
           }
         } else if (responseData === 'NO') {
-          Alert.alert('Failed', 'Duplicated email');
+          Alert.alert('Failed', lang.validator.duplicatedEmail);
         } else {
-          Alert.alert(
-            'Error',
-            'There is a server communication error. Please try again...',
-          );
+          Alert.alert('Error', lang.validator.errorServer);
         }
       } catch (error) {
         console.error('Error during API call:', error);
-        Alert.alert(
-          'Error',
-          'There is a server communication error. Please try again...',
-        );
+        Alert.alert('Error', lang.validator.errorServer);
       }
     }
   };
@@ -225,7 +211,6 @@ const SignUpScreen = ({route}) => {
         var jsonToArr = Object.values(jsonData);
         var arrResult = jsonToArr.flat();
         setAreaData(arrResult);
-        // setAreaData(jsonData);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
