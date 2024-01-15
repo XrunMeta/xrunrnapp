@@ -50,6 +50,7 @@ import {View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API} from '../../utils';
+import CompleteConversion from '../screens/CompleteConversion';
 
 export default Router = () => {
   const Stack = createNativeStackNavigator();
@@ -164,6 +165,10 @@ export default Router = () => {
         <Stack.Screen name="ShowAd" component={ShowAdScreen} />
         <Stack.Screen name="CompleteSend" component={CompleteSend} />
         <Stack.Screen name="ConversionRequest" component={ConversionRequest} />
+        <Stack.Screen
+          name="CompleteConversion"
+          component={CompleteConversion}
+        />
       </Stack.Navigator>
     </View>
   );
