@@ -403,5 +403,8 @@
   },
   "popup": {
     "notice": "We apologize to user XRUN.\n\nWe will conduct a testing period\nand simultaneous maintenance.\n\nMaintenance includes:\n\n1. Expanding coins throughout Indonesia.\n\n2. To reduce errors during coin capture and ad watching.\n\n3. Free Coins for users who fill in Referral.\n\n*Our testing period will run until the end of August on the 31st, 2022"
+  },
+  "global_error": {
+    "error": "It's a server problem. Please try in a few minutes."
   }
 }
