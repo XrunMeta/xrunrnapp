@@ -11,26 +11,26 @@ import {
   Modal,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  Button,
 } from 'react-native';
 import React, {useState, useRef, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import CustomButton from '../../components/CustomButton';
-import {URL_API} from '../../../utils';
+import {URL_API, getLanguage} from '../../../utils';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // ########## Main Function ##########
 const PhoneVerificationScreen = () => {
   const route = useRoute();
-  const {isLoggedIn, login} = useAuth();
+  const {login} = useAuth();
   const {mobile, mobilecode, countrycode} = route.params;
   const [verificationCode, setVerificationCode] = useState(['', '', '', '']);
   const [activeIndex, setActiveIndex] = useState(0);
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   let ScreenHeight = Dimensions.get('window').height;
+  const [lang, setLang] = useState({});
 
   const phoneAuth = async () => {
     try {
@@ -42,7 +42,7 @@ const PhoneVerificationScreen = () => {
       if (responseData.data === 'ok') {
         console.log('Kode dikirim boy');
       } else {
-        Alert.alert('Failed', 'Please enter your number');
+        Alert.alert('Failed', lang.field_phoneVerif.emptyNumber);
       }
     } catch (error) {
       // Handle network errors or other exceptions
@@ -51,6 +51,25 @@ const PhoneVerificationScreen = () => {
   };
 
   useEffect(() => {
+    // Get Language
+    const fetchLangData = async () => {
+      try {
+        const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+        const screenLang = await getLanguage(
+          currentLanguage,
+          'screen_notExist',
+        );
+
+        setLang(screenLang);
+      } catch (err) {
+        console.error(
+          'Error retrieving selfCoordinate from AsyncStorage:',
+          err,
+        );
+      }
+    };
+
+    fetchLangData();
     phoneAuth();
   }, []);
 
@@ -74,12 +93,12 @@ const PhoneVerificationScreen = () => {
 
       if (firstResObj.data === 'false') {
         // Invalid Number
-        Alert.alert('Failed', 'Invalid Number');
-        navigation.navigate('SignupByEmail', {
-          mobile: mobile,
-          mobilecode: mobilecode,
-          countrycode: countrycode,
-        });
+        Alert.alert('Failed', lang.field_phoneVerif.invalidNumber);
+        // navigation.navigate('SignupByEmail', {
+        //   mobile: mobile,
+        //   mobilecode: mobilecode,
+        //   countrycode: countrycode,
+        // });
 
         console.log(`
           Data dikirim (Phone Verif) :
@@ -103,7 +122,11 @@ const PhoneVerificationScreen = () => {
 
           if (responseLoginData.data === 'false') {
             console.log('ke halaman berikutnya (ap1700)');
-            navigation.navigate('SignupByEmail', {mobile: mobile});
+            navigation.navigate('SignupByEmail', {
+              mobile: mobile,
+              mobilecode: mobilecode,
+              countrycode: countrycode,
+            });
           } else {
             await AsyncStorage.setItem('userEmail', responseLoginData.email);
             // Do Login Auth
@@ -118,7 +141,11 @@ const PhoneVerificationScreen = () => {
         }
       } else {
         console.log('ke halaman berikutnya (ap1700)');
-        navigation.navigate('SignupByEmail', {screenBack: 'First'});
+        navigation.navigate('SignupByEmail', {
+          mobile: mobile,
+          mobilecode: mobilecode,
+          countrycode: countrycode,
+        });
       }
     } catch (error) {
       // Handle network errors or other exceptions
@@ -127,7 +154,7 @@ const PhoneVerificationScreen = () => {
   };
 
   const onSignInDisabled = () => {
-    Alert.alert('Peringatan', 'Tolong lengkapi kode verifikasi');
+    Alert.alert('Warning', lang.field_phoneVerif.emptyCode);
   };
 
   const onProblem = () => {
@@ -196,11 +223,14 @@ const PhoneVerificationScreen = () => {
       <View style={styles.container}>
         {seconds > 0 ? (
           <Text style={styles.disableText}>
-            Please send your code in {formattedMinutes}:{formattedSeconds}
+            {lang && lang.field_phoneVerif ? lang.field_phoneVerif.on : ''}{' '}
+            {formattedMinutes}:{formattedSeconds}
           </Text>
         ) : (
           <Pressable onPress={onProblem} style={styles.resetPassword}>
-            <Text style={styles.emailAuth}>A problem has occured</Text>
+            <Text style={styles.emailAuth}>
+              {lang && lang.field_phoneVerif ? lang.field_phoneVerif.off : ''}
+            </Text>
           </Pressable>
         )}
       </View>
@@ -225,7 +255,14 @@ const PhoneVerificationScreen = () => {
                   style={{height: 25}}
                 />
               </TouchableOpacity>
-              <CustomButton onPress={sendCodeAgain} text="RE-SEND" />
+              <CustomButton
+                onPress={sendCodeAgain}
+                text={
+                  lang && lang.field_phoneVerif
+                    ? lang.field_phoneVerif.sendAgain
+                    : ''
+                }
+              />
             </View>
           </View>
         </TouchableWithoutFeedback>
@@ -241,7 +278,7 @@ const PhoneVerificationScreen = () => {
         {/* Text Section */}
         <View style={styles.textWrapper}>
           <Text style={styles.normalText}>
-            Please enter the next 4 digit code sent.
+            {lang && lang.field_phoneVerif ? lang.field_phoneVerif.label : ''}
           </Text>
           <Text style={styles.boldText}>{mobile}</Text>
         </View>
@@ -298,8 +335,6 @@ const PhoneVerificationScreen = () => {
 
         {/* Slider Modal */}
         <SliderModal visible={modalVisible} onClose={toggleModal} />
-
-        {/* <RepeatablePage>Test</RepeatablePage> */}
       </View>
     </ScrollView>
   );
@@ -338,7 +373,7 @@ const styles = StyleSheet.create({
   },
   bottomSection: {
     padding: 20,
-    paddingBottom: 40,
+    paddingBottom: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
     flex: 1,
@@ -352,7 +387,7 @@ const styles = StyleSheet.create({
   },
   emailAuth: {
     fontFamily: 'Poppins-SemiBold',
-    fontSize: 15,
+    fontSize: 13,
     color: '#343a59',
   },
   disableText: {
