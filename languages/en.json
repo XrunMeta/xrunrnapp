@@ -174,7 +174,7 @@
   },
 
   "screen_country": {
-    "title": "Country Selection",
+    "title": "Country Select",
     "current_country": "Current Location",
     "placeholder": "Search for a country"
   },
