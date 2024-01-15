@@ -117,9 +117,20 @@
 
   "screen_emailVerification": {
     "email": {
-      "label": "6자리 확인 코드 입력"
+      "label": "6 자리 확인 코드 입력"
     },
-    "timer": "재전송"
+    "timer": {
+      "on": "코드를 다시 보내주세요",
+      "off": "문제가 발생했습니다",
+      "sendAgain": "코드 다시 보내기",
+      "loginPassword": "비밀번호로 로그인"
+    },
+    "notif": {
+      "emptyCode": "확인 코드를 완료하세요",
+      "invalidEmail": "이메일을 입력하세요",
+      "wrongCode": "인증 코드가 잘못되었습니다",
+      "errorServer": "서버 통신 오류가 발생했습니다. 다시 시도하세요..."
+    }
   },
 
   "screen_country": {

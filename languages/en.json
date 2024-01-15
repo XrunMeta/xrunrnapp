@@ -120,9 +120,20 @@
 
   "screen_emailVerification": {
     "email": {
-      "label": "Enter 6-digit Verification Code"
+      "label": "Enter the 6 digit verification code"
     },
-    "timer": "resend"
+    "timer": {
+      "on": "Please send your code in",
+      "off": "A problem has occured",
+      "sendAgain": "Send code again",
+      "loginPassword": "Login with password"
+    },
+    "notif": {
+      "emptyCode": "Please complete the verification code",
+      "invalidEmail": "Please enter your email",
+      "wrongCode": "Your Auth Code is Wrong",
+      "errorServer": "There is a server communication error. Please try again..."
+    }
   },
 
   "screen_country": {

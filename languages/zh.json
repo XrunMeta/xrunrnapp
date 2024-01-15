@@ -117,9 +117,20 @@
 
   "screen_emailVerification": {
     "email": {
-      "label": "输入6位验证码"
+      "label": "输入6位数验证码"
     },
-    "timer": "重新发送"
+    "timer": {
+      "on": "请在内发送您的验证码",
+      "off": "发生问题",
+      "sendAgain": "重新发送验证码",
+      "loginPassword": "使用密码登录"
+    },
+    "notif": {
+      "emptyCode": "请完成验证码验证",
+      "invalidEmail": "请输入您的电子邮件",
+      "wrongCode": "您的验证码错误",
+      "errorServer": "存在服务器通信错误。请再试一次..."
+    }
   },
 
   "screen_country": {
