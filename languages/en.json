@@ -200,6 +200,13 @@
       "invalidEmail": "Your email is not valid",
       "occupiedEmail": "Email occupied",
       "errorServer": "There is a server communication error. Please try again..."
+    },
+    "field_password": {
+      "label": "Password",
+      "placeholder": "Enter your new password",
+      "validator": "*Alphanumeric, numeric, special combination of symbols, more than 8 digits",
+      "emptyPassword": "Please fill your password",
+      "invalidPassword": "Your password is not valid"
     }
   },
 

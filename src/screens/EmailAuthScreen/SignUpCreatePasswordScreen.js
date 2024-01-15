@@ -15,8 +15,6 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getLanguage} from '../../../utils';
 
-const langData = require('../../../lang.json');
-
 const SignUpCreatePassword = () => {
   const [lang, setLang] = useState({});
   const [password, setPassword] = useState('');
@@ -29,14 +27,9 @@ const SignUpCreatePassword = () => {
 
   const onSignIn = async () => {
     if (password.trim() === '') {
-      Alert.alert(
-        'Error',
-        lang && lang.screen_emailAuth && lang.screen_emailAuth.alert
-          ? lang.screen_emailAuth.alert.emptyPassword
-          : '',
-      );
+      Alert.alert('Error', lang.field_password.emptyPassword);
     } else if (!isValidPassword(password)) {
-      Alert.alert('Error', 'Your password is not valid');
+      Alert.alert('Error', lang.field_password.invalidPassword);
     } else {
       navigation.navigate('SignupCreateName', {
         mobile: mobile,
@@ -73,13 +66,15 @@ const SignUpCreatePassword = () => {
 
   useEffect(() => {
     // Get Language
-    const getLanguage = async () => {
+    const fetchLangData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+        const screenLang = await getLanguage(
+          currentLanguage,
+          'screen_notExist',
+        );
 
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
-        setLang(language);
+        setLang(screenLang);
       } catch (err) {
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
@@ -88,7 +83,7 @@ const SignUpCreatePassword = () => {
       }
     };
 
-    getLanguage();
+    fetchLangData();
   }, []);
 
   return (
@@ -98,15 +93,9 @@ const SignUpCreatePassword = () => {
 
         {/*  Field - Password */}
         <CustomInput
-          label={
-            lang && lang.screen_signup && lang.screen_signup.password
-              ? lang.screen_signup.password.label
-              : ''
-          }
+          label={lang && lang.field_password ? lang.field_password.label : ''}
           placeholder={
-            lang && lang.screen_signup && lang.screen_signup.password
-              ? lang.screen_signup.password.placeholder
-              : ''
+            lang && lang.field_password ? lang.field_password.placeholder : ''
           }
           value={password}
           setValue={onPasswordChange}
@@ -120,9 +109,9 @@ const SignUpCreatePassword = () => {
             color: isPasswordValid ? 'black' : 'red',
             fontFamily: 'Poppins-Regular',
             fontSize: 11,
+            marginRight: 1,
           }}>
-          *Alphanumeric, numeric, special combination of symbols, more than 8
-          digits
+          {lang && lang.field_password ? lang.field_password.validator : ''}
         </Text>
 
         <View style={[styles.bottomSection]}>
