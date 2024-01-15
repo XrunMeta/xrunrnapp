@@ -99,6 +99,7 @@
       "emptyEmail": "Email harus diisi",
       "invalidEmail": "Format email tidak valid",
       "emptyPassword": "Password harus diisi",
+      "emptyPhone": "Nomor telepon harus diisi",
       "emptyArea": "Daerah harus diisi"
     }
   },

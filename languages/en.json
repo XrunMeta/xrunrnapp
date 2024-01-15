@@ -97,9 +97,13 @@
     "validator": {
       "emptyName": "Name is required",
       "emptyEmail": "Email required",
+      "duplicatedEmail": "Duplicated email",
       "invalidEmail": "Invalid email format",
       "emptyPassword": "Password is required",
-      "emptyArea": "Area must be filled"
+      "emptyPhone": "Phone number is required",
+      "emptyArea": "Area must be filled",
+      "invalidRecommend": "Please verify the recommended email",
+      "errorServer": "There is a server communication error. Please try again..."
     }
   },
 
