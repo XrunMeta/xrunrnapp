@@ -7,17 +7,14 @@ import {
   Image,
   Dimensions,
   Alert,
-  TextInput,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API} from '../../../utils';
+import {URL_API, getLanguage} from '../../../utils';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import CustomMultipleChecbox from '../../components/CustomCheckbox/CustomMultipleCheckbox';
-
-const langData = require('../../../lang.json');
 
 const SignUpCreateGender = () => {
   const route = useRoute();
@@ -36,13 +33,15 @@ const SignUpCreateGender = () => {
 
   useEffect(() => {
     // Get Language
-    const getLanguage = async () => {
+    const fetchLangData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+        const screenLang = await getLanguage(
+          currentLanguage,
+          'screen_notExist',
+        );
 
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
-        setLang(language);
+        setLang(screenLang);
       } catch (err) {
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
@@ -51,7 +50,7 @@ const SignUpCreateGender = () => {
       }
     };
 
-    getLanguage();
+    fetchLangData();
   }, []);
 
   const onSignUp = async () => {
@@ -85,19 +84,15 @@ const SignUpCreateGender = () => {
         login();
         navigation.replace('SuccessJoin');
       } else {
-        Alert.alert(
-          'Error',
-          "It's a server problem. Please try in a few minutes",
-          [
-            {
-              text: 'OK',
-              onPress: () => {
-                userPressedOK = true;
-                navigation.replace('First');
-              },
+        Alert.alert('Error', lang.field_gender.errorServer, [
+          {
+            text: 'OK',
+            onPress: () => {
+              userPressedOK = true;
+              navigation.replace('First');
             },
-          ],
-        );
+          },
+        ]);
 
         // Idle conditioning
         setTimeout(() => {
@@ -108,10 +103,7 @@ const SignUpCreateGender = () => {
       }
     } catch (error) {
       console.error('Error during API request:', error);
-      Alert.alert(
-        'Error',
-        "It's a server problem. Please try in a few minutes",
-      );
+      Alert.alert('Error', lang.field_gender.errorServer);
     }
   };
 
@@ -140,19 +132,12 @@ const SignUpCreateGender = () => {
               color: '#343a59',
               marginBottom: -5,
             }}>
-            {lang && lang.screen_signup && lang.screen_signup.gender
-              ? lang.screen_signup.gender.label
-              : ''}
+            {lang && lang.field_gender ? lang.field_gender.label : ''}
           </Text>
           <CustomMultipleChecbox
             texts={[
-              lang && lang.screen_signup && lang.screen_signup.gender
-                ? lang.screen_signup.gender.male
-                : '',
-              lang && lang.screen_signup && lang.screen_signup.gender
-                ? lang.screen_signup.gender.female
-                : '',
-              ,
+              lang && lang.field_gender ? lang.field_gender.male : '',
+              lang && lang.field_gender ? lang.field_gender.female : '',
             ]}
             count={2}
             singleCheck={true}

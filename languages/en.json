@@ -214,6 +214,11 @@
       "placeholder_first": "Name",
       "emptyLastName": "Please fill your last name",
       "emptyName": "Please fill your name"
+    },
+    "field_gender": {
+      "label": "Gender",
+      "male": "Male",
+      "female": "Female"
     }
   },
 
