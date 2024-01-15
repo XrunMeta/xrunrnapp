@@ -97,9 +97,13 @@
     "validator": {
       "emptyName": "Name is required",
       "emptyEmail": "Email required",
+      "duplicatedEmail": "Duplicated email",
       "invalidEmail": "Invalid email format",
       "emptyPassword": "Password is required",
-      "emptyArea": "Area must be filled"
+      "emptyPhone": "Phone number is required",
+      "emptyArea": "Area must be filled",
+      "invalidRecommend": "Please verify the recommended email",
+      "errorServer": "There is a server communication error. Please try again..."
     }
   },
 
@@ -116,9 +120,44 @@
 
   "screen_emailVerification": {
     "email": {
-      "label": "Enter 6-digit Verification Code"
+      "label": "Enter the 6 digit verification code"
     },
-    "timer": "resend"
+    "timer": {
+      "on": "Please send your code in",
+      "off": "A problem has occured",
+      "sendAgain": "Send code again",
+      "loginPassword": "Login with password"
+    },
+    "notif": {
+      "emptyCode": "Please complete the verification code",
+      "invalidEmail": "Please enter your email",
+      "wrongCode": "Your Auth Code is Wrong",
+      "errorServer": "There is a server communication error. Please try again..."
+    }
+  },
+
+  "screen_loginWithPassword": {
+    "title": "Welcome back",
+    "subtitle": "Please sign in to continue",
+    "input": {
+      "password": {
+        "label": "Password",
+        "placeholder": "Please enter your password"
+      },
+      "missing": {
+        "btn": "PASSWORD",
+        "text": "missed"
+      },
+      "notExist": {
+        "btn": "ACCOUNT",
+        "text": "doesn't exist."
+      }
+    },
+    "notif": {
+      "wrong": "Unable to login. Please check your password",
+      "errorServer": "There is a server communication error. Please try again...",
+      "emptyPassword": "Please fill your password"
+    }
   },
 
   "screen_country": {

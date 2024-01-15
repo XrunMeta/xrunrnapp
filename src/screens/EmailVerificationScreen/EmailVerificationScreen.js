@@ -11,20 +11,19 @@ import {
   Modal,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  Button,
 } from 'react-native';
 import React, {useState, useRef, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import CustomButton from '../../components/CustomButton/';
-import {URL_API} from '../../../utils';
+import {URL_API, getLanguage} from '../../../utils';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // ########## Main Function ##########
 const EmailVerificationScreen = () => {
   const route = useRoute();
-  const {isLoggedIn, login} = useAuth();
+  const {login} = useAuth();
   const {dataEmail, pin, signupUrl, mobile} = route.params;
   const [verificationCode, setVerificationCode] = useState([
     '',
@@ -38,6 +37,7 @@ const EmailVerificationScreen = () => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   let ScreenHeight = Dimensions.get('window').height;
+  const [lang, setLang] = useState({});
 
   const emailAuth = async () => {
     try {
@@ -47,7 +47,7 @@ const EmailVerificationScreen = () => {
       const responseData = await response.text(); // Convert response to JSON
 
       if (responseData.data === 'false') {
-        Alert.alert('Failed', 'Please enter your email');
+        Alert.alert('Failed', lang.notif.invalidEmail);
       } else {
         console.log('Kode dikirim boy');
         console.log(signupUrl);
@@ -59,6 +59,22 @@ const EmailVerificationScreen = () => {
   };
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+        const screenLang = await getLanguage(
+          currentLanguage,
+          'screen_emailVerification',
+        );
+
+        // Set your language state
+        setLang(screenLang);
+      } catch (err) {
+        console.error('Error in fetchData:', err);
+      }
+    };
+
+    fetchData();
     emailAuth();
   }, []);
 
@@ -85,7 +101,7 @@ const EmailVerificationScreen = () => {
       console.log(JSON.stringify(responseAuthData));
 
       if (responseAuthData.data === 'false') {
-        Alert.alert('Failed', 'Your Auth Code is Wrong');
+        Alert.alert('Failed', lang.notif.wrongCode);
       } else {
         // Do SignUp
         try {
@@ -107,28 +123,19 @@ const EmailVerificationScreen = () => {
                 login();
                 navigation.replace('SuccessJoin');
               } else {
-                Alert.alert(
-                  'Failed',
-                  "It's a server problem. Please try in a few minutes.",
-                );
+                Alert.alert('Failed', lang.notif.errorServer);
               }
             } catch (error) {
               // Handle network errors or other exceptions
               console.error('Error during Check Login Email & Pin:', error);
             }
           } else {
-            Alert.alert(
-              'Failed',
-              "It's a server problem. Please try in a few minutes.",
-            );
+            Alert.alert('Failed', lang.notif.errorServer);
             navigation.navigate('First');
           }
         } catch (error) {
           console.error('Error during Signup:', error);
-          Alert.alert(
-            'Error',
-            "It's a server problem. Please try in a few minutes.",
-          );
+          Alert.alert('Error', lang.notif.errorServer);
         }
       }
     } catch (error) {
@@ -138,7 +145,7 @@ const EmailVerificationScreen = () => {
   };
 
   const onSignInDisabled = () => {
-    Alert.alert('Peringatan', 'Tolong lengkapi kode verifikasi');
+    Alert.alert('Warning', lang.notif.emptyCode);
   };
 
   const onProblem = () => {
@@ -207,11 +214,14 @@ const EmailVerificationScreen = () => {
       <View style={styles.container}>
         {seconds > 0 ? (
           <Text style={styles.disableText}>
-            Please send your code in {formattedMinutes}:{formattedSeconds}
+            {lang && lang.timer ? lang.timer.on : ''} {formattedMinutes}:
+            {formattedSeconds}
           </Text>
         ) : (
           <Pressable onPress={onProblem} style={styles.resetPassword}>
-            <Text style={styles.emailAuth}>A problem has occured</Text>
+            <Text style={styles.emailAuth}>
+              {lang && lang.timer ? lang.timer.off : ''}
+            </Text>
           </Pressable>
         )}
       </View>
@@ -236,9 +246,12 @@ const EmailVerificationScreen = () => {
                   style={{height: 25}}
                 />
               </TouchableOpacity>
-              <CustomButton onPress={sendCodeAgain} text="Send code again" />
               <CustomButton
-                text="Login with password"
+                onPress={sendCodeAgain}
+                text={lang && lang.timer ? lang.timer.sendAgain : ''}
+              />
+              <CustomButton
+                text={lang && lang.timer ? lang.timer.loginPassword : ''}
                 onPress={onLoginPassword}
                 type="SECONDARY"
               />
@@ -257,7 +270,7 @@ const EmailVerificationScreen = () => {
         {/* Text Section */}
         <View style={styles.textWrapper}>
           <Text style={styles.normalText}>
-            Enter the 6 digit verification code
+            {lang && lang.email ? lang.email.label : ''}
           </Text>
           <Text style={styles.boldText}>{dataEmail}</Text>
         </View>
@@ -314,8 +327,6 @@ const EmailVerificationScreen = () => {
 
         {/* Slider Modal */}
         <SliderModal visible={modalVisible} onClose={toggleModal} />
-
-        {/* <RepeatablePage>Test</RepeatablePage> */}
       </View>
     </ScrollView>
   );
@@ -354,7 +365,7 @@ const styles = StyleSheet.create({
   },
   bottomSection: {
     padding: 20,
-    paddingBottom: 40,
+    paddingBottom: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
     flex: 1,
