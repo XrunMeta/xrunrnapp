@@ -13,9 +13,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import CustomListItem from '../../components/CustomButton/CustomListItem';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API} from '../../../utils';
-
-const langData = require('../../../lang.json');
+import {URL_API, getLanguage} from '../../../utils';
 
 const ChooseRegionScreen = ({route}) => {
   const [lang, setLang] = useState({});
@@ -65,13 +63,12 @@ const ChooseRegionScreen = ({route}) => {
       });
 
     // Get Language
-    const getLanguage = async () => {
+    const fetchLangData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+        const screenLang = await getLanguage(currentLanguage, 'screen_country');
 
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
-        setLang(language);
+        setLang(screenLang);
       } catch (err) {
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
@@ -82,7 +79,7 @@ const ChooseRegionScreen = ({route}) => {
 
     console.log('Status Screen Name -> ' + screenName);
 
-    getLanguage();
+    fetchLangData();
   }, []);
 
   // ########## Choose Region
@@ -114,20 +111,14 @@ const ChooseRegionScreen = ({route}) => {
       <ButtonBack onClick={() => onBack(code, flag, countryCode, country)} />
 
       <View style={styles.titleWrapper}>
-        <Text style={styles.title}>
-          {lang && lang.screen_country && lang.screen_country.title
-            ? lang.screen_country.title
-            : ''}
-        </Text>
+        <Text style={styles.title}>{lang.title ? lang.title : ''}</Text>
       </View>
 
       {/* Selected Region */}
       <View style={[styles.formGroup, {marginTop: 25}]}>
         <Text
           style={[styles.mediumText, {alignSelf: 'flex-start', marginTop: 20}]}>
-          {lang && lang.screen_country && lang.screen_country.current_country
-            ? lang.screen_country.current_country
-            : ''}
+          {lang.current_country ? lang.current_country : ''}
         </Text>
         <View
           style={{
@@ -159,11 +150,7 @@ const ChooseRegionScreen = ({route}) => {
       {/* Search Box */}
       <View style={styles.searchBox}>
         <TextInput
-          placeholder={
-            lang && lang.screen_country && lang.screen_country.placeholder
-              ? lang.screen_country.placeholder
-              : ''
-          }
+          placeholder={lang.placeholder ? lang.placeholder : ''}
           placeholderTextColor="lightgrey"
           style={[styles.mediumText, {flex: 1}]}
           value={searchText}
