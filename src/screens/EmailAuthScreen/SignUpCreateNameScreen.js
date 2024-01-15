@@ -13,7 +13,7 @@ import React, {useState, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API} from '../../../utils';
+import {getLanguage} from '../../../utils';
 
 const langData = require('../../../lang.json');
 
@@ -33,13 +33,15 @@ const SignUpCreateName = () => {
 
   useEffect(() => {
     // Get Language
-    const getLanguage = async () => {
+    const fetchLangData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+        const screenLang = await getLanguage(
+          currentLanguage,
+          'screen_notExist',
+        );
 
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
-        setLang(language);
+        setLang(screenLang);
       } catch (err) {
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
@@ -48,14 +50,14 @@ const SignUpCreateName = () => {
       }
     };
 
-    getLanguage();
+    fetchLangData();
   }, []);
 
   const onSignIn = async () => {
     if (lastname.trim() === '') {
-      Alert.alert('Failed', 'Please fill your Last name');
+      Alert.alert('Failed', lang.field_name.emptyLastName);
     } else if (name.trim() === '') {
-      Alert.alert('Failed', 'Please fill your name');
+      Alert.alert('Failed', lang.field_name.emptyName);
     } else {
       navigation.navigate('SignupCreateGender', {
         mobile: mobile,
@@ -98,7 +100,7 @@ const SignUpCreateName = () => {
               color: '#343a59',
               marginBottom: -5,
             }}>
-            What is your name?
+            {lang && lang.field_name ? lang.field_name.label : ''}
           </Text>
           <View
             style={{
@@ -118,7 +120,10 @@ const SignUpCreateName = () => {
                 paddingBottom: -10,
                 flex: 1,
               }}
-              placeholder="Last name"
+              placeholder={
+                lang && lang.field_name ? lang.field_name.placeholder_last : ''
+              }
+              placeholderTextColor="grey"
               value={lastname}
               onChangeText={setLastname}
               autoCapitalize="words"
@@ -136,7 +141,10 @@ const SignUpCreateName = () => {
                 paddingBottom: -10,
                 flex: 1,
               }}
-              placeholder="Name"
+              placeholder={
+                lang && lang.field_name ? lang.field_name.placeholder_first : ''
+              }
+              placeholderTextColor="grey"
               value={name}
               onChangeText={setName}
               autoCapitalize="words"
@@ -165,7 +173,7 @@ const styles = StyleSheet.create({
   },
   bottomSection: {
     padding: 20,
-    paddingBottom: 40,
+    paddingBottom: 5,
     flexDirection: 'row',
     justifyContent: 'flex-end',
     flex: 1,
