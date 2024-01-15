@@ -207,6 +207,13 @@
       "validator": "*Alphanumeric, numeric, special combination of symbols, more than 8 digits",
       "emptyPassword": "Please fill your password",
       "invalidPassword": "Your password is not valid"
+    },
+    "field_name": {
+      "label": "What is your name?",
+      "placeholder_last": "Last name",
+      "placeholder_first": "Name",
+      "emptyLastName": "Please fill your last name",
+      "emptyName": "Please fill your name"
     }
   },
 

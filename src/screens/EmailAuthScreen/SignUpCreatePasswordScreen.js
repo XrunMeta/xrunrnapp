@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   },
   bottomSection: {
     padding: 20,
-    paddingBottom: 40,
+    paddingBottom: 5,
     flexDirection: 'row',
     justifyContent: 'flex-end',
     flex: 1,
