@@ -58,7 +58,6 @@ export default Router = () => {
   const logoutUser = async () => {
     const value = await AsyncStorage.getItem('isLoggedIn');
 
-    console.log(`Auto logout: ${value}`);
     if (value === 'true') {
       const userData = await AsyncStorage.getItem('userData');
       const {firstname, member, extrastr} = JSON.parse(userData);
