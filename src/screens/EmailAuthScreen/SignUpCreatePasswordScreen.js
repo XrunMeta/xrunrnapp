@@ -13,7 +13,7 @@ import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API} from '../../../utils';
+import {getLanguage} from '../../../utils';
 
 const langData = require('../../../lang.json');
 

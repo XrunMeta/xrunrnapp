@@ -13,9 +13,7 @@ import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API} from '../../../utils';
-
-const langData = require('../../../lang.json');
+import {URL_API, getLanguage} from '../../../utils';
 
 const SignUpByEmailScreen = () => {
   const [lang, setLang] = useState({});
@@ -30,19 +28,9 @@ const SignUpByEmailScreen = () => {
 
   const onSignIn = async () => {
     if (email.trim() === '') {
-      Alert.alert(
-        'Error',
-        lang && lang.screen_emailAuth && lang.screen_emailAuth.alert
-          ? lang.screen_emailAuth.alert.emptyEmail
-          : '',
-      );
+      Alert.alert('Error', lang.field_email.emptyEmail);
     } else if (!isValidEmail(email)) {
-      Alert.alert(
-        'Error',
-        lang && lang.screen_emailAuth && lang.screen_emailAuth.alert
-          ? lang.screen_emailAuth.alert.invalidEmail
-          : '',
-      );
+      Alert.alert('Error', lang.field_email.invalidEmail);
     } else {
       try {
         const apiUrl = `${URL_API}&act=login-checker-email&email=${email}`;
@@ -68,13 +56,13 @@ const SignUpByEmailScreen = () => {
           `);
         } else {
           // Jika gagal, tampilkan pesan kesalahan
-          Alert.alert('Failed', 'Email occupied');
+          Alert.alert('Failed', lang.field_email.occupiedEmail);
           setEmail('');
         }
       } catch (error) {
         // Handle network errors or other exceptions
         console.error('Error during API request:', error);
-        Alert.alert('Error', 'An error occurred. Please try again.');
+        Alert.alert('Error', lang.field_email.errorServer);
       }
     }
   };
@@ -97,13 +85,15 @@ const SignUpByEmailScreen = () => {
 
   useEffect(() => {
     // Get Language
-    const getLanguage = async () => {
+    const fetchLangData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+        const screenLang = await getLanguage(
+          currentLanguage,
+          'screen_notExist',
+        );
 
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
-        setLang(language);
+        setLang(screenLang);
       } catch (err) {
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
@@ -112,7 +102,7 @@ const SignUpByEmailScreen = () => {
       }
     };
 
-    getLanguage();
+    fetchLangData();
   }, []);
 
   return (
@@ -121,15 +111,9 @@ const SignUpByEmailScreen = () => {
         <ButtonBack onClick={onBack} />
 
         <CustomInput
-          label={
-            lang && lang.screen_emailAuth && lang.screen_emailAuth.email
-              ? lang.screen_emailAuth.email.label
-              : ''
-          }
+          label={lang && lang.field_email ? lang.field_email.label : ''}
           placeholder={
-            lang && lang.screen_emailAuth && lang.screen_emailAuth.email
-              ? lang.screen_emailAuth.email.placeholder
-              : ''
+            lang && lang.field_email ? lang.field_email.placeholder : ''
           }
           value={email}
           setValue={onEmailChange}
@@ -169,7 +153,7 @@ const styles = StyleSheet.create({
   },
   bottomSection: {
     padding: 20,
-    paddingBottom: 40,
+    paddingBottom: 5,
     flexDirection: 'row',
     justifyContent: 'flex-end',
     flex: 1,
