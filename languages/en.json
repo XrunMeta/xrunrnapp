@@ -179,6 +179,13 @@
     "placeholder": "Search for a country"
   },
 
+  "screen_notExist": {
+    "field_phoneNumber": {
+      "label": "Please enter a phone number",
+      "empty": "Phone number is required"
+    }
+  },
+
   "screen_map": {
     "section_card_shadow": {
       "radius": "Within a radius of 1000 meters",
