@@ -11,8 +11,7 @@ import React, {useState, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const langData = require('../../../lang.json');
+import {getLanguage} from '../../../utils';
 
 const PhoneLoginScreen = ({route}) => {
   const [lang, setLang] = useState({});
@@ -29,13 +28,15 @@ const PhoneLoginScreen = ({route}) => {
 
   useEffect(() => {
     // Get Language
-    const getLanguage = async () => {
+    const fetchLangData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+        const screenLang = await getLanguage(
+          currentLanguage,
+          'screen_notExist',
+        );
 
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
-        setLang(language);
+        setLang(screenLang);
       } catch (err) {
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
@@ -44,12 +45,12 @@ const PhoneLoginScreen = ({route}) => {
       }
     };
 
-    getLanguage();
+    fetchLangData();
   }, []);
 
   const onSignUp = async () => {
     if (phoneNumber.trim() === '') {
-      Alert.alert('Error', `Nomor Telepon harus diisi`);
+      Alert.alert('Error', lang.field_phoneNumber.empty);
     } else {
       navigation.navigate('PhoneVerif', {
         mobilecode: countryCode,
@@ -98,7 +99,9 @@ const PhoneLoginScreen = ({route}) => {
 
       {/*  Field - Phone Number */}
       <View style={styles.formGroup}>
-        <Text style={styles.label}>Please enter a phone number.</Text>
+        <Text style={styles.label}>
+          {lang && lang.field_phoneNumber ? lang.field_phoneNumber.label : ''}
+        </Text>
         <View
           style={{
             width: '100%',
