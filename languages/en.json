@@ -218,7 +218,13 @@
     "field_gender": {
       "label": "Gender",
       "male": "Male",
-      "female": "Female"
+      "female": "Female",
+      "errorServer": "There is a server communication error. Please try again..."
+    },
+    "field_join": {
+      "str1": "Welcome to the membership.",
+      "str2": "Your subscription has ",
+      "str3": "Finished"
     }
   },
 
