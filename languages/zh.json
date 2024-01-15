@@ -97,10 +97,13 @@
     "validator": {
       "emptyName": "名字是必需的",
       "emptyEmail": "需要电子邮件",
+      "duplicatedEmail": "电子邮件已经存在",
       "invalidEmail": "电子邮件格式无效",
       "emptyPassword": "密码是必需的",
       "emptyPhone": "电话号码为必填项",
-      "emptyArea": "必须填写地区"
+      "emptyArea": "必须填写地区",
+      "invalidRecommend": "请验证推荐邮箱",
+      "errorServer": "服务器通讯错误。请重试..."
     }
   },
 
@@ -130,6 +133,30 @@
       "invalidEmail": "请输入您的电子邮件",
       "wrongCode": "您的验证码错误",
       "errorServer": "存在服务器通信错误。请再试一次..."
+    }
+  },
+
+  "screen_loginWithPassword": {
+    "title": "欢迎回来",
+    "subtitle": "请登录以继续",
+    "input": {
+      "password": {
+        "label": "密码",
+        "placeholder": "请输入您的密码"
+      },
+      "missing": {
+        "btn": "密码",
+        "text": "丢失"
+      },
+      "notExist": {
+        "btn": "账户",
+        "text": "不存在。"
+      }
+    },
+    "notif": {
+      "wrong": "无法登录。请检查您的密码",
+      "errorServer": "服务器通信错误。请重试...",
+      "emptyPassword": "请输入您的密码"
     }
   },
 
