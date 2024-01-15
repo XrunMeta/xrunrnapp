@@ -168,7 +168,7 @@ const ConversionRequest = ({navigation, route}) => {
     }
   };
 
-  const confirmConversion = () => {
+  const confirmConversion = async () => {
     if (isNaNCoverted) {
       Alert.alert('', 'Invalid input amount.');
       setPopupConversion(false);
@@ -207,7 +207,27 @@ const ConversionRequest = ({navigation, route}) => {
     } else {
       setIsLoading(true);
 
-      // fetch(`${URL_API}&`)
+      const request = await fetch(
+        `${URL_API}&act=app4420-02&currency=${currency}&member=${dataMember.member}&address=${address}&amount=${amount}&extracurrency=${subcurrency}`,
+      );
+
+      const response = await request.json();
+      const result = response.data[0].count;
+      setIsLoading(false);
+      setPopupConversion(false);
+      setAmount('');
+      setAddress('');
+      setActiveNetwork('ETH');
+
+      if (result === '1') {
+        navigation.navigate('CompleteConversion', {
+          symbol: activeNetwork,
+          conversionRequest,
+          amount,
+        });
+      } else {
+        Alert.alert('', "It's a server problem. Please try in a few minutes.");
+      }
     }
   };
 
