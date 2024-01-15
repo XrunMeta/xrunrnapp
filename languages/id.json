@@ -160,6 +160,19 @@
     }
   },
 
+  "screen_passwordMissed": {
+    "email": {
+      "label": "Masukkan alamat e-mail yang Anda daftarkan",
+      "placeholder": "Tulis alamat e-mail Anda"
+    },
+    "notif": {
+      "emptyEmail": "Silakan masukkan alamat e-mail Anda",
+      "invalidEmail": "E-mail Anda tidak valid",
+      "sended": "Sistem telah mengirimkan e-mail untuk mengganti kata sandi Anda di e-mail tersebut.",
+      "errorServer": "Terjadi kesalahan komunikasi dengan server. Silakan coba lagi..."
+    }
+  },
+
   "screen_country": {
     "title": "Pemilihan Negara",
     "current_country": "Lokasi Sekarang",
