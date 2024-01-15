@@ -253,7 +253,7 @@ const SendWalletScreen = ({navigation, route}) => {
       )
         .then(response => response.json())
         .then(result => {
-          const {available, amountrq} = result;
+          const {available} = result;
 
           if (available === 'FALSE') {
             setIsLoading(false);
