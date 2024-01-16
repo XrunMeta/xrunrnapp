@@ -114,7 +114,8 @@
     },
     "alert": {
       "emptyEmail": "Please insert your email",
-      "invalidEmail": "Your email is not valid"
+      "invalidEmail": "Your email is not valid",
+      "errorServer": "There is a server communication error. Please try again..."
     }
   },
 

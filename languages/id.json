@@ -114,7 +114,8 @@
     },
     "alert": {
       "emptyEmail": "Tolong isi email anda",
-      "invalidEmail": "Email anda tidak valid"
+      "invalidEmail": "Email anda tidak valid",
+      "errorServer": "Terjadi kesalahan komunikasi server. Harap coba lagi..."
     }
   },
 
@@ -177,6 +178,55 @@
     "title": "Pemilihan Negara",
     "current_country": "Lokasi Sekarang",
     "placeholder": "Silakan cari negara anda"
+  },
+
+  "screen_notExist": {
+    "field_phoneNumber": {
+      "label": "Silakan masukkan nomor telepon",
+      "empty": "Nomor telepon diperlukan"
+    },
+    "field_phoneVerif": {
+      "label": "Silakan masukkan kode 4 digit yang dikirim selanjutnya",
+      "on": "Harap kirim kode Anda dalam",
+      "off": "Terjadi masalah",
+      "sendAgain": "KIRIM ULANG",
+      "emptyCode": "Harap lengkapi kode verifikasi",
+      "invalidNumber": "Nomor tidak valid",
+      "emptyNumber": "Silakan masukkan nomor Anda"
+    },
+    "field_email": {
+      "label": "Masukkan Email Anda",
+      "placeholder": "xrun@xrun.run",
+      "emptyEmail": "Silakan masukkan email Anda",
+      "invalidEmail": "Email Anda tidak valid",
+      "occupiedEmail": "Email sudah terdaftar",
+      "errorServer": "Terjadi kesalahan komunikasi dengan server. Silakan coba lagi..."
+    },
+    "field_password": {
+      "label": "Kata Sandi",
+      "placeholder": "Masukkan kata sandi baru Anda",
+      "validator": "*Alfanumerik, numerik, kombinasi simbol khusus, lebih dari 8 digit",
+      "emptyPassword": "Silakan isi kata sandi Anda",
+      "invalidPassword": "Kata sandi Anda tidak valid"
+    },
+    "field_name": {
+      "label": "Apa nama Anda?",
+      "placeholder_last": "Nama Belakang",
+      "placeholder_first": "Nama",
+      "emptyLastName": "Silakan isi nama belakang Anda",
+      "emptyName": "Silakan isi nama Anda"
+    },
+    "field_gender": {
+      "label": "Jenis Kelamin",
+      "male": "Pria",
+      "female": "Wanita",
+      "errorServer": "Terjadi kesalahan komunikasi dengan server. Silakan coba lagi..."
+    },
+    "field_join": {
+      "str1": "Selamat datang di keanggotaan.",
+      "str2": "Langganan Anda telah ",
+      "str3": "Selesai"
+    }
   },
 
   "screen_map": {
