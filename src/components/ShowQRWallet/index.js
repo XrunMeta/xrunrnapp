@@ -27,15 +27,25 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const addressWallet = await AsyncStorage.getItem('addressWallet');
         const qrWallet = await AsyncStorage.getItem('qrWallet');
 
-        if (!qrWallet) {
+        if (JSON.parse(addressWallet) != cardDataQR.address) {
+          console.log(
+            `New address: ${JSON.parse(addressWallet)} | Old: ${
+              cardDataQR.address
+            }`,
+          );
           // Convert image qr code to base64
           const response = await fetch(
             `${apiQRCode}?size=110x110&data=${cardDataQR.address}&margin=10`,
           );
           const data = await response.blob();
           const base64Data = await convertBlobToBase64(data);
+          await AsyncStorage.setItem(
+            'addressWallet',
+            JSON.stringify(cardDataQR.address),
+          );
           await AsyncStorage.setItem('qrWallet', base64Data);
           setQrCodeData(base64Data);
           setDownloadDisable(false);
@@ -176,16 +186,11 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
       Alert.alert(
         '',
         `${fileName} ${
-          lang && lang.screen_wallet && lang.screen_wallet.download_qrcode_show
-            ? lang.screen_wallet.download_qrcode_show
-            : ''
+          lang && lang.download_qrcode_show ? lang.download_qrcode_show : ''
         }`,
         [
           {
-            text:
-              lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
-                ? lang.screen_wallet.confirm_alert
-                : '',
+            text: lang && lang.confirm_alert ? lang.confirm_alert : '',
             onPress: () => {
               setDownloadDisable(false);
             },
@@ -197,18 +202,13 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
       Alert.alert(
         '',
         `${
-          lang &&
-          lang.screen_wallet &&
-          lang.screen_wallet.failed_download_qrcode_alert
-            ? lang.screen_wallet.failed_download_qrcode_alert
+          lang && lang.failed_download_qrcode_alert
+            ? lang.failed_download_qrcode_alert
             : ''
         }`,
         [
           {
-            text:
-              lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
-                ? lang.screen_wallet.confirm_alert
-                : '',
+            text: lang && lang.confirm_alert ? lang.confirm_alert : '',
             onPress: () => {
               setDownloadDisable(false);
             },
@@ -320,9 +320,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
             style={{width: 28, height: 28}}
           />
           <Text style={styles.notificationTextInQR}>
-            {lang && lang.screen_wallet && lang.screen_wallet.copy_qrcode_show
-              ? lang.screen_wallet.copy_qrcode_show
-              : ''}
+            {lang && lang.copy_qrcode_show ? lang.copy_qrcode_show : ''}
           </Text>
         </View>
       </Animated.View>
