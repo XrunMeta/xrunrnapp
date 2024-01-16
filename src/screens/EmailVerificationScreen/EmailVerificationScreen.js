@@ -191,8 +191,8 @@ const EmailVerificationScreen = () => {
 
   // ########## Countdown ##########
   const Countdown = () => {
-    // const [seconds, setSeconds] = useState(599); // Duration
-    const [seconds, setSeconds] = useState(5);
+    const [seconds, setSeconds] = useState(599); // Duration
+    // const [seconds, setSeconds] = useState(5);
 
     useEffect(() => {
       const timer = setInterval(() => {

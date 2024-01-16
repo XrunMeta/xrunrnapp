@@ -11,13 +11,12 @@ import {
   Modal,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  Button,
 } from 'react-native';
 import React, {useState, useRef, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import CustomButton from '../../components/CustomButton';
-import {URL_API} from '../../../utils';
+import {URL_API, getLanguage} from '../../../utils';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -38,6 +37,7 @@ const EmailVerificationLoginScreen = () => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   let ScreenHeight = Dimensions.get('window').height;
+  const [lang, setLang] = useState({});
 
   const emailAuth = async () => {
     try {
@@ -58,6 +58,22 @@ const EmailVerificationLoginScreen = () => {
   };
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+        const screenLang = await getLanguage(
+          currentLanguage,
+          'screen_emailVerification',
+        );
+
+        // Set your language state
+        setLang(screenLang);
+      } catch (err) {
+        console.error('Error in fetchData:', err);
+      }
+    };
+
+    fetchData();
     emailAuth();
   }, []);
 
@@ -84,7 +100,7 @@ const EmailVerificationLoginScreen = () => {
       console.log(JSON.stringify(responseAuthData));
 
       if (responseAuthData.data === 'false') {
-        Alert.alert('Failed', 'Your Auth Code is Wrong');
+        Alert.alert('Failed', lang.notif.wrongCode);
       } else {
         try {
           const responseLogin = await fetch(
@@ -118,7 +134,7 @@ const EmailVerificationLoginScreen = () => {
   };
 
   const onSignInDisabled = () => {
-    Alert.alert('Peringatan', 'Tolong lengkapi kode verifikasi');
+    Alert.alert('Warning', lang.notif.emptyCode);
   };
 
   const onProblem = () => {
@@ -164,8 +180,7 @@ const EmailVerificationLoginScreen = () => {
 
   // ########## Countdown ##########
   const Countdown = () => {
-    // const [seconds, setSeconds] = useState(599); // Duration
-    const [seconds, setSeconds] = useState(5);
+    const [seconds, setSeconds] = useState(599); // Duration
 
     useEffect(() => {
       const timer = setInterval(() => {
@@ -187,11 +202,14 @@ const EmailVerificationLoginScreen = () => {
       <View style={styles.container}>
         {seconds > 0 ? (
           <Text style={styles.disableText}>
-            Please send your code in {formattedMinutes}:{formattedSeconds}
+            {lang && lang.timer ? lang.timer.on : ''} {formattedMinutes}:
+            {formattedSeconds}
           </Text>
         ) : (
           <Pressable onPress={onProblem} style={styles.resetPassword}>
-            <Text style={styles.emailAuth}>A problem has occured</Text>
+            <Text style={styles.emailAuth}>
+              {lang && lang.timer ? lang.timer.off : ''}
+            </Text>
           </Pressable>
         )}
       </View>
@@ -216,9 +234,12 @@ const EmailVerificationLoginScreen = () => {
                   style={{height: 25}}
                 />
               </TouchableOpacity>
-              <CustomButton onPress={sendCodeAgain} text="Send code again" />
               <CustomButton
-                text="Login with password"
+                onPress={sendCodeAgain}
+                text={lang && lang.timer ? lang.timer.sendAgain : ''}
+              />
+              <CustomButton
+                text={lang && lang.timer ? lang.timer.loginPassword : ''}
                 onPress={onLoginPassword}
                 type="SECONDARY"
               />
@@ -237,7 +258,7 @@ const EmailVerificationLoginScreen = () => {
         {/* Text Section */}
         <View style={styles.textWrapper}>
           <Text style={styles.normalText}>
-            Enter the 6 digit verification code
+            {lang && lang.email ? lang.email.label : ''}
           </Text>
           <Text style={styles.boldText}>{dataEmail}</Text>
         </View>
@@ -294,8 +315,6 @@ const EmailVerificationLoginScreen = () => {
 
         {/* Slider Modal */}
         <SliderModal visible={modalVisible} onClose={toggleModal} />
-
-        {/* <RepeatablePage>Test</RepeatablePage> */}
       </View>
     </ScrollView>
   );
