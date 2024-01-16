@@ -12,10 +12,9 @@ import {
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import ARScreen from '../ARScreen/ARScreen';
 import MapParent from './MapParentScreen';
-import TestCam from '../ARScreen/testCam';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API} from '../../../utils';
+import {getLanguage} from '../../../utils';
 
 export default function Home({route}) {
   const [lang, setLang] = useState({});
@@ -23,8 +22,6 @@ export default function Home({route}) {
   const {isLoggedIn} = useAuth();
   console.log('Status Login di Home : ' + isLoggedIn);
   const [activeTab, setActiveTab] = useState('Map');
-  const [openScreen, setOpenScreen] = useState();
-  const [popupNotif, setPopupNotif] = useState(true);
   const isFocused = useIsFocused();
 
   const navigation = useNavigation();
@@ -42,40 +39,20 @@ export default function Home({route}) {
 
   useEffect(() => {
     // Get Language
-    const getLanguage = async () => {
+    const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        let langData;
-
-        switch (currentLanguage) {
-          case 'id':
-            langData = require('../../../languages/id.json');
-            break;
-          case 'en':
-            langData = require('../../../languages/en.json');
-            break;
-          case 'ko':
-            langData = require('../../../languages/ko.json');
-            break;
-          case 'zh':
-            langData = require('../../../languages/zh.json');
-            break;
-          default:
-            langData = require('../../../languages/en.json');
-            break;
-        }
-
-        const language = langData;
-        setLang(language);
-      } catch (err) {
-        console.error(
-          'Error retrieving selfCoordinate from AsyncStorage:',
-          err,
+        const screenLang = await getLanguage(
+          currentLanguage,
+          'screen_bottomTab',
         );
+
+        // Set your language state
+        setLang(screenLang);
+      } catch (err) {
+        console.error('Error in fetchData:', err);
       }
     };
-
-    getLanguage();
 
     const getUserData = async () => {
       try {
@@ -93,7 +70,8 @@ export default function Home({route}) {
       }
     };
 
-    getUserData(); // Get Language
+    fetchData(); // Get Language
+    getUserData(); // Get User Data
   }, [isLoggedIn]);
 
   // User press back, show notif want exit app or not
@@ -163,7 +141,7 @@ export default function Home({route}) {
             {renderTabButton(
               'Wallet',
               require('../../../assets/images/icon_wallet.png'),
-              'Wallet',
+              lang.wallet ? lang.wallet.title : 'Wallet',
               () => {
                 navigation.navigate('WalletHome');
               },
@@ -171,7 +149,7 @@ export default function Home({route}) {
             {renderTabButton(
               'Advertise',
               require('../../../assets/images/icon_advertisement.png'),
-              'Advertise',
+              lang.advertise ? lang.advertise.title : 'Advertise',
               () => {
                 navigation.navigate('AdvertiseHome');
               },
@@ -261,7 +239,7 @@ export default function Home({route}) {
             {renderTabButton(
               'Notify',
               require('../../../assets/images/icon_bell.png'),
-              'Notify',
+              lang.notify ? lang.notify.title : 'Notify',
               () => {
                 navigation.navigate('NotifyHome');
               },
@@ -269,7 +247,7 @@ export default function Home({route}) {
             {renderTabButton(
               'Info',
               require('../../../assets/images/icon_user.png'),
-              'Info',
+              lang.info ? lang.info.title : 'Info',
               () => {
                 navigation.navigate('InfoHome');
               },
@@ -277,7 +255,15 @@ export default function Home({route}) {
           </View>
         </View>
       ) : (
-        <Text>You are not logged in.</Text>
+        <Text
+          style={{
+            fontFamily: 'Poppins-Regular',
+            fontSize: 13,
+            color: 'red',
+            margin: 'auto',
+          }}>
+          You are not logged in.
+        </Text>
       )}
     </SafeAreaView>
   );
