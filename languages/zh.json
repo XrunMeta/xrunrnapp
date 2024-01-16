@@ -229,6 +229,22 @@
     }
   },
 
+  "screen_bottomTab": {
+    "wallet": {
+      "title": "钱包"
+    },
+    "advertise": {
+      "title": "广告"
+    },
+    "notify": {
+      "title": "通知"
+    },
+    "info": {
+      "title": "信息"
+    },
+    "notLoggedin": "您尚未登录。"
+  },
+
   "screen_map": {
     "section_card_shadow": {
       "radius": "在1000米半径内",

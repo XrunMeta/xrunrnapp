@@ -229,6 +229,22 @@
     }
   },
 
+  "screen_bottomTab": {
+    "wallet": {
+      "title": "Dompet"
+    },
+    "advertise": {
+      "title": "Iklan"
+    },
+    "notify": {
+      "title": "Notifikasi"
+    },
+    "info": {
+      "title": "Info"
+    },
+    "notLoggedin": "Anda belum masuk."
+  },
+
   "screen_map": {
     "section_card_shadow": {
       "radius": "Dalam radius 1000 meter",

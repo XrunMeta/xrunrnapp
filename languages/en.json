@@ -229,6 +229,22 @@
     }
   },
 
+  "screen_bottomTab": {
+    "wallet": {
+      "title": "Wallet"
+    },
+    "advertise": {
+      "title": "Advertise"
+    },
+    "notify": {
+      "title": "Notify"
+    },
+    "info": {
+      "title": "Info"
+    },
+    "notLoggedin": "You are not logged in."
+  },
+
   "screen_map": {
     "section_card_shadow": {
       "radius": "Within a radius of 1000 meters",
