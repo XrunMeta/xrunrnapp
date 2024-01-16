@@ -229,6 +229,22 @@
     }
   },
 
+  "screen_bottomTab": {
+    "wallet": {
+      "title": "지갑"
+    },
+    "advertise": {
+      "title": "광고"
+    },
+    "notify": {
+      "title": "통지"
+    },
+    "info": {
+      "title": "정보"
+    },
+    "notLoggedin": "로그인하지 않았습니다."
+  },
+
   "screen_map": {
     "section_card_shadow": {
       "radius": "1000 미터 반경 내에서",
