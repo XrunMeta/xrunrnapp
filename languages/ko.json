@@ -114,7 +114,8 @@
     },
     "alert": {
       "emptyEmail": "이메일을 입력하세요",
-      "invalidEmail": "이메일이 유효하지 않습니다"
+      "invalidEmail": "이메일이 유효하지 않습니다",
+      "errorServer": "서버 통신 오류가 발생했습니다. 다시 시도하세요..."
     }
   },
 
@@ -179,6 +180,71 @@
     "placeholder": "국가 검색"
   },
 
+  "screen_notExist": {
+    "field_phoneNumber": {
+      "label": "전화 번호를 입력하세요",
+      "empty": "전화 번호가 필요합니다"
+    },
+    "field_phoneVerif": {
+      "label": "다음에 보내진 4 자리 코드를 입력하세요",
+      "on": "코드를 보내 주세요",
+      "off": "문제가 발생했습니다",
+      "sendAgain": "다시 보내기",
+      "emptyCode": "인증 코드를 완료하세요",
+      "invalidNumber": "유효하지 않은 번호",
+      "emptyNumber": "전화 번호를 입력하세요"
+    },
+    "field_email": {
+      "label": "이메일을 입력하세요",
+      "placeholder": "xrun@xrun.run",
+      "emptyEmail": "이메일을 입력하세요",
+      "invalidEmail": "유효하지 않은 이메일입니다",
+      "occupiedEmail": "이미 등록된 이메일",
+      "errorServer": "서버 통신 오류가 발생했습니다. 다시 시도하세요..."
+    },
+    "field_password": {
+      "label": "비밀번호",
+      "placeholder": "새 비밀번호를 입력하세요",
+      "validator": "*알파벳, 숫자, 특수 문자의 조합, 8자 이상",
+      "emptyPassword": "비밀번호를 입력하세요",
+      "invalidPassword": "유효하지 않은 비밀번호"
+    },
+    "field_name": {
+      "label": "이름은 무엇인가요?",
+      "placeholder_last": "성",
+      "placeholder_first": "이름",
+      "emptyLastName": "성을 입력하세요",
+      "emptyName": "이름을 입력하세요"
+    },
+    "field_gender": {
+      "label": "성별",
+      "male": "남성",
+      "female": "여성",
+      "errorServer": "서버 통신 오류가 발생했습니다. 다시 시도하세요..."
+    },
+    "field_join": {
+      "str1": "회원 가입을 환영합니다.",
+      "str2": "구독이 완료되었습니다. ",
+      "str3": ""
+    }
+  },
+
+  "screen_bottomTab": {
+    "wallet": {
+      "title": "지갑"
+    },
+    "advertise": {
+      "title": "광고"
+    },
+    "notify": {
+      "title": "통지"
+    },
+    "info": {
+      "title": "정보"
+    },
+    "notLoggedin": "로그인하지 않았습니다."
+  },
+
   "screen_map": {
     "section_card_shadow": {
       "radius": "1000 미터 반경 내에서",
@@ -186,7 +252,9 @@
       "and": "및",
       "getable": "얻을 수 있음",
       "event": "XRUN 이벤트",
-      "diamond": "다이아몬드"
+      "diamond": "다이아몬드",
+      "noCoin": "XRUN이 없습니다",
+      "noCoin2": "근거리에"
     },
     "section_slider_card": {
       "desc1": "획득 가능한 XRUN이",

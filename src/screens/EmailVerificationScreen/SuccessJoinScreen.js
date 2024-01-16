@@ -2,18 +2,42 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   Pressable,
   Image,
   Dimensions,
 } from 'react-native';
 import React, {useState, useRef, useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
+import {getLanguage} from '../../../utils';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // ########## Main Function ##########
 const SuccessJoinScreen = () => {
   const navigation = useNavigation();
   let ScreenHeight = Dimensions.get('window').height;
+  const [lang, setLang] = useState({});
+
+  useEffect(() => {
+    // Get Language
+    const fetchLangData = async () => {
+      try {
+        const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+        const screenLang = await getLanguage(
+          currentLanguage,
+          'screen_notExist',
+        );
+
+        setLang(screenLang);
+      } catch (err) {
+        console.error(
+          'Error retrieving selfCoordinate from AsyncStorage:',
+          err,
+        );
+      }
+    };
+
+    fetchLangData();
+  }, []);
 
   const onSignIn = async () => {
     navigation.replace('Home');
@@ -38,11 +62,13 @@ const SuccessJoinScreen = () => {
           }}
         />
         <View style={{alignItems: 'center'}}>
-          <Text style={styles.normalText}>Welcome to the membership.</Text>
           <Text style={styles.normalText}>
-            Your subscription has{' '}
+            {lang && lang.field_join ? lang.field_join.str1 : ''}
+          </Text>
+          <Text style={styles.normalText}>
+            {lang && lang.field_join ? lang.field_join.str2 : ''}
             <Text style={{color: '#da7750', fontFamily: 'Poppins-SemiBold'}}>
-              Finished
+              {lang && lang.field_join ? lang.field_join.str3 : ''}
             </Text>
           </Text>
         </View>

@@ -114,7 +114,8 @@
     },
     "alert": {
       "emptyEmail": "请插入您的电子邮件",
-      "invalidEmail": "您的电子邮件无效"
+      "invalidEmail": "您的电子邮件无效",
+      "errorServer": "存在服务器通信错误。请再试一次..."
     }
   },
 
@@ -179,6 +180,71 @@
     "placeholder": "搜索国家"
   },
 
+  "screen_notExist": {
+    "field_phoneNumber": {
+      "label": "请输入电话号码",
+      "empty": "电话号码是必需的"
+    },
+    "field_phoneVerif": {
+      "label": "请输入接收到的下一个4位代码",
+      "on": "请在以下时间内发送您的代码",
+      "off": "发生问题",
+      "sendAgain": "重新发送",
+      "emptyCode": "请完成验证码",
+      "invalidNumber": "无效号码",
+      "emptyNumber": "请输入您的号码"
+    },
+    "field_email": {
+      "label": "输入您的电子邮件",
+      "placeholder": "xrun@xrun.run",
+      "emptyEmail": "请输入您的电子邮件",
+      "invalidEmail": "您的电子邮件无效",
+      "occupiedEmail": "电子邮件已占用",
+      "errorServer": "与服务器通信时出现错误。请重试..."
+    },
+    "field_password": {
+      "label": "密码",
+      "placeholder": "输入您的新密码",
+      "validator": "*字母数字，数字，特殊符号组合，超过8位",
+      "emptyPassword": "请输入您的密码",
+      "invalidPassword": "您的密码无效"
+    },
+    "field_name": {
+      "label": "您叫什么名字？",
+      "placeholder_last": "姓",
+      "placeholder_first": "名",
+      "emptyLastName": "请输入您的姓氏",
+      "emptyName": "请输入您的名字"
+    },
+    "field_gender": {
+      "label": "性别",
+      "male": "男",
+      "female": "女",
+      "errorServer": "与服务器通信时出现错误。请重试..."
+    },
+    "field_join": {
+      "str1": "欢迎加入会员。",
+      "str2": "您的订阅已 ",
+      "str3": "完成"
+    }
+  },
+
+  "screen_bottomTab": {
+    "wallet": {
+      "title": "钱包"
+    },
+    "advertise": {
+      "title": "广告"
+    },
+    "notify": {
+      "title": "通知"
+    },
+    "info": {
+      "title": "信息"
+    },
+    "notLoggedin": "您尚未登录。"
+  },
+
   "screen_map": {
     "section_card_shadow": {
       "radius": "在1000米半径内",
@@ -186,7 +252,9 @@
       "and": "和",
       "getable": "可以获得",
       "event": "XRUN活动",
-      "diamond": "钻石"
+      "diamond": "钻石",
+      "noCoin": "没有 XRUN",
+      "noCoin2": "在近距离"
     },
     "section_slider_card": {
       "desc1": "有一个XRUN",

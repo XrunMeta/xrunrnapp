@@ -114,7 +114,8 @@
     },
     "alert": {
       "emptyEmail": "Please insert your email",
-      "invalidEmail": "Your email is not valid"
+      "invalidEmail": "Your email is not valid",
+      "errorServer": "There is a server communication error. Please try again..."
     }
   },
 
@@ -218,8 +219,30 @@
     "field_gender": {
       "label": "Gender",
       "male": "Male",
-      "female": "Female"
+      "female": "Female",
+      "errorServer": "There is a server communication error. Please try again..."
+    },
+    "field_join": {
+      "str1": "Welcome to the membership.",
+      "str2": "Your subscription has ",
+      "str3": "Finished"
     }
+  },
+
+  "screen_bottomTab": {
+    "wallet": {
+      "title": "Wallet"
+    },
+    "advertise": {
+      "title": "Advertise"
+    },
+    "notify": {
+      "title": "Notify"
+    },
+    "info": {
+      "title": "Info"
+    },
+    "notLoggedin": "You are not logged in."
   },
 
   "screen_map": {
@@ -229,7 +252,9 @@
       "and": "and",
       "getable": "can be optained",
       "event": "XRUN Event",
-      "diamond": "Diamond"
+      "diamond": "Diamond",
+      "noCoin": "There are no XRUN",
+      "noCoin2": "at close range"
     },
     "section_slider_card": {
       "desc1": "There is a XRUN of",
