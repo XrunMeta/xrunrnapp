@@ -252,7 +252,9 @@
       "and": "dan",
       "getable": "dapat diperoleh",
       "event": "XRUN Event",
-      "diamond": "Diamond"
+      "diamond": "Diamond",
+      "noCoin": "Tidak ada XRUN",
+      "noCoin2": "pada jarak dekat"
     },
     "section_slider_card": {
       "desc1": "Ada XRUN dari",

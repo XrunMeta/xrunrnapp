@@ -1,11 +1,4 @@
-import React, {
-  useEffect,
-  useState,
-  useRef,
-  useCallback,
-  useMemo,
-  createRef,
-} from 'react';
+import React, {useEffect, useState, useRef, useCallback, useMemo} from 'react';
 import {
   View,
   StyleSheet,
@@ -19,8 +12,7 @@ import Geolocation from 'react-native-geolocation-service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {fetchMarkerData} from './APIGetMarker';
 import RNFetchBlob from 'rn-fetch-blob';
-import logoMarker from '../../../assets/images/logo_xrun.png';
-import RangeText from './RangeText';
+const logo_tempMarker = require('../../../assets/images/logo_tempMarker.png');
 
 // ########## Main Component ##########
 const MapComponent = ({
@@ -44,7 +36,6 @@ const MapComponent = ({
   const [adThumbnail, setAdThumbnail] = useState([]); // Save AdThumbnail from BLOB API
   const mapRef = useRef(null);
   const markerRef = useRef(null);
-  const markerRefs = useRef(markersData.map(() => createRef()));
   const prevUserCoordinate = useRef({
     latitude: 0,
     longitude: 0,
@@ -67,13 +58,6 @@ const MapComponent = ({
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          title: 'Izin Lokasi',
-          message:
-            'Aplikasi memerlukan izin akses lokasi untuk fungsi tertentu.',
-          buttonPositive: 'Izinkan',
-          buttonNegative: 'Exit',
-        },
       );
 
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
@@ -233,13 +217,6 @@ const MapComponent = ({
       try {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-          {
-            title: 'Izin Lokasi',
-            message:
-              'Aplikasi memerlukan izin akses lokasi untuk fungsi tertentu.',
-            buttonPositive: 'Izinkan',
-            buttonNegative: 'Exit',
-          },
         );
 
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
@@ -396,8 +373,6 @@ const MapComponent = ({
 
     console.log('Marker di klik : ' + item.distance);
 
-    const markerIndex = markersData.findIndex(m => m.coin === item.coin);
-
     setPinTarget({
       latitude: parseFloat(item.lat),
       longitude: parseFloat(item.lng),
@@ -469,9 +444,10 @@ const MapComponent = ({
         title={item.title}
         onPress={() => handleMarkerClick(item)}>
         <Image
-          source={{uri: `file://${adThumbnail[idx]}`}}
-          // source={logoMarker}
-          style={{width: 15, height: 15}}
+          // source={{uri: `file://${adThumbnail[idx]}`}}
+          // style={{width: 15, height: 15}}
+          style={{width: 35, height: 35}}
+          source={logo_tempMarker}
         />
         <Callout tooltip>
           <View
@@ -480,7 +456,7 @@ const MapComponent = ({
               borderColor: '#ffdc04',
               borderWidth: 3,
               flexDirection: 'row',
-              width: 200,
+              width: 225,
               height: 80,
               paddingVertical: 5,
               paddingHorizontal: 10,
@@ -524,7 +500,6 @@ const MapComponent = ({
                 {updateRange}m
               </Text>
             </View>
-            {/* {console.log('Range Update : ' + localClickedRange)} */}
             <View
               style={{
                 flex: 1,
@@ -537,13 +512,13 @@ const MapComponent = ({
                   marginTop: 3,
                   color: '#343a59',
                 }}>
-                {lang && lang.screen_map && lang.screen_map.section_marker
-                  ? lang.screen_map.section_marker.desc1 + ' '
+                {lang && lang.section_marker
+                  ? lang.section_marker.desc1 + ' '
                   : ''}
                 {item.brand}
                 {'\n'}
-                {lang && lang.screen_map && lang.screen_map.section_marker
-                  ? lang.screen_map.section_marker.desc2 + ' '
+                {lang && lang.section_marker
+                  ? lang.section_marker.desc2 + ' '
                   : ''}
                 {item.brand + '.'}
               </Text>
@@ -551,7 +526,7 @@ const MapComponent = ({
                 style={{
                   fontSize: 18,
                   fontFamily: 'Poppins-SemiBold',
-                  marginBottom: -5,
+                  marginTop: -6,
                   color: 'black',
                 }}>
                 {item.coins} {item.brand}
@@ -582,9 +557,7 @@ const MapComponent = ({
               fontFamily: 'Poppins-Regular',
               fontSize: 13,
             }}>
-            {lang && lang.screen_map && lang.screen_map.section_marker
-              ? lang.screen_map.section_marker.loader
-              : ''}
+            {lang && lang.section_marker ? lang.section_marker.loader : ''}
           </Text>
           {/* Show Loading While Data is Load */}
         </View>
@@ -614,9 +587,9 @@ const MapComponent = ({
                   fontFamily: 'Poppins-Regular',
                   fontSize: 13,
                 }}>
-                {lang && lang.screen_map && lang.screen_map.section_marker
-                  ? lang.screen_map.section_marker.loader
-                  : ''}
+                {lang && lang.section_marker
+                  ? lang.section_marker.loader
+                  : 'Loading...'}
               </Text>
             </View>
           )}
