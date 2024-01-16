@@ -70,7 +70,13 @@ const CompleteSend = ({navigation, route}) => {
     <View style={{flex: 1, backgroundColor: '#f3f4f6'}}>
       <View style={{flexDirection: 'row'}}>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>Switch request completed</Text>
+          <Text style={styles.title}>
+            {lang &&
+            lang.complete_conversion &&
+            lang.complete_conversion.conversion_request
+              ? lang.complete_conversion.conversion_request
+              : ''}
+          </Text>
         </View>
       </View>
       <View
@@ -86,7 +92,9 @@ const CompleteSend = ({navigation, route}) => {
             fontFamily: 'Poppins-Regular',
             color: '#e05c2b',
           }}>
-          Change{' '}
+          {lang && lang.screen_wallet && lang.screen_wallet.table_head_change
+            ? lang.screen_wallet.table_head_change
+            : ''}{' '}
         </Text>
         <Text
           style={{fontSize: 16, fontFamily: 'Poppins-Regular', color: '#555'}}>
@@ -118,7 +126,11 @@ const CompleteSend = ({navigation, route}) => {
               fontFamily: 'Poppins-Regular',
               color: '#555',
             }}>
-            XRUN yang akan di ubah
+            {lang &&
+            lang.complete_conversion &&
+            lang.complete_conversion.target_converted
+              ? lang.complete_conversion.target_converted
+              : ''}
           </Text>
           <Text
             style={{
@@ -143,7 +155,11 @@ const CompleteSend = ({navigation, route}) => {
               fontFamily: 'Poppins-Regular',
               color: '#555',
             }}>
-            Saldo saat ini
+            {lang &&
+            lang.complete_conversion &&
+            lang.complete_conversion.current_balance
+              ? lang.complete_conversion.current_balance
+              : ''}
           </Text>
           <Text
             style={{
@@ -166,7 +182,11 @@ const CompleteSend = ({navigation, route}) => {
               fontFamily: 'Poppins-Regular',
               color: '#555',
             }}>
-            Permintaan ubah XRUN
+            {lang &&
+            lang.complete_conversion &&
+            lang.complete_conversion.conversion_request
+              ? lang.complete_conversion.conversion_request
+              : ''}
           </Text>
           <View>
             <Text
@@ -189,7 +209,9 @@ const CompleteSend = ({navigation, route}) => {
           paddingHorizontal: 20,
           marginTop: 30,
         }}>
-        Swap may reject if network fee is higher then your remain XRUN
+        {lang && lang.complete_conversion && lang.complete_conversion.desc
+          ? lang.complete_conversion.desc
+          : ''}
       </Text>
 
       <KeyboardAvoidingView
