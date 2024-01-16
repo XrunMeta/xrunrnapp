@@ -252,7 +252,9 @@
       "and": "및",
       "getable": "얻을 수 있음",
       "event": "XRUN 이벤트",
-      "diamond": "다이아몬드"
+      "diamond": "다이아몬드",
+      "noCoin": "XRUN이 없습니다",
+      "noCoin2": "근거리에"
     },
     "section_slider_card": {
       "desc1": "획득 가능한 XRUN이",

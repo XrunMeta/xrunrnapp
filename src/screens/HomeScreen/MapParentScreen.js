@@ -6,8 +6,6 @@ import {
   SafeAreaView,
   StyleSheet,
   View,
-  Touchable,
-  TouchableOpacity,
 } from 'react-native';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import LinearGradient from 'react-native-linear-gradient';
@@ -21,8 +19,7 @@ import Animated, {
 import MapComponent from '../../components/Map/Map';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CompassHeading from 'react-native-compass-heading';
-
-const langData = require('../../../lang.json');
+import {getLanguage} from '../../../utils';
 
 // Offset Value of Slider Card
 const initialOffset = 110;
@@ -49,8 +46,6 @@ export default function MapParent() {
   const animatedStyles = useAnimatedStyle(() => ({
     transform: [{translateY: offset.value}],
   })); // Slider Card Translate Animation
-  const [activeTab, setActiveTab] = useState('Home');
-  const [GPSActive, setGPSActive] = useState(false);
 
   const arrowStyle = useAnimatedStyle(() => {
     if (pin) {
@@ -69,15 +64,14 @@ export default function MapParent() {
 
   useEffect(() => {
     // Get Language
-    const getLanguage = async () => {
+    const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
         const selfCoordinate = await AsyncStorage.getItem('selfCoordinate');
 
         // Set Language
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
-        setLang(language);
+        const screenLang = await getLanguage(currentLanguage, 'screen_map');
+        setLang(screenLang);
 
         // Set Player Coordinate
         const coordinate = JSON.parse(selfCoordinate);
@@ -89,7 +83,7 @@ export default function MapParent() {
         );
       }
     };
-    getLanguage();
+    fetchData();
 
     // Get Device Rotation
     const degree_update_rate = 3;
@@ -267,10 +261,8 @@ export default function MapParent() {
                     fontSize: 10.5,
                     color: 'white',
                   }}>
-                  {lang &&
-                  lang.screen_map &&
-                  lang.screen_map.section_card_shadow
-                    ? lang.screen_map.section_card_shadow.radius
+                  {lang && lang.section_card_shadow
+                    ? lang.section_card_shadow.radius
                     : ''}
                 </Text>
                 {markerCount > 0 ? (
@@ -281,10 +273,8 @@ export default function MapParent() {
                       color: 'white',
                       flexWrap: 'wrap',
                     }}>
-                    {lang &&
-                    lang.screen_map &&
-                    lang.screen_map.section_card_shadow
-                      ? lang.screen_map.section_card_shadow.amount + ' '
+                    {lang && lang.section_card_shadow
+                      ? lang.section_card_shadow.amount + ' '
                       : ''}
                     <Text
                       style={{
@@ -292,10 +282,8 @@ export default function MapParent() {
                       }}>
                       {brandCount} XRUN
                     </Text>{' '}
-                    {lang &&
-                    lang.screen_map &&
-                    lang.screen_map.section_card_shadow
-                      ? lang.screen_map.section_card_shadow.and + ' '
+                    {lang && lang.section_card_shadow
+                      ? lang.section_card_shadow.and + ' '
                       : ''}
                     <Text
                       style={{
@@ -304,10 +292,8 @@ export default function MapParent() {
                       {markerCount} BIG XRUN{' '}
                     </Text>
                     {'\n'}
-                    {lang &&
-                    lang.screen_map &&
-                    lang.screen_map.section_card_shadow
-                      ? lang.screen_map.section_card_shadow.getable
+                    {lang && lang.section_card_shadow
+                      ? lang.section_card_shadow.getable
                       : ''}
                   </Text>
                 ) : (
@@ -318,7 +304,11 @@ export default function MapParent() {
                       color: 'white',
                       marginBottom: 3,
                     }}>
-                    There are no XRUN {'\n'}at close range.
+                    {lang.section_card_shadow &&
+                      lang.section_card_shadow.noCoin + ' '}
+                    {'\n'}
+                    {lang.section_card_shadow &&
+                      lang.section_card_shadow.noCoin2}
                   </Text>
                 )}
               </View>
@@ -336,10 +326,8 @@ export default function MapParent() {
                     marginTop: 1,
                     marginBottom: -2,
                   }}>
-                  {lang &&
-                  lang.screen_map &&
-                  lang.screen_map.section_card_shadow
-                    ? lang.screen_map.section_card_shadow.event
+                  {lang && lang.section_card_shadow
+                    ? lang.section_card_shadow.event
                     : ''}
                 </Text>
                 <View
@@ -358,10 +346,8 @@ export default function MapParent() {
                       color: '#ffdc04',
                       marginTop: -4,
                     }}>
-                    {lang &&
-                    lang.screen_map &&
-                    lang.screen_map.section_card_shadow
-                      ? lang.screen_map.section_card_shadow.diamond + ' '
+                    {lang && lang.section_card_shadow
+                      ? lang.section_card_shadow.diamond + ' '
                       : ''}
                     {bigCoin}
                   </Text>
@@ -441,17 +427,13 @@ export default function MapParent() {
                   <Text style={styles.subTitle}>{rangeToMarker || 0}m</Text>
                   <Text style={styles.desc}>
                     <Text style={styles.desc}>
-                      {lang &&
-                      lang.screen_map &&
-                      lang.screen_map.section_slider_card
-                        ? lang.screen_map.section_slider_card.desc1
+                      {lang && lang.section_slider_card
+                        ? lang.section_slider_card.desc1
                         : ''}
                     </Text>{' '}
                     <Text style={{fontFamily: 'Poppins-Bold'}}>XRUN</Text>{' '}
-                    {lang &&
-                    lang.screen_map &&
-                    lang.screen_map.section_slider_card
-                      ? lang.screen_map.section_slider_card.desc2
+                    {lang && lang.section_slider_card
+                      ? lang.section_slider_card.desc2
                       : ''}
                   </Text>
                 </View>

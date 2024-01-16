@@ -88,7 +88,10 @@ export default Router = () => {
   };
 
   return (
-    <View style={{flex: 1}} onTouchStart={logoutUser}>
+    <View
+      style={{flex: 1}}
+      // onTouchStart={logoutUser}
+    >
       <Stack.Navigator screenOptions={{headerShown: false}}>
         <Stack.Screen name="First" component={FirstScreen} />
         <Stack.Screen name="Home" component={Home} />
