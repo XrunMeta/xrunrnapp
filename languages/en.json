@@ -508,5 +508,21 @@
   },
   "global_error": {
     "error": "It's a server problem. Please try in a few minutes."
+  },
+
+  "screen_advertise": {
+    "title": "Advertising Storage",
+    "delete": "DELETE",
+    "all": " ALL",
+    "deleteAll": "DELETE ALL",
+    "surely": "Are you sure to delete all?",
+    "deleted": "Ads has been deleted",
+    "failedDelete": "Ads failed to delete",
+    "until": "until",
+    "loading": "Loading data, please wait...",
+    "nodata": "No data available",
+    "newest": "Newest",
+    "deadline": "Deadline",
+    "order": "Coin order"
   }
 }
