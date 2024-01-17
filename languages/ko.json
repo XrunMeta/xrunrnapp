@@ -267,6 +267,11 @@
     }
   },
 
+  "screen_showad": {
+    "success": "코인 획득 성공",
+    "failed": "코인 획득 실패"
+  },
+
   "screen_info": {
     "title": "내 정보",
     "list": {

@@ -267,6 +267,11 @@
     }
   },
 
+  "screen_showad": {
+    "success": "获取硬币成功",
+    "failed": "获取硬币失败"
+  },
+
   "screen_info": {
     "title": "我的信息",
     "list": {

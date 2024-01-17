@@ -267,6 +267,11 @@
     }
   },
 
+  "screen_showad": {
+    "success": "Berhasil mendapatkan Koin",
+    "failed": "Gagal mendapatkan Koin"
+  },
+
   "screen_info": {
     "title": "Info Saya",
     "list": {
