@@ -267,6 +267,11 @@
     }
   },
 
+  "screen_showad": {
+    "success": "Coin Acquired  Successfully",
+    "failed": "Coin Acquisition Failed"
+  },
+
   "screen_info": {
     "title": "My Info",
     "list": {
