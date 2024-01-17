@@ -10,7 +10,6 @@ import {
   Text,
   Dimensions,
   PermissionsAndroid,
-  Pressable,
 } from 'react-native';
 import {Camera, useCameraDevice} from 'react-native-vision-camera';
 import Animated, {
@@ -22,12 +21,10 @@ import Animated, {
 } from 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
-import {URL_API} from '../../../utils';
+import {URL_API, getLanguage} from '../../../utils';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import CompassHeading from 'react-native-compass-heading';
-
-const langData = require('../../../lang.json');
 
 function ARScreen() {
   const [lang, setLang] = useState({});
@@ -48,31 +45,26 @@ function ARScreen() {
   const navigation = useNavigation();
   const [brandCount, setBrandCount] = useState(0);
   const [bigCoin, setBigCoin] = useState(0);
-  const [markerCount, setMarkerCount] = useState(0);
   const [compassHeading, setCompassHeading] = useState(0);
 
   const getCamPermission = async () => {
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.CAMERA,
-        {
-          title: 'Camera Permission',
-          message:
-            'XRUN needs access to your camera ' +
-            'so you can enjoy AR and Catch the Coin!',
-          buttonPositive: 'OK',
-          buttonNegative: 'Cancel',
-        },
+        // {
+        //   title: 'Camera Permission',
+        //   message:
+        //     'XRUN needs access to your camera ' +
+        //     'so you can enjoy AR and Catch the Coin!',
+        //   buttonPositive: 'OK',
+        //   buttonNegative: 'Cancel',
+        // },
       );
 
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        // console.log('Kamera diijinin boy');
-
         setCameraReady(true);
         setCameraPermission('granted');
       } else {
-        // RNRestart.restart();
-        // setCameraPermission('denied');
         console.log('Kamera ga diizinin');
         Linking.openSettings();
       }
@@ -90,9 +82,9 @@ function ARScreen() {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
 
         // Set Language
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
-        setLang(language);
+        const screenLang = await getLanguage(currentLanguage, 'screen_map');
+        setLang(screenLang);
+
         setUserData(JSON.parse(storedUserData));
       } catch (err) {
         console.error(
@@ -374,9 +366,9 @@ function ARScreen() {
                       width: 150,
                       height: 275,
                       display:
-                        item.rotation >= 30 && item.rotation <= 100
+                        item.rotation >= 20 && item.rotation <= 100
                           ? 'block'
-                          : item.rotation >= 130 && item.rotation <= 180
+                          : item.rotation >= 130 && item.rotation <= 195
                           ? 'block'
                           : item.rotation >= 210 && item.rotation <= 300
                           ? 'block'
@@ -506,10 +498,8 @@ function ARScreen() {
                         fontSize: 10.5,
                         color: 'white',
                       }}>
-                      {lang &&
-                      lang.screen_map &&
-                      lang.screen_map.section_card_shadow
-                        ? lang.screen_map.section_card_shadow.radius
+                      {lang && lang.section_card_shadow
+                        ? lang.section_card_shadow.radius
                         : ''}
                     </Text>
                     <Text
@@ -518,10 +508,8 @@ function ARScreen() {
                         fontSize: 13,
                         color: 'white',
                       }}>
-                      {lang &&
-                      lang.screen_map &&
-                      lang.screen_map.section_card_shadow
-                        ? lang.screen_map.section_card_shadow.amount + ' '
+                      {lang && lang.section_card_shadow
+                        ? lang.section_card_shadow.amount + ' '
                         : ''}
                       <Text
                         style={{
@@ -529,10 +517,8 @@ function ARScreen() {
                         }}>
                         {brandCount} XRUN
                       </Text>{' '}
-                      {lang &&
-                      lang.screen_map &&
-                      lang.screen_map.section_card_shadow
-                        ? lang.screen_map.section_card_shadow.and + ' '
+                      {lang && lang.section_card_shadow
+                        ? lang.section_card_shadow.and + ' '
                         : ''}
                       <Text
                         style={{
@@ -541,10 +527,8 @@ function ARScreen() {
                         {coinAPI.length} BIG XRUN{' '}
                       </Text>
                       {'\n'}
-                      {lang &&
-                      lang.screen_map &&
-                      lang.screen_map.section_card_shadow
-                        ? lang.screen_map.section_card_shadow.getable
+                      {lang && lang.section_card_shadow
+                        ? lang.section_card_shadow.getable
                         : ''}
                     </Text>
                   </View>
@@ -560,10 +544,8 @@ function ARScreen() {
                         fontSize: 13,
                         color: 'white',
                       }}>
-                      {lang &&
-                      lang.screen_map &&
-                      lang.screen_map.section_card_shadow
-                        ? lang.screen_map.section_card_shadow.event
+                      {lang && lang.section_card_shadow
+                        ? lang.section_card_shadow.event
                         : ''}
                     </Text>
                     <View
@@ -582,10 +564,8 @@ function ARScreen() {
                           color: '#ffdc04',
                           marginTop: -4,
                         }}>
-                        {lang &&
-                        lang.screen_map &&
-                        lang.screen_map.section_card_shadow
-                          ? lang.screen_map.section_card_shadow.diamond + ' '
+                        {lang && lang.section_card_shadow
+                          ? lang.section_card_shadow.diamond + ' '
                           : ''}
                         {bigCoin}
                       </Text>
