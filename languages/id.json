@@ -272,6 +272,18 @@
     "failed": "Gagal mendapatkan Koin"
   },
 
+  "screen_notify": {
+    "title": "Pemberitahuan",
+    "delete": "HAPUS",
+    "deletAll": "HAPUS SEMUA",
+    "loader": "Memuat...",
+    "look": "LIHAT LEBIH DEKAT",
+    "visit": "KE ACARA",
+    "send": "Kirim",
+    "placeholder": "Ketik pertanyaan Anda...",
+    "surely": "Apakah Anda yakin ingin menghapus semua obrolan?"
+  },
+
   "screen_info": {
     "title": "Info Saya",
     "list": {
