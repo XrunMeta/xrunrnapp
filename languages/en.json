@@ -272,6 +272,18 @@
     "failed": "Coin Acquisition Failed"
   },
 
+  "screen_notify": {
+    "title": "Notify",
+    "delete": "DELETE",
+    "deletAll": "DELETE ALL",
+    "loader": "Loading...",
+    "look": "TAKE A CLOSER LOOK",
+    "visit": "GO TO THE EVENT",
+    "send": "Send",
+    "placeholder": "Type your question...",
+    "surely": "Are you sure you want to delete all chats?"
+  },
+
   "screen_info": {
     "title": "My Info",
     "list": {
