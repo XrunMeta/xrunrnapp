@@ -148,7 +148,7 @@ const SendWalletScreen = ({navigation, route}) => {
   }, [isVisibleReadQR]);
 
   useEffect(() => {
-    if (amount === '') {
+    if (amount === '' || amount > parseFloat(dataWallet.Wamount).toString()) {
       setIconNextIsDisabled(true);
     } else if (amount == 0) {
       setIconNextIsDisabled(true);

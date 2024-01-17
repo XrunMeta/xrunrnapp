@@ -472,6 +472,23 @@
   "popup": {
     "notice": "Mohon maaf kepada user XRUN.\n\nKami akan melakukan testing periode\nDan sekaligus maintenance.\n\nMaintenance kurang lebih :\n\n1. Meluaskan coin di seluruh Indonesia.\n\n2. Untuk mengurangi error pada saat tangkap coin dan nonton iklan.\n\n3. Free Coin untuk User yang mengisi Referral.\n\n*Test Periode kami akan berjalan sampai Akhir bulan Aug tanggal 31 2022"
   },
+  "screen_conversion": {
+    "title": "Permintaan Konversi",
+    "invalid_input": "Input tidak valid.",
+    "invalid_input_amount": "Jumlah input tidak valid.",
+    "insufficient_coin": "Kekurangan koin yang diperoleh.",
+    "coin_above_0": "Silakan masukkan koin di atas 0.",
+    "acquired_coin": "mendapatkan koin",
+    "select_network": "Pilih Jaringan",
+    "desc": "Ketika beralih, biaya gas sekitar 0.124% dikurangkan sebelum beralih."
+  },
+  "complete_conversion": {
+    "title": "Permintaan Konversi Selesai",
+    "target_converted": "Tujuan yang akan dikonversi",
+    "current_balance": "Saldo Saat Ini",
+    "conversion_request": "Permintaan Konversi dari",
+    "desc": "Pertukaran mungkin ditolak jika biaya jaringan lebih tinggi daripada sisa XRUN Anda"
+  },
   "global_error": {
     "error": "Server telah masalah. Silakan mencoba lagi nanti."
   }

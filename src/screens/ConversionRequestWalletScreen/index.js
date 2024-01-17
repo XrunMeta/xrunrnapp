@@ -15,8 +15,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInputWallet from '../../components/CustomInputWallet';
 import {URL_API} from '../../../utils';
 
-const langData = require('../../../lang.json');
-
 const ConversionRequest = ({navigation, route}) => {
   const [lang, setLang] = useState({});
   const [iconNextIsDisabled, setIconNextIsDisabled] = useState(true);
@@ -40,9 +38,27 @@ const ConversionRequest = ({navigation, route}) => {
     const getLanguage = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+        let langData;
 
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
+        switch (currentLanguage) {
+          case 'id':
+            langData = require('../../../languages/id.json');
+            break;
+          case 'en':
+            langData = require('../../../languages/en.json');
+            break;
+          case 'ko':
+            langData = require('../../../languages/ko.json');
+            break;
+          case 'zh':
+            langData = require('../../../languages/zh.json');
+            break;
+          default:
+            langData = require('../../../languages/en.json');
+            break;
+        }
+
+        const language = langData;
         setLang(language);
       } catch (err) {
         console.error(
@@ -91,7 +107,7 @@ const ConversionRequest = ({navigation, route}) => {
   }, [dataMember]);
 
   useEffect(() => {
-    if (amount === '' || amount === '-') {
+    if (amount === '' || amount === '-' || parseFloat(amount) > balance) {
       setIconNextIsDisabled(true);
     } else if (amount == 0 || amount < 0) {
       setIconNextIsDisabled(true);
@@ -106,11 +122,28 @@ const ConversionRequest = ({navigation, route}) => {
 
   const onSend = () => {
     if (amount === '' || amount === '-') {
-      Alert.alert('Warning', 'Invalid input.');
+      Alert.alert(
+        '',
+        lang && lang.screen_conversion && lang.screen_conversion.invalid_input
+          ? lang.screen_conversion.invalid_input
+          : '',
+      );
     } else if (parseFloat(amount) > parseFloat(balance)) {
-      Alert.alert('Warning', 'Insufficient coin acquired.');
+      Alert.alert(
+        '',
+        lang &&
+          lang.screen_conversion &&
+          lang.screen_conversion.insufficient_coin
+          ? lang.screen_conversion.insufficient_coin
+          : '',
+      );
     } else if (amount == 0 || amount < 0) {
-      Alert.alert('Warning', 'Please enter the coin above 0.');
+      Alert.alert(
+        '',
+        lang && lang.screen_conversion && lang.screen_conversion.coin_above_0
+          ? lang.screen_conversion.coin_above_0
+          : '',
+      );
     } else {
       // setAmount('');
       setPopupConversion(true);
@@ -226,7 +259,12 @@ const ConversionRequest = ({navigation, route}) => {
           amount,
         });
       } else {
-        Alert.alert('', "It's a server problem. Please try in a few minutes.");
+        Alert.alert(
+          '',
+          lang && lang.global_error && lang.global_error.error
+            ? lang.global_error.error
+            : '',
+        );
       }
     }
   };
@@ -245,7 +283,11 @@ const ConversionRequest = ({navigation, route}) => {
           <ButtonBack onClick={onBack} />
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>Conversion request</Text>
+          <Text style={styles.title}>
+            {lang && lang.screen_conversion && lang.screen_conversion.title
+              ? lang.screen_conversion.title
+              : ''}
+          </Text>
         </View>
       </View>
 
@@ -253,15 +295,29 @@ const ConversionRequest = ({navigation, route}) => {
         <View style={styles.partTop}>
           <Text style={styles.currencyName}>-</Text>
           <View style={styles.partScanQR}>
-            <Text style={styles.balance}>accquired coin: {balance}XRUN</Text>
+            <Text style={styles.balance}>
+              {lang &&
+              lang.screen_conversion &&
+              lang.screen_conversion.acquired_coin
+                ? lang.screen_conversion.acquired_coin
+                : ''}
+              : {balance}XRUN
+            </Text>
           </View>
         </View>
 
         <View style={styles.partBottom}>
-          <Text style={styles.selectNetwork}>Select Network</Text>
+          <Text style={styles.selectNetwork}>
+            {lang &&
+            lang.screen_conversion &&
+            lang.screen_conversion.select_network
+              ? lang.screen_conversion.select_network
+              : ''}
+          </Text>
           <Text style={styles.description}>
-            When switching, the gas is approximately 0.124% deducted before
-            switching.
+            {lang && lang.screen_conversion && lang.screen_conversion.desc
+              ? lang.screen_conversion.desc
+              : ''}
           </Text>
 
           <View style={styles.wrapperNetwork}>
@@ -309,15 +365,26 @@ const ConversionRequest = ({navigation, route}) => {
               setValue={setAmount}
               isNumber
               labelVisible={false}
-              placeholder={'Please enter the amount to be sent.'}
+              placeholder={
+                lang &&
+                lang.screen_send &&
+                lang.screen_send.send_amount_placeholder
+                  ? lang.screen_send.send_amount_placeholder
+                  : ''
+              }
               customFontSize={16}
             />
-
             <CustomInputWallet
               value={address}
               labelVisible={false}
               setValue={setAddress}
-              placeholder={'Please enter the Address'}
+              placeholder={
+                lang &&
+                lang.screen_send &&
+                lang.screen_send.send_address_placeholder
+                  ? lang.screen_send.send_address_placeholder
+                  : ''
+              }
               customFontSize={16}
             />
           </View>

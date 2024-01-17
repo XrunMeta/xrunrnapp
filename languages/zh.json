@@ -460,7 +460,8 @@
     "send_balance_not_enough": "没有足够的钱（或银行余额）。",
     "send_address_less": "地址少于40个字母。",
     "send_enough_money": "检查当前金额，并确保您的钱包中有足够的钱，包括燃气费（转账费）",
-    "send_verification_code": "发送验证码"
+    "send_verification_code": "发送验证码",
+    "confirm_alert": "确认"
   },
   "screen_complete_send": {
     "title": "转账完成",
@@ -471,6 +472,23 @@
   },
   "popup": {
     "notice": "向用户XRUN致以诚挚的歉意。\n\n我们将进行测试期间并同时进行维护。\n\n维护内容如下：\n\n1. 在整个印度尼西亚扩大硬币。\n\n2. 减少捕捉硬币和观看广告时的错误。\n\n3. 为填写推荐的用户提供免费硬币。\n\n* 我们的测试期将持续到2022年8月31日。"
+  },
+  "screen_conversion": {
+    "title": "转换请求",
+    "invalid_input": "无效输入。",
+    "invalid_input_amount": "无效输入金额。",
+    "insufficient_coin": "获取的币不足。",
+    "coin_above_0": "请输入大于0的币。",
+    "acquired_coin": "获得的币",
+    "select_network": "选择网络",
+    "desc": "切换时，在切换之前大约扣除0.124%的气体。"
+  },
+  "complete_conversion": {
+    "title": "转换请求已完成",
+    "target_converted": "要转换的目标",
+    "current_balance": "当前余额",
+    "conversion_request": "转换请求来自",
+    "desc": "如果网络费用高于剩余的XRUN，则交换可能被拒绝。"
   },
   "global_error": {
     "error": "服务器有问题，请稍后再试."
