@@ -1,7 +1,8 @@
 import {Modal, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useInterstitialAd, TestIds} from '@react-native-admob/admob';
-import {URL_API} from '../../../utils';
+import {URL_API, getLanguage} from '../../../utils';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const realAD = 'ca-app-pub-9457909979646034/7873165988';
 
@@ -34,6 +35,7 @@ const ShowAdScreen = ({route, navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [adCompleted, setAdCompleted] = useState(false);
   const [modalText, setModalText] = useState('');
+  const [lang, setLang] = useState({});
 
   const handleOKPress = () => {
     setModalVisible(false);
@@ -47,6 +49,23 @@ const ShowAdScreen = ({route, navigation}) => {
       navigation.replace(screenName);
     }
   };
+
+  useEffect(() => {
+    // Get Language Data
+    const fetchData = async () => {
+      try {
+        const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+        const screenLang = await getLanguage(currentLanguage, 'screen_showad');
+
+        // Set your language state
+        setLang(screenLang);
+      } catch (err) {
+        console.error('Error in fetchData:', err);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const loadAd = async () => {
@@ -79,10 +98,10 @@ const ShowAdScreen = ({route, navigation}) => {
 
           // If Success
           if (data && parseInt(data.data[0].count) > 0) {
-            setModalText(`Coin Acquired Successfully!`);
+            setModalText(lang.success);
             setModalVisible(true);
           } else {
-            setModalText('Coin Acquisition Failed.');
+            setModalText(lang.failed);
             setModalVisible(true);
           }
         } catch (err) {

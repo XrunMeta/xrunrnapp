@@ -18,7 +18,7 @@ import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import jsonData from '../../../testAds';
-import {URL_API} from '../../../utils';
+import {URL_API, getLanguage} from '../../../utils';
 
 const langData = require('../../../lang.json');
 
@@ -54,13 +54,15 @@ const AdvertiseScreen = () => {
 
   useEffect(() => {
     // Get Language
-    const getLanguage = async () => {
+    const fetchData = async () => {
       try {
         console.log('Dapetin API di awal nih bray');
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
-        setLang(language);
+        const screenLang = await getLanguage(
+          currentLanguage,
+          'screen_advertise',
+        );
+        setLang(screenLang);
 
         // Get User Data
         const userData = await AsyncStorage.getItem('userData');
@@ -100,7 +102,7 @@ const AdvertiseScreen = () => {
       }
     };
 
-    getLanguage();
+    fetchData();
   }, []);
 
   const completedKeyExtractor = (item, index) => item.transaction.toString();
@@ -196,7 +198,7 @@ const AdvertiseScreen = () => {
   const deleteAllChat = async () => {
     Alert.alert(
       'Warning',
-      'Are you sure to delete all?',
+      lang.surely,
       [
         {
           text: 'Cancel',
@@ -217,9 +219,7 @@ const AdvertiseScreen = () => {
                 // Tampilkan alert sesuai dengan nilai count
                 if (count > 0) {
                   // Sukses, tampilkan alert sukses
-                  Alert.alert('Sukses', 'Iklan berhasil dihapus', [
-                    {text: 'Oke'},
-                  ]);
+                  Alert.alert('Success', lang.deleted, [{text: 'Ok'}]);
 
                   // Exit from Delete Mode and back to normal mode
                   setIsDelete(false);
@@ -235,13 +235,11 @@ const AdvertiseScreen = () => {
                   });
                 } else {
                   // Gagal, tampilkan alert gagal
-                  Alert.alert('Gagal', 'Gagal menghapus iklan', [
-                    {text: 'Oke'},
-                  ]);
+                  Alert.alert('Failed', lang.failedDelete, [{text: 'Ok'}]);
                 }
               } else {
                 // Tangani kondisi tidak ada data
-                Alert.alert('Gagal', 'Gagal menghapus iklan', [{text: 'Oke'}]);
+                Alert.alert('Failed', lang.failedDelete, [{text: 'Ok'}]);
               }
             } catch (err) {
               console.error('Error fetching ads data:', err);
@@ -268,7 +266,7 @@ const AdvertiseScreen = () => {
         // Tampilkan alert sesuai dengan nilai count
         if (count > 0) {
           // Sukses, tampilkan alert sukses
-          Alert.alert('Sukses', 'Iklan berhasil dihapus', [{text: 'Oke'}]);
+          Alert.alert('Success', lang.deleted, [{text: 'Ok'}]);
 
           // Exit from Delete Mode and back to normal mode
           setIsDelete(false);
@@ -284,11 +282,11 @@ const AdvertiseScreen = () => {
           });
         } else {
           // Gagal, tampilkan alert gagal
-          Alert.alert('Gagal', 'Gagal menghapus iklan', [{text: 'Oke'}]);
+          Alert.alert('Failed', lang.failedDelete, [{text: 'Ok'}]);
         }
       } else {
         // Tangani kondisi tidak ada data
-        Alert.alert('Gagal', 'Gagal menghapus iklan', [{text: 'Oke'}]);
+        Alert.alert('Failed', lang.failedDelete, [{text: 'Ok'}]);
       }
     } catch (err) {
       console.error('Error fetching ads data:', err);
@@ -367,7 +365,9 @@ const AdvertiseScreen = () => {
               </Text>
               <Text style={styles.listNormalText}> {item.symbol}</Text>
             </View>
-            <Text style={styles.listNormalText}>{item.dateends} 까지</Text>
+            <Text style={styles.listNormalText}>
+              {item.dateends} {lang && lang.until ? lang.until : ''}
+            </Text>
           </View>
         </View>
       </View>
@@ -434,12 +434,14 @@ const AdvertiseScreen = () => {
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#343a59" />
             <Text style={[styles.normalText, {color: 'grey'}]}>
-              Loading data, please wait...
+              {lang && lang.loading ? lang.loading : ''}
             </Text>
           </View>
         ) : storageAds.length === 0 ? (
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>No data available</Text>
+            <Text style={styles.emptyText}>
+              {lang && lang.nodata ? lang.nodata : ''}
+            </Text>
           </View>
         ) : (
           <View>
@@ -465,7 +467,7 @@ const AdvertiseScreen = () => {
                     fontFamily: 'Poppins-SemiBold',
                     textAlign: 'center',
                   }}>
-                  DELETE{' '}
+                  {lang && lang.delete ? lang.delete : ''}{' '}
                   {selectedItems.length > 0 ? `(${selectedItems.length})` : ''}
                 </Text>
               </TouchableOpacity>
@@ -509,7 +511,9 @@ const AdvertiseScreen = () => {
                     borderBottomColor: '#acb5bb',
                     borderBottomWidth: 1,
                   }}>
-                  <Text style={styles.normalText}>Newest</Text>
+                  <Text style={styles.normalText}>
+                    {lang && lang.newest ? lang.newest : ''}
+                  </Text>
                 </Pressable>
                 <Pressable
                   onPress={() => selectFilter('Deadline', 1, 'dateleft')}
@@ -519,7 +523,9 @@ const AdvertiseScreen = () => {
                     borderBottomColor: '#acb5bb',
                     borderBottomWidth: 1,
                   }}>
-                  <Text style={styles.normalText}>Deadline</Text>
+                  <Text style={styles.normalText}>
+                    {lang && lang.deadline ? lang.deadline : ''}
+                  </Text>
                 </Pressable>
                 <Pressable
                   onPress={() => selectFilter('Coin order', 2, 'amount')}
@@ -528,7 +534,9 @@ const AdvertiseScreen = () => {
                     paddingHorizontal: 10,
                     borderBottomColor: '#acb5bb',
                   }}>
-                  <Text style={styles.normalText}>Coin order</Text>
+                  <Text style={styles.normalText}>
+                    {lang && lang.order ? lang.order : ''}
+                  </Text>
                 </Pressable>
               </View>
             </View>
@@ -547,12 +555,14 @@ const AdvertiseScreen = () => {
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#343a59" />
           <Text style={[styles.normalText, {color: 'grey'}]}>
-            Loading data, please wait...
+            {lang && lang.loading ? lang.loading : ''}
           </Text>
         </View>
       ) : completedAds.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>No data available</Text>
+          <Text style={styles.emptyText}>
+            {lang && lang.nodata ? lang.nodata : ''}
+          </Text>
         </View>
       ) : (
         <FlatList
@@ -621,7 +631,9 @@ const AdvertiseScreen = () => {
           )}
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>Advertising Storage</Text>
+          <Text style={styles.title}>
+            {lang && lang.title ? lang.title : ''}
+          </Text>
           {index == 0 ? (
             <TouchableOpacity
               style={{
@@ -644,9 +656,12 @@ const AdvertiseScreen = () => {
                   fontSize: 13,
                 }}>
                 {isDelete
-                  ? `DELETE
-    ALL`
-                  : 'DELETE'}
+                  ? lang && lang.deleteAll
+                    ? lang.deleteAll
+                    : ''
+                  : lang && lang.delete
+                  ? lang.delete
+                  : ''}
               </Text>
             </TouchableOpacity>
           ) : (

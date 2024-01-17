@@ -267,6 +267,22 @@
     }
   },
 
+  "screen_showad": {
+    "success": "获取硬币成功",
+    "failed": "获取硬币失败"
+  },
+
+  "screen_notify": {
+    "title": "通知",
+    "delete": "删除",
+    "deletAll": "全部删除",
+    "loader": "加载中...",
+    "look": "仔细看",
+    "visit": "去活动",
+    "send": "发送",
+    "placeholder": "输入您的问题...",
+    "surely": "您确定要删除所有聊天吗"
+  },
   "screen_info": {
     "title": "我的信息",
     "list": {

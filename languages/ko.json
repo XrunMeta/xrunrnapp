@@ -267,6 +267,23 @@
     }
   },
 
+  "screen_showad": {
+    "success": "코인 획득 성공",
+    "failed": "코인 획득 실패"
+  },
+
+  "screen_notify": {
+    "title": "알림",
+    "delete": "삭제",
+    "deletAll": "모두 삭제",
+    "loader": "로딩 중...",
+    "look": "자세히 보기",
+    "visit": "이벤트로 이동",
+    "send": "보내기",
+    "placeholder": "질문을 입력하세요...",
+    "surely": "모든 채팅을 삭제하시겠습니까?"
+  },
+
   "screen_info": {
     "title": "내 정보",
     "list": {
