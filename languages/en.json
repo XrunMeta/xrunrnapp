@@ -292,7 +292,8 @@
       "clause": "Clause",
       "cs": "Customer Service",
       "app_info": "App Information",
-      "recommend": "Recommend"
+      "recommend": "Recommend",
+      "already": "You already have a referral history."
     },
     "button": {
       "logout": "Are you sure you want to logout?"

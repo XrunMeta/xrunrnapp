@@ -291,7 +291,8 @@
       "clause": "条款",
       "cs": "客户服务",
       "app_info": "应用程序信息",
-      "recommend": "推荐"
+      "recommend": "推荐",
+      "already": "您已经有推荐记录了。"
     },
     "button": {
       "logout": "您确定要注销吗？"

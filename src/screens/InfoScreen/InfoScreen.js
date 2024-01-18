@@ -16,15 +16,11 @@ import ButtonList from '../../components/ButtonList/ButtonList';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
-import {URL_API} from '../../../utils';
-
-// Get Language Data
-const langData = require('../../../lang.json');
+import {URL_API, getLanguage} from '../../../utils';
 
 const InfoScreen = () => {
   const [lang, setLang] = useState({});
   const {isLoggedIn, logout} = useAuth();
-  const [userName, setUserName] = useState(null);
   const [userDetails, setUserDetails] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
   const [refEmail, setRefEmail] = useState('');
@@ -41,9 +37,8 @@ const InfoScreen = () => {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
 
         console.log('Info Screen -> ' + userData);
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
-        setLang(language);
+        const screenLang = await getLanguage(currentLanguage, 'screen_info');
+        setLang(screenLang);
 
         const data = JSON.parse(userData);
 
@@ -184,9 +179,7 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
         </View>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>
-            {lang && lang.screen_info && lang.screen_info.title
-              ? lang.screen_info.title
-              : ''}
+            {lang && lang.title ? lang.title : ''}
           </Text>
         </View>
       </View>
@@ -286,51 +279,27 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
         }}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <ButtonList
-            label={
-              lang && lang.screen_info && lang.screen_info.list.modify
-                ? lang.screen_info.list.modify
-                : ''
-            }
+            label={lang && lang.list ? lang.list.modify : ''}
             onPress={onModify}
           />
           <ButtonList
-            label={
-              lang && lang.screen_info && lang.screen_info.list.setting
-                ? lang.screen_info.list.setting
-                : ''
-            }
+            label={lang && lang.list ? lang.list.setting : ''}
             onPress={onSetting}
           />
           <ButtonList
-            label={
-              lang && lang.screen_info && lang.screen_info.list.clause
-                ? lang.screen_info.list.clause
-                : ''
-            }
+            label={lang && lang.list ? lang.list.clause : ''}
             onPress={onClause}
           />
           <ButtonList
-            label={
-              lang && lang.screen_info && lang.screen_info.list.cs
-                ? lang.screen_info.list.cs
-                : ''
-            }
+            label={lang && lang.list ? lang.list.cs : ''}
             onPress={onCustomerService}
           />
           <ButtonList
-            label={
-              lang && lang.screen_info && lang.screen_info.list.app_info
-                ? lang.screen_info.list.app_info
-                : ''
-            }
+            label={lang && lang.list ? lang.list.app_info : ''}
             onPress={onAppInfo}
           />
           <ButtonList
-            label={
-              lang && lang.screen_info && lang.screen_info.list.recommend
-                ? lang.screen_info.list.recommend
-                : ''
-            }
+            label={lang && lang.list ? lang.list.recommend : ''}
             onPress={onRecommend}
           />
         </ScrollView>
@@ -345,9 +314,7 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
         <View style={styles.modal}>
           <View style={styles.modalContent}>
             <Text style={styles.modalText}>
-              {lang && lang.screen_recommend
-                ? lang.screen_recommend.add_recommend.already
-                : ''}
+              {lang && lang.list ? lang.list.already : ''}
             </Text>
             <Text
               style={[
