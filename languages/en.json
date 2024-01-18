@@ -315,6 +315,7 @@
   },
 
   "screen_modify_information": {
+    "loader": "Loading...",
     "title": "Modify Information",
     "lastname": {
       "label": "Last Name",

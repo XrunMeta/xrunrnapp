@@ -101,7 +101,9 @@ const ConfirmPassword = () => {
           paddingHorizontal: 25,
           marginTop: 5,
         }}>
-        <Text style={styles.subTitle}>*{lang ? lang.note.alt1 : ''}</Text>
+        <Text style={styles.subTitle}>
+          *{lang && lang.note ? lang.note.alt1 : ''}
+        </Text>
       </View>
 
       <View style={[styles.bottomSection]}>
@@ -147,7 +149,7 @@ const styles = StyleSheet.create({
   },
   bottomSection: {
     padding: 20,
-    paddingBottom: 40,
+    paddingBottom: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
     flex: 1,
