@@ -292,7 +292,8 @@
       "clause": "Ketentuan",
       "cs": "Layanan Pelanggan",
       "app_info": "Informasi Aplikasi",
-      "recommend": "Rekomendasi"
+      "recommend": "Rekomendasi",
+      "already": "Anda sudah memiliki riwayat referral."
     },
     "button": {
       "logout": "Apakah Anda yakin ingin keluar?"
@@ -308,7 +309,8 @@
     },
     "condition": {
       "empty": "Silakan isi kata sandi Anda",
-      "wrong": "Kata sandi Anda tidak cocok"
+      "wrong": "Kata sandi Anda tidak cocok",
+      "errorServer": "Terjadi kesalahan komunikasi server. Silakan coba lagi..."
     }
   },
 
@@ -431,6 +433,18 @@
       "del_placeholder": "Masukan kata sandi.",
       "del_empty": "Silahkan masukan kata sandi anda",
       "del_fail": "Gagal menghapus akun"
+    },
+    "alert": {
+      "title": {
+        "error": "Error",
+        "fail": "Gagal",
+        "warning": "Peringatan",
+        "info": "Info",
+        "success": "Berhasil"
+      }
+    },
+    "button": {
+      "logout": "Apakah Anda yakin ingin keluar?"
     }
   },
   "screen_wallet": {
@@ -508,5 +522,23 @@
   },
   "global_error": {
     "error": "Server telah masalah. Silakan mencoba lagi nanti."
+  },
+
+  "screen_advertise": {
+    "title": "Penyimpanan Iklan",
+    "delete": "HAPUS",
+    "all": " SEMUA",
+    "deleteAll": "HAPUS SEMUA",
+    "surely": "Apakah Anda yakin ingin menghapus semua?",
+    "deleted": "Iklan telah dihapus",
+    "failedDelete": "Gagal menghapus iklan",
+    "until": "sampai",
+    "loading": "Memuat data, harap tunggu...",
+    "nodata": "Tidak ada data yang tersedia",
+    "newest": "Terbaru",
+    "deadline": "Batas Waktu",
+    "order": "Pemesanan Koin",
+    "completed": "Pengambilan koin selesai",
+    "pending": "Menunggu pengambilan koin"
   }
 }

@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API} from '../../../utils';
+import {URL_API, getLanguage} from '../../../utils';
 
 const langData = require('../../../lang.json');
 
@@ -31,22 +31,17 @@ const AppInformation = () => {
     };
 
     // Get Language
-    const getLanguage = async () => {
+    const currGetLanguage = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
-        setLang(language);
+        const screenLang = await getLanguage(currentLanguage, 'screen_appInfo');
+        setLang(screenLang);
       } catch (err) {
-        console.error(
-          'Error retrieving selfCoordinate from AsyncStorage:',
-          err,
-        );
+        console.error('Error fetching user data: ', err);
       }
     };
+    currGetLanguage();
 
-    getLanguage();
     fetchData();
   });
 
@@ -61,9 +56,7 @@ const AppInformation = () => {
           <ButtonBack onClick={onBack} />
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>
-            {lang && lang.screen_appInfo ? lang.screen_appInfo.title : ''}
-          </Text>
+          <Text style={styles.title}>{lang && lang ? lang.title : ''}</Text>
         </View>
       </View>
       <View
@@ -83,8 +76,7 @@ const AppInformation = () => {
             color: 'grey',
             paddingVertical: 20,
           }}>
-          {lang && lang.screen_appInfo ? lang.screen_appInfo.version : ''}{' '}
-          {version ? version.version : '...'}
+          {lang && lang ? lang.version : ''} {version ? version.version : '...'}
         </Text>
       </View>
     </View>

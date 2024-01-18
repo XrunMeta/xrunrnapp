@@ -12,9 +12,7 @@ import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API} from '../../../utils';
-
-const langData = require('../../../lang.json');
+import {URL_API, getLanguage} from '../../../utils';
 
 const ConfirmPassword = () => {
   const [lang, setLang] = useState({});
@@ -27,12 +25,7 @@ const ConfirmPassword = () => {
 
   const onSignIn = async () => {
     if (password.trim() === '') {
-      Alert.alert(
-        lang && lang.alert ? lang.alert.title.error : '',
-        lang && lang.screen_confirm_password
-          ? lang.screen_confirm_password.condition.empty
-          : '-',
-      );
+      Alert.alert('Error', lang ? lang.condition.empty : '-');
     } else {
       try {
         const response = await fetch(
@@ -43,16 +36,11 @@ const ConfirmPassword = () => {
         if (data === 'OK') {
           navigation.replace('ModifInfo');
         } else {
-          Alert.alert(
-            lang && lang.alert ? lang.alert.title.error : '',
-            lang && lang.screen_confirm_password
-              ? lang.screen_confirm_password.condition.wrong
-              : '-',
-          );
+          Alert.alert('Error', lang ? lang.condition.wrong : '-');
         }
       } catch (error) {
         console.error('Error:', error);
-        Alert.alert('Error', 'An error occurred while logging in');
+        Alert.alert('Error', lang ? lang.condition.errorServer : '-');
       }
     }
   };
@@ -64,16 +52,18 @@ const ConfirmPassword = () => {
 
   useEffect(() => {
     // Get Language
-    const getLanguage = async () => {
+    const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
         const userEmail = await AsyncStorage.getItem('userEmail');
 
         setEmail(userEmail);
 
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
-        setLang(language);
+        const screenLang = await getLanguage(
+          currentLanguage,
+          'screen_confirm_password',
+        );
+        setLang(screenLang);
       } catch (err) {
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
@@ -82,7 +72,7 @@ const ConfirmPassword = () => {
       }
     };
 
-    getLanguage();
+    fetchData();
   }, []);
 
   return (
@@ -93,25 +83,13 @@ const ConfirmPassword = () => {
           <ButtonBack onClick={onBack} />
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>
-            {lang && lang.screen_confirm_password
-              ? lang.screen_confirm_password.title
-              : ''}
-          </Text>
+          <Text style={styles.title}>{lang ? lang.title : ''}</Text>
         </View>
       </View>
 
       <CustomInput
-        label={
-          lang && lang.screen_confirm_password
-            ? lang.screen_confirm_password.label
-            : ''
-        }
-        placeholder={
-          lang && lang.screen_confirm_password
-            ? lang.screen_confirm_password.placeholder
-            : ''
-        }
+        label={lang ? lang.label : ''}
+        placeholder={lang ? lang.placeholder : ''}
         value={password}
         setValue={setPassword}
         secureTextEntry
@@ -124,10 +102,7 @@ const ConfirmPassword = () => {
           marginTop: 5,
         }}>
         <Text style={styles.subTitle}>
-          *
-          {lang && lang.screen_confirm_password
-            ? lang.screen_confirm_password.note.alt1
-            : ''}
+          *{lang && lang.note ? lang.note.alt1 : ''}
         </Text>
       </View>
 
@@ -174,7 +149,7 @@ const styles = StyleSheet.create({
   },
   bottomSection: {
     padding: 20,
-    paddingBottom: 40,
+    paddingBottom: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
     flex: 1,

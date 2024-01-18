@@ -292,7 +292,8 @@
       "clause": "Clause",
       "cs": "Customer Service",
       "app_info": "App Information",
-      "recommend": "Recommend"
+      "recommend": "Recommend",
+      "already": "You already have a referral history."
     },
     "button": {
       "logout": "Are you sure you want to logout?"
@@ -308,11 +309,13 @@
     },
     "condition": {
       "empty": "Please fill your password",
-      "wrong": "Your password is doesn't match"
+      "wrong": "Your password is doesn't match",
+      "errorServer": "There is a server communication error. Please try again..."
     }
   },
 
   "screen_modify_information": {
+    "loader": "Loading...",
     "title": "Modify Information",
     "lastname": {
       "label": "Last Name",
@@ -431,6 +434,16 @@
       "del_placeholder": "Please enter your password.",
       "del_empty": "Please enter your password",
       "del_fail": "Close membership failed"
+    },
+    "alert": {
+      "error": "Error",
+      "fail": "Failed",
+      "warning": "Warning",
+      "info": "Info",
+      "success": "Success"
+    },
+    "button": {
+      "logout": "Are you sure you want to logout?"
     }
   },
   "screen_wallet": {
@@ -523,6 +536,8 @@
     "nodata": "No data available",
     "newest": "Newest",
     "deadline": "Deadline",
-    "order": "Coin order"
+    "order": "Coin order",
+    "completed": "Coin acquisition completed",
+    "pending": "Waiting for coin Acquisition"
   }
 }

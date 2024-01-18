@@ -18,9 +18,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import CustomMultipleChecbox from '../../components/CustomCheckbox/CustomMultipleCheckbox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API} from '../../../utils';
-
-const langData = require('../../../lang.json');
+import {URL_API, getLanguage} from '../../../utils';
 
 const ModifInfoScreen = ({route}) => {
   const [lang, setLang] = useState({});
@@ -85,13 +83,15 @@ const ModifInfoScreen = ({route}) => {
 
   useEffect(() => {
     // Get Language
-    const getLanguage = async () => {
+    const fetchLangData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
 
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
-        setLang(language);
+        const screenLang = await getLanguage(
+          currentLanguage,
+          'screen_modify_information',
+        );
+        setLang(screenLang);
       } catch (err) {
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
@@ -174,7 +174,7 @@ const ModifInfoScreen = ({route}) => {
     };
 
     fetchData(); // Get Data from API
-    getLanguage(); // Get Language
+    fetchLangData(); // Get Language
   }, []);
 
   // Format Date
@@ -284,9 +284,7 @@ const ModifInfoScreen = ({route}) => {
               fontFamily: 'Poppins-Regular',
               fontSize: 13,
             }}>
-            {lang && lang.screen_map && lang.screen_map.section_marker
-              ? lang.screen_map.section_marker.loader
-              : ''}
+            {lang ? lang.loader : ''}
           </Text>
         </View>
       ) : (
@@ -301,11 +299,7 @@ const ModifInfoScreen = ({route}) => {
               <ButtonBack onClick={onBack} />
             </View>
             <View style={styles.titleWrapper}>
-              <Text style={styles.title}>
-                {lang && lang.screen_modify_information
-                  ? lang.screen_modify_information.title
-                  : ''}
-              </Text>
+              <Text style={styles.title}>{lang ? lang.title : ''}</Text>
             </View>
           </View>
 
@@ -314,20 +308,10 @@ const ModifInfoScreen = ({route}) => {
             style={{width: '100%'}}>
             <View style={{paddingBottom: 35}}>
               <CustomInputEdit
-                title={
-                  lang && lang.screen_modify_information
-                    ? lang.screen_modify_information.lastname.label
-                    : ''
-                }
-                label={
-                  lang && lang.screen_modify_information
-                    ? lang.screen_modify_information.lastname.label
-                    : ''
-                }
+                title={lang && lang.lastname ? lang.lastname.label : ''}
+                label={lang && lang.lastname ? lang.lastname.label : ''}
                 placeholder={
-                  lang && lang.screen_modify_information
-                    ? lang.screen_modify_information.lastname.placeholder
-                    : ''
+                  lang && lang.lastname ? lang.lastname.placeholder : ''
                 }
                 value={lastName}
                 setValue={setLastName}
@@ -360,17 +344,13 @@ const ModifInfoScreen = ({route}) => {
                         marginBottom: -10,
                         color: '#343a59',
                       }}>
-                      {lang && lang.screen_modify_information
-                        ? lang.screen_modify_information.lastname.label
-                        : ''}
+                      {lang && lang.lastname ? lang.lastname.label : ''}
                     </Text>
                     <TextInput
                       value={tempLastName}
                       onChangeText={setTempLastName}
                       placeholder={
-                        lang && lang.screen_modify_information
-                          ? lang.screen_modify_information.lastname.placeholder
-                          : ''
+                        lang && lang.lastname ? lang.lastname.placeholder : ''
                       }
                       placeholderTextColor="#a8a8a7"
                       style={{
@@ -391,21 +371,9 @@ const ModifInfoScreen = ({route}) => {
 
               {/*  Field - Name */}
               <CustomInputEdit
-                title={
-                  lang && lang.screen_modify_information
-                    ? lang.screen_modify_information.name.label
-                    : ''
-                }
-                label={
-                  lang && lang.screen_modify_information
-                    ? lang.screen_modify_information.name.label
-                    : ''
-                }
-                placeholder={
-                  lang && lang.screen_modify_information
-                    ? lang.screen_modify_information.name.placeholder
-                    : ''
-                }
+                title={lang && lang.name ? lang.name.label : ''}
+                label={lang && lang.name ? lang.name.label : ''}
+                placeholder={lang && lang.name ? lang.name.placeholder : ''}
                 value={name}
                 setValue={setName}
                 onSaveChange={() => {
@@ -437,17 +405,13 @@ const ModifInfoScreen = ({route}) => {
                         marginBottom: -10,
                         color: '#343a59',
                       }}>
-                      {lang && lang.screen_modify_information
-                        ? lang.screen_modify_information.name.label
-                        : ''}
+                      {lang && lang.name ? lang.name.label : ''}
                     </Text>
                     <TextInput
                       value={tempName}
                       onChangeText={setTempName}
                       placeholder={
-                        lang && lang.screen_modify_information
-                          ? lang.screen_modify_information.name.placeholder
-                          : ''
+                        lang && lang.name ? lang.name.placeholder : ''
                       }
                       placeholderTextColor="#a8a8a7"
                       style={{
@@ -468,21 +432,9 @@ const ModifInfoScreen = ({route}) => {
 
               {/*  Field - Email */}
               <CustomInputEdit
-                title={
-                  lang && lang.screen_modify_information
-                    ? lang.screen_modify_information.email.label
-                    : ''
-                }
-                label={
-                  lang && lang.screen_modify_information
-                    ? lang.screen_modify_information.email.label
-                    : ''
-                }
-                placeholder={
-                  lang && lang.screen_modify_information
-                    ? lang.screen_modify_information.email.placeholder
-                    : ''
-                }
+                title={lang && lang.email ? lang.email.label : ''}
+                label={lang && lang.email ? lang.email.label : ''}
+                placeholder={lang && lang.email ? lang.email.placeholder : ''}
                 value={userData.email}
                 isDisable={true}
                 content={
@@ -499,9 +451,7 @@ const ModifInfoScreen = ({route}) => {
                         marginBottom: -10,
                         color: '#343a59',
                       }}>
-                      {lang && lang.screen_modify_information
-                        ? lang.screen_modify_information.email.label
-                        : ''}
+                      {lang && lang.email ? lang.email.label : ''}
                     </Text>
                     <TextInput
                       value={userData.email}
@@ -526,9 +476,7 @@ const ModifInfoScreen = ({route}) => {
               {/*  Field - Phone Number */}
               <View style={styles.formGroup}>
                 <Text style={styles.label}>
-                  {lang && lang.screen_modify_information
-                    ? lang.screen_modify_information.phone.label
-                    : ''}
+                  {lang && lang.phone ? lang.phone.label : ''}
                 </Text>
                 <View
                   style={{
@@ -590,9 +538,7 @@ const ModifInfoScreen = ({route}) => {
                     color: '#343a59',
                     zIndex: 1,
                   }}>
-                  {lang && lang.screen_modify_information
-                    ? lang.screen_modify_information.password.label
-                    : ''}
+                  {lang && lang.password ? lang.password.label : ''}
                 </Text>
                 <TouchableOpacity onPress={onChangePassword}>
                   <View
@@ -612,9 +558,7 @@ const ModifInfoScreen = ({route}) => {
                         paddingRight: 30,
                         paddingLeft: -10,
                       }}>
-                      {lang && lang.screen_modify_information
-                        ? lang.screen_modify_information.password.extstr
-                        : ''}{' '}
+                      {lang && lang.password ? lang.password.extstr : ''}{' '}
                       <Text
                         style={{
                           color: '#ffc404',
@@ -629,21 +573,9 @@ const ModifInfoScreen = ({route}) => {
 
               {/*  Field - Age */}
               <CustomInputEdit
-                title={
-                  lang && lang.screen_modify_information
-                    ? lang.screen_modify_information.age.label
-                    : ''
-                }
-                label={
-                  lang && lang.screen_modify_information
-                    ? lang.screen_modify_information.age.label
-                    : ''
-                }
-                placeholder={
-                  lang && lang.screen_modify_information
-                    ? lang.screen_modify_information.age.label
-                    : ''
-                }
+                title={lang && lang.age ? lang.age.label : ''}
+                label={lang && lang.age ? lang.age.label : ''}
+                placeholder={lang && lang.age ? lang.age.label : ''}
                 value={age == null ? '-' : age + 's'}
                 setValue={setAge}
                 onSaveChange={() => {
@@ -664,9 +596,7 @@ const ModifInfoScreen = ({route}) => {
                 content={
                   <View style={[styles.formGroup, {zIndex: -1}]}>
                     <Text style={styles.label}>
-                      {lang && lang.screen_modify_information
-                        ? lang.screen_modify_information.age.label
-                        : ''}
+                      {lang && lang.age ? lang.age.label : ''}
                     </Text>
                     <CustomMultipleChecbox
                       texts={['10', '20', '30', '40', '50']}
@@ -685,28 +615,16 @@ const ModifInfoScreen = ({route}) => {
 
               {/*  Field - Gender */}
               <CustomInputEdit
-                title={
-                  lang && lang.screen_modify_information
-                    ? lang.screen_modify_information.gender.label
-                    : ''
-                }
-                label={
-                  lang && lang.screen_modify_information
-                    ? lang.screen_modify_information.gender.label
-                    : ''
-                }
-                placeholder={
-                  lang && lang.screen_modify_information
-                    ? lang.screen_modify_information.gender.label
-                    : ''
-                }
+                title={lang && lang.gender ? lang.gender.label : ''}
+                label={lang && lang.gender ? lang.gender.label : ''}
+                placeholder={lang && lang.gender ? lang.gender.label : ''}
                 value={
                   gender == 2110
-                    ? lang && lang.screen_modify_information
-                      ? lang.screen_modify_information.gender.opt1
+                    ? lang && lang.gender
+                      ? lang.gender.opt1
                       : ''
-                    : lang && lang.screen_modify_information
-                    ? lang.screen_modify_information.gender.opt2
+                    : lang && lang.gender
+                    ? lang.gender.opt2
                     : ''
                 }
                 setValue={setGender}
@@ -728,18 +646,12 @@ const ModifInfoScreen = ({route}) => {
                 content={
                   <View style={[styles.formGroup, {zIndex: -1}]}>
                     <Text style={styles.label}>
-                      {lang && lang.screen_modify_information
-                        ? lang.screen_modify_information.gender.label
-                        : ''}
+                      {lang && lang.gender ? lang.gender.label : ''}
                     </Text>
                     <CustomMultipleChecbox
                       texts={[
-                        lang && lang.screen_modify_information
-                          ? lang.screen_modify_information.gender.opt1
-                          : '',
-                        lang && lang.screen_modify_information
-                          ? lang.screen_modify_information.gender.opt2
-                          : '',
+                        lang && lang.gender ? lang.gender.opt1 : '',
+                        lang && lang.gender ? lang.gender.opt2 : '',
                       ]}
                       count={2}
                       singleCheck={true}
@@ -753,21 +665,9 @@ const ModifInfoScreen = ({route}) => {
 
               {/*  Field - Area */}
               <CustomInputEdit
-                title={
-                  lang && lang.screen_modify_information
-                    ? lang.screen_modify_information.area.label
-                    : ''
-                }
-                label={
-                  lang && lang.screen_modify_information
-                    ? lang.screen_modify_information.area.label
-                    : ''
-                }
-                placeholder={
-                  lang && lang.screen_modify_information
-                    ? lang.screen_modify_information.area.placeholder
-                    : ''
-                }
+                title={lang && lang.area ? lang.area.label : ''}
+                label={lang && lang.area ? lang.area.label : ''}
+                placeholder={lang && lang.area ? lang.area.placeholder : ''}
                 value={
                   country.cDesc == null
                     ? '-'
@@ -778,9 +678,7 @@ const ModifInfoScreen = ({route}) => {
                   if (tempRegion.rCode === 0) {
                     Alert.alert(
                       'Error',
-                      lang && lang.screen_modify_information
-                        ? lang.screen_modify_information.area.empty
-                        : '',
+                      lang && lang.area ? lang.area.empty : '',
                     );
                     return 0;
                   } else {
@@ -857,9 +755,7 @@ const ModifInfoScreen = ({route}) => {
                           color: '#343a59',
                           zIndex: 1,
                         }}>
-                        {lang && lang.screen_modify_information
-                          ? lang.screen_modify_information.area.label_country
-                          : ''}
+                        {lang && lang.area ? lang.area.label_country : ''}
                       </Text>
                       <TouchableOpacity onPress={() => openCountryModal()}>
                         <View
@@ -899,9 +795,7 @@ const ModifInfoScreen = ({route}) => {
                           color: '#343a59',
                           zIndex: 1,
                         }}>
-                        {lang && lang.screen_modify_information
-                          ? lang.screen_modify_information.area.label_area
-                          : ''}
+                        {lang && lang.area ? lang.area.label_area : ''}
                       </Text>
                       <TouchableOpacity onPress={() => openAreaModal()}>
                         <View
@@ -951,9 +845,7 @@ const ModifInfoScreen = ({route}) => {
                   ListEmptyComponent={() => (
                     <View style={{marginVertical: 20}}>
                       <Text style={[styles.normalText, {textAlign: 'center'}]}>
-                        {lang && lang.screen_modify_information
-                          ? lang.screen_modify_information.modal.empty
-                          : ''}
+                        {lang && lang.modal ? lang.modal.empty : ''}
                       </Text>
                     </View>
                   )}
@@ -972,9 +864,7 @@ const ModifInfoScreen = ({route}) => {
                   style={styles.closeButton}
                   onPress={() => setCountryModalVisible(false)}>
                   <Text style={styles.closeButtonText}>
-                    {lang && lang.screen_modify_information
-                      ? lang.screen_modify_information.close
-                      : ''}
+                    {lang ? lang.close : ''}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -997,9 +887,7 @@ const ModifInfoScreen = ({route}) => {
                   ListEmptyComponent={() => (
                     <View style={{marginVertical: 20}}>
                       <Text style={[styles.normalText, {textAlign: 'center'}]}>
-                        {lang && lang.screen_modify_information
-                          ? lang.screen_modify_information.modal.empty
-                          : ''}
+                        {lang && lang.modal ? lang.modal.empty : ''}
                       </Text>
                     </View>
                   )}
@@ -1017,9 +905,7 @@ const ModifInfoScreen = ({route}) => {
                   style={styles.closeButton}
                   onPress={() => setAreaModalVisible(false)}>
                   <Text style={styles.closeButtonText}>
-                    {lang && lang.screen_modify_information
-                      ? lang.screen_modify_information.close
-                      : ''}
+                    {lang ? lang.close : ''}
                   </Text>
                 </TouchableOpacity>
               </View>

@@ -292,7 +292,8 @@
       "clause": "조항",
       "cs": "고객 서비스",
       "app_info": "앱 정보",
-      "recommend": "추천"
+      "recommend": "추천",
+      "already": "이미 추천 이력이 있습니다."
     },
     "button": {
       "logout": "로그아웃 하시겠습니까?"
@@ -308,7 +309,8 @@
     },
     "condition": {
       "empty": "비밀번호를 입력하세요",
-      "wrong": "비밀번호가 일치하지 않습니다"
+      "wrong": "비밀번호가 일치하지 않습니다",
+      "errorServer": "서버 통신 오류가 발생했습니다. 다시 시도하세요..."
     }
   },
 
@@ -431,6 +433,18 @@
       "del_placeholder": "비밀번호를 입력하세요.",
       "del_empty": "비밀번호를 입력하세요",
       "del_fail": "멤버십 해지 실패"
+    },
+    "alert": {
+      "title": {
+        "error": "에러",
+        "fail": "실패",
+        "warning": "주의",
+        "info": "정보",
+        "success": "성공"
+      }
+    },
+    "button": {
+      "logout": "로그아웃 하시겠습니까?"
     }
   },
   "screen_wallet": {
@@ -509,5 +523,23 @@
   },
   "global_error": {
     "error": "통신문제가 발생했습니다. 잠시후 시도해 주세요."
+  },
+
+  "screen_advertise": {
+    "title": "광고 저장소",
+    "delete": "삭제",
+    "all": " 모두",
+    "deleteAll": "모두 삭제",
+    "surely": "모두 삭제하시겠습니까?",
+    "deleted": "광고가 삭제되었습니다",
+    "failedDelete": "광고 삭제 실패",
+    "until": "까지",
+    "loading": "데이터 로드 중, 기다려주십시오...",
+    "nodata": "사용 가능한 데이터가 없습니다",
+    "newest": "최신",
+    "deadline": "마감일",
+    "order": "코인 주문",
+    "completed": "코인 획득 완료",
+    "pending": "코인 획득 대기 중"
   }
 }
