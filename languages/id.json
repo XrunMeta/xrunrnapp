@@ -508,5 +508,23 @@
   },
   "global_error": {
     "error": "Server telah masalah. Silakan mencoba lagi nanti."
+  },
+
+  "screen_advertise": {
+    "title": "Penyimpanan Iklan",
+    "delete": "HAPUS",
+    "all": " SEMUA",
+    "deleteAll": "HAPUS SEMUA",
+    "surely": "Apakah Anda yakin ingin menghapus semua?",
+    "deleted": "Iklan telah dihapus",
+    "failedDelete": "Gagal menghapus iklan",
+    "until": "sampai",
+    "loading": "Memuat data, harap tunggu...",
+    "nodata": "Tidak ada data yang tersedia",
+    "newest": "Terbaru",
+    "deadline": "Batas Waktu",
+    "order": "Pemesanan Koin",
+    "completed": "Pengambilan koin selesai",
+    "pending": "Menunggu pengambilan koin"
   }
 }
