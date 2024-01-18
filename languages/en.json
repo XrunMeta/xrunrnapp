@@ -309,7 +309,8 @@
     },
     "condition": {
       "empty": "Please fill your password",
-      "wrong": "Your password is doesn't match"
+      "wrong": "Your password is doesn't match",
+      "errorServer": "There is a server communication error. Please try again..."
     }
   },
 

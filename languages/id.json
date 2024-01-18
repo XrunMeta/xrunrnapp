@@ -309,7 +309,8 @@
     },
     "condition": {
       "empty": "Silakan isi kata sandi Anda",
-      "wrong": "Kata sandi Anda tidak cocok"
+      "wrong": "Kata sandi Anda tidak cocok",
+      "errorServer": "Terjadi kesalahan komunikasi server. Silakan coba lagi..."
     }
   },
 
