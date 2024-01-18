@@ -12,9 +12,7 @@ import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API} from '../../../utils';
-
-const langData = require('../../../lang.json');
+import {URL_API, getLanguage} from '../../../utils';
 
 const ConfirmPasswordEdit = () => {
   const [lang, setLang] = useState({});
@@ -27,7 +25,7 @@ const ConfirmPasswordEdit = () => {
 
   const onSignIn = async () => {
     if (password.trim() === '') {
-      Alert.alert('Error', 'password gaboleh kosong');
+      Alert.alert('Error', lang.condition.empty);
     } else {
       try {
         const response = await fetch(
@@ -38,7 +36,7 @@ const ConfirmPasswordEdit = () => {
         if (data === 'OK') {
           navigation.replace('EditPassword');
         } else {
-          Alert.alert('Error', 'password salah');
+          Alert.alert('Error', lang.condition.wrong);
         }
       } catch (error) {
         console.error('Error:', error);
@@ -54,16 +52,18 @@ const ConfirmPasswordEdit = () => {
 
   useEffect(() => {
     // Get Language
-    const getLanguage = async () => {
+    const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
         const userEmail = await AsyncStorage.getItem('userEmail');
 
         setEmail(userEmail);
 
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
-        setLang(language);
+        const screenLang = await getLanguage(
+          currentLanguage,
+          'screen_confirm_password',
+        );
+        setLang(screenLang);
       } catch (err) {
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
@@ -72,7 +72,7 @@ const ConfirmPasswordEdit = () => {
       }
     };
 
-    getLanguage();
+    fetchData();
   }, []);
 
   return (
@@ -83,21 +83,13 @@ const ConfirmPasswordEdit = () => {
           <ButtonBack onClick={onBack} />
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>Confirm Password</Text>
+          <Text style={styles.title}>{lang ? lang.title : ''}</Text>
         </View>
       </View>
 
       <CustomInput
-        label={
-          lang && lang.screen_signin && lang.screen_signin.password
-            ? lang.screen_signin.password.label
-            : ''
-        }
-        placeholder={
-          lang && lang.screen_signin && lang.screen_signin.password
-            ? lang.screen_signin.password.placeholder
-            : ''
-        }
+        label={lang ? lang.label : ''}
+        placeholder={lang ? lang.placeholder : ''}
         value={password}
         setValue={setPassword}
         secureTextEntry
@@ -110,7 +102,7 @@ const ConfirmPasswordEdit = () => {
           marginTop: 5,
         }}>
         <Text style={styles.subTitle}>
-          *Please enter your existing password for security
+          *{lang && lang.note ? lang.note.alt1 : ''}
         </Text>
       </View>
 
@@ -157,7 +149,7 @@ const styles = StyleSheet.create({
   },
   bottomSection: {
     padding: 20,
-    paddingBottom: 40,
+    paddingBottom: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
     flex: 1,
