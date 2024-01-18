@@ -508,5 +508,23 @@
   },
   "global_error": {
     "error": "服务器有问题，请稍后再试."
+  },
+
+  "screen_advertise": {
+    "title": "广告存储",
+    "delete": "删除",
+    "all": " 全部",
+    "deleteAll": "全部删除",
+    "surely": "您确定要全部删除吗？",
+    "deleted": "广告已删除",
+    "failedDelete": "广告删除失败",
+    "until": "直到",
+    "loading": "正在加载数据，请稍候...",
+    "nodata": "没有可用的数据",
+    "newest": "最新",
+    "deadline": "截止日期",
+    "order": "金币订单",
+    "completed": "金币获取完成",
+    "pending": "等待金币获取"
   }
 }

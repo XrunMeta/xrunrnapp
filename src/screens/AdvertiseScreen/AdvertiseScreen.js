@@ -82,8 +82,14 @@ const AdvertiseScreen = () => {
             coin: ad.amount + ' ' + ad.symbol,
             extracode: ad.extracode,
             datetime: ad.datetime,
-            statusSuccess: 'Coin acquisition completed',
-            statusPending: 'Waiting for Coin Acquisition',
+            statusSuccess:
+              lang && lang.completed
+                ? lang.completed
+                : 'Coin acquisition completed',
+            statusPending:
+              lang && lang.pending
+                ? lang.pending
+                : 'Waiting for Coin Acquisition',
           }));
 
           setCompletedAds(filteredAds);

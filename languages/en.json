@@ -523,6 +523,8 @@
     "nodata": "No data available",
     "newest": "Newest",
     "deadline": "Deadline",
-    "order": "Coin order"
+    "order": "Coin order",
+    "completed": "Coin acquisition completed",
+    "pending": "Waiting for coin Acquisition"
   }
 }
