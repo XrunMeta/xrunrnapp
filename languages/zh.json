@@ -291,7 +291,8 @@
       "clause": "条款",
       "cs": "客户服务",
       "app_info": "应用程序信息",
-      "recommend": "推荐"
+      "recommend": "推荐",
+      "already": "您已经有推荐记录了。"
     },
     "button": {
       "logout": "您确定要注销吗？"
@@ -307,7 +308,8 @@
     },
     "condition": {
       "empty": "请填写您的密码",
-      "wrong": "您的密码不匹配"
+      "wrong": "您的密码不匹配",
+      "errorServer": "服务器通信错误。请重试..."
     }
   },
 
@@ -430,6 +432,18 @@
       "del_placeholder": "请输入您的密码。",
       "del_empty": "请输入您的密码",
       "del_fail": "关闭会员资格失败"
+    },
+    "alert": {
+      "title": {
+        "error": "错误",
+        "fail": "失败",
+        "warning": "警告",
+        "info": "信息",
+        "success": "成功"
+      }
+    },
+    "button": {
+      "logout": "您确定要注销吗？"
     }
   },
   "screen_wallet": {
@@ -508,5 +522,23 @@
   },
   "global_error": {
     "error": "服务器有问题，请稍后再试."
+  },
+
+  "screen_advertise": {
+    "title": "广告存储",
+    "delete": "删除",
+    "all": " 全部",
+    "deleteAll": "全部删除",
+    "surely": "您确定要全部删除吗？",
+    "deleted": "广告已删除",
+    "failedDelete": "广告删除失败",
+    "until": "直到",
+    "loading": "正在加载数据，请稍候...",
+    "nodata": "没有可用的数据",
+    "newest": "最新",
+    "deadline": "截止日期",
+    "order": "金币订单",
+    "completed": "金币获取完成",
+    "pending": "等待金币获取"
   }
 }
