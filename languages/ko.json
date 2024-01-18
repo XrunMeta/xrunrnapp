@@ -292,7 +292,8 @@
       "clause": "조항",
       "cs": "고객 서비스",
       "app_info": "앱 정보",
-      "recommend": "추천"
+      "recommend": "추천",
+      "already": "이미 추천 이력이 있습니다."
     },
     "button": {
       "logout": "로그아웃 하시겠습니까?"

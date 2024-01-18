@@ -292,7 +292,8 @@
       "clause": "Ketentuan",
       "cs": "Layanan Pelanggan",
       "app_info": "Informasi Aplikasi",
-      "recommend": "Rekomendasi"
+      "recommend": "Rekomendasi",
+      "already": "Anda sudah memiliki riwayat referral."
     },
     "button": {
       "logout": "Apakah Anda yakin ingin keluar?"
