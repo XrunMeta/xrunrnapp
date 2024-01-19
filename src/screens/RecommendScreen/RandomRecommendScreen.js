@@ -13,12 +13,11 @@ import {
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API} from '../../../utils';
-
-const langData = require('../../../lang.json');
+import {URL_API, getLanguage} from '../../../utils';
 
 const RandomRecommendScreen = () => {
   const [lang, setLang] = useState({});
+  const [alert, setAlert] = useState({});
   const navigation = useNavigation();
   let ScreenHeight = Dimensions.get('window').height;
   const [userData, setUserData] = useState({});
@@ -28,12 +27,16 @@ const RandomRecommendScreen = () => {
 
   useEffect(() => {
     // Get Language
-    const getLanguage = async () => {
+    const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
-        setLang(language);
+        const screenLang = await getLanguage(
+          currentLanguage,
+          'screen_recommend',
+        );
+        const screenAlert = await getLanguage(currentLanguage, 'alert');
+        setLang(screenLang);
+        setAlert(screenAlert);
 
         // Get User Data from Asyncstorage
         const astorUserData = await AsyncStorage.getItem('userData');
@@ -66,17 +69,15 @@ const RandomRecommendScreen = () => {
       }
     };
 
-    getLanguage();
+    fetchData();
     fetchRecommendations();
   }, []);
 
   const onSaveChange = () => {
     if (checkedID == 0) {
       Alert.alert(
-        lang && lang.alert ? lang.alert.title.fail : '',
-        lang && lang.screen_recommend
-          ? lang.screen_recommend.random_recommend.empty
-          : '',
+        alert ? alert.title.fail : '',
+        lang && lang.random_recommend ? lang.random_recommend.empty : '',
       );
     } else {
       const registRecommend = async () => {
@@ -88,18 +89,14 @@ const RandomRecommendScreen = () => {
 
           if (data.data === 'ok') {
             Alert.alert(
-              lang && lang.alert ? lang.alert.title.success : '',
-              lang && lang.screen_recommend
-                ? lang.screen_recommend.add_recommend.recommended
-                : '',
+              alert ? alert.title.success : '',
+              lang && lang.add_recommend ? lang.add_recommend.recommended : '',
             );
             navigation.replace('InfoHome');
           } else {
             Alert.alert(
-              lang && lang.alert ? lang.alert.title.warning : '',
-              lang && lang.screen_recommend
-                ? lang.screen_recommend.add_recommend.already
-                : '',
+              alert ? alert.title.warning : '',
+              lang && lang.add_recommend ? lang.add_recommend.already : '',
             );
             navigation.replace('InfoHome');
           }
@@ -153,9 +150,7 @@ const RandomRecommendScreen = () => {
         </View>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>
-            {lang && lang.screen_recommend
-              ? lang.screen_recommend.category.random
-              : ''}
+            {lang && lang.category ? lang.category.random : ''}
           </Text>
         </View>
       </View>
