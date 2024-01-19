@@ -314,6 +314,20 @@
     }
   },
 
+  "screen_modify_password": {
+    "title": "비밀번호 수정",
+    "label": "새 비밀번호",
+    "placeholder": "새 비밀번호를 입력하세요",
+    "note": {
+      "alt1": "개인 정보를 위해 비밀번호를 입력하세요"
+    },
+    "condition": {
+      "empty": "비밀번호를 입력해주세요",
+      "wrong": "비밀번호가 일치하지 않습니다",
+      "errorServer": "서버 통신 오류가 발생했습니다. 다시 시도해주세요..."
+    }
+  },
+
   "screen_modify_information": {
     "title": "정보 수정",
     "lastname": {

@@ -11,9 +11,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInput from '../../components/CustomInput';
-import {URL_API} from '../../../utils';
-
-const langData = require('../../../lang.json');
+import {URL_API, getLanguage} from '../../../utils';
 
 const EditPassword = () => {
   const [lang, setLang] = useState({});
@@ -24,7 +22,7 @@ const EditPassword = () => {
 
   const onSaveChange = () => {
     if (password == '') {
-      alert('Please enter your password');
+      alert(lang ? lang.condition.empty : '');
     } else {
       const savePassword = async () => {
         try {
@@ -64,12 +62,14 @@ const EditPassword = () => {
 
   useEffect(() => {
     // Get Language
-    const getLanguage = async () => {
+    const fetchLangData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
-        setLang(language);
+        const screenLang = await getLanguage(
+          currentLanguage,
+          'screen_modify_password',
+        );
+        setLang(screenLang);
 
         // Get User Data from Asyncstorage
         const astorUserData = await AsyncStorage.getItem('userData');
@@ -83,7 +83,7 @@ const EditPassword = () => {
       }
     };
 
-    getLanguage();
+    fetchLangData();
   }, []);
 
   return (
@@ -94,13 +94,13 @@ const EditPassword = () => {
           <ButtonBack onClick={handleBack} />
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>Password Modify</Text>
+          <Text style={styles.title}>{lang ? lang.title : ''}</Text>
         </View>
       </View>
 
       <CustomInput
-        label="New Password"
-        placeholder="Please enter your new password"
+        label={lang ? lang.label : ''}
+        placeholder={lang ? lang.placeholder : ''}
         value={password}
         setValue={setPassword}
         secureTextEntry

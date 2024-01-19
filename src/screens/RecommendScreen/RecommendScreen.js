@@ -1,31 +1,26 @@
-import {StyleSheet, Text, View, ScrollView, Dimensions} from 'react-native';
+import {StyleSheet, Text, View, ScrollView} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import ButtonList from '../../components/ButtonList/ButtonList';
-import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
-import {URL_API} from '../../../utils';
-
-const langData = require('../../../lang.json');
+import {getLanguage} from '../../../utils';
 
 const RecommendScreen = () => {
-  const {isLoggedIn, logout} = useAuth();
-  const [userName, setUserName] = useState(null);
-  const [lang, setLang] = useState('');
-
   const navigation = useNavigation();
+  const [lang, setLang] = useState('');
 
   //   Call API
   useEffect(() => {
     // Get Language
-    const getLanguage = async () => {
+    const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
-        setLang(language);
+        const screenLang = await getLanguage(
+          currentLanguage,
+          'screen_recommend',
+        );
+        setLang(screenLang);
       } catch (err) {
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
@@ -34,7 +29,7 @@ const RecommendScreen = () => {
       }
     };
 
-    getLanguage();
+    fetchData();
   }, []);
 
   const onBack = () => {
@@ -57,9 +52,7 @@ const RecommendScreen = () => {
           <ButtonBack onClick={onBack} />
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>
-            {lang && lang.screen_recommend ? lang.screen_recommend.title : ''}
-          </Text>
+          <Text style={styles.title}>{lang ? lang.title : ''}</Text>
         </View>
       </View>
 
@@ -71,19 +64,11 @@ const RecommendScreen = () => {
         }}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <ButtonList
-            label={
-              lang && lang.screen_recommend
-                ? lang.screen_recommend.category.regist
-                : ''
-            }
+            label={lang && lang.category ? lang.category.regist : ''}
             onPress={onRegist}
           />
           <ButtonList
-            label={
-              lang && lang.screen_recommend
-                ? lang.screen_recommend.category.random
-                : ''
-            }
+            label={lang && lang.category ? lang.category.random : ''}
             onPress={onRandom}
           />
         </ScrollView>
