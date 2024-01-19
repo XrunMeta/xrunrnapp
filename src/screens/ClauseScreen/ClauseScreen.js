@@ -5,7 +5,7 @@ import ButtonList from '../../components/ButtonList/ButtonList';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
-import {URL_API} from '../../../utils';
+import {URL_API, getLanguage} from '../../../utils';
 
 const langData = require('../../../lang.json');
 
@@ -21,22 +21,16 @@ const ClauseScreen = () => {
   //   Call API
   useEffect(() => {
     // Get Language
-    const getLanguage = async () => {
+    const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
-        setLang(language);
+        const screenLang = await getLanguage(currentLanguage, 'screen_clause');
+        setLang(screenLang);
       } catch (err) {
-        console.error(
-          'Error retrieving selfCoordinate from AsyncStorage:',
-          err,
-        );
+        console.error('Error fetching user data: ', err);
       }
     };
-
-    getLanguage();
+    fetchData();
   }, []);
 
   const onBack = () => {
@@ -63,9 +57,7 @@ const ClauseScreen = () => {
           <ButtonBack onClick={onBack} />
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>
-            {lang && lang.screen_clause ? lang.screen_clause.title : ''}
-          </Text>
+          <Text style={styles.title}>{lang && lang ? lang.title : ''}</Text>
         </View>
       </View>
 
@@ -77,27 +69,15 @@ const ClauseScreen = () => {
         }}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <ButtonList
-            label={
-              lang && lang.screen_clause
-                ? lang.screen_clause.category.service
-                : ''
-            }
+            label={lang && lang ? lang.category.service : ''}
             onPress={onServiceClause}
           />
           <ButtonList
-            label={
-              lang && lang.screen_clause
-                ? lang.screen_clause.category.location
-                : ''
-            }
+            label={lang && lang ? lang.category.location : ''}
             onPress={onClausePersonal}
           />
           <ButtonList
-            label={
-              lang && lang.screen_clause
-                ? lang.screen_clause.category.usage
-                : ''
-            }
+            label={lang && lang ? lang.category.usage : ''}
             onPress={onClauseUsage}
           />
         </ScrollView>

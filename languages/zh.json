@@ -446,6 +446,18 @@
       "del_placeholder": "请输入您的密码。",
       "del_empty": "请输入您的密码",
       "del_fail": "关闭会员资格失败"
+    },
+    "alert": {
+      "title": {
+        "error": "错误",
+        "fail": "失败",
+        "warning": "警告",
+        "info": "信息",
+        "success": "成功"
+      }
+    },
+    "button": {
+      "logout": "您确定要注销吗？"
     }
   },
   "screen_wallet": {
