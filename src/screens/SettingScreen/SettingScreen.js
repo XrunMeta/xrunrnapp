@@ -5,7 +5,7 @@ import ButtonList from '../../components/ButtonList/ButtonList';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
-import {getLanguage} from '../../../utils';
+import {getLanguage2} from '../../../utils';
 
 const SettingScreen = () => {
   const {isLoggedIn, logout} = useAuth();
@@ -18,7 +18,7 @@ const SettingScreen = () => {
     const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage(currentLanguage, 'screen_setting');
+        const screenLang = await getLanguage2(currentLanguage);
         setLang(screenLang);
       } catch (err) {
         console.error('Error fetching user data: ', err);
@@ -38,8 +38,12 @@ const SettingScreen = () => {
 
   const onLogout = () => {
     Alert.alert(
-      `${lang && lang.alert ? lang.alert.warning : ''}`,
-      `${lang && lang && lang.button.logout ? lang.button.logout : ''}`,
+      `${lang && lang.alert.title ? lang.alert.title.warning : ''}`,
+      `${
+        lang && lang && lang.screen_setting.button.logout
+          ? lang.screen_setting.button.logout
+          : ''
+      }`,
       [
         {
           text: 'Cancel',
@@ -71,7 +75,7 @@ const SettingScreen = () => {
         </View>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>
-            {lang && lang.title ? lang.title : ''}
+            {lang && lang.screen_setting.title ? lang.screen_setting.title : ''}
           </Text>
         </View>
       </View>
@@ -92,10 +96,12 @@ const SettingScreen = () => {
               marginLeft: 20,
               marginTop: 15,
             }}>
-            {lang && lang ? lang.category.basic.cat : ''}
+            {lang && lang ? lang.screen_setting.category.basic.cat : ''}
           </Text>
           <ButtonList
-            label={lang && lang ? lang.category.basic.device : ''}
+            label={
+              lang && lang ? lang.screen_setting.category.basic.device : ''
+            }
             onPress={onDevice}
           />
 
@@ -108,14 +114,18 @@ const SettingScreen = () => {
               marginLeft: 20,
               marginTop: 20,
             }}>
-            {lang && lang ? lang.category.account.cat : ''}
+            {lang && lang ? lang.screen_setting.category.account.cat : ''}
           </Text>
           <ButtonList
-            label={lang && lang ? lang.category.account.logout : ''}
+            label={
+              lang && lang ? lang.screen_setting.category.account.logout : ''
+            }
             onPress={onLogout}
           />
           <ButtonList
-            label={lang && lang ? lang.category.account.close : ''}
+            label={
+              lang && lang ? lang.screen_setting.category.account.close : ''
+            }
             onPress={onClose}
           />
         </ScrollView>

@@ -13,10 +13,10 @@ import React, {useState, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInputWallet from '../../components/CustomInputWallet';
-import {URL_API} from '../../../utils';
+import {URL_API, getLanguage2} from '../../../utils';
 
 const ConversionRequest = ({navigation, route}) => {
-  const [lang, setLang] = useState({});
+  const [lang, setLang] = useState('');
   const [iconNextIsDisabled, setIconNextIsDisabled] = useState(true);
   const [amount, setAmount] = useState('');
   const [address, setAddress] = useState('');
@@ -34,41 +34,20 @@ const ConversionRequest = ({navigation, route}) => {
   const [isNaNCoverted, setIsNaNConverted] = useState(false);
 
   useEffect(() => {
-    // Get Language
-    const getLanguage = async () => {
+    // Get Language Data
+    const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        let langData;
+        const screenLang = await getLanguage2(currentLanguage);
 
-        switch (currentLanguage) {
-          case 'id':
-            langData = require('../../../languages/id.json');
-            break;
-          case 'en':
-            langData = require('../../../languages/en.json');
-            break;
-          case 'ko':
-            langData = require('../../../languages/ko.json');
-            break;
-          case 'zh':
-            langData = require('../../../languages/zh.json');
-            break;
-          default:
-            langData = require('../../../languages/en.json');
-            break;
-        }
-
-        const language = langData;
-        setLang(language);
+        // Set your language state
+        setLang(screenLang);
       } catch (err) {
-        console.error(
-          'Error retrieving selfCoordinate from AsyncStorage:',
-          err,
-        );
+        console.error('Error in fetchData:', err);
       }
     };
 
-    getLanguage();
+    fetchData();
 
     // Get data member
     const getUserData = async () => {
@@ -255,7 +234,7 @@ const ConversionRequest = ({navigation, route}) => {
       if (result === '1') {
         navigation.navigate('CompleteConversion', {
           symbol: activeNetwork,
-          conversionRequest,
+          conversionTargetConverted,
           amount,
         });
       } else {
@@ -284,9 +263,7 @@ const ConversionRequest = ({navigation, route}) => {
         </View>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>
-            {lang && lang.screen_conversion && lang.screen_conversion.title
-              ? lang.screen_conversion.title
-              : ''}
+            {lang && lang ? lang.screen_conversion.title : ''}
           </Text>
         </View>
       </View>
@@ -296,28 +273,18 @@ const ConversionRequest = ({navigation, route}) => {
           <Text style={styles.currencyName}>-</Text>
           <View style={styles.partScanQR}>
             <Text style={styles.balance}>
-              {lang &&
-              lang.screen_conversion &&
-              lang.screen_conversion.acquired_coin
-                ? lang.screen_conversion.acquired_coin
-                : ''}
-              : {balance}XRUN
+              {lang && lang ? lang.screen_conversion.acquired_coin : ''}:{' '}
+              {balance}XRUN
             </Text>
           </View>
         </View>
 
         <View style={styles.partBottom}>
           <Text style={styles.selectNetwork}>
-            {lang &&
-            lang.screen_conversion &&
-            lang.screen_conversion.select_network
-              ? lang.screen_conversion.select_network
-              : ''}
+            {lang && lang ? lang.screen_conversion.select_network : ''}
           </Text>
           <Text style={styles.description}>
-            {lang && lang.screen_conversion && lang.screen_conversion.desc
-              ? lang.screen_conversion.desc
-              : ''}
+            {lang && lang ? lang.screen_conversion.desc : ''}
           </Text>
 
           <View style={styles.wrapperNetwork}>
@@ -366,11 +333,7 @@ const ConversionRequest = ({navigation, route}) => {
               isNumber
               labelVisible={false}
               placeholder={
-                lang &&
-                lang.screen_send &&
-                lang.screen_send.send_amount_placeholder
-                  ? lang.screen_send.send_amount_placeholder
-                  : ''
+                lang && lang ? lang.screen_send.send_amount_placeholder : ''
               }
               customFontSize={16}
             />
@@ -379,11 +342,7 @@ const ConversionRequest = ({navigation, route}) => {
               labelVisible={false}
               setValue={setAddress}
               placeholder={
-                lang &&
-                lang.screen_send &&
-                lang.screen_send.send_address_placeholder
-                  ? lang.screen_send.send_address_placeholder
-                  : ''
+                lang && lang ? lang.screen_send.send_address_placeholder : ''
               }
               customFontSize={16}
             />
@@ -421,7 +380,11 @@ const ConversionRequest = ({navigation, route}) => {
             </View>
             <View style={styles.contentConversion}>
               <View style={styles.wrapperTextConversion}>
-                <Text style={styles.textPartLeft}>Target to be converted</Text>
+                <Text style={styles.textPartLeft}>
+                  {lang && lang
+                    ? lang.complete_conversion.target_converted
+                    : ''}
+                </Text>
                 <Text style={styles.textPartRight}>
                   {conversionTargetConverted.toFixed(6).replaceAll('.', ',')}
                   {activeNetwork}
@@ -429,7 +392,9 @@ const ConversionRequest = ({navigation, route}) => {
               </View>
               <View style={styles.wrapperTextConversion}>
                 <Text style={styles.textPartLeft}>
-                  Conversion Request from{' '}
+                  {lang && lang
+                    ? lang.complete_conversion.conversion_request
+                    : ''}{' '}
                 </Text>
                 <Text style={styles.textPartRight}>
                   {parseFloat(conversionRequest).toFixed(5)}XRUN
@@ -451,7 +416,7 @@ const ConversionRequest = ({navigation, route}) => {
                 ]}
                 onPress={confirmConversion}>
                 <Text style={[styles.textButtonConfirm, {color: '#fff'}]}>
-                  OK
+                  {lang && lang ? lang.screen_wallet.confirm_alert : ''}
                 </Text>
               </TouchableOpacity>
             </View>

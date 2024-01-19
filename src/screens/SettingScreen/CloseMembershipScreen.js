@@ -14,41 +14,32 @@ import {
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const langData = require('../../../lang.json');
+import {getLanguage2} from '../../../utils';
 
 const CloseMembershipScreen = () => {
-  const [lang, setLang] = useState({});
+  const [lang, setLang] = useState('');
   const navigation = useNavigation();
   let ScreenHeight = Dimensions.get('window').height;
-  const [userData, setUserData] = useState({});
   const [checkedRecommendations, setCheckedRecommendations] = useState({});
   const [checkedID, setCheckedID] = useState(null);
   const [reason, setReason] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get Language
-    const getLanguage = async () => {
+    // Get Language Data
+    const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
-        setLang(language);
+        const screenLang = await getLanguage2(currentLanguage);
 
-        // Get User Data from Asyncstorage
-        const astorUserData = await AsyncStorage.getItem('userData');
-        const astorJsonData = JSON.parse(astorUserData);
-        setUserData(astorJsonData);
+        // Set your language state
+        setLang(screenLang);
       } catch (err) {
-        console.error(
-          'Error retrieving selfCoordinate from AsyncStorage:',
-          err,
-        );
+        console.error('Error in fetchData:', err);
       }
     };
 
-    getLanguage();
+    fetchData();
     setLoading(false);
   }, []);
 

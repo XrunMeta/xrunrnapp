@@ -19,10 +19,10 @@ import ButtonBack from '../../components/ButtonBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInputWallet from '../../components/CustomInputWallet';
 import CustomDropdownWallet from '../../components/CustomDropdownWallet';
-import {URL_API} from '../../../utils';
+import {URL_API, getLanguage2} from '../../../utils';
 
 const SendWalletScreen = ({navigation, route}) => {
-  const [lang, setLang] = useState({});
+  const [lang, setLang] = useState('');
   const [iconNextIsDisabled, setIconNextIsDisabled] = useState(true);
   const [amount, setAmount] = useState('');
   const [address, setAddress] = useState('');
@@ -38,41 +38,20 @@ const SendWalletScreen = ({navigation, route}) => {
   const [zIndexAnim, setZIndexAnim] = useState(-1);
 
   useEffect(() => {
-    // Get Language
-    const getLanguage = async () => {
+    // Get Language Data
+    const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        let langData;
+        const screenLang = await getLanguage2(currentLanguage);
 
-        switch (currentLanguage) {
-          case 'id':
-            langData = require('../../../languages/id.json');
-            break;
-          case 'en':
-            langData = require('../../../languages/en.json');
-            break;
-          case 'ko':
-            langData = require('../../../languages/ko.json');
-            break;
-          case 'zh':
-            langData = require('../../../languages/zh.json');
-            break;
-          default:
-            langData = require('../../../languages/en.json');
-            break;
-        }
-
-        const language = langData;
-        setLang(language);
+        // Set your language state
+        setLang(screenLang);
       } catch (err) {
-        console.error(
-          'Error retrieving selfCoordinate from AsyncStorage:',
-          err,
-        );
+        console.error('Error in fetchData:', err);
       }
     };
 
-    getLanguage();
+    fetchData();
 
     // Get data member
     const getUserData = async () => {
@@ -169,78 +148,49 @@ const SendWalletScreen = ({navigation, route}) => {
     if (amount === '') {
       Alert.alert(
         '',
-        lang && lang.screen_send && lang.screen_send.send_amount_placeholder
-          ? lang.screen_send.send_amount_placeholder
-          : '',
+        lang && lang ? lang.screen_send.send_amount_placeholder : '',
         [
           {
-            text:
-              lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
-                ? lang.screen_wallet.confirm_alert
-                : '',
+            text: lang && lang ? lang.screen_wallet.confirm_alert : '',
           },
         ],
       );
     } else if (amount == 0) {
       Alert.alert(
         '',
-        lang && lang.screen_send && lang.screen_send.send_amount_greater_zero
-          ? lang.screen_send.send_amount_greater_zero
-          : '',
+        lang && lang ? lang.screen_send.send_amount_greater_zero : '',
         [
           {
-            text:
-              lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
-                ? lang.screen_wallet.confirm_alert
-                : '',
+            text: lang && lang ? lang.screen_wallet.confirm_alert : '',
           },
         ],
       );
     } else if (amount > balance) {
       Alert.alert(
         '',
-        lang && lang.screen_send && lang.screen_send.send_balance_not_enough
-          ? lang.screen_send.send_balance_not_enough
-          : '',
+        lang && lang ? lang.screen_send.send_balance_not_enough : '',
         [
           {
-            text:
-              lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
-                ? lang.screen_wallet.confirm_alert
-                : '',
+            text: lang && lang ? lang.screen_wallet.confirm_alert : '',
           },
         ],
       );
     } else if (address === '') {
       Alert.alert(
         '',
-        lang && lang.screen_send && lang.screen_send.send_address_placeholder
-          ? lang.screen_send.send_address_placeholder
-          : '',
+        lang && lang ? lang.screen_send.send_address_placeholder : '',
         [
           {
-            text:
-              lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
-                ? lang.screen_wallet.confirm_alert
-                : '',
+            text: lang && lang ? lang.screen_wallet.confirm_alert : '',
           },
         ],
       );
     } else if (address.length < 40) {
-      Alert.alert(
-        '',
-        lang && lang.screen_send && lang.screen_send.send_address_less
-          ? lang.screen_send.send_address_less
-          : '',
-        [
-          {
-            text:
-              lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
-                ? lang.screen_wallet.confirm_alert
-                : '',
-          },
-        ],
-      );
+      Alert.alert('', lang && lang ? lang.screen_send.send_address_less : '', [
+        {
+          text: lang && lang ? lang.screen_wallet.confirm_alert : '',
+        },
+      ]);
     } else {
       setIsLoading(true);
       const currency = dataWallet.currency;
@@ -259,9 +209,7 @@ const SendWalletScreen = ({navigation, route}) => {
             setIsLoading(false);
             Alert.alert(
               '',
-              lang && lang.screen_send && lang.screen_send.send_enough_money
-                ? lang.screen_send.send_enough_money
-                : '',
+              lang && lang ? lang.screen_send.send_enough_money : '',
             );
           } else {
             if (currency == 11) {
@@ -277,9 +225,7 @@ const SendWalletScreen = ({navigation, route}) => {
                   if (status == 'false') {
                     Alert.alert(
                       '',
-                      lang &&
-                        lang.screen_send &&
-                        lang.screen_send.send_verification_code
+                      lang && lang
                         ? lang.screen_send.send_verification_code
                         : '',
                     );
@@ -407,9 +353,7 @@ const SendWalletScreen = ({navigation, route}) => {
         </View>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>
-            {lang && lang.screen_wallet && lang.screen_wallet.table_head_send
-              ? lang.screen_wallet.table_head_send
-              : ''}
+            {lang && lang ? lang.screen_wallet.table_head_send : ''}
           </Text>
         </View>
       </View>
@@ -440,16 +384,10 @@ const SendWalletScreen = ({navigation, route}) => {
               setValue={setAmount}
               isNumber
               label={`${
-                lang && lang.screen_send && lang.screen_send.send_amount_label
-                  ? lang.screen_send.send_amount_label
-                  : ''
+                lang && lang ? lang.screen_send.send_amount_label : ''
               }`}
               placeholder={`${
-                lang &&
-                lang.screen_send &&
-                lang.screen_send.send_amount_placeholder
-                  ? lang.screen_send.send_amount_placeholder
-                  : ''
+                lang && lang ? lang.screen_send.send_amount_placeholder : ''
               }`}
             />
 
@@ -457,16 +395,10 @@ const SendWalletScreen = ({navigation, route}) => {
               value={address}
               setValue={setAddress}
               label={`${
-                lang && lang.screen_send && lang.screen_send.send_address_label
-                  ? lang.screen_send.send_address_label
-                  : ''
+                lang && lang ? lang.screen_send.send_address_label : ''
               }`}
               placeholder={`${
-                lang &&
-                lang.screen_send &&
-                lang.screen_send.send_address_placeholder
-                  ? lang.screen_send.send_address_placeholder
-                  : ''
+                lang && lang ? lang.screen_send.send_address_placeholder : ''
               }`}
             />
 
