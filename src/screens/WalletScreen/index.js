@@ -15,11 +15,11 @@ import ButtonBack from '../../components/ButtonBack';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {TabView, SceneMap} from 'react-native-tab-view';
 import TableWalletCard from '../../components/TableWallet';
-import {URL_API, getLanguage} from '../../../utils';
+import {URL_API, getLanguage2} from '../../../utils';
 import ShowQRWallet from '../../components/ShowQRWallet';
 
 const WalletScreen = ({navigation, route}) => {
-  const [lang, setLang] = useState({});
+  const [lang, setLang] = useState('');
   const layout = useWindowDimensions();
   const [member, setMember] = useState('');
   const [currentCurrency, setCurrentCurrency] = useState('1');
@@ -46,7 +46,7 @@ const WalletScreen = ({navigation, route}) => {
     const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage(currentLanguage, 'screen_wallet');
+        const screenLang = await getLanguage2(currentLanguage);
 
         // Set your language state
         setLang(screenLang);
@@ -88,13 +88,17 @@ const WalletScreen = ({navigation, route}) => {
             })
             .catch(error => {
               Alert.alert(
-                `${lang.failed_alert ? lang.failed_alert : ''}`,
+                '',
                 `${
-                  lang.failed_getwallet_alert ? lang.failed_getwallet_alert : ''
+                  lang.screen_wallet.failed_getwallet_alert
+                    ? lang.screen_wallet.failed_getwallet_alert
+                    : ''
                 }`,
                 [
                   {
-                    text: lang.confirm_alert ? lang.confirm_alert : '',
+                    text: lang.screen_wallet.confirm_alert
+                      ? lang.screen_wallet.confirm_alert
+                      : '',
                     onPress: () =>
                       console.log('Failed get wallet data: ', error),
                   },
@@ -188,7 +192,7 @@ const WalletScreen = ({navigation, route}) => {
         <View style={styles.containerTextWallet}>
           <View style={styles.wrapperTextwallet}>
             <Text style={styles.textWallet}>
-              {lang.possess ? lang.possess : ''}
+              {lang.screen_wallet.possess ? lang.screen_wallet.possess : ''}
             </Text>
             <Text style={styles.valueWallet}>
               {Wamount.replaceAll('.', ',')}
@@ -198,7 +202,7 @@ const WalletScreen = ({navigation, route}) => {
 
           <View style={styles.wrapperTextwallet}>
             <Text style={styles.textWallet}>
-              {lang.catch ? lang.catch : ''}
+              {lang.screen_wallet.catch ? lang.screen_wallet.catch : ''}
             </Text>
             <Text style={styles.valueWallet}>
               {amount.replaceAll('.', ',')}
@@ -251,11 +255,17 @@ const WalletScreen = ({navigation, route}) => {
   const copiedHash = hash => {
     Clipboard.setString(hash);
 
-    Alert.alert('', lang.copy_qrcode ? lang.copy_qrcode : '', [
-      {
-        text: lang.confirm_alert ? lang.confirm_alert : '',
-      },
-    ]);
+    Alert.alert(
+      '',
+      lang.screen_wallet.copy_qrcode ? lang.screen_wallet.copy_qrcode : '',
+      [
+        {
+          text: lang.screen_wallet.confirm_alert
+            ? lang.screen_wallet.confirm_alert
+            : '',
+        },
+      ],
+    );
   };
 
   const onBack = () => {
@@ -285,7 +295,9 @@ const WalletScreen = ({navigation, route}) => {
           <ButtonBack onClick={onBack} />
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>{lang.title ? lang.title : ''}</Text>
+          <Text style={styles.title}>
+            {lang && lang.screen_wallet ? lang.screen_wallet.title : ''}
+          </Text>
         </View>
       </View>
 
@@ -333,7 +345,9 @@ const WalletScreen = ({navigation, route}) => {
               setIsShowQRCodeWallet(true);
             }}>
             <Text style={styles.textQRCode}>
-              {lang.qrcode_show ? lang.qrcode_show : ''}
+              {lang.screen_wallet.qrcode_show
+                ? lang.screen_wallet.qrcode_show
+                : ''}
             </Text>
           </TouchableOpacity>
 

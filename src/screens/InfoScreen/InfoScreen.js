@@ -19,7 +19,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {URL_API, getLanguage} from '../../../utils';
 
 const InfoScreen = () => {
-  const [lang, setLang] = useState({});
+  const [lang, setLang] = useState('');
   const {isLoggedIn, logout} = useAuth();
   const [userDetails, setUserDetails] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -68,32 +68,24 @@ const InfoScreen = () => {
   }
 
   const onLogout = () => {
-    Alert.alert(
-      `${lang && lang.alert ? lang.alert.title.warning : ''}`,
-      `${
-        lang && lang.screen_info && lang.screen_info.button.logout
-          ? lang.screen_info.button.logout
-          : ''
-      }`,
-      [
-        {
-          text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
+    Alert.alert('', 'Are you sure want to logout?', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'OK',
+        onPress: () => {
+          logout();
+          // Go to SignIn Screen
+          navigation.reset({
+            index: 0,
+            routes: [{name: 'SignIn'}],
+          });
         },
-        {
-          text: 'OK',
-          onPress: () => {
-            logout();
-            // Go to SignIn Screen
-            navigation.reset({
-              index: 0,
-              routes: [{name: 'SignIn'}],
-            });
-          },
-        },
-      ],
-    );
+      },
+    ]);
   };
 
   const onShare = async () => {
