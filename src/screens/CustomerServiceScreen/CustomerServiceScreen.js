@@ -2,18 +2,12 @@ import {StyleSheet, Text, View, ScrollView} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import ButtonList from '../../components/ButtonList/ButtonList';
-import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
-import {URL_API, getLanguage} from '../../../utils';
-
-const langData = require('../../../lang.json');
+import {getLanguage2} from '../../../utils';
 
 const CustomerServiceScreen = () => {
-  const {isLoggedIn, logout} = useAuth();
-  const [userName, setUserName] = useState(null);
   const [lang, setLang] = useState('');
-
   const navigation = useNavigation();
 
   //   Call API
@@ -22,7 +16,7 @@ const CustomerServiceScreen = () => {
     const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage(currentLanguage, 'screen_cs');
+        const screenLang = await getLanguage2(currentLanguage);
         setLang(screenLang);
       } catch (err) {
         console.error('Error fetching user data: ', err);
@@ -52,7 +46,9 @@ const CustomerServiceScreen = () => {
           <ButtonBack onClick={onBack} />
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>{lang && lang ? lang.title : ''}</Text>
+          <Text style={styles.title}>
+            {lang && lang.screen_cs ? lang.screen_cs.title : ''}
+          </Text>
         </View>
       </View>
 
@@ -64,11 +60,11 @@ const CustomerServiceScreen = () => {
         }}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <ButtonList
-            label={lang && lang ? lang.common.title : ''}
+            label={lang && lang.screen_cs ? lang.screen_cs.common.title : ''}
             onPress={onCommon}
           />
           <ButtonList
-            label={lang && lang ? lang.one.title : ''}
+            label={lang && lang.screen_cs ? lang.screen_cs.one.title : ''}
             onPress={onOne}
           />
         </ScrollView>

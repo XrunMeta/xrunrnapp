@@ -186,11 +186,16 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
       Alert.alert(
         '',
         `${fileName} ${
-          lang && lang.download_qrcode_show ? lang.download_qrcode_show : ''
+          lang && lang.screen_wallet.download_qrcode_show
+            ? lang.screen_wallet.download_qrcode_show
+            : ''
         }`,
         [
           {
-            text: lang && lang.confirm_alert ? lang.confirm_alert : '',
+            text:
+              lang && lang.screen_wallet.confirm_alert
+                ? lang.screen_wallet.confirm_alert
+                : '',
             onPress: () => {
               setDownloadDisable(false);
             },
@@ -202,13 +207,16 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
       Alert.alert(
         '',
         `${
-          lang && lang.failed_download_qrcode_alert
-            ? lang.failed_download_qrcode_alert
+          lang && lang.screen_wallet.failed_download_qrcode_alert
+            ? lang.screen_wallet.failed_download_qrcode_alert
             : ''
         }`,
         [
           {
-            text: lang && lang.confirm_alert ? lang.confirm_alert : '',
+            text:
+              lang && lang.screen_wallet.confirm_alert
+                ? lang.screen_wallet.confirm_alert
+                : '',
             onPress: () => {
               setDownloadDisable(false);
             },
@@ -320,7 +328,9 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
             style={{width: 28, height: 28}}
           />
           <Text style={styles.notificationTextInQR}>
-            {lang && lang.copy_qrcode_show ? lang.copy_qrcode_show : ''}
+            {lang && lang.screen_wallet.copy_qrcode_show
+              ? lang.screen_wallet.copy_qrcode_show
+              : ''}
           </Text>
         </View>
       </Animated.View>

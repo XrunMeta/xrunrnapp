@@ -29,7 +29,7 @@
 
   "screen_signin": {
     "title": "로그인",
-    "subTitle": "빠르게 로그인해보세요 'Catch Me'",
+    "subTitle": "로그인 그리고 'Catch Me'",
     "email": {
       "label": "이메일",
       "placeholder": "xrun@xrun.run"
@@ -237,7 +237,7 @@
       "title": "광고"
     },
     "notify": {
-      "title": "통지"
+      "title": "알림"
     },
     "info": {
       "title": "정보"
@@ -247,14 +247,14 @@
 
   "screen_map": {
     "section_card_shadow": {
-      "radius": "1000 미터 반경 내에서",
+      "radius": "현재위치 부근에서",
       "amount": "총",
       "and": "및",
       "getable": "얻을 수 있음",
       "event": "XRUN 이벤트",
       "diamond": "다이아몬드",
-      "noCoin": "XRUN이 없습니다",
-      "noCoin2": "근거리에"
+      "noCoin": "코인이 없습니다",
+      "noCoin2": "부근에"
     },
     "section_slider_card": {
       "desc1": "획득 가능한 XRUN이",
@@ -443,7 +443,7 @@
       "reason": "해지 사유",
       "del_title": "멤버십 해지",
       "del_d1": "안전한 계정 관리를 위해",
-      "del_d2": "나가실 때 비밀번호를 입력 중입니다.",
+      "del_d2": "계정의 비밀번호를 입력하세요.",
       "del_placeholder": "비밀번호를 입력하세요.",
       "del_empty": "비밀번호를 입력하세요",
       "del_fail": "멤버십 해지 실패"
@@ -463,8 +463,8 @@
   },
   "screen_wallet": {
     "title": "내 지갑",
-    "possess": "소지하다",
-    "catch": "잡다",
+    "possess": "보유",
+    "catch": "획득",
     "qrcode_show": "QR 코드",
     "copy_qrcode_show": "지갑 주소가 복사되었습니다.",
     "download_qrcode_show": "이미지가 성공적으로 저장되었습니다. 갤러리를 확인해주세요.",
@@ -476,8 +476,8 @@
     "table_days": "일",
     "total_history": "총 기록",
     "transfer_history": "이체 내역",
-    "received_details": "수신 세부 정보",
-    "transition_history": "전이 내역",
+    "received_details": "획득 정보",
+    "transition_history": "전송 내역",
     "history_action3651": "출금 세부 사항",
     "history_action3304": "완료됨",
     "history_action3305": "이체",
@@ -526,19 +526,18 @@
     "coin_above_0": "코인을 0 이상 입력하세요.",
     "acquired_coin": "획득한 코인",
     "select_network": "네트워크 선택",
-    "desc": "전환 시에는 전환 전에 약 0.124%의 가스가 공제됩니다."
+    "desc": "전환 시에는 전환 전에 약 네트워크 수수료가 공제됩니다."
   },
   "complete_conversion": {
     "title": "전환 요청 완료",
     "target_converted": "전환 대상",
     "current_balance": "현재 잔액",
     "conversion_request": "전환 요청자",
-    "desc": "네트워크 수수료가 남은 XRUN보다 높으면 전환이 거부될 수 있습니다."
+    "desc": "네트워크 수수료와 보낼금액이 보유량보다 높으면 전환이 거부될 수 있습니다."
   },
   "global_error": {
     "error": "통신문제가 발생했습니다. 잠시후 시도해 주세요."
   },
-
   "screen_advertise": {
     "title": "광고 저장소",
     "delete": "삭제",
