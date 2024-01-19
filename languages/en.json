@@ -314,6 +314,20 @@
     }
   },
 
+  "screen_modify_password": {
+    "title": "Password Modify",
+    "label": "New Password",
+    "placeholder": "Please enter your new password",
+    "note": {
+      "alt1": "Please enter your password for personal information"
+    },
+    "condition": {
+      "empty": "Please fill your password",
+      "wrong": "Your password is doesn't match",
+      "errorServer": "There is a server communication error. Please try again..."
+    }
+  },
+
   "screen_modify_information": {
     "loader": "Loading...",
     "title": "Modify Information",
