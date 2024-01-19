@@ -20,6 +20,7 @@ import {URL_API, getLanguage} from '../../../utils';
 
 const InfoScreen = () => {
   const [lang, setLang] = useState({});
+  const [langAlert, setLangAlert] = useState({});
   const {isLoggedIn, logout} = useAuth();
   const [userDetails, setUserDetails] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -39,6 +40,9 @@ const InfoScreen = () => {
         console.log('Info Screen -> ' + userData);
         const screenLang = await getLanguage(currentLanguage, 'screen_info');
         setLang(screenLang);
+
+        const screenAlert = await getLanguage(currentLanguage, 'alert');
+        setLangAlert(screenAlert);
 
         const data = JSON.parse(userData);
 
@@ -69,12 +73,8 @@ const InfoScreen = () => {
 
   const onLogout = () => {
     Alert.alert(
-      `${lang && lang.alert ? lang.alert.title.warning : ''}`,
-      `${
-        lang && lang.screen_info && lang.screen_info.button.logout
-          ? lang.screen_info.button.logout
-          : ''
-      }`,
+      `${langAlert && langAlert.title ? langAlert.title.warning : ''}`,
+      `${lang && lang.button ? lang.button.logout : ''}`,
       [
         {
           text: 'Cancel',
