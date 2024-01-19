@@ -314,6 +314,20 @@
     }
   },
 
+  "screen_modify_password": {
+    "title": "Ubah Kata Sandi",
+    "label": "Kata Sandi Baru",
+    "placeholder": "Silakan masukkan kata sandi baru Anda",
+    "note": {
+      "alt1": "Silakan masukkan kata sandi Anda untuk informasi pribadi"
+    },
+    "condition": {
+      "empty": "Silakan isi kata sandi Anda",
+      "wrong": "Kata sandi Anda tidak cocok",
+      "errorServer": "Ada kesalahan komunikasi server. Silakan coba lagi..."
+    }
+  },
+
   "screen_modify_information": {
     "title": "Ubah Informasi",
     "lastname": {

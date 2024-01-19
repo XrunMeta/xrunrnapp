@@ -313,6 +313,20 @@
     }
   },
 
+  "screen_modify_password": {
+    "title": "修改密码",
+    "label": "新密码",
+    "placeholder": "请输入您的新密码",
+    "note": {
+      "alt1": "请输入您的密码以获取个人信息"
+    },
+    "condition": {
+      "empty": "请填写您的密码",
+      "wrong": "您的密码不匹配",
+      "errorServer": "存在服务器通信错误。请重试..."
+    }
+  },
+
   "screen_modify_information": {
     "title": "修改信息",
     "lastname": {
