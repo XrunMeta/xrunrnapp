@@ -448,6 +448,16 @@
       "del_placeholder": "Please enter your password.",
       "del_empty": "Please enter your password",
       "del_fail": "Close membership failed"
+    },
+    "alert": {
+      "error": "Error",
+      "fail": "Failed",
+      "warning": "Warning",
+      "info": "Info",
+      "success": "Success"
+    },
+    "button": {
+      "logout": "Are you sure you want to logout?"
     }
   },
   "screen_wallet": {

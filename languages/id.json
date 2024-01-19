@@ -447,6 +447,18 @@
       "del_placeholder": "Masukan kata sandi.",
       "del_empty": "Silahkan masukan kata sandi anda",
       "del_fail": "Gagal menghapus akun"
+    },
+    "alert": {
+      "title": {
+        "error": "Error",
+        "fail": "Gagal",
+        "warning": "Peringatan",
+        "info": "Info",
+        "success": "Berhasil"
+      }
+    },
+    "button": {
+      "logout": "Apakah Anda yakin ingin keluar?"
     }
   },
   "screen_wallet": {

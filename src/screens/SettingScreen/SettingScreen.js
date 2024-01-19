@@ -5,8 +5,7 @@ import ButtonList from '../../components/ButtonList/ButtonList';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
-
-const langData = require('../../../lang.json');
+import {getLanguage} from '../../../utils';
 
 const SettingScreen = () => {
   const {isLoggedIn, logout} = useAuth();
@@ -14,25 +13,19 @@ const SettingScreen = () => {
 
   const navigation = useNavigation();
 
-  //   Call API
   useEffect(() => {
     // Get Language
-    const getLanguage = async () => {
+    const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
-        setLang(language);
+        const screenLang = await getLanguage(currentLanguage, 'screen_setting');
+        setLang(screenLang);
       } catch (err) {
-        console.error(
-          'Error retrieving selfCoordinate from AsyncStorage:',
-          err,
-        );
+        console.error('Error fetching user data: ', err);
       }
     };
 
-    getLanguage();
+    fetchData();
   }, []);
 
   const onBack = () => {
@@ -45,12 +38,8 @@ const SettingScreen = () => {
 
   const onLogout = () => {
     Alert.alert(
-      `${lang && lang.alert ? lang.alert.title.warning : ''}`,
-      `${
-        lang && lang.screen_info && lang.screen_info.button.logout
-          ? lang.screen_info.button.logout
-          : ''
-      }`,
+      `${lang && lang.alert ? lang.alert.warning : ''}`,
+      `${lang && lang && lang.button.logout ? lang.button.logout : ''}`,
       [
         {
           text: 'Cancel',
@@ -82,7 +71,7 @@ const SettingScreen = () => {
         </View>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>
-            {lang && lang.screen_setting ? lang.screen_setting.title : ''}
+            {lang && lang.title ? lang.title : ''}
           </Text>
         </View>
       </View>
@@ -103,16 +92,10 @@ const SettingScreen = () => {
               marginLeft: 20,
               marginTop: 15,
             }}>
-            {lang && lang.screen_setting
-              ? lang.screen_setting.category.basic.cat
-              : ''}
+            {lang && lang ? lang.category.basic.cat : ''}
           </Text>
           <ButtonList
-            label={
-              lang && lang.screen_setting
-                ? lang.screen_setting.category.basic.device
-                : ''
-            }
+            label={lang && lang ? lang.category.basic.device : ''}
             onPress={onDevice}
           />
 
@@ -125,24 +108,14 @@ const SettingScreen = () => {
               marginLeft: 20,
               marginTop: 20,
             }}>
-            {lang && lang.screen_setting
-              ? lang.screen_setting.category.account.cat
-              : ''}
+            {lang && lang ? lang.category.account.cat : ''}
           </Text>
           <ButtonList
-            label={
-              lang && lang.screen_setting
-                ? lang.screen_setting.category.account.logout
-                : ''
-            }
+            label={lang && lang ? lang.category.account.logout : ''}
             onPress={onLogout}
           />
           <ButtonList
-            label={
-              lang && lang.screen_setting
-                ? lang.screen_setting.category.account.close
-                : ''
-            }
+            label={lang && lang ? lang.category.account.close : ''}
             onPress={onClose}
           />
         </ScrollView>

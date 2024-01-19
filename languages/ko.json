@@ -447,6 +447,18 @@
       "del_placeholder": "비밀번호를 입력하세요.",
       "del_empty": "비밀번호를 입력하세요",
       "del_fail": "멤버십 해지 실패"
+    },
+    "alert": {
+      "title": {
+        "error": "에러",
+        "fail": "실패",
+        "warning": "주의",
+        "info": "정보",
+        "success": "성공"
+      }
+    },
+    "button": {
+      "logout": "로그아웃 하시겠습니까?"
     }
   },
   "screen_wallet": {
