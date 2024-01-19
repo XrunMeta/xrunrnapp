@@ -9,47 +9,27 @@ import {
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {getLanguage2} from '../../../utils';
 
 const CompleteSend = ({navigation, route}) => {
-  const [lang, setLang] = useState({});
-  const {symbol, amount, conversionRequest} = route.params;
+  const [lang, setLang] = useState('');
+  const {symbol, amount, conversionTargetConverted} = route.params;
 
   useEffect(() => {
-    // Get Language
-    const getLanguage = async () => {
+    // Get Language Data
+    const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        let langData;
+        const screenLang = await getLanguage2(currentLanguage);
 
-        switch (currentLanguage) {
-          case 'id':
-            langData = require('../../../languages/id.json');
-            break;
-          case 'en':
-            langData = require('../../../languages/en.json');
-            break;
-          case 'ko':
-            langData = require('../../../languages/ko.json');
-            break;
-          case 'zh':
-            langData = require('../../../languages/zh.json');
-            break;
-          default:
-            langData = require('../../../languages/en.json');
-            break;
-        }
-
-        const language = langData;
-        setLang(language);
+        // Set your language state
+        setLang(screenLang);
       } catch (err) {
-        console.error(
-          'Error retrieving selfCoordinate from AsyncStorage:',
-          err,
-        );
+        console.error('Error in fetchData:', err);
       }
     };
 
-    getLanguage();
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -167,7 +147,7 @@ const CompleteSend = ({navigation, route}) => {
               color: '#000',
               maxWidth: 180,
             }}>
-            {conversionRequest}
+            {amount}XRUN
           </Text>
         </View>
         <View
@@ -195,7 +175,7 @@ const CompleteSend = ({navigation, route}) => {
                 color: '#000',
                 maxWidth: 240,
               }}>
-              {amount}
+              {conversionTargetConverted}
               {symbol}
             </Text>
           </View>

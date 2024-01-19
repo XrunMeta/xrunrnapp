@@ -76,48 +76,75 @@ const TotalHistory = ({totalHistory, lang}) => {
 
     switch (tempAction) {
       case '3304':
-        action = lang && lang.history_action3304 ? lang.history_action3304 : '';
+        action =
+          lang && lang.screen_wallet.history_action3304
+            ? lang.screen_wallet.history_action3304
+            : '';
         break;
       case '3651':
-        action = lang && lang.history_action3651 ? lang.history_action3651 : '';
+        action =
+          lang && lang.screen_wallet.history_action3651
+            ? lang.screen_wallet.history_action3651
+            : '';
         break;
       case '3305':
-        action = lang && lang.history_action3305 ? lang.history_action3305 : '';
+        action =
+          lang && lang.screen_wallet.history_action3305
+            ? lang.screen_wallet.history_action3305
+            : '';
         break;
       case '3306':
-        action = lang && lang.history_action3306 ? lang.history_action3306 : '';
+        action =
+          lang && lang.screen_wallet.history_action3306
+            ? lang.screen_wallet.history_action3306
+            : '';
         break;
       case '3307':
-        action = lang && lang.history_action3307 ? lang.history_action3307 : '';
+        action =
+          lang && lang.screen_wallet.history_action3307
+            ? lang.screen_wallet.history_action3307
+            : '';
         break;
       case '3308':
-        action = lang && lang.history_action3308 ? lang.history_action3308 : '';
+        action =
+          lang && lang.screen_wallet.history_action3308
+            ? lang.screen_wallet.history_action3308
+            : '';
         break;
       default:
-        action = lang && lang.history_action3305 ? lang.history_action3305 : '';
+        action =
+          lang && lang.screen_wallet.history_action3305
+            ? lang.screen_wallet.history_action3305
+            : '';
         break;
     }
 
     switch (tempExtracode) {
       case '9453':
         extracode =
-          lang && lang.history_extracode9453 ? lang.history_extracode9453 : '';
+          lang && lang.screen_wallet.history_extracode9453
+            ? lang.screen_wallet.history_extracode9453
+            : '';
         break;
       case '9416':
         extracode = '-';
         break;
       case '9001':
         extracode =
-          lang && lang.history_extracode9001 ? lang.history_extracode9001 : '';
+          lang && lang.screen_wallet.history_extracode9001
+            ? lang.screen_wallet.history_extracode9001
+            : '';
         break;
       case '9002':
         extracode =
-          lang && lang.history_extracode9002 ? lang.history_extracode9002 : '';
+          lang && lang.screen_wallet.history_extracode9002
+            ? lang.screen_wallet.history_extracode9002
+            : '';
         break;
       default:
         extracode =
-          lang && lang.history_extracodesuccess
-            ? lang.history_extracodesuccess
+          lang && lang.screen_wallet.history_extracodesuccess
+            ? lang.screen_wallet.history_extracodesuccess
             : '';
         break;
     }
@@ -155,7 +182,9 @@ const TotalHistory = ({totalHistory, lang}) => {
     } else {
       return (
         <Text style={styles.textNotFoundHistory}>
-          {lang && lang.history_not_found ? lang.history_not_found : ''}
+          {lang && lang.screen_wallet.history_not_found
+            ? lang.screen_wallet.history_not_found
+            : ''}
         </Text>
       );
     }
@@ -197,25 +226,46 @@ const TransferHistory = ({transferHistory, lang}) => {
 
     switch (tempAction) {
       case '3304':
-        action = lang && lang.history_action3304 ? lang.history_action3304 : '';
+        action =
+          lang && lang.screen_wallet.history_action3304
+            ? lang.screen_wallet.history_action3304
+            : '';
         break;
       case '3651':
-        action = lang && lang.history_action3651 ? lang.history_action3651 : '';
+        action =
+          lang && lang.screen_wallet.history_action3651
+            ? lang.screen_wallet.history_action3651
+            : '';
         break;
       case '3305':
-        action = lang && lang.history_action3305 ? lang.history_action3305 : '';
+        action =
+          lang && lang.screen_wallet.history_action3305
+            ? lang.screen_wallet.history_action3305
+            : '';
         break;
       case '3306':
-        action = lang && lang.history_action3306 ? lang.history_action3306 : '';
+        action =
+          lang && lang.screen_wallet.history_action3306
+            ? lang.screen_wallet.history_action3306
+            : '';
         break;
       case '3307':
-        action = lang && lang.history_action3307 ? lang.history_action3307 : '';
+        action =
+          lang && lang.screen_wallet.history_action3307
+            ? lang.screen_wallet.history_action3307
+            : '';
         break;
       case '3308':
-        action = lang && lang.history_action3308 ? lang.history_action3308 : '';
+        action =
+          lang && lang.screen_wallet.history_action3308
+            ? lang.screen_wallet.history_action3308
+            : '';
         break;
       default:
-        action = lang && lang.history_action3305 ? lang.history_action3305 : '';
+        action =
+          lang && lang.screen_wallet.history_action3305
+            ? lang.screen_wallet.history_action3305
+            : '';
         break;
     }
 
@@ -252,7 +302,9 @@ const TransferHistory = ({transferHistory, lang}) => {
     } else {
       return (
         <Text style={styles.textNotFoundHistory}>
-          {lang && lang.history_not_found ? lang.history_not_found : ''}
+          {lang && lang.screen_wallet.history_not_found
+            ? lang.screen_wallet.history_not_found
+            : ''}
         </Text>
       );
     }
@@ -300,48 +352,75 @@ const ReceivedDetails = ({receivedDetails, lang}) => {
 
     switch (tempAction) {
       case '3304':
-        action = lang && lang.history_action3304 ? lang.history_action3304 : '';
+        action =
+          lang && lang.screen_wallet.history_action3304
+            ? lang.screen_wallet.history_action3304
+            : '';
         break;
       case '3651':
-        action = lang && lang.history_action3651 ? lang.history_action3651 : '';
+        action =
+          lang && lang.screen_wallet.history_action3651
+            ? lang.screen_wallet.history_action3651
+            : '';
         break;
       case '3305':
-        action = lang && lang.history_action3305 ? lang.history_action3305 : '';
+        action =
+          lang && lang.screen_wallet.history_action3305
+            ? lang.screen_wallet.history_action3305
+            : '';
         break;
       case '3306':
-        action = lang && lang.history_action3306 ? lang.history_action3306 : '';
+        action =
+          lang && lang.screen_wallet.history_action3306
+            ? lang.screen_wallet.history_action3306
+            : '';
         break;
       case '3307':
-        action = lang && lang.history_action3307 ? lang.history_action3307 : '';
+        action =
+          lang && lang.screen_wallet.history_action3307
+            ? lang.screen_wallet.history_action3307
+            : '';
         break;
       case '3308':
-        action = lang && lang.history_action3308 ? lang.history_action3308 : '';
+        action =
+          lang && lang.screen_wallet.history_action3308
+            ? lang.screen_wallet.history_action3308
+            : '';
         break;
       default:
-        action = lang && lang.history_action3305 ? lang.history_action3305 : '';
+        action =
+          lang && lang.screen_wallet.history_action3305
+            ? lang.screen_wallet.history_action3305
+            : '';
         break;
     }
 
     switch (tempExtracode) {
       case '9453':
         extracode =
-          lang && lang.history_extracode9453 ? lang.history_extracode9453 : '';
+          lang && lang.screen_wallet.history_extracode9453
+            ? lang.screen_wallet.history_extracode9453
+            : '';
         break;
       case '9416':
         extracode = '-';
         break;
       case '9001':
         extracode =
-          lang && lang.history_extracode9001 ? lang.history_extracode9001 : '';
+          lang && lang.screen_wallet.history_extracode9001
+            ? lang.screen_wallet.history_extracode9001
+            : '';
         break;
       case '9002':
         extracode =
-          lang && lang.history_extracode9002 ? lang.history_extracode9002 : '';
+          lang && lang.screen_wallet.history_extracode9002
+            ? lang.screen_wallet.history_extracode9002
+            : '';
         break;
       default:
         extracode =
-          lang && lang.history_extracodesuccess
-            ? lang.history_extracodesuccess
+          lang && lang.screen_wallet.history_extracodesuccess
+            ? lang.screen_wallet.history_extracodesuccess
             : '';
         break;
     }
@@ -379,7 +458,9 @@ const ReceivedDetails = ({receivedDetails, lang}) => {
     } else {
       return (
         <Text style={styles.textNotFoundHistory}>
-          {lang && lang.history_not_found ? lang.history_not_found : ''}
+          {lang && lang.screen_wallet.history_not_found
+            ? lang.screen_wallet.history_not_found
+            : ''}
         </Text>
       );
     }
@@ -420,25 +501,46 @@ const TransitionHistory = ({transitionHistory, lang}) => {
 
     switch (tempAction) {
       case '3304':
-        action = lang && lang.history_action3304 ? lang.history_action3304 : '';
+        action =
+          lang && lang.screen_wallet.history_action3304
+            ? lang.screen_wallet.history_action3304
+            : '';
         break;
       case '3651':
-        action = lang && lang.history_action3651 ? lang.history_action3651 : '';
+        action =
+          lang && lang.screen_wallet.history_action3651
+            ? lang.screen_wallet.history_action3651
+            : '';
         break;
       case '3305':
-        action = lang && lang.history_action3305 ? lang.history_action3305 : '';
+        action =
+          lang && lang.screen_wallet.history_action3305
+            ? lang.screen_wallet.history_action3305
+            : '';
         break;
       case '3306':
-        action = lang && lang.history_action3306 ? lang.history_action3306 : '';
+        action =
+          lang && lang.screen_wallet.history_action3306
+            ? lang.screen_wallet.history_action3306
+            : '';
         break;
       case '3307':
-        action = lang && lang.history_action3307 ? lang.history_action3307 : '';
+        action =
+          lang && lang.screen_wallet.history_action3307
+            ? lang.screen_wallet.history_action3307
+            : '';
         break;
       case '3308':
-        action = lang && lang.history_action3308 ? lang.history_action3308 : '';
+        action =
+          lang && lang.screen_wallet.history_action3308
+            ? lang.screen_wallet.history_action3308
+            : '';
         break;
       default:
-        action = lang && lang.history_action3305 ? lang.history_action3305 : '';
+        action =
+          lang && lang.screen_wallet.history_action3305
+            ? lang.screen_wallet.history_action3305
+            : '';
         break;
     }
 
@@ -475,7 +577,9 @@ const TransitionHistory = ({transitionHistory, lang}) => {
     } else {
       return (
         <Text style={styles.textNotFoundHistory}>
-          {lang && lang.history_not_found ? lang.history_not_found : ''}
+          {lang && lang.screen_wallet.history_not_found
+            ? lang.screen_wallet.history_not_found
+            : ''}
         </Text>
       );
     }
@@ -533,19 +637,31 @@ const TableWalletCard = ({
     setRoutes([
       {
         key: 'totalHistory',
-        title: lang && lang.total_history ? lang.total_history : '',
+        title:
+          lang && lang.screen_wallet.total_history
+            ? lang.screen_wallet.total_history
+            : '',
       },
       {
         key: 'transferHistory',
-        title: lang && lang.transfer_history ? lang.transfer_history : '',
+        title:
+          lang && lang.screen_wallet.transfer_history
+            ? lang.screen_wallet.transfer_history
+            : '',
       },
       {
         key: 'receivedDetails',
-        title: lang && lang.received_details ? lang.received_details : '',
+        title:
+          lang && lang.screen_wallet.received_details
+            ? lang.screen_wallet.received_details
+            : '',
       },
       {
         key: 'transitionHistory',
-        title: lang && lang.transition_history ? lang.transition_history : '',
+        title:
+          lang && lang.screen_wallet.transition_history
+            ? lang.screen_wallet.transition_history
+            : '',
       },
     ]);
   }, [lang]);
@@ -698,8 +814,8 @@ const TableWalletCard = ({
           style={styles.contentTextHeadDefault}
           activeOpacity={0.7}>
           <Text style={[styles.textHead, styles.textHeadDefault]}>
-            {lang && lang.table_head_transaction
-              ? lang.table_head_transaction
+            {lang && lang.screen_wallet.table_head_transaction
+              ? lang.screen_wallet.table_head_transaction
               : ''}
           </Text>
         </TouchableOpacity>
@@ -714,7 +830,9 @@ const TableWalletCard = ({
                 })
               }>
               <Text style={styles.textHead}>
-                {lang && lang.table_head_send ? lang.table_head_send : ''}
+                {lang && lang.screen_wallet.table_head_send
+                  ? lang.screen_wallet.table_head_send
+                  : ''}
               </Text>
             </TouchableOpacity>
 
@@ -724,7 +842,9 @@ const TableWalletCard = ({
                 style={styles.contentTextHead}
                 onPress={conversionRequest}>
                 <Text style={styles.textHead}>
-                  {lang && lang.table_head_change ? lang.table_head_change : ''}
+                  {lang && lang.screen_wallet.table_head_change
+                    ? lang.screen_wallet.table_head_change
+                    : ''}
                 </Text>
               </TouchableOpacity>
             ) : (
@@ -733,8 +853,8 @@ const TableWalletCard = ({
                 style={styles.contentTextHead}
                 onPress={conversionRequest}>
                 <Text style={styles.textHead}>
-                  {lang && lang.table_head_exchange
-                    ? lang.table_head_exchange
+                  {lang && lang.screen_wallet.table_head_exchange
+                    ? lang.screen_wallet.table_head_exchange
                     : ''}
                 </Text>
               </TouchableOpacity>
@@ -755,7 +875,10 @@ const TableWalletCard = ({
               },
             ]}>
             <Text style={styles.textDay}>
-              7 {lang && lang.table_days ? lang.table_days : ''}
+              7{' '}
+              {lang && lang.screen_wallet.table_days
+                ? lang.screen_wallet.table_days
+                : ''}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -768,7 +891,10 @@ const TableWalletCard = ({
               },
             ]}>
             <Text style={styles.textDay}>
-              14 {lang && lang.table_days ? lang.table_days : ''}
+              14{' '}
+              {lang && lang.screen_wallet.table_days
+                ? lang.screen_wallet.table_days
+                : ''}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -781,7 +907,10 @@ const TableWalletCard = ({
               },
             ]}>
             <Text style={styles.textDay}>
-              30 {lang && lang.table_days ? lang.table_days : ''}
+              30{' '}
+              {lang && lang.screen_wallet.table_days
+                ? lang.screen_wallet.table_days
+                : ''}
             </Text>
           </TouchableOpacity>
         </View>
