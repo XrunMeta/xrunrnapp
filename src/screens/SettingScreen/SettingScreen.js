@@ -8,7 +8,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {getLanguage2} from '../../../utils';
 
 const SettingScreen = () => {
-  const {isLoggedIn, logout} = useAuth();
+  const {logout} = useAuth();
   const [lang, setLang] = useState('');
 
   const navigation = useNavigation();
