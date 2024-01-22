@@ -12,7 +12,7 @@ import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage} from '../../../utils';
+import {URL_API, getLanguage2} from '../../../utils';
 
 const ConfirmPassword = () => {
   const [lang, setLang] = useState({});
@@ -25,7 +25,14 @@ const ConfirmPassword = () => {
 
   const onSignIn = async () => {
     if (password.trim() === '') {
-      Alert.alert('Error', lang ? lang.condition.empty : '-');
+      Alert.alert(
+        'Error',
+        lang &&
+          lang.screen_confirm_password &&
+          lang.screen_confirm_password.condition
+          ? lang.screen_confirm_password.condition.empty
+          : '-',
+      );
     } else {
       try {
         const response = await fetch(
@@ -36,11 +43,25 @@ const ConfirmPassword = () => {
         if (data === 'OK') {
           navigation.replace('ModifInfo');
         } else {
-          Alert.alert('Error', lang ? lang.condition.wrong : '-');
+          Alert.alert(
+            'Error',
+            lang &&
+              lang.screen_confirm_password &&
+              lang.screen_confirm_password.condition
+              ? lang.screen_confirm_password.condition.wrong
+              : '-',
+          );
         }
       } catch (error) {
         console.error('Error:', error);
-        Alert.alert('Error', lang ? lang.condition.errorServer : '-');
+        Alert.alert(
+          'Error',
+          lang &&
+            lang.screen_confirm_password &&
+            lang.screen_confirm_password.condition
+            ? lang.screen_confirm_password.condition.errorServer
+            : '-',
+        );
       }
     }
   };
@@ -59,10 +80,7 @@ const ConfirmPassword = () => {
 
         setEmail(userEmail);
 
-        const screenLang = await getLanguage(
-          currentLanguage,
-          'screen_confirm_password',
-        );
+        const screenLang = await getLanguage2(currentLanguage);
         setLang(screenLang);
       } catch (err) {
         console.error(
@@ -83,13 +101,25 @@ const ConfirmPassword = () => {
           <ButtonBack onClick={onBack} />
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>{lang ? lang.title : ''}</Text>
+          <Text style={styles.title}>
+            {lang && lang.screen_confirm_password
+              ? lang.screen_confirm_password.title
+              : ''}
+          </Text>
         </View>
       </View>
 
       <CustomInput
-        label={lang ? lang.label : ''}
-        placeholder={lang ? lang.placeholder : ''}
+        label={
+          lang && lang.screen_confirm_password
+            ? lang.screen_confirm_password.label
+            : ''
+        }
+        placeholder={
+          lang && lang.screen_confirm_password
+            ? lang.screen_confirm_password.placeholder
+            : ''
+        }
         value={password}
         setValue={setPassword}
         secureTextEntry
@@ -102,7 +132,12 @@ const ConfirmPassword = () => {
           marginTop: 5,
         }}>
         <Text style={styles.subTitle}>
-          *{lang && lang.note ? lang.note.alt1 : ''}
+          *
+          {lang &&
+          lang.screen_confirm_password &&
+          lang.screen_confirm_password.note
+            ? lang.screen_confirm_password.note.alt1
+            : ''}
         </Text>
       </View>
 
