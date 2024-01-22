@@ -940,7 +940,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingRight: 36,
+    paddingRight: 28,
   },
   contentTextHead: {
     flex: 1,
