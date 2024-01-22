@@ -13,7 +13,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import CustomListItem from '../../components/CustomButton/CustomListItem';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage} from '../../../utils';
+import {URL_API, getLanguage2} from '../../../utils';
 
 const ChooseRegionScreen = ({route}) => {
   const [lang, setLang] = useState({});
@@ -66,7 +66,7 @@ const ChooseRegionScreen = ({route}) => {
     const fetchLangData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage(currentLanguage, 'screen_country');
+        const screenLang = await getLanguage2(currentLanguage);
 
         setLang(screenLang);
       } catch (err) {
@@ -111,14 +111,20 @@ const ChooseRegionScreen = ({route}) => {
       <ButtonBack onClick={() => onBack(code, flag, countryCode, country)} />
 
       <View style={styles.titleWrapper}>
-        <Text style={styles.title}>{lang.title ? lang.title : ''}</Text>
+        <Text style={styles.title}>
+          {lang && lang.screen_country && lang.screen_country.title
+            ? lang.screen_country.title
+            : ''}
+        </Text>
       </View>
 
       {/* Selected Region */}
       <View style={[styles.formGroup, {marginTop: 25}]}>
         <Text
           style={[styles.mediumText, {alignSelf: 'flex-start', marginTop: 20}]}>
-          {lang.current_country ? lang.current_country : ''}
+          {lang && lang.screen_country && lang.screen_country.current_country
+            ? lang.screen_country.current_country
+            : ''}
         </Text>
         <View
           style={{
@@ -150,7 +156,11 @@ const ChooseRegionScreen = ({route}) => {
       {/* Search Box */}
       <View style={styles.searchBox}>
         <TextInput
-          placeholder={lang.placeholder ? lang.placeholder : ''}
+          placeholder={
+            lang && lang.screen_country && lang.screen_country.placeholder
+              ? lang.screen_country.placeholder
+              : ''
+          }
           placeholderTextColor="lightgrey"
           style={[styles.mediumText, {flex: 1}]}
           value={searchText}
