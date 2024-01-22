@@ -1,23 +1,36 @@
-import React, {useState} from 'react';
-import {View, Button, Text} from 'react-native';
-import crashlytics from '@react-native-firebase/crashlytics';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, {useEffect, useState} from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {AuthProvider} from './src/context/AuthContext/AuthContext';
+import Router from './src/navigation/Router';
 
 export default function App() {
-  const [enabled, setEnabled] = useState(
-    crashlytics().isCrashlyticsCollectionEnabled,
-  );
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  async function toggleCrashlytics() {
-    await crashlytics()
-      .setCrashlyticsCollectionEnabled(!enabled)
-      .then(() => setEnabled(crashlytics().isCrashlyticsCollectionEnabled));
-  }
+  useEffect(() => {
+    // Fungsi untuk check status login
+    const checkLoginStatus = async () => {
+      try {
+        const value = await AsyncStorage.getItem('isLoggedIn');
+
+        if (value === 'true') {
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
+        }
+      } catch (error) {
+        console.error('Error checking login status:', error);
+      }
+    };
+
+    checkLoginStatus();
+  }, []);
 
   return (
-    <View>
-      <Button title="Toggle Crashlytics" onPress={toggleCrashlytics} />
-      <Button title="Crash" onPress={() => crashlytics().crash()} />
-      <Text>Crashlytics is currently {enabled ? 'enabled' : 'disabled'}</Text>
-    </View>
+    <AuthProvider>
+      <NavigationContainer>
+        <Router />
+      </NavigationContainer>
+    </AuthProvider>
   );
 }

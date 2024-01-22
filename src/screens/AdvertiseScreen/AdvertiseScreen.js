@@ -18,9 +18,7 @@ import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import jsonData from '../../../testAds';
-import {URL_API, getLanguage} from '../../../utils';
-
-const langData = require('../../../lang.json');
+import {URL_API, getLanguage2} from '../../../utils';
 
 const AdvertiseScreen = () => {
   const [lang, setLang] = useState({});
@@ -58,10 +56,7 @@ const AdvertiseScreen = () => {
       try {
         console.log('Dapetin API di awal nih bray');
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage(
-          currentLanguage,
-          'screen_advertise',
-        );
+        const screenLang = await getLanguage2(currentLanguage);
         setLang(screenLang);
 
         // Get User Data
@@ -83,12 +78,12 @@ const AdvertiseScreen = () => {
             extracode: ad.extracode,
             datetime: ad.datetime,
             statusSuccess:
-              lang && lang.completed
-                ? lang.completed
+              lang && lang.screen_advertise && lang.screen_advertise.completed
+                ? lang.screen_advertise.completed
                 : 'Coin acquisition completed',
             statusPending:
-              lang && lang.pending
-                ? lang.pending
+              lang && lang.screen_advertise && lang.screen_advertise.pending
+                ? lang.screen_advertise.pending
                 : 'Waiting for Coin Acquisition',
           }));
 
@@ -204,7 +199,7 @@ const AdvertiseScreen = () => {
   const deleteAllChat = async () => {
     Alert.alert(
       'Warning',
-      lang.surely,
+      lang.screen_advertise.surely,
       [
         {
           text: 'Cancel',
@@ -225,7 +220,9 @@ const AdvertiseScreen = () => {
                 // Tampilkan alert sesuai dengan nilai count
                 if (count > 0) {
                   // Sukses, tampilkan alert sukses
-                  Alert.alert('Success', lang.deleted, [{text: 'Ok'}]);
+                  Alert.alert('Success', lang.screen_advertise.deleted, [
+                    {text: 'Ok'},
+                  ]);
 
                   // Exit from Delete Mode and back to normal mode
                   setIsDelete(false);
@@ -241,11 +238,15 @@ const AdvertiseScreen = () => {
                   });
                 } else {
                   // Gagal, tampilkan alert gagal
-                  Alert.alert('Failed', lang.failedDelete, [{text: 'Ok'}]);
+                  Alert.alert('Failed', lang.screen_advertise.failedDelete, [
+                    {text: 'Ok'},
+                  ]);
                 }
               } else {
                 // Tangani kondisi tidak ada data
-                Alert.alert('Failed', lang.failedDelete, [{text: 'Ok'}]);
+                Alert.alert('Failed', lang.screen_advertise.failedDelete, [
+                  {text: 'Ok'},
+                ]);
               }
             } catch (err) {
               console.error('Error fetching ads data:', err);
@@ -272,7 +273,7 @@ const AdvertiseScreen = () => {
         // Tampilkan alert sesuai dengan nilai count
         if (count > 0) {
           // Sukses, tampilkan alert sukses
-          Alert.alert('Success', lang.deleted, [{text: 'Ok'}]);
+          Alert.alert('Success', lang.screen_advertise.deleted, [{text: 'Ok'}]);
 
           // Exit from Delete Mode and back to normal mode
           setIsDelete(false);
@@ -288,11 +289,15 @@ const AdvertiseScreen = () => {
           });
         } else {
           // Gagal, tampilkan alert gagal
-          Alert.alert('Failed', lang.failedDelete, [{text: 'Ok'}]);
+          Alert.alert('Failed', lang.screen_advertise.failedDelete, [
+            {text: 'Ok'},
+          ]);
         }
       } else {
         // Tangani kondisi tidak ada data
-        Alert.alert('Failed', lang.failedDelete, [{text: 'Ok'}]);
+        Alert.alert('Failed', lang.screen_advertise.failedDelete, [
+          {text: 'Ok'},
+        ]);
       }
     } catch (err) {
       console.error('Error fetching ads data:', err);
@@ -372,7 +377,10 @@ const AdvertiseScreen = () => {
               <Text style={styles.listNormalText}> {item.symbol}</Text>
             </View>
             <Text style={styles.listNormalText}>
-              {item.dateends} {lang && lang.until ? lang.until : ''}
+              {item.dateends}{' '}
+              {lang && lang.screen_advertise && lang.screen_advertise.until
+                ? lang.screen_advertise.until
+                : ''}
             </Text>
           </View>
         </View>
@@ -440,13 +448,17 @@ const AdvertiseScreen = () => {
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#343a59" />
             <Text style={[styles.normalText, {color: 'grey'}]}>
-              {lang && lang.loading ? lang.loading : ''}
+              {lang && lang.screen_advertise && lang.screen_advertise.loading
+                ? lang.screen_advertise.loading
+                : ''}
             </Text>
           </View>
         ) : storageAds.length === 0 ? (
           <View style={styles.emptyContainer}>
             <Text style={styles.emptyText}>
-              {lang && lang.nodata ? lang.nodata : ''}
+              {lang && lang.screen_advertise && lang.screen_advertise.nodata
+                ? lang.screen_advertise.nodata
+                : ''}
             </Text>
           </View>
         ) : (
@@ -473,7 +485,9 @@ const AdvertiseScreen = () => {
                     fontFamily: 'Poppins-SemiBold',
                     textAlign: 'center',
                   }}>
-                  {lang && lang.delete ? lang.delete : ''}{' '}
+                  {lang && lang.screen_advertise && lang.screen_advertise.delete
+                    ? lang.screen_advertise.delete
+                    : ''}{' '}
                   {selectedItems.length > 0 ? `(${selectedItems.length})` : ''}
                 </Text>
               </TouchableOpacity>
@@ -518,7 +532,11 @@ const AdvertiseScreen = () => {
                     borderBottomWidth: 1,
                   }}>
                   <Text style={styles.normalText}>
-                    {lang && lang.newest ? lang.newest : ''}
+                    {lang &&
+                    lang.screen_advertise &&
+                    lang.screen_advertise.newest
+                      ? lang.screen_advertise.newest
+                      : ''}
                   </Text>
                 </Pressable>
                 <Pressable
@@ -530,7 +548,11 @@ const AdvertiseScreen = () => {
                     borderBottomWidth: 1,
                   }}>
                   <Text style={styles.normalText}>
-                    {lang && lang.deadline ? lang.deadline : ''}
+                    {lang &&
+                    lang.screen_advertise &&
+                    lang.screen_advertise.deadline
+                      ? lang.screen_advertise.deadline
+                      : ''}
                   </Text>
                 </Pressable>
                 <Pressable
@@ -541,7 +563,11 @@ const AdvertiseScreen = () => {
                     borderBottomColor: '#acb5bb',
                   }}>
                   <Text style={styles.normalText}>
-                    {lang && lang.order ? lang.order : ''}
+                    {lang &&
+                    lang.screen_advertise &&
+                    lang.screen_advertise.order
+                      ? lang.screen_advertise.order
+                      : ''}
                   </Text>
                 </Pressable>
               </View>
@@ -561,13 +587,17 @@ const AdvertiseScreen = () => {
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#343a59" />
           <Text style={[styles.normalText, {color: 'grey'}]}>
-            {lang && lang.loading ? lang.loading : ''}
+            {lang && lang.screen_advertise && lang.screen_advertise.loading
+              ? lang.screen_advertise.loading
+              : ''}
           </Text>
         </View>
       ) : completedAds.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyText}>
-            {lang && lang.nodata ? lang.nodata : ''}
+            {lang && lang.screen_advertise && lang.screen_advertise.nodata
+              ? lang.screen_advertise.nodata
+              : ''}
           </Text>
         </View>
       ) : (
@@ -638,7 +668,9 @@ const AdvertiseScreen = () => {
         </View>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>
-            {lang && lang.title ? lang.title : ''}
+            {lang && lang.screen_advertise && lang.screen_advertise.title
+              ? lang.screen_advertise.title
+              : ''}
           </Text>
           {index == 0 ? (
             <TouchableOpacity
@@ -662,11 +694,15 @@ const AdvertiseScreen = () => {
                   fontSize: 13,
                 }}>
                 {isDelete
-                  ? lang && lang.deleteAll
-                    ? lang.deleteAll
+                  ? lang &&
+                    lang.screen_advertise &&
+                    lang.screen_advertise.deleteAll
+                    ? lang.screen_advertise.deleteAll
                     : ''
-                  : lang && lang.delete
-                  ? lang.delete
+                  : lang &&
+                    lang.screen_advertise &&
+                    lang.screen_advertise.delete
+                  ? lang.screen_advertise.delete
                   : ''}
               </Text>
             </TouchableOpacity>
