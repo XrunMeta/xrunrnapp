@@ -13,7 +13,7 @@ import React, {useState, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getLanguage} from '../../../utils';
+import {getLanguage2} from '../../../utils';
 
 const SignUpCreateName = () => {
   const route = useRoute();
@@ -34,10 +34,7 @@ const SignUpCreateName = () => {
     const fetchLangData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage(
-          currentLanguage,
-          'screen_notExist',
-        );
+        const screenLang = await getLanguage2(currentLanguage);
 
         setLang(screenLang);
       } catch (err) {
@@ -53,9 +50,9 @@ const SignUpCreateName = () => {
 
   const onSignIn = async () => {
     if (lastname.trim() === '') {
-      Alert.alert('Failed', lang.field_name.emptyLastName);
+      Alert.alert('Failed', lang.screen_notExist.field_name.emptyLastName);
     } else if (name.trim() === '') {
-      Alert.alert('Failed', lang.field_name.emptyName);
+      Alert.alert('Failed', lang.screen_notExist.field_name.emptyName);
     } else {
       navigation.navigate('SignupCreateGender', {
         mobile: mobile,
@@ -98,7 +95,9 @@ const SignUpCreateName = () => {
               color: '#343a59',
               marginBottom: -5,
             }}>
-            {lang && lang.field_name ? lang.field_name.label : ''}
+            {lang && lang.screen_notExist && lang.screen_notExist.field_name
+              ? lang.screen_notExist.field_name.label
+              : ''}
           </Text>
           <View
             style={{
@@ -119,7 +118,9 @@ const SignUpCreateName = () => {
                 flex: 1,
               }}
               placeholder={
-                lang && lang.field_name ? lang.field_name.placeholder_last : ''
+                lang && lang.screen_notExist && lang.screen_notExist.field_name
+                  ? lang.screen_notExist.field_name.placeholder_last
+                  : ''
               }
               placeholderTextColor="grey"
               value={lastname}
@@ -140,7 +141,9 @@ const SignUpCreateName = () => {
                 flex: 1,
               }}
               placeholder={
-                lang && lang.field_name ? lang.field_name.placeholder_first : ''
+                lang && lang.screen_notExist && lang.screen_notExist.field_name
+                  ? lang.screen_notExist.field_name.placeholder_first
+                  : ''
               }
               placeholderTextColor="grey"
               value={name}
