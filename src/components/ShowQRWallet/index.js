@@ -14,6 +14,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import Share from 'react-native-share';
 import RNFetchBlob from 'rn-fetch-blob';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
   const [downloadDisable, setDownloadDisable] = useState(true);
@@ -58,6 +59,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
       } catch (error) {
         Alert.alert('', 'Error fetching QR code data');
         console.error('Error fetching QR code data:', error);
+        crashlytics().recordError(err);
       }
     };
 
@@ -121,6 +123,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
     } catch (error) {
       setShareDisable(false);
       console.log('Error sharing QR Code:', error.message);
+      crashlytics().recordError(err);
     }
   };
 
@@ -144,6 +147,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
       } catch (err) {
         // To handle permission related exception
         console.log('++++' + err);
+        crashlytics().recordError(err);
       }
     } else {
       downloadFile();
@@ -203,6 +207,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
         ],
       );
     } catch (error) {
+      crashlytics().recordError(err);
       console.error('Error downloading qr code:', error);
       Alert.alert(
         '',

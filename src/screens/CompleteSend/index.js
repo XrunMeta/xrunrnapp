@@ -11,6 +11,7 @@ import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {getLanguage2} from '../../../utils';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const CompleteSend = ({navigation, route}) => {
   const [lang, setLang] = useState('');
@@ -27,6 +28,7 @@ const CompleteSend = ({navigation, route}) => {
         setLang(screenLang);
       } catch (err) {
         console.error('Error in fetchData:', err);
+        crashlytics().recordError(err);
       }
     };
 
