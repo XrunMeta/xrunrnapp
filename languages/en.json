@@ -268,7 +268,7 @@
   },
 
   "screen_showad": {
-    "success": "Coin Acquired  Successfully",
+    "success": "Coin Acquired Successfully",
     "failed": "Coin Acquisition Failed"
   },
 
