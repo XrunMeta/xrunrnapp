@@ -14,7 +14,7 @@ import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage} from '../../../utils';
+import {URL_API, getLanguage2} from '../../../utils';
 
 const EmailAuthScreen = () => {
   const [lang, setLang] = useState({});
@@ -31,10 +31,7 @@ const EmailAuthScreen = () => {
     const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage(
-          currentLanguage,
-          'screen_emailAuth',
-        );
+        const screenLang = await getLanguage2(currentLanguage);
 
         // Set your language state
         setLang(screenLang);
@@ -48,9 +45,9 @@ const EmailAuthScreen = () => {
 
   const onSignIn = async () => {
     if (email.trim() === '') {
-      Alert.alert('Error', lang.alert.emptyEmail);
+      Alert.alert('Error', lang.screen_emailAuth.alert.emptyEmail);
     } else if (!isValidEmail(email)) {
-      Alert.alert('Error', lang.alert.invalidEmail);
+      Alert.alert('Error', lang.screen_emailAuth.alert.invalidEmail);
     } else {
       try {
         const apiUrl = `${URL_API}&act=login-02-email&email=${email}`;
@@ -72,7 +69,7 @@ const EmailAuthScreen = () => {
 
             return {
               data: 'error',
-              value: lang.alert.errorServer,
+              value: lang.screen_emailAuth.alert.errorServer,
             };
           }
         };
@@ -91,7 +88,7 @@ const EmailAuthScreen = () => {
               dataEmail: email,
             });
           } else if (result.data === 'error') {
-            Alert.alert('Error', lang.alert.errorServer, [
+            Alert.alert('Error', lang.screen_emailAuth.alert.errorServer, [
               {
                 text: 'OK',
                 onPress: () => {
@@ -101,11 +98,11 @@ const EmailAuthScreen = () => {
             ]);
             setEmail('');
           } else {
-            Alert.alert('Error', lang.alert.invalidEmail);
+            Alert.alert('Error', lang.screen_emailAuth.alert.invalidEmail);
             setEmail('');
           }
         } else {
-          Alert.alert('Error', lang.alert.errorServer, [
+          Alert.alert('Error', lang.screen_emailAuth.alert.errorServer, [
             {
               text: 'OK',
               onPress: () => {
@@ -117,7 +114,7 @@ const EmailAuthScreen = () => {
       } catch (error) {
         // Handle network errors or other exceptions
         console.error('Error during API request:', error);
-        Alert.alert('Error', lang.alert.errorServer);
+        Alert.alert('Error', lang.screen_emailAuth.alert.errorServer);
       }
     }
   };
@@ -142,8 +139,16 @@ const EmailAuthScreen = () => {
         <ButtonBack onClick={onBack} />
 
         <CustomInput
-          label={lang ? lang.email.label : ''}
-          placeholder={lang ? lang.email.placeholder : ''}
+          label={
+            lang && lang.screen_emailAuth && lang.screen_emailAuth.email
+              ? lang.screen_emailAuth.email.label
+              : ''
+          }
+          placeholder={
+            lang && lang.screen_emailAuth && lang.screen_emailAuth.email
+              ? lang.screen_emailAuth.email.placeholder
+              : ''
+          }
           value={email}
           setValue={onEmailChange}
           isPassword={false}
@@ -155,7 +160,9 @@ const EmailAuthScreen = () => {
               marginLeft: 25,
               color: 'red',
             }}>
-            {lang ? lang.alert.invalidEmail : ''}
+            {lang && lang.screen_emailAuth && lang.screen_emailAuth.alert
+              ? lang.screen_emailAuth.alert.invalidEmail
+              : ''}
           </Text>
         )}
 
