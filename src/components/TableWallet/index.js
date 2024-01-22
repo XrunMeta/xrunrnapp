@@ -17,6 +17,7 @@ import {
   funcTransferHistory,
   funcTransitionHistory,
 } from '../../../utils';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 // Custom TabBar
 const renderTabBar = props => (
@@ -679,6 +680,7 @@ const TableWalletCard = ({
       } catch (err) {
         console.log(`Failed get transaction: ${err}`);
         Alert.alert('', `Failed get transaction: ${err}`);
+        crashlytics().recordError(err);
       }
     };
 
@@ -721,6 +723,7 @@ const TableWalletCard = ({
         setTotalHistoryLength(totalHistory.length);
       } catch (err) {
         console.log(err);
+        crashlytics().recordError(err);
       }
     };
 
@@ -785,6 +788,7 @@ const TableWalletCard = ({
       } catch (err) {
         console.log(`Failed get transaction ${key}: ${err}`);
         Alert.alert('', `Failed get transaction ${key}: ${err}`);
+        crashlytics().recordError(err);
       }
     };
   });
