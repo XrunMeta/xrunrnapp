@@ -13,7 +13,7 @@ import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getLanguage} from '../../../utils';
+import {getLanguage2} from '../../../utils';
 
 const SignUpCreatePassword = () => {
   const [lang, setLang] = useState({});
@@ -27,9 +27,9 @@ const SignUpCreatePassword = () => {
 
   const onSignIn = async () => {
     if (password.trim() === '') {
-      Alert.alert('Error', lang.field_password.emptyPassword);
+      Alert.alert('Error', lang.screen_notExist.field_password.emptyPassword);
     } else if (!isValidPassword(password)) {
-      Alert.alert('Error', lang.field_password.invalidPassword);
+      Alert.alert('Error', lang.screen_notExist.field_password.invalidPassword);
     } else {
       navigation.navigate('SignupCreateName', {
         mobile: mobile,
@@ -69,10 +69,7 @@ const SignUpCreatePassword = () => {
     const fetchLangData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage(
-          currentLanguage,
-          'screen_notExist',
-        );
+        const screenLang = await getLanguage2(currentLanguage);
 
         setLang(screenLang);
       } catch (err) {
@@ -93,9 +90,15 @@ const SignUpCreatePassword = () => {
 
         {/*  Field - Password */}
         <CustomInput
-          label={lang && lang.field_password ? lang.field_password.label : ''}
+          label={
+            lang && lang.screen_notExist.field_password
+              ? lang.screen_notExist.field_password.label
+              : ''
+          }
           placeholder={
-            lang && lang.field_password ? lang.field_password.placeholder : ''
+            lang && lang.screen_notExist.field_password
+              ? lang.screen_notExist.field_password.placeholder
+              : ''
           }
           value={password}
           setValue={onPasswordChange}
@@ -111,7 +114,9 @@ const SignUpCreatePassword = () => {
             fontSize: 11,
             marginRight: 1,
           }}>
-          {lang && lang.field_password ? lang.field_password.validator : ''}
+          {lang && lang.screen_notExist.field_password
+            ? lang.screen_notExist.field_password.validator
+            : ''}
         </Text>
 
         <View style={[styles.bottomSection]}>

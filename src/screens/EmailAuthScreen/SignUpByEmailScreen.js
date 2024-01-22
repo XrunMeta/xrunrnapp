@@ -13,7 +13,7 @@ import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage} from '../../../utils';
+import {URL_API, getLanguage2} from '../../../utils';
 
 const SignUpByEmailScreen = () => {
   const [lang, setLang] = useState({});
@@ -28,9 +28,9 @@ const SignUpByEmailScreen = () => {
 
   const onSignIn = async () => {
     if (email.trim() === '') {
-      Alert.alert('Error', lang.field_email.emptyEmail);
+      Alert.alert('Error', lang.screen_notExist.field_email.emptyEmail);
     } else if (!isValidEmail(email)) {
-      Alert.alert('Error', lang.field_email.invalidEmail);
+      Alert.alert('Error', lang.screen_notExist.field_email.invalidEmail);
     } else {
       try {
         const apiUrl = `${URL_API}&act=login-checker-email&email=${email}`;
@@ -56,13 +56,13 @@ const SignUpByEmailScreen = () => {
           `);
         } else {
           // Jika gagal, tampilkan pesan kesalahan
-          Alert.alert('Failed', lang.field_email.occupiedEmail);
+          Alert.alert('Failed', lang.screen_notExist.field_email.occupiedEmail);
           setEmail('');
         }
       } catch (error) {
         // Handle network errors or other exceptions
         console.error('Error during API request:', error);
-        Alert.alert('Error', lang.field_email.errorServer);
+        Alert.alert('Error', lang.screen_notExist.field_email.errorServer);
       }
     }
   };
@@ -88,10 +88,7 @@ const SignUpByEmailScreen = () => {
     const fetchLangData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage(
-          currentLanguage,
-          'screen_notExist',
-        );
+        const screenLang = await getLanguage2(currentLanguage);
 
         setLang(screenLang);
       } catch (err) {
@@ -111,9 +108,15 @@ const SignUpByEmailScreen = () => {
         <ButtonBack onClick={onBack} />
 
         <CustomInput
-          label={lang && lang.field_email ? lang.field_email.label : ''}
+          label={
+            lang && lang.screen_notExist && lang.screen_notExist.field_email
+              ? lang.screen_notExist.field_email.label
+              : ''
+          }
           placeholder={
-            lang && lang.field_email ? lang.field_email.placeholder : ''
+            lang && lang.screen_notExist && lang.screen_notExist.field_email
+              ? lang.screen_notExist.field_email.placeholder
+              : ''
           }
           value={email}
           setValue={onEmailChange}
@@ -126,8 +129,11 @@ const SignUpByEmailScreen = () => {
               marginLeft: 25,
               color: 'red',
             }}>
-            {lang && lang.screen_emailAuth && lang.screen_emailAuth.alert
-              ? lang.screen_emailAuth.alert.invalidEmail
+            {lang &&
+            lang.screen_notExist &&
+            lang.screen_notExist.screen_emailAuth &&
+            lang.screen_notExist.screen_emailAuth.alert
+              ? lang.screen_notExist.screen_emailAuth.alert.invalidEmail
               : ''}
           </Text>
         )}

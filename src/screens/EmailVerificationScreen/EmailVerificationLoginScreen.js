@@ -16,7 +16,7 @@ import React, {useState, useRef, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import CustomButton from '../../components/CustomButton';
-import {URL_API, getLanguage} from '../../../utils';
+import {URL_API, getLanguage2} from '../../../utils';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -61,10 +61,7 @@ const EmailVerificationLoginScreen = () => {
     const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage(
-          currentLanguage,
-          'screen_emailVerification',
-        );
+        const screenLang = await getLanguage2(currentLanguage);
 
         // Set your language state
         setLang(screenLang);
@@ -100,7 +97,7 @@ const EmailVerificationLoginScreen = () => {
       console.log(JSON.stringify(responseAuthData));
 
       if (responseAuthData.data === 'false') {
-        Alert.alert('Failed', lang.notif.wrongCode);
+        Alert.alert('Failed', lang.screen_emailVerification.notif.wrongCode);
       } else {
         try {
           const responseLogin = await fetch(
@@ -134,7 +131,7 @@ const EmailVerificationLoginScreen = () => {
   };
 
   const onSignInDisabled = () => {
-    Alert.alert('Warning', lang.notif.emptyCode);
+    Alert.alert('Warning', lang.screen_emailVerification.notif.emptyCode);
   };
 
   const onProblem = () => {
@@ -202,13 +199,21 @@ const EmailVerificationLoginScreen = () => {
       <View style={styles.container}>
         {seconds > 0 ? (
           <Text style={styles.disableText}>
-            {lang && lang.timer ? lang.timer.on : ''} {formattedMinutes}:
-            {formattedSeconds}
+            {lang &&
+            lang.screen_emailVerification &&
+            lang.screen_emailVerification.timer
+              ? lang.screen_emailVerification.timer.on
+              : ''}{' '}
+            {formattedMinutes}:{formattedSeconds}
           </Text>
         ) : (
           <Pressable onPress={onProblem} style={styles.resetPassword}>
             <Text style={styles.emailAuth}>
-              {lang && lang.timer ? lang.timer.off : ''}
+              {lang &&
+              lang.screen_emailVerification &&
+              lang.screen_emailVerification.timer
+                ? lang.screen_emailVerification.timer.off
+                : ''}
             </Text>
           </Pressable>
         )}
@@ -236,10 +241,22 @@ const EmailVerificationLoginScreen = () => {
               </TouchableOpacity>
               <CustomButton
                 onPress={sendCodeAgain}
-                text={lang && lang.timer ? lang.timer.sendAgain : ''}
+                text={
+                  lang &&
+                  lang.screen_emailVerification &&
+                  lang.screen_emailVerification.timer
+                    ? lang.screen_emailVerification.timer.sendAgain
+                    : ''
+                }
               />
               <CustomButton
-                text={lang && lang.timer ? lang.timer.loginPassword : ''}
+                text={
+                  lang &&
+                  lang.screen_emailVerification &&
+                  lang.screen_emailVerification.timer
+                    ? lang.screen_emailVerification.timer.loginPassword
+                    : ''
+                }
                 onPress={onLoginPassword}
                 type="SECONDARY"
               />
@@ -258,7 +275,11 @@ const EmailVerificationLoginScreen = () => {
         {/* Text Section */}
         <View style={styles.textWrapper}>
           <Text style={styles.normalText}>
-            {lang && lang.email ? lang.email.label : ''}
+            {lang &&
+            lang.screen_emailVerification &&
+            lang.screen_emailVerification.email
+              ? lang.screen_emailVerification.email.label
+              : ''}
           </Text>
           <Text style={styles.boldText}>{dataEmail}</Text>
         </View>

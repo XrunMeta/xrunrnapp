@@ -12,7 +12,7 @@ import React, {useState, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage} from '../../../utils';
+import {URL_API, getLanguage2} from '../../../utils';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import CustomMultipleChecbox from '../../components/CustomCheckbox/CustomMultipleCheckbox';
 
@@ -36,10 +36,7 @@ const SignUpCreateGender = () => {
     const fetchLangData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage(
-          currentLanguage,
-          'screen_notExist',
-        );
+        const screenLang = await getLanguage2(currentLanguage);
 
         setLang(screenLang);
       } catch (err) {
@@ -84,7 +81,7 @@ const SignUpCreateGender = () => {
         login();
         navigation.replace('SuccessJoin');
       } else {
-        Alert.alert('Error', lang.field_gender.errorServer, [
+        Alert.alert('Error', lang.screen_notExist.field_gender.errorServer, [
           {
             text: 'OK',
             onPress: () => {
@@ -103,7 +100,7 @@ const SignUpCreateGender = () => {
       }
     } catch (error) {
       console.error('Error during API request:', error);
-      Alert.alert('Error', lang.field_gender.errorServer);
+      Alert.alert('Error', lang.screen_notExist.field_gender.errorServer);
     }
   };
 
@@ -132,12 +129,18 @@ const SignUpCreateGender = () => {
               color: '#343a59',
               marginBottom: -5,
             }}>
-            {lang && lang.field_gender ? lang.field_gender.label : ''}
+            {lang && lang.screen_notExist && lang.screen_notExist.field_gender
+              ? lang.screen_notExist.field_gender.label
+              : ''}
           </Text>
           <CustomMultipleChecbox
             texts={[
-              lang && lang.field_gender ? lang.field_gender.male : '',
-              lang && lang.field_gender ? lang.field_gender.female : '',
+              lang && lang.screen_notExist && lang.screen_notExist.field_gender
+                ? lang.screen_notExist.field_gender.male
+                : '',
+              lang && lang.screen_notExist && lang.screen_notExist.field_gender
+                ? lang.screen_notExist.field_gender.female
+                : '',
             ]}
             count={2}
             singleCheck={true}
