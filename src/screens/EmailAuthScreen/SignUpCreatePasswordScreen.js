@@ -13,7 +13,7 @@ import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getLanguage} from '../../../utils';
+import {getLanguage2} from '../../../utils';
 
 const SignUpCreatePassword = () => {
   const [lang, setLang] = useState({});
@@ -69,10 +69,7 @@ const SignUpCreatePassword = () => {
     const fetchLangData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage(
-          currentLanguage,
-          'screen_notExist',
-        );
+        const screenLang = await getLanguage2(currentLanguage);
 
         setLang(screenLang);
       } catch (err) {
@@ -94,12 +91,12 @@ const SignUpCreatePassword = () => {
         {/*  Field - Password */}
         <CustomInput
           label={
-            lang && lang.screen_notExist && lang.screen_notExist.field_password
+            lang && lang.screen_notExist.field_password
               ? lang.screen_notExist.field_password.label
               : ''
           }
           placeholder={
-            lang && lang.screen_notExist && lang.screen_notExist.field_password
+            lang && lang.screen_notExist.field_password
               ? lang.screen_notExist.field_password.placeholder
               : ''
           }
@@ -117,7 +114,7 @@ const SignUpCreatePassword = () => {
             fontSize: 11,
             marginRight: 1,
           }}>
-          {lang && lang.screen_notExist && lang.screen_notExist.field_password
+          {lang && lang.screen_notExist.field_password
             ? lang.screen_notExist.field_password.validator
             : ''}
         </Text>
