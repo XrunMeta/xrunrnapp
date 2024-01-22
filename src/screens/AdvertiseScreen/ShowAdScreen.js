@@ -1,7 +1,7 @@
 import {Modal, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useInterstitialAd, TestIds} from '@react-native-admob/admob';
-import {URL_API, getLanguage} from '../../../utils';
+import {URL_API, getLanguage2} from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const realAD = 'ca-app-pub-9457909979646034/7873165988';
@@ -55,7 +55,7 @@ const ShowAdScreen = ({route, navigation}) => {
     const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage(currentLanguage, 'screen_showad');
+        const screenLang = await getLanguage2(currentLanguage);
 
         // Set your language state
         setLang(screenLang);
@@ -98,10 +98,10 @@ const ShowAdScreen = ({route, navigation}) => {
 
           // If Success
           if (data && parseInt(data.data[0].count) > 0) {
-            setModalText(lang.success);
+            setModalText(lang.screen_showad.success);
             setModalVisible(true);
           } else {
-            setModalText(lang.failed);
+            setModalText(lang.screen_showad.failed);
             setModalVisible(true);
           }
         } catch (err) {

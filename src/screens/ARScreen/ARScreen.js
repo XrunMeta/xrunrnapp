@@ -21,7 +21,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
-import {URL_API, getLanguage} from '../../../utils';
+import {URL_API, getLanguage2} from '../../../utils';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import CompassHeading from 'react-native-compass-heading';
@@ -82,7 +82,7 @@ function ARScreen() {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
 
         // Set Language
-        const screenLang = await getLanguage(currentLanguage, 'screen_map');
+        const screenLang = await getLanguage2(currentLanguage, 'screen_map');
         setLang(screenLang);
 
         setUserData(JSON.parse(storedUserData));
@@ -498,8 +498,10 @@ function ARScreen() {
                         fontSize: 10.5,
                         color: 'white',
                       }}>
-                      {lang && lang.section_card_shadow
-                        ? lang.section_card_shadow.radius
+                      {lang &&
+                      lang.screen_map &&
+                      lang.screen_map.section_card_shadow
+                        ? lang.screen_map.section_card_shadow.radius
                         : ''}
                     </Text>
                     <Text
@@ -508,8 +510,10 @@ function ARScreen() {
                         fontSize: 13,
                         color: 'white',
                       }}>
-                      {lang && lang.section_card_shadow
-                        ? lang.section_card_shadow.amount + ' '
+                      {lang &&
+                      lang.screen_map &&
+                      lang.screen_map.section_card_shadow
+                        ? lang.screen_map.section_card_shadow.amount + ' '
                         : ''}
                       <Text
                         style={{
@@ -517,8 +521,10 @@ function ARScreen() {
                         }}>
                         {brandCount} XRUN
                       </Text>{' '}
-                      {lang && lang.section_card_shadow
-                        ? lang.section_card_shadow.and + ' '
+                      {lang &&
+                      lang.screen_map &&
+                      lang.screen_map.section_card_shadow
+                        ? lang.screen_map.section_card_shadow.and + ' '
                         : ''}
                       <Text
                         style={{
@@ -527,8 +533,10 @@ function ARScreen() {
                         {coinAPI.length} BIG XRUN{' '}
                       </Text>
                       {'\n'}
-                      {lang && lang.section_card_shadow
-                        ? lang.section_card_shadow.getable
+                      {lang &&
+                      lang.screen_map &&
+                      lang.screen_map.section_card_shadow
+                        ? lang.screen_map.section_card_shadow.getable
                         : ''}
                     </Text>
                   </View>
@@ -544,8 +552,10 @@ function ARScreen() {
                         fontSize: 13,
                         color: 'white',
                       }}>
-                      {lang && lang.section_card_shadow
-                        ? lang.section_card_shadow.event
+                      {lang &&
+                      lang.screen_map &&
+                      lang.screen_map.section_card_shadow
+                        ? lang.screen_map.section_card_shadow.event
                         : ''}
                     </Text>
                     <View
@@ -564,8 +574,10 @@ function ARScreen() {
                           color: '#ffdc04',
                           marginTop: -4,
                         }}>
-                        {lang && lang.section_card_shadow
-                          ? lang.section_card_shadow.diamond + ' '
+                        {lang &&
+                        lang.screen_map &&
+                        lang.screen_map.section_card_shadow
+                          ? lang.screen_map.section_card_shadow.diamond + ' '
                           : ''}
                         {bigCoin}
                       </Text>
