@@ -17,6 +17,7 @@ import {TabView, SceneMap} from 'react-native-tab-view';
 import TableWalletCard from '../../components/TableWallet';
 import {URL_API, getLanguage2} from '../../../utils';
 import ShowQRWallet from '../../components/ShowQRWallet';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const WalletScreen = ({navigation, route}) => {
   const [lang, setLang] = useState('');
@@ -52,6 +53,7 @@ const WalletScreen = ({navigation, route}) => {
         setLang(screenLang);
       } catch (err) {
         console.error('Error in fetchData:', err);
+        crashlytics().recordError(err);
       }
     };
 
@@ -65,6 +67,7 @@ const WalletScreen = ({navigation, route}) => {
       } catch (err) {
         console.log(`Failed get member from async storage: ${err}`);
         Alert.alert('', `Failed get member from async storage`);
+        crashlytics().recordError(err);
       }
     };
 
@@ -100,16 +103,21 @@ const WalletScreen = ({navigation, route}) => {
                       ? lang.screen_wallet.confirm_alert
                       : '',
                     onPress: () =>
-                      console.log('Failed get wallet data: ', error),
+                      console.log(
+                        'Failed get wallet data - app4000-01-rev: ',
+                        error,
+                      ),
                   },
                 ],
               );
+              crashlytics().recordError(error);
               setIsLoading(false);
             });
         }
       } catch (err) {
         console.error('Failed to get userData from AsyncStorage:', err);
         setIsLoading(false);
+        crashlytics().recordError(err);
       }
     };
 
