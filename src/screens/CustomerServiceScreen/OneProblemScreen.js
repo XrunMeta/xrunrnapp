@@ -21,7 +21,7 @@ const OneProblemScreen = () => {
 
   useEffect(() => {
     // Get Language
-    const getLanguage = async () => {
+    const fetchLangData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
         const screenLang = await getLanguage2(currentLanguage);
@@ -45,7 +45,7 @@ const OneProblemScreen = () => {
       }
     };
 
-    getLanguage();
+    fetchLangData();
   }, []);
 
   const handleBack = () => {

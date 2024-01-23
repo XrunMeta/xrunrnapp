@@ -12,9 +12,7 @@ import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API} from '../../../utils';
-
-const langData = require('../../../lang.json');
+import {URL_API, getLanguage2} from '../../../utils';
 
 const CloseConfirmPassword = () => {
   const [lang, setLang] = useState({});
@@ -56,16 +54,15 @@ const CloseConfirmPassword = () => {
 
   useEffect(() => {
     // Get Language
-    const getLanguage = async () => {
+    const fetchDataLang = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
         const userEmail = await AsyncStorage.getItem('userEmail');
 
         setEmail(userEmail);
 
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
-        setLang(language);
+        const screenLang = await getLanguage2(currentLanguage);
+        setLang(screenLang);
       } catch (err) {
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
@@ -74,7 +71,7 @@ const CloseConfirmPassword = () => {
       }
     };
 
-    getLanguage();
+    fetchDataLang();
   }, []);
 
   return (
@@ -86,7 +83,7 @@ const CloseConfirmPassword = () => {
         </View>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>
-            {lang && lang.screen_setting
+            {lang && lang.screen_setting && lang.screen_setting.close
               ? lang.screen_setting.close.del_title
               : ''}
           </Text>
@@ -116,10 +113,13 @@ const CloseConfirmPassword = () => {
           marginTop: 5,
         }}>
         <Text style={styles.subTitle}>
-          *{lang && lang.screen_setting ? lang.screen_setting.close.del_d1 : ''}
+          *
+          {lang && lang.screen_setting && lang.screen_setting.close
+            ? lang.screen_setting.close.del_d1
+            : ''}
         </Text>
         <Text style={styles.subTitle}>
-          {lang && lang.screen_setting
+          {lang && lang.screen_setting && lang.screen_setting.close
             ? '  ' + lang.screen_setting.close.del_d2
             : ''}
         </Text>
