@@ -13,12 +13,11 @@ import {
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage} from '../../../utils';
+import {URL_API, getLanguage2} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const RandomRecommendScreen = () => {
   const [lang, setLang] = useState({});
-  const [alert, setAlert] = useState({});
   const navigation = useNavigation();
   let ScreenHeight = Dimensions.get('window').height;
   const [userData, setUserData] = useState({});
@@ -31,13 +30,8 @@ const RandomRecommendScreen = () => {
     const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage(
-          currentLanguage,
-          'screen_recommend',
-        );
-        const screenAlert = await getLanguage(currentLanguage, 'alert');
+        const screenLang = await getLanguage2(currentLanguage);
         setLang(screenLang);
-        setAlert(screenAlert);
 
         // Get User Data from Asyncstorage
         const astorUserData = await AsyncStorage.getItem('userData');
@@ -81,8 +75,10 @@ const RandomRecommendScreen = () => {
   const onSaveChange = () => {
     if (checkedID == 0) {
       Alert.alert(
-        alert ? alert.title.fail : '',
-        lang && lang.random_recommend ? lang.random_recommend.empty : '',
+        lang && lang.alert ? lang.alert.title.fail : '',
+        lang && lang.screen_recommend && lang.screen_recommend.random_recommend
+          ? lang.screen_recommend.random_recommend.empty
+          : '',
       );
     } else {
       const registRecommend = async () => {
@@ -94,14 +90,22 @@ const RandomRecommendScreen = () => {
 
           if (data.data === 'ok') {
             Alert.alert(
-              alert ? alert.title.success : '',
-              lang && lang.add_recommend ? lang.add_recommend.recommended : '',
+              lang && lang.alert ? lang.alert.title.success : '',
+              lang &&
+                lang.screen_recommend &&
+                lang.screen_recommend.add_recommend
+                ? lang.screen_recommend.add_recommend.recommended
+                : '',
             );
             navigation.replace('InfoHome');
           } else {
             Alert.alert(
-              alert ? alert.title.warning : '',
-              lang && lang.add_recommend ? lang.add_recommend.already : '',
+              lang && lang.alert ? lang.alert.title.warning : '',
+              lang &&
+                lang.screen_recommend &&
+                lang.screen_recommend.add_recommend
+                ? lang.screen_recommend.add_recommend.already
+                : '',
             );
             navigation.replace('InfoHome');
           }
@@ -157,7 +161,9 @@ const RandomRecommendScreen = () => {
         </View>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>
-            {lang && lang.category ? lang.category.random : ''}
+            {lang && lang.screen_recommend && lang.screen_recommend.category
+              ? lang.screen_recommend.category.random
+              : ''}
           </Text>
         </View>
       </View>

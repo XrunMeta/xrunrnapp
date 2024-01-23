@@ -15,7 +15,7 @@ import {
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage} from '../../../utils';
+import {URL_API, getLanguage2} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const NotifyScreen = () => {
@@ -34,7 +34,7 @@ const NotifyScreen = () => {
     const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage(currentLanguage, 'screen_notify');
+        const screenLang = await getLanguage2(currentLanguage);
         setLang(screenLang);
 
         // Get User Data
@@ -180,7 +180,7 @@ const NotifyScreen = () => {
       // Show a confirmation alert
       Alert.alert(
         'Confirmation',
-        lang.surely,
+        lang.screen_notify.surely,
         [
           {
             text: 'Cancel',
@@ -244,7 +244,9 @@ const NotifyScreen = () => {
         </View>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>
-            {lang && lang.title ? lang.title : ''}
+            {lang && lang.screen_notify && lang.screen_notify.title
+              ? lang.screen_notify.title
+              : ''}
           </Text>
           <TouchableOpacity
             style={{
@@ -266,11 +268,11 @@ const NotifyScreen = () => {
                 fontSize: 16,
               }}>
               {isDelete
-                ? lang && lang.deleteAll
-                  ? lang.deleteAll
+                ? lang && lang.screen_notify && lang.screen_notify.deleteAll
+                  ? lang.screen_notify.deleteAll
                   : ''
-                : lang && lang.delete
-                ? lang.delete
+                : lang && lang.screen_notify && lang.screen_notify.delete
+                ? lang.screen_notify.delete
                 : ''}
             </Text>
           </TouchableOpacity>
@@ -292,7 +294,9 @@ const NotifyScreen = () => {
                 fontFamily: 'Poppins-Regular',
                 fontSize: 13,
               }}>
-              {lang && lang.loader ? lang.loader : ''}
+              {lang && lang.screen_notify && lang.screen_notify.loader
+                ? lang.screen_notify.loader
+                : ''}
             </Text>
           </View>
         ) : (
@@ -465,12 +469,16 @@ const NotifyScreen = () => {
                               }}>
                               {/* Bilal ganteng :D */}
                               {item.type == 9301
-                                ? lang && lang.look
-                                  ? lang.look
+                                ? lang &&
+                                  lang.screen_notify &&
+                                  lang.screen_notify.look
+                                  ? lang.screen_notify.look
                                   : ''
                                 : item.type == 9302
-                                ? lang && lang.visit
-                                  ? lang.visit
+                                ? lang &&
+                                  lang.screen_notify &&
+                                  lang.screen_notify.visit
+                                  ? lang.screen_notify.visit
                                   : ''
                                 : ''}
                             </Text>
@@ -517,7 +525,11 @@ const NotifyScreen = () => {
         <View style={styles.chatInputContainer}>
           <TextInput
             style={styles.chatInput}
-            placeholder={lang && lang.placeholder ? lang.placeholder : ''}
+            placeholder={
+              lang && lang.screen_notify && lang.screen_notify.placeholder
+                ? lang.screen_notify.placeholder
+                : ''
+            }
             placeholderTextColor="grey"
             value={chatText}
             onChangeText={setChatText}
@@ -529,7 +541,9 @@ const NotifyScreen = () => {
               sendChat(chatText);
             }}>
             <Text style={styles.sendButtonText}>
-              {lang && lang.send ? lang.send : ''}
+              {lang && lang.screen_notify && lang.screen_notify.send
+                ? lang.screen_notify.send
+                : ''}
             </Text>
           </TouchableOpacity>
         </View>

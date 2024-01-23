@@ -11,7 +11,7 @@ import React, {useState, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getLanguage} from '../../../utils';
+import {getLanguage2} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const PhoneLoginScreen = ({route}) => {
@@ -32,10 +32,7 @@ const PhoneLoginScreen = ({route}) => {
     const fetchLangData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage(
-          currentLanguage,
-          'screen_notExist',
-        );
+        const screenLang = await getLanguage2(currentLanguage);
 
         setLang(screenLang);
       } catch (err) {
@@ -53,7 +50,7 @@ const PhoneLoginScreen = ({route}) => {
 
   const onSignUp = async () => {
     if (phoneNumber.trim() === '') {
-      Alert.alert('Error', lang.field_phoneNumber.empty);
+      Alert.alert('Error', lang.screen_notExist.field_phoneNumber.empty);
     } else {
       navigation.navigate('PhoneVerif', {
         mobilecode: countryCode,
@@ -103,7 +100,11 @@ const PhoneLoginScreen = ({route}) => {
       {/*  Field - Phone Number */}
       <View style={styles.formGroup}>
         <Text style={styles.label}>
-          {lang && lang.field_phoneNumber ? lang.field_phoneNumber.label : ''}
+          {lang &&
+          lang.screen_notExist &&
+          lang.screen_notExist.field_phoneNumber
+            ? lang.screen_notExist.field_phoneNumber.label
+            : ''}
         </Text>
         <View
           style={{

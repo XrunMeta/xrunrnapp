@@ -14,7 +14,7 @@ import ButtonBack from '../../components/ButtonBack/';
 import {useNavigation} from '@react-navigation/native';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage} from '../../../utils';
+import {URL_API, getLanguage2} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const SignInScreen = () => {
@@ -30,11 +30,20 @@ const SignInScreen = () => {
 
   const onSignIn = async () => {
     if (email.trim() === '') {
-      Alert.alert('Error', lang.alert ? lang.alert.emptyEmail : '');
+      Alert.alert(
+        'Error',
+        lang.screen_signin.alert ? lang.screen_signin.alert.emptyEmail : '',
+      );
     } else if (!isValidEmail(email)) {
-      Alert.alert('Error', lang.alert ? lang.alert.invalidEmail : '');
+      Alert.alert(
+        'Error',
+        lang.screen_signin.alert ? lang.screen_signin.alert.invalidEmail : '',
+      );
     } else if (password.trim() === '') {
-      Alert.alert('Error', lang.alert ? lang.alert.emptyPassword : '');
+      Alert.alert(
+        'Error',
+        lang.screen_signin.alert ? lang.screen_signin.alert.emptyPassword : '',
+      );
     } else {
       try {
         const response = await fetch(
@@ -44,8 +53,8 @@ const SignInScreen = () => {
 
         if (data.data === 'false') {
           Alert.alert(
-            lang ? lang.alert.fail : '',
-            lang ? lang.failedLogin : '',
+            lang ? lang.screen_signin.alert.fail : '',
+            lang ? lang.screen_signin.failedLogin : '',
           );
 
           setEmail('');
@@ -62,7 +71,10 @@ const SignInScreen = () => {
         }
       } catch (error) {
         console.error('Error:', error);
-        Alert.alert(lang ? lang.alert.error : '', lang ? lang.errorLogin : '');
+        Alert.alert(
+          lang ? lang.screen_signin.alert.error : '',
+          lang ? lang.screen_signin.errorLogin : '',
+        );
         setEmail('');
         setPassword('');
         crashlytics().recordError(new Error(error));
@@ -94,7 +106,7 @@ const SignInScreen = () => {
     const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage(currentLanguage, 'screen_signin');
+        const screenLang = await getLanguage2(currentLanguage);
 
         // Set your language state
         setLang(screenLang);
@@ -114,15 +126,29 @@ const SignInScreen = () => {
         <ButtonBack onClick={onBack} />
 
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>{lang.title ? lang.title : ''}</Text>
+          <Text style={styles.title}>
+            {lang && lang.screen_signin && lang.screen_signin.title
+              ? lang.screen_signin.title
+              : ''}
+          </Text>
           <Text style={styles.subTitle}>
-            {lang.subTitle ? lang.subTitle : ''}
+            {lang && lang.screen_signin && lang.screen_signin.subTitle
+              ? lang.screen_signin.subTitle
+              : ''}
           </Text>
         </View>
 
         <CustomInput
-          label={lang.email ? lang.email.label : ''}
-          placeholder={lang.email ? lang.email.placeholder : ''}
+          label={
+            lang && lang.screen_signin && lang.screen_signin.email
+              ? lang.screen_signin.email.label
+              : ''
+          }
+          placeholder={
+            lang && lang.screen_signin && lang.screen_signin.email
+              ? lang.screen_signin.email.placeholder
+              : ''
+          }
           value={email}
           setValue={onEmailChange}
           isPassword={false}
@@ -136,13 +162,23 @@ const SignInScreen = () => {
               fontFamily: 'Poppins-Regular',
               fontSize: 13,
             }}>
-            {lang.validator ? lang.validator : ''}
+            {lang && lang.screen_signin && lang.screen_signin.validator
+              ? lang.screen_signin.validator
+              : ''}
           </Text>
         )}
 
         <CustomInput
-          label={lang.password ? lang.password.label : ''}
-          placeholder={lang.password ? lang.password.placeholder : ''}
+          label={
+            lang && lang.screen_signin && lang.screen_signin.password
+              ? lang.screen_signin.password.label
+              : ''
+          }
+          placeholder={
+            lang && lang.screen_signin && lang.screen_signin.password
+              ? lang.screen_signin.password.placeholder
+              : ''
+          }
           value={password}
           setValue={setPassword}
           secureTextEntry
@@ -152,11 +188,15 @@ const SignInScreen = () => {
         <View style={[styles.bottomSection]}>
           <View style={styles.additionalLogin}>
             <Text style={styles.normalText}>
-              {lang.authcode ? lang.authcode.label + ' ' : ''}
+              {lang && lang.screen_signin && lang.screen_signin.authcode
+                ? lang.screen_signin.authcode.label + ' '
+                : ''}
             </Text>
             <Pressable onPress={onEmailAuth} style={styles.resetPassword}>
               <Text style={styles.emailAuth}>
-                {lang.authcode ? lang.authcode.link : ''}
+                {lang && lang.screen_signin && lang.screen_signin.authcode
+                  ? lang.screen_signin.authcode.link
+                  : ''}
               </Text>
             </Pressable>
           </View>

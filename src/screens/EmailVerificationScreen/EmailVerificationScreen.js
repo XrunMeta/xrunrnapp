@@ -16,7 +16,7 @@ import React, {useState, useRef, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import CustomButton from '../../components/CustomButton/';
-import {URL_API, getLanguage} from '../../../utils';
+import {URL_API, getLanguage2} from '../../../utils';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -47,7 +47,7 @@ const EmailVerificationScreen = () => {
       const responseData = await response.text(); // Convert response to JSON
 
       if (responseData.data === 'false') {
-        Alert.alert('Failed', lang.notif.invalidEmail);
+        Alert.alert('Failed', lang.screen_emailVerification.notif.invalidEmail);
       } else {
         console.log('Kode dikirim boy');
         console.log(signupUrl);
@@ -62,10 +62,7 @@ const EmailVerificationScreen = () => {
     const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage(
-          currentLanguage,
-          'screen_emailVerification',
-        );
+        const screenLang = await getLanguage2(currentLanguage);
 
         // Set your language state
         setLang(screenLang);
@@ -101,7 +98,7 @@ const EmailVerificationScreen = () => {
       console.log(JSON.stringify(responseAuthData));
 
       if (responseAuthData.data === 'false') {
-        Alert.alert('Failed', lang.notif.wrongCode);
+        Alert.alert('Failed', lang.screen_emailVerification.notif.wrongCode);
       } else {
         // Do SignUp
         try {
@@ -123,19 +120,25 @@ const EmailVerificationScreen = () => {
                 login();
                 navigation.replace('SuccessJoin');
               } else {
-                Alert.alert('Failed', lang.notif.errorServer);
+                Alert.alert(
+                  'Failed',
+                  lang.screen_emailVerification.notif.errorServer,
+                );
               }
             } catch (error) {
               // Handle network errors or other exceptions
               console.error('Error during Check Login Email & Pin:', error);
             }
           } else {
-            Alert.alert('Failed', lang.notif.errorServer);
+            Alert.alert(
+              'Failed',
+              lang.screen_emailVerification.notif.errorServer,
+            );
             navigation.navigate('First');
           }
         } catch (error) {
           console.error('Error during Signup:', error);
-          Alert.alert('Error', lang.notif.errorServer);
+          Alert.alert('Error', lang.screen_emailVerification.notif.errorServer);
         }
       }
     } catch (error) {
@@ -145,7 +148,7 @@ const EmailVerificationScreen = () => {
   };
 
   const onSignInDisabled = () => {
-    Alert.alert('Warning', lang.notif.emptyCode);
+    Alert.alert('Warning', lang.screen_emailVerification.notif.emptyCode);
   };
 
   const onProblem = () => {
@@ -214,13 +217,21 @@ const EmailVerificationScreen = () => {
       <View style={styles.container}>
         {seconds > 0 ? (
           <Text style={styles.disableText}>
-            {lang && lang.timer ? lang.timer.on : ''} {formattedMinutes}:
-            {formattedSeconds}
+            {lang &&
+            lang.screen_emailVerification &&
+            lang.screen_emailVerification.timer
+              ? lang.screen_emailVerification.timer.on
+              : ''}{' '}
+            {formattedMinutes}:{formattedSeconds}
           </Text>
         ) : (
           <Pressable onPress={onProblem} style={styles.resetPassword}>
             <Text style={styles.emailAuth}>
-              {lang && lang.timer ? lang.timer.off : ''}
+              {lang &&
+              lang.screen_emailVerification &&
+              lang.screen_emailVerification.timer
+                ? lang.screen_emailVerification.timer.off
+                : ''}
             </Text>
           </Pressable>
         )}
@@ -248,10 +259,22 @@ const EmailVerificationScreen = () => {
               </TouchableOpacity>
               <CustomButton
                 onPress={sendCodeAgain}
-                text={lang && lang.timer ? lang.timer.sendAgain : ''}
+                text={
+                  lang &&
+                  lang.screen_emailVerification &&
+                  lang.screen_emailVerification.timer
+                    ? lang.screen_emailVerification.timer.sendAgain
+                    : ''
+                }
               />
               <CustomButton
-                text={lang && lang.timer ? lang.timer.loginPassword : ''}
+                text={
+                  lang &&
+                  lang.screen_emailVerification &&
+                  lang.screen_emailVerification.timer
+                    ? lang.screen_emailVerification.timer.loginPassword
+                    : ''
+                }
                 onPress={onLoginPassword}
                 type="SECONDARY"
               />
@@ -270,7 +293,11 @@ const EmailVerificationScreen = () => {
         {/* Text Section */}
         <View style={styles.textWrapper}>
           <Text style={styles.normalText}>
-            {lang && lang.email ? lang.email.label : ''}
+            {lang &&
+            lang.screen_emailVerification &&
+            lang.screen_emailVerification.email
+              ? lang.screen_emailVerification.email.label
+              : ''}
           </Text>
           <Text style={styles.boldText}>{dataEmail}</Text>
         </View>

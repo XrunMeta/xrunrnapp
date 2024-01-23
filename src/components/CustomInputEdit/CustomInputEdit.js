@@ -11,8 +11,7 @@ import {
 } from 'react-native';
 import ButtonBack from '../ButtonBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const langData = require('../../../lang.json');
+import {getLanguage2} from '../../../utils';
 
 const CustomInputEdit = ({
   title,
@@ -26,18 +25,14 @@ const CustomInputEdit = ({
   const [isModalVisible, setModalVisible] = useState(false);
   let ScreenHeight = Dimensions.get('window').height;
   const [lang, setLang] = useState({});
-  const [langCode, setLangCode] = useState('');
 
   useEffect(() => {
     // Get Language
-    const getLanguage = async () => {
+    const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
-        setLang(language);
-        setLangCode(selectedLanguage);
+        const screenLang = await getLanguage2(currentLanguage);
+        setLang(screenLang);
       } catch (err) {
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
@@ -46,7 +41,7 @@ const CustomInputEdit = ({
       }
     };
 
-    getLanguage(); // Get Language
+    fetchData(); // Get Language
   }, []);
 
   const openModal = () => {
@@ -118,7 +113,10 @@ const CustomInputEdit = ({
                     color: '#051C60',
                     margin: 10,
                   }}>
-                  {langCode === 'id' ? 'Ubah ' + title : title + ' Modify'}
+                  {lang && lang.screen_modify_information
+                    ? lang.screen_modify_information.modify
+                    : 'Modify'}{' '}
+                  {title}
                 </Text>
               </View>
             </View>
