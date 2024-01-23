@@ -490,7 +490,7 @@
     "history_extracodesuccess": "Penyelesaian",
     "history_not_found": "Histori tidak ditemukan",
     "confirm_alert": "MENGONFIRMASI",
-    "failed_getwallet_alert": "Untuk dapatkan dompet Anda, silakan coba lagi nanti",
+    "failed_getwallet_alert": "Gagal untuk dapatkan dompet Anda, silakan coba lagi nanti",
     "failed_alert": "Gagal",
     "failed_download_qrcode_alert": "Gagal untuk mengunduh qr code"
   },
