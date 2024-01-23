@@ -16,7 +16,7 @@ import React, {useState, useRef, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import CustomButton from '../../components/CustomButton';
-import {URL_API, getLanguage} from '../../../utils';
+import {URL_API, getLanguage2} from '../../../utils';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import crashlytics from '@react-native-firebase/crashlytics';
@@ -43,7 +43,10 @@ const PhoneVerificationScreen = () => {
       if (responseData.data === 'ok') {
         console.log('Kode dikirim boy');
       } else {
-        Alert.alert('Failed', lang.field_phoneVerif.emptyNumber);
+        Alert.alert(
+          'Failed',
+          lang.screen_notExist.field_phoneVerif.emptyNumber,
+        );
       }
     } catch (error) {
       // Handle network errors or other exceptions
@@ -58,10 +61,7 @@ const PhoneVerificationScreen = () => {
     const fetchLangData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage(
-          currentLanguage,
-          'screen_notExist',
-        );
+        const screenLang = await getLanguage2(currentLanguage);
 
         setLang(screenLang);
       } catch (err) {
@@ -98,7 +98,10 @@ const PhoneVerificationScreen = () => {
 
       if (firstResObj.data === 'false') {
         // Invalid Number
-        Alert.alert('Failed', lang.field_phoneVerif.invalidNumber);
+        Alert.alert(
+          'Failed',
+          lang.screen_notExist.field_phoneVerif.invalidNumber,
+        );
         navigation.navigate('SignupByEmail', {
           mobile: mobile,
           mobilecode: mobilecode,
@@ -163,7 +166,7 @@ const PhoneVerificationScreen = () => {
   };
 
   const onSignInDisabled = () => {
-    Alert.alert('Warning', lang.field_phoneVerif.emptyCode);
+    Alert.alert('Warning', lang.screen_notExist.field_phoneVerif.emptyCode);
   };
 
   const onProblem = () => {
@@ -232,13 +235,21 @@ const PhoneVerificationScreen = () => {
       <View style={styles.container}>
         {seconds > 0 ? (
           <Text style={styles.disableText}>
-            {lang && lang.field_phoneVerif ? lang.field_phoneVerif.on : ''}{' '}
+            {lang &&
+            lang.screen_notExist &&
+            lang.screen_notExist.field_phoneVerif
+              ? lang.screen_notExist.field_phoneVerif.on
+              : ''}{' '}
             {formattedMinutes}:{formattedSeconds}
           </Text>
         ) : (
           <Pressable onPress={onProblem} style={styles.resetPassword}>
             <Text style={styles.emailAuth}>
-              {lang && lang.field_phoneVerif ? lang.field_phoneVerif.off : ''}
+              {lang &&
+              lang.screen_notExist &&
+              lang.screen_notExist.field_phoneVerif
+                ? lang.screen_notExist.field_phoneVerif.off
+                : ''}
             </Text>
           </Pressable>
         )}
@@ -267,8 +278,10 @@ const PhoneVerificationScreen = () => {
               <CustomButton
                 onPress={sendCodeAgain}
                 text={
-                  lang && lang.field_phoneVerif
-                    ? lang.field_phoneVerif.sendAgain
+                  lang &&
+                  lang.screen_notExist &&
+                  lang.screen_notExist.field_phoneVerif
+                    ? lang.screen_notExist.field_phoneVerif.sendAgain
                     : ''
                 }
               />
@@ -287,7 +300,11 @@ const PhoneVerificationScreen = () => {
         {/* Text Section */}
         <View style={styles.textWrapper}>
           <Text style={styles.normalText}>
-            {lang && lang.field_phoneVerif ? lang.field_phoneVerif.label : ''}
+            {lang &&
+            lang.screen_notExist &&
+            lang.screen_notExist.field_phoneVerif
+              ? lang.screen_notExist.field_phoneVerif.label
+              : ''}
           </Text>
           <Text style={styles.boldText}>{mobile}</Text>
         </View>

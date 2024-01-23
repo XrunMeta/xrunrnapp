@@ -16,12 +16,11 @@ import ButtonList from '../../components/ButtonList/ButtonList';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
-import {URL_API, getLanguage} from '../../../utils';
+import {URL_API, getLanguage2} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const InfoScreen = () => {
   const [lang, setLang] = useState({});
-  const [langAlert, setLangAlert] = useState({});
   const {isLoggedIn, logout} = useAuth();
   const [userDetails, setUserDetails] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -39,11 +38,8 @@ const InfoScreen = () => {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
 
         console.log('Info Screen -> ' + userData);
-        const screenLang = await getLanguage(currentLanguage, 'screen_info');
+        const screenLang = await getLanguage2(currentLanguage);
         setLang(screenLang);
-
-        const screenAlert = await getLanguage(currentLanguage, 'alert');
-        setLangAlert(screenAlert);
 
         const data = JSON.parse(userData);
 
@@ -76,8 +72,14 @@ const InfoScreen = () => {
 
   const onLogout = () => {
     Alert.alert(
-      `${langAlert && langAlert.title ? langAlert.title.warning : ''}`,
-      `${lang && lang.button ? lang.button.logout : ''}`,
+      `${
+        lang && lang.alert && lang.alert.title ? lang.alert.title.warning : ''
+      }`,
+      `${
+        lang && lang.screen_info && lang.screen_info.button
+          ? lang.screen_info.button.logout
+          : ''
+      }`,
       [
         {
           text: 'Cancel',
@@ -184,7 +186,7 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
         </View>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>
-            {lang && lang.title ? lang.title : ''}
+            {lang && lang.screen_info ? lang.screen_info.title : ''}
           </Text>
         </View>
       </View>
@@ -284,27 +286,51 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
         }}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <ButtonList
-            label={lang && lang.list ? lang.list.modify : ''}
+            label={
+              lang && lang.screen_info && lang.screen_info.list
+                ? lang.screen_info.list.modify
+                : ''
+            }
             onPress={onModify}
           />
           <ButtonList
-            label={lang && lang.list ? lang.list.setting : ''}
+            label={
+              lang && lang.screen_info && lang.screen_info.list
+                ? lang.screen_info.list.setting
+                : ''
+            }
             onPress={onSetting}
           />
           <ButtonList
-            label={lang && lang.list ? lang.list.clause : ''}
+            label={
+              lang && lang.screen_info && lang.screen_info.list
+                ? lang.screen_info.list.clause
+                : ''
+            }
             onPress={onClause}
           />
           <ButtonList
-            label={lang && lang.list ? lang.list.cs : ''}
+            label={
+              lang && lang.screen_info && lang.screen_info.list
+                ? lang.screen_info.list.cs
+                : ''
+            }
             onPress={onCustomerService}
           />
           <ButtonList
-            label={lang && lang.list ? lang.list.app_info : ''}
+            label={
+              lang && lang.screen_info && lang.screen_info.list
+                ? lang.screen_info.list.app_info
+                : ''
+            }
             onPress={onAppInfo}
           />
           <ButtonList
-            label={lang && lang.list ? lang.list.recommend : ''}
+            label={
+              lang && lang.screen_info && lang.screen_info.list
+                ? lang.screen_info.list.recommend
+                : ''
+            }
             onPress={onRecommend}
           />
         </ScrollView>
@@ -319,7 +345,9 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
         <View style={styles.modal}>
           <View style={styles.modalContent}>
             <Text style={styles.modalText}>
-              {lang && lang.list ? lang.list.already : ''}
+              {lang && lang.screen_info && lang.screen_info.list
+                ? lang.screen_info.list.already
+                : ''}
             </Text>
             <Text
               style={[

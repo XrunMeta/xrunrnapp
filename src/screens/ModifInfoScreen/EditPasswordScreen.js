@@ -11,7 +11,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInput from '../../components/CustomInput';
-import {URL_API, getLanguage} from '../../../utils';
+import {URL_API, getLanguage2} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const EditPassword = () => {
@@ -23,7 +23,7 @@ const EditPassword = () => {
 
   const onSaveChange = () => {
     if (password == '') {
-      alert(lang ? lang.condition.empty : '');
+      alert(lang ? lang.screen_modify_password.condition.empty : '');
     } else {
       const savePassword = async () => {
         try {
@@ -68,10 +68,7 @@ const EditPassword = () => {
     const fetchLangData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage(
-          currentLanguage,
-          'screen_modify_password',
-        );
+        const screenLang = await getLanguage2(currentLanguage);
         setLang(screenLang);
 
         // Get User Data from Asyncstorage
@@ -99,13 +96,25 @@ const EditPassword = () => {
           <ButtonBack onClick={handleBack} />
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>{lang ? lang.title : ''}</Text>
+          <Text style={styles.title}>
+            {lang && lang.screen_modify_password
+              ? lang.screen_modify_password.title
+              : ''}
+          </Text>
         </View>
       </View>
 
       <CustomInput
-        label={lang ? lang.label : ''}
-        placeholder={lang ? lang.placeholder : ''}
+        label={
+          lang && lang.screen_modify_password
+            ? lang.screen_modify_password.label
+            : ''
+        }
+        placeholder={
+          lang && lang.screen_modify_password
+            ? lang.screen_modify_password.placeholder
+            : ''
+        }
         value={password}
         setValue={setPassword}
         secureTextEntry

@@ -12,12 +12,11 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInput from '../../components/CustomInput';
-import {URL_API, getLanguage} from '../../../utils';
+import {URL_API, getLanguage2} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const RegistRecommendScreen = () => {
   const [lang, setLang] = useState({});
-  const [alert, setAlert] = useState({});
   const navigation = useNavigation();
   const [recID, setRecID] = useState('');
   let ScreenHeight = Dimensions.get('window').height;
@@ -28,13 +27,8 @@ const RegistRecommendScreen = () => {
     const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage(
-          currentLanguage,
-          'screen_recommend',
-        );
-        const screenAlert = await getLanguage(currentLanguage, 'alert');
+        const screenLang = await getLanguage2(currentLanguage);
         setLang(screenLang);
-        setAlert(screenAlert);
 
         // Get User Data from Asyncstorage
         const astorUserData = await AsyncStorage.getItem('userData');
@@ -56,8 +50,10 @@ const RegistRecommendScreen = () => {
   const onSaveChange = () => {
     if (recID == '') {
       Alert.alert(
-        alert ? alert.title.fail : '',
-        lang && lang.add_recommend ? lang.add_recommend.placeholder : '',
+        lang && lang.alert ? lang.alert.title.fail : '',
+        lang && lang.screen_recommend && lang.screen_recommend.add_recommend
+          ? lang.screen_recommend.add_recommend.placeholder
+          : '',
       );
     } else {
       const registRecommend = async () => {
@@ -68,22 +64,34 @@ const RegistRecommendScreen = () => {
 
           if (data.data === 'no id') {
             Alert.alert(
-              alert ? alert.title.fail : '',
-              lang && lang.add_recommend ? lang.add_recommend.not_found : '',
+              lang && lang.alert ? lang.alert.title.fail : '',
+              lang &&
+                lang.screen_recommend &&
+                lang.screen_recommend.add_recommend
+                ? lang.screen_recommend.add_recommend.not_found
+                : '',
             );
 
             setRecID('');
           } else if (data.data === 'ok') {
             Alert.alert(
-              alert ? alert.title.success : '',
-              lang && lang.add_recommend ? lang.add_recommend.recommended : '',
+              lang && lang.alert ? lang.alert.title.success : '',
+              lang &&
+                lang.screen_recommend &&
+                lang.screen_recommend.add_recommend
+                ? lang.screen_recommend.add_recommend.recommended
+                : '',
             );
 
             navigation.replace('InfoHome');
           } else {
             Alert.alert(
-              alert ? alert.title.warning : '',
-              lang && lang.add_recommend ? lang.add_recommend.already : '',
+              lang && lang.alert ? lang.alert.title.warning : '',
+              lang &&
+                lang.screen_recommend &&
+                lang.screen_recommend.add_recommend
+                ? lang.screen_recommend.add_recommend.already
+                : '',
             );
 
             navigation.replace('InfoHome');
@@ -111,14 +119,22 @@ const RegistRecommendScreen = () => {
           <ButtonBack onClick={handleBack} />
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>{lang ? lang.title : ''}</Text>
+          <Text style={styles.title}>
+            {lang && lang.screen_recommend ? lang.screen_recommend.title : ''}
+          </Text>
         </View>
       </View>
 
       <CustomInput
-        label={lang && lang.add_recommend ? lang.add_recommend.label : ''}
+        label={
+          lang && lang.screen_recommend && lang.screen_recommend.add_recommend
+            ? lang.screen_recommend.add_recommend.label
+            : ''
+        }
         placeholder={
-          lang && lang.add_recommend ? lang.add_recommend.placeholder : ''
+          lang && lang.screen_recommend && lang.screen_recommend.add_recommend
+            ? lang.screen_recommend.add_recommend.placeholder
+            : ''
         }
         value={recID}
         setValue={setRecID}
