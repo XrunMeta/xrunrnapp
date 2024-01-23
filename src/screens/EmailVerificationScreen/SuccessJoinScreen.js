@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import React, {useState, useRef, useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {getLanguage} from '../../../utils';
+import {getLanguage2} from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // ########## Main Function ##########
@@ -22,10 +22,7 @@ const SuccessJoinScreen = () => {
     const fetchLangData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage(
-          currentLanguage,
-          'screen_notExist',
-        );
+        const screenLang = await getLanguage2(currentLanguage);
 
         setLang(screenLang);
       } catch (err) {
@@ -63,12 +60,18 @@ const SuccessJoinScreen = () => {
         />
         <View style={{alignItems: 'center'}}>
           <Text style={styles.normalText}>
-            {lang && lang.field_join ? lang.field_join.str1 : ''}
+            {lang && lang.screen_notExist && lang.screen_notExist.field_join
+              ? lang.screen_notExist.field_join.str1
+              : ''}
           </Text>
           <Text style={styles.normalText}>
-            {lang && lang.field_join ? lang.field_join.str2 : ''}
+            {lang && lang.screen_notExist && lang.screen_notExist.field_join
+              ? lang.screen_notExist.field_join.str2
+              : ''}
             <Text style={{color: '#da7750', fontFamily: 'Poppins-SemiBold'}}>
-              {lang && lang.field_join ? lang.field_join.str3 : ''}
+              {lang && lang.screen_notExist && lang.screen_notExist.field_join
+                ? lang.screen_notExist.field_join.str3
+                : ''}
             </Text>
           </Text>
         </View>
