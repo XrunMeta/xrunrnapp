@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import ButtonList from '../../components/ButtonList/ButtonList';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
-import {getLanguage} from '../../../utils';
+import {getLanguage2} from '../../../utils';
 
 const RecommendScreen = () => {
   const navigation = useNavigation();
@@ -16,10 +16,7 @@ const RecommendScreen = () => {
     const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage(
-          currentLanguage,
-          'screen_recommend',
-        );
+        const screenLang = await getLanguage2(currentLanguage);
         setLang(screenLang);
       } catch (err) {
         console.error(
@@ -52,7 +49,9 @@ const RecommendScreen = () => {
           <ButtonBack onClick={onBack} />
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>{lang ? lang.title : ''}</Text>
+          <Text style={styles.title}>
+            {lang && lang.screen_recommend ? lang.screen_recommend.title : ''}
+          </Text>
         </View>
       </View>
 
@@ -64,11 +63,19 @@ const RecommendScreen = () => {
         }}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <ButtonList
-            label={lang && lang.category ? lang.category.regist : ''}
+            label={
+              lang && lang.screen_recommend && lang.screen_recommend.category
+                ? lang.screen_recommend.category.regist
+                : ''
+            }
             onPress={onRegist}
           />
           <ButtonList
-            label={lang && lang.category ? lang.category.random : ''}
+            label={
+              lang && lang.screen_recommend && lang.screen_recommend.category
+                ? lang.screen_recommend.category.random
+                : ''
+            }
             onPress={onRandom}
           />
         </ScrollView>
