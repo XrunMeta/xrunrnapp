@@ -14,7 +14,7 @@ import ARScreen from '../ARScreen/ARScreen';
 import MapParent from './MapParentScreen';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getLanguage} from '../../../utils';
+import {getLanguage2} from '../../../utils';
 
 export default function Home({route}) {
   const [lang, setLang] = useState({});
@@ -42,10 +42,7 @@ export default function Home({route}) {
     const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage(
-          currentLanguage,
-          'screen_bottomTab',
-        );
+        const screenLang = await getLanguage2(currentLanguage);
 
         // Set your language state
         setLang(screenLang);
@@ -141,7 +138,9 @@ export default function Home({route}) {
             {renderTabButton(
               'Wallet',
               require('../../../assets/images/icon_wallet.png'),
-              lang.wallet ? lang.wallet.title : 'Wallet',
+              lang && lang.screen_bottomTab && lang.screen_bottomTab.wallet
+                ? lang.screen_bottomTab.wallet.title
+                : 'Wallet',
               () => {
                 navigation.navigate('WalletHome');
               },
@@ -149,7 +148,9 @@ export default function Home({route}) {
             {renderTabButton(
               'Advertise',
               require('../../../assets/images/icon_advertisement.png'),
-              lang.advertise ? lang.advertise.title : 'Advertise',
+              lang && lang.screen_bottomTab && lang.screen_bottomTab.advertise
+                ? lang.screen_bottomTab.advertise.title
+                : 'Advertise',
               () => {
                 navigation.navigate('AdvertiseHome');
               },
@@ -239,7 +240,9 @@ export default function Home({route}) {
             {renderTabButton(
               'Notify',
               require('../../../assets/images/icon_bell.png'),
-              lang.notify ? lang.notify.title : 'Notify',
+              lang && lang.screen_bottomTab && lang.screen_bottomTab.notify
+                ? lang.screen_bottomTab.notify.title
+                : 'Notify',
               () => {
                 navigation.navigate('NotifyHome');
               },
@@ -247,7 +250,9 @@ export default function Home({route}) {
             {renderTabButton(
               'Info',
               require('../../../assets/images/icon_user.png'),
-              lang.info ? lang.info.title : 'Info',
+              lang && lang.screen_bottomTab && lang.screen_bottomTab.info
+                ? lang.screen_bottomTab.info.title
+                : 'Info',
               () => {
                 navigation.navigate('InfoHome');
               },
