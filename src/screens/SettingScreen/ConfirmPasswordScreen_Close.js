@@ -13,6 +13,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API} from '../../../utils';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const langData = require('../../../lang.json');
 
@@ -67,6 +68,8 @@ const CloseConfirmPassword = () => {
         const language = langData[selectedLanguage];
         setLang(language);
       } catch (err) {
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
           err,

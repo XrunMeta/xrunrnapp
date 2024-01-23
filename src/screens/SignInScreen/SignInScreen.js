@@ -15,6 +15,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API, getLanguage} from '../../../utils';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const SignInScreen = () => {
   const [lang, setLang] = useState({});
@@ -64,6 +65,8 @@ const SignInScreen = () => {
         Alert.alert(lang ? lang.alert.error : '', lang ? lang.errorLogin : '');
         setEmail('');
         setPassword('');
+        crashlytics().recordError(new Error(error));
+        crashlytics().log(error);
       }
     }
   };
@@ -97,6 +100,8 @@ const SignInScreen = () => {
         setLang(screenLang);
       } catch (err) {
         console.error('Error in fetchData:', err);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     };
 

@@ -49,7 +49,8 @@ const SendWalletScreen = ({navigation, route}) => {
         setLang(screenLang);
       } catch (err) {
         console.error('Error in fetchData:', err);
-        crashlytics().recordError(err);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     };
 
@@ -63,7 +64,8 @@ const SendWalletScreen = ({navigation, route}) => {
         setDataMember(dataMember);
       } catch (error) {
         console.error('Failed to get userData from AsyncStorage:', err);
-        crashlytics().recordError(err);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     };
 
@@ -82,7 +84,8 @@ const SendWalletScreen = ({navigation, route}) => {
         setIsLoading(false);
         Alert.alert('Error get data listCrypto: ', err);
         console.log('Error get data listCrypto: ', err);
-        crashlytics().recordError(err);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     };
 
@@ -104,7 +107,8 @@ const SendWalletScreen = ({navigation, route}) => {
         }
       } catch (error) {
         console.error('Failed to request camera permission:', error);
-        crashlytics().recordError(err);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     };
 
@@ -241,7 +245,8 @@ const SendWalletScreen = ({navigation, route}) => {
                 .catch(err => {
                   Alert.alert('', 'Check email failed: ', err);
                   console.log('Check email failed: ', err);
-                  crashlytics().recordError(err);
+                  crashlytics().recordError(new Error(err));
+                  crashlytics().log(err);
                 });
             } else {
               fetch(
@@ -287,13 +292,15 @@ const SendWalletScreen = ({navigation, route}) => {
                     .catch(err => {
                       Alert.alert('', 'Transfer failed: ', err);
                       console.log('Transfer failed postTransfer: ', err);
-                      crashlytics().recordError(err);
+                      crashlytics().recordError(new Error(err));
+                      crashlytics().log(err);
                     });
                 })
                 .catch(err => {
                   Alert.alert('', 'Transferf failed: ', err);
                   console.log('Transfer failed ap4300-03: ', err);
-                  crashlytics().recordError(err);
+                  crashlytics().recordError(new Error(err));
+                  crashlytics().log(err);
                 });
             }
           }
@@ -301,7 +308,8 @@ const SendWalletScreen = ({navigation, route}) => {
         .catch(err => {
           Alert.alert('', 'Check limit transfer failed: ', err);
           setIsLoading(false);
-          crashlytics().recordError(err);
+          crashlytics().recordError(new Error(err));
+          crashlytics().log(err);
         });
     }
   };

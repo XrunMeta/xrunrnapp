@@ -59,7 +59,8 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
       } catch (error) {
         Alert.alert('', 'Error fetching QR code data');
         console.error('Error fetching QR code data:', error);
-        crashlytics().recordError(err);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     };
 
@@ -123,7 +124,8 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
     } catch (error) {
       setShareDisable(false);
       console.log('Error sharing QR Code:', error.message);
-      crashlytics().recordError(err);
+      crashlytics().recordError(new Error(err));
+      crashlytics().log(err);
     }
   };
 
@@ -147,7 +149,8 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
       } catch (err) {
         // To handle permission related exception
         console.log('++++' + err);
-        crashlytics().recordError(err);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     } else {
       downloadFile();
@@ -207,7 +210,8 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
         ],
       );
     } catch (error) {
-      crashlytics().recordError(err);
+      crashlytics().recordError(new Error(err));
+      crashlytics().log(err);
       console.error('Error downloading qr code:', error);
       Alert.alert(
         '',

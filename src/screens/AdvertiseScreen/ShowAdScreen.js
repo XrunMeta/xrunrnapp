@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {useInterstitialAd, TestIds} from '@react-native-admob/admob';
 import {URL_API, getLanguage2} from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const realAD = 'ca-app-pub-9457909979646034/7873165988';
 
@@ -60,6 +61,8 @@ const ShowAdScreen = ({route, navigation}) => {
         // Set your language state
         setLang(screenLang);
       } catch (err) {
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
         console.error('Error in fetchData:', err);
       }
     };
@@ -105,6 +108,8 @@ const ShowAdScreen = ({route, navigation}) => {
             setModalVisible(true);
           }
         } catch (err) {
+          crashlytics().recordError(new Error(err));
+          crashlytics().log(err);
           console.error(
             'Error retrieving selfCoordinate from AsyncStorage:',
             err,

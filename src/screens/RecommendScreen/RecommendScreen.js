@@ -5,6 +5,7 @@ import ButtonList from '../../components/ButtonList/ButtonList';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
 import {getLanguage} from '../../../utils';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const RecommendScreen = () => {
   const navigation = useNavigation();
@@ -22,6 +23,8 @@ const RecommendScreen = () => {
         );
         setLang(screenLang);
       } catch (err) {
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
           err,

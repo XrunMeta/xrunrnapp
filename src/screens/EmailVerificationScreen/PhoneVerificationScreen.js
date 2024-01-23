@@ -19,6 +19,7 @@ import CustomButton from '../../components/CustomButton';
 import {URL_API, getLanguage} from '../../../utils';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 // ########## Main Function ##########
 const PhoneVerificationScreen = () => {
@@ -47,6 +48,8 @@ const PhoneVerificationScreen = () => {
     } catch (error) {
       // Handle network errors or other exceptions
       console.error('Error during Phone Auth:', error);
+      crashlytics().recordError(new Error(error));
+      crashlytics().log(error);
     }
   };
 
@@ -66,6 +69,8 @@ const PhoneVerificationScreen = () => {
           'Error retrieving selfCoordinate from AsyncStorage:',
           err,
         );
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     };
 
@@ -138,6 +143,8 @@ const PhoneVerificationScreen = () => {
           }
         } catch (error) {
           console.error('Error during Check Login with Mobile:', error);
+          crashlytics().recordError(new Error(error));
+          crashlytics().log(error);
         }
       } else {
         console.log('ke halaman berikutnya (ap1700)');
@@ -150,6 +157,8 @@ const PhoneVerificationScreen = () => {
     } catch (error) {
       // Handle network errors or other exceptions
       console.error('Error during Check Auth Code:', error);
+      crashlytics().recordError(new Error(error));
+      crashlytics().log(error);
     }
   };
 

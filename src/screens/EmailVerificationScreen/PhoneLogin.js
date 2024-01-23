@@ -12,6 +12,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getLanguage} from '../../../utils';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const PhoneLoginScreen = ({route}) => {
   const [lang, setLang] = useState({});
@@ -42,6 +43,8 @@ const PhoneLoginScreen = ({route}) => {
           'Error retrieving selfCoordinate from AsyncStorage:',
           err,
         );
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     };
 

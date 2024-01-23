@@ -53,7 +53,8 @@ const WalletScreen = ({navigation, route}) => {
         setLang(screenLang);
       } catch (err) {
         console.error('Error in fetchData:', err);
-        crashlytics().recordError(err);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     };
 
@@ -67,7 +68,8 @@ const WalletScreen = ({navigation, route}) => {
       } catch (err) {
         console.log(`Failed get member from async storage: ${err}`);
         Alert.alert('', `Failed get member from async storage`);
-        crashlytics().recordError(err);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     };
 
@@ -102,22 +104,19 @@ const WalletScreen = ({navigation, route}) => {
                     text: lang.screen_wallet.confirm_alert
                       ? lang.screen_wallet.confirm_alert
                       : '',
-                    onPress: () =>
-                      console.log(
-                        'Failed get wallet data - app4000-01-rev: ',
-                        error,
-                      ),
                   },
                 ],
               );
-              crashlytics().recordError(error);
+              crashlytics().recordError(new Error(error));
+              crashlytics().log(error);
               setIsLoading(false);
             });
         }
       } catch (err) {
         console.error('Failed to get userData from AsyncStorage:', err);
         setIsLoading(false);
-        crashlytics().recordError(err);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     };
 

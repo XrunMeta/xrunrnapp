@@ -14,6 +14,7 @@ import ButtonBack from '../../components/ButtonBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInputWallet from '../../components/CustomInputWallet';
 import {URL_API, getLanguage2} from '../../../utils';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const ConversionRequest = ({navigation, route}) => {
   const [lang, setLang] = useState('');
@@ -44,6 +45,8 @@ const ConversionRequest = ({navigation, route}) => {
         setLang(screenLang);
       } catch (err) {
         console.error('Error in fetchData:', err);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     };
 
@@ -56,7 +59,9 @@ const ConversionRequest = ({navigation, route}) => {
         const dataMember = JSON.parse(userData);
         setDataMember(dataMember);
       } catch (error) {
-        console.error('Failed to get userData from AsyncStorage:', err);
+        console.error('Failed to get userData from AsyncStorage:', error);
+        crashlytics().recordError(new Error(error));
+        crashlytics().log(error);
       }
     };
 
@@ -79,6 +84,8 @@ const ConversionRequest = ({navigation, route}) => {
         }
       } catch (err) {
         console.log(`Error get balance: ${err}`);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     };
 

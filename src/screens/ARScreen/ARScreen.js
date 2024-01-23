@@ -25,6 +25,7 @@ import {URL_API, getLanguage2} from '../../../utils';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import CompassHeading from 'react-native-compass-heading';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 function ARScreen() {
   const [lang, setLang] = useState({});
@@ -207,6 +208,8 @@ function ARScreen() {
         setCoinAPI([]);
       }
     } catch (error) {
+      crashlytics().recordError(new Error(error));
+      crashlytics().log(error);
       console.error('Error calling API:', error);
     }
   };

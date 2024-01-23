@@ -13,6 +13,7 @@ import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInput from '../../components/CustomInput';
 import {URL_API, getLanguage} from '../../../utils';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const RegistRecommendScreen = () => {
   const [lang, setLang] = useState({});
@@ -40,6 +41,8 @@ const RegistRecommendScreen = () => {
         const astorJsonData = JSON.parse(astorUserData);
         setUserData(astorJsonData);
       } catch (err) {
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
           err,
@@ -87,6 +90,8 @@ const RegistRecommendScreen = () => {
           }
         } catch (error) {
           console.error('Terjadi kesalahan:', error.message);
+          crashlytics().recordError(new Error(error));
+          crashlytics().log(error);
         }
       };
 

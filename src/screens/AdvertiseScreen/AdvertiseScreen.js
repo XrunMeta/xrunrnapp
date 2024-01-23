@@ -19,6 +19,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import jsonData from '../../../testAds';
 import {URL_API, getLanguage2} from '../../../utils';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const AdvertiseScreen = () => {
   const [lang, setLang] = useState({});
@@ -100,6 +101,8 @@ const AdvertiseScreen = () => {
           'Error retrieving selfCoordinate from AsyncStorage:',
           err,
         );
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     };
 
@@ -126,6 +129,8 @@ const AdvertiseScreen = () => {
       setStorageAdsLoading(false);
     } catch (err) {
       console.error('Error fetching ads data:', err);
+      crashlytics().recordError(new Error(err));
+      crashlytics().log(err);
     }
   };
 
@@ -250,6 +255,8 @@ const AdvertiseScreen = () => {
               }
             } catch (err) {
               console.error('Error fetching ads data:', err);
+              crashlytics().recordError(new Error(err));
+              crashlytics().log(err);
             }
           },
         },
@@ -301,6 +308,8 @@ const AdvertiseScreen = () => {
       }
     } catch (err) {
       console.error('Error fetching ads data:', err);
+      crashlytics().recordError(new Error(err));
+      crashlytics().log(err);
     }
   };
 

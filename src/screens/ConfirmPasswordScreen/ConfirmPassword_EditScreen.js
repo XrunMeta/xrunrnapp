@@ -13,6 +13,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API, getLanguage2} from '../../../utils';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const ConfirmPasswordEdit = () => {
   const [lang, setLang] = useState({});
@@ -39,6 +40,8 @@ const ConfirmPasswordEdit = () => {
           Alert.alert('Error', lang.screen_confirm_password.condition.wrong);
         }
       } catch (error) {
+        crashlytics().recordError(new Error(error));
+        crashlytics().log(error);
         console.error('Error:', error);
         Alert.alert('Error', 'An error occurred while logging in');
       }
@@ -62,6 +65,8 @@ const ConfirmPasswordEdit = () => {
         const screenLang = await getLanguage2(currentLanguage);
         setLang(screenLang);
       } catch (err) {
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
           err,

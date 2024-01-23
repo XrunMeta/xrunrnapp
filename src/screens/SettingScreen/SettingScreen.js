@@ -6,6 +6,7 @@ import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
 import {getLanguage2} from '../../../utils';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const SettingScreen = () => {
   const {logout} = useAuth();
@@ -21,6 +22,8 @@ const SettingScreen = () => {
         const screenLang = await getLanguage2(currentLanguage);
         setLang(screenLang);
       } catch (err) {
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
         console.error('Error fetching user data: ', err);
       }
     };

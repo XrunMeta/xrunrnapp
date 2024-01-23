@@ -15,6 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API, getLanguage2} from '../../../utils';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import CustomMultipleChecbox from '../../components/CustomCheckbox/CustomMultipleCheckbox';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const SignUpCreateGender = () => {
   const route = useRoute();
@@ -40,6 +41,8 @@ const SignUpCreateGender = () => {
 
         setLang(screenLang);
       } catch (err) {
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
           err,
@@ -101,6 +104,8 @@ const SignUpCreateGender = () => {
     } catch (error) {
       console.error('Error during API request:', error);
       Alert.alert('Error', lang.screen_notExist.field_gender.errorServer);
+      crashlytics().recordError(new Error(error));
+      crashlytics().log(error);
     }
   };
 

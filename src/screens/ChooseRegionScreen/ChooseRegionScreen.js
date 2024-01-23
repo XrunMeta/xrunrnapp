@@ -14,6 +14,7 @@ import {useNavigation} from '@react-navigation/native';
 import CustomListItem from '../../components/CustomButton/CustomListItem';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API, getLanguage2} from '../../../utils';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const ChooseRegionScreen = ({route}) => {
   const [lang, setLang] = useState({});
@@ -60,6 +61,8 @@ const ChooseRegionScreen = ({route}) => {
       .catch(error => {
         console.error('Error fetching data:', error);
         setIsLoading(false);
+        crashlytics().recordError(new Error(error));
+        crashlytics().log(error);
       });
 
     // Get Language
@@ -74,6 +77,8 @@ const ChooseRegionScreen = ({route}) => {
           'Error retrieving selfCoordinate from AsyncStorage:',
           err,
         );
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     };
 
