@@ -489,7 +489,7 @@
     "history_extracodesuccess": "Transfer completed",
     "history_not_found": "History not found",
     "confirm_alert": "OK",
-    "failed_getwallet_alert": "For get your wallet, please try again later",
+    "failed_getwallet_alert": "Failed for get your wallet, please try again later",
     "failed_alert": "Failed",
     "failed_download_qrcode_alert": "Failed to download qr code"
   },
