@@ -13,7 +13,7 @@ import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getLanguage} from '../../../utils';
+import {getLanguage2} from '../../../utils';
 
 const PasswordMissedScreen = () => {
   const [lang, setLang] = useState({});
@@ -25,9 +25,9 @@ const PasswordMissedScreen = () => {
 
   const onSignIn = async () => {
     if (email.trim() === '') {
-      Alert.alert('Error', lang.notif.emptyEmail);
+      Alert.alert('Error', lang.screen_passwordMissed.notif.emptyEmail);
     } else if (!isValidEmail(email)) {
-      Alert.alert('Error', lang.notif.invalidEmail);
+      Alert.alert('Error', lang.screen_passwordMissed.notif.invalidEmail);
     } else {
       try {
         const apiUrl = 'https://app.xrun.run/phpmail/sendmail.php';
@@ -47,7 +47,7 @@ const PasswordMissedScreen = () => {
         // Menampilkan alert
         Alert.alert(
           'Success',
-          lang.notif.sended,
+          lang.screen_passwordMissed.notif.sended,
           [
             {
               text: 'OK',
@@ -67,7 +67,7 @@ const PasswordMissedScreen = () => {
       } catch (error) {
         // Handle network errors or other exceptions
         console.error('Error during API request:', error);
-        Alert.alert('Error', lang.notif.errorServer);
+        Alert.alert('Error', lang.screen_passwordMissed.notif.errorServer);
       }
     }
   };
@@ -91,10 +91,7 @@ const PasswordMissedScreen = () => {
     const fetchLangData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage(
-          currentLanguage,
-          'screen_passwordMissed',
-        );
+        const screenLang = await getLanguage2(currentLanguage);
 
         setLang(screenLang);
       } catch (err) {
@@ -114,8 +111,20 @@ const PasswordMissedScreen = () => {
         <ButtonBack onClick={onBack} />
 
         <CustomInput
-          label={lang && lang.email ? lang.email.label : ''}
-          placeholder={lang && lang.email ? lang.email.placeholder : ''}
+          label={
+            lang &&
+            lang.screen_passwordMissed &&
+            lang.screen_passwordMissed.email
+              ? lang.screen_passwordMissed.email.label
+              : ''
+          }
+          placeholder={
+            lang &&
+            lang.screen_passwordMissed &&
+            lang.screen_passwordMissed.email
+              ? lang.screen_passwordMissed.email.placeholder
+              : ''
+          }
           value={email}
           setValue={onEmailChange}
           isPassword={false}
@@ -127,7 +136,11 @@ const PasswordMissedScreen = () => {
               marginLeft: 25,
               color: 'red',
             }}>
-            {lang && lang.email ? lang.notif.invalidEmail : ''}
+            {lang &&
+            lang.screen_passwordMissed &&
+            lang.screen_passwordMissed.notif
+              ? lang.screen_passwordMissed.notif.invalidEmail
+              : ''}
           </Text>
         )}
 
