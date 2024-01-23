@@ -115,7 +115,8 @@ const CustomInputEdit = ({
                   }}>
                   {lang && lang.screen_modify_information
                     ? lang.screen_modify_information.modify
-                    : 'Modify'}
+                    : 'Modify'}{' '}
+                  {title}
                 </Text>
               </View>
             </View>

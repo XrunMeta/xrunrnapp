@@ -10,9 +10,7 @@ import {
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API} from '../../../utils';
-
-const langData = require('../../../lang.json');
+import {URL_API, getLanguage2} from '../../../utils';
 
 const CommonProblemScreen = () => {
   const [lang, setLang] = useState({});
@@ -27,12 +25,11 @@ const CommonProblemScreen = () => {
 
   useEffect(() => {
     // Get Language
-    const getLanguage = async () => {
+    const fetchDataLang = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const selectedLanguage = currentLanguage === 'id' ? 'id' : 'eng';
-        const language = langData[selectedLanguage];
-        setLang(language);
+        const screenLang = await getLanguage2(currentLanguage);
+        setLang(screenLang);
       } catch (err) {
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
@@ -61,7 +58,7 @@ const CommonProblemScreen = () => {
       }
     };
 
-    getLanguage();
+    fetchDataLang();
     fetchCommonProblem();
   }, []);
 
