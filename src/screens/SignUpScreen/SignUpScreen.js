@@ -15,7 +15,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import CustomMultipleChecbox from '../../components/CustomCheckbox/CustomMultipleCheckbox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage} from '../../../utils';
+import {URL_API, getLanguage2} from '../../../utils';
 
 const SignUpScreen = ({route}) => {
   const [lang, setLang] = useState({});
@@ -37,17 +37,17 @@ const SignUpScreen = ({route}) => {
 
   const onSignUp = async () => {
     if (name.trim() === '') {
-      Alert.alert('Error', lang.validator.emptyName);
+      Alert.alert('Error', lang.screen_signup.validator.emptyName);
     } else if (email.trim() === '') {
-      Alert.alert('Error', lang.validator.emptyEmail);
+      Alert.alert('Error', lang.screen_signup.validator.emptyEmail);
     } else if (!isValidEmail(email)) {
-      Alert.alert('Error', lang.validator.invalidEmail);
+      Alert.alert('Error', lang.screen_signup.validator.invalidEmail);
     } else if (password.trim() === '') {
-      Alert.alert('Error', lang.validator.emptyPassword);
+      Alert.alert('Error', lang.screen_signup.validator.emptyPassword);
     } else if (phoneNumber.trim() === '') {
-      Alert.alert('Error', lang.validator.emptyPhone);
+      Alert.alert('Error', lang.screen_signup.validator.emptyPhone);
     } else if (regionID == 0) {
-      Alert.alert('Error', lang.validator.emptyArea);
+      Alert.alert('Error', lang.screen_signup.validator.emptyArea);
     } else {
       // Pemanggilan API ke link yang diberikan
       const apiUrl = `${URL_API}&act=login-checker-email&email=${email}`;
@@ -111,22 +111,25 @@ const SignUpScreen = ({route}) => {
               });
             } else if (referData.result === 'false') {
               setRefferalEmail('');
-              Alert.alert('Failed', lang.validator.invalidRecommend);
+              Alert.alert(
+                'Failed',
+                lang.screen_signup.validator.invalidRecommend,
+              );
             } else {
-              Alert.alert('Error', lang.validator.errorServer);
+              Alert.alert('Error', lang.screen_signup.validator.errorServer);
             }
           } catch (error) {
             console.error('Error during API call:', error);
-            Alert.alert('Error', lang.validator.errorServer);
+            Alert.alert('Error', lang.screen_signup.validator.errorServer);
           }
         } else if (responseData === 'NO') {
-          Alert.alert('Failed', lang.validator.duplicatedEmail);
+          Alert.alert('Failed', lang.screen_signup.validator.duplicatedEmail);
         } else {
-          Alert.alert('Error', lang.validator.errorServer);
+          Alert.alert('Error', lang.screen_signup.validator.errorServer);
         }
       } catch (error) {
         console.error('Error during API call:', error);
-        Alert.alert('Error', lang.validator.errorServer);
+        Alert.alert('Error', lang.screen_signup.validator.errorServer);
       }
     }
   };
@@ -180,7 +183,7 @@ const SignUpScreen = ({route}) => {
     const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage(currentLanguage, 'screen_signup');
+        const screenLang = await getLanguage2(currentLanguage);
 
         // Set your language state
         setLang(screenLang);
@@ -312,14 +315,24 @@ const SignUpScreen = ({route}) => {
         {/*  Title */}
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>
-            {lang && lang.title ? lang.title : ''}
+            {lang && lang.screen_signup && lang.screen_signup.title
+              ? lang.screen_signup.title
+              : ''}
           </Text>
         </View>
 
         {/*  Field - Name */}
         <CustomInput
-          label={lang && lang.name ? lang.name.label : ''}
-          placeholder={lang && lang.name ? lang.name.placeholder : ''}
+          label={
+            lang && lang.screen_signup && lang.screen_signup.name
+              ? lang.screen_signup.name.label
+              : ''
+          }
+          placeholder={
+            lang && lang.screen_signup && lang.screen_signup.name
+              ? lang.screen_signup.name.placeholder
+              : ''
+          }
           value={name}
           setValue={setName}
           isPassword={false}
@@ -327,8 +340,16 @@ const SignUpScreen = ({route}) => {
 
         {/*  Field - Email */}
         <CustomInput
-          label={lang && lang.email ? lang.email.label : ''}
-          placeholder={lang && lang.email ? lang.email.placeholder : ''}
+          label={
+            lang && lang.screen_signup && lang.screen_signup.email
+              ? lang.screen_signup.email.label
+              : ''
+          }
+          placeholder={
+            lang && lang.screen_signup && lang.screen_signup.email
+              ? lang.screen_signup.email.placeholder
+              : ''
+          }
           value={email}
           setValue={onEmailChange}
           isPassword={false}
@@ -342,14 +363,24 @@ const SignUpScreen = ({route}) => {
               fontFamily: 'Poppins-Medium',
               fontSize: 13,
             }}>
-            {lang && lang.validator ? lang.validator.invalidEmail : ''}
+            {lang && lang.screen_signup && lang.screen_signup.validator
+              ? lang.screen_signup.validator.invalidEmail
+              : ''}
           </Text>
         )}
 
         {/*  Field - Password */}
         <CustomInput
-          label={lang && lang.password ? lang.password.label : ''}
-          placeholder={lang && lang.password ? lang.password.placeholder : ''}
+          label={
+            lang && lang.screen_signup && lang.screen_signup.password
+              ? lang.screen_signup.password.label
+              : ''
+          }
+          placeholder={
+            lang && lang.screen_signup && lang.screen_signup.password
+              ? lang.screen_signup.password.placeholder
+              : ''
+          }
           value={password}
           setValue={setPassword}
           secureTextEntry
@@ -359,7 +390,9 @@ const SignUpScreen = ({route}) => {
         {/*  Field - Phone Number */}
         <View style={styles.formGroup}>
           <Text style={styles.label}>
-            {lang && lang.phone_number ? lang.phone_number.label : ''}
+            {lang && lang.screen_signup && lang.screen_signup.phone_number
+              ? lang.screen_signup.phone_number.label
+              : ''}
           </Text>
           <View
             style={{
@@ -408,8 +441,16 @@ const SignUpScreen = ({route}) => {
 
         {/*  Field - Region */}
         <CustomInput
-          label={lang && lang.area ? lang.area.label : ''}
-          placeholder={lang && lang.area ? lang.area.placeholder : ''}
+          label={
+            lang && lang.screen_signup && lang.screen_signup.area
+              ? lang.screen_signup.area.label
+              : ''
+          }
+          placeholder={
+            lang && lang.screen_signup && lang.screen_signup.area
+              ? lang.screen_signup.area.placeholder
+              : ''
+          }
           value={region}
           setValue={setRegion}
           isPassword={false}
@@ -420,12 +461,18 @@ const SignUpScreen = ({route}) => {
         {/*  Field - Gender */}
         <View style={[styles.formGroup, {zIndex: -1}]}>
           <Text style={styles.label}>
-            {lang && lang.gender ? lang.gender.label : ''}
+            {lang && lang.screen_signup && lang.screen_signup.gender
+              ? lang.screen_signup.gender.label
+              : ''}
           </Text>
           <CustomMultipleChecbox
             texts={[
-              lang && lang.gender ? lang.gender.male : '',
-              lang && lang.gender ? lang.gender.female : '',
+              lang && lang.screen_signup && lang.screen_signup.gender
+                ? lang.screen_signup.gender.male
+                : '',
+              lang && lang.screen_signup && lang.screen_signup.gender
+                ? lang.screen_signup.gender.female
+                : '',
               ,
             ]}
             count={2}
@@ -439,7 +486,9 @@ const SignUpScreen = ({route}) => {
         {/*  Field - Age */}
         <View style={[styles.formGroup, {zIndex: -1}]}>
           <Text style={styles.label}>
-            {lang && lang.age ? lang.age.label : ''}
+            {lang && lang.screen_signup && lang.screen_signup.age
+              ? lang.screen_signup.age.label
+              : ''}
           </Text>
           <CustomMultipleChecbox
             texts={['10', '20', '30', '40', '50+']}
@@ -453,8 +502,16 @@ const SignUpScreen = ({route}) => {
 
         {/* Field - Referral Email */}
         <CustomInput
-          label={lang && lang.referral ? lang.referral.label : ''}
-          placeholder={lang && lang.referral ? lang.referral.placeholder : ''}
+          label={
+            lang && lang.screen_signup && lang.screen_signup.referral
+              ? lang.screen_signup.referral.label
+              : ''
+          }
+          placeholder={
+            lang && lang.screen_signup && lang.screen_signup.referral
+              ? lang.screen_signup.referral.placeholder
+              : ''
+          }
           value={refferalEmail}
           setValue={setRefferalEmail}
           isPassword={false}
@@ -464,8 +521,13 @@ const SignUpScreen = ({route}) => {
         <View style={[styles.bottomSection]}>
           <View style={styles.additionalLogin}>
             <Text style={styles.normalText}>
-              {lang && lang.add_desc ? lang.add_desc.ad1 : ''} {'\n'}
-              {lang && lang.add_desc ? lang.add_desc.ad2 : ''}
+              {lang && lang.screen_signup && lang.screen_signup.add_desc
+                ? lang.screen_signup.add_desc.ad1
+                : ''}{' '}
+              {'\n'}
+              {lang && lang.screen_signup && lang.screen_signup.add_desc
+                ? lang.screen_signup.add_desc.ad2
+                : ''}
             </Text>
           </View>
           <Pressable onPress={onSignUp} style={styles.buttonSignUp}>
