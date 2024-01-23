@@ -19,6 +19,7 @@ import {useNavigation} from '@react-navigation/native';
 import CustomMultipleChecbox from '../../components/CustomCheckbox/CustomMultipleCheckbox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API, getLanguage} from '../../../utils';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const ModifInfoScreen = ({route}) => {
   const [lang, setLang] = useState({});
@@ -93,6 +94,8 @@ const ModifInfoScreen = ({route}) => {
         );
         setLang(screenLang);
       } catch (err) {
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
           err,
@@ -170,6 +173,8 @@ const ModifInfoScreen = ({route}) => {
         console.log('Fetch udah selesai');
       } catch (error) {
         console.error('Terjadi kesalahan:', error);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     };
 
@@ -227,6 +232,8 @@ const ModifInfoScreen = ({route}) => {
       console.log('Perubahan berhasil disimpan ke API');
     } catch (error) {
       console.error('Terjadi kesalahan:', error.message);
+      crashlytics().recordError(new Error(err));
+      crashlytics().log(err);
     }
   };
 
@@ -256,6 +263,8 @@ const ModifInfoScreen = ({route}) => {
       })
       .catch(error => {
         console.error('Error fetching areas:', error);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       });
 
     // Setelah mengirim data, Anda bisa menutup modal
@@ -719,6 +728,8 @@ const ModifInfoScreen = ({route}) => {
                         );
                       } catch (error) {
                         console.error('Terjadi kesalahan:', error.message);
+                        crashlytics().recordError(new Error(err));
+                        crashlytics().log(err);
                       }
                     };
 

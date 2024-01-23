@@ -16,6 +16,7 @@ import {useNavigation} from '@react-navigation/native';
 import CustomMultipleChecbox from '../../components/CustomCheckbox/CustomMultipleCheckbox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API, getLanguage} from '../../../utils';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const SignUpScreen = ({route}) => {
   const [lang, setLang] = useState({});
@@ -118,6 +119,8 @@ const SignUpScreen = ({route}) => {
           } catch (error) {
             console.error('Error during API call:', error);
             Alert.alert('Error', lang.validator.errorServer);
+            crashlytics().recordError(new Error(error));
+            crashlytics().log(error);
           }
         } else if (responseData === 'NO') {
           Alert.alert('Failed', lang.validator.duplicatedEmail);
@@ -127,6 +130,8 @@ const SignUpScreen = ({route}) => {
       } catch (error) {
         console.error('Error during API call:', error);
         Alert.alert('Error', lang.validator.errorServer);
+        crashlytics().recordError(new Error(error));
+        crashlytics().log(error);
       }
     }
   };
@@ -186,6 +191,8 @@ const SignUpScreen = ({route}) => {
         setLang(screenLang);
       } catch (err) {
         console.error('Error in fetchData:', err);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     };
 
@@ -200,6 +207,8 @@ const SignUpScreen = ({route}) => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        crashlytics().recordError(new Error(error));
+        crashlytics().log(error);
       });
   }, []);
 
@@ -214,6 +223,8 @@ const SignUpScreen = ({route}) => {
       })
       .catch(error => {
         console.error('Error fetching data:', error);
+        crashlytics().recordError(new Error(error));
+        crashlytics().log(error);
       });
   }, [countryCode]);
 

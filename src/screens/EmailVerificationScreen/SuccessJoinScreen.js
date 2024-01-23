@@ -10,6 +10,7 @@ import React, {useState, useRef, useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {getLanguage} from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 // ########## Main Function ##########
 const SuccessJoinScreen = () => {
@@ -33,6 +34,8 @@ const SuccessJoinScreen = () => {
           'Error retrieving selfCoordinate from AsyncStorage:',
           err,
         );
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     };
 

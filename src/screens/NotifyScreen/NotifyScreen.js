@@ -16,6 +16,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API, getLanguage} from '../../../utils';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const NotifyScreen = () => {
   const [lang, setLang] = useState({});
@@ -57,6 +58,8 @@ const NotifyScreen = () => {
           'Error retrieving selfCoordinate from AsyncStorage:',
           err,
         );
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     };
 
@@ -121,6 +124,8 @@ const NotifyScreen = () => {
         }
       } catch (error) {
         console.error('Error sending chat:', error);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     }
   };
@@ -139,6 +144,8 @@ const NotifyScreen = () => {
       }
     } catch (err) {
       console.error('Error retrieving chat data:', err);
+      crashlytics().recordError(new Error(err));
+      crashlytics().log(err);
     }
   };
 
@@ -162,6 +169,8 @@ const NotifyScreen = () => {
       }
     } catch (error) {
       console.error('Error sending chat:', error);
+      crashlytics().recordError(new Error(err));
+      crashlytics().log(err);
     }
   };
 
@@ -200,6 +209,8 @@ const NotifyScreen = () => {
       );
     } catch (error) {
       console.error('Error sending chat:', error);
+      crashlytics().recordError(new Error(error));
+      crashlytics().log(error);
     }
   };
 
@@ -440,9 +451,11 @@ const NotifyScreen = () => {
                                   ? item.guid
                                   : '';
 
-                              Linking.openURL(url).catch(err =>
-                                console.error('Error opening URL : ', err),
-                              );
+                              Linking.openURL(url).catch(err => {
+                                crashlytics().recordError(new Error(err));
+                                crashlytics().log(err);
+                                console.error('Error opening URL : ', err);
+                              });
                             }}>
                             <Text
                               style={{

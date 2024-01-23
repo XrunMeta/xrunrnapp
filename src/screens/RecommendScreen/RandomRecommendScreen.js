@@ -14,6 +14,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API, getLanguage} from '../../../utils';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const RandomRecommendScreen = () => {
   const [lang, setLang] = useState({});
@@ -43,6 +44,8 @@ const RandomRecommendScreen = () => {
         const astorJsonData = JSON.parse(astorUserData);
         setUserData(astorJsonData);
       } catch (err) {
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
           err,
@@ -66,6 +69,8 @@ const RandomRecommendScreen = () => {
         }
       } catch (error) {
         console.error('Error fetching recommendations:', error);
+        crashlytics().recordError(new Error(error));
+        crashlytics().log(error);
       }
     };
 
@@ -102,6 +107,8 @@ const RandomRecommendScreen = () => {
           }
         } catch (error) {
           console.error('Terjadi kesalahan:', error.message);
+          crashlytics().recordError(new Error(error));
+          crashlytics().log(error);
         }
       };
 

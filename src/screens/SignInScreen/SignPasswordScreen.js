@@ -15,6 +15,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API, getLanguage} from '../../../utils';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const SignPasswordScreen = () => {
   const [lang, setLang] = useState({});
@@ -57,6 +58,8 @@ const SignPasswordScreen = () => {
           'Error retrieving selfCoordinate from AsyncStorage:',
           err,
         );
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     };
 
@@ -90,6 +93,8 @@ const SignPasswordScreen = () => {
       } catch (error) {
         console.error('Error:', error);
         Alert.alert('Error', lang.notif.errorServer);
+        crashlytics().recordError(new Error(error));
+        crashlytics().log(error);
       }
     }
   };

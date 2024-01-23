@@ -14,6 +14,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getLanguage} from '../../../utils';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const PasswordMissedScreen = () => {
   const [lang, setLang] = useState({});
@@ -68,6 +69,8 @@ const PasswordMissedScreen = () => {
         // Handle network errors or other exceptions
         console.error('Error during API request:', error);
         Alert.alert('Error', lang.notif.errorServer);
+        crashlytics().recordError(new Error(error));
+        crashlytics().log(error);
       }
     }
   };
@@ -98,6 +101,8 @@ const PasswordMissedScreen = () => {
 
         setLang(screenLang);
       } catch (err) {
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
           err,

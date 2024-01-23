@@ -27,7 +27,8 @@ const CompleteSend = ({navigation, route}) => {
         setLang(screenLang);
       } catch (err) {
         console.error('Error in fetchData:', err);
-        crashlytics().recordError(err);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     };
 

@@ -4,6 +4,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API, getLanguage2} from '../../../utils';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const AppInformation = () => {
   const [version, setVersion] = useState('');
@@ -24,6 +25,8 @@ const AppInformation = () => {
         }
       } catch (err) {
         console.error('Error fetching version app: ', err);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     };
 

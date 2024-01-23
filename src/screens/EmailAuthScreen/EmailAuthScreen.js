@@ -15,6 +15,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API, getLanguage2} from '../../../utils';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const EmailAuthScreen = () => {
   const [lang, setLang] = useState({});
@@ -37,6 +38,8 @@ const EmailAuthScreen = () => {
         setLang(screenLang);
       } catch (err) {
         console.error('Error in fetchData:', err);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     };
 
@@ -66,6 +69,8 @@ const EmailAuthScreen = () => {
             return responseData;
           } catch (error) {
             setIsLoading(true);
+            crashlytics().recordError(new Error(err));
+            crashlytics().log(err);
 
             return {
               data: 'error',
@@ -113,6 +118,8 @@ const EmailAuthScreen = () => {
         }
       } catch (error) {
         // Handle network errors or other exceptions
+        crashlytics().recordError(new Error(error));
+        crashlytics().log(error);
         console.error('Error during API request:', error);
         Alert.alert('Error', lang.screen_emailAuth.alert.errorServer);
       }

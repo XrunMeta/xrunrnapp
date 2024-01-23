@@ -680,7 +680,8 @@ const TableWalletCard = ({
       } catch (err) {
         console.log(`Failed get transaction: ${err}`);
         Alert.alert('', `Failed get transaction: ${err}`);
-        crashlytics().recordError(err);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     };
 
@@ -723,7 +724,8 @@ const TableWalletCard = ({
         setTotalHistoryLength(totalHistory.length);
       } catch (err) {
         console.log(err);
-        crashlytics().recordError(err);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     };
 
@@ -788,7 +790,8 @@ const TableWalletCard = ({
       } catch (err) {
         console.log(`Failed get transaction ${key}: ${err}`);
         Alert.alert('', `Failed get transaction ${key}: ${err}`);
-        crashlytics().recordError(err);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     };
   });

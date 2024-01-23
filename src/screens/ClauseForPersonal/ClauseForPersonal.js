@@ -4,6 +4,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API} from '../../../utils';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const langData = require('../../../lang.json');
 
@@ -42,6 +43,8 @@ const ClauseForPersonal = () => {
                 setText(firstElement);
               }
             } catch (err) {
+              crashlytics().recordError(new Error(err));
+              crashlytics().log(err);
               console.error('Error fetching user data: ', err);
             }
           };
@@ -50,6 +53,8 @@ const ClauseForPersonal = () => {
         }
       })
       .catch(error => {
+        crashlytics().recordError(new Error(error));
+        crashlytics().log(error);
         console.error(
           'Error getting currentLanguage from AsyncStorage:',
           error,

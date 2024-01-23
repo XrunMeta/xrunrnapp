@@ -12,6 +12,7 @@ import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInput from '../../components/CustomInput';
 import {URL_API, getLanguage} from '../../../utils';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const EditPassword = () => {
   const [lang, setLang] = useState({});
@@ -48,6 +49,8 @@ const EditPassword = () => {
           console.log(`Password Baru : ${password}`);
           navigation.goBack();
         } catch (error) {
+          crashlytics().recordError(new Error(error));
+          crashlytics().log(error);
           console.error('Terjadi kesalahan:', error.message);
         }
       };
@@ -76,6 +79,8 @@ const EditPassword = () => {
         const astorJsonData = JSON.parse(astorUserData);
         setUserData(astorJsonData);
       } catch (err) {
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
           err,
