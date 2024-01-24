@@ -21,6 +21,7 @@ import CustomInputWallet from '../../components/CustomInputWallet';
 import CustomDropdownWallet from '../../components/CustomDropdownWallet';
 import {URL_API, getLanguage2} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
+import BarcodeZxingScan from 'react-native-barcode-zxing-scan';
 
 const SendWalletScreen = ({navigation, route}) => {
   const [lang, setLang] = useState('');
@@ -37,6 +38,11 @@ const SendWalletScreen = ({navigation, route}) => {
   // Animated notification in QR
   const [fadeAnim] = useState(new Animated.Value(0));
   const [zIndexAnim, setZIndexAnim] = useState(-1);
+
+  // QR code
+  const barcodeScanned = data => {
+    console.log('Barcode ', data);
+  };
 
   useEffect(() => {
     // Get Language Data
@@ -315,7 +321,8 @@ const SendWalletScreen = ({navigation, route}) => {
   };
 
   const onQRCodeScan = () => {
-    setIsVisibleReadQR(true);
+    // setIsVisibleReadQR(true);
+    BarcodeZxingScan.showQrReader(barcodeScanned);
   };
 
   const handleQRCodeRead = ({data}) => {

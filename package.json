@@ -25,6 +25,7 @@
     "expo-font": "^11.4.0",
     "react": "18.2.0",
     "react-native": "0.72.3",
+    "react-native-barcode-zxing-scan": "^1.0.2",
     "react-native-camera": "^4.2.1",
     "react-native-compass-heading": "^1.5.0",
     "react-native-dropdown-select-list": "^2.0.5",
