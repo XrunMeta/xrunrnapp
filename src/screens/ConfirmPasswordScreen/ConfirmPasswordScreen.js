@@ -37,11 +37,12 @@ const ConfirmPassword = () => {
     } else {
       try {
         const response = await fetch(
-          `${URL_API}&act=login-checker&email=${email}&pin=${password}`,
+          // `${URL_API}&act=login-checker&email=${email}&pin=${password}`,
+          `${URL_API}&act=app7100-01&email=${email}&pin=${password}`,
         );
-        const data = await response.text();
+        const data = await response.json();
 
-        if (data === 'OK') {
+        if (data.data[0].count == 1) {
           navigation.replace('ModifInfo');
         } else {
           Alert.alert(
