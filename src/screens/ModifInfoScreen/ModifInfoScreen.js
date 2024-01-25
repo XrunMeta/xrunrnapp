@@ -109,7 +109,8 @@ const ModifInfoScreen = ({route}) => {
 
         // Get User Information
         const userResponse = await fetch(
-          `${URL_API}&act=app7000-01&member=${astorJsonData.member}`,
+          // `${URL_API}&act=app7000-01&member=${astorJsonData.member}`,
+          `${URL_API}&act=app7110-01&member=${astorJsonData.member}`,
         );
         const userJsonData = await userResponse.json();
         const userData = userJsonData.data[0];
