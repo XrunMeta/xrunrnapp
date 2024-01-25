@@ -14,7 +14,7 @@ import ARScreen from '../ARScreen/ARScreen';
 import MapParent from './MapParentScreen';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getLanguage2} from '../../../utils';
+import {getLanguage2, URL_API} from '../../../utils';
 
 export default function Home({route}) {
   const [lang, setLang] = useState({});
@@ -23,6 +23,7 @@ export default function Home({route}) {
   console.log('Status Login di Home : ' + isLoggedIn);
   const [activeTab, setActiveTab] = useState('Map');
   const isFocused = useIsFocused();
+  const [countAds, setCountAds] = useState(0);
 
   const navigation = useNavigation();
 
@@ -55,6 +56,13 @@ export default function Home({route}) {
       try {
         const userEmail = await AsyncStorage.getItem('userEmail');
         const userData = await AsyncStorage.getItem('userData');
+        const responseUserData = JSON.parse(userData);
+
+        const countResponse = await fetch(
+          `${URL_API}&act=app5010-01-counter&member=${responseUserData.member}`,
+        );
+        const dataCount = await countResponse.json();
+        setCountAds(dataCount.data[0].count);
 
         console.log(`
           Email Bahloooolllll => ${userEmail}
@@ -119,6 +127,30 @@ export default function Home({route}) {
           // tintColor: activeTab === tabName ? 'black' : '#343a59',
         }}
       />
+      {tabName === 'Advertise' && countAds > 0 && (
+        <View
+          style={{
+            backgroundColor: tabName === 'Advertise' ? 'green' : 'pink',
+            width: 30,
+            height: 30,
+            borderRadius: 20,
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'absolute',
+            top: -12,
+            right: 8,
+          }}>
+          <Text
+            style={{
+              fontFamily: 'Poppins-Light',
+              fontSize: 9,
+              color: 'white',
+            }}>
+            {countAds > 100 ? countAds : '99+'}
+          </Text>
+        </View>
+      )}
+
       <Text style={styles.tabText}>{text}</Text>
     </TouchableOpacity>
   );
@@ -284,6 +316,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 5,
+    position: 'relative',
   },
   bottomTabContainer: {
     backgroundColor: 'white',
