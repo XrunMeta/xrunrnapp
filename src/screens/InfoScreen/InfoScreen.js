@@ -34,26 +34,32 @@ const InfoScreen = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userData = await AsyncStorage.getItem('userData');
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-
-        console.log('Info Screen -> ' + userData);
         const screenLang = await getLanguage2(currentLanguage);
         setLang(screenLang);
 
-        const data = JSON.parse(userData);
+        const AsyncUserData = await AsyncStorage.getItem('userData');
+        const data = JSON.parse(AsyncUserData);
+
+        const userResponse = await fetch(
+          `${URL_API}&act=app7110-01&member=${data.member}`,
+        );
+        const userJsonData = await userResponse.json();
+        const userData = userJsonData.data[0];
+
+        console.log('Info Screen -> ' + JSON.stringify(userData));
 
         setUserDetails({
-          email: data.email,
-          firstname: data.firstname,
-          member: data.member,
-          lastname: data.lastname,
-          gender: data.gender,
-          extrastr: data.extrastr,
-          country: data.country,
-          countrycode: data.countrycode,
-          region: data.region,
-          ages: data.ages,
+          email: userData.email,
+          firstname: userData.firstname,
+          member: userData.member,
+          lastname: userData.lastname,
+          gender: userData.gender,
+          extrastr: userData.extrastr,
+          country: userData.country,
+          countrycode: userData.countrycode,
+          region: userData.region,
+          ages: userData.ages,
         });
       } catch (err) {
         console.error('Error fetching user data: ', err);
