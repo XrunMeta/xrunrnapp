@@ -14,7 +14,8 @@ import ARScreen from '../ARScreen/ARScreen';
 import MapParent from './MapParentScreen';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getLanguage2} from '../../../utils';
+import {URL_API, getFCMToken, getLanguage2} from '../../../utils';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 export default function Home({route}) {
   const [lang, setLang] = useState({});
@@ -59,6 +60,24 @@ export default function Home({route}) {
         console.log(`
           Email Bahloooolllll => ${userEmail}
           Data : ${userData}`);
+
+        // Get Firebase Token
+        if (isLoggedIn) {
+          getFCMToken(fcmToken => {
+            console.log(`FCMToken: ${fcmToken}`);
+            const member = JSON.parse(userData).member;
+
+            fetch(
+              `${URL_API}&act=login-pushkeyreg&member=${member}&pushkey=${fcmToken}`,
+            )
+              .then(response => response)
+              .then(() => console.log('Success save pushkey to database'))
+              .catch(err => {
+                crashlytics().recordError(new Error(err));
+                crashlytics().log(err);
+              });
+          });
+        }
       } catch (err) {
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
