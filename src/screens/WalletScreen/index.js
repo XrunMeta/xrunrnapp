@@ -143,6 +143,26 @@ const WalletScreen = ({navigation, route}) => {
     setDataWallet(filterDataWallet[0]);
   }, [currentCurrency]);
 
+  // Refresh balance
+  useEffect(() => {
+    const refreshBalance = async () => {
+      try {
+        if (member) {
+          const fetchData = await fetch(
+            `${URL_API}&act=refreshBalances&member=${member}`,
+          );
+          const result = await fetchData.json();
+          console.log(`Result refreshBalances: ${result}`);
+        }
+      } catch (err) {
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
+      }
+    };
+
+    refreshBalance();
+  }, [member]);
+
   const renderScene = SceneMap(
     Object.fromEntries(
       cardsData.map(cardData => [
