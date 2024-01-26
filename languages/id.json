@@ -433,7 +433,8 @@
         "clo2": "XRUN ",
         "clo3": "Anda akan menghilang secara keseluruhan.",
         "clo4": "Bila hapus akun, semua akun yang terhubung ",
-        "clo5": "akan Terhapus semua."
+        "clo5": "akan Terhapus semua.",
+        "fail": "Gagal menghapus akun"
       },
       "select": {
         "sel1": "Layanan sulit digunakan",

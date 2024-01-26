@@ -434,7 +434,10 @@
         "clo2": "Coin ",
         "clo3": "will be gone instantly.",
         "clo4": "Also, you will no longer",
-        "clo5": "All services will be withdrawn."
+        "clo5": "All services will be withdrawn.",
+        "fail": "Failed to withdraw",
+        "success_title": "Your membership closing request has been confirmed",
+        "success_desc": "All ID information will be deleted 7 days from the date of application for withdrawal. Personal information stored in the ID is destroyed and stored in accordance with the relevant statues and privacy policy."
       },
       "select": {
         "sel1": "The service is difficult to use",
@@ -443,7 +446,7 @@
       },
       "reason": "Close reason",
       "del_title": "Close Membership",
-      "del_d1": "For safe acccount management,",
+      "del_d1": "For safe account management,",
       "del_d2": "You are receiving a password when you leave.",
       "del_placeholder": "Please enter your password.",
       "del_empty": "Please enter your password",

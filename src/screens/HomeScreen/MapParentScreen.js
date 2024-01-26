@@ -217,7 +217,7 @@ export default function MapParent() {
               degToTarget={deg => setDegToTarget(deg)}
               shouldResetMap={shouldResetMap}
               onResetMap={() => setShouldResetMap(false)}
-              lang={lang}
+              lang={lang.screen_map}
               updateRange={rangeToMarker}
               // GPSActive={GPSActive => setGPSActive(GPSActive)}
               GPSActive={GPSActive => console.log('Status GPS -> ' + GPSActive)}
