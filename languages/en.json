@@ -466,7 +466,7 @@
     "catch": "Catch",
     "qrcode_show": "QR Code",
     "copy_qrcode_show": "The wallet address has been copied.",
-    "download_qrcode_show": "Image is saved successfully. Please check the gallery.",
+    "download_qrcode_show": "Image is saved successfully. Please check the gallery.\n\nPlease check the download folder for the key file. \n\nIf the key file is requested more than once, the file will be damaged (non-recoverable).",
     "copy_qrcode": "The wallet address has been copied. Use it wherever you want.",
     "table_head_transaction": "Transactional information/Transactional bill",
     "table_head_send": "Send",

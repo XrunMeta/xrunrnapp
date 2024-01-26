@@ -466,7 +466,7 @@
     "catch": "捕捉",
     "qrcode_show": "二维码",
     "copy_qrcode_show": "钱包地址已复制。",
-    "download_qrcode_show": "图像保存成功，请检查画廊。",
+    "download_qrcode_show": "图像保存成功，请检查画廊。\n\n请检查下载文件夹中是否有密钥文件。 \n\n如果多次请求密钥文件，该文件将被损坏（不可恢复）。",
     "copy_qrcode": "钱包地址已复制。随时使用。",
     "table_head_transaction": "交易信息/交易账单",
     "table_head_send": "发送",

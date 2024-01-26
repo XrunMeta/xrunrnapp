@@ -467,7 +467,7 @@
     "catch": "Catch",
     "qrcode_show": "Melihat QR Code",
     "copy_qrcode_show": "Berhasil menyalinkan alamat dompet.",
-    "download_qrcode_show": "Gambar telah berhasil disimpan. Lihat galeri.",
+    "download_qrcode_show": "Gambar telah berhasil disimpan. Lihat galeri.\n\nSilakan periksa folder unduhan untuk file kunci. \n\nJika file kunci diminta lebih dari satu kali, file tersebut akan rusak (tidak dapat dipulihkan).",
     "copy_qrcode": "Alamat dompet berhasil di salin.Silakan tempel untuk menggunakan.",
     "table_head_transaction": "Mutasi",
     "table_head_send": "Kirim",

@@ -467,7 +467,7 @@
     "catch": "획득",
     "qrcode_show": "QR 코드",
     "copy_qrcode_show": "지갑 주소가 복사되었습니다.",
-    "download_qrcode_show": "이미지가 성공적으로 저장되었습니다. 갤러리를 확인해주세요.",
+    "download_qrcode_show": "이미지가 성공적으로 저장되었습니다. 갤러리를 확인해주세요.\n\n키파일은 다운로드폴더를 확인 해 주세요. \n\n키파일에 한하여 두 번 이상 요청시 파일이 손상됩니다.(복구불가)",
     "copy_qrcode": "지갑 주소가 복사되었습니다. 원하는 곳에서 사용하세요.",
     "table_head_transaction": "거래 정보/거래 내역",
     "table_head_send": "보내기",
