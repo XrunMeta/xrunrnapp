@@ -471,7 +471,7 @@ const styles = StyleSheet.create({
   balance: {
     color: '#fff',
     fontFamily: 'Poppins-Regular',
-    fontSize: 12,
+    fontSize: 13,
   },
   partBottom: {
     paddingHorizontal: 28,
