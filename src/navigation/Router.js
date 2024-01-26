@@ -51,6 +51,7 @@ import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API} from '../../utils';
 import CompleteConversion from '../screens/CompleteConversion';
+import SuccessCloseMembership from '../screens/SettingScreen/SuccessCloseMembership';
 
 export default Router = () => {
   const Stack = createNativeStackNavigator();
@@ -158,6 +159,10 @@ export default Router = () => {
         <Stack.Screen name="CloseConfirm" component={CloseConfirmPassword} />
         <Stack.Screen name="NotifyHome" component={NotifyScreen} />
         <Stack.Screen name="AdvertiseHome" component={AdvertiseScreen} />
+        <Stack.Screen
+          name="SuccessCloseMembership"
+          component={SuccessCloseMembership}
+        />
 
         {/* Wallet */}
         <Stack.Screen name="WalletHome" component={WalletScreen} />
