@@ -157,6 +157,9 @@ dependencies {
     // https://firebase.google.com/docs/android/setup#available-libraries
      implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-analytics")
+
+    // React native file system
+    implementation project(':react-native-fs')
 }
 
 apply plugin: 'com.google.gms.google-services'
