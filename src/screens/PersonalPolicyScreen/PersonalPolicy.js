@@ -33,14 +33,14 @@ const PersonalPolicy = () => {
         <Text
           style={{
             fontFamily: 'Poppins-Medium',
-            fontSize: 18,
+            fontSize: 16,
           }}>
           KEBIJAKAN PRIBADI
         </Text>
         <Text
           style={{
             fontFamily: 'Poppins-Medium',
-            fontSize: 14,
+            fontSize: 13,
           }}>
           1. Apa itu Kebijakan Privasi? XRUN LLC (selanjutnya disebut sebagai
           "Perusahaan") mengumpulkan, menggunakan, dan memberikan informasi
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   title: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
     color: '#051C60',
     margin: 10,

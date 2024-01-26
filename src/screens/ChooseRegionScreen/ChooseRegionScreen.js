@@ -243,11 +243,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
     color: '#343a59',
   },
-  subTitle: {
-    fontFamily: 'Poppins-Medium',
-    fontSize: 18,
-    color: '#343a59',
-  },
   bottomSection: {
     padding: 20,
     marginBottom: 40,
@@ -260,16 +255,6 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     alignItems: 'center',
     height: 100,
-  },
-  label: {
-    fontFamily: 'Poppins-Medium',
-    fontSize: 18,
-    color: '#343a59',
-  },
-  emailAuth: {
-    fontFamily: 'Poppins-SemiBold',
-    fontSize: 15,
-    color: '#343a59',
   },
   buttonSignIn: {
     flexDirection: 'row',
@@ -292,16 +277,6 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 25,
   },
-  input: {
-    fontFamily: 'Poppins-Medium',
-    fontSize: 18,
-    color: '#343a59',
-    borderBottomColor: '#cccccc',
-    borderBottomWidth: 1,
-    paddingHorizontal: 15,
-    flex: 1,
-  },
-
   mediumText: {
     fontFamily: 'Poppins-Medium',
     fontSize: 13,

@@ -217,7 +217,7 @@ export default TabNavigator;
 const styles = StyleSheet.create({
   normalText: {
     fontFamily: 'Poppins-Medium',
-    fontSize: 14,
+    fontSize: 13,
     color: '#343a59',
   },
 });

@@ -1019,7 +1019,7 @@ const styles = StyleSheet.create({
     color: 'black',
     marginBottom: 10,
     fontFamily: 'Poppins-Regular',
-    fontSize: 12,
+    fontSize: 13,
     maxWidth: 150,
   },
   date: {

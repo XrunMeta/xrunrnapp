@@ -180,7 +180,7 @@ const AdvertiseScreen = () => {
         </Text>
       </View>
       <View style={[styles.listUpWrapper, {marginTop: -6}]}>
-        <Text style={styles.smallText}>{item.datetime}</Text>
+        <Text style={[styles.smallText, {marginTop: -6}]}>{item.datetime}</Text>
         <Text style={styles.mediumText}>{item.coin}</Text>
       </View>
     </View>
@@ -782,7 +782,7 @@ const styles = StyleSheet.create({
   },
   mediumText: {
     fontFamily: 'Poppins-Medium',
-    fontSize: 18,
+    fontSize: 16,
     color: 'black',
   },
   list: {
