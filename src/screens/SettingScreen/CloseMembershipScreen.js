@@ -137,7 +137,7 @@ const CloseMembershipScreen = () => {
               style={{
                 color: 'black',
                 fontFamily: 'Poppins-Regular',
-                fontSize: 18,
+                fontSize: 16,
               }}>
               {lang && lang.screen_setting
                 ? lang.screen_setting.close.desc.clo1 + ' '
@@ -382,7 +382,7 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   title: {
-    fontSize: 20,
+    fontSize: 22,
     fontFamily: 'Poppins-Bold',
     color: '#051C60',
     margin: 10,

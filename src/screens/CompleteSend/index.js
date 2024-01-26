@@ -112,7 +112,7 @@ const CompleteSend = ({navigation, route}) => {
             style={{
               fontFamily: 'Poppins-Regular',
               color: '#000',
-              fontSize: 12,
+              fontSize: 13,
               maxWidth: 180,
             }}>
             {addrto}
