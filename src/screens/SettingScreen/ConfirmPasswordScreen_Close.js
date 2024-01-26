@@ -10,14 +10,16 @@ import {
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API, getLanguage2} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const CloseConfirmPassword = () => {
+  const route = useRoute();
+  const {reasonNum, reason} = route.params;
   const [lang, setLang] = useState({});
-  const [email, setEmail] = useState('');
+  const [userData, setUserData] = useState('');
   const [password, setPassword] = useState('');
 
   const navigation = useNavigation();
@@ -31,25 +33,40 @@ const CloseConfirmPassword = () => {
         lang && lang.screen_setting ? lang.screen_setting.close.del_empty : '',
       );
     } else {
-      // try {
-      //   const response = await fetch(
-      //     `${URL_API}&act=login-checker&email=${email}&pin=${password}`,
-      //   );
-      //   const data = await response.text();
-      //   if (data === 'OK') {
-      //     navigation.replace('EditPassword');
-      //   } else {
-      //     Alert.alert('Error', 'password salah');
-      //   }
-      // } catch (error) {
-      //   console.error('Error:', error);
-      //   Alert.alert('Error', 'An error occurred while logging in');
-      // }
+      try {
+        const response = await fetch(
+          `${URL_API}&act=app8080-01&pin=${password}&reasonNum=${reasonNum}&reason=${reason}&member=${userData.member}`,
+        );
+        const data = await response.json();
+
+        console.log('Response Apu -> ' + JSON.stringify(data));
+        if (data.data[0].count == 1) {
+          navigation.replace('SuccessCloseMembership');
+        } else {
+          Alert.alert(
+            'Failed',
+            lang && lang.screen_setting
+              ? lang.screen_setting.close.desc.fail
+              : '',
+          );
+          setPassword('');
+          navigation.replace('SuccessCloseMembership');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        Alert.alert('Error', 'An error occurred while logging in');
+      }
+      console.log(`
+        app8080-01 Data => 
+          pin       : ${password}
+          reasonNum : ${reasonNum} -> ${typeof userData.member}
+          reason    : ${reason}
+          member    : ${userData.member} -> ${typeof userData.member}
+      `);
     }
   };
 
   const onBack = () => {
-    // navigation.navigate('First');
     navigation.goBack();
   };
 
@@ -58,9 +75,12 @@ const CloseConfirmPassword = () => {
     const fetchDataLang = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const userEmail = await AsyncStorage.getItem('userEmail');
+        const getUserData = await AsyncStorage.getItem('userData');
+        const resUserData = JSON.parse(getUserData);
 
-        setEmail(userEmail);
+        console.log('API Res -> ' + JSON.stringify(resUserData));
+
+        setUserData(resUserData);
 
         const screenLang = await getLanguage2(currentLanguage);
         setLang(screenLang);
