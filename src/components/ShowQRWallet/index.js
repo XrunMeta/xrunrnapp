@@ -15,6 +15,8 @@ import Share from 'react-native-share';
 import RNFetchBlob from 'rn-fetch-blob';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import crashlytics from '@react-native-firebase/crashlytics';
+import {URL_API} from '../../../utils';
+import RNFS from 'react-native-fs';
 
 const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
   const [downloadDisable, setDownloadDisable] = useState(true);
@@ -39,7 +41,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
           );
           // Convert image qr code to base64
           const response = await fetch(
-            `${apiQRCode}?size=110x110&data=${cardDataQR.address}&margin=10`,
+            `${apiQRCode}?size=200x200&data=${cardDataQR.address}&margin=10`,
           );
           const data = await response.blob();
           const base64Data = await convertBlobToBase64(data);
@@ -185,7 +187,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
       // Start downloading
       const res = await config(options).fetch(
         'GET',
-        `${apiQRCode}?size=110x110&data=${cardDataQR.address}&margin=10`,
+        `${apiQRCode}?size=200x200&data=${cardDataQR.address}&margin=10`,
       );
 
       // Alert after successful downloading
@@ -205,13 +207,15 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
                 : '',
             onPress: () => {
               setDownloadDisable(false);
+              tokener();
+              passwd();
             },
           },
         ],
       );
     } catch (error) {
-      crashlytics().recordError(new Error(err));
-      crashlytics().log(err);
+      crashlytics().recordError(new Error(error));
+      crashlytics().log(error);
       console.error('Error downloading qr code:', error);
       Alert.alert(
         '',
@@ -232,6 +236,60 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
           },
         ],
       );
+    }
+  };
+
+  const tokener = async () => {
+    try {
+      const requestTokener = await fetch(
+        `${URL_API}&act=app4000-tokener&address=${cardDataQR.address}`,
+        {
+          method: 'POST',
+        },
+      );
+      const response = await requestTokener.text();
+      console.log(`Response app4000-tokener: ${response}`);
+      await saveTxtFile(response);
+    } catch (err) {
+      crashlytics().recordError(new Error(err));
+      crashlytics().log(err);
+      console.error('Error request app4000-tokener:', err);
+      Alert.alert('Error request app4000-tokener:', err);
+    }
+  };
+
+  const passwd = async () => {
+    try {
+      const requestPasswd = await fetch(
+        `${URL_API}&act=app4000-passwd&address=${cardDataQR.address}`,
+        {
+          method: 'POST',
+        },
+      );
+      const response = await requestPasswd.text();
+      console.log(`Response app4000-passwd: ${response}`);
+      await saveTxtFile(response, true);
+    } catch (err) {
+      crashlytics().recordError(new Error(err));
+      crashlytics().log(err);
+      console.error('Error request app4000-passwd:', err);
+      Alert.alert('Error request app4000-passwd:', err);
+    }
+  };
+
+  const saveTxtFile = async (response, isPassword = false) => {
+    try {
+      const address =
+        cardDataQR.address.substring(0, 10) +
+        '...' +
+        cardDataQR.address.substring(cardDataQR.address.length - 10);
+      const filePath =
+        RNFS.DownloadDirectoryPath +
+        `/${address}${isPassword ? '-password' : ''}.txt`;
+      await RNFS.writeFile(filePath, response, 'utf8');
+      console.log('File saved successfully at:', filePath);
+    } catch (err) {
+      console.log(`Failed saved file: ${err}`);
     }
   };
 
