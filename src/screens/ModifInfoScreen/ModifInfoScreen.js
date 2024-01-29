@@ -603,6 +603,7 @@ const ModifInfoScreen = ({route}) => {
                         color: '#a8a8a7',
                         alignSelf: 'center',
                         paddingRight: 10,
+                        marginTop: -6,
                       }}>
                       +{countryCode == undefined ? '62' : countryCode}
                     </Text>
@@ -650,6 +651,7 @@ const ModifInfoScreen = ({route}) => {
                         color: '#343a59',
                         paddingRight: 30,
                         paddingLeft: -10,
+                        paddingTop: 4,
                       }}>
                       {lang &&
                       lang.screen_modify_information &&
@@ -1163,7 +1165,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#cccccc',
     borderBottomWidth: 1,
     paddingHorizontal: 5,
-    paddingBottom: -10,
+    paddingBottom: 5,
     flex: 1,
   },
   loadingContainer: {

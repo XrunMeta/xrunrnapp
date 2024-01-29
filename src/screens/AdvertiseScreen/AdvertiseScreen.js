@@ -175,12 +175,12 @@ const AdvertiseScreen = () => {
           numberOfLines={1}>
           {item.title}
         </Text>
-        <Text style={styles.smallText}>
+        <Text style={[styles.smallText, {marginTop: -4}]}>
           {item.extracode === '9416' ? item.statusPending : item.statusSuccess}
         </Text>
       </View>
-      <View style={[styles.listUpWrapper, {marginTop: -6}]}>
-        <Text style={[styles.smallText, {marginTop: -6}]}>{item.datetime}</Text>
+      <View style={[styles.listUpWrapper, {marginTop: -5, marginBottom: 8}]}>
+        <Text style={[styles.smallText, {marginTop: -1}]}>{item.datetime}</Text>
         <Text style={styles.mediumText}>{item.coin}</Text>
       </View>
     </View>
