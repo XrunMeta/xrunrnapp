@@ -554,6 +554,7 @@ function ARScreen() {
                         fontFamily: 'Roboto-Medium',
                         fontSize: 13,
                         color: 'white',
+                        marginTop: -2,
                       }}>
                       {lang &&
                       lang.screen_map &&

@@ -268,12 +268,12 @@ const NotifyScreen = () => {
                 fontSize: 16,
               }}>
               {isDelete
-                ? lang && lang.screen_notify && lang.screen_notify.deleteAll
-                  ? lang.screen_notify.deleteAll
-                  : ''
+                ? lang && lang.screen_notify && lang.screen_notify.deletAll
+                  ? lang.screen_notify.deletAll
+                  : 'DELETE ALL'
                 : lang && lang.screen_notify && lang.screen_notify.delete
                 ? lang.screen_notify.delete
-                : ''}
+                : 'DELETE'}
             </Text>
           </TouchableOpacity>
         </View>
@@ -612,7 +612,7 @@ const styles = StyleSheet.create({
     color: 'black',
     fontFamily: 'Roboto-Regular',
     fontSize: 13,
-    paddingBottom: 6,
+    paddingBottom: 10,
   },
   sendButton: {
     backgroundColor: '#051C60',
@@ -625,6 +625,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontFamily: 'Roboto-Medium',
     fontSize: 13,
+    marginBottom: 5,
     marginTop: 3,
   },
   chatContainer: {

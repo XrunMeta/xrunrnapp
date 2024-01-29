@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   title: {
-    marginLeft: 70,
+    marginLeft: 55,
     fontSize: 22,
     color: '#051C60',
     margin: 10,
