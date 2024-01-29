@@ -97,7 +97,7 @@ const MarkerMap = ({item, onClick, currentRange, lang, logoMarker}) => {
             <Text
               style={{
                 fontSize: 18,
-                fontFamily: 'Roboto-SemiBold',
+                fontFamily: 'Roboto-Medium',
                 marginBottom: -5,
                 color: 'black',
               }}>

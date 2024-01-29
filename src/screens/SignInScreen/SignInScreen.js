@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
     color: '#343a59',
   },
   emailAuth: {
-    fontFamily: 'Roboto-SemiBold',
+    fontFamily: 'Roboto-Medium',
     fontSize: 13,
     color: '#343a59',
   },

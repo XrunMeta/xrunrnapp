@@ -659,7 +659,7 @@ const ModifInfoScreen = ({route}) => {
                       <Text
                         style={{
                           color: '#ffc404',
-                          fontFamily: 'Roboto-SemiBold',
+                          fontFamily: 'Roboto-Medium',
                         }}>
                         {password}
                       </Text>

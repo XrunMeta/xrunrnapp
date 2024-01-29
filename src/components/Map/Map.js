@@ -496,6 +496,7 @@ const MapComponent = ({
                   fontSize: 11,
                   fontFamily: 'Roboto-Medium',
                   color: '#343a59',
+                  marginBottom: 3,
                 }}>
                 {updateRange}m
               </Text>
@@ -525,7 +526,7 @@ const MapComponent = ({
               <Text
                 style={{
                   fontSize: 18,
-                  fontFamily: 'Roboto-SemiBold',
+                  fontFamily: 'Roboto-Medium',
                   marginTop: -6,
                   color: 'black',
                 }}>

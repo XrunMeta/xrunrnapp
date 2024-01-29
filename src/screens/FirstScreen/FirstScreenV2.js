@@ -325,7 +325,7 @@ const FirstScreenV2 = ({navigation}) => {
                   <Text
                     style={{
                       color: 'black',
-                      fontFamily: 'Roboto-SemiBold',
+                      fontFamily: 'Roboto-Medium',
                       fontSize: 13,
                       textAlign: 'right',
                       paddingLeft: 10,
@@ -337,7 +337,7 @@ const FirstScreenV2 = ({navigation}) => {
                   <Text
                     style={{
                       color: 'black',
-                      fontFamily: 'Roboto-SemiBold',
+                      fontFamily: 'Roboto-Medium',
                       fontSize: 13,
                       textAlign: 'right',
                       paddingLeft: 10,

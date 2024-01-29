@@ -412,7 +412,7 @@ const styles = StyleSheet.create({
     height: 100,
   },
   emailAuth: {
-    fontFamily: 'Roboto-SemiBold',
+    fontFamily: 'Roboto-Medium',
     fontSize: 13,
     color: '#343a59',
   },
@@ -429,7 +429,7 @@ const styles = StyleSheet.create({
   codeInput: {
     width: 40,
     height: 60,
-    fontFamily: 'Roboto-SemiBold',
+    fontFamily: 'Roboto-Medium',
     fontSize: 20,
     color: '#343a59',
     borderBottomWidth: 2,

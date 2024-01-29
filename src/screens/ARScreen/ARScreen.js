@@ -431,7 +431,7 @@ function ARScreen() {
                         />
                         <Text
                           style={{
-                            fontFamily: 'Roboto-SemiBold',
+                            fontFamily: 'Roboto-Medium',
                             fontSize: 16,
                             color: 'white',
                           }}>

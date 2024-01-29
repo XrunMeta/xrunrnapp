@@ -264,7 +264,7 @@ const NotifyScreen = () => {
             <Text
               style={{
                 color: '#ffdc04',
-                fontFamily: 'Roboto-SemiBold',
+                fontFamily: 'Roboto-Medium',
                 fontSize: 16,
               }}>
               {isDelete
@@ -463,7 +463,7 @@ const NotifyScreen = () => {
                             }}>
                             <Text
                               style={{
-                                fontFamily: 'Roboto-SemiBold',
+                                fontFamily: 'Roboto-Medium',
                                 fontSize: 13,
                                 color: 'white',
                               }}>
@@ -623,7 +623,7 @@ const styles = StyleSheet.create({
   },
   sendButtonText: {
     color: 'white',
-    fontFamily: 'Roboto-SemiBold',
+    fontFamily: 'Roboto-Medium',
     fontSize: 13,
     marginTop: 3,
   },
