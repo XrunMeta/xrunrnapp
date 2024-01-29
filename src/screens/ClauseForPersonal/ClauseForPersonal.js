@@ -90,7 +90,7 @@ const ClauseForPersonal = () => {
         }}>
         <Text
           style={{
-            fontFamily: 'Poppins-Regular',
+            fontFamily: 'Roboto-Regular',
             fontSize: 13,
             paddingVertical: 20,
             color: 'grey',
@@ -124,6 +124,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
     color: '#051C60',
     margin: 10,
-    fontFamily: 'Poppins-Bold',
+    fontFamily: 'Roboto-Bold',
   },
 });

@@ -113,7 +113,7 @@ const SignUpCreatePassword = () => {
             alignSelf: 'flex-start',
             marginLeft: 25,
             color: isPasswordValid ? 'black' : 'red',
-            fontFamily: 'Poppins-Regular',
+            fontFamily: 'Roboto-Regular',
             fontSize: 11,
             marginRight: 1,
           }}>

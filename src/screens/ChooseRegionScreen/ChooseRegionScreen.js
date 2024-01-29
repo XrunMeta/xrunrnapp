@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontFamily: 'Poppins-Bold',
+    fontFamily: 'Roboto-Bold',
     fontSize: 22,
     color: '#343a59',
   },
@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
   },
   mediumText: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     fontSize: 13,
     color: '#343a59',
     alignSelf: 'center',

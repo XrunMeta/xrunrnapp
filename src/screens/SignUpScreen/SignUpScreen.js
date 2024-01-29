@@ -371,7 +371,7 @@ const SignUpScreen = ({route}) => {
               alignSelf: 'flex-start',
               marginLeft: 25,
               color: 'red',
-              fontFamily: 'Poppins-Medium',
+              fontFamily: 'Roboto-Medium',
               fontSize: 13,
             }}>
             {lang && lang.screen_signup && lang.screen_signup.validator
@@ -431,7 +431,7 @@ const SignUpScreen = ({route}) => {
               />
               <Text
                 style={{
-                  fontFamily: 'Poppins-Medium',
+                  fontFamily: 'Roboto-Medium',
                   fontSize: 13,
                   color: '#a8a8a7',
                   alignSelf: 'center',
@@ -566,7 +566,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontFamily: 'Poppins-Bold',
+    fontFamily: 'Roboto-Bold',
     fontSize: 22,
     color: '#343a59',
   },
@@ -584,12 +584,12 @@ const styles = StyleSheet.create({
     height: 100,
   },
   normalText: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     fontSize: 13,
     color: '#343a59',
   },
   label: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     fontSize: 13,
     color: '#343a59',
     marginBottom: -5,
@@ -617,7 +617,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   input: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     fontSize: 13,
     color: '#343a59',
     borderBottomColor: '#cccccc',

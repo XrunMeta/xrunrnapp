@@ -118,7 +118,7 @@ const CommonProblemScreen = () => {
                 <Text
                   onPress={() => toggleDescription(item.board)}
                   style={{
-                    fontFamily: 'Poppins-Regular',
+                    fontFamily: 'Roboto-Regular',
                     fontSize: 13,
                     color: 'black',
                     paddingVertical: 18,
@@ -157,13 +157,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: 'Poppins-Bold',
+    fontFamily: 'Roboto-Bold',
     color: '#051C60',
     margin: 10,
   },
   normalText: {
     color: 'grey',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     fontSize: 13,
   },
   collapseWrapper: {

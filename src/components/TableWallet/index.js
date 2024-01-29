@@ -36,7 +36,7 @@ const renderTabBar = props => (
         style={{
           color: focused ? '#383b50' : '#bbb',
           textAlign: 'center',
-          fontFamily: 'Poppins-Regular',
+          fontFamily: 'Roboto-Regular',
           fontSize: 13,
           maxWidth: 80,
           borderBottomColor: 'yellow',
@@ -958,7 +958,7 @@ const styles = StyleSheet.create({
   },
   textHead: {
     textAlign: 'center',
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     fontSize: 15,
     color: '#000',
     minWidth: 80,
@@ -998,7 +998,7 @@ const styles = StyleSheet.create({
     paddingBottom: 2,
   },
   textDay: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     fontSize: 15,
     color: 'black',
   },
@@ -1018,13 +1018,13 @@ const styles = StyleSheet.create({
   details: {
     color: 'black',
     marginBottom: 10,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     fontSize: 13,
     maxWidth: 150,
   },
   date: {
     fontSize: 11,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     color: '#aaa',
   },
   wrapperPrice: {
@@ -1034,7 +1034,7 @@ const styles = StyleSheet.create({
   },
   price: {
     fontSize: 13,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     color: 'black',
     textAlign: 'right',
   },
@@ -1044,7 +1044,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   textNotFoundHistory: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     color: '#ccc',
     textAlign: 'center',
     paddingTop: 20,

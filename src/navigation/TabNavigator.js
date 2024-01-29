@@ -216,7 +216,7 @@ export default TabNavigator;
 
 const styles = StyleSheet.create({
   normalText: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     fontSize: 13,
     color: '#343a59',
   },

@@ -89,7 +89,7 @@ const ServiceClause = () => {
         }}>
         <Text
           style={{
-            fontFamily: 'Poppins-Regular',
+            fontFamily: 'Roboto-Regular',
             fontSize: 13,
             color: 'grey',
             paddingVertical: 20,
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: 'Poppins-Bold',
+    fontFamily: 'Roboto-Bold',
     color: '#051C60',
     margin: 10,
   },

@@ -65,12 +65,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   tabBarText: {
-    fontFamily: 'Poppins-Regular', // Font family of the tab text
+    fontFamily: 'Roboto-Regular', // Font family of the tab text
     fontSize: 16,
     color: 'white', // Font color of the tab text
   },
   tabBarTextFocused: {
-    fontFamily: 'Poppins-Bold', // Font family of the focused tab text
+    fontFamily: 'Roboto-Bold', // Font family of the focused tab text
     fontSize: 16,
     color: '#ffdc04', // Font color of the focused tab text
   },

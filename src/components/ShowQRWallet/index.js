@@ -443,11 +443,11 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   showQRHash: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     color: '#fff',
   },
   titleQR: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     textAlign: 'center',
     color: '#fff',
     fontSize: 24,
@@ -499,7 +499,7 @@ const styles = StyleSheet.create({
   },
   notificationTextInQR: {
     color: '#fff',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     margin: 0,
     maxWidth: 240,
   },

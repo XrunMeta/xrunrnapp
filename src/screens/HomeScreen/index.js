@@ -161,7 +161,7 @@ export default function Home({route}) {
           }}>
           <Text
             style={{
-              fontFamily: 'Poppins-Light',
+              fontFamily: 'Roboto-Light',
               fontSize: 9,
               color: 'white',
             }}>
@@ -313,7 +313,7 @@ export default function Home({route}) {
       ) : (
         <Text
           style={{
-            fontFamily: 'Poppins-Regular',
+            fontFamily: 'Roboto-Regular',
             fontSize: 13,
             color: 'red',
             margin: 'auto',
@@ -370,7 +370,7 @@ const styles = StyleSheet.create({
     }),
   },
   tabText: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     color: 'black',
     fontSize: 10.5,
     marginBottom: -15,

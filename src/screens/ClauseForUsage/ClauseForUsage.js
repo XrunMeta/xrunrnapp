@@ -90,7 +90,7 @@ const ClauseForUsage = () => {
         }}>
         <Text
           style={{
-            fontFamily: 'Poppins-Regular',
+            fontFamily: 'Roboto-Regular',
             fontSize: 13,
             color: 'grey',
             paddingVertical: 20,

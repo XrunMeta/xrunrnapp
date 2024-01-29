@@ -226,12 +226,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontFamily: 'Poppins-Bold',
+    fontFamily: 'Roboto-Bold',
     fontSize: 22,
     color: '#343a59',
   },
   subTitle: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     fontSize: 16,
     color: '#343a59',
     marginTop: -5,
@@ -252,12 +252,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   normalText: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     fontSize: 13,
     color: '#343a59',
   },
   emailAuth: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Roboto-SemiBold',
     fontSize: 13,
     color: '#343a59',
   },

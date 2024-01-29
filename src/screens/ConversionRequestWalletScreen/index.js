@@ -451,7 +451,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: 'Poppins-Bold',
+    fontFamily: 'Roboto-Bold',
     color: '#051C60',
     margin: 10,
   },
@@ -465,12 +465,12 @@ const styles = StyleSheet.create({
   },
   currencyName: {
     color: '#fff',
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     fontSize: 18,
   },
   balance: {
     color: '#fff',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     fontSize: 13,
   },
   partBottom: {
@@ -493,12 +493,12 @@ const styles = StyleSheet.create({
     width: 95,
   },
   selectNetwork: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     color: '#000',
     marginTop: 10,
   },
   description: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     color: '#bbb',
     marginTop: 4,
   },
@@ -518,7 +518,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   textDay: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     color: 'black',
   },
   wrapperInput: {
@@ -557,13 +557,13 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   textChange: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     color: '#000',
     textTransform: 'uppercase',
     fontSize: 13,
   },
   textCheckInformation: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     fontSize: 11,
     color: '#000',
   },
@@ -580,12 +580,12 @@ const styles = StyleSheet.create({
   },
   textPartLeft: {
     color: '#aaa',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     fontSize: 13,
   },
   textPartRight: {
     color: '#000',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     fontSize: 13,
   },
   wrapperButton: {
@@ -600,7 +600,7 @@ const styles = StyleSheet.create({
   },
   textButtonConfirm: {
     color: '#343c5a',
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     textTransform: 'uppercase',
   },
 });
