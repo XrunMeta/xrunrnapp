@@ -65,7 +65,7 @@ const CompleteSend = ({navigation, route}) => {
         <Text
           style={{
             fontSize: 16,
-            fontFamily: 'Poppins-Regular',
+            fontFamily: 'Roboto-Regular',
             color: '#e05c2b',
           }}>
           {lang && lang.screen_wallet && lang.screen_wallet.table_head_send
@@ -73,7 +73,7 @@ const CompleteSend = ({navigation, route}) => {
             : ''}{' '}
         </Text>
         <Text
-          style={{fontSize: 16, fontFamily: 'Poppins-Regular', color: '#555'}}>
+          style={{fontSize: 16, fontFamily: 'Roboto-Regular', color: '#555'}}>
           {lang &&
           lang.screen_complete_send &&
           lang.screen_complete_send.complete_send
@@ -99,7 +99,7 @@ const CompleteSend = ({navigation, route}) => {
           }}>
           <Text
             style={{
-              fontFamily: 'Poppins-Regular',
+              fontFamily: 'Roboto-Regular',
               color: '#555',
             }}>
             {lang &&
@@ -110,7 +110,7 @@ const CompleteSend = ({navigation, route}) => {
           </Text>
           <Text
             style={{
-              fontFamily: 'Poppins-Regular',
+              fontFamily: 'Roboto-Regular',
               color: '#000',
               fontSize: 13,
               maxWidth: 180,
@@ -129,7 +129,7 @@ const CompleteSend = ({navigation, route}) => {
           }}>
           <Text
             style={{
-              fontFamily: 'Poppins-Regular',
+              fontFamily: 'Roboto-Regular',
               color: '#555',
             }}>
             {lang &&
@@ -140,7 +140,7 @@ const CompleteSend = ({navigation, route}) => {
           </Text>
           <Text
             style={{
-              fontFamily: 'Poppins-Medium',
+              fontFamily: 'Roboto-Medium',
               color: '#e05c2b',
               fontSize: 15,
               maxWidth: 180,
@@ -158,7 +158,7 @@ const CompleteSend = ({navigation, route}) => {
           }}>
           <Text
             style={{
-              fontFamily: 'Poppins-Regular',
+              fontFamily: 'Roboto-Regular',
               color: '#555',
             }}>
             TXID
@@ -166,7 +166,7 @@ const CompleteSend = ({navigation, route}) => {
           <View>
             <Text
               style={{
-                fontFamily: 'Poppins-Medium',
+                fontFamily: 'Roboto-Medium',
                 color: '#e05c2b',
                 fontSize: 15,
                 maxWidth: 240,
@@ -195,7 +195,7 @@ const CompleteSend = ({navigation, route}) => {
 
       <Text
         style={{
-          fontFamily: 'Poppins-Regular',
+          fontFamily: 'Roboto-Regular',
           color: '#555',
           textAlign: 'center',
           marginTop: 30,
@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: 'Poppins-Bold',
+    fontFamily: 'Roboto-Bold',
     color: '#051C60',
     margin: 10,
   },

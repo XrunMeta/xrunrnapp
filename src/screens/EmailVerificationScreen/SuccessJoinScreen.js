@@ -71,7 +71,7 @@ const SuccessJoinScreen = () => {
             {lang && lang.screen_notExist && lang.screen_notExist.field_join
               ? lang.screen_notExist.field_join.str2
               : ''}
-            <Text style={{color: '#da7750', fontFamily: 'Poppins-SemiBold'}}>
+            <Text style={{color: '#da7750', fontFamily: 'Roboto-SemiBold'}}>
               {lang && lang.screen_notExist && lang.screen_notExist.field_join
                 ? lang.screen_notExist.field_join.str3
                 : ''}
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     width: 80,
   },
   normalText: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     fontSize: 13,
     color: '#343a59',
   },

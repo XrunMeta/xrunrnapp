@@ -308,7 +308,7 @@ const WalletScreen = ({navigation, route}) => {
           <Text
             style={{
               color: '#fff',
-              fontFamily: 'Poppins-Regular',
+              fontFamily: 'Roboto-Regular',
               fontSize: 13,
               marginTop: 10,
             }}>
@@ -419,7 +419,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: 'Poppins-Bold',
+    fontFamily: 'Roboto-Bold',
     color: '#051C60',
     margin: 10,
   },
@@ -438,7 +438,7 @@ const styles = StyleSheet.create({
   },
   cardName: {
     color: 'white',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     paddingTop: 20,
   },
   wrapperShowQR: {
@@ -476,7 +476,7 @@ const styles = StyleSheet.create({
     right: 0,
   },
   textQRCode: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     color: 'black',
     fontSize: 20,
   },
@@ -490,12 +490,12 @@ const styles = StyleSheet.create({
   },
   textWallet: {
     color: 'white',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     fontSize: 13,
   },
   valueWallet: {
     color: 'white',
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     fontSize: 20,
   },
   wrapperPartBottom: {
@@ -512,7 +512,7 @@ const styles = StyleSheet.create({
   },
   hash: {
     color: 'white',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     fontSize: 12,
   },
   logo: {

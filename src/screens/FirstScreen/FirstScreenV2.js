@@ -325,7 +325,7 @@ const FirstScreenV2 = ({navigation}) => {
                   <Text
                     style={{
                       color: 'black',
-                      fontFamily: 'Poppins-SemiBold',
+                      fontFamily: 'Roboto-SemiBold',
                       fontSize: 13,
                       textAlign: 'right',
                       paddingLeft: 10,
@@ -337,7 +337,7 @@ const FirstScreenV2 = ({navigation}) => {
                   <Text
                     style={{
                       color: 'black',
-                      fontFamily: 'Poppins-SemiBold',
+                      fontFamily: 'Roboto-SemiBold',
                       fontSize: 13,
                       textAlign: 'right',
                       paddingLeft: 10,
@@ -385,7 +385,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     color: '#343a59',
-    fontFamily: 'Poppins-Bold',
+    fontFamily: 'Roboto-Bold',
   },
   sliderWrapper: {
     flex: 1,
@@ -416,7 +416,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   text: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     textAlign: 'center',
     fontSize: 13,
     lineHeight: 19,
@@ -424,7 +424,7 @@ const styles = StyleSheet.create({
   },
   link: {
     color: '#343a59',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     textDecorationLine: 'underline',
     fontSize: 13,
     position: 'relative',
@@ -449,12 +449,12 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 22,
     color: '#343a59',
-    fontFamily: 'Poppins-Bold',
+    fontFamily: 'Roboto-Bold',
   },
   modalDescription: {
     fontSize: 13,
     color: 'black',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     marginBottom: 20,
     textAlign: 'left',
   },

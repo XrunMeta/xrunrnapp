@@ -68,7 +68,7 @@ const MarkerMap = ({item, onClick, currentRange, lang, logoMarker}) => {
             <Text
               style={{
                 fontSize: 11,
-                fontFamily: 'Poppins-Medium',
+                fontFamily: 'Roboto-Medium',
               }}>
               {currentRange.toFixed(2)}m
             </Text>
@@ -81,7 +81,7 @@ const MarkerMap = ({item, onClick, currentRange, lang, logoMarker}) => {
             <Text
               style={{
                 fontSize: 11,
-                fontFamily: 'Poppins-Medium',
+                fontFamily: 'Roboto-Medium',
                 marginTop: 3,
               }}>
               {lang && lang.screen_map && lang.screen_map.section_marker
@@ -97,7 +97,7 @@ const MarkerMap = ({item, onClick, currentRange, lang, logoMarker}) => {
             <Text
               style={{
                 fontSize: 18,
-                fontFamily: 'Poppins-SemiBold',
+                fontFamily: 'Roboto-SemiBold',
                 marginBottom: -5,
                 color: 'black',
               }}>

@@ -16,7 +16,7 @@ const ButtonList = ({label, onPress}) => {
       <View>
         <Text
           style={{
-            fontFamily: 'Poppins-Regular',
+            fontFamily: 'Roboto-Regular',
             fontSize: 13,
             color: 'black',
             paddingVertical: 18,

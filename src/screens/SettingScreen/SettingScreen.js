@@ -94,7 +94,7 @@ const SettingScreen = () => {
           <Text
             style={{
               color: 'grey',
-              fontFamily: 'Poppins-Regular',
+              fontFamily: 'Roboto-Regular',
               fontSize: 13,
               marginLeft: 20,
               marginTop: 15,
@@ -112,7 +112,7 @@ const SettingScreen = () => {
           <Text
             style={{
               color: 'grey',
-              fontFamily: 'Poppins-Regular',
+              fontFamily: 'Roboto-Regular',
               fontSize: 13,
               marginLeft: 20,
               marginTop: 20,
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: 'Poppins-Bold',
+    fontFamily: 'Roboto-Bold',
     color: '#051C60',
     margin: 10,
   },

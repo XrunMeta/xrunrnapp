@@ -414,7 +414,7 @@ const AdvertiseScreen = () => {
           <Text
             style={{
               color: 'black',
-              fontFamily: 'Poppins-Regular',
+              fontFamily: 'Roboto-Regular',
               fontSize: 13,
             }}>
             Total <Text style={{color: 'orange'}}>{storageAds.length}</Text>
@@ -434,7 +434,7 @@ const AdvertiseScreen = () => {
             <Text
               style={{
                 color: 'black',
-                fontFamily: 'Poppins-Regular',
+                fontFamily: 'Roboto-Regular',
                 fontSize: 13,
                 marginBottom: -2,
               }}>
@@ -491,7 +491,7 @@ const AdvertiseScreen = () => {
                 <Text
                   style={{
                     color: 'white',
-                    fontFamily: 'Poppins-SemiBold',
+                    fontFamily: 'Roboto-SemiBold',
                     textAlign: 'center',
                   }}>
                   {lang && lang.screen_advertise && lang.screen_advertise.delete
@@ -633,7 +633,7 @@ const AdvertiseScreen = () => {
         <Text
           style={{
             color: focused ? 'black' : 'grey',
-            fontFamily: focused ? 'Poppins-Medium' : 'Poppins-Regular',
+            fontFamily: focused ? 'Roboto-Medium' : 'Roboto-Regular',
             fontSize: 13,
             textAlign: 'center',
           }}>
@@ -699,7 +699,7 @@ const AdvertiseScreen = () => {
                 style={{
                   // color: '#ffdc04',
                   color: 'orange',
-                  fontFamily: 'Poppins-SemiBold',
+                  fontFamily: 'Roboto-SemiBold',
                   fontSize: 13,
                 }}>
                 {isDelete
@@ -758,14 +758,14 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: 'Poppins-Bold',
+    fontFamily: 'Roboto-Bold',
     color: '#051C60',
     margin: 10,
     marginLeft: -10,
   },
   normalText: {
     color: 'black',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     fontSize: 13,
   },
   loadingContainer: {
@@ -775,13 +775,13 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   smallText: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     fontSize: 11,
     color: 'grey',
     paddingTop: 7,
   },
   mediumText: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     fontSize: 16,
     color: 'black',
   },
@@ -805,12 +805,12 @@ const styles = StyleSheet.create({
   },
   listBigText: {
     color: 'grey',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     fontSize: 20,
   },
   listNormalText: {
     color: 'grey',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     fontSize: 13,
     marginBottom: -3,
   },
@@ -821,7 +821,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     color: 'grey',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     fontSize: 13,
   },
   checkbox: {

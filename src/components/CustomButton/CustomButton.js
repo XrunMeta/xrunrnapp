@@ -62,25 +62,25 @@ const styles = StyleSheet.create({
   },
 
   text_PRIMARY: {
-    fontFamily: 'Poppins-Bold',
+    fontFamily: 'Roboto-Bold',
     color: 'white',
   },
 
   text: {
     color: '#45494c',
     fontSize: 16,
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
   },
 
   text_SECONDARY: {
     color: '#45494c',
-    fontFamily: 'Poppins-Bold',
+    fontFamily: 'Roboto-Bold',
   },
 
   text_TERTIARY: {
     fontWeight: 'bold',
     color: '#343a59',
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
   },
 });
 

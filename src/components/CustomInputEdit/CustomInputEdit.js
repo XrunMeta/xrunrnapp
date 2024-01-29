@@ -109,7 +109,7 @@ const CustomInputEdit = ({
                 <Text
                   style={{
                     fontSize: 22,
-                    fontFamily: 'Poppins-Bold',
+                    fontFamily: 'Roboto-Bold',
                     color: '#051C60',
                     margin: 10,
                   }}>
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   label: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     fontSize: 13,
     marginBottom: -10,
     color: '#343a59',
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   input: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     fontSize: 13,
     color: '#343a59',
     paddingRight: 30,

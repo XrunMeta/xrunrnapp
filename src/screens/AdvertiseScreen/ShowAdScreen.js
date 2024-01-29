@@ -130,7 +130,7 @@ const ShowAdScreen = ({route, navigation}) => {
       {!adLoaded && (
         <Text
           style={{
-            fontFamily: 'Poppins-Regular',
+            fontFamily: 'Roboto-Regular',
             fontSize: 13,
             color: 'grey',
           }}>
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
   },
   modalText: {
     fontSize: 13,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     marginBottom: 10,
     color: 'black',
   },
@@ -182,6 +182,6 @@ const styles = StyleSheet.create({
   },
   okButtonText: {
     color: 'white',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
   },
 });

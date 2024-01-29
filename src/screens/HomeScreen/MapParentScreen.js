@@ -257,7 +257,7 @@ export default function MapParent() {
                 }}>
                 <Text
                   style={{
-                    fontFamily: 'Poppins-Medium',
+                    fontFamily: 'Roboto-Medium',
                     fontSize: 10.5,
                     color: 'white',
                   }}>
@@ -270,7 +270,7 @@ export default function MapParent() {
                 {markerCount > 0 ? (
                   <Text
                     style={{
-                      fontFamily: 'Poppins-Medium',
+                      fontFamily: 'Roboto-Medium',
                       fontSize: 13,
                       color: 'white',
                       flexWrap: 'wrap',
@@ -282,7 +282,7 @@ export default function MapParent() {
                       : ''}
                     <Text
                       style={{
-                        fontFamily: 'Poppins-Bold',
+                        fontFamily: 'Roboto-Bold',
                       }}>
                       {brandCount} XRUN
                     </Text>{' '}
@@ -293,7 +293,7 @@ export default function MapParent() {
                       : ''}
                     <Text
                       style={{
-                        fontFamily: 'Poppins-Bold',
+                        fontFamily: 'Roboto-Bold',
                       }}>
                       {markerCount} BIG XRUN{' '}
                     </Text>
@@ -307,7 +307,7 @@ export default function MapParent() {
                 ) : (
                   <Text
                     style={{
-                      fontFamily: 'Poppins-Medium',
+                      fontFamily: 'Roboto-Medium',
                       fontSize: 13,
                       color: 'white',
                       marginBottom: 3,
@@ -332,7 +332,7 @@ export default function MapParent() {
                 }}>
                 <Text
                   style={{
-                    fontFamily: 'Poppins-Medium',
+                    fontFamily: 'Roboto-Medium',
                     fontSize: 13,
                     color: 'white',
                     marginTop: 1,
@@ -355,7 +355,7 @@ export default function MapParent() {
                   />
                   <Text
                     style={{
-                      fontFamily: 'Poppins-Bold',
+                      fontFamily: 'Roboto-Bold',
                       fontSize: 13,
                       color: '#ffdc04',
                       marginTop: -4,
@@ -449,7 +449,7 @@ export default function MapParent() {
                         ? lang.screen_map.section_slider_card.desc1
                         : ''}
                     </Text>{' '}
-                    <Text style={{fontFamily: 'Poppins-Bold'}}>XRUN</Text>{' '}
+                    <Text style={{fontFamily: 'Roboto-Bold'}}>XRUN</Text>{' '}
                     {lang &&
                     lang.screen_map &&
                     lang.screen_map.section_slider_card
@@ -494,18 +494,18 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontFamily: 'Poppins-Bold',
+    fontFamily: 'Roboto-Bold',
     fontSize: 22,
     color: '#343a59',
   },
   subTitle: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Roboto-SemiBold',
     fontSize: 22,
     color: '#343a59',
     marginBottom: -9,
   },
   desc: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     fontSize: 13,
     color: '#343a59',
   },

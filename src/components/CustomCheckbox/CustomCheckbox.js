@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#343a59',
     fontSize: 16,
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
   },
   checkMark: {
     color: 'white',
