@@ -335,8 +335,7 @@ export default function MapParent() {
                     fontFamily: 'Roboto-Medium',
                     fontSize: 13,
                     color: 'white',
-                    marginTop: 1,
-                    marginBottom: -2,
+                    marginBottom: 2,
                   }}>
                   {lang &&
                   lang.screen_map &&
@@ -441,7 +440,7 @@ export default function MapParent() {
                     flex: 1,
                   }}>
                   <Text style={styles.subTitle}>{rangeToMarker || 0}m</Text>
-                  <Text style={styles.desc}>
+                  <Text style={[styles.desc, {marginTop: 12}]}>
                     <Text style={styles.desc}>
                       {lang &&
                       lang.screen_map &&
@@ -499,7 +498,7 @@ const styles = StyleSheet.create({
     color: '#343a59',
   },
   subTitle: {
-    fontFamily: 'Roboto-SemiBold',
+    fontFamily: 'Roboto-Medium',
     fontSize: 22,
     color: '#343a59',
     marginBottom: -9,

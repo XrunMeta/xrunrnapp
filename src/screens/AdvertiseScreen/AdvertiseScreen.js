@@ -491,7 +491,7 @@ const AdvertiseScreen = () => {
                 <Text
                   style={{
                     color: 'white',
-                    fontFamily: 'Roboto-SemiBold',
+                    fontFamily: 'Roboto-Medium',
                     textAlign: 'center',
                   }}>
                   {lang && lang.screen_advertise && lang.screen_advertise.delete
@@ -699,7 +699,7 @@ const AdvertiseScreen = () => {
                 style={{
                   // color: '#ffdc04',
                   color: 'orange',
-                  fontFamily: 'Roboto-SemiBold',
+                  fontFamily: 'Roboto-Medium',
                   fontSize: 13,
                 }}>
                 {isDelete

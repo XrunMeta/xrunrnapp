@@ -71,7 +71,7 @@ const SuccessJoinScreen = () => {
             {lang && lang.screen_notExist && lang.screen_notExist.field_join
               ? lang.screen_notExist.field_join.str2
               : ''}
-            <Text style={{color: '#da7750', fontFamily: 'Roboto-SemiBold'}}>
+            <Text style={{color: '#da7750', fontFamily: 'Roboto-Medium'}}>
               {lang && lang.screen_notExist && lang.screen_notExist.field_join
                 ? lang.screen_notExist.field_join.str3
                 : ''}

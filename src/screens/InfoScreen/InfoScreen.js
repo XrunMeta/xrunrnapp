@@ -358,7 +358,7 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
             <Text
               style={[
                 styles.modalText,
-                {fontFamily: 'Roboto-SemiBold', marginBottom: 20},
+                {fontFamily: 'Roboto-Medium', marginBottom: 20},
               ]}>
               {refEmail}
             </Text>
