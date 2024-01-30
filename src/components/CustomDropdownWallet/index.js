@@ -41,14 +41,14 @@ const styles = StyleSheet.create({
   },
   label: {
     color: '#000',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
   },
   containerInput: {
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
   },
   input: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     color: '#000',
     backgroundColor: '#fff',
     fontSize: 13,

@@ -90,7 +90,7 @@ const ClauseForUsage = () => {
         }}>
         <Text
           style={{
-            fontFamily: 'Poppins-Regular',
+            fontFamily: 'Roboto-Regular',
             fontSize: 13,
             color: 'grey',
             paddingVertical: 20,
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   title: {
-    marginLeft: 70,
+    marginLeft: 55,
     fontSize: 22,
     fontWeight: 'bold',
     color: '#051C60',

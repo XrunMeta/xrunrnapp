@@ -494,8 +494,9 @@ const MapComponent = ({
                 key={updateRange}
                 style={{
                   fontSize: 11,
-                  fontFamily: 'Poppins-Medium',
+                  fontFamily: 'Roboto-Medium',
                   color: '#343a59',
+                  marginBottom: 3,
                 }}>
                 {updateRange}m
               </Text>
@@ -508,7 +509,7 @@ const MapComponent = ({
               <Text
                 style={{
                   fontSize: 11,
-                  fontFamily: 'Poppins-Medium',
+                  fontFamily: 'Roboto-Medium',
                   marginTop: 3,
                   color: '#343a59',
                 }}>
@@ -525,7 +526,7 @@ const MapComponent = ({
               <Text
                 style={{
                   fontSize: 18,
-                  fontFamily: 'Poppins-SemiBold',
+                  fontFamily: 'Roboto-Medium',
                   marginTop: -6,
                   color: 'black',
                 }}>
@@ -554,7 +555,7 @@ const MapComponent = ({
           <Text
             style={{
               color: 'white',
-              fontFamily: 'Poppins-Regular',
+              fontFamily: 'Roboto-Regular',
               fontSize: 13,
             }}>
             {lang && lang.section_marker ? lang.section_marker.loader : ''}
@@ -584,7 +585,7 @@ const MapComponent = ({
               <Text
                 style={{
                   color: 'white',
-                  fontFamily: 'Poppins-Regular',
+                  fontFamily: 'Roboto-Regular',
                   fontSize: 13,
                 }}>
                 {lang && lang.section_marker

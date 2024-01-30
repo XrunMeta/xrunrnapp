@@ -70,7 +70,12 @@ const CustomInputEdit = ({
           style={[
             styles.inputContainer,
             isDisable
-              ? {backgroundColor: '#e5e5e56e', height: 30, marginTop: 10}
+              ? {
+                  backgroundColor: '#e5e5e56e',
+                  height: 38,
+                  marginTop: 10,
+                  paddingBottom: 8,
+                }
               : '',
           ]}>
           <Text style={[styles.input, isDisable ? {color: '#a8a8a7'} : '']}>
@@ -109,7 +114,7 @@ const CustomInputEdit = ({
                 <Text
                   style={{
                     fontSize: 22,
-                    fontFamily: 'Poppins-Bold',
+                    fontFamily: 'Roboto-Bold',
                     color: '#051C60',
                     margin: 10,
                   }}>
@@ -178,7 +183,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   label: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     fontSize: 13,
     marginBottom: -10,
     color: '#343a59',
@@ -191,11 +196,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   input: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     fontSize: 13,
     color: '#343a59',
     paddingRight: 30,
     paddingLeft: -10,
+    paddingTop: 7,
   },
   modalContainer: {
     flex: 1,

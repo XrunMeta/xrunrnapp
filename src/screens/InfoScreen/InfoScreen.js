@@ -213,7 +213,7 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
           }}>
           <Text
             style={{
-              fontFamily: 'Poppins-Regular',
+              fontFamily: 'Roboto-Regular',
               fontSize: 13,
               color: 'black',
             }}>
@@ -223,7 +223,7 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
           </Text>
           <Text
             style={{
-              fontFamily: 'Poppins-Regular',
+              fontFamily: 'Roboto-Regular',
               fontSize: 11,
               color: 'grey',
               marginTop: -3,
@@ -358,7 +358,7 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
             <Text
               style={[
                 styles.modalText,
-                {fontFamily: 'Poppins-SemiBold', marginBottom: 20},
+                {fontFamily: 'Roboto-Medium', marginBottom: 20},
               ]}>
               {refEmail}
             </Text>
@@ -390,7 +390,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: 'Poppins-Bold',
+    fontFamily: 'Roboto-Bold',
     color: '#051C60',
     margin: 10,
   },
@@ -412,7 +412,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     textAlign: 'left',
     color: '#051C60',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
   },
   modalButton: {
     paddingVertical: 10,
@@ -426,6 +426,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 13,
     color: '#051C60',
-    fontFamily: 'Poppins-Bold',
+    fontFamily: 'Roboto-Bold',
   },
 });

@@ -431,7 +431,7 @@ function ARScreen() {
                         />
                         <Text
                           style={{
-                            fontFamily: 'Poppins-SemiBold',
+                            fontFamily: 'Roboto-Medium',
                             fontSize: 16,
                             color: 'white',
                           }}>
@@ -441,7 +441,7 @@ function ARScreen() {
                         </Text>
                         <Text
                           style={{
-                            fontFamily: 'Poppins-Regular',
+                            fontFamily: 'Roboto-Regular',
                             fontSize: 13,
                             color: 'grey',
                             marginTop: -7,
@@ -497,7 +497,7 @@ function ARScreen() {
                   <View style={{marginBottom: -20}}>
                     <Text
                       style={{
-                        fontFamily: 'Poppins-Medium',
+                        fontFamily: 'Roboto-Medium',
                         fontSize: 10.5,
                         color: 'white',
                       }}>
@@ -509,7 +509,7 @@ function ARScreen() {
                     </Text>
                     <Text
                       style={{
-                        fontFamily: 'Poppins-Medium',
+                        fontFamily: 'Roboto-Medium',
                         fontSize: 13,
                         color: 'white',
                       }}>
@@ -520,7 +520,7 @@ function ARScreen() {
                         : ''}
                       <Text
                         style={{
-                          fontFamily: 'Poppins-Bold',
+                          fontFamily: 'Roboto-Bold',
                         }}>
                         {brandCount} XRUN
                       </Text>{' '}
@@ -531,7 +531,7 @@ function ARScreen() {
                         : ''}
                       <Text
                         style={{
-                          fontFamily: 'Poppins-Bold',
+                          fontFamily: 'Roboto-Bold',
                         }}>
                         {coinAPI.length} BIG XRUN{' '}
                       </Text>
@@ -551,9 +551,10 @@ function ARScreen() {
                     }}>
                     <Text
                       style={{
-                        fontFamily: 'Poppins-Medium',
+                        fontFamily: 'Roboto-Medium',
                         fontSize: 13,
                         color: 'white',
+                        marginTop: -2,
                       }}>
                       {lang &&
                       lang.screen_map &&
@@ -572,7 +573,7 @@ function ARScreen() {
                       />
                       <Text
                         style={{
-                          fontFamily: 'Poppins-Bold',
+                          fontFamily: 'Roboto-Bold',
                           fontSize: 13,
                           color: '#ffdc04',
                           marginTop: -4,
@@ -652,7 +653,7 @@ function ARScreen() {
               onPress={() => getCamPermission()}>
               <Text
                 style={{
-                  fontFamily: 'Poppins-Medium',
+                  fontFamily: 'Roboto-Medium',
                   marginBottom: -3,
                   color: 'white',
                 }}>
@@ -678,7 +679,7 @@ const styles = StyleSheet.create({
   },
   permissionDeniedText: {
     fontSize: 16,
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     marginBottom: 20,
     textAlign: 'center',
     color: 'black',

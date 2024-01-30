@@ -288,7 +288,7 @@ const ModifInfoScreen = ({route}) => {
           <Text
             style={{
               color: 'white',
-              fontFamily: 'Poppins-Regular',
+              fontFamily: 'Roboto-Regular',
               fontSize: 13,
             }}>
             {lang && lang.screen_modify_information
@@ -368,7 +368,7 @@ const ModifInfoScreen = ({route}) => {
                     }}>
                     <Text
                       style={{
-                        fontFamily: 'Poppins-Medium',
+                        fontFamily: 'Roboto-Medium',
                         fontSize: 13,
                         marginBottom: -10,
                         color: '#343a59',
@@ -393,7 +393,7 @@ const ModifInfoScreen = ({route}) => {
                       style={{
                         height: 40,
                         paddingBottom: -10,
-                        fontFamily: 'Poppins-Medium',
+                        fontFamily: 'Roboto-Medium',
                         fontSize: 13,
                         color: '#343a59',
                         borderBottomColor: '#cccccc',
@@ -455,7 +455,7 @@ const ModifInfoScreen = ({route}) => {
                     }}>
                     <Text
                       style={{
-                        fontFamily: 'Poppins-Medium',
+                        fontFamily: 'Roboto-Medium',
                         fontSize: 13,
                         marginBottom: -10,
                         color: '#343a59',
@@ -480,7 +480,7 @@ const ModifInfoScreen = ({route}) => {
                       style={{
                         height: 40,
                         paddingBottom: -10,
-                        fontFamily: 'Poppins-Medium',
+                        fontFamily: 'Roboto-Medium',
                         fontSize: 13,
                         color: '#343a59',
                         borderBottomColor: '#cccccc',
@@ -527,7 +527,7 @@ const ModifInfoScreen = ({route}) => {
                     }}>
                     <Text
                       style={{
-                        fontFamily: 'Poppins-Medium',
+                        fontFamily: 'Roboto-Medium',
                         fontSize: 13,
                         marginBottom: -10,
                         color: '#343a59',
@@ -545,7 +545,7 @@ const ModifInfoScreen = ({route}) => {
                       style={{
                         height: 40,
                         paddingBottom: -10,
-                        fontFamily: 'Poppins-Medium',
+                        fontFamily: 'Roboto-Medium',
                         fontSize: 13,
                         color: '#343a59',
                         borderBottomColor: '#cccccc',
@@ -598,11 +598,12 @@ const ModifInfoScreen = ({route}) => {
                     />
                     <Text
                       style={{
-                        fontFamily: 'Poppins-Medium',
+                        fontFamily: 'Roboto-Medium',
                         fontSize: 13,
                         color: '#a8a8a7',
                         alignSelf: 'center',
                         paddingRight: 10,
+                        marginTop: -6,
                       }}>
                       +{countryCode == undefined ? '62' : countryCode}
                     </Text>
@@ -621,7 +622,7 @@ const ModifInfoScreen = ({route}) => {
                 style={{width: '100%', paddingHorizontal: 25, marginTop: 30}}>
                 <Text
                   style={{
-                    fontFamily: 'Poppins-Medium',
+                    fontFamily: 'Roboto-Medium',
                     fontSize: 13,
                     marginBottom: -10,
                     color: '#343a59',
@@ -645,11 +646,12 @@ const ModifInfoScreen = ({route}) => {
                     ]}>
                     <Text
                       style={{
-                        fontFamily: 'Poppins-Medium',
+                        fontFamily: 'Roboto-Medium',
                         fontSize: 13,
                         color: '#343a59',
                         paddingRight: 30,
                         paddingLeft: -10,
+                        paddingTop: 4,
                       }}>
                       {lang &&
                       lang.screen_modify_information &&
@@ -659,7 +661,7 @@ const ModifInfoScreen = ({route}) => {
                       <Text
                         style={{
                           color: '#ffc404',
-                          fontFamily: 'Poppins-SemiBold',
+                          fontFamily: 'Roboto-Medium',
                         }}>
                         {password}
                       </Text>
@@ -926,7 +928,7 @@ const ModifInfoScreen = ({route}) => {
                       }}>
                       <Text
                         style={{
-                          fontFamily: 'Poppins-Medium',
+                          fontFamily: 'Roboto-Medium',
                           fontSize: 13,
                           marginBottom: -10,
                           color: '#343a59',
@@ -950,7 +952,7 @@ const ModifInfoScreen = ({route}) => {
                           ]}>
                           <Text
                             style={{
-                              fontFamily: 'Poppins-Medium',
+                              fontFamily: 'Roboto-Medium',
                               fontSize: 13,
                               color: '#343a59',
                               paddingRight: 30,
@@ -970,7 +972,7 @@ const ModifInfoScreen = ({route}) => {
                       }}>
                       <Text
                         style={{
-                          fontFamily: 'Poppins-Medium',
+                          fontFamily: 'Roboto-Medium',
                           fontSize: 13,
                           marginBottom: -10,
                           color: '#343a59',
@@ -994,7 +996,7 @@ const ModifInfoScreen = ({route}) => {
                           ]}>
                           <Text
                             style={{
-                              fontFamily: 'Poppins-Medium',
+                              fontFamily: 'Roboto-Medium',
                               fontSize: 13,
                               color: '#343a59',
                               paddingRight: 30,
@@ -1130,18 +1132,18 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   title: {
-    fontFamily: 'Poppins-Bold',
+    fontFamily: 'Roboto-Bold',
     fontSize: 22,
     color: '#343a59',
     margin: 10,
   },
   normalText: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     fontSize: 13,
     color: '#343a59',
   },
   label: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     fontSize: 13,
     color: '#343a59',
     marginBottom: -5,
@@ -1157,13 +1159,13 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   input: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     fontSize: 13,
     color: '#a8a8a7',
     borderBottomColor: '#cccccc',
     borderBottomWidth: 1,
     paddingHorizontal: 5,
-    paddingBottom: -10,
+    paddingBottom: 5,
     flex: 1,
   },
   loadingContainer: {
@@ -1196,7 +1198,7 @@ const styles = StyleSheet.create({
   },
   modalItemText: {
     fontSize: 13,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     color: '#343a59',
   },
   closeButton: {
@@ -1209,7 +1211,7 @@ const styles = StyleSheet.create({
   closeButtonText: {
     color: 'white',
     fontSize: 13,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
   },
 });
 

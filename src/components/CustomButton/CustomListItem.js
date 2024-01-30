@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     marginVertical: 2,
   },
   mediumText: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     fontSize: 13,
     color: '#343a59',
     alignSelf: 'center',

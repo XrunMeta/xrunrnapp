@@ -54,7 +54,7 @@ const FirstScreen = () => {
                   fontWeight: '500',
                   color: '#343a59',
                   fontSize: 16,
-                  fontFamily: 'Poppins-Medium',
+                  fontFamily: 'Roboto-Medium',
                 }}>
                 RESET PASSWORD
               </Text>
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: '500',
     color: '#343a59',
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     marginTop: 10,
     marginBottom: 30,
   },
