@@ -197,10 +197,9 @@ const WalletScreen = ({navigation, route}) => {
       MEMP: '#343b58',
     };
 
-    const walletColor = walletColors[symbol] || walletColors['DIGX'];
     return (
       <View
-        style={[styles.card, {backgroundColor: walletColor}]}
+        style={[styles.card, {backgroundColor: walletColors[symbol]}]}
         key={currency}>
         <View style={styles.wrapperPartTop}>
           <Text style={styles.cardName}>{displaystr}</Text>
