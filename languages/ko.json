@@ -527,7 +527,12 @@
     "coin_above_0": "코인을 0 이상 입력하세요.",
     "acquired_coin": "획득한 코인",
     "select_network": "네트워크 선택",
-    "desc": "전환 시에는 전환 전에 약 네트워크 수수료가 공제됩니다."
+    "desc": "전환 시에는 전환 전에 약 네트워크 수수료가 공제됩니다.",
+    "exchanged": "스왑할 코인",
+    "exchanged_xrun_desc": "XRUN 보유코인으로 대상 코인으로 스왑됩니다",
+    "input_exchanged": "스왑할 코인수량을 입력해 주세요.",
+    "check_conversion_desc": "정보를 한 번 더 확인해 주세요.",
+    "minimum_exchange": "최소 스왑금액인"
   },
   "complete_conversion": {
     "title": "전환 요청 완료",
@@ -535,6 +540,13 @@
     "current_balance": "현재 잔액",
     "conversion_request": "전환 요청자",
     "desc": "네트워크 수수료와 보낼금액이 보유량보다 높으면 전환이 거부될 수 있습니다."
+  },
+  "complete_exchange": {
+    "exchange_target": "스왑 대상 코인",
+    "exchange_request": "스왑 요청 코인",
+    "post_exchange_balance": "스왑 후 잔액",
+    "previous_balance": "이전 잔액",
+    "title": "스왑 완료"
   },
   "global_error": {
     "error": "통신문제가 발생했습니다. 잠시후 시도해 주세요."

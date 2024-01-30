@@ -527,7 +527,12 @@
     "coin_above_0": "Please enter the coin above 0.",
     "acquired_coin": "acquired coin",
     "select_network": "Select Network",
-    "desc": "When switching, the gas is approximately 0.124% deducted before switching."
+    "desc": "When switching, the gas is approximately 0.124% deducted before switching.",
+    "exchanged": "To be exchanged",
+    "exchanged_xrun_desc": "It will be exchanged for an XRUN retention.",
+    "input_exchanged": "Please enter the number of coins to be exchanged.",
+    "check_conversion_desc": "Please check the information once more.",
+    "minimum_exchange": "Minimum exchange amount"
   },
   "complete_conversion": {
     "title": "Switch request completed",
@@ -535,6 +540,13 @@
     "current_balance": "Current Balance",
     "conversion_request": "Conversion Request from",
     "desc": "Swap may reject if network fee is higher then your remain XRUN"
+  },
+  "complete_exchange": {
+    "exchange_target": "Exchange Target",
+    "exchange_request": "Exchange Request",
+    "post_exchange_balance": "Post-exchange balance",
+    "previous_balance": "Previous balance",
+    "title": "Exchange Complete"
   },
   "global_error": {
     "error": "It's a server problem. Please try in a few minutes."

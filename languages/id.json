@@ -526,7 +526,12 @@
     "coin_above_0": "Silakan masukkan koin di atas 0.",
     "acquired_coin": "mendapatkan koin",
     "select_network": "Pilih Jaringan",
-    "desc": "Ketika beralih, biaya gas sekitar 0.124% dikurangkan sebelum beralih."
+    "desc": "Ketika beralih, biaya gas sekitar 0.124% dikurangkan sebelum beralih.",
+    "exchanged": "XRUN yang akan di tukar ",
+    "exchanged_xrun_desc": "Akan tertukar dengan XRUN  XRUN anda.",
+    "input_exchanged": "Masukan jumlah XRUN  yang ingin di tukar.",
+    "check_conversion_desc": "Silakan mengecek informasi anda sekali lagi.",
+    "minimum_exchange": "Jumlah penukaran minimum"
   },
   "complete_conversion": {
     "title": "Permintaan Konversi Selesai",
@@ -534,6 +539,13 @@
     "current_balance": "Saldo Saat Ini",
     "conversion_request": "Permintaan Konversi dari",
     "desc": "Pertukaran mungkin ditolak jika biaya jaringan lebih tinggi daripada sisa XRUN Anda"
+  },
+  "complete_exchange": {
+    "exchange_target": "XRUN  yang ingin di tukar",
+    "exchange_request": "Permintaan penukaran XRUN",
+    "post_exchange_balance": "Saldo setelah penukaran",
+    "previous_balance": "Saldo Sebelum",
+    "title": "Berhasil menukarkan XRUN"
   },
   "global_error": {
     "error": "Server telah masalah. Silakan mencoba lagi nanti."
