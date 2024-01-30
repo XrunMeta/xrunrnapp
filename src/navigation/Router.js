@@ -45,13 +45,15 @@ import WalletScreen from '../screens/WalletScreen';
 import SendWalletScreen from '../screens/SendWalletScreen';
 import ShowAdScreen from '../screens/AdvertiseScreen/ShowAdScreen';
 import CompleteSend from '../screens/CompleteSend';
-import ConversionRequest from '../screens/ConversionRequestWalletScreen';
+import CompleteExchange from '../screens/CompleteExchange';
+import Change from '../screens/ChangeWalletScreen';
 import {View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API} from '../../utils';
 import CompleteConversion from '../screens/CompleteConversion';
 import SuccessCloseMembership from '../screens/SettingScreen/SuccessCloseMembership';
+import Exchange from '../screens/ExchangeWalletScreen';
 
 export default Router = () => {
   const Stack = createNativeStackNavigator();
@@ -169,7 +171,9 @@ export default Router = () => {
         <Stack.Screen name="SendWallet" component={SendWalletScreen} />
         <Stack.Screen name="ShowAd" component={ShowAdScreen} />
         <Stack.Screen name="CompleteSend" component={CompleteSend} />
-        <Stack.Screen name="ConversionRequest" component={ConversionRequest} />
+        <Stack.Screen name="CompleteExchange" component={CompleteExchange} />
+        <Stack.Screen name="Change" component={Change} />
+        <Stack.Screen name="Exchange" component={Exchange} />
         <Stack.Screen
           name="CompleteConversion"
           component={CompleteConversion}
