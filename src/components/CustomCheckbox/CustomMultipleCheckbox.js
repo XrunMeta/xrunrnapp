@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#343a59',
     fontSize: 13,
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     marginTop: 2,
   },
   checkMark: {

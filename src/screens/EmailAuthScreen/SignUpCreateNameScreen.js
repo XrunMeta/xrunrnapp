@@ -93,7 +93,7 @@ const SignUpCreateName = () => {
           }}>
           <Text
             style={{
-              fontFamily: 'Poppins-Medium',
+              fontFamily: 'Roboto-Medium',
               fontSize: 13,
               color: '#343a59',
               marginBottom: -5,
@@ -111,7 +111,7 @@ const SignUpCreateName = () => {
             {/* Last Name */}
             <TextInput
               style={{
-                fontFamily: 'Poppins-Medium',
+                fontFamily: 'Roboto-Medium',
                 fontSize: 13,
                 color: '#343a59',
                 borderBottomColor: '#cccccc',
@@ -134,7 +134,7 @@ const SignUpCreateName = () => {
             {/* Name */}
             <TextInput
               style={{
-                fontFamily: 'Poppins-Medium',
+                fontFamily: 'Roboto-Medium',
                 fontSize: 13,
                 color: '#343a59',
                 borderBottomColor: '#cccccc',

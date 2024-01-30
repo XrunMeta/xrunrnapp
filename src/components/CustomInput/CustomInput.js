@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   label: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     fontSize: 13,
     marginBottom: -10,
     color: '#343a59',
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     paddingBottom: -10,
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     fontSize: 13,
     color: '#343a59',
     borderBottomColor: '#cccccc',

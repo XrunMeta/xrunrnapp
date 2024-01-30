@@ -360,7 +360,7 @@ const SendWalletScreen = ({navigation, route}) => {
           <Text
             style={{
               color: '#fff',
-              fontFamily: 'Poppins-Regular',
+              fontFamily: 'Roboto-Regular',
               fontSize: 13,
               marginTop: 10,
             }}>
@@ -531,7 +531,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: 'Poppins-Bold',
+    fontFamily: 'Roboto-Bold',
     color: '#051C60',
     margin: 10,
   },
@@ -545,12 +545,12 @@ const styles = StyleSheet.create({
   },
   currencyName: {
     color: '#fff',
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     fontSize: 16,
   },
   balance: {
     color: '#fff',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     fontSize: 13,
   },
   partBottom: {
@@ -586,11 +586,11 @@ const styles = StyleSheet.create({
   },
   textScanQR: {
     color: '#fff',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
   },
   notificationTextInQR: {
     color: '#fff',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     margin: 0,
     maxWidth: 240,
   },

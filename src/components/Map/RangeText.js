@@ -6,7 +6,7 @@ const RangeText = ({range}) => {
     <Text
       style={{
         fontSize: 11,
-        fontFamily: 'Poppins-Medium',
+        fontFamily: 'Roboto-Medium',
       }}>
       {range}m
     </Text>

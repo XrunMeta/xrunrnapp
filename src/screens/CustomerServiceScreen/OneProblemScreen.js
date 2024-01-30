@@ -114,7 +114,7 @@ const OneProblemScreen = () => {
                     style={{flexDirection: 'row', gap: 10, marginBottom: -3}}>
                     <Text
                       style={{
-                        fontFamily: 'Poppins-Regular',
+                        fontFamily: 'Roboto-Regular',
                         fontSize: 11,
                         color: 'grey',
                       }}>
@@ -122,7 +122,7 @@ const OneProblemScreen = () => {
                     </Text>
                     <Text
                       style={{
-                        fontFamily: 'Poppins-Regular',
+                        fontFamily: 'Roboto-Regular',
                         fontSize: 11,
                         color: 'grey',
                       }}>
@@ -131,7 +131,7 @@ const OneProblemScreen = () => {
                   </View>
                   <Text
                     style={{
-                      fontFamily: 'Poppins-Regular',
+                      fontFamily: 'Roboto-Regular',
                       fontSize: 13,
                       color: 'black',
                     }}>
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: 'Poppins-Bold',
+    fontFamily: 'Roboto-Bold',
     color: '#051C60',
     margin: 10,
   },

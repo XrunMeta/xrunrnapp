@@ -264,16 +264,16 @@ const NotifyScreen = () => {
             <Text
               style={{
                 color: '#ffdc04',
-                fontFamily: 'Poppins-SemiBold',
+                fontFamily: 'Roboto-Medium',
                 fontSize: 16,
               }}>
               {isDelete
-                ? lang && lang.screen_notify && lang.screen_notify.deleteAll
-                  ? lang.screen_notify.deleteAll
-                  : ''
+                ? lang && lang.screen_notify && lang.screen_notify.deletAll
+                  ? lang.screen_notify.deletAll
+                  : 'DELETE ALL'
                 : lang && lang.screen_notify && lang.screen_notify.delete
                 ? lang.screen_notify.delete
-                : ''}
+                : 'DELETE'}
             </Text>
           </TouchableOpacity>
         </View>
@@ -291,7 +291,7 @@ const NotifyScreen = () => {
             <Text
               style={{
                 color: 'grey',
-                fontFamily: 'Poppins-Regular',
+                fontFamily: 'Roboto-Regular',
                 fontSize: 13,
               }}>
               {lang && lang.screen_notify && lang.screen_notify.loader
@@ -319,7 +319,7 @@ const NotifyScreen = () => {
                       <Text
                         style={{
                           color: 'white',
-                          fontFamily: 'Poppins-Regular',
+                          fontFamily: 'Roboto-Regular',
                           fontSize: 11,
                           backgroundColor: '#89919d73',
                           borderRadius: 115,
@@ -463,7 +463,7 @@ const NotifyScreen = () => {
                             }}>
                             <Text
                               style={{
-                                fontFamily: 'Poppins-SemiBold',
+                                fontFamily: 'Roboto-Medium',
                                 fontSize: 13,
                                 color: 'white',
                               }}>
@@ -568,13 +568,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: 'Poppins-Bold',
+    fontFamily: 'Roboto-Bold',
     color: '#051C60',
     margin: 10,
   },
   normalText: {
     color: 'grey',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     fontSize: 13,
   },
   collapseWrapper: {
@@ -610,9 +610,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     marginRight: 10,
     color: 'black',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     fontSize: 13,
-    paddingBottom: 6,
+    paddingBottom: 10,
   },
   sendButton: {
     backgroundColor: '#051C60',
@@ -623,8 +623,9 @@ const styles = StyleSheet.create({
   },
   sendButtonText: {
     color: 'white',
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Roboto-Medium',
     fontSize: 13,
+    marginBottom: 5,
     marginTop: 3,
   },
   chatContainer: {
@@ -647,12 +648,12 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start', // Left Bubble Chat
   },
   chatText: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     fontSize: 13,
     color: 'black',
   },
   timestampText: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     fontSize: 11,
     color: 'grey',
     marginTop: 5,

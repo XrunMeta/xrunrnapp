@@ -363,12 +363,12 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   normalText: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     fontSize: 13,
     color: '#343a59',
   },
   boldText: {
-    fontFamily: 'Poppins-Bold',
+    fontFamily: 'Roboto-Bold',
     fontSize: 18,
     color: '#343a59',
   },
@@ -387,12 +387,12 @@ const styles = StyleSheet.create({
     height: 100,
   },
   emailAuth: {
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Roboto-Medium',
     fontSize: 13,
     color: '#343a59',
   },
   disableText: {
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     fontSize: 13,
     color: '#aeb1b5',
   },
@@ -405,7 +405,7 @@ const styles = StyleSheet.create({
   codeInput: {
     width: 40,
     height: 60,
-    fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Roboto-Medium',
     fontSize: 20,
     color: '#343a59',
     borderBottomWidth: 2,

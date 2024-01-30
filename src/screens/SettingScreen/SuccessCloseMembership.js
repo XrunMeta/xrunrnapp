@@ -64,7 +64,7 @@ const SuccessCloseMembership = () => {
         <Text
           style={[
             styles.normalText,
-            {textAlign: 'center', fontFamily: 'Poppins-Bold', fontSize: 16},
+            {textAlign: 'center', fontFamily: 'Roboto-Bold', fontSize: 16},
           ]}>
           {lang &&
           lang.screen_setting &&
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     width: 80,
   },
   normalText: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Roboto-Medium',
     fontSize: 13,
     color: '#343a59',
   },

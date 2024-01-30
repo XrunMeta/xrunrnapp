@@ -29,13 +29,13 @@ export default CustomInputWallet;
 const styles = StyleSheet.create({
   label: {
     color: '#000',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
   },
   input: customFontSize => ({
     borderBottomWidth: 1,
     paddingLeft: 10,
     borderBottomColor: '#ddd',
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Roboto-Regular',
     color: '#000',
     fontSize: customFontSize,
   }),
