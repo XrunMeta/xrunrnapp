@@ -69,8 +69,8 @@ const EmailAuthScreen = () => {
             return responseData;
           } catch (error) {
             setIsLoading(true);
-            crashlytics().recordError(new Error(err));
-            crashlytics().log(err);
+            crashlytics().recordError(new Error(error));
+            crashlytics().log(error);
 
             return {
               data: 'error',

@@ -61,8 +61,8 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
       } catch (error) {
         Alert.alert('', 'Error fetching QR code data');
         console.error('Error fetching QR code data:', error);
-        crashlytics().recordError(new Error(err));
-        crashlytics().log(err);
+        crashlytics().recordError(new Error(error));
+        crashlytics().log(error);
       }
     };
 
