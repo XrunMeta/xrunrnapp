@@ -220,7 +220,7 @@ const WalletScreen = ({navigation, route}) => {
             <Text style={styles.textWallet}>
               {lang.screen_wallet.possess ? lang.screen_wallet.possess : ''}
             </Text>
-            <Text style={styles.valueWallet}>
+            <Text style={[styles.valueWallet, {marginBottom: 3}]}>
               {Wamount.replaceAll('.', ',')}
             </Text>
             <Text style={styles.textWallet}>{symbol}</Text>
@@ -230,7 +230,7 @@ const WalletScreen = ({navigation, route}) => {
             <Text style={styles.textWallet}>
               {lang.screen_wallet.catch ? lang.screen_wallet.catch : ''}
             </Text>
-            <Text style={styles.valueWallet}>
+            <Text style={[styles.valueWallet, {marginBottom: 2}]}>
               {amount.replaceAll('.', ',')}
             </Text>
             <Text style={styles.textWallet}>
@@ -495,7 +495,8 @@ const styles = StyleSheet.create({
   valueWallet: {
     color: 'white',
     fontFamily: 'Roboto-Medium',
-    fontSize: 20,
+    fontSize: 16,
+    marginHorizontal: -3,
   },
   wrapperPartBottom: {
     marginTop: 13,
