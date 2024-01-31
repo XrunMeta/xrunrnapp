@@ -1001,6 +1001,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Medium',
     fontSize: 15,
     color: 'black',
+    marginBottom: 4,
   },
   wrapperTabView: {
     flex: 1,
@@ -1024,6 +1025,7 @@ const styles = StyleSheet.create({
   },
   date: {
     fontSize: 11,
+    marginTop: 3,
     fontFamily: 'Roboto-Regular',
     color: '#aaa',
   },

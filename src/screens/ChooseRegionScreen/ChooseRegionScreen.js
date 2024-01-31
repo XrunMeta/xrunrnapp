@@ -135,6 +135,7 @@ const ChooseRegionScreen = ({route}) => {
           style={{
             width: '100%',
             flexDirection: 'row',
+            marginTop: 10,
           }}>
           <Image
             resizeMode="contain"
