@@ -526,7 +526,12 @@
     "coin_above_0": "请输入大于0的币。",
     "acquired_coin": "获得的币",
     "select_network": "选择网络",
-    "desc": "切换时，在切换之前大约扣除0.124%的气体。"
+    "desc": "切换时，在切换之前大约扣除0.124%的气体。",
+    "exchanged": "交换硬币",
+    "exchanged_xrun_desc": "更换为XRUN保有硬币。",
+    "input_exchanged": "请输入更换的硬币数量。",
+    "check_conversion_desc": "请再次检查信息。",
+    "minimum_exchange": "最少交换金额"
   },
   "complete_conversion": {
     "title": "转换请求已完成",
@@ -534,6 +539,13 @@
     "current_balance": "当前余额",
     "conversion_request": "转换请求来自",
     "desc": "如果网络费用高于剩余的XRUN，则交换可能被拒绝。"
+  },
+  "complete_exchange": {
+    "exchange_target": "交换对象",
+    "exchange_request": "要求交换的硬币",
+    "post_exchange_balance": "交换后余额",
+    "previous_balance": "前余额",
+    "title": "交换完毕"
   },
   "global_error": {
     "error": "服务器有问题，请稍后再试."

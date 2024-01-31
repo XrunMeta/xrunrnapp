@@ -797,8 +797,8 @@ const TableWalletCard = ({
   });
 
   // Go to page conversion request
-  const conversionRequest = () => {
-    navigation.navigate('ConversionRequest', {
+  const changeAndExchangeWalletScreen = type => {
+    navigation.navigate(type === 'Change' ? 'Change' : 'Change', {
       currency: dataWallet.currency,
     });
   };
@@ -847,7 +847,7 @@ const TableWalletCard = ({
               <TouchableOpacity
                 activeOpacity={0.6}
                 style={styles.contentTextHead}
-                onPress={conversionRequest}>
+                onPress={() => changeAndExchangeWalletScreen('Change')}>
                 <Text style={styles.textHead}>
                   {lang && lang.screen_wallet.table_head_change
                     ? lang.screen_wallet.table_head_change
@@ -858,7 +858,7 @@ const TableWalletCard = ({
               <TouchableOpacity
                 activeOpacity={0.6}
                 style={styles.contentTextHead}
-                onPress={conversionRequest}>
+                onPress={() => changeAndExchangeWalletScreen('Exchange')}>
                 <Text style={styles.textHead}>
                   {lang && lang.screen_wallet.table_head_exchange
                     ? lang.screen_wallet.table_head_exchange

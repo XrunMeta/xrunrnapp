@@ -69,8 +69,8 @@ const SendWalletScreen = ({navigation, route}) => {
         setDataMember(dataMember);
       } catch (error) {
         console.error('Failed to get userData from AsyncStorage:', err);
-        crashlytics().recordError(new Error(err));
-        crashlytics().log(err);
+        crashlytics().recordError(new Error(error));
+        crashlytics().log(error);
       }
     };
 
@@ -112,8 +112,8 @@ const SendWalletScreen = ({navigation, route}) => {
         }
       } catch (error) {
         console.error('Failed to request camera permission:', error);
-        crashlytics().recordError(new Error(err));
-        crashlytics().log(err);
+        crashlytics().recordError(new Error(error));
+        crashlytics().log(error);
       }
     };
 
