@@ -9,30 +9,31 @@ import {
   Alert,
   Keyboard,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInputWallet from '../../components/CustomInputWallet';
 import {URL_API, getLanguage2} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
-const ConversionRequest = ({navigation, route}) => {
+const Exchange = ({navigation, route}) => {
   const [lang, setLang] = useState('');
   const [iconNextIsDisabled, setIconNextIsDisabled] = useState(true);
   const [amount, setAmount] = useState('');
-  const [address, setAddress] = useState('');
   const {currency} = route.params;
   const [dataMember, setDataMember] = useState({});
   const [activeNetwork, setActiveNetwork] = useState('ETH');
   const [subcurrency, setSubcurrency] = useState('5205');
-  const [balance, setBalance] = useState('');
+  const [symbol, setSymbol] = useState('XRUN');
+  const symbolRef = useRef(null);
+  const [Eamount, setEamount] = useState(0);
+  const [minchange, setMinchange] = useState(0);
+  const [estimate, setEstimate] = useState((0.0).toFixed(1));
+  const [leftval, setLeftval] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   // Conversion
   const [popupConversion, setPopupConversion] = useState(false);
-  const [conversionTargetConverted, setConversionTargetConverted] = useState(0);
-  const [conversionRequest, setConversionRequest] = useState(0);
-  const [isNaNCoverted, setIsNaNConverted] = useState(false);
 
   useEffect(() => {
     // Get Language Data
@@ -68,39 +69,86 @@ const ConversionRequest = ({navigation, route}) => {
     getUserData();
   }, []);
 
-  // Get balance
   useEffect(() => {
-    const getBalance = async () => {
-      try {
-        if (Object.keys(dataMember).length !== 0) {
-          const fetchData = await fetch(
-            `${URL_API}&act=app4300-temp-amount&member=${dataMember.member}&currency=${currency}`,
-          );
-
-          const response = await fetchData.json();
-          const balance = await response.data[0].amount;
-          setBalance(balance);
+    if (dataMember) {
+      const coinInquiry = async () => {
+        try {
+          if (currency === '11') {
+            const request = await fetch(
+              `${URL_API}&act=nd-1002&member=${dataMember.member}`,
+              {
+                method: 'POST',
+              },
+            );
+            const response = await request.json();
+            const result = await response;
+            setEamount(result);
+            setSymbol('XRUN');
+            setIsLoading(false);
+          }
+        } catch (e) {
           setIsLoading(false);
+          console.log(`Error get coin inquiry: ${err}`);
+          crashlytics().recordError(new Error(err));
+          crashlytics().log(err);
+          Alert.alert(
+            '',
+            lang && lang.global_error && lang.global_error.error
+              ? lang.global_error.error
+              : '',
+          );
         }
-      } catch (err) {
-        console.log(`Error get balance: ${err}`);
-        crashlytics().recordError(new Error(err));
-        crashlytics().log(err);
-      }
-    };
+      };
 
-    getBalance();
+      coinInquiry();
+
+      const viewExchangeBalance = async () => {
+        // Deprecated API
+        const request = await fetch(
+          `${URL_API}&act=app4500-01&currency=${currency}&member=${dataMember.member}`,
+          {
+            method: 'POST',
+          },
+        );
+        const response = await request.json();
+
+        if (response && response.data.length > 0) {
+          setIsLoading(false);
+          const result = await response.data[0];
+          const {symbol, Eamount, ratio, minchange} = result;
+          setSymbol(symbol);
+          setEamount(Eamount);
+          symbolRef.current = ratio;
+          setMinchange(parseFloat(minchange));
+          console.log(
+            `Symbol: ${symbol} | Eamount: ${Eamount} | Ratio: ${ratio} | Minchange: ${minchange}`,
+          );
+        }
+      };
+
+      viewExchangeBalance();
+    }
   }, [dataMember]);
 
   useEffect(() => {
-    if (amount === '' || amount === '-' || parseFloat(amount) > balance) {
+    let tval = 0;
+    if (amount === '' || amount === '-' || amount.length < 1 || amount == 0) {
+      tval = 0;
+      setEstimate(tval.toFixed(1));
       setIconNextIsDisabled(true);
-    } else if (amount == 0 || amount < 0) {
+    } else if (amount > parseFloat(Eamount)) {
       setIconNextIsDisabled(true);
     } else {
+      tval = amount;
+
+      const floatAmount = parseFloat(tval);
+      const ratio = parseFloat(symbolRef.current);
+      const result = floatAmount * ratio;
+      setEstimate(result);
+
       setIconNextIsDisabled(false);
     }
-  }, [amount, address]);
+  }, [amount]);
 
   const onBack = () => {
     navigation.navigate('WalletHome');
@@ -114,15 +162,6 @@ const ConversionRequest = ({navigation, route}) => {
           ? lang.screen_conversion.invalid_input
           : '',
       );
-    } else if (parseFloat(amount) > parseFloat(balance)) {
-      Alert.alert(
-        '',
-        lang &&
-          lang.screen_conversion &&
-          lang.screen_conversion.insufficient_coin
-          ? lang.screen_conversion.insufficient_coin
-          : '',
-      );
     } else if (amount == 0 || amount < 0) {
       Alert.alert(
         '',
@@ -130,36 +169,31 @@ const ConversionRequest = ({navigation, route}) => {
           ? lang.screen_conversion.coin_above_0
           : '',
       );
+      // } else if (amount < minchange) {
+      //   Alert.alert(
+      //     '',
+      //     lang && lang ? lang.screen_conversion.minimum_exchange : '',
+      //     [
+      //       {
+      //         text: lang && lang ? lang.screen_wallet.confirm_alert : '',
+      //       },
+      //     ],
+      //   );
+    } else if (amount > Eamount) {
+      Alert.alert(
+        '',
+        lang && lang ? lang.screen_send.send_balance_not_enough : '',
+        [
+          {
+            text: lang && lang ? lang.screen_wallet.confirm_alert : '',
+          },
+        ],
+      );
     } else {
-      // setAmount('');
       setPopupConversion(true);
-      setConversionRequest(parseFloat(amount));
       Keyboard.dismiss();
-      let totalConverted;
-
-      switch (activeNetwork) {
-        case 'ETH':
-          totalConverted = parseFloat(amount) * (450 / 2139400.0);
-          setConversionTargetConverted(totalConverted);
-          setIsNaNConverted(isNaN(totalConverted));
-          break;
-        case 'TRX':
-          totalConverted = parseFloat(amount) * (450 / 86.0);
-          setConversionTargetConverted(totalConverted);
-          setIsNaNConverted(isNaN(totalConverted));
-          break;
-        case 'MATIC':
-          totalConverted = parseFloat(amount) * (450 / 1230.0);
-          setConversionTargetConverted(totalConverted);
-          setIsNaNConverted(isNaN(totalConverted));
-          break;
-        default:
-          // Default ETH
-          totalConverted = parseFloat(amount) * (450 / 2139400.0);
-          setConversionTargetConverted(totalConverted);
-          setIsNaNConverted(isNaN(totalConverted));
-          break;
-      }
+      const leftval = parseFloat(Eamount) - parseFloat(amount);
+      setLeftval(leftval);
     }
   };
 
@@ -188,70 +222,41 @@ const ConversionRequest = ({navigation, route}) => {
   };
 
   const confirmConversion = async () => {
-    if (isNaNCoverted) {
-      Alert.alert('', 'Invalid input amount.');
-      setPopupConversion(false);
-    } else if (address === '') {
-      Alert.alert(
-        '',
-        lang && lang.screen_send && lang.screen_send.send_address_placeholder
-          ? lang.screen_send.send_address_placeholder
-          : '',
-        [
-          {
-            text:
-              lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
-                ? lang.screen_wallet.confirm_alert
-                : '',
-          },
-        ],
-      );
-      setPopupConversion(false);
-    } else if (address.length < 40) {
-      Alert.alert(
-        '',
-        lang && lang.screen_send && lang.screen_send.send_address_less
-          ? lang.screen_send.send_address_less
-          : '',
-        [
-          {
-            text:
-              lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
-                ? lang.screen_wallet.confirm_alert
-                : '',
-          },
-        ],
-      );
-      setPopupConversion(false);
-    } else {
-      setIsLoading(true);
+    setIsLoading(true);
 
+    try {
       const request = await fetch(
-        `${URL_API}&act=app4420-02&currency=${currency}&member=${dataMember.member}&address=${address}&amount=${amount}&extracurrency=${subcurrency}`,
+        `${URL_API}&act=app4520-01&currency=${currency}&member=${dataMember.member}&asxrun=${estimate}&amount=${amount}`,
+        {
+          method: 'POST',
+        },
       );
-
       const response = await request.json();
-      const result = response.data[0].count;
-      setIsLoading(false);
-      setPopupConversion(false);
-      setAmount('');
-      setAddress('');
-      setActiveNetwork('ETH');
+      const result = await response.data[0];
+      const {count} = result;
 
-      if (result === '1') {
-        navigation.navigate('CompleteConversion', {
-          symbol: activeNetwork,
-          conversionTargetConverted,
-          amount,
-        });
+      if (count.toString() === '-1') {
+        Alert.alert(result.v2);
       } else {
-        Alert.alert(
-          '',
-          lang && lang.global_error && lang.global_error.error
-            ? lang.global_error.error
-            : '',
-        );
+        navigation.navigate('CompleteExchange', {
+          symbol,
+          amount,
+          currency,
+          originamount: Eamount,
+          estimate,
+          leftval,
+        });
       }
+    } catch (err) {
+      Alert.alert(
+        '',
+        lang && lang.global_error && lang.global_error.error
+          ? lang.global_error.error
+          : '',
+      );
+      console.error('Error in fetchData:', err);
+      crashlytics().recordError(new Error(err));
+      crashlytics().log(err);
     }
   };
 
@@ -261,6 +266,15 @@ const ConversionRequest = ({navigation, route}) => {
       {isLoading && (
         <View style={styles.loading}>
           <ActivityIndicator size={'large'} color={'#fff'} />
+          <Text
+            style={{
+              color: '#fff',
+              fontFamily: 'Poppins-Regular',
+              fontSize: 13,
+              marginTop: 10,
+            }}>
+            Loading...
+          </Text>
         </View>
       )}
 
@@ -270,28 +284,41 @@ const ConversionRequest = ({navigation, route}) => {
         </View>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>
-            {lang && lang ? lang.screen_conversion.title : ''}
+            {lang && lang.screen_wallet.table_head_exchange
+              ? lang.screen_wallet.table_head_exchange
+              : ''}
           </Text>
         </View>
       </View>
 
       <View style={{backgroundColor: '#fff'}}>
         <View style={styles.partTop}>
-          <Text style={styles.currencyName}>-</Text>
+          <Text style={[styles.currencyName, {opacity: 0}]}>-</Text>
           <View style={styles.partScanQR}>
-            <Text style={styles.balance}>
-              {lang && lang ? lang.screen_conversion.acquired_coin : ''}:{' '}
-              {balance}XRUN
-            </Text>
+            <View style={{flexDirection: 'row'}}>
+              <Text style={styles.balance}>
+                {lang && lang ? lang.screen_conversion.acquired_coin : ''}:{' '}
+                {Eamount}
+              </Text>
+              <Text style={styles.balance} ref={symbolRef}>
+                {symbol}
+              </Text>
+            </View>
           </View>
         </View>
 
         <View style={styles.partBottom}>
           <Text style={styles.selectNetwork}>
-            {lang && lang ? lang.screen_conversion.select_network : ''}
+            {lang && lang.screen_conversion && lang.screen_conversion.exchanged
+              ? lang.screen_conversion.exchanged
+              : ''}
           </Text>
           <Text style={styles.description}>
-            {lang && lang ? lang.screen_conversion.desc : ''}
+            {lang &&
+            lang.screen_conversion &&
+            lang.screen_conversion.exchanged_xrun_desc
+              ? lang.screen_conversion.exchanged_xrun_desc
+              : ''}
           </Text>
 
           <View style={styles.wrapperNetwork}>
@@ -319,17 +346,14 @@ const ConversionRequest = ({navigation, route}) => {
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={1}
-              onPress={() => changeActiveNetwork('MATIC')}
+              onPress={() => changeActiveNetwork('BUTTON')}
               style={[
                 styles.wrapperTextNetwork,
-                activeNetwork === 'MATIC' && {
+                activeNetwork === 'BUTTON' && {
                   backgroundColor: currentActiveNetwork,
                 },
-                {
-                  width: 130,
-                },
               ]}>
-              <Text style={styles.textDay}>MATIC(POLYGON)</Text>
+              <Text style={styles.textDay}>BUTTON</Text>
             </TouchableOpacity>
           </View>
 
@@ -340,20 +364,16 @@ const ConversionRequest = ({navigation, route}) => {
               isNumber
               labelVisible={false}
               placeholder={
-                lang && lang ? lang.screen_send.send_amount_placeholder : ''
-              }
-              customFontSize={16}
-            />
-            <CustomInputWallet
-              value={address}
-              labelVisible={false}
-              setValue={setAddress}
-              placeholder={
-                lang && lang ? lang.screen_send.send_address_placeholder : ''
+                lang &&
+                lang.screen_conversion &&
+                lang.screen_conversion.input_exchanged
+                  ? lang.screen_conversion.input_exchanged
+                  : ''
               }
               customFontSize={16}
             />
           </View>
+          <Text style={styles.estimate}>{estimate}XRUN</Text>
         </View>
       </View>
 
@@ -380,31 +400,48 @@ const ConversionRequest = ({navigation, route}) => {
         <View style={styles.popupConversion}>
           <View style={styles.wrapperConversion}>
             <View style={styles.wrapperPartTop}>
-              <Text style={styles.textChange}>Change </Text>
+              <Text style={styles.textChange}>
+                {lang && lang ? lang.screen_wallet.table_head_exchange : ''}{' '}
+              </Text>
               <Text style={styles.textCheckInformation}>
-                Please check the information once more.
+                {lang && lang
+                  ? lang.screen_conversion.check_conversion_desc
+                  : ''}
               </Text>
             </View>
             <View style={styles.contentConversion}>
               <View style={styles.wrapperTextConversion}>
                 <Text style={styles.textPartLeft}>
-                  {lang && lang
-                    ? lang.complete_conversion.target_converted
-                    : ''}
+                  {lang && lang ? lang.complete_exchange.exchange_target : ''}
                 </Text>
                 <Text style={styles.textPartRight}>
-                  {conversionTargetConverted.toFixed(6).replaceAll('.', ',')}
-                  {activeNetwork}
+                  {symbol} {'>> XRUN'}
                 </Text>
               </View>
               <View style={styles.wrapperTextConversion}>
                 <Text style={styles.textPartLeft}>
-                  {lang && lang
-                    ? lang.complete_conversion.conversion_request
-                    : ''}{' '}
+                  {lang && lang ? lang.complete_exchange.exchange_request : ''}
                 </Text>
                 <Text style={styles.textPartRight}>
-                  {parseFloat(conversionRequest).toFixed(5)}XRUN
+                  {amount}
+                  {symbol}
+                </Text>
+              </View>
+              <View style={styles.wrapperTextConversion}>
+                <Text style={styles.textPartLeft}>
+                  {lang && lang ? lang.screen_wallet.table_head_exchange : ''}
+                </Text>
+                <Text style={styles.textPartRight}>{estimate}XRUN</Text>
+              </View>
+              <View style={styles.wrapperTextConversion}>
+                <Text style={styles.textPartLeft}>
+                  {lang && lang
+                    ? lang.complete_exchange.post_exchange_balance
+                    : ''}
+                </Text>
+                <Text style={styles.textPartRight}>
+                  {leftval}
+                  {symbol}
                 </Text>
               </View>
             </View>
@@ -434,7 +471,7 @@ const ConversionRequest = ({navigation, route}) => {
   );
 };
 
-export default ConversionRequest;
+export default Exchange;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -451,7 +488,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: 'Poppins-Bold',
     color: '#051C60',
     margin: 10,
   },
@@ -465,12 +502,12 @@ const styles = StyleSheet.create({
   },
   currencyName: {
     color: '#fff',
-    fontFamily: 'Roboto-Medium',
+    fontFamily: 'Poppins-Medium',
     fontSize: 18,
   },
   balance: {
     color: '#fff',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Poppins-Regular',
     fontSize: 13,
   },
   partBottom: {
@@ -493,18 +530,18 @@ const styles = StyleSheet.create({
     width: 95,
   },
   selectNetwork: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Poppins-Regular',
     color: '#000',
     marginTop: 10,
   },
   description: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Poppins-Regular',
     color: '#bbb',
     marginTop: 4,
   },
   wrapperNetwork: {
     flexDirection: 'row',
-    gap: 4,
+    gap: 12,
     marginTop: 10,
     marginBottom: 30,
   },
@@ -518,7 +555,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   textDay: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: 'Poppins-Medium',
     color: 'black',
   },
   wrapperInput: {
@@ -557,13 +594,13 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   textChange: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: 'Poppins-Medium',
     color: '#000',
     textTransform: 'uppercase',
     fontSize: 13,
   },
   textCheckInformation: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Poppins-Regular',
     fontSize: 11,
     color: '#000',
   },
@@ -580,12 +617,12 @@ const styles = StyleSheet.create({
   },
   textPartLeft: {
     color: '#aaa',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Poppins-Regular',
     fontSize: 13,
   },
   textPartRight: {
     color: '#000',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: 'Poppins-Regular',
     fontSize: 13,
   },
   wrapperButton: {
@@ -600,7 +637,14 @@ const styles = StyleSheet.create({
   },
   textButtonConfirm: {
     color: '#343c5a',
-    fontFamily: 'Roboto-Medium',
+    fontFamily: 'Poppins-Medium',
     textTransform: 'uppercase',
+  },
+  estimate: {
+    fontSize: 24,
+    fontFamily: 'Poppins-Regular',
+    color: '#aaa',
+    textAlign: 'right',
+    marginTop: 10,
   },
 });

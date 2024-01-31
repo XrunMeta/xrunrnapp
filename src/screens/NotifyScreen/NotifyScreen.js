@@ -124,8 +124,8 @@ const NotifyScreen = () => {
         }
       } catch (error) {
         console.error('Error sending chat:', error);
-        crashlytics().recordError(new Error(err));
-        crashlytics().log(err);
+        crashlytics().recordError(new Error(error));
+        crashlytics().log(error);
       }
     }
   };
@@ -169,8 +169,8 @@ const NotifyScreen = () => {
       }
     } catch (error) {
       console.error('Error sending chat:', error);
-      crashlytics().recordError(new Error(err));
-      crashlytics().log(err);
+      crashlytics().recordError(new Error(error));
+      crashlytics().log(error);
     }
   };
 
