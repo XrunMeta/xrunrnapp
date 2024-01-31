@@ -1,5 +1,6 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {URL_API} from '../../../utils';
 
 const AuthContext = createContext();
 
@@ -37,6 +38,10 @@ export const AuthProvider = ({children}) => {
   // Fungsi untuk logout
   const logout = async () => {
     try {
+      const AsyncUserData = await AsyncStorage.getItem('userData');
+      const member = JSON.parse(AsyncUserData).member;
+      await fetch(`${URL_API}&act=logout-9705&member=${member}`);
+
       // Hapus status login dari AsyncStorage
       await AsyncStorage.removeItem('isLoggedIn');
       setIsLoggedIn(false);
