@@ -14,7 +14,7 @@ import crashlytics from '@react-native-firebase/crashlytics';
 
 const CompleteSend = ({navigation, route}) => {
   const [lang, setLang] = useState('');
-  const {symbol, amount, conversionTargetConverted} = route.params;
+  const {symbol, amount, estimate, currency, originamount, left} = route.params;
 
   useEffect(() => {
     // Get Language Data
@@ -150,7 +150,7 @@ const CompleteSend = ({navigation, route}) => {
               color: '#000',
               maxWidth: 180,
             }}>
-            {amount}XRUN
+            {originamount}
           </Text>
         </View>
         <View
@@ -178,8 +178,7 @@ const CompleteSend = ({navigation, route}) => {
                 color: '#000',
                 maxWidth: 240,
               }}>
-              {conversionTargetConverted}
-              {symbol}
+              {estimate}
             </Text>
           </View>
         </View>
