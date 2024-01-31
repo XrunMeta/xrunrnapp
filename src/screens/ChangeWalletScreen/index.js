@@ -23,14 +23,14 @@ const Change = ({navigation, route}) => {
   const [address, setAddress] = useState('');
   const {currency} = route.params;
   const [dataMember, setDataMember] = useState({});
-  const [activeNetwork, setActiveNetwork] = useState('ETH');
+  const [symbol, setSymbol] = useState('ETH');
   const [subcurrency, setSubcurrency] = useState('5205');
   const [balance, setBalance] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   // Conversion
   const [popupConversion, setPopupConversion] = useState(false);
-  const [conversionTargetConverted, setConversionTargetConverted] = useState(0);
+  const [estimate, setEstimate] = useState(0);
   const [conversionRequest, setConversionRequest] = useState(0);
   const [isNaNCoverted, setIsNaNConverted] = useState(false);
 
@@ -169,26 +169,26 @@ const Change = ({navigation, route}) => {
 
       let totalConverted;
 
-      switch (activeNetwork) {
+      switch (symbol) {
         case 'ETH':
           totalConverted = parseFloat(amount) * (450 / 2139400.0);
-          setConversionTargetConverted(totalConverted);
+          setEstimate(totalConverted);
           setIsNaNConverted(isNaN(totalConverted));
           break;
         case 'TRX':
           totalConverted = parseFloat(amount) * (450 / 86.0);
-          setConversionTargetConverted(totalConverted);
+          setEstimate(totalConverted);
           setIsNaNConverted(isNaN(totalConverted));
           break;
         case 'MATIC':
           totalConverted = parseFloat(amount) * (450 / 1230.0);
-          setConversionTargetConverted(totalConverted);
+          setEstimate(totalConverted);
           setIsNaNConverted(isNaN(totalConverted));
           break;
         default:
           // Default ETH
           totalConverted = parseFloat(amount) * (450 / 2139400.0);
-          setConversionTargetConverted(totalConverted);
+          setEstimate(totalConverted);
           setIsNaNConverted(isNaN(totalConverted));
           break;
       }
@@ -199,11 +199,11 @@ const Change = ({navigation, route}) => {
     setPopupConversion(false);
   };
 
-  const currentActiveNetwork = '#fedc00';
-  const changeActiveNetwork = network => {
-    setActiveNetwork(network);
+  const currentActiveSymbol = '#fedc00';
+  const changeSymbol = currentSymbol => {
+    setSymbol(currentSymbol);
 
-    switch (network) {
+    switch (currentSymbol) {
       case 'ETH':
         setSubcurrency('5205');
         break;
@@ -258,31 +258,39 @@ const Change = ({navigation, route}) => {
     } else {
       setIsLoading(true);
 
-      const request = await fetch(
-        `${URL_API}&act=app4420-02&currency=${currency}&member=${dataMember.member}&address=${address}&amount=${amount}&extracurrency=${subcurrency}`,
-      );
+      try {
+        const request = await fetch(
+          `${URL_API}&act=app4420-02&currency=${currency}&member=${dataMember.member}&address=${address}&amount=${amount}&extracurrency=${subcurrency}`,
+        );
 
-      const response = await request.json();
-      const result = response.data[0].count;
-      setIsLoading(false);
-      setPopupConversion(false);
-      setAmount('');
-      setAddress('');
-      setActiveNetwork('ETH');
+        const response = await request.json();
+        const result = response.data[0].count;
+        setIsLoading(false);
+        setPopupConversion(false);
+        setAmount('');
+        setAddress('');
+        setSymbol('ETH');
 
-      if (result === '1') {
+        console.log(`Success conversion request: ${result}`);
+
         navigation.navigate('CompleteConversion', {
-          symbol: activeNetwork,
-          conversionTargetConverted,
+          symbol,
+          estimate,
           amount,
+          currency,
+          originamount: amount,
+          left: 0,
         });
-      } else {
+      } catch (err) {
         Alert.alert(
           '',
           lang && lang.global_error && lang.global_error.error
             ? lang.global_error.error
             : '',
         );
+        console.error('Error conversion request:', err);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
       }
     }
   };
@@ -338,33 +346,33 @@ const Change = ({navigation, route}) => {
           <View style={styles.wrapperNetwork}>
             <TouchableOpacity
               activeOpacity={1}
-              onPress={() => changeActiveNetwork('ETH')}
+              onPress={() => changeSymbol('ETH')}
               style={[
                 styles.wrapperTextNetwork,
-                activeNetwork === 'ETH' && {
-                  backgroundColor: currentActiveNetwork,
+                symbol === 'ETH' && {
+                  backgroundColor: currentActiveSymbol,
                 },
               ]}>
               <Text style={styles.textDay}>ETH</Text>
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={1}
-              onPress={() => changeActiveNetwork('TRX')}
+              onPress={() => changeSymbol('TRX')}
               style={[
                 styles.wrapperTextNetwork,
-                activeNetwork === 'TRX' && {
-                  backgroundColor: currentActiveNetwork,
+                symbol === 'TRX' && {
+                  backgroundColor: currentActiveSymbol,
                 },
               ]}>
               <Text style={styles.textDay}>TRON</Text>
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={1}
-              onPress={() => changeActiveNetwork('MATIC')}
+              onPress={() => changeSymbol('MATIC')}
               style={[
                 styles.wrapperTextNetwork,
-                activeNetwork === 'MATIC' && {
-                  backgroundColor: currentActiveNetwork,
+                symbol === 'MATIC' && {
+                  backgroundColor: currentActiveSymbol,
                 },
                 {
                   width: 130,
@@ -438,8 +446,8 @@ const Change = ({navigation, route}) => {
                     : ''}
                 </Text>
                 <Text style={styles.textPartRight}>
-                  {conversionTargetConverted.toFixed(6).replaceAll('.', ',')}
-                  {activeNetwork}
+                  {estimate.toFixed(6).replaceAll('.', ',')}
+                  {symbol}
                 </Text>
               </View>
               <View style={styles.wrapperTextConversion}>
@@ -449,7 +457,10 @@ const Change = ({navigation, route}) => {
                     : ''}{' '}
                 </Text>
                 <Text style={styles.textPartRight}>
-                  {parseFloat(conversionRequest).toFixed(5)}XRUN
+                  {parseFloat(conversionRequest)
+                    .toFixed(5)
+                    .replaceAll('.', ',')}
+                  XRUN
                 </Text>
               </View>
             </View>
@@ -622,6 +633,7 @@ const styles = StyleSheet.create({
   wrapperTextConversion: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    gap: 10,
   },
   textPartLeft: {
     color: '#aaa',
