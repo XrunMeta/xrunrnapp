@@ -531,7 +531,8 @@
     "exchanged_xrun_desc": "Akan tertukar dengan XRUN  XRUN anda.",
     "input_exchanged": "Masukan jumlah XRUN  yang ingin di tukar.",
     "check_conversion_desc": "Silakan mengecek informasi anda sekali lagi.",
-    "minimum_exchange": "Jumlah penukaran minimum"
+    "minimum_exchange": "Jumlah penukaran minimum",
+    "input_convert": " Masukan jumlah XRUN  yang ingin di ubah."
   },
   "complete_conversion": {
     "title": "Permintaan Konversi Selesai",
