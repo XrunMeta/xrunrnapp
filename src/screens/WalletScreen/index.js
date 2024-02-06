@@ -402,7 +402,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f3f4f6',
   },
   containerCard: {
-    height: 240,
+    height: 220,
   },
   containerTable: {
     flex: 1,
@@ -428,7 +428,7 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 0,
     borderRadius: 8,
-    height: 195,
+    height: 175,
     zIndex: 5,
   },
   wrapperPartTop: {
