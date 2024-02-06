@@ -54,10 +54,8 @@ const CompleteSend = ({navigation, route}) => {
       <View style={{flexDirection: 'row'}}>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>
-            {lang &&
-            lang.complete_conversion &&
-            lang.complete_conversion.conversion_request
-              ? lang.complete_conversion.conversion_request
+            {lang && lang.complete_conversion && lang.complete_conversion.title
+              ? lang.complete_conversion.title
               : ''}
           </Text>
         </View>
@@ -75,8 +73,8 @@ const CompleteSend = ({navigation, route}) => {
             fontFamily: 'Roboto-Regular',
             color: '#e05c2b',
           }}>
-          {lang && lang.screen_wallet && lang.screen_wallet.table_head_change
-            ? lang.screen_wallet.table_head_change
+          {lang && lang.screen_wallet && lang.screen_wallet.history_action3306
+            ? lang.screen_wallet.history_action3306
             : ''}{' '}
         </Text>
         <Text
@@ -103,6 +101,7 @@ const CompleteSend = ({navigation, route}) => {
             paddingVertical: 20,
             borderBottomColor: '#bbb',
             borderBottomWidth: 0.7,
+            opacity: 0,
           }}>
           <Text
             style={{
@@ -129,7 +128,7 @@ const CompleteSend = ({navigation, route}) => {
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
-            paddingVertical: 20,
+            paddingBottom: 20,
             borderBottomColor: '#bbb',
             borderBottomWidth: 0.7,
           }}>
@@ -150,7 +149,7 @@ const CompleteSend = ({navigation, route}) => {
               color: '#000',
               maxWidth: 180,
             }}>
-            {originamount}
+            {originamount}XRUN
           </Text>
         </View>
         <View
@@ -159,6 +158,7 @@ const CompleteSend = ({navigation, route}) => {
             justifyContent: 'space-between',
             alignItems: 'center',
             paddingVertical: 20,
+            opacity: 0,
           }}>
           <Text
             style={{

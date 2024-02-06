@@ -20,10 +20,10 @@ const Change = ({navigation, route}) => {
   const [lang, setLang] = useState('');
   const [iconNextIsDisabled, setIconNextIsDisabled] = useState(true);
   const [amount, setAmount] = useState('');
-  const [address, setAddress] = useState('');
+  const [address, setAddress] = useState('CONVERT');
   const {currency} = route.params;
   const [dataMember, setDataMember] = useState({});
-  const [symbol, setSymbol] = useState('ETH');
+  const [symbol, setSymbol] = useState('XRUN');
   const [subcurrency, setSubcurrency] = useState('5205');
   const [balance, setBalance] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -66,6 +66,10 @@ const Change = ({navigation, route}) => {
     };
 
     getUserData();
+
+    if (currency == '1') {
+      setSymbol('XRUN');
+    }
   }, []);
 
   // Get balance
@@ -97,8 +101,8 @@ const Change = ({navigation, route}) => {
       setIconNextIsDisabled(true);
     } else if (amount == 0 || amount < 0) {
       setIconNextIsDisabled(true);
-    } else if (address === '' || address.length < 40) {
-      setIconNextIsDisabled(true);
+      // } else if (address === '' || address.length < 40) {
+      //   setIconNextIsDisabled(true);
     } else {
       setIconNextIsDisabled(false);
     }
@@ -132,66 +136,67 @@ const Change = ({navigation, route}) => {
           ? lang.screen_conversion.coin_above_0
           : '',
       );
-    } else if (address === '') {
-      Alert.alert(
-        '',
-        lang && lang ? lang.screen_send.send_address_placeholder : '',
-        [
-          {
-            text: lang && lang ? lang.screen_wallet.confirm_alert : '',
-          },
-        ],
-      );
-    } else if (address.length < 40) {
-      Alert.alert('', lang && lang ? lang.screen_send.send_address_less : '', [
-        {
-          text: lang && lang ? lang.screen_wallet.confirm_alert : '',
-        },
-      ]);
+      // } else if (address === '') {
+      //   Alert.alert(
+      //     '',
+      //     lang && lang ? lang.screen_send.send_address_placeholder : '',
+      //     [
+      //       {
+      //         text: lang && lang ? lang.screen_wallet.confirm_alert : '',
+      //       },
+      //     ],
+      //   );
+      // } else if (address.length < 40) {
+      //   Alert.alert('', lang && lang ? lang.screen_send.send_address_less : '', [
+      //     {
+      //       text: lang && lang ? lang.screen_wallet.confirm_alert : '',
+      //     },
+      //   ]);
     } else {
       setPopupConversion(true);
-      setConversionRequest(parseFloat(amount));
+      console.log(amount.length);
+      setConversionRequest(parseFloat(amount).toFixed(9));
       Keyboard.dismiss();
 
       // Info checker load
-      const infoCheckerLoad = async () => {
-        const request = await fetch(
-          `${URL_API}&act=app4420-01&currency=${currency}&member=${dataMember.member}&amount=${amount}`,
-        );
-        const response = await request.json();
-        const result = await response.data[0];
+      // const infoCheckerLoad = async () => {
+      //   const request = await fetch(
+      //     `${URL_API}&act=app4420-01&currency=${currency}&member=${dataMember.member}&amount=${amount}`,
+      //   );
+      //   const response = await request.json();
+      //   const result = await response.data[0];
 
-        const {symbol: resultSymbol, amount: resultAmount, fee} = result;
-      };
+      //   const {symbol: resultSymbol, amount: resultAmount, fee} = result;
+      // };
 
       // Not using same like code in java
       // infoCheckerLoad();
 
-      let totalConverted;
+      // let totalConverted;
 
-      switch (symbol) {
-        case 'ETH':
-          totalConverted = parseFloat(amount) * (450 / 2139400.0);
-          setEstimate(totalConverted);
-          setIsNaNConverted(isNaN(totalConverted));
-          break;
-        case 'TRX':
-          totalConverted = parseFloat(amount) * (450 / 86.0);
-          setEstimate(totalConverted);
-          setIsNaNConverted(isNaN(totalConverted));
-          break;
-        case 'MATIC':
-          totalConverted = parseFloat(amount) * (450 / 1230.0);
-          setEstimate(totalConverted);
-          setIsNaNConverted(isNaN(totalConverted));
-          break;
-        default:
-          // Default ETH
-          totalConverted = parseFloat(amount) * (450 / 2139400.0);
-          setEstimate(totalConverted);
-          setIsNaNConverted(isNaN(totalConverted));
-          break;
-      }
+      // switch (symbol) {
+      //   case 'ETH':
+      //     totalConverted = parseFloat(amount) * (450 / 2139400.0);
+      //     setEstimate(totalConverted);
+      //     setIsNaNConverted(isNaN(totalConverted));
+      //     break;
+      //   case 'TRX':
+      //     totalConverted = parseFloat(amount) * (450 / 86.0);
+      //     setEstimate(totalConverted);
+      //     setIsNaNConverted(isNaN(totalConverted));
+      //     break;
+      //   case 'MATIC':
+      //     totalConverted = parseFloat(amount) * (450 / 1230.0);
+      //     setEstimate(totalConverted);
+      //     setIsNaNConverted(isNaN(totalConverted));
+      //     break;
+      //   default:
+      //     // Default ETH
+      //     totalConverted = parseFloat(amount) * (450 / 2139400.0);
+      //     setEstimate(totalConverted);
+      //     setIsNaNConverted(isNaN(totalConverted));
+      //     break;
+      // }
     }
   };
 
@@ -199,68 +204,72 @@ const Change = ({navigation, route}) => {
     setPopupConversion(false);
   };
 
-  const currentActiveSymbol = '#fedc00';
-  const changeSymbol = currentSymbol => {
-    setSymbol(currentSymbol);
+  // const currentActiveSymbol = '#fedc00';
+  // const changeSymbol = currentSymbol => {
+  //   setSymbol(currentSymbol);
 
-    switch (currentSymbol) {
-      case 'ETH':
-        setSubcurrency('5205');
-        break;
-      case 'TRX':
-        setSubcurrency('5201');
-        break;
-      case 'MATIC':
-        setSubcurrency('5203');
-        break;
-      default:
-        setSubcurrency('5205');
-        break;
-    }
-  };
+  //   switch (currentSymbol) {
+  //     case 'ETH':
+  //       setSubcurrency('5205');
+  //       break;
+  //     case 'TRX':
+  //       setSubcurrency('5201');
+  //       break;
+  //     case 'MATIC':
+  //       setSubcurrency('5203');
+  //       break;
+  //     default:
+  //       setSubcurrency('5205');
+  //       break;
+  //   }
+  // };
 
   const confirmConversion = async () => {
     if (isNaNCoverted) {
       Alert.alert('', 'Invalid input amount.');
       setPopupConversion(false);
-    } else if (address === '') {
-      Alert.alert(
-        '',
-        lang && lang.screen_send && lang.screen_send.send_address_placeholder
-          ? lang.screen_send.send_address_placeholder
-          : '',
-        [
-          {
-            text:
-              lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
-                ? lang.screen_wallet.confirm_alert
-                : '',
-          },
-        ],
-      );
-      setPopupConversion(false);
-    } else if (address.length < 40) {
-      Alert.alert(
-        '',
-        lang && lang.screen_send && lang.screen_send.send_address_less
-          ? lang.screen_send.send_address_less
-          : '',
-        [
-          {
-            text:
-              lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
-                ? lang.screen_wallet.confirm_alert
-                : '',
-          },
-        ],
-      );
-      setPopupConversion(false);
+      // } else if (address === '') {
+      //   Alert.alert(
+      //     '',
+      //     lang && lang.screen_send && lang.screen_send.send_address_placeholder
+      //       ? lang.screen_send.send_address_placeholder
+      //       : '',
+      //     [
+      //       {
+      //         text:
+      //           lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
+      //             ? lang.screen_wallet.confirm_alert
+      //             : '',
+      //       },
+      //     ],
+      //   );
+      //   setPopupConversion(false);
+      // } else if (address.length < 40) {
+      //   Alert.alert(
+      //     '',
+      //     lang && lang.screen_send && lang.screen_send.send_address_less
+      //       ? lang.screen_send.send_address_less
+      //       : '',
+      //     [
+      //       {
+      //         text:
+      //           lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
+      //             ? lang.screen_wallet.confirm_alert
+      //             : '',
+      //       },
+      //     ],
+      //   );
+      //   setPopupConversion(false);
     } else {
       setIsLoading(true);
 
       try {
         const request = await fetch(
-          `${URL_API}&act=app4420-02&currency=${currency}&member=${dataMember.member}&address=${address}&amount=${amount}&extracurrency=${subcurrency}`,
+          `${URL_API}&act=app4420-02-conv&currency=${currency}&member=${
+            dataMember.member
+          }&address=${address}&amount=${String(
+            amount,
+          )}&extracurrency=${subcurrency}`,
         );
 
         const response = await request.json();
@@ -269,7 +278,7 @@ const Change = ({navigation, route}) => {
         setPopupConversion(false);
         setAmount('');
         setAddress('');
-        setSymbol('ETH');
+        setSymbol('XRUN');
 
         console.log(`Success conversion request: ${result}`);
 
@@ -337,13 +346,13 @@ const Change = ({navigation, route}) => {
 
         <View style={styles.partBottom}>
           <Text style={styles.selectNetwork}>
-            {lang && lang ? lang.screen_conversion.select_network : ''}
+            {lang && lang ? lang.screen_conversion.title : ''}
           </Text>
           <Text style={styles.description}>
             {lang && lang ? lang.screen_conversion.desc : ''}
           </Text>
 
-          <View style={styles.wrapperNetwork}>
+          {/* <View style={styles.wrapperNetwork}>
             <TouchableOpacity
               activeOpacity={1}
               onPress={() => changeSymbol('ETH')}
@@ -380,7 +389,7 @@ const Change = ({navigation, route}) => {
               ]}>
               <Text style={styles.textDay}>MATIC(POLYGON)</Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
 
           <View style={styles.wrapperInput}>
             <CustomInputWallet
@@ -389,11 +398,11 @@ const Change = ({navigation, route}) => {
               isNumber
               labelVisible={false}
               placeholder={
-                lang && lang ? lang.screen_send.send_amount_placeholder : ''
+                lang && lang ? lang.screen_conversion.input_convert : ''
               }
               customFontSize={16}
             />
-            <CustomInputWallet
+            {/* <CustomInputWallet
               value={address}
               labelVisible={false}
               setValue={setAddress}
@@ -401,7 +410,7 @@ const Change = ({navigation, route}) => {
                 lang && lang ? lang.screen_send.send_address_placeholder : ''
               }
               customFontSize={16}
-            />
+            /> */}
           </View>
         </View>
       </View>
@@ -430,7 +439,7 @@ const Change = ({navigation, route}) => {
           <View style={styles.wrapperConversion}>
             <View style={styles.wrapperPartTop}>
               <Text style={styles.textChange}>
-                {lang && lang ? lang.screen_wallet.table_head_change : ''}{' '}
+                {lang && lang ? lang.screen_wallet.history_action3306 : ''}{' '}
               </Text>
               <Text style={styles.textCheckInformation}>
                 {lang && lang
@@ -439,7 +448,7 @@ const Change = ({navigation, route}) => {
               </Text>
             </View>
             <View style={styles.contentConversion}>
-              <View style={styles.wrapperTextConversion}>
+              {/* <View style={styles.wrapperTextConversion}>
                 <Text style={styles.textPartLeft}>
                   {lang && lang
                     ? lang.complete_conversion.target_converted
@@ -449,7 +458,7 @@ const Change = ({navigation, route}) => {
                   {estimate.toFixed(6).replaceAll('.', ',')}
                   {symbol}
                 </Text>
-              </View>
+              </View> */}
               <View style={styles.wrapperTextConversion}>
                 <Text style={styles.textPartLeft}>
                   {lang && lang
@@ -457,9 +466,7 @@ const Change = ({navigation, route}) => {
                     : ''}{' '}
                 </Text>
                 <Text style={styles.textPartRight}>
-                  {parseFloat(conversionRequest)
-                    .toFixed(5)
-                    .replaceAll('.', ',')}
+                  {conversionRequest}
                   XRUN
                 </Text>
               </View>
@@ -579,6 +586,7 @@ const styles = StyleSheet.create({
   },
   wrapperInput: {
     gap: 10,
+    marginTop: 10,
   },
   loading: {
     position: 'absolute',
@@ -626,7 +634,7 @@ const styles = StyleSheet.create({
   contentConversion: {
     borderTopColor: '#343c5a',
     borderTopWidth: 2,
-    marginHorizontal: 20,
+    marginHorizontal: 10,
     paddingVertical: 14,
     rowGap: 28,
   },
