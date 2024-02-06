@@ -5,7 +5,7 @@ import {AuthProvider} from './src/context/AuthContext/AuthContext';
 import Router from './src/navigation/Router';
 
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     // Fungsi untuk check status login

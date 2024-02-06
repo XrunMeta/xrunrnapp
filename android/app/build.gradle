@@ -1,4 +1,5 @@
 apply plugin: "com.android.application"
+apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
@@ -73,15 +74,16 @@ def jscFlavor = 'org.webkit:android-jsc:+'
 android {
     ndkVersion rootProject.ext.ndkVersion
 
+    buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.XRUN"
+    namespace "run.xrun.xrunapps"
     defaultConfig {
-        applicationId "com.XRUN"
+        applicationId "run.xrun.xrunapps"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.0.1"
         missingDimensionStrategy 'react-native-camera', 'general'
     }
     signingConfigs {
@@ -138,12 +140,8 @@ dependencies {
     // Google AdMob
     implementation("com.google.android.gms:play-services-ads:22.6.0")
 
-    debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
-    debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
-        exclude group:'com.squareup.okhttp3', module:'okhttp'
-    }
-
-    debugImplementation("com.facebook.flipper:flipper-fresco-plugin:${FLIPPER_VERSION}")
+    implementation("com.facebook.react:flipper-integration")
+    
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
