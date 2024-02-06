@@ -520,7 +520,7 @@
     "notice": "We apologize to user XRUN.\n\nWe will conduct a testing period\nand simultaneous maintenance.\n\nMaintenance includes:\n\n1. Expanding coins throughout Indonesia.\n\n2. To reduce errors during coin capture and ad watching.\n\n3. Free Coins for users who fill in Referral.\n\n*Our testing period will run until the end of August on the 31st, 2022"
   },
   "screen_conversion": {
-    "title": "Conversion request",
+    "title": "Convert Coins",
     "invalid_input": "Invalid input.",
     "invalid_input_amount": "Invalid input amount.",
     "insufficient_coin": "Insufficient coin acquired.",
@@ -532,7 +532,8 @@
     "exchanged_xrun_desc": "It will be exchanged for an XRUN retention.",
     "input_exchanged": "Please enter the number of coins to be exchanged.",
     "check_conversion_desc": "Please check the information once more.",
-    "minimum_exchange": "Minimum exchange amount"
+    "minimum_exchange": "Minimum exchange amount",
+    "input_convert": "Please enter the number of coins to convert."
   },
   "complete_conversion": {
     "title": "Switch request completed",

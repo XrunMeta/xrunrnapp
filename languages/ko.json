@@ -532,7 +532,8 @@
     "exchanged_xrun_desc": "XRUN 보유코인으로 대상 코인으로 스왑됩니다",
     "input_exchanged": "스왑할 코인수량을 입력해 주세요.",
     "check_conversion_desc": "정보를 한 번 더 확인해 주세요.",
-    "minimum_exchange": "최소 스왑금액인"
+    "minimum_exchange": "최소 스왑금액인",
+    "input_convert": "코인 개수를 입력해 주세요."
   },
   "complete_conversion": {
     "title": "전환 요청 완료",
