@@ -54,6 +54,7 @@ import {URL_API} from '../../utils';
 import CompleteConversion from '../screens/CompleteConversion';
 import SuccessCloseMembership from '../screens/SettingScreen/SuccessCloseMembership';
 import Exchange from '../screens/ExchangeWalletScreen';
+import SplashScreen from '../screens/SplashScreen/SplashScreen';
 
 export default Router = () => {
   const Stack = createNativeStackNavigator();
@@ -92,7 +93,10 @@ export default Router = () => {
 
   return (
     <View style={{flex: 1}} onTouchStart={logoutUser}>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Navigator
+        screenOptions={{headerShown: false}}
+        initialRouteName="Splash">
+        <Stack.Screen name="Splash" component={SplashScreen} />
         <Stack.Screen name="First" component={FirstScreen} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="ARScreen" component={ARScreen} />
