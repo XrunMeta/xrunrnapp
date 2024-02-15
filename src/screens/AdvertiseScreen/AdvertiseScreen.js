@@ -12,6 +12,7 @@ import {
   TouchableWithoutFeedback,
   Pressable,
   Alert,
+  SafeAreaView,
 } from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
@@ -644,7 +645,7 @@ const AdvertiseScreen = () => {
   );
 
   return (
-    <View style={[styles.root, {height: ScreenHeight}]}>
+    <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
       {/* Title */}
       <View style={{flexDirection: 'row', zIndex: 1}}>
         <View style={{position: 'absolute', zIndex: 1}}>
@@ -738,7 +739,7 @@ const AdvertiseScreen = () => {
       </View>
 
       {/* {isFilterModalVisible && <ListWrapper />} */}
-    </View>
+    </SafeAreaView>
   );
 };
 

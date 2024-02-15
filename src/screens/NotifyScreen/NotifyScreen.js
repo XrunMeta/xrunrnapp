@@ -11,6 +11,7 @@ import {
   Linking,
   Alert,
   ActivityIndicator,
+  SafeAreaView,
 } from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
@@ -215,7 +216,7 @@ const NotifyScreen = () => {
   };
 
   return (
-    <View style={[styles.root, {height: ScreenHeight}]}>
+    <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
       {/* Title */}
       <View style={{flexDirection: 'row'}}>
         <View style={{position: 'absolute', zIndex: 1}}>
@@ -548,7 +549,7 @@ const NotifyScreen = () => {
           </TouchableOpacity>
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 

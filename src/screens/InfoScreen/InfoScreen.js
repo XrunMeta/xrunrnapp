@@ -9,6 +9,7 @@ import {
   Share,
   Alert,
   Modal,
+  SafeAreaView,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -184,7 +185,7 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
   };
 
   return (
-    <View style={[styles.root, {height: ScreenHeight}]}>
+    <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
       {/* Title */}
       <View style={{flexDirection: 'row'}}>
         <View style={{position: 'absolute', zIndex: 1}}>
@@ -368,7 +369,7 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
           </View>
         </View>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -12,6 +12,7 @@ import {
   ActivityIndicator,
   BackHandler,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import QRCodeScanner from 'react-native-qrcode-scanner';
@@ -352,7 +353,7 @@ const SendWalletScreen = ({navigation, route}) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* Loading */}
       {isLoading && (
         <View style={styles.loading}>
@@ -510,7 +511,7 @@ const SendWalletScreen = ({navigation, route}) => {
           <Text style={styles.notificationTextInQR}>Scanned: {address}</Text>
         </View>
       </Animated.View>
-    </View>
+    </SafeAreaView>
   );
 };
 
