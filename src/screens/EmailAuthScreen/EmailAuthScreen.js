@@ -2,12 +2,12 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   Pressable,
   Image,
   Dimensions,
   Alert,
   ActivityIndicator,
+  SafeAreaView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput';
@@ -141,7 +141,7 @@ const EmailAuthScreen = () => {
   };
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <SafeAreaView style={{flex: 1}}>
       <View style={[styles.root, {height: ScreenHeight}]}>
         <ButtonBack onClick={onBack} />
 
@@ -195,7 +195,7 @@ const EmailAuthScreen = () => {
           <ActivityIndicator size="large" color="#343a59" />
         </View>
       )}
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 

@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Alert,
   Keyboard,
+  SafeAreaView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
@@ -305,7 +306,7 @@ const Change = ({navigation, route}) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* Loading */}
       {isLoading && (
         <View style={styles.loading}>
@@ -493,7 +494,7 @@ const Change = ({navigation, route}) => {
           </View>
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 
