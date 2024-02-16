@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Image,
   Alert,
+  SafeAreaView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -43,7 +44,7 @@ const CompleteSend = ({navigation, route}) => {
   };
 
   return (
-    <View style={{flex: 1, backgroundColor: '#f3f4f6'}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#f3f4f6'}}>
       <View style={{flexDirection: 'row'}}>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>
@@ -221,7 +222,7 @@ const CompleteSend = ({navigation, route}) => {
           />
         </TouchableOpacity>
       </KeyboardAvoidingView>
-    </View>
+    </SafeAreaView>
   );
 };
 

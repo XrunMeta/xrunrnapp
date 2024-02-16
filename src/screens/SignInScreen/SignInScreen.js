@@ -7,6 +7,7 @@ import {
   Dimensions,
   Alert,
   SafeAreaView,
+  TouchableOpacity,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput/';
@@ -121,53 +122,71 @@ const SignInScreen = () => {
   }, []);
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <View style={[styles.root, {height: ScreenHeight}]}>
-        <ButtonBack onClick={onBack} />
+    <SafeAreaView style={styles.root}>
+      <ButtonBack onClick={onBack} />
 
-        <View style={styles.titleWrapper}>
-          <Text style={styles.title}>
-            {lang && lang.screen_signin && lang.screen_signin.title
-              ? lang.screen_signin.title
-              : ''}
-          </Text>
-          <Text style={styles.subTitle}>
-            {lang && lang.screen_signin && lang.screen_signin.subTitle
-              ? lang.screen_signin.subTitle
-              : ''}
-          </Text>
-        </View>
+      <View style={styles.titleWrapper}>
+        <Text style={styles.title}>
+          {lang && lang.screen_signin && lang.screen_signin.title
+            ? lang.screen_signin.title
+            : ''}
+        </Text>
+        <Text style={styles.subTitle}>
+          {lang && lang.screen_signin && lang.screen_signin.subTitle
+            ? lang.screen_signin.subTitle
+            : ''}
+        </Text>
+      </View>
 
-        <CustomInput
-          label={
-            lang && lang.screen_signin && lang.screen_signin.email
-              ? lang.screen_signin.email.label
-              : ''
-          }
-          placeholder={
-            lang && lang.screen_signin && lang.screen_signin.email
-              ? lang.screen_signin.email.placeholder
-              : ''
-          }
-          value={email}
-          setValue={onEmailChange}
-          isPassword={false}
-        />
-        {isEmailValid ? null : (
-          <Text
-            style={{
-              alignSelf: 'flex-start',
-              marginLeft: 25,
-              color: 'red',
-              fontFamily: 'Roboto-Regular',
-              fontSize: 13,
-            }}>
-            {lang && lang.screen_signin && lang.screen_signin.validator
-              ? lang.screen_signin.validator
-              : ''}
-          </Text>
-        )}
+      <CustomInput
+        label={
+          lang && lang.screen_signin && lang.screen_signin.email
+            ? lang.screen_signin.email.label
+            : ''
+        }
+        placeholder={
+          lang && lang.screen_signin && lang.screen_signin.email
+            ? lang.screen_signin.email.placeholder
+            : ''
+        }
+        value={email}
+        setValue={onEmailChange}
+        isPassword={false}
+      />
+      {isEmailValid ? null : (
+        <Text
+          style={{
+            alignSelf: 'flex-start',
+            marginLeft: 25,
+            color: 'red',
+            fontFamily: 'Roboto-Regular',
+            fontSize: 13,
+          }}>
+          {lang && lang.screen_signin && lang.screen_signin.validator
+            ? lang.screen_signin.validator
+            : ''}
+        </Text>
+      )}
 
+      <CustomInput
+        label={
+          lang && lang.screen_signin && lang.screen_signin.password
+            ? lang.screen_signin.password.label
+            : ''
+        }
+        placeholder={
+          lang && lang.screen_signin && lang.screen_signin.password
+            ? lang.screen_signin.password.placeholder
+            : ''
+        }
+        value={password}
+        setValue={setPassword}
+        secureTextEntry
+        isPassword={true}
+      />
+
+      {/* Start - Ngakalin biar tombol nya gak keatas ketika keyboard muncul */}
+      <View style={{opacity: 0, pointerEvents: 'none'}}>
         <CustomInput
           label={
             lang && lang.screen_signin && lang.screen_signin.password
@@ -184,30 +203,33 @@ const SignInScreen = () => {
           secureTextEntry
           isPassword={true}
         />
+      </View>
+      <View style={{flex: 1}}></View>
+      {/* End - Ngakalin biar tombol nya gak keatas ketika keyboard muncul */}
 
-        <View style={[styles.bottomSection]}>
-          <View style={styles.additionalLogin}>
-            <Text style={styles.normalText}>
+      <View style={[styles.bottomSection]}>
+        <View style={styles.additionalLogin}>
+          <Text style={styles.normalText}>
+            {lang && lang.screen_signin && lang.screen_signin.authcode
+              ? lang.screen_signin.authcode.label + ' '
+              : ''}
+          </Text>
+          <Pressable onPress={onEmailAuth} style={styles.resetPassword}>
+            <Text style={styles.emailAuth}>
               {lang && lang.screen_signin && lang.screen_signin.authcode
-                ? lang.screen_signin.authcode.label + ' '
+                ? lang.screen_signin.authcode.link
                 : ''}
             </Text>
-            <Pressable onPress={onEmailAuth} style={styles.resetPassword}>
-              <Text style={styles.emailAuth}>
-                {lang && lang.screen_signin && lang.screen_signin.authcode
-                  ? lang.screen_signin.authcode.link
-                  : ''}
-              </Text>
-            </Pressable>
-          </View>
-          <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
-            <Image
-              source={require('../../../assets/images/icon_next.png')}
-              resizeMode="contain"
-              style={styles.buttonSignInImage}
-            />
           </Pressable>
         </View>
+
+        <TouchableOpacity onPress={onSignIn} style={styles.buttonSignIn}>
+          <Image
+            source={require('../../../assets/images/icon_next.png')}
+            resizeMode="contain"
+            style={styles.buttonSignInImage}
+          />
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -215,7 +237,6 @@ const SignInScreen = () => {
 
 const styles = StyleSheet.create({
   root: {
-    alignItems: 'center',
     flex: 1,
   },
   titleWrapper: {
@@ -236,17 +257,14 @@ const styles = StyleSheet.create({
   },
   bottomSection: {
     padding: 20,
-    paddingBottom: 40,
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    flex: 1,
     width: '100%',
   },
   additionalLogin: {
     flexDirection: 'row',
-    alignSelf: 'flex-end',
     alignItems: 'center',
-    height: 100,
   },
   normalText: {
     fontFamily: 'Roboto-Regular',
@@ -262,8 +280,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'flex-end',
-    flexDirection: 'column-reverse',
-    height: 100,
+    flexDirection: 'column',
     justifyContent: 'center',
   },
   buttonSignInImage: {

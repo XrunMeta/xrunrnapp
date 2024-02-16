@@ -280,14 +280,14 @@ const styles = StyleSheet.create({
     width: 80,
   },
   shadow: {
-    shadowColor: 'black',
+    shadowColor: '#000000',
     shadowOffset: {
       width: 0,
-      height: 10,
+      height: 1,
     },
-    shadowOpacity: 1,
-    shadowRadius: 3.5,
-    // elevation: 2,
+    shadowOpacity: 0.16,
+    shadowRadius: 1.51,
+    elevation: 1,
   },
   checkbox: {
     width: 20,
