@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, ScrollView} from 'react-native';
+import {StyleSheet, Text, View, ScrollView, SafeAreaView} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
@@ -67,7 +67,7 @@ const ClauseForPersonal = () => {
   };
 
   return (
-    <View style={styles.root}>
+    <SafeAreaView style={styles.root}>
       <View style={{flexDirection: 'row'}}>
         <View style={{position: 'absolute', zIndex: 1, top: 15}}>
           <ButtonBack onClick={onBack} />
@@ -98,7 +98,7 @@ const ClauseForPersonal = () => {
           {text ? text : 'Loading...'}
         </Text>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
