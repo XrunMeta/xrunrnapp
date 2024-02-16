@@ -8,6 +8,7 @@ import {
   useWindowDimensions,
   ActivityIndicator,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import React, {useState, useEffect, useRef} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -299,7 +300,7 @@ const WalletScreen = ({navigation, route}) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* Loading */}
       {isLoading && (
         <View style={styles.loading}>
@@ -391,7 +392,7 @@ const WalletScreen = ({navigation, route}) => {
           lang={lang}
         />
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 

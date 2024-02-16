@@ -6,7 +6,7 @@ import {
   Image,
   Dimensions,
   Alert,
-  ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput/';
@@ -121,7 +121,7 @@ const SignInScreen = () => {
   }, []);
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false} scrollEnabled={false}>
+    <SafeAreaView style={{flex: 1}}>
       <View style={[styles.root, {height: ScreenHeight}]}>
         <ButtonBack onClick={onBack} />
 
@@ -209,7 +209,7 @@ const SignInScreen = () => {
           </Pressable>
         </View>
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 
