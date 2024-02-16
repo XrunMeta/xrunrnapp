@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   BackHandler,
   Alert,
+  SafeAreaView,
 } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import React, {useState, useEffect} from 'react';
@@ -191,7 +192,7 @@ const FirstScreenV2 = ({navigation}) => {
   };
 
   return (
-    <View style={styles.root}>
+    <SafeAreaView style={styles.root}>
       <View style={styles.titleWrapper}>
         <Text style={styles.title}>
           {lang && lang.screen_first && lang.screen_first.title
@@ -350,7 +351,7 @@ const FirstScreenV2 = ({navigation}) => {
           </View>
         </Modal>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 
