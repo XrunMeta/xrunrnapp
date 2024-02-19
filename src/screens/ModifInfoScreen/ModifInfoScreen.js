@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   Modal,
   FlatList,
+  SafeAreaView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInputEdit from '../../components/CustomInputEdit/CustomInputEdit';
@@ -19,7 +20,7 @@ import {useNavigation} from '@react-navigation/native';
 import CustomMultipleChecbox from '../../components/CustomCheckbox/CustomMultipleCheckbox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API, getLanguage2} from '../../../utils';
-import crashlytics from '@react-native-firebase/crashlytics';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 const ModifInfoScreen = ({route}) => {
   const [lang, setLang] = useState({});
@@ -281,7 +282,7 @@ const ModifInfoScreen = ({route}) => {
   };
 
   return (
-    <View style={[styles.root]}>
+    <SafeAreaView style={[styles.root]}>
       {isLoading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#343a59" />
@@ -1112,7 +1113,7 @@ const ModifInfoScreen = ({route}) => {
           </Modal>
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 

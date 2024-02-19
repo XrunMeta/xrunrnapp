@@ -570,6 +570,9 @@
     "deadline": "Deadline",
     "order": "Coin order",
     "completed": "Coin acquisition completed",
-    "pending": "Waiting for coin Acquisition"
+    "pending": "Waiting for coin Acquisition",
+    "tab1": "An Advertisement in Storage",
+    "tab2": "Mission Completed Advertisement",
+    "total": "Total"
   }
 }

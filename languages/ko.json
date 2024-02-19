@@ -374,9 +374,9 @@
   "screen_clause": {
     "title": "조항",
     "category": {
-      "service": "서비스 조항",
-      "location": "개인 위치 정보 조항",
-      "usage": "개인 정보 수집 및 사용 조항"
+      "service": "약관",
+      "location": "개인 위치정보 이용 약관",
+      "usage": "사용약관, 개인정보 수집 안내"
     }
   },
 
@@ -569,6 +569,9 @@
     "deadline": "마감일",
     "order": "코인 주문",
     "completed": "코인 획득 완료",
-    "pending": "코인 획득 대기 중"
+    "pending": "코인 획득 대기 중",
+    "tab1": "보관된 광고",
+    "tab2": "완료된 광고",
+    "total": "합계"
   }
 }

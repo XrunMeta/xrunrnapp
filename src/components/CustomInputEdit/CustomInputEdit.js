@@ -8,6 +8,7 @@ import {
   Pressable,
   Image,
   Dimensions,
+  SafeAreaView,
 } from 'react-native';
 import ButtonBack from '../ButtonBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -90,7 +91,7 @@ const CustomInputEdit = ({
         transparent={true}
         visible={isModalVisible}
         onRequestClose={closeModal}>
-        <View style={styles.modalContainer}>
+        <SafeAreaView style={styles.modalContainer}>
           <View
             style={[
               {alignItems: 'center', flex: 1, backgroundColor: 'white'},
@@ -170,7 +171,7 @@ const CustomInputEdit = ({
               </Pressable>
             </View>
           </View>
-        </View>
+        </SafeAreaView>
       </Modal>
     </View>
   );

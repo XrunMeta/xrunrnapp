@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import React, {useState} from 'react';
 
 const CustomMultipleChecbox = ({
@@ -41,7 +41,10 @@ const CustomMultipleChecbox = ({
                 : styles.uncheckedBox,
             ]}>
             {checkedIndices.includes(index) && (
-              <Text style={styles.checkMark}>✔</Text>
+              <Image
+                style={{height: 10, resizeMode: 'contain'}}
+                source={require('./../../../assets/images/icon_btnCheck.png')}
+              />
             )}
           </View>
           <Text style={styles.text}>{texts[index]}</Text>
@@ -82,12 +85,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontFamily: 'Roboto-Medium',
     marginTop: 2,
-  },
-  checkMark: {
-    color: 'white',
-    fontSize: 11,
-    marginTop: -2,
-    fontWeight: 'bold',
   },
 });
 

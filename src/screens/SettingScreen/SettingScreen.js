@@ -86,12 +86,11 @@ const SettingScreen = () => {
       {/* List Button */}
       <View
         style={{
-          paddingVertical: 10,
           flex: 1,
         }}>
         <ScrollView showsVerticalScrollIndicator={false}>
           {/* Basic Setting */}
-          <Text
+          {/* <Text
             style={{
               color: 'grey',
               fontFamily: 'Roboto-Regular',
@@ -106,7 +105,7 @@ const SettingScreen = () => {
               lang && lang ? lang.screen_setting.category.basic.device : ''
             }
             onPress={onDevice}
-          />
+          /> */}
 
           {/* Account Setting */}
           <Text
