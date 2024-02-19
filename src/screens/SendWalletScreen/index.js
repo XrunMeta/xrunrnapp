@@ -282,7 +282,7 @@ const SendWalletScreen = ({navigation, route}) => {
                         setIsLoading(false);
                         setAddress('');
                         setAmount('');
-                        setSelectedExchange('36001');
+                        setSelectedExchange('360001');
                         navigation.navigate('CompleteSend', {
                           amount,
                           addrto: address,
@@ -423,15 +423,6 @@ const SendWalletScreen = ({navigation, route}) => {
               placeholder={`${
                 lang && lang ? lang.screen_send.send_address_placeholder : ''
               }`}
-            />
-
-            <CustomDropdownWallet
-              label={'Stock exchange'}
-              onSelectedExchange={value => {
-                setSelectedExchange(value);
-              }}
-              selectedExchange={selectedExchange}
-              cointrace={cointrace}
             />
           </View>
         </View>

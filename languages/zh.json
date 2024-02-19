@@ -492,7 +492,8 @@
     "confirm_alert": "确认",
     "failed_getwallet_alert": "获取您的钱包失败，请稍后重试",
     "failed_alert": "失败",
-    "failed_download_qrcode_alert": "无法下载二维码"
+    "failed_download_qrcode_alert": "无法下载二维码",
+    "see_more": "看更多"
   },
   "screen_send": {
     "send_amount_label": "发送金额",
@@ -546,7 +547,8 @@
     "exchange_request": "要求交换的硬币",
     "post_exchange_balance": "交换后余额",
     "previous_balance": "前余额",
-    "title": "交换完毕"
+    "title": "交换完毕",
+    "cancel_exchange": "取消"
   },
   "global_error": {
     "error": "服务器有问题，请稍后再试."
