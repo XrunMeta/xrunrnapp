@@ -33,15 +33,15 @@ const AdvertiseScreen = () => {
   const [storageAdsLoading, setStorageAdsLoading] = useState(true);
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    {key: 'first', title: 'An Advertisement in Storage'},
-    {key: 'second', title: 'Mission Completed Advertisement'},
+    {
+      key: 'first',
+    },
+    {
+      key: 'second',
+    },
   ]);
   const layout = useWindowDimensions();
-  const [selectedFilter, setSelectedFilter] = useState({
-    desc: 'Newest',
-    value: 0,
-    db: 'datetime',
-  });
+  const [selectedFilter, setSelectedFilter] = useState({});
   const [isFilterModalVisible, setFilterModalVisible] = useState(false);
   const [checkedRecommendations, setCheckedRecommendations] = useState({});
   const [isDelete, setIsDelete] = useState(false);
@@ -60,6 +60,16 @@ const AdvertiseScreen = () => {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
         const screenLang = await getLanguage2(currentLanguage);
         setLang(screenLang);
+        setSelectedFilter({
+          desc:
+            screenLang &&
+            screenLang.screen_advertise &&
+            screenLang.screen_advertise.newest
+              ? screenLang.screen_advertise.newest
+              : 'Newest',
+          value: 0,
+          db: 'datetime',
+        });
 
         // Get User Data
         const userData = await AsyncStorage.getItem('userData');
@@ -238,7 +248,12 @@ const AdvertiseScreen = () => {
                   fetchAdsData('datetime', userData.member);
 
                   setSelectedFilter({
-                    desc: 'Newest',
+                    desc:
+                      lang &&
+                      lang.screen_advertise &&
+                      lang.screen_advertise.newest
+                        ? lang.screen_advertise.newest
+                        : 'Newest',
                     value: 0,
                     db: 'datetime',
                   });
@@ -291,7 +306,10 @@ const AdvertiseScreen = () => {
           fetchAdsData('datetime', userData.member);
 
           setSelectedFilter({
-            desc: 'Newest',
+            desc:
+              lang && lang.screen_advertise && lang.screen_advertise.newest
+                ? lang.screen_advertise.newest
+                : 'Newest',
             value: 0,
             db: 'datetime',
           });
@@ -418,7 +436,10 @@ const AdvertiseScreen = () => {
               fontFamily: 'Roboto-Regular',
               fontSize: 13,
             }}>
-            Total <Text style={{color: 'orange'}}>{storageAds.length}</Text>
+            {lang && lang.screen_advertise && lang.screen_advertise.total
+              ? lang.screen_advertise.total
+              : 'Total'}{' '}
+            <Text style={{color: 'orange'}}>{storageAds.length}</Text>
             XRUNs.
           </Text>
           <TouchableOpacity
@@ -534,7 +555,17 @@ const AdvertiseScreen = () => {
                   paddingVertical: 5,
                 }}>
                 <Pressable
-                  onPress={() => selectFilter('Newest', 0, 'datetime')}
+                  onPress={() =>
+                    selectFilter(
+                      lang &&
+                        lang.screen_advertise &&
+                        lang.screen_advertise.newest
+                        ? lang.screen_advertise.newest
+                        : 'Newest',
+                      0,
+                      'datetime',
+                    )
+                  }
                   style={{
                     paddingVertical: 5,
                     paddingHorizontal: 10,
@@ -550,7 +581,17 @@ const AdvertiseScreen = () => {
                   </Text>
                 </Pressable>
                 <Pressable
-                  onPress={() => selectFilter('Deadline', 1, 'dateleft')}
+                  onPress={() =>
+                    selectFilter(
+                      lang &&
+                        lang.screen_advertise &&
+                        lang.screen_advertise.deadline
+                        ? lang.screen_advertise.deadline
+                        : 'Deadline',
+                      1,
+                      'dateleft',
+                    )
+                  }
                   style={{
                     paddingVertical: 5,
                     paddingHorizontal: 10,
@@ -566,7 +607,17 @@ const AdvertiseScreen = () => {
                   </Text>
                 </Pressable>
                 <Pressable
-                  onPress={() => selectFilter('Coin order', 2, 'amount')}
+                  onPress={() =>
+                    selectFilter(
+                      lang &&
+                        lang.screen_advertise &&
+                        lang.screen_advertise.order
+                        ? lang.screen_advertise.order
+                        : 'Coin Order',
+                      2,
+                      'amount',
+                    )
+                  }
                   style={{
                     paddingVertical: 5,
                     paddingHorizontal: 10,
@@ -638,7 +689,13 @@ const AdvertiseScreen = () => {
             fontSize: 13,
             textAlign: 'center',
           }}>
-          {route.title}
+          {route.key === 'first'
+            ? lang && lang.screen_advertise && lang.screen_advertise.tab1
+              ? lang.screen_advertise.tab1
+              : 'An Advertisement in Storage'
+            : lang && lang.screen_advertise && lang.screen_advertise.tab2
+            ? lang.screen_advertise.tab2
+            : 'Mission Completed Advertisement'}
         </Text>
       )}
     />

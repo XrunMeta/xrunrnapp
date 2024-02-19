@@ -567,6 +567,9 @@
     "deadline": "Batas Waktu",
     "order": "Pemesanan Koin",
     "completed": "Pengambilan koin selesai",
-    "pending": "Menunggu pengambilan koin"
+    "pending": "Menunggu pengambilan koin",
+    "tab1": "Penyimpanan Iklan",
+    "tab2": "Misi Iklan Selesai",
+    "total": "Total"
   }
 }

@@ -111,7 +111,7 @@ const FirstScreenV2 = ({navigation}) => {
   };
 
   // Panggil fungsi ini saat Anda ingin mendapatkan koordinat
-  // getCurrentLocation();
+  getCurrentLocation();
 
   useEffect(() => {
     const checkIsLoggedIn = async () => {
