@@ -374,9 +374,9 @@
   "screen_clause": {
     "title": "조항",
     "category": {
-      "service": "서비스 조항",
-      "location": "개인 위치 정보 조항",
-      "usage": "개인 정보 수집 및 사용 조항"
+      "service": "약관",
+      "location": "개인 위치정보 이용 약관",
+      "usage": "사용약관, 개인정보 수집 안내"
     }
   },
 
