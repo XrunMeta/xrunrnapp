@@ -19,7 +19,8 @@ const AppInformation = () => {
 
         if (data) {
           setVersion({
-            version: data.version,
+            // version: data.version,
+            version: 1.87,
             url: data.url,
           });
         }
