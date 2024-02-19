@@ -67,6 +67,12 @@ const NotifyScreen = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (!loading) {
+      scrollViewRef.current.scrollToEnd({animated: true});
+    }
+  }, [notify, loading]);
+
   // Back
   const handleBack = () => {
     navigation.goBack();
