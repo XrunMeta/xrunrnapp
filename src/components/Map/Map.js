@@ -235,7 +235,14 @@ const MapComponent = ({
       Geolocation.watchPosition(
         position => {
           // Handle lokasi berubah
-          console.log('Lokasi berubah:', position);
+          console.log(
+            'Lokasi berubah:',
+            position.coords.altitude +
+              '  lat:' +
+              position.coords.latitude +
+              '  lng:' +
+              position.coords.longitude,
+          );
         },
         error => {
           console.error('Error dalam mendapatkan lokasi:', error) +

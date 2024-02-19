@@ -66,10 +66,10 @@ const CustomerServiceScreen = () => {
             label={lang && lang.screen_cs ? lang.screen_cs.common.title : ''}
             onPress={onCommon}
           />
-          <ButtonList
+          {/* <ButtonList
             label={lang && lang.screen_cs ? lang.screen_cs.one.title : ''}
             onPress={onOne}
-          />
+          /> */}
         </ScrollView>
       </View>
     </SafeAreaView>
