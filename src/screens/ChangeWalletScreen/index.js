@@ -477,7 +477,9 @@ const Change = ({navigation, route}) => {
                 activeOpacity={0.7}
                 style={styles.buttonConfirm}
                 onPress={cancelConversion}>
-                <Text style={styles.textButtonConfirm}>Cancel</Text>
+                <Text style={styles.textButtonConfirm}>
+                  {lang && lang ? lang.complete_exchange.cancel_exchange : ''}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 activeOpacity={0.7}

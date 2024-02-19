@@ -493,7 +493,8 @@
     "confirm_alert": "MENGONFIRMASI",
     "failed_getwallet_alert": "Gagal untuk dapatkan dompet Anda, silakan coba lagi nanti",
     "failed_alert": "Gagal",
-    "failed_download_qrcode_alert": "Gagal untuk mengunduh qr code"
+    "failed_download_qrcode_alert": "Gagal untuk mengunduh qr code",
+    "see_more": "Lihat Lainnya"
   },
   "screen_send": {
     "send_amount_label": "Amount",
@@ -546,7 +547,8 @@
     "exchange_request": "Permintaan penukaran XRUN",
     "post_exchange_balance": "Saldo setelah penukaran",
     "previous_balance": "Saldo Sebelum",
-    "title": "Berhasil menukarkan XRUN"
+    "title": "Berhasil menukarkan XRUN",
+    "cancel_exchange": "Batal"
   },
   "global_error": {
     "error": "Server telah masalah. Silakan mencoba lagi nanti."
