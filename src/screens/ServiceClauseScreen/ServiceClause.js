@@ -1,69 +1,42 @@
-import {StyleSheet, Text, View, ScrollView, SafeAreaView} from 'react-native';
 import React, {useEffect, useState} from 'react';
+import {StyleSheet, Text, View, ScrollView, SafeAreaView} from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API} from '../../../utils';
+import * as RNLocalize from 'react-native-localize';
+import {URL_API, getLanguage2} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
-
-const langData = require('../../../lang.json');
 
 const ServiceClause = () => {
   const [text, setText] = useState('');
   const [lang, setLang] = useState('');
-
   const navigation = useNavigation();
 
   useEffect(() => {
-    // Get Current Language from Async Storage
-    AsyncStorage.getItem('currentLanguage')
-      .then(language => {
-        // Lakukan sesuatu dengan nilai currentLanguage, misalnya set state atau tindakan lain
-        if (language) {
-          let apiUrl = `${URL_API}&act=app7010-01`;
+    const fetchData = async () => {
+      try {
+        const screenLang = await getLanguage2();
+        setLang(screenLang);
 
-          // Tambahkan bahasa ke URL jika bahasa adalah "id"
-          if (language === 'id') {
-            apiUrl += '-id';
-          }
+        const language = RNLocalize.getLocales()[0].languageCode;
+        if (!language) return;
 
-          const selectedLanguage = language === 'id' ? 'id' : 'eng';
-          const languageData = langData[selectedLanguage];
-          setLang(languageData);
+        let apiUrl = `${URL_API}&act=app7010-01`;
+        if (language === 'id') apiUrl += '-id';
 
-          const fetchData = async () => {
-            try {
-              const response = await fetch(apiUrl);
-              const result = await response.json();
+        const response = await fetch(apiUrl);
+        const result = await response.json();
+        if (result) setText(result?.data[0]?.c);
+      } catch (err) {
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
+        console.error('Error fetching user data: ', err);
+      }
+    };
 
-              if (result) {
-                // Ambil elemen pertama dari array "result" dengan kunci "c"
-                const firstElement = result.data[0].c;
-                setText(firstElement);
-              }
-            } catch (err) {
-              crashlytics().recordError(new Error(err));
-              crashlytics().log(err);
-              console.error('Error fetching user data: ', err);
-            }
-          };
-
-          fetchData();
-        }
-      })
-      .catch(error => {
-        crashlytics().recordError(new Error(error));
-        crashlytics().log(error);
-        console.error(
-          'Error getting currentLanguage from AsyncStorage:',
-          error,
-        );
-      });
+    fetchData();
   }, []);
 
-  const onBack = () => {
-    navigation.navigate('Clause');
-  };
+  const onBack = () => navigation.navigate('Clause');
 
   return (
     <SafeAreaView style={styles.root}>
@@ -73,35 +46,16 @@ const ServiceClause = () => {
         </View>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>
-            {lang && lang.screen_clause
-              ? lang.screen_clause.category.service
-              : ''}
+            {lang?.screen_clause?.category?.service}
           </Text>
         </View>
       </View>
-      <ScrollView
-        style={{
-          flex: 1,
-          paddingHorizontal: 20,
-          marginTop: 10,
-          backgroundColor: 'white',
-          width: '100%',
-        }}>
-        <Text
-          style={{
-            fontFamily: 'Roboto-Regular',
-            fontSize: 13,
-            color: 'grey',
-            paddingVertical: 20,
-          }}>
-          {text ? text : 'Loading...'}
-        </Text>
+      <ScrollView style={styles.scrollView}>
+        <Text style={styles.text}>{text ? text : 'Loading...'}</Text>
       </ScrollView>
     </SafeAreaView>
   );
 };
-
-export default ServiceClause;
 
 const styles = StyleSheet.create({
   root: {
@@ -124,4 +78,19 @@ const styles = StyleSheet.create({
     color: '#051C60',
     margin: 10,
   },
+  scrollView: {
+    flex: 1,
+    paddingHorizontal: 20,
+    marginTop: 10,
+    backgroundColor: 'white',
+    width: '100%',
+  },
+  text: {
+    fontFamily: 'Roboto-Regular',
+    fontSize: 13,
+    color: 'grey',
+    paddingVertical: 20,
+  },
 });
+
+export default ServiceClause;
