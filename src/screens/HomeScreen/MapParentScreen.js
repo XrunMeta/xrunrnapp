@@ -401,12 +401,11 @@ export default function MapParent() {
                 style={{
                   alignItems: 'center',
                   justifyContent: 'center',
-                  marginTop: -55,
-                  marginBottom: -30,
                   paddingHorizontal: 90,
-                  paddingBottom: 20,
                   paddingTop: 35,
                   zIndex: 1,
+                  // backgroundColor: '#FFFFFF4D',
+                  marginTop: -60,
                 }}>
                 <Image
                   source={require('../../../assets/images/icon_bottom.png')}

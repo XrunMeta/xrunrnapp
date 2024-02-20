@@ -629,6 +629,7 @@ function ARScreen() {
                       style={{
                         width: 20,
                         tintColor: '#7a7a7a',
+                        transform: [{rotate: '180deg'}],
                       }}
                     />
                   </View>
