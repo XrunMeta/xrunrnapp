@@ -583,7 +583,8 @@ const MapComponent = ({
           }}
           customMapStyle={customMapStyle}
           showsUserLocation={true}
-          showsMyLocationButton={false}>
+          showsMyLocationButton={false}
+          followsUserLocation={true}>
           {imagesLoaded ? (
             markers
           ) : (
@@ -630,22 +631,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-  },
-  arrow: {
-    backgroundColor: 'transparent',
-    borderColor: 'transparent',
-    borderTopColor: '#fff',
-    borderWidth: 16,
-    alignSelf: 'center',
-    marginTop: -32,
-  },
-  arrowBorder: {
-    backgroundColor: 'transparent',
-    borderColor: 'transparent',
-    borderTopColor: 'blue',
-    borderWidth: '16',
-    alignSelf: 'center',
-    marginTop: -0.5,
   },
 });
 
