@@ -472,8 +472,8 @@
     "download_qrcode_show": "Image is saved successfully. Please check the gallery.\n\nPlease check the download folder for the key file. \n\nIf the key file is requested more than once, the file will be damaged (non-recoverable).",
     "copy_qrcode": "The wallet address has been copied. Use it wherever you want.",
     "table_head_transaction": "Transactional information/Transactional bill",
-    "table_head_send": "Send",
-    "table_head_change": "Change",
+    "table_head_send": "Transfer",
+    "table_head_change": "Convert",
     "table_head_exchange": "Exchange",
     "table_days": "DAYS",
     "total_history": "Total History",
@@ -494,7 +494,8 @@
     "confirm_alert": "OK",
     "failed_getwallet_alert": "Failed for get your wallet, please try again later",
     "failed_alert": "Failed",
-    "failed_download_qrcode_alert": "Failed to download qr code"
+    "failed_download_qrcode_alert": "Failed to download qr code",
+    "see_more": "See More"
   },
   "screen_send": {
     "send_amount_label": "Amount to send",
@@ -547,7 +548,8 @@
     "exchange_request": "Exchange Request",
     "post_exchange_balance": "Post-exchange balance",
     "previous_balance": "Previous balance",
-    "title": "Exchange Complete"
+    "title": "Exchange Complete",
+    "cancel_exchange": "Cancel"
   },
   "global_error": {
     "error": "It's a server problem. Please try in a few minutes."
