@@ -4,12 +4,11 @@ import {
   View,
   TouchableOpacity,
   useWindowDimensions,
-  FlatList,
   ActivityIndicator,
   Alert,
   ScrollView,
 } from 'react-native';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import {
@@ -17,6 +16,7 @@ import {
   funcTotalHistory,
   funcTransferHistory,
   funcTransitionHistory,
+  loadMore,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
@@ -48,26 +48,18 @@ const renderTabBar = props => (
   />
 );
 
-const loadMore = (
-  totalTransaction,
-  totalData,
-  setTotalData,
-  lastPosition,
-  setLastPosition,
-) => {
-  const nextData = totalData.length + 20;
-  setTotalData(totalTransaction.slice(0, nextData));
-  setLastPosition(lastPosition + 200000);
-};
-
 // Content TabView
 const TotalHistory = ({
+  routeSwipe,
   totalTransaction,
-  totalData,
-  setTotalData,
+  setTotalTransaction,
+  member,
+  currency,
+  days,
   lang,
   seeMore,
   setSeeMore,
+  defaultLoadData,
   lastPosition,
   setLastPosition,
 }) => {
@@ -75,29 +67,21 @@ const TotalHistory = ({
 
   useEffect(() => {
     setTimeout(() => {
-      if (totalData.length > 0) {
+      if (totalTransaction.length > 0) {
         setLoading(false);
       } else {
         setLoading(false);
       }
     }, 100);
-
-    if (totalTransaction.length > 0) {
-      console.log(totalData.length);
-      if (totalData.length >= totalTransaction.length && lastPosition != 0) {
-        setSeeMore(false);
-      }
-    }
-  }, [totalData]);
-
+  }, [totalTransaction]);
   return (
     <ScrollView
-      contentOffset={{y: lastPosition}}
       style={{paddingHorizontal: 28}}
-      overScrollMode="never">
-      {totalData.length > 0 ? (
+      overScrollMode="never"
+      contentOffset={{y: lastPosition}}>
+      {totalTransaction.length > 0 ? (
         <>
-          {totalData.map((item, index) => {
+          {totalTransaction.map((item, index) => {
             const {
               datetime,
               time,
@@ -202,16 +186,20 @@ const TotalHistory = ({
             );
           })}
 
-          {seeMore && (
+          {seeMore && totalTransaction.length > defaultLoadData && (
             <View style={{marginTop: 20, marginBottom: 20}}>
               <TouchableOpacity
                 style={styles.btnSeeMore}
                 activeOpacity={0.7}
                 onPress={() =>
                   loadMore(
+                    routeSwipe,
                     totalTransaction,
-                    totalData,
-                    setTotalData,
+                    setTotalTransaction,
+                    member,
+                    currency,
+                    days,
+                    setSeeMore,
                     lastPosition,
                     setLastPosition,
                   )
@@ -247,42 +235,38 @@ const TotalHistory = ({
 };
 
 const TransferHistory = ({
+  routeSwipe,
   totalTransaction,
-  totalData,
-  setTotalData,
+  setTotalTransaction,
+  member,
+  currency,
+  days,
   lang,
   seeMore,
   setSeeMore,
+  defaultLoadData,
   lastPosition,
   setLastPosition,
 }) => {
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     setTimeout(() => {
-      if (totalData.length === 0) {
+      if (totalTransaction.length > 0) {
         setLoading(false);
       } else {
         setLoading(false);
       }
     }, 100);
-
-    if (totalTransaction.length > 0) {
-      console.log(totalData.length);
-      if (totalData.length >= totalTransaction.length && lastPosition != 0) {
-        setSeeMore(false);
-      }
-    }
-  }, [totalData]);
+  }, [totalTransaction]);
 
   return (
     <ScrollView
-      contentOffset={{y: lastPosition}}
       style={{paddingHorizontal: 28}}
-      overScrollMode="never">
-      {totalData.length > 0 ? (
+      overScrollMode="never"
+      contentOffset={{y: lastPosition}}>
+      {totalTransaction.length > 0 ? (
         <>
-          {totalData.map((item, index) => {
+          {totalTransaction.map((item, index) => {
             const {datetime, time, amount, symbol, action: tempAction} = item;
 
             let action;
@@ -350,16 +334,20 @@ const TransferHistory = ({
             );
           })}
 
-          {seeMore && (
+          {seeMore && totalTransaction.length > defaultLoadData && (
             <View style={{marginTop: 20, marginBottom: 20}}>
               <TouchableOpacity
                 style={styles.btnSeeMore}
                 activeOpacity={0.7}
                 onPress={() =>
                   loadMore(
+                    routeSwipe,
                     totalTransaction,
-                    totalData,
-                    setTotalData,
+                    setTotalTransaction,
+                    member,
+                    currency,
+                    days,
+                    setSeeMore,
                     lastPosition,
                     setLastPosition,
                   )
@@ -395,42 +383,38 @@ const TransferHistory = ({
 };
 
 const ReceivedDetails = ({
+  routeSwipe,
   totalTransaction,
-  totalData,
-  setTotalData,
+  setTotalTransaction,
+  member,
+  currency,
+  days,
   lang,
   seeMore,
   setSeeMore,
+  defaultLoadData,
   lastPosition,
   setLastPosition,
 }) => {
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     setTimeout(() => {
-      if (totalData.length > 0) {
+      if (totalTransaction.length > 0) {
         setLoading(false);
       } else {
         setLoading(false);
       }
     }, 100);
-
-    if (totalTransaction.length > 0) {
-      console.log(totalData.length);
-      if (totalData.length >= totalTransaction.length && lastPosition != 0) {
-        setSeeMore(false);
-      }
-    }
-  }, [totalData]);
+  }, [totalTransaction]);
 
   return (
     <ScrollView
-      contentOffset={{y: lastPosition}}
       style={{paddingHorizontal: 28}}
-      overScrollMode="never">
-      {totalData.length > 0 ? (
+      overScrollMode="never"
+      contentOffset={{y: lastPosition}}>
+      {totalTransaction.length > 0 ? (
         <>
-          {totalData.map((item, index) => {
+          {totalTransaction.map((item, index) => {
             const {
               datetime,
               time,
@@ -535,16 +519,20 @@ const ReceivedDetails = ({
             );
           })}
 
-          {seeMore && (
+          {seeMore && totalTransaction.length > defaultLoadData && (
             <View style={{marginTop: 20, marginBottom: 20}}>
               <TouchableOpacity
                 style={styles.btnSeeMore}
                 activeOpacity={0.7}
                 onPress={() =>
                   loadMore(
+                    routeSwipe,
                     totalTransaction,
-                    totalData,
-                    setTotalData,
+                    setTotalTransaction,
+                    member,
+                    currency,
+                    days,
+                    setSeeMore,
                     lastPosition,
                     setLastPosition,
                   )
@@ -580,41 +568,38 @@ const ReceivedDetails = ({
 };
 
 const TransitionHistory = ({
+  routeSwipe,
   totalTransaction,
-  totalData,
-  setTotalData,
+  setTotalTransaction,
+  member,
+  currency,
+  days,
   lang,
   seeMore,
   setSeeMore,
+  defaultLoadData,
   lastPosition,
   setLastPosition,
 }) => {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     setTimeout(() => {
-      if (totalData.length === 0) {
+      if (totalTransaction.length > 0) {
         setLoading(false);
       } else {
         setLoading(false);
       }
     }, 100);
-
-    if (totalTransaction.length > 0) {
-      console.log(totalData.length);
-      if (totalData.length >= totalTransaction.length && lastPosition != 0) {
-        setSeeMore(false);
-      }
-    }
-  }, [totalData]);
+  }, [totalTransaction]);
 
   return (
     <ScrollView
-      contentOffset={{y: lastPosition}}
       style={{paddingHorizontal: 28}}
-      overScrollMode="never">
-      {totalData.length > 0 ? (
+      overScrollMode="never"
+      contentOffset={{y: lastPosition}}>
+      {totalTransaction.length > 0 ? (
         <>
-          {totalData.map((item, index) => {
+          {totalTransaction.map((item, index) => {
             const {datetime, time, amount, symbol, action: tempAction} = item;
 
             let action;
@@ -682,16 +667,20 @@ const TransitionHistory = ({
             );
           })}
 
-          {seeMore && (
+          {seeMore && totalTransaction.length > defaultLoadData && (
             <View style={{marginTop: 20, marginBottom: 20}}>
               <TouchableOpacity
                 style={styles.btnSeeMore}
                 activeOpacity={0.7}
                 onPress={() =>
                   loadMore(
+                    routeSwipe,
                     totalTransaction,
-                    totalData,
-                    setTotalData,
+                    setTotalTransaction,
+                    member,
+                    currency,
+                    days,
+                    setSeeMore,
                     lastPosition,
                     setLastPosition,
                   )
@@ -739,31 +728,19 @@ const TableWalletCard = ({
   const [currentDaysTransactional, setCurrentDaysTransactional] = useState(7);
   const [index, setIndex] = useState(0);
   const [routes, setRoutes] = useState([]);
+  const [currentSwipe, setCurrentSwipe] = useState('totalHistory');
 
   // Transaction
-  const defaultLoadData = 20;
-  const [totalHistoryLength, setTotalHistoryLength] = useState(0);
+  const defaultLoadData = 100;
   const [seeMore, setBtnSeeMore] = useState(true);
   const [lastPosition, setLastPosition] = useState(0);
+  const [totalHistoryLength, setTotalHistoryLength] = useState(0);
 
-  // Total data
-  // ~ Total History
+  // Detail Transaction
   const [totalHistory, setTotalHistory] = useState([]);
-  const [totalDataTotalHistory, setTotalDataTotalHistory] = useState([]);
-
-  // ~ Transfer History
   const [transferHistory, setTransferHistory] = useState([]);
-  const [totalDataTransferHistory, setTotalDataTransferHistory] = useState([]);
-
-  // ~ Received Details
   const [receivedDetails, setReceivedDetails] = useState([]);
-  const [totalDataReceivedDetails, setTotalDataReceivedDetails] = useState([]);
-
-  // ~ Transition History
   const [transitionHistory, setTransitionHistory] = useState([]);
-  const [totalDataTransitionHistory, setTotalDataTransitionHistory] = useState(
-    [],
-  );
 
   useEffect(() => {
     if (route.params !== undefined) {
@@ -843,11 +820,15 @@ const TableWalletCard = ({
     totalHistory: () => (
       <TotalHistory
         totalTransaction={totalHistory}
+        setTotalTransaction={setTotalHistory}
+        member={member}
+        currency={currentCurrency}
+        days={currentDaysTransactional}
         lang={lang}
-        totalData={totalDataTotalHistory}
-        setTotalData={setTotalDataTotalHistory}
         seeMore={seeMore}
         setSeeMore={setBtnSeeMore}
+        routeSwipe={currentSwipe}
+        defaultLoadData={defaultLoadData}
         lastPosition={lastPosition}
         setLastPosition={setLastPosition}
       />
@@ -855,11 +836,15 @@ const TableWalletCard = ({
     transferHistory: () => (
       <TransferHistory
         totalTransaction={transferHistory}
+        setTotalTransaction={setTransferHistory}
+        member={member}
+        currency={currentCurrency}
+        days={currentDaysTransactional}
         lang={lang}
-        totalData={totalDataTransferHistory}
-        setTotalData={setTotalDataTransferHistory}
         seeMore={seeMore}
         setSeeMore={setBtnSeeMore}
+        routeSwipe={currentSwipe}
+        defaultLoadData={defaultLoadData}
         lastPosition={lastPosition}
         setLastPosition={setLastPosition}
       />
@@ -867,11 +852,15 @@ const TableWalletCard = ({
     receivedDetails: () => (
       <ReceivedDetails
         totalTransaction={receivedDetails}
+        setTotalTransaction={setReceivedDetails}
+        member={member}
+        currency={currentCurrency}
+        days={currentDaysTransactional}
         lang={lang}
-        totalData={totalDataReceivedDetails}
-        setTotalData={setTotalDataReceivedDetails}
         seeMore={seeMore}
         setSeeMore={setBtnSeeMore}
+        routeSwipe={currentSwipe}
+        defaultLoadData={defaultLoadData}
         lastPosition={lastPosition}
         setLastPosition={setLastPosition}
       />
@@ -879,11 +868,15 @@ const TableWalletCard = ({
     transitionHistory: () => (
       <TransitionHistory
         totalTransaction={transitionHistory}
+        setTotalTransaction={setTransitionHistory}
+        member={member}
+        currency={currentCurrency}
+        days={currentDaysTransactional}
         lang={lang}
-        totalData={totalDataTransitionHistory}
-        setTotalData={setTotalDataTransitionHistory}
         seeMore={seeMore}
         setSeeMore={setBtnSeeMore}
+        routeSwipe={currentSwipe}
+        defaultLoadData={defaultLoadData}
         lastPosition={lastPosition}
         setLastPosition={setLastPosition}
       />
@@ -900,6 +893,7 @@ const TableWalletCard = ({
           1,
           30,
         );
+
         setTotalHistoryLength(totalHistory.length);
       } catch (err) {
         console.log(err);
@@ -917,6 +911,11 @@ const TableWalletCard = ({
   const getDataTransaction = useMemo(() => {
     return async key => {
       try {
+        setTotalHistory([]);
+        setTransferHistory([]);
+        setReceivedDetails([]);
+        setTransitionHistory([]);
+
         switch (key) {
           case 'totalHistory':
             const totalHistory = await funcTotalHistory(
@@ -930,7 +929,6 @@ const TableWalletCard = ({
             setLastPosition(0);
             setBtnSeeMore(true);
             setTotalHistory(totalHistory);
-            setTotalDataTotalHistory(totalHistory.slice(0, defaultLoadData));
             break;
           case 'transferHistory':
             const transferHistory = await funcTransferHistory(
@@ -944,9 +942,6 @@ const TableWalletCard = ({
             setLastPosition(0);
             setBtnSeeMore(true);
             setTransferHistory(transferHistory);
-            setTotalDataTransferHistory(
-              transferHistory.slice(0, defaultLoadData),
-            );
             break;
           case 'receivedDetails':
             const receivedDetails = await funcReceivedDetails(
@@ -957,11 +952,9 @@ const TableWalletCard = ({
               currentDaysTransactional,
             );
 
+            setLastPosition(0);
             setBtnSeeMore(true);
             setReceivedDetails(receivedDetails);
-            setTotalDataReceivedDetails(
-              receivedDetails.slice(0, defaultLoadData),
-            );
             break;
           case 'transitionHistory':
             const transitionHistory = await funcTransitionHistory(
@@ -972,11 +965,9 @@ const TableWalletCard = ({
               currentDaysTransactional,
             );
 
+            setLastPosition(0);
             setBtnSeeMore(true);
             setTransitionHistory(transitionHistory);
-            setTotalDataTransitionHistory(
-              transitionHistory.slice(0, defaultLoadData),
-            );
             break;
           default:
             console.log(`Failed get transaction ${key}: ${err}`);
@@ -1007,6 +998,7 @@ const TableWalletCard = ({
 
   // Hit API for transaction if user swipe table
   const onSwipeTransaction = async key => {
+    setCurrentSwipe(key);
     getDataTransaction(key);
   };
 
