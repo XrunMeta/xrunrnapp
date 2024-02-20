@@ -22,6 +22,7 @@ const ServiceClause = () => {
 
         let apiUrl = `${URL_API}&act=app7010-01`;
         if (language === 'id') apiUrl += '-id';
+        if (language === 'ko') apiUrl += '-kr';
 
         const response = await fetch(apiUrl);
         const result = await response.json();
