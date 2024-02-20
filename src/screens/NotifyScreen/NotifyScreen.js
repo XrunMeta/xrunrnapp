@@ -48,6 +48,11 @@ const NotifyScreen = () => {
         );
         const data = await response.json();
 
+        console.log(
+          'Bgst -> ' +
+            `${URL_API}&act=ap6000-01&member=${getData.member}&start=0`,
+        );
+
         if (data && data.data.length > 0) {
           const reversedNotify = data.data.reverse();
           setNotify(reversedNotify);

@@ -22,6 +22,8 @@ const ClauseForPersonal = () => {
           let apiUrl = `${URL_API}&act=app7010-01`;
           if (language === 'id') {
             apiUrl += '-id';
+          } else if (language === 'ko') {
+            apiUrl += '-kr';
           }
 
           console.log('Bgst -> ' + language + ' -> ' + apiUrl);
