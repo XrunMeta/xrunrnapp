@@ -471,8 +471,8 @@
     "download_qrcode_show": "이미지가 성공적으로 저장되었습니다. 갤러리를 확인해주세요.\n\n키파일은 다운로드폴더를 확인 해 주세요. \n\n키파일에 한하여 두 번 이상 요청시 파일이 손상됩니다.(복구불가)",
     "copy_qrcode": "지갑 주소가 복사되었습니다. 원하는 곳에서 사용하세요.",
     "table_head_transaction": "거래 정보/거래 내역",
-    "table_head_send": "보내기",
-    "table_head_change": "변경",
+    "table_head_send": "전송",
+    "table_head_change": "전환",
     "table_head_exchange": "교환",
     "table_days": "일",
     "total_history": "총 기록",
@@ -493,7 +493,8 @@
     "confirm_alert": "확인",
     "failed_getwallet_alert": "지갑을 가져오기 위해 나중에 다시 시도하세요",
     "failed_alert": "실패",
-    "failed_download_qrcode_alert": "QR 코드 다운로드 실패"
+    "failed_download_qrcode_alert": "QR 코드 다운로드 실패",
+    "see_more": "더보기"
   },
   "screen_send": {
     "send_amount_label": "보낼 금액",
@@ -547,7 +548,8 @@
     "exchange_request": "스왑 요청 코인",
     "post_exchange_balance": "스왑 후 잔액",
     "previous_balance": "이전 잔액",
-    "title": "스왑 완료"
+    "title": "스왑 완료",
+    "cancel_exchange": "취소"
   },
   "global_error": {
     "error": "통신문제가 발생했습니다. 잠시후 시도해 주세요."

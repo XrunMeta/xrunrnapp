@@ -4,9 +4,9 @@ import {
   View,
   TouchableOpacity,
   useWindowDimensions,
-  FlatList,
   ActivityIndicator,
   Alert,
+  ScrollView,
 } from 'react-native';
 import React, {useEffect, useMemo, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -16,6 +16,7 @@ import {
   funcTotalHistory,
   funcTransferHistory,
   funcTransitionHistory,
+  loadMore,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
@@ -48,128 +49,171 @@ const renderTabBar = props => (
 );
 
 // Content TabView
-
-const TotalHistory = ({totalHistory, lang}) => {
+const TotalHistory = ({
+  routeSwipe,
+  totalTransaction,
+  setTotalTransaction,
+  member,
+  currency,
+  days,
+  lang,
+  seeMore,
+  setSeeMore,
+  defaultLoadData,
+  lastPosition,
+  setLastPosition,
+}) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setTimeout(() => {
-      if (totalHistory.length > 0) {
+      if (totalTransaction.length > 0) {
         setLoading(false);
       } else {
         setLoading(false);
       }
     }, 100);
-  }, [totalHistory]);
+  }, [totalTransaction]);
+  return (
+    <ScrollView
+      style={{paddingHorizontal: 28}}
+      overScrollMode="never"
+      contentOffset={{y: lastPosition}}>
+      {totalTransaction.length > 0 ? (
+        <>
+          {totalTransaction.map((item, index) => {
+            const {
+              datetime,
+              time,
+              amount,
+              symbol,
+              extracode: tempExtracode,
+              action: tempAction,
+            } = item;
 
-  const renderItem = ({item}) => {
-    const {
-      datetime,
-      time,
-      amount,
-      symbol,
-      extracode: tempExtracode,
-      action: tempAction,
-    } = item;
+            let action;
+            let extracode;
 
-    let action;
-    let extracode;
+            switch (tempAction) {
+              case '3304':
+                action =
+                  lang && lang.screen_wallet.history_action3304
+                    ? lang.screen_wallet.history_action3304
+                    : '';
+                break;
+              case '3651':
+                action =
+                  lang && lang.screen_wallet.history_action3651
+                    ? lang.screen_wallet.history_action3651
+                    : '';
+                break;
+              case '3305':
+                action =
+                  lang && lang.screen_wallet.history_action3305
+                    ? lang.screen_wallet.history_action3305
+                    : '';
+                break;
+              case '3306':
+                action =
+                  lang && lang.screen_wallet.history_action3306
+                    ? lang.screen_wallet.history_action3306
+                    : '';
+                break;
+              case '3307':
+                action =
+                  lang && lang.screen_wallet.history_action3307
+                    ? lang.screen_wallet.history_action3307
+                    : '';
+                break;
+              case '3308':
+                action =
+                  lang && lang.screen_wallet.history_action3308
+                    ? lang.screen_wallet.history_action3308
+                    : '';
+                break;
+              default:
+                action =
+                  lang && lang.screen_wallet.history_action3305
+                    ? lang.screen_wallet.history_action3305
+                    : '';
+                break;
+            }
 
-    switch (tempAction) {
-      case '3304':
-        action =
-          lang && lang.screen_wallet.history_action3304
-            ? lang.screen_wallet.history_action3304
-            : '';
-        break;
-      case '3651':
-        action =
-          lang && lang.screen_wallet.history_action3651
-            ? lang.screen_wallet.history_action3651
-            : '';
-        break;
-      case '3305':
-        action =
-          lang && lang.screen_wallet.history_action3305
-            ? lang.screen_wallet.history_action3305
-            : '';
-        break;
-      case '3306':
-        action =
-          lang && lang.screen_wallet.history_action3306
-            ? lang.screen_wallet.history_action3306
-            : '';
-        break;
-      case '3307':
-        action =
-          lang && lang.screen_wallet.history_action3307
-            ? lang.screen_wallet.history_action3307
-            : '';
-        break;
-      case '3308':
-        action =
-          lang && lang.screen_wallet.history_action3308
-            ? lang.screen_wallet.history_action3308
-            : '';
-        break;
-      default:
-        action =
-          lang && lang.screen_wallet.history_action3305
-            ? lang.screen_wallet.history_action3305
-            : '';
-        break;
-    }
+            switch (tempExtracode) {
+              case '9453':
+                extracode =
+                  lang && lang.screen_wallet.history_extracode9453
+                    ? lang.screen_wallet.history_extracode9453
+                    : '';
+                break;
+              case '9416':
+                extracode = '-';
+                break;
+              case '9001':
+                extracode =
+                  lang && lang.screen_wallet.history_extracode9001
+                    ? lang.screen_wallet.history_extracode9001
+                    : '';
+                break;
+              case '9002':
+                extracode =
+                  lang && lang.screen_wallet.history_extracode9002
+                    ? lang.screen_wallet.history_extracode9002
+                    : '';
+                break;
+              default:
+                extracode =
+                  lang && lang.screen_wallet.history_extracodesuccess
+                    ? lang.screen_wallet.history_extracodesuccess
+                    : '';
+                break;
+            }
 
-    switch (tempExtracode) {
-      case '9453':
-        extracode =
-          lang && lang.screen_wallet.history_extracode9453
-            ? lang.screen_wallet.history_extracode9453
-            : '';
-        break;
-      case '9416':
-        extracode = '-';
-        break;
-      case '9001':
-        extracode =
-          lang && lang.screen_wallet.history_extracode9001
-            ? lang.screen_wallet.history_extracode9001
-            : '';
-        break;
-      case '9002':
-        extracode =
-          lang && lang.screen_wallet.history_extracode9002
-            ? lang.screen_wallet.history_extracode9002
-            : '';
-        break;
-      default:
-        extracode =
-          lang && lang.screen_wallet.history_extracodesuccess
-            ? lang.screen_wallet.history_extracodesuccess
-            : '';
-        break;
-    }
+            return (
+              <View key={index} style={styles.wrapperItemTable}>
+                <View>
+                  <Text style={styles.details}>{action}</Text>
+                  <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
+                </View>
+                <View>
+                  <View style={styles.wrapperPrice}>
+                    <Text style={styles.price}>{amount} </Text>
+                    <Text style={styles.price}>{symbol}</Text>
+                  </View>
+                  <Text style={styles.status}>{extracode}</Text>
+                </View>
+              </View>
+            );
+          })}
 
-    return (
-      <View style={styles.wrapperItemTable}>
-        <View>
-          <Text style={styles.details}>{action}</Text>
-          <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
-        </View>
-        <View>
-          <View style={styles.wrapperPrice}>
-            <Text style={styles.price}>{amount} </Text>
-            <Text style={styles.price}>{symbol}</Text>
-          </View>
-          <Text style={styles.status}>{extracode}</Text>
-        </View>
-      </View>
-    );
-  };
-
-  const renderEmptyList = () => {
-    if (loading) {
-      return (
+          {seeMore && totalTransaction.length > defaultLoadData && (
+            <View style={{marginTop: 20, marginBottom: 20}}>
+              <TouchableOpacity
+                style={styles.btnSeeMore}
+                activeOpacity={0.7}
+                onPress={() =>
+                  loadMore(
+                    routeSwipe,
+                    totalTransaction,
+                    setTotalTransaction,
+                    member,
+                    currency,
+                    days,
+                    setSeeMore,
+                    lastPosition,
+                    setLastPosition,
+                  )
+                }>
+                <Text style={styles.textSeeMore}>
+                  {lang && lang.screen_wallet
+                    ? lang.screen_wallet.see_more
+                    : ''}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </>
+      ) : loading ? (
         <View
           style={{
             flex: 1,
@@ -179,117 +223,145 @@ const TotalHistory = ({totalHistory, lang}) => {
           }}>
           <ActivityIndicator size="large" color="#ccc" />
         </View>
-      );
-    } else {
-      return (
+      ) : (
         <Text style={styles.textNotFoundHistory}>
           {lang && lang.screen_wallet.history_not_found
             ? lang.screen_wallet.history_not_found
             : ''}
         </Text>
-      );
-    }
-  };
-
-  return (
-    <FlatList
-      data={totalHistory}
-      keyExtractor={(_, index) => index.toString()}
-      renderItem={renderItem}
-      ListEmptyComponent={renderEmptyList}
-      showsVerticalScrollIndicator={false}
-      style={{paddingHorizontal: 28}}
-      overScrollMode="never"
-      initialNumToRender={20}
-      windowSize={20}
-    />
+      )}
+    </ScrollView>
   );
 };
 
-const TransferHistory = ({transferHistory, lang}) => {
+const TransferHistory = ({
+  routeSwipe,
+  totalTransaction,
+  setTotalTransaction,
+  member,
+  currency,
+  days,
+  lang,
+  seeMore,
+  setSeeMore,
+  defaultLoadData,
+  lastPosition,
+  setLastPosition,
+}) => {
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     setTimeout(() => {
-      if (transferHistory.length === 0) {
+      if (totalTransaction.length > 0) {
         setLoading(false);
       } else {
         setLoading(false);
       }
     }, 100);
-  }, [transferHistory]);
+  }, [totalTransaction]);
 
-  const renderItem = ({item}) => {
-    const {datetime, time, amount, symbol, action: tempAction} = item;
+  return (
+    <ScrollView
+      style={{paddingHorizontal: 28}}
+      overScrollMode="never"
+      contentOffset={{y: lastPosition}}>
+      {totalTransaction.length > 0 ? (
+        <>
+          {totalTransaction.map((item, index) => {
+            const {datetime, time, amount, symbol, action: tempAction} = item;
 
-    let action;
-    let extracode;
+            let action;
+            let extracode;
 
-    switch (tempAction) {
-      case '3304':
-        action =
-          lang && lang.screen_wallet.history_action3304
-            ? lang.screen_wallet.history_action3304
-            : '';
-        break;
-      case '3651':
-        action =
-          lang && lang.screen_wallet.history_action3651
-            ? lang.screen_wallet.history_action3651
-            : '';
-        break;
-      case '3305':
-        action =
-          lang && lang.screen_wallet.history_action3305
-            ? lang.screen_wallet.history_action3305
-            : '';
-        break;
-      case '3306':
-        action =
-          lang && lang.screen_wallet.history_action3306
-            ? lang.screen_wallet.history_action3306
-            : '';
-        break;
-      case '3307':
-        action =
-          lang && lang.screen_wallet.history_action3307
-            ? lang.screen_wallet.history_action3307
-            : '';
-        break;
-      case '3308':
-        action =
-          lang && lang.screen_wallet.history_action3308
-            ? lang.screen_wallet.history_action3308
-            : '';
-        break;
-      default:
-        action =
-          lang && lang.screen_wallet.history_action3305
-            ? lang.screen_wallet.history_action3305
-            : '';
-        break;
-    }
+            switch (tempAction) {
+              case '3304':
+                action =
+                  lang && lang.screen_wallet.history_action3304
+                    ? lang.screen_wallet.history_action3304
+                    : '';
+                break;
+              case '3651':
+                action =
+                  lang && lang.screen_wallet.history_action3651
+                    ? lang.screen_wallet.history_action3651
+                    : '';
+                break;
+              case '3305':
+                action =
+                  lang && lang.screen_wallet.history_action3305
+                    ? lang.screen_wallet.history_action3305
+                    : '';
+                break;
+              case '3306':
+                action =
+                  lang && lang.screen_wallet.history_action3306
+                    ? lang.screen_wallet.history_action3306
+                    : '';
+                break;
+              case '3307':
+                action =
+                  lang && lang.screen_wallet.history_action3307
+                    ? lang.screen_wallet.history_action3307
+                    : '';
+                break;
+              case '3308':
+                action =
+                  lang && lang.screen_wallet.history_action3308
+                    ? lang.screen_wallet.history_action3308
+                    : '';
+                break;
+              default:
+                action =
+                  lang && lang.screen_wallet.history_action3305
+                    ? lang.screen_wallet.history_action3305
+                    : '';
+                break;
+            }
 
-    return (
-      <View style={styles.wrapperItemTable}>
-        <View>
-          <Text style={styles.details}>{action}</Text>
-          <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
-        </View>
-        <View>
-          <View style={styles.wrapperPrice}>
-            <Text style={styles.price}>{amount} </Text>
-            <Text style={styles.price}>{symbol}</Text>
-          </View>
-          <Text style={styles.status}>{extracode}</Text>
-        </View>
-      </View>
-    );
-  };
+            return (
+              <View style={styles.wrapperItemTable} key={index}>
+                <View>
+                  <Text style={styles.details}>{action}</Text>
+                  <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
+                </View>
+                <View>
+                  <View style={styles.wrapperPrice}>
+                    <Text style={styles.price}>{amount} </Text>
+                    <Text style={styles.price}>{symbol}</Text>
+                  </View>
+                  <Text style={styles.status}>{extracode}</Text>
+                </View>
+              </View>
+            );
+          })}
 
-  const renderEmptyList = () => {
-    if (loading) {
-      return (
+          {seeMore && totalTransaction.length > defaultLoadData && (
+            <View style={{marginTop: 20, marginBottom: 20}}>
+              <TouchableOpacity
+                style={styles.btnSeeMore}
+                activeOpacity={0.7}
+                onPress={() =>
+                  loadMore(
+                    routeSwipe,
+                    totalTransaction,
+                    setTotalTransaction,
+                    member,
+                    currency,
+                    days,
+                    setSeeMore,
+                    lastPosition,
+                    setLastPosition,
+                  )
+                }>
+                <Text style={styles.textSeeMore}>
+                  {lang && lang.screen_wallet
+                    ? lang.screen_wallet.see_more
+                    : ''}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </>
+      ) : loading ? (
         <View
           style={{
             flex: 1,
@@ -299,153 +371,182 @@ const TransferHistory = ({transferHistory, lang}) => {
           }}>
           <ActivityIndicator size="large" color="#ccc" />
         </View>
-      );
-    } else {
-      return (
+      ) : (
         <Text style={styles.textNotFoundHistory}>
           {lang && lang.screen_wallet.history_not_found
             ? lang.screen_wallet.history_not_found
             : ''}
         </Text>
-      );
-    }
-  };
-
-  return (
-    <FlatList
-      data={transferHistory}
-      keyExtractor={(_, index) => index.toString()}
-      renderItem={renderItem}
-      ListEmptyComponent={renderEmptyList}
-      showsVerticalScrollIndicator={false}
-      style={{paddingHorizontal: 28}}
-      overScrollMode="never"
-      initialNumToRender={20}
-      windowSize={20}
-    />
+      )}
+    </ScrollView>
   );
 };
 
-const ReceivedDetails = ({receivedDetails, lang}) => {
+const ReceivedDetails = ({
+  routeSwipe,
+  totalTransaction,
+  setTotalTransaction,
+  member,
+  currency,
+  days,
+  lang,
+  seeMore,
+  setSeeMore,
+  defaultLoadData,
+  lastPosition,
+  setLastPosition,
+}) => {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     setTimeout(() => {
-      if (receivedDetails.length === 0) {
+      if (totalTransaction.length > 0) {
         setLoading(false);
       } else {
         setLoading(false);
       }
     }, 100);
-  }, [receivedDetails]);
+  }, [totalTransaction]);
 
-  const renderItem = ({item}) => {
-    const {
-      datetime,
-      time,
-      amount,
-      symbol,
-      extracode: tempExtracode,
-      action: tempAction,
-    } = item;
+  return (
+    <ScrollView
+      style={{paddingHorizontal: 28}}
+      overScrollMode="never"
+      contentOffset={{y: lastPosition}}>
+      {totalTransaction.length > 0 ? (
+        <>
+          {totalTransaction.map((item, index) => {
+            const {
+              datetime,
+              time,
+              amount,
+              symbol,
+              extracode: tempExtracode,
+              action: tempAction,
+            } = item;
 
-    let action;
-    let extracode;
+            let action;
+            let extracode;
 
-    switch (tempAction) {
-      case '3304':
-        action =
-          lang && lang.screen_wallet.history_action3304
-            ? lang.screen_wallet.history_action3304
-            : '';
-        break;
-      case '3651':
-        action =
-          lang && lang.screen_wallet.history_action3651
-            ? lang.screen_wallet.history_action3651
-            : '';
-        break;
-      case '3305':
-        action =
-          lang && lang.screen_wallet.history_action3305
-            ? lang.screen_wallet.history_action3305
-            : '';
-        break;
-      case '3306':
-        action =
-          lang && lang.screen_wallet.history_action3306
-            ? lang.screen_wallet.history_action3306
-            : '';
-        break;
-      case '3307':
-        action =
-          lang && lang.screen_wallet.history_action3307
-            ? lang.screen_wallet.history_action3307
-            : '';
-        break;
-      case '3308':
-        action =
-          lang && lang.screen_wallet.history_action3308
-            ? lang.screen_wallet.history_action3308
-            : '';
-        break;
-      default:
-        action =
-          lang && lang.screen_wallet.history_action3305
-            ? lang.screen_wallet.history_action3305
-            : '';
-        break;
-    }
+            switch (tempAction) {
+              case '3304':
+                action =
+                  lang && lang.screen_wallet.history_action3304
+                    ? lang.screen_wallet.history_action3304
+                    : '';
+                break;
+              case '3651':
+                action =
+                  lang && lang.screen_wallet.history_action3651
+                    ? lang.screen_wallet.history_action3651
+                    : '';
+                break;
+              case '3305':
+                action =
+                  lang && lang.screen_wallet.history_action3305
+                    ? lang.screen_wallet.history_action3305
+                    : '';
+                break;
+              case '3306':
+                action =
+                  lang && lang.screen_wallet.history_action3306
+                    ? lang.screen_wallet.history_action3306
+                    : '';
+                break;
+              case '3307':
+                action =
+                  lang && lang.screen_wallet.history_action3307
+                    ? lang.screen_wallet.history_action3307
+                    : '';
+                break;
+              case '3308':
+                action =
+                  lang && lang.screen_wallet.history_action3308
+                    ? lang.screen_wallet.history_action3308
+                    : '';
+                break;
+              default:
+                action =
+                  lang && lang.screen_wallet.history_action3305
+                    ? lang.screen_wallet.history_action3305
+                    : '';
+                break;
+            }
 
-    switch (tempExtracode) {
-      case '9453':
-        extracode =
-          lang && lang.screen_wallet.history_extracode9453
-            ? lang.screen_wallet.history_extracode9453
-            : '';
-        break;
-      case '9416':
-        extracode = '-';
-        break;
-      case '9001':
-        extracode =
-          lang && lang.screen_wallet.history_extracode9001
-            ? lang.screen_wallet.history_extracode9001
-            : '';
-        break;
-      case '9002':
-        extracode =
-          lang && lang.screen_wallet.history_extracode9002
-            ? lang.screen_wallet.history_extracode9002
-            : '';
-        break;
-      default:
-        extracode =
-          lang && lang.screen_wallet.history_extracodesuccess
-            ? lang.screen_wallet.history_extracodesuccess
-            : '';
-        break;
-    }
+            switch (tempExtracode) {
+              case '9453':
+                extracode =
+                  lang && lang.screen_wallet.history_extracode9453
+                    ? lang.screen_wallet.history_extracode9453
+                    : '';
+                break;
+              case '9416':
+                extracode = '-';
+                break;
+              case '9001':
+                extracode =
+                  lang && lang.screen_wallet.history_extracode9001
+                    ? lang.screen_wallet.history_extracode9001
+                    : '';
+                break;
+              case '9002':
+                extracode =
+                  lang && lang.screen_wallet.history_extracode9002
+                    ? lang.screen_wallet.history_extracode9002
+                    : '';
+                break;
+              default:
+                extracode =
+                  lang && lang.screen_wallet.history_extracodesuccess
+                    ? lang.screen_wallet.history_extracodesuccess
+                    : '';
+                break;
+            }
 
-    return (
-      <View style={styles.wrapperItemTable}>
-        <View>
-          <Text style={styles.details}>{action}</Text>
-          <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
-        </View>
-        <View>
-          <View style={styles.wrapperPrice}>
-            <Text style={styles.price}>{amount} </Text>
-            <Text style={styles.price}>{symbol}</Text>
-          </View>
-          <Text style={styles.status}>{extracode}</Text>
-        </View>
-      </View>
-    );
-  };
+            return (
+              <View key={index} style={styles.wrapperItemTable}>
+                <View>
+                  <Text style={styles.details}>{action}</Text>
+                  <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
+                </View>
+                <View>
+                  <View style={styles.wrapperPrice}>
+                    <Text style={styles.price}>{amount} </Text>
+                    <Text style={styles.price}>{symbol}</Text>
+                  </View>
+                  <Text style={styles.status}>{extracode}</Text>
+                </View>
+              </View>
+            );
+          })}
 
-  const renderEmptyList = () => {
-    if (loading) {
-      return (
+          {seeMore && totalTransaction.length > defaultLoadData && (
+            <View style={{marginTop: 20, marginBottom: 20}}>
+              <TouchableOpacity
+                style={styles.btnSeeMore}
+                activeOpacity={0.7}
+                onPress={() =>
+                  loadMore(
+                    routeSwipe,
+                    totalTransaction,
+                    setTotalTransaction,
+                    member,
+                    currency,
+                    days,
+                    setSeeMore,
+                    lastPosition,
+                    setLastPosition,
+                  )
+                }>
+                <Text style={styles.textSeeMore}>
+                  {lang && lang.screen_wallet
+                    ? lang.screen_wallet.see_more
+                    : ''}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </>
+      ) : loading ? (
         <View
           style={{
             flex: 1,
@@ -455,116 +556,145 @@ const ReceivedDetails = ({receivedDetails, lang}) => {
           }}>
           <ActivityIndicator size="large" color="#ccc" />
         </View>
-      );
-    } else {
-      return (
+      ) : (
         <Text style={styles.textNotFoundHistory}>
           {lang && lang.screen_wallet.history_not_found
             ? lang.screen_wallet.history_not_found
             : ''}
         </Text>
-      );
-    }
-  };
-
-  return (
-    <FlatList
-      data={receivedDetails}
-      keyExtractor={(_, index) => index.toString()}
-      renderItem={renderItem}
-      ListEmptyComponent={renderEmptyList}
-      showsVerticalScrollIndicator={false}
-      style={{paddingHorizontal: 28}}
-      overScrollMode="never"
-      initialNumToRender={20}
-      windowSize={20}
-    />
+      )}
+    </ScrollView>
   );
 };
 
-const TransitionHistory = ({transitionHistory, lang}) => {
+const TransitionHistory = ({
+  routeSwipe,
+  totalTransaction,
+  setTotalTransaction,
+  member,
+  currency,
+  days,
+  lang,
+  seeMore,
+  setSeeMore,
+  defaultLoadData,
+  lastPosition,
+  setLastPosition,
+}) => {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     setTimeout(() => {
-      if (transitionHistory.length === 0) {
+      if (totalTransaction.length > 0) {
         setLoading(false);
       } else {
         setLoading(false);
       }
     }, 100);
-  }, [transitionHistory]);
+  }, [totalTransaction]);
 
-  const renderItem = ({item}) => {
-    const {datetime, time, amount, symbol, action: tempAction} = item;
+  return (
+    <ScrollView
+      style={{paddingHorizontal: 28}}
+      overScrollMode="never"
+      contentOffset={{y: lastPosition}}>
+      {totalTransaction.length > 0 ? (
+        <>
+          {totalTransaction.map((item, index) => {
+            const {datetime, time, amount, symbol, action: tempAction} = item;
 
-    let action;
-    let extracode;
+            let action;
+            let extracode;
 
-    switch (tempAction) {
-      case '3304':
-        action =
-          lang && lang.screen_wallet.history_action3304
-            ? lang.screen_wallet.history_action3304
-            : '';
-        break;
-      case '3651':
-        action =
-          lang && lang.screen_wallet.history_action3651
-            ? lang.screen_wallet.history_action3651
-            : '';
-        break;
-      case '3305':
-        action =
-          lang && lang.screen_wallet.history_action3305
-            ? lang.screen_wallet.history_action3305
-            : '';
-        break;
-      case '3306':
-        action =
-          lang && lang.screen_wallet.history_action3306
-            ? lang.screen_wallet.history_action3306
-            : '';
-        break;
-      case '3307':
-        action =
-          lang && lang.screen_wallet.history_action3307
-            ? lang.screen_wallet.history_action3307
-            : '';
-        break;
-      case '3308':
-        action =
-          lang && lang.screen_wallet.history_action3308
-            ? lang.screen_wallet.history_action3308
-            : '';
-        break;
-      default:
-        action =
-          lang && lang.screen_wallet.history_action3305
-            ? lang.screen_wallet.history_action3305
-            : '';
-        break;
-    }
+            switch (tempAction) {
+              case '3304':
+                action =
+                  lang && lang.screen_wallet.history_action3304
+                    ? lang.screen_wallet.history_action3304
+                    : '';
+                break;
+              case '3651':
+                action =
+                  lang && lang.screen_wallet.history_action3651
+                    ? lang.screen_wallet.history_action3651
+                    : '';
+                break;
+              case '3305':
+                action =
+                  lang && lang.screen_wallet.history_action3305
+                    ? lang.screen_wallet.history_action3305
+                    : '';
+                break;
+              case '3306':
+                action =
+                  lang && lang.screen_wallet.history_action3306
+                    ? lang.screen_wallet.history_action3306
+                    : '';
+                break;
+              case '3307':
+                action =
+                  lang && lang.screen_wallet.history_action3307
+                    ? lang.screen_wallet.history_action3307
+                    : '';
+                break;
+              case '3308':
+                action =
+                  lang && lang.screen_wallet.history_action3308
+                    ? lang.screen_wallet.history_action3308
+                    : '';
+                break;
+              default:
+                action =
+                  lang && lang.screen_wallet.history_action3305
+                    ? lang.screen_wallet.history_action3305
+                    : '';
+                break;
+            }
 
-    return (
-      <View style={styles.wrapperItemTable}>
-        <View>
-          <Text style={styles.details}>{action}</Text>
-          <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
-        </View>
-        <View>
-          <View style={styles.wrapperPrice}>
-            <Text style={styles.price}>{amount} </Text>
-            <Text style={styles.price}>{symbol}</Text>
-          </View>
-          <Text style={styles.status}>{extracode}</Text>
-        </View>
-      </View>
-    );
-  };
+            return (
+              <View style={styles.wrapperItemTable} key={index}>
+                <View>
+                  <Text style={styles.details}>{action}</Text>
+                  <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
+                </View>
+                <View>
+                  <View style={styles.wrapperPrice}>
+                    <Text style={styles.price}>{amount} </Text>
+                    <Text style={styles.price}>{symbol}</Text>
+                  </View>
+                  <Text style={styles.status}>{extracode}</Text>
+                </View>
+              </View>
+            );
+          })}
 
-  const renderEmptyList = () => {
-    if (loading) {
-      return (
+          {seeMore && totalTransaction.length > defaultLoadData && (
+            <View style={{marginTop: 20, marginBottom: 20}}>
+              <TouchableOpacity
+                style={styles.btnSeeMore}
+                activeOpacity={0.7}
+                onPress={() =>
+                  loadMore(
+                    routeSwipe,
+                    totalTransaction,
+                    setTotalTransaction,
+                    member,
+                    currency,
+                    days,
+                    setSeeMore,
+                    lastPosition,
+                    setLastPosition,
+                  )
+                }>
+                <Text style={styles.textSeeMore}>
+                  {lang && lang.screen_wallet
+                    ? lang.screen_wallet.see_more
+                    : ''}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </>
+      ) : loading ? (
         <View
           style={{
             flex: 1,
@@ -574,30 +704,14 @@ const TransitionHistory = ({transitionHistory, lang}) => {
           }}>
           <ActivityIndicator size="large" color="#ccc" />
         </View>
-      );
-    } else {
-      return (
+      ) : (
         <Text style={styles.textNotFoundHistory}>
           {lang && lang.screen_wallet.history_not_found
             ? lang.screen_wallet.history_not_found
             : ''}
         </Text>
-      );
-    }
-  };
-
-  return (
-    <FlatList
-      data={transitionHistory}
-      keyExtractor={(_, index) => index.toString()}
-      renderItem={renderItem}
-      ListEmptyComponent={renderEmptyList}
-      showsVerticalScrollIndicator={false}
-      style={{paddingHorizontal: 28}}
-      overScrollMode="never"
-      initialNumToRender={20}
-      windowSize={20}
-    />
+      )}
+    </ScrollView>
   );
 };
 
@@ -614,9 +728,15 @@ const TableWalletCard = ({
   const [currentDaysTransactional, setCurrentDaysTransactional] = useState(7);
   const [index, setIndex] = useState(0);
   const [routes, setRoutes] = useState([]);
+  const [currentSwipe, setCurrentSwipe] = useState('totalHistory');
 
   // Transaction
+  const defaultLoadData = 100;
+  const [seeMore, setBtnSeeMore] = useState(true);
+  const [lastPosition, setLastPosition] = useState(0);
   const [totalHistoryLength, setTotalHistoryLength] = useState(0);
+
+  // Detail Transaction
   const [totalHistory, setTotalHistory] = useState([]);
   const [transferHistory, setTransferHistory] = useState([]);
   const [receivedDetails, setReceivedDetails] = useState([]);
@@ -698,16 +818,68 @@ const TableWalletCard = ({
 
   const renderScene = SceneMap({
     totalHistory: () => (
-      <TotalHistory totalHistory={totalHistory} lang={lang} />
+      <TotalHistory
+        totalTransaction={totalHistory}
+        setTotalTransaction={setTotalHistory}
+        member={member}
+        currency={currentCurrency}
+        days={currentDaysTransactional}
+        lang={lang}
+        seeMore={seeMore}
+        setSeeMore={setBtnSeeMore}
+        routeSwipe={currentSwipe}
+        defaultLoadData={defaultLoadData}
+        lastPosition={lastPosition}
+        setLastPosition={setLastPosition}
+      />
     ),
     transferHistory: () => (
-      <TransferHistory transferHistory={transferHistory} lang={lang} />
+      <TransferHistory
+        totalTransaction={transferHistory}
+        setTotalTransaction={setTransferHistory}
+        member={member}
+        currency={currentCurrency}
+        days={currentDaysTransactional}
+        lang={lang}
+        seeMore={seeMore}
+        setSeeMore={setBtnSeeMore}
+        routeSwipe={currentSwipe}
+        defaultLoadData={defaultLoadData}
+        lastPosition={lastPosition}
+        setLastPosition={setLastPosition}
+      />
     ),
     receivedDetails: () => (
-      <ReceivedDetails receivedDetails={receivedDetails} lang={lang} />
+      <ReceivedDetails
+        totalTransaction={receivedDetails}
+        setTotalTransaction={setReceivedDetails}
+        member={member}
+        currency={currentCurrency}
+        days={currentDaysTransactional}
+        lang={lang}
+        seeMore={seeMore}
+        setSeeMore={setBtnSeeMore}
+        routeSwipe={currentSwipe}
+        defaultLoadData={defaultLoadData}
+        lastPosition={lastPosition}
+        setLastPosition={setLastPosition}
+      />
     ),
     transitionHistory: () => (
-      <TransitionHistory transitionHistory={transitionHistory} lang={lang} />
+      <TransitionHistory
+        totalTransaction={transitionHistory}
+        setTotalTransaction={setTransitionHistory}
+        member={member}
+        currency={currentCurrency}
+        days={currentDaysTransactional}
+        lang={lang}
+        seeMore={seeMore}
+        setSeeMore={setBtnSeeMore}
+        routeSwipe={currentSwipe}
+        defaultLoadData={defaultLoadData}
+        lastPosition={lastPosition}
+        setLastPosition={setLastPosition}
+      />
     ),
   });
 
@@ -721,6 +893,7 @@ const TableWalletCard = ({
           1,
           30,
         );
+
         setTotalHistoryLength(totalHistory.length);
       } catch (err) {
         console.log(err);
@@ -738,6 +911,11 @@ const TableWalletCard = ({
   const getDataTransaction = useMemo(() => {
     return async key => {
       try {
+        setTotalHistory([]);
+        setTransferHistory([]);
+        setReceivedDetails([]);
+        setTransitionHistory([]);
+
         switch (key) {
           case 'totalHistory':
             const totalHistory = await funcTotalHistory(
@@ -748,6 +926,8 @@ const TableWalletCard = ({
               currentDaysTransactional,
             );
 
+            setLastPosition(0);
+            setBtnSeeMore(true);
             setTotalHistory(totalHistory);
             break;
           case 'transferHistory':
@@ -759,6 +939,8 @@ const TableWalletCard = ({
               currentDaysTransactional,
             );
 
+            setLastPosition(0);
+            setBtnSeeMore(true);
             setTransferHistory(transferHistory);
             break;
           case 'receivedDetails':
@@ -769,6 +951,9 @@ const TableWalletCard = ({
               currentCurrency,
               currentDaysTransactional,
             );
+
+            setLastPosition(0);
+            setBtnSeeMore(true);
             setReceivedDetails(receivedDetails);
             break;
           case 'transitionHistory':
@@ -780,6 +965,8 @@ const TableWalletCard = ({
               currentDaysTransactional,
             );
 
+            setLastPosition(0);
+            setBtnSeeMore(true);
             setTransitionHistory(transitionHistory);
             break;
           default:
@@ -811,6 +998,7 @@ const TableWalletCard = ({
 
   // Hit API for transaction if user swipe table
   const onSwipeTransaction = async key => {
+    setCurrentSwipe(key);
     getDataTransaction(key);
   };
 
@@ -1053,5 +1241,15 @@ const styles = StyleSheet.create({
     borderBottomColor: '#bbb',
     borderBottomWidth: 0.55,
     paddingBottom: 10,
+  },
+  btnSeeMore: {
+    borderWidth: 1,
+    borderColor: '#555',
+    padding: 8,
+    borderRadius: 99,
+  },
+  textSeeMore: {
+    color: '#555',
+    textAlign: 'center',
   },
 });
