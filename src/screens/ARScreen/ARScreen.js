@@ -369,11 +369,11 @@ function ARScreen() {
                       width: 150,
                       height: 275,
                       display:
-                        item.rotation >= 20 && item.rotation <= 100
+                        item.rotation >= 10 && item.rotation <= 120
                           ? 'block'
-                          : item.rotation >= 130 && item.rotation <= 195
+                          : item.rotation >= 130 && item.rotation <= 200
                           ? 'block'
-                          : item.rotation >= 210 && item.rotation <= 300
+                          : item.rotation >= 210 && item.rotation <= 320
                           ? 'block'
                           : item.rotation >= 330 && rotation <= 360
                           ? 'block'
