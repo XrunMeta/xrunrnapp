@@ -269,8 +269,8 @@ function ARScreen() {
         .map(item => {
           // const rotation = Math.random() * 360; // Menetapkan rotasi acak untuk koin
           const rotation = Math.random() * compassHeading; // Menetapkan rotasi acak untuk koin
-          const x = (Math.random() - 0.5) * (WINDOW_WIDTH - COIN_WIDTH); // Menetapkan posisi X acak untuk koin
-          const y = (Math.random() - 0.5) * (WINDOW_HEIGHT - COIN_HEIGHT); // Menetapkan posisi Y acak untuk koin
+          const x = Math.random() * (WINDOW_WIDTH - COIN_WIDTH); // Menetapkan posisi X acak untuk koin
+          const y = (Math.random() - 0.1) * (WINDOW_HEIGHT - COIN_HEIGHT); // Menetapkan posisi Y acak untuk koin
 
           return {
             ...item,
@@ -355,8 +355,8 @@ function ARScreen() {
                 // backgroundColor: '#001a477a',
                 top: 0,
                 bottom: 0,
-                left: 0,
-                right: 0,
+                left: -50,
+                right: -50,
               }}>
               {coins.map((item, index) => (
                 <Animated.View
@@ -369,15 +369,14 @@ function ARScreen() {
                       width: 150,
                       height: 275,
                       display:
-                        item.rotation >= 10 && item.rotation <= 120
-                          ? 'block'
-                          : item.rotation >= 130 && item.rotation <= 200
+                        item.rotation >= 10 && item.rotation <= 200
                           ? 'block'
                           : item.rotation >= 210 && item.rotation <= 320
                           ? 'block'
                           : item.rotation >= 330 && rotation <= 360
                           ? 'block'
                           : 'none',
+                      // display: 'block',
                     },
                     bouncingCoinAnimatedStyle,
                   ]}>
