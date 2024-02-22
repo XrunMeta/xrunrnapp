@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   TextInput,
   ActivityIndicator,
+  SafeAreaView,
 } from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
@@ -95,7 +96,7 @@ const CloseMembershipScreen = () => {
   };
 
   return (
-    <View style={[styles.root, {height: ScreenHeight}]}>
+    <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
       {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#343a59" />
@@ -342,7 +343,7 @@ const CloseMembershipScreen = () => {
           </View>
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 
