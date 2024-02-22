@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, TextInput} from 'react-native';
+import {StyleSheet, Text, View, TextInput, Platform} from 'react-native';
 import React from 'react';
 
 const CustomInputWallet = ({
@@ -33,6 +33,8 @@ const styles = StyleSheet.create({
   },
   input: customFontSize => ({
     borderBottomWidth: 1,
+    marginTop: Platform.OS === 'ios' ? 14 : 0,
+    paddingBottom: 10,
     paddingLeft: 10,
     borderBottomColor: '#ddd',
     fontFamily: 'Roboto-Regular',
