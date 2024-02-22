@@ -32,12 +32,13 @@ export default ButtonList;
 
 const styles = StyleSheet.create({
   shadow: {
-    shadowColor: 'black',
+    shadowColor: '#000000',
     shadowOffset: {
       width: 0,
-      height: 10,
+      height: 1,
     },
-    shadowOpacity: 1,
-    shadowRadius: 3.5,
+    shadowOpacity: 0.16,
+    shadowRadius: 1.51,
+    elevation: 1,
   },
 });
