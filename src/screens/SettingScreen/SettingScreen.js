@@ -1,4 +1,11 @@
-import {StyleSheet, Text, View, ScrollView, Alert} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  Alert,
+  SafeAreaView,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import ButtonList from '../../components/ButtonList/ButtonList';
@@ -70,7 +77,7 @@ const SettingScreen = () => {
   };
 
   return (
-    <View style={styles.root}>
+    <SafeAreaView style={styles.root}>
       {/* Title */}
       <View style={{flexDirection: 'row'}}>
         <View style={{position: 'absolute', zIndex: 1}}>
@@ -132,7 +139,7 @@ const SettingScreen = () => {
           />
         </ScrollView>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

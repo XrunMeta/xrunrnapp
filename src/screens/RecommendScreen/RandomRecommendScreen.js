@@ -9,6 +9,7 @@ import {
   Alert,
   ScrollView,
   TouchableOpacity,
+  SafeAreaView,
 } from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
@@ -153,7 +154,7 @@ const RandomRecommendScreen = () => {
   };
 
   return (
-    <View style={[styles.root, {height: ScreenHeight}]}>
+    <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
       {/* Title */}
       <View style={{flexDirection: 'row'}}>
         <View style={{position: 'absolute', zIndex: 1}}>
@@ -232,7 +233,7 @@ const RandomRecommendScreen = () => {
           />
         </Pressable>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -310,6 +311,7 @@ const styles = StyleSheet.create({
   checkMark: {
     color: 'white',
     fontSize: 13,
+    backgroundColor: '#fff',
     fontWeight: 'bold',
     marginTop: -1,
   },
