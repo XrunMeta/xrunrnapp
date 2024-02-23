@@ -13,6 +13,7 @@ import {
   BackHandler,
   ScrollView,
   SafeAreaView,
+  Platform,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import QRCodeScanner from 'react-native-qrcode-scanner';
@@ -22,6 +23,13 @@ import CustomInputWallet from '../../components/CustomInputWallet';
 import CustomDropdownWallet from '../../components/CustomDropdownWallet';
 import {URL_API, getLanguage2} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
+import {
+  request,
+  PERMISSIONS,
+  check,
+  RESULTS,
+  openSettings,
+} from 'react-native-permissions';
 
 const SendWalletScreen = ({navigation, route}) => {
   const [lang, setLang] = useState('');
@@ -98,27 +106,18 @@ const SendWalletScreen = ({navigation, route}) => {
     cointrace();
   }, []);
 
+  const requestCameraPermission = async permission => {
+    request(permission).then(result => {
+      console.log(`Permission: ${result}`);
+    });
+  };
+
   useEffect(() => {
-    const requestCameraPermission = async () => {
-      try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.CAMERA,
-        );
-
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          console.log('Camera permission granted');
-        } else {
-          Linking.openSettings();
-          console.log('Camera permission not granted');
-        }
-      } catch (error) {
-        console.error('Failed to request camera permission:', error);
-        crashlytics().recordError(new Error(error));
-        crashlytics().log(error);
-      }
-    };
-
-    requestCameraPermission();
+    if (Platform.OS == 'ios') {
+      requestCameraPermission(PERMISSIONS.IOS.CAMERA);
+    } else {
+      requestCameraPermission(PERMISSIONS.ANDROID.CAMERA);
+    }
   }, []);
 
   const handleBackPress = () => {
@@ -320,8 +319,68 @@ const SendWalletScreen = ({navigation, route}) => {
     }
   };
 
-  const onQRCodeScan = () => {
-    setIsVisibleReadQR(true);
+  const onQRCodeScan = async () => {
+    try {
+      if (Platform.OS == 'ios') {
+        check(PERMISSIONS.IOS.CAMERA)
+          .then(result => {
+            switch (result) {
+              case RESULTS.DENIED:
+                console.log(
+                  'The permission has not been requested / is denied but requestable',
+                );
+                request(PERMISSIONS.IOS.CAMERA).then(result => {
+                  console.log(`Permission: ${result}`);
+                });
+                openSettings();
+                break;
+              case RESULTS.LIMITED:
+                console.log(
+                  'The permission is limited: some actions are possible',
+                );
+                break;
+              case RESULTS.GRANTED:
+                console.log('The permission is granted');
+                break;
+              case RESULTS.BLOCKED:
+                request(PERMISSIONS.IOS.CAMERA).then(result => {
+                  console.log(`Permission: ${result}`);
+                });
+                openSettings();
+                console.log(
+                  'The permission is denied and not requestable anymore',
+                );
+                break;
+            }
+          })
+          .catch(error => {
+            // …
+          });
+      } else {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+          {
+            title: 'Cool Photo App Camera Permission',
+            message:
+              'Cool Photo App needs access to your camera ' +
+              'so you can take awesome pictures.',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          },
+        );
+
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log('You can use the camera');
+          setIsVisibleReadQR(true);
+        } else {
+          openSettings();
+          console.log('Camera permission denied');
+        }
+      }
+    } catch (err) {
+      console.warn(`Error permission camera: ${err}`);
+    }
   };
 
   const handleQRCodeRead = ({data}) => {

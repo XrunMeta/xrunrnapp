@@ -38,6 +38,7 @@
     "react-native-localize": "^3.0.2",
     "react-native-maps": "^1.7.1",
     "react-native-pager-view": "^6.2.3",
+    "react-native-permissions": "^4.1.2",
     "react-native-qrcode-scanner": "^1.5.5",
     "react-native-reanimated": "^3.6.2",
     "react-native-rename": "^3.2.14",
