@@ -80,9 +80,10 @@ const EmailVerificationScreen = () => {
   };
 
   const onLoginPassword = () => {
-    navigation.replace('SignPassword', {
+    navigation.navigate('SignPassword', {
       mobile: mobile,
     });
+    setModalVisible(false);
   };
 
   const onSignIn = async () => {
