@@ -219,6 +219,7 @@ const styles = StyleSheet.create({
   root: {
     alignItems: 'center',
     flex: 1,
+    paddingBottom: 15,
   },
   titleWrapper: {
     width: '100%',
@@ -239,7 +240,6 @@ const styles = StyleSheet.create({
   },
   bottomSection: {
     padding: 20,
-    paddingBottom: 15,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

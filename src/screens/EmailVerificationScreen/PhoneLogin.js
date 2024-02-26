@@ -221,6 +221,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingHorizontal: 5,
     paddingBottom: -10,
+    paddingTop: 10,
     flex: 1,
   },
 });
