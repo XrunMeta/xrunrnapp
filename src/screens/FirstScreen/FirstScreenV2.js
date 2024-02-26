@@ -15,7 +15,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import CustomButton from '../../components/CustomButton';
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import * as RNLocalize from 'react-native-localize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
@@ -198,9 +198,11 @@ const FirstScreenV2 = ({navigation}) => {
     require('../../../assets/images/image_firstSlider3.png'),
   ];
 
-  const renderImage = ({item}) => (
-    <Image source={item} style={styles.sliderImage} resizeMode="cover" />
-  );
+  const renderImage = ({item, index}) => {
+    return (
+      <Image source={item} style={[styles.sliderImage, index % 2 === 1 ? {marginHorizontal: 15, width: Dimensions.get('window').width - 55} : '']} resizeMode="cover" />
+    );
+  }
 
   const exitApp = () => {
     BackHandler.exitApp();
@@ -266,6 +268,7 @@ const FirstScreenV2 = ({navigation}) => {
               : ''
           }
           onPress={onSignIn}
+          firstScreen
         />
         <CustomButton
           text={
@@ -411,15 +414,13 @@ const styles = StyleSheet.create({
   },
   sliderWrapper: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   sliderImage: {
-    width: Dimensions.get('window').width * 0.85, // 86% width of screen
+    flex: 1,
+    flexShrink: 0,
+    width: Dimensions.get('window').width - 40,
     height: '95%',
     borderRadius: 10,
-    marginHorizontal: 5,
-    marginLeft: 10,
   },
   sliderNavigator: {
     flexDirection: 'row',
