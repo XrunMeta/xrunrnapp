@@ -82,7 +82,10 @@ const SignUpCreateGender = () => {
       if (responseData.data === 'ok') {
         await AsyncStorage.setItem('userEmail', email);
         login();
-        navigation.replace('SuccessJoin');
+        navigation.replace('SuccessJoin', {
+          email: email,
+          pin: pin,
+        });
       } else {
         Alert.alert('Error', lang.screen_notExist.field_gender.errorServer, [
           {
@@ -115,61 +118,59 @@ const SignUpCreateGender = () => {
   };
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false} scrollEnabled={false}>
-      <View style={[styles.root, {height: ScreenHeight}]}>
-        <ButtonBack onClick={onBack} />
+    <View style={[styles.root, {height: ScreenHeight}]}>
+      <ButtonBack onClick={onBack} />
 
-        <View
+      <View
+        style={{
+          width: '100%',
+          paddingHorizontal: 25,
+          marginTop: 30,
+          zIndex: -1,
+        }}>
+        {/*  Field - Gender */}
+        <Text
           style={{
-            width: '100%',
-            paddingHorizontal: 25,
-            marginTop: 30,
-            zIndex: -1,
+            fontFamily: 'Roboto-Medium',
+            fontSize: 13,
+            color: '#343a59',
+            marginBottom: -5,
           }}>
-          {/*  Field - Gender */}
-          <Text
-            style={{
-              fontFamily: 'Roboto-Medium',
-              fontSize: 13,
-              color: '#343a59',
-              marginBottom: -5,
-            }}>
-            {lang && lang.screen_notExist && lang.screen_notExist.field_gender
-              ? lang.screen_notExist.field_gender.label
-              : ''}
-          </Text>
-          <CustomMultipleChecbox
-            texts={[
-              lang && lang.screen_notExist && lang.screen_notExist.field_gender
-                ? lang.screen_notExist.field_gender.male
-                : '',
-              lang && lang.screen_notExist && lang.screen_notExist.field_gender
-                ? lang.screen_notExist.field_gender.female
-                : '',
-            ]}
-            count={2}
-            singleCheck={true}
-            wrapperStyle={{
-              flexDirection: 'row',
-              paddingTop: 5,
-              alignSelf: 'flex-start',
-            }}
-            defaultCheckedIndices={[gender]}
-            onCheckChange={genderSelector}
-          />
-        </View>
-
-        <View style={[styles.bottomSection]}>
-          <Pressable onPress={onSignUp} style={styles.buttonSignIn}>
-            <Image
-              source={require('../../../assets/images/icon_next.png')}
-              resizeMode="contain"
-              style={styles.buttonSignInImage}
-            />
-          </Pressable>
-        </View>
+          {lang && lang.screen_notExist && lang.screen_notExist.field_gender
+            ? lang.screen_notExist.field_gender.label
+            : ''}
+        </Text>
+        <CustomMultipleChecbox
+          texts={[
+            lang && lang.screen_notExist && lang.screen_notExist.field_gender
+              ? lang.screen_notExist.field_gender.male
+              : '',
+            lang && lang.screen_notExist && lang.screen_notExist.field_gender
+              ? lang.screen_notExist.field_gender.female
+              : '',
+          ]}
+          count={2}
+          singleCheck={true}
+          wrapperStyle={{
+            flexDirection: 'row',
+            paddingTop: 5,
+            alignSelf: 'flex-start',
+          }}
+          defaultCheckedIndices={[gender]}
+          onCheckChange={genderSelector}
+        />
       </View>
-    </ScrollView>
+
+      <View style={[styles.bottomSection]}>
+        <Pressable onPress={onSignUp} style={styles.buttonSignIn}>
+          <Image
+            source={require('../../../assets/images/icon_next.png')}
+            resizeMode="contain"
+            style={styles.buttonSignInImage}
+          />
+        </Pressable>
+      </View>
+    </View>
   );
 };
 
@@ -180,7 +181,6 @@ const styles = StyleSheet.create({
   },
   bottomSection: {
     padding: 20,
-    paddingBottom: 40,
     flexDirection: 'row',
     justifyContent: 'flex-end',
     flex: 1,

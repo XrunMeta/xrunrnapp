@@ -2,7 +2,6 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   Pressable,
   Image,
   Dimensions,
@@ -81,92 +80,90 @@ const SignUpCreateName = () => {
   };
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false} scrollEnabled={false}>
-      <View style={[styles.root, {height: ScreenHeight}]}>
-        <ButtonBack onClick={onBack} />
+    <View style={[styles.root, {height: ScreenHeight}]}>
+      <ButtonBack onClick={onBack} />
 
+      <View
+        style={{
+          width: '100%',
+          paddingHorizontal: 25,
+          marginTop: 30,
+        }}>
+        <Text
+          style={{
+            fontFamily: 'Roboto-Medium',
+            fontSize: 13,
+            color: '#343a59',
+            marginBottom: -5,
+          }}>
+          {lang && lang.screen_notExist && lang.screen_notExist.field_name
+            ? lang.screen_notExist.field_name.label
+            : ''}
+        </Text>
         <View
           style={{
             width: '100%',
-            paddingHorizontal: 25,
-            marginTop: 30,
+            flexDirection: 'row',
+            gap: 25,
           }}>
-          <Text
+          {/* Last Name */}
+          <TextInput
             style={{
               fontFamily: 'Roboto-Medium',
               fontSize: 13,
               color: '#343a59',
-              marginBottom: -5,
-            }}>
-            {lang && lang.screen_notExist && lang.screen_notExist.field_name
-              ? lang.screen_notExist.field_name.label
-              : ''}
-          </Text>
-          <View
+              borderBottomColor: '#cccccc',
+              borderBottomWidth: 1,
+              paddingHorizontal: 5,
+              paddingBottom: -10,
+              flex: 1,
+            }}
+            placeholder={
+              lang && lang.screen_notExist && lang.screen_notExist.field_name
+                ? lang.screen_notExist.field_name.placeholder_last
+                : ''
+            }
+            placeholderTextColor="grey"
+            value={lastname}
+            onChangeText={setLastname}
+            autoCapitalize="words"
+          />
+
+          {/* Name */}
+          <TextInput
             style={{
-              width: '100%',
-              flexDirection: 'row',
-              gap: 25,
-            }}>
-            {/* Last Name */}
-            <TextInput
-              style={{
-                fontFamily: 'Roboto-Medium',
-                fontSize: 13,
-                color: '#343a59',
-                borderBottomColor: '#cccccc',
-                borderBottomWidth: 1,
-                paddingHorizontal: 5,
-                paddingBottom: -10,
-                flex: 1,
-              }}
-              placeholder={
-                lang && lang.screen_notExist && lang.screen_notExist.field_name
-                  ? lang.screen_notExist.field_name.placeholder_last
-                  : ''
-              }
-              placeholderTextColor="grey"
-              value={lastname}
-              onChangeText={setLastname}
-              autoCapitalize="words"
-            />
-
-            {/* Name */}
-            <TextInput
-              style={{
-                fontFamily: 'Roboto-Medium',
-                fontSize: 13,
-                color: '#343a59',
-                borderBottomColor: '#cccccc',
-                borderBottomWidth: 1,
-                paddingHorizontal: 5,
-                paddingBottom: -10,
-                flex: 1,
-              }}
-              placeholder={
-                lang && lang.screen_notExist && lang.screen_notExist.field_name
-                  ? lang.screen_notExist.field_name.placeholder_first
-                  : ''
-              }
-              placeholderTextColor="grey"
-              value={name}
-              onChangeText={setName}
-              autoCapitalize="words"
-            />
-          </View>
-        </View>
-
-        <View style={[styles.bottomSection]}>
-          <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
-            <Image
-              source={require('../../../assets/images/icon_next.png')}
-              resizeMode="contain"
-              style={styles.buttonSignInImage}
-            />
-          </Pressable>
+              fontFamily: 'Roboto-Medium',
+              fontSize: 13,
+              color: '#343a59',
+              borderBottomColor: '#cccccc',
+              borderBottomWidth: 1,
+              paddingHorizontal: 5,
+              paddingBottom: -10,
+              flex: 1,
+            }}
+            placeholder={
+              lang && lang.screen_notExist && lang.screen_notExist.field_name
+                ? lang.screen_notExist.field_name.placeholder_first
+                : ''
+            }
+            placeholderTextColor="grey"
+            value={name}
+            onChangeText={setName}
+            autoCapitalize="words"
+          />
         </View>
       </View>
-    </ScrollView>
+
+      <View style={[styles.bottomSection]}>
+        <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
+          <Image
+            source={require('../../../assets/images/icon_next.png')}
+            resizeMode="contain"
+            style={styles.buttonSignInImage}
+          />
+        </Pressable>
+      </View>
+    </View>
   );
 };
 

@@ -108,52 +108,50 @@ const SignUpByEmailScreen = () => {
   }, []);
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={[styles.root, {height: ScreenHeight}]}>
-        <ButtonBack onClick={onBack} />
+    <View style={[styles.root, {height: ScreenHeight}]}>
+      <ButtonBack onClick={onBack} />
 
-        <CustomInput
-          label={
-            lang && lang.screen_notExist && lang.screen_notExist.field_email
-              ? lang.screen_notExist.field_email.label
-              : ''
-          }
-          placeholder={
-            lang && lang.screen_notExist && lang.screen_notExist.field_email
-              ? lang.screen_notExist.field_email.placeholder
-              : ''
-          }
-          value={email}
-          setValue={onEmailChange}
-          isPassword={false}
-        />
-        {isEmailValid ? null : (
-          <Text
-            style={{
-              alignSelf: 'flex-start',
-              marginLeft: 25,
-              color: 'red',
-            }}>
-            {lang &&
-            lang.screen_notExist &&
-            lang.screen_notExist.screen_emailAuth &&
-            lang.screen_notExist.screen_emailAuth.alert
-              ? lang.screen_notExist.screen_emailAuth.alert.invalidEmail
-              : ''}
-          </Text>
-        )}
+      <CustomInput
+        label={
+          lang && lang.screen_notExist && lang.screen_notExist.field_email
+            ? lang.screen_notExist.field_email.label
+            : ''
+        }
+        placeholder={
+          lang && lang.screen_notExist && lang.screen_notExist.field_email
+            ? lang.screen_notExist.field_email.placeholder
+            : ''
+        }
+        value={email}
+        setValue={onEmailChange}
+        isPassword={false}
+      />
+      {isEmailValid ? null : (
+        <Text
+          style={{
+            alignSelf: 'flex-start',
+            marginLeft: 25,
+            color: 'red',
+          }}>
+          {lang &&
+          lang.screen_notExist &&
+          lang.screen_notExist.screen_emailAuth &&
+          lang.screen_notExist.screen_emailAuth.alert
+            ? lang.screen_notExist.screen_emailAuth.alert.invalidEmail
+            : ''}
+        </Text>
+      )}
 
-        <View style={[styles.bottomSection]}>
-          <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
-            <Image
-              source={require('../../../assets/images/icon_next.png')}
-              resizeMode="contain"
-              style={styles.buttonSignInImage}
-            />
-          </Pressable>
-        </View>
+      <View style={[styles.bottomSection]}>
+        <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
+          <Image
+            source={require('../../../assets/images/icon_next.png')}
+            resizeMode="contain"
+            style={styles.buttonSignInImage}
+          />
+        </Pressable>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
