@@ -8,6 +8,7 @@ import {
   Alert,
   TextInput,
   TouchableWithoutFeedback,
+  SafeAreaView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput';
@@ -319,238 +320,240 @@ const SignUpScreen = ({route}) => {
   }, [region]);
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={[styles.root]}>
-        <ButtonBack onClick={onBack} />
+    <SafeAreaView>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={[styles.root]}>
+          <ButtonBack onClick={onBack} />
 
-        {/*  Title */}
-        <View style={styles.titleWrapper}>
-          <Text style={styles.title}>
-            {lang && lang.screen_signup && lang.screen_signup.title
-              ? lang.screen_signup.title
-              : ''}
-          </Text>
-        </View>
-
-        {/*  Field - Name */}
-        <CustomInput
-          label={
-            lang && lang.screen_signup && lang.screen_signup.name
-              ? lang.screen_signup.name.label
-              : ''
-          }
-          placeholder={
-            lang && lang.screen_signup && lang.screen_signup.name
-              ? lang.screen_signup.name.placeholder
-              : ''
-          }
-          value={name}
-          setValue={setName}
-          isPassword={false}
-        />
-
-        {/*  Field - Email */}
-        <CustomInput
-          label={
-            lang && lang.screen_signup && lang.screen_signup.email
-              ? lang.screen_signup.email.label
-              : ''
-          }
-          placeholder={
-            lang && lang.screen_signup && lang.screen_signup.email
-              ? lang.screen_signup.email.placeholder
-              : ''
-          }
-          value={email}
-          setValue={onEmailChange}
-          isPassword={false}
-        />
-        {isEmailValid ? null : (
-          <Text
-            style={{
-              alignSelf: 'flex-start',
-              marginLeft: 25,
-              color: 'red',
-              fontFamily: 'Roboto-Medium',
-              fontSize: 13,
-            }}>
-            {lang && lang.screen_signup && lang.screen_signup.validator
-              ? lang.screen_signup.validator.invalidEmail
-              : ''}
-          </Text>
-        )}
-
-        {/*  Field - Password */}
-        <CustomInput
-          label={
-            lang && lang.screen_signup && lang.screen_signup.password
-              ? lang.screen_signup.password.label
-              : ''
-          }
-          placeholder={
-            lang && lang.screen_signup && lang.screen_signup.password
-              ? lang.screen_signup.password.placeholder
-              : ''
-          }
-          value={password}
-          setValue={setPassword}
-          secureTextEntry
-          isPassword={true}
-        />
-
-        {/*  Field - Phone Number */}
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>
-            {lang && lang.screen_signup && lang.screen_signup.phone_number
-              ? lang.screen_signup.phone_number.label
-              : ''}
-          </Text>
-          <View
-            style={{
-              width: '100%',
-              flexDirection: 'row',
-            }}>
-            <Pressable
-              style={{flexDirection: 'row', marginBottom: -10}}
-              onPress={() => chooseRegion(flag, countryCode, country)}>
-              <Image
-                resizeMode="contain"
-                style={{
-                  width: 35,
-                  marginRight: 10,
-                }}
-                source={
-                  flag == undefined
-                    ? {
-                        uri: 'https://app.xrun.run/flags/kr.png',
-                      }
-                    : {
-                        uri: flag,
-                      }
-                }
-              />
-              <Text
-                style={{
-                  fontFamily: 'Roboto-Medium',
-                  fontSize: 13,
-                  color: '#a8a8a7',
-                  alignSelf: 'center',
-                  paddingRight: 10,
-                }}>
-                +{countryCode == undefined ? '82' : countryCode}
-              </Text>
-            </Pressable>
-            <TextInput
-              keyboardType="numeric"
-              style={styles.input}
-              value={phoneNumber}
-              setValue={setPhoneNumber}
-              onChangeText={text => setPhoneNumber(text)}
-            />
-          </View>
-        </View>
-
-        {/*  Field - Region */}
-        <CustomInput
-          label={
-            lang && lang.screen_signup && lang.screen_signup.area
-              ? lang.screen_signup.area.label
-              : ''
-          }
-          placeholder={
-            lang && lang.screen_signup && lang.screen_signup.area
-              ? lang.screen_signup.area.placeholder
-              : ''
-          }
-          value={region}
-          setValue={setRegion}
-          isPassword={false}
-        />
-
-        {isListWrapperVisible && <ListWrapper onClose={closeButton} />}
-
-        {/*  Field - Gender */}
-        <View style={[styles.formGroup, {zIndex: -1}]}>
-          <Text style={styles.label}>
-            {lang && lang.screen_signup && lang.screen_signup.gender
-              ? lang.screen_signup.gender.label
-              : ''}
-          </Text>
-          <CustomMultipleChecbox
-            texts={[
-              lang && lang.screen_signup && lang.screen_signup.gender
-                ? lang.screen_signup.gender.male
-                : '',
-              lang && lang.screen_signup && lang.screen_signup.gender
-                ? lang.screen_signup.gender.female
-                : '',
-              ,
-            ]}
-            count={2}
-            singleCheck={true}
-            wrapperStyle={styles.horizontalChecbox}
-            defaultCheckedIndices={[0]}
-            onCheckChange={genderSelector}
-          />
-        </View>
-
-        {/*  Field - Age */}
-        <View style={[styles.formGroup, {zIndex: -1}]}>
-          <Text style={styles.label}>
-            {lang && lang.screen_signup && lang.screen_signup.age
-              ? lang.screen_signup.age.label
-              : ''}
-          </Text>
-          <CustomMultipleChecbox
-            texts={['10', '20', '30', '40', '50+']}
-            count={5}
-            singleCheck={true}
-            wrapperStyle={styles.horizontalChecbox}
-            defaultCheckedIndices={[0]}
-            onCheckChange={ageSelector}
-          />
-        </View>
-
-        {/* Field - Referral Email */}
-        <CustomInput
-          label={
-            lang && lang.screen_signup && lang.screen_signup.referral
-              ? lang.screen_signup.referral.label
-              : ''
-          }
-          placeholder={
-            lang && lang.screen_signup && lang.screen_signup.referral
-              ? lang.screen_signup.referral.placeholder
-              : ''
-          }
-          value={refferalEmail}
-          setValue={setRefferalEmail}
-          isPassword={false}
-        />
-
-        {/* Bottom Section */}
-        <View style={[styles.bottomSection]}>
-          <View style={styles.additionalLogin}>
-            <Text style={styles.normalText}>
-              {lang && lang.screen_signup && lang.screen_signup.add_desc
-                ? lang.screen_signup.add_desc.ad1
-                : ''}{' '}
-              {'\n'}
-              {lang && lang.screen_signup && lang.screen_signup.add_desc
-                ? lang.screen_signup.add_desc.ad2
+          {/*  Title */}
+          <View style={styles.titleWrapper}>
+            <Text style={styles.title}>
+              {lang && lang.screen_signup && lang.screen_signup.title
+                ? lang.screen_signup.title
                 : ''}
             </Text>
           </View>
-          <Pressable onPress={onSignUp} style={styles.buttonSignUp}>
-            <Image
-              source={require('../../../assets/images/icon_next.png')}
-              resizeMode="contain"
-              style={styles.buttonSignUpImage}
+
+          {/*  Field - Name */}
+          <CustomInput
+            label={
+              lang && lang.screen_signup && lang.screen_signup.name
+                ? lang.screen_signup.name.label
+                : ''
+            }
+            placeholder={
+              lang && lang.screen_signup && lang.screen_signup.name
+                ? lang.screen_signup.name.placeholder
+                : ''
+            }
+            value={name}
+            setValue={setName}
+            isPassword={false}
+          />
+
+          {/*  Field - Email */}
+          <CustomInput
+            label={
+              lang && lang.screen_signup && lang.screen_signup.email
+                ? lang.screen_signup.email.label
+                : ''
+            }
+            placeholder={
+              lang && lang.screen_signup && lang.screen_signup.email
+                ? lang.screen_signup.email.placeholder
+                : ''
+            }
+            value={email}
+            setValue={onEmailChange}
+            isPassword={false}
+          />
+          {isEmailValid ? null : (
+            <Text
+              style={{
+                alignSelf: 'flex-start',
+                marginLeft: 25,
+                color: 'red',
+                fontFamily: 'Roboto-Medium',
+                fontSize: 13,
+              }}>
+              {lang && lang.screen_signup && lang.screen_signup.validator
+                ? lang.screen_signup.validator.invalidEmail
+                : ''}
+            </Text>
+          )}
+
+          {/*  Field - Password */}
+          <CustomInput
+            label={
+              lang && lang.screen_signup && lang.screen_signup.password
+                ? lang.screen_signup.password.label
+                : ''
+            }
+            placeholder={
+              lang && lang.screen_signup && lang.screen_signup.password
+                ? lang.screen_signup.password.placeholder
+                : ''
+            }
+            value={password}
+            setValue={setPassword}
+            secureTextEntry
+            isPassword={true}
+          />
+
+          {/*  Field - Phone Number */}
+          <View style={styles.formGroup}>
+            <Text style={styles.label}>
+              {lang && lang.screen_signup && lang.screen_signup.phone_number
+                ? lang.screen_signup.phone_number.label
+                : ''}
+            </Text>
+            <View
+              style={{
+                width: '100%',
+                flexDirection: 'row',
+              }}>
+              <Pressable
+                style={{flexDirection: 'row', marginBottom: -10}}
+                onPress={() => chooseRegion(flag, countryCode, country)}>
+                <Image
+                  resizeMode="contain"
+                  style={{
+                    width: 35,
+                    marginRight: 10,
+                  }}
+                  source={
+                    flag == undefined
+                      ? {
+                          uri: 'https://app.xrun.run/flags/kr.png',
+                        }
+                      : {
+                          uri: flag,
+                        }
+                  }
+                />
+                <Text
+                  style={{
+                    fontFamily: 'Roboto-Medium',
+                    fontSize: 13,
+                    color: '#a8a8a7',
+                    alignSelf: 'center',
+                    paddingRight: 10,
+                  }}>
+                  +{countryCode == undefined ? '82' : countryCode}
+                </Text>
+              </Pressable>
+              <TextInput
+                keyboardType="numeric"
+                style={styles.input}
+                value={phoneNumber}
+                setValue={setPhoneNumber}
+                onChangeText={text => setPhoneNumber(text)}
+              />
+            </View>
+          </View>
+
+          {/*  Field - Region */}
+          <CustomInput
+            label={
+              lang && lang.screen_signup && lang.screen_signup.area
+                ? lang.screen_signup.area.label
+                : ''
+            }
+            placeholder={
+              lang && lang.screen_signup && lang.screen_signup.area
+                ? lang.screen_signup.area.placeholder
+                : ''
+            }
+            value={region}
+            setValue={setRegion}
+            isPassword={false}
+          />
+
+          {isListWrapperVisible && <ListWrapper onClose={closeButton} />}
+
+          {/*  Field - Gender */}
+          <View style={[styles.formGroup, {zIndex: -1}]}>
+            <Text style={styles.label}>
+              {lang && lang.screen_signup && lang.screen_signup.gender
+                ? lang.screen_signup.gender.label
+                : ''}
+            </Text>
+            <CustomMultipleChecbox
+              texts={[
+                lang && lang.screen_signup && lang.screen_signup.gender
+                  ? lang.screen_signup.gender.male
+                  : '',
+                lang && lang.screen_signup && lang.screen_signup.gender
+                  ? lang.screen_signup.gender.female
+                  : '',
+                ,
+              ]}
+              count={2}
+              singleCheck={true}
+              wrapperStyle={styles.horizontalChecbox}
+              defaultCheckedIndices={[0]}
+              onCheckChange={genderSelector}
             />
-          </Pressable>
+          </View>
+
+          {/*  Field - Age */}
+          <View style={[styles.formGroup, {zIndex: -1}]}>
+            <Text style={styles.label}>
+              {lang && lang.screen_signup && lang.screen_signup.age
+                ? lang.screen_signup.age.label
+                : ''}
+            </Text>
+            <CustomMultipleChecbox
+              texts={['10', '20', '30', '40', '50+']}
+              count={5}
+              singleCheck={true}
+              wrapperStyle={styles.horizontalChecbox}
+              defaultCheckedIndices={[0]}
+              onCheckChange={ageSelector}
+            />
+          </View>
+
+          {/* Field - Referral Email */}
+          <CustomInput
+            label={
+              lang && lang.screen_signup && lang.screen_signup.referral
+                ? lang.screen_signup.referral.label
+                : ''
+            }
+            placeholder={
+              lang && lang.screen_signup && lang.screen_signup.referral
+                ? lang.screen_signup.referral.placeholder
+                : ''
+            }
+            value={refferalEmail}
+            setValue={setRefferalEmail}
+            isPassword={false}
+          />
+
+          {/* Bottom Section */}
+          <View style={[styles.bottomSection]}>
+            <View style={styles.additionalLogin}>
+              <Text style={styles.normalText}>
+                {lang && lang.screen_signup && lang.screen_signup.add_desc
+                  ? lang.screen_signup.add_desc.ad1
+                  : ''}{' '}
+                {'\n'}
+                {lang && lang.screen_signup && lang.screen_signup.add_desc
+                  ? lang.screen_signup.add_desc.ad2
+                  : ''}
+              </Text>
+            </View>
+            <Pressable onPress={onSignUp} style={styles.buttonSignUp}>
+              <Image
+                source={require('../../../assets/images/icon_next.png')}
+                resizeMode="contain"
+                style={styles.buttonSignUpImage}
+              />
+            </Pressable>
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
