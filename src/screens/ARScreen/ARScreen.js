@@ -21,7 +21,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
-import {URL_API, getLanguage2} from '../../../utils';
+import {URL_API, getLanguage2, getFontFam} from '../../../utils';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import CompassHeading from 'react-native-compass-heading';
@@ -430,7 +430,7 @@ function ARScreen() {
                         />
                         <Text
                           style={{
-                            fontFamily: 'Roboto-Medium',
+                            fontFamily: getFontFam() + 'Medium',
                             fontSize: 16,
                             color: 'white',
                           }}>
@@ -440,7 +440,7 @@ function ARScreen() {
                         </Text>
                         <Text
                           style={{
-                            fontFamily: 'Roboto-Regular',
+                            fontFamily: getFontFam() + 'Regular',
                             fontSize: 13,
                             color: 'grey',
                             marginTop: -7,
@@ -496,7 +496,7 @@ function ARScreen() {
                   <View style={{marginBottom: -20}}>
                     <Text
                       style={{
-                        fontFamily: 'Roboto-Medium',
+                        fontFamily: getFontFam() + 'Medium',
                         fontSize: 10.5,
                         color: 'white',
                       }}>
@@ -508,7 +508,7 @@ function ARScreen() {
                     </Text>
                     <Text
                       style={{
-                        fontFamily: 'Roboto-Medium',
+                        fontFamily: getFontFam() + 'Medium',
                         fontSize: 13,
                         color: 'white',
                       }}>
@@ -519,7 +519,7 @@ function ARScreen() {
                         : ''}
                       <Text
                         style={{
-                          fontFamily: 'Roboto-Bold',
+                          fontFamily: getFontFam() + 'Bold',
                         }}>
                         {brandCount} XRUN
                       </Text>{' '}
@@ -530,7 +530,7 @@ function ARScreen() {
                         : ''}
                       <Text
                         style={{
-                          fontFamily: 'Roboto-Bold',
+                          fontFamily: getFontFam() + 'Bold',
                         }}>
                         {coinAPI.length} BIG XRUN{' '}
                       </Text>
@@ -550,7 +550,7 @@ function ARScreen() {
                     }}>
                     <Text
                       style={{
-                        fontFamily: 'Roboto-Medium',
+                        fontFamily: getFontFam() + 'Medium',
                         fontSize: 13,
                         color: 'white',
                         marginTop: -2,
@@ -572,7 +572,7 @@ function ARScreen() {
                       />
                       <Text
                         style={{
-                          fontFamily: 'Roboto-Bold',
+                          fontFamily: getFontFam() + 'Bold',
                           fontSize: 13,
                           color: '#ffdc04',
                           marginTop: -4,
@@ -653,7 +653,7 @@ function ARScreen() {
               onPress={() => getCamPermission()}>
               <Text
                 style={{
-                  fontFamily: 'Roboto-Medium',
+                  fontFamily: getFontFam() + 'Medium',
                   marginBottom: -3,
                   color: 'white',
                 }}>
@@ -679,7 +679,7 @@ const styles = StyleSheet.create({
   },
   permissionDeniedText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     marginBottom: 20,
     textAlign: 'center',
     color: 'black',
