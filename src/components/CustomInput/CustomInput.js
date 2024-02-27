@@ -7,6 +7,7 @@ import {
   Image,
 } from 'react-native';
 import React, {useState} from 'react';
+import {getFontFam} from '../../../utils';
 
 const CustomInput = ({
   label,
@@ -75,7 +76,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   label: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: 13,
     marginBottom: -10,
     color: '#343a59',
@@ -83,7 +84,7 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     paddingBottom: -10,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: 13,
     color: '#343a59',
     borderBottomColor: '#cccccc',
