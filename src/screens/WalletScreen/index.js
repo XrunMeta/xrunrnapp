@@ -5,30 +5,28 @@ import {
   TouchableOpacity,
   Image,
   Alert,
-  useWindowDimensions,
   ActivityIndicator,
   ScrollView,
   SafeAreaView,
+  FlatList,
+  Dimensions,
 } from 'react-native';
 import React, {useState, useEffect, useRef} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
 import Clipboard from '@react-native-clipboard/clipboard';
-import {TabView, SceneMap} from 'react-native-tab-view';
 import TableWalletCard from '../../components/TableWallet';
 import {URL_API, getLanguage2} from '../../../utils';
 import ShowQRWallet from '../../components/ShowQRWallet';
-import crashlytics from '@react-native-firebase/crashlytics';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 const WalletScreen = ({navigation, route}) => {
   const [lang, setLang] = useState('');
-  const layout = useWindowDimensions();
   const [member, setMember] = useState('');
   const [currentCurrency, setCurrentCurrency] = useState('1');
   const [dataWallet, setDataWallet] = useState({});
-  const [index, setIndex] = useState(0);
   const [cardsData, setCardsData] = useState([]);
-  const [routes, setRoutes] = useState([]);
+
   const [isLoading, setIsLoading] = useState(true);
   const refLayout = useRef(null);
 
@@ -90,7 +88,11 @@ const WalletScreen = ({navigation, route}) => {
             .then(result => {
               setCardsData(result.data);
               setIsLoading(false);
-              setRoutes(result.data.map(card => ({key: card.currency})));
+              // setRoutes(
+              //   result.data.map(card => ({
+              //     key: card.currency,
+              //   })),
+              // );
             })
             .catch(error => {
               Alert.alert(
@@ -164,16 +166,7 @@ const WalletScreen = ({navigation, route}) => {
     refreshBalance();
   }, [member]);
 
-  const renderScene = SceneMap(
-    Object.fromEntries(
-      cardsData.map(cardData => [
-        cardData.currency,
-        () => routeComponent(cardData, copiedHash, handleShowQR),
-      ]),
-    ),
-  );
-
-  const routeComponent = (cardData, copiedHash, handleShowQR) => {
+  const routeComponent = ({item}) => {
     const {
       amount: tempAmount,
       Wamount: tempWamount,
@@ -184,7 +177,7 @@ const WalletScreen = ({navigation, route}) => {
       currency,
       Eamount,
       countrysymbol,
-    } = cardData;
+    } = item;
 
     const Wamount = parseFloat(tempWamount).toFixed(2);
     const amount = parseFloat(tempAmount).toFixed(2);
@@ -208,7 +201,7 @@ const WalletScreen = ({navigation, route}) => {
             <TouchableOpacity
               style={styles.wrapperDots}
               activeOpacity={0.6}
-              onPress={() => handleShowQR(cardData)}>
+              onPress={() => handleShowQR(item)}>
               <View style={styles.dot}></View>
               <View style={styles.dot}></View>
               <View style={styles.dot}></View>
@@ -262,7 +255,11 @@ const WalletScreen = ({navigation, route}) => {
           </View>
 
           <Image
-            source={{uri: `data:image/jpeg;base64,${symbolimg}`}}
+            width={40}
+            height={40}
+            source={{
+              uri: `data:image/jpeg;base64,${symbolimg}`,
+            }}
             style={styles.logo}
           />
         </View>
@@ -333,16 +330,19 @@ const WalletScreen = ({navigation, route}) => {
           <ScrollView style={{flex: 1}}>
             <View style={styles.containerCard}>
               {emptyWallet || (
-                <TabView
-                  navigationState={{index, routes}}
-                  renderScene={renderScene}
-                  onIndexChange={index => {
-                    setIndex(index);
-                    setCurrentCurrency(routes[index].key);
+                <FlatList
+                  data={cardsData}
+                  renderItem={routeComponent}
+                  horizontal
+                  pagingEnabled
+                  showsHorizontalScrollIndicator={false}
+                  onMomentumScrollEnd={event => {
+                    const index = Math.round(
+                      event.nativeEvent.contentOffset.x /
+                        event.nativeEvent.layoutMeasurement.width,
+                    );
+                    setCurrentCurrency(cardsData[index].currency);
                   }}
-                  initialLayout={{width: layout.width}}
-                  renderTabBar={() => null}
-                  overScrollMode={'never'}
                 />
               )}
             </View>
@@ -431,6 +431,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     height: 175,
     zIndex: 5,
+    width: Dimensions.get('window').width - 58,
   },
   wrapperPartTop: {
     flexDirection: 'row',
