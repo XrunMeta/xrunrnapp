@@ -574,5 +574,10 @@
     "tab1": "An Advertisement in Storage",
     "tab2": "Mission Completed Advertisement",
     "total": "Total"
+  },
+
+  "permissions_alert": {
+    "title_camera_permission": "Permission Camera",
+    "desc_camera_permission": "Need camera accsess to scan QR Code Image"
   }
 }

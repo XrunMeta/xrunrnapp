@@ -354,7 +354,13 @@ const SendWalletScreen = ({navigation, route}) => {
             }
           })
           .catch(error => {
-            // …
+            console.log(`Error QR Code Send: ${error}`);
+            Alert.alert(
+              '',
+              lang && lang.global_error && lang.global_error.error
+                ? lang.global_error.error
+                : '',
+            );
           });
       } else {
         const granted = await PermissionsAndroid.request(
@@ -371,11 +377,22 @@ const SendWalletScreen = ({navigation, route}) => {
         );
 
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          console.log('You can use the camera');
           setIsVisibleReadQR(true);
         } else {
-          openSettings();
-          console.log('Camera permission denied');
+          Alert.alert(
+            lang && lang ? lang.permissions_alert.title_camera_permission : '',
+            lang && lang ? lang.permissions_alert.desc_camera_permission : '',
+            [
+              {
+                text:
+                  lang && lang ? lang.complete_exchange.cancel_exchange : '',
+              },
+              {
+                text: lang && lang ? lang.screen_wallet.confirm_alert : '',
+                onPress: () => openSettings(),
+              },
+            ],
+          );
         }
       }
     } catch (err) {
