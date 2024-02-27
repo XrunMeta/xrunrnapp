@@ -573,5 +573,10 @@
     "tab1": "Penyimpanan Iklan",
     "tab2": "Misi Iklan Selesai",
     "total": "Total"
+  },
+
+  "permissions_alert": {
+    "title_camera_permission": "Izin Kamera",
+    "desc_camera_permission": "Perlu akses kamera untuk memindai Gambar Kode QR"
   }
 }

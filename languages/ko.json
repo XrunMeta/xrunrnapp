@@ -573,5 +573,10 @@
     "tab1": "보관된 광고",
     "tab2": "완료된 광고",
     "total": "합계"
+  },
+
+  "permissions_alert": {
+    "title_camera_permission": "카메라 권한",
+    "desc_camera_permission": "QR 코드 이미지를 스캔하려면 카메라에 액세스해야 합니다."
   }
 }
