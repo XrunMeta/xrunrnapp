@@ -359,7 +359,7 @@ const FirstScreenV2 = ({navigation}) => {
                     <Text
                       style={{
                         color: 'black',
-                        fontFamily: 'Roboto-Medium',
+                        fontFamily: getFontFam() + 'Medium',
                         fontSize: 13,
                         textAlign: 'right',
                         paddingLeft: 10,
@@ -371,7 +371,7 @@ const FirstScreenV2 = ({navigation}) => {
                     <Text
                       style={{
                         color: 'black',
-                        fontFamily: 'Roboto-Medium',
+                        fontFamily: getFontFam() + 'Medium',
                         fontSize: 13,
                         textAlign: 'right',
                         paddingLeft: 10,
@@ -449,7 +449,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   text: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     textAlign: 'center',
     fontSize: 13,
     lineHeight: 19,
@@ -457,7 +457,7 @@ const styles = StyleSheet.create({
   },
   link: {
     color: '#343a59',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     textDecorationLine: 'underline',
     fontSize: 13,
     position: 'relative',
@@ -482,12 +482,12 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 22,
     color: '#343a59',
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
   },
   modalDescription: {
     fontSize: 13,
     color: 'black',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     marginBottom: 20,
     textAlign: 'left',
   },
