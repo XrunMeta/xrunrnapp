@@ -15,7 +15,7 @@ import Share from 'react-native-share';
 import RNFetchBlob from 'rn-fetch-blob';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import crashlytics from '@react-native-firebase/crashlytics';
-import {URL_API} from '../../../utils';
+import {URL_API, getFontFam} from '../../../utils';
 import RNFS from 'react-native-fs';
 
 const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
@@ -443,11 +443,11 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   showQRHash: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     color: '#fff',
   },
   titleQR: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     textAlign: 'center',
     color: '#fff',
     fontSize: 24,
@@ -499,7 +499,7 @@ const styles = StyleSheet.create({
   },
   notificationTextInQR: {
     color: '#fff',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     margin: 0,
     maxWidth: 240,
   },

@@ -1,5 +1,6 @@
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import React, {useState} from 'react';
+import {getFontFam} from '../../../utils';
 
 const CustomMultipleChecbox = ({
   texts,
@@ -83,7 +84,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#343a59',
     fontSize: 13,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     marginTop: 2,
   },
 });

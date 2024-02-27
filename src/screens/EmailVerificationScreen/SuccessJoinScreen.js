@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import React, {useState, useRef, useEffect} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {getLanguage2, URL_API} from '../../../utils';
+import {getLanguage2, URL_API, getFontFam} from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {useAuth} from '../../context/AuthContext/AuthContext';
@@ -85,7 +85,8 @@ const SuccessJoinScreen = () => {
             {lang && lang.screen_notExist && lang.screen_notExist.field_join
               ? lang.screen_notExist.field_join.str2
               : ''}
-            <Text style={{color: '#da7750', fontFamily: 'Roboto-Medium'}}>
+            <Text
+              style={{color: '#da7750', fontFamily: getFontFam() + 'Medium'}}>
               {lang && lang.screen_notExist && lang.screen_notExist.field_join
                 ? lang.screen_notExist.field_join.str3
                 : ''}
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
     width: 80,
   },
   normalText: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: 13,
     color: '#343a59',
   },

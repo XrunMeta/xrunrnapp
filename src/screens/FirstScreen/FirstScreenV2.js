@@ -15,10 +15,11 @@ import {
   SafeAreaView,
 } from 'react-native';
 import CustomButton from '../../components/CustomButton';
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import * as RNLocalize from 'react-native-localize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
+import {getFontFam} from '../../../utils';
 
 // Get Language Data
 
@@ -200,9 +201,18 @@ const FirstScreenV2 = ({navigation}) => {
 
   const renderImage = ({item, index}) => {
     return (
-      <Image source={item} style={[styles.sliderImage, index % 2 === 1 ? {marginHorizontal: 15, width: Dimensions.get('window').width - 55} : '']} resizeMode="cover" />
+      <Image
+        source={item}
+        style={[
+          styles.sliderImage,
+          index % 2 === 1
+            ? {marginHorizontal: 15, width: Dimensions.get('window').width - 55}
+            : '',
+        ]}
+        resizeMode="cover"
+      />
     );
-  }
+  };
 
   const exitApp = () => {
     BackHandler.exitApp();
@@ -349,7 +359,7 @@ const FirstScreenV2 = ({navigation}) => {
                     <Text
                       style={{
                         color: 'black',
-                        fontFamily: 'Roboto-Medium',
+                        fontFamily: getFontFam() + 'Medium',
                         fontSize: 13,
                         textAlign: 'right',
                         paddingLeft: 10,
@@ -361,7 +371,7 @@ const FirstScreenV2 = ({navigation}) => {
                     <Text
                       style={{
                         color: 'black',
-                        fontFamily: 'Roboto-Medium',
+                        fontFamily: getFontFam() + 'Medium',
                         fontSize: 13,
                         textAlign: 'right',
                         paddingLeft: 10,
@@ -410,7 +420,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     color: '#343a59',
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
   },
   sliderWrapper: {
     flex: 1,
@@ -439,7 +449,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   text: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     textAlign: 'center',
     fontSize: 13,
     lineHeight: 19,
@@ -447,7 +457,7 @@ const styles = StyleSheet.create({
   },
   link: {
     color: '#343a59',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     textDecorationLine: 'underline',
     fontSize: 13,
     position: 'relative',
@@ -472,12 +482,12 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 22,
     color: '#343a59',
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
   },
   modalDescription: {
     fontSize: 13,
     color: 'black',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     marginBottom: 20,
     textAlign: 'left',
   },

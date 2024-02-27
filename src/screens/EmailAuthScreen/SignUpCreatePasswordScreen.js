@@ -13,7 +13,7 @@ import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getLanguage2} from '../../../utils';
+import {getLanguage2, getFontFam} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const SignUpCreatePassword = () => {
@@ -112,7 +112,7 @@ const SignUpCreatePassword = () => {
           alignSelf: 'flex-start',
           marginLeft: 25,
           color: isPasswordValid ? 'black' : 'red',
-          fontFamily: 'Roboto-Regular',
+          fontFamily: getFontFam() + 'Regular',
           fontSize: 11,
           marginRight: 1,
         }}>
