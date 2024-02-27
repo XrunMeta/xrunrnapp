@@ -1,5 +1,6 @@
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React from 'react';
+import {getFontFam} from '../../../utils';
 
 const ButtonList = ({label, onPress}) => {
   return (
@@ -16,7 +17,7 @@ const ButtonList = ({label, onPress}) => {
       <View>
         <Text
           style={{
-            fontFamily: 'Roboto-Regular',
+            fontFamily: getFontFam() + 'Regular',
             fontSize: 13,
             color: 'black',
             paddingVertical: 18,

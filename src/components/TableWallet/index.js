@@ -17,6 +17,7 @@ import {
   funcTransferHistory,
   funcTransitionHistory,
   loadMore,
+  getFontFam,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
@@ -37,7 +38,7 @@ const renderTabBar = props => (
         style={{
           color: focused ? '#383b50' : '#bbb',
           textAlign: 'center',
-          fontFamily: 'Roboto-Regular',
+          fontFamily: getFontFam() + 'Regular',
           fontSize: 13,
           maxWidth: 80,
           borderBottomColor: 'yellow',
@@ -1146,7 +1147,7 @@ const styles = StyleSheet.create({
   },
   textHead: {
     textAlign: 'center',
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: 15,
     color: '#000',
     minWidth: 80,
@@ -1186,7 +1187,7 @@ const styles = StyleSheet.create({
     paddingBottom: 2,
   },
   textDay: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: 15,
     color: 'black',
     marginBottom: 4,
@@ -1207,14 +1208,14 @@ const styles = StyleSheet.create({
   details: {
     color: 'black',
     marginBottom: 10,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 13,
     maxWidth: 150,
   },
   date: {
     fontSize: 11,
     marginTop: 3,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     color: '#aaa',
   },
   wrapperPrice: {
@@ -1224,7 +1225,7 @@ const styles = StyleSheet.create({
   },
   price: {
     fontSize: 13,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     color: 'black',
     textAlign: 'right',
   },
@@ -1234,7 +1235,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   textNotFoundHistory: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     color: '#ccc',
     textAlign: 'center',
     paddingTop: 20,

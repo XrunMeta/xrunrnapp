@@ -16,7 +16,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import CustomMultipleChecbox from '../../components/CustomCheckbox/CustomMultipleCheckbox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2} from '../../../utils';
+import {URL_API, getLanguage2, getFontFam} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const SignUpScreen = ({route}) => {
@@ -373,7 +373,7 @@ const SignUpScreen = ({route}) => {
                 alignSelf: 'flex-start',
                 marginLeft: 25,
                 color: 'red',
-                fontFamily: 'Roboto-Medium',
+                fontFamily: getFontFam() + 'Medium',
                 fontSize: 13,
               }}>
               {lang && lang.screen_signup && lang.screen_signup.validator
@@ -433,7 +433,7 @@ const SignUpScreen = ({route}) => {
                 />
                 <Text
                   style={{
-                    fontFamily: 'Roboto-Medium',
+                    fontFamily: getFontFam() + 'Medium',
                     fontSize: 13,
                     color: '#a8a8a7',
                     alignSelf: 'center',
@@ -569,7 +569,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
     fontSize: 22,
     color: '#343a59',
   },
@@ -587,12 +587,12 @@ const styles = StyleSheet.create({
     height: 100,
   },
   normalText: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 13,
     color: '#343a59',
   },
   label: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: 13,
     color: '#343a59',
     marginBottom: -5,
@@ -620,7 +620,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   input: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: 13,
     color: '#343a59',
     borderBottomColor: '#cccccc',

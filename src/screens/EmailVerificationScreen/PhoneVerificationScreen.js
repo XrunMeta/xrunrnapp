@@ -16,7 +16,7 @@ import React, {useState, useRef, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import CustomButton from '../../components/CustomButton';
-import {URL_API, getLanguage2} from '../../../utils';
+import {URL_API, getLanguage2, getFontFam} from '../../../utils';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import crashlytics from '@react-native-firebase/crashlytics';
@@ -384,12 +384,12 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   normalText: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: 13,
     color: '#343a59',
   },
   boldText: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
     fontSize: 18,
     color: '#343a59',
   },
@@ -408,12 +408,12 @@ const styles = StyleSheet.create({
     height: 100,
   },
   emailAuth: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: 13,
     color: '#343a59',
   },
   disableText: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 13,
     color: '#aeb1b5',
   },
@@ -425,7 +425,7 @@ const styles = StyleSheet.create({
   codeInput: {
     width: 40,
     height: 60,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: 20,
     color: '#343a59',
     borderBottomWidth: 2,

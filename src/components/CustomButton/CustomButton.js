@@ -1,7 +1,15 @@
 import {Text, StyleSheet, Pressable} from 'react-native';
 import React from 'react';
+import {getFontFam} from '../../../utils';
 
-const CustomButton = ({onPress, text, type = 'PRIMARY', bgColor, fgColor, firstScreen}) => {
+const CustomButton = ({
+  onPress,
+  text,
+  type = 'PRIMARY',
+  bgColor,
+  fgColor,
+  firstScreen,
+}) => {
   return (
     <Pressable
       onPress={onPress}
@@ -10,7 +18,7 @@ const CustomButton = ({onPress, text, type = 'PRIMARY', bgColor, fgColor, firstS
       //   [styles.container, styles[`container_${type}`]],
       //   bgColor ? {backgroundColor: bgColor} : {},
       // ]}
-      >
+    >
       <Text
         style={[
           styles.text,
@@ -77,25 +85,25 @@ const styles = StyleSheet.create({
   },
 
   text_PRIMARY: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
     color: 'white',
   },
 
   text: {
     color: '#45494c',
     fontSize: 16,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
   },
 
   text_SECONDARY: {
     color: '#45494c',
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
   },
 
   text_TERTIARY: {
     fontWeight: 'bold',
     color: '#343a59',
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
   },
 });
 

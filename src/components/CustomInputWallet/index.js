@@ -1,5 +1,6 @@
 import {StyleSheet, Text, View, TextInput, Platform} from 'react-native';
 import React from 'react';
+import {getFontFam} from '../../../utils';
 
 const CustomInputWallet = ({
   label,
@@ -29,7 +30,7 @@ export default CustomInputWallet;
 const styles = StyleSheet.create({
   label: {
     color: '#000',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
   },
   input: customFontSize => ({
     borderBottomWidth: 1,
@@ -37,7 +38,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     paddingLeft: 10,
     borderBottomColor: '#ddd',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     color: '#000',
     fontSize: customFontSize,
   }),

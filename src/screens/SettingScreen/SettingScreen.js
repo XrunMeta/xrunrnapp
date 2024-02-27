@@ -12,7 +12,7 @@ import ButtonList from '../../components/ButtonList/ButtonList';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
-import {getLanguage2} from '../../../utils';
+import {getLanguage2, getFontFam} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const SettingScreen = () => {
@@ -100,7 +100,7 @@ const SettingScreen = () => {
           {/* <Text
             style={{
               color: 'grey',
-              fontFamily: 'Roboto-Regular',
+              fontFamily: getFontFam() + 'Regular',
               fontSize: 13,
               marginLeft: 20,
               marginTop: 15,
@@ -118,7 +118,7 @@ const SettingScreen = () => {
           <Text
             style={{
               color: 'grey',
-              fontFamily: 'Roboto-Regular',
+              fontFamily: getFontFam() + 'Regular',
               fontSize: 13,
               marginLeft: 20,
               marginTop: 20,
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
   },
