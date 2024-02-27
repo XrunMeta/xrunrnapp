@@ -400,7 +400,6 @@ const MapComponent = ({
               .catch(error => {
                 console.error('Error while loading images:', error);
               });
-            Geolocation.clearWatch(selfCoordinateBgst);
           }
         }
       } catch (err) {
