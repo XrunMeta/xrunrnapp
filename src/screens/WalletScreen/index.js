@@ -16,7 +16,7 @@ import ButtonBack from '../../components/ButtonBack';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {TabView, SceneMap} from 'react-native-tab-view';
 import TableWalletCard from '../../components/TableWallet';
-import {URL_API, getLanguage2} from '../../../utils';
+import {URL_API, getLanguage2, getFontFam} from '../../../utils';
 import ShowQRWallet from '../../components/ShowQRWallet';
 import crashlytics from '@react-native-firebase/crashlytics';
 
@@ -308,7 +308,7 @@ const WalletScreen = ({navigation, route}) => {
           <Text
             style={{
               color: '#fff',
-              fontFamily: 'Roboto-Regular',
+              fontFamily: getFontFam() + 'Regular',
               fontSize: 13,
               marginTop: 10,
             }}>
@@ -419,7 +419,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
   },
@@ -438,7 +438,7 @@ const styles = StyleSheet.create({
   },
   cardName: {
     color: 'white',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     paddingTop: 20,
   },
   wrapperShowQR: {
@@ -476,7 +476,7 @@ const styles = StyleSheet.create({
     right: 0,
   },
   textQRCode: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     color: 'black',
     fontSize: 20,
   },
@@ -490,12 +490,12 @@ const styles = StyleSheet.create({
   },
   textWallet: {
     color: 'white',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 13,
   },
   valueWallet: {
     color: 'white',
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: 16,
     marginHorizontal: -3,
   },
@@ -513,7 +513,7 @@ const styles = StyleSheet.create({
   },
   hash: {
     color: 'white',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 12,
   },
   logo: {
