@@ -12,6 +12,7 @@ import Geolocation from 'react-native-geolocation-service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {fetchMarkerData} from './APIGetMarker';
 import RNFetchBlob from 'rn-fetch-blob';
+import {getFontFam} from '../../../utils';
 const logo_tempMarker = require('../../../assets/images/logo_tempMarker.png');
 
 // ########## Main Component ##########
@@ -704,7 +705,7 @@ const MapComponent = ({
                 key={updateRange}
                 style={{
                   fontSize: 11,
-                  fontFamily: 'Roboto-Medium',
+                  fontFamily: getFontFam() + 'Medium',
                   color: '#343a59',
                   marginBottom: 3,
                 }}>
@@ -719,7 +720,7 @@ const MapComponent = ({
               <Text
                 style={{
                   fontSize: 11,
-                  fontFamily: 'Roboto-Medium',
+                  fontFamily: getFontFam() + 'Medium',
                   marginTop: 3,
                   color: '#343a59',
                 }}>
@@ -736,7 +737,7 @@ const MapComponent = ({
               <Text
                 style={{
                   fontSize: 18,
-                  fontFamily: 'Roboto-Medium',
+                  fontFamily: getFontFam() + 'Medium',
                   marginTop: -6,
                   color: 'black',
                 }}>
@@ -765,7 +766,7 @@ const MapComponent = ({
           <Text
             style={{
               color: 'white',
-              fontFamily: 'Roboto-Regular',
+              fontFamily: getFontFam() + 'Regular',
               fontSize: 13,
             }}>
             {lang && lang.section_marker ? lang.section_marker.loader : ''}
@@ -796,7 +797,7 @@ const MapComponent = ({
               <Text
                 style={{
                   color: 'white',
-                  fontFamily: 'Roboto-Regular',
+                  fontFamily: getFontFam() + 'Regular',
                   fontSize: 13,
                 }}>
                 {lang && lang.section_marker
