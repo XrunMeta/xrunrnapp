@@ -21,7 +21,7 @@ import ButtonBack from '../../components/ButtonBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInputWallet from '../../components/CustomInputWallet';
 import CustomDropdownWallet from '../../components/CustomDropdownWallet';
-import {URL_API, getLanguage2} from '../../../utils';
+import {URL_API, getLanguage2, getFontFam} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {
   request,
@@ -420,7 +420,7 @@ const SendWalletScreen = ({navigation, route}) => {
           <Text
             style={{
               color: '#fff',
-              fontFamily: 'Roboto-Regular',
+              fontFamily: getFontFam() + 'Regular',
               fontSize: 13,
               marginTop: 10,
             }}>
@@ -582,7 +582,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
   },
@@ -596,12 +596,12 @@ const styles = StyleSheet.create({
   },
   currencyName: {
     color: '#fff',
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: 16,
   },
   balance: {
     color: '#fff',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 13,
   },
   partBottom: {
@@ -637,11 +637,11 @@ const styles = StyleSheet.create({
   },
   textScanQR: {
     color: '#fff',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
   },
   notificationTextInQR: {
     color: '#fff',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     margin: 0,
     maxWidth: 240,
   },
