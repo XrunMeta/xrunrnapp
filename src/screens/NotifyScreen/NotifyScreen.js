@@ -16,7 +16,7 @@ import {
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2} from '../../../utils';
+import {URL_API, getLanguage2, getFontFam} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const NotifyScreen = () => {
@@ -276,7 +276,7 @@ const NotifyScreen = () => {
             <Text
               style={{
                 color: '#ffdc04',
-                fontFamily: 'Roboto-Medium',
+                fontFamily: getFontFam() + 'Medium',
                 fontSize: 16,
               }}>
               {isDelete
@@ -303,7 +303,7 @@ const NotifyScreen = () => {
             <Text
               style={{
                 color: 'grey',
-                fontFamily: 'Roboto-Regular',
+                fontFamily: getFontFam() + 'Regular',
                 fontSize: 13,
               }}>
               {lang && lang.screen_notify && lang.screen_notify.loader
@@ -331,7 +331,7 @@ const NotifyScreen = () => {
                       <Text
                         style={{
                           color: 'white',
-                          fontFamily: 'Roboto-Regular',
+                          fontFamily: getFontFam() + 'Regular',
                           fontSize: 11,
                           backgroundColor: '#89919d73',
                           borderRadius: 115,
@@ -475,7 +475,7 @@ const NotifyScreen = () => {
                             }}>
                             <Text
                               style={{
-                                fontFamily: 'Roboto-Medium',
+                                fontFamily: getFontFam() + 'Medium',
                                 fontSize: 13,
                                 color: 'white',
                               }}>
@@ -580,13 +580,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
   },
   normalText: {
     color: 'grey',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 13,
   },
   collapseWrapper: {
@@ -622,7 +622,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     marginRight: 10,
     color: 'black',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 13,
     paddingBottom: 10,
   },
@@ -635,7 +635,7 @@ const styles = StyleSheet.create({
   },
   sendButtonText: {
     color: 'white',
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: 13,
     marginBottom: 5,
     marginTop: 3,
@@ -660,12 +660,12 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start', // Left Bubble Chat
   },
   chatText: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 13,
     color: 'black',
   },
   timestampText: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 11,
     color: 'grey',
     marginTop: 5,
