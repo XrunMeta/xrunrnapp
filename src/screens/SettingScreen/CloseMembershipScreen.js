@@ -15,7 +15,7 @@ import {
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getLanguage2} from '../../../utils';
+import {getLanguage2, getFontFam} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const CloseMembershipScreen = () => {
@@ -103,7 +103,7 @@ const CloseMembershipScreen = () => {
           <Text
             style={{
               color: 'white',
-              fontFamily: 'Roboto-Regular',
+              fontFamily: getFontFam() + 'Regular',
               fontSize: 13,
             }}>
             {lang && lang.screen_map && lang.screen_map.section_marker
@@ -137,13 +137,14 @@ const CloseMembershipScreen = () => {
             <Text
               style={{
                 color: 'black',
-                fontFamily: 'Roboto-Regular',
+                fontFamily: getFontFam() + 'Regular',
                 fontSize: 16,
               }}>
               {lang && lang.screen_setting
                 ? lang.screen_setting.close.desc.clo1 + ' '
                 : ''}
-              <Text style={{color: '#ffc404', fontFamily: 'Roboto-Medium'}}>
+              <Text
+                style={{color: '#ffc404', fontFamily: getFontFam() + 'Medium'}}>
                 {lang && lang.screen_setting
                   ? lang.screen_setting.close.desc.clo2
                   : ''}
@@ -155,7 +156,7 @@ const CloseMembershipScreen = () => {
             <Text
               style={{
                 color: 'black',
-                fontFamily: 'Roboto-Regular',
+                fontFamily: getFontFam() + 'Regular',
                 fontSize: 13,
                 marginTop: 15,
               }}>
@@ -166,7 +167,7 @@ const CloseMembershipScreen = () => {
             <Text
               style={{
                 color: '#ffc404',
-                fontFamily: 'Roboto-Medium',
+                fontFamily: getFontFam() + 'Medium',
                 fontSize: 13,
                 marginTop: -2,
               }}>
@@ -215,7 +216,7 @@ const CloseMembershipScreen = () => {
                 </View>
                 <Text
                   style={{
-                    fontFamily: 'Roboto-Regular',
+                    fontFamily: getFontFam() + 'Regular',
                     fontSize: 13,
                     color: 'black',
                     paddingVertical: 5,
@@ -260,7 +261,7 @@ const CloseMembershipScreen = () => {
                 </View>
                 <Text
                   style={{
-                    fontFamily: 'Roboto-Regular',
+                    fontFamily: getFontFam() + 'Regular',
                     fontSize: 13,
                     color: 'black',
                     paddingVertical: 5,
@@ -305,7 +306,7 @@ const CloseMembershipScreen = () => {
                 </View>
                 <Text
                   style={{
-                    fontFamily: 'Roboto-Regular',
+                    fontFamily: getFontFam() + 'Regular',
                     fontSize: 13,
                     color: 'black',
                     paddingVertical: 5,
@@ -363,7 +364,7 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     paddingBottom: -10,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: 13,
     color: '#343a59',
     borderBottomColor: '#cccccc',
@@ -384,7 +385,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
   },
