@@ -1,7 +1,7 @@
 import {Modal, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useInterstitialAd, TestIds} from '@react-native-admob/admob';
-import {URL_API, getLanguage2} from '../../../utils';
+import {URL_API, getLanguage2, getFontFam} from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import crashlytics from '@react-native-firebase/crashlytics';
 
@@ -130,7 +130,7 @@ const ShowAdScreen = ({route, navigation}) => {
       {!adLoaded && (
         <Text
           style={{
-            fontFamily: 'Roboto-Regular',
+            fontFamily: getFontFam() + 'Regular',
             fontSize: 13,
             color: 'grey',
           }}>
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
   },
   modalText: {
     fontSize: 13,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     marginBottom: 10,
     color: 'black',
   },
@@ -182,6 +182,6 @@ const styles = StyleSheet.create({
   },
   okButtonText: {
     color: 'white',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
   },
 });

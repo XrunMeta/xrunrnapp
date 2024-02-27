@@ -1,6 +1,7 @@
 import React from 'react';
 import {Image, Text, View} from 'react-native';
 import {Marker, Callout} from 'react-native-maps';
+import {getFontFam} from '../../../utils';
 
 const MarkerMap = ({item, onClick, currentRange, lang, logoMarker}) => {
   const handleMarkerClick = () => {
@@ -68,7 +69,7 @@ const MarkerMap = ({item, onClick, currentRange, lang, logoMarker}) => {
             <Text
               style={{
                 fontSize: 11,
-                fontFamily: 'Roboto-Medium',
+                fontFamily: getFontFam() + 'Medium',
               }}>
               {currentRange.toFixed(2)}m
             </Text>
@@ -81,7 +82,7 @@ const MarkerMap = ({item, onClick, currentRange, lang, logoMarker}) => {
             <Text
               style={{
                 fontSize: 11,
-                fontFamily: 'Roboto-Medium',
+                fontFamily: getFontFam() + 'Medium',
                 marginTop: 3,
               }}>
               {lang && lang.screen_map && lang.screen_map.section_marker
@@ -97,7 +98,7 @@ const MarkerMap = ({item, onClick, currentRange, lang, logoMarker}) => {
             <Text
               style={{
                 fontSize: 18,
-                fontFamily: 'Roboto-Medium',
+                fontFamily: getFontFam() + 'Medium',
                 marginBottom: -5,
                 color: 'black',
               }}>
