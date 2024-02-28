@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   ScrollView,
   SafeAreaView,
+  Platform,
   FlatList,
   Dimensions,
   ImageBackground,
@@ -492,7 +493,8 @@ const styles = StyleSheet.create({
   },
   valueWallet: {
     color: 'white',
-    fontFamily: getFontFam() + 'Medium',
+    fontFamily:
+      Platform.OS === 'ios' ? 'AppleSDGothicNeo-Bold' : 'Roboto-Medium',
     fontSize: 16,
     marginHorizontal: -3,
   },
