@@ -573,5 +573,10 @@
     "tab1": "存储中的广告",
     "tab2": "任务完成广告",
     "total": "总"
+  },
+
+  "permissions_alert": {
+    "title_camera_permission": "相机权限",
+    "desc_camera_permission": "需要相机权限扫描二维码图像"
   }
 }
