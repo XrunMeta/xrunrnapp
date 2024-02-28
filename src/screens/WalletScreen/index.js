@@ -10,6 +10,7 @@ import {
   SafeAreaView,
   FlatList,
   Dimensions,
+  ImageBackground,
 } from 'react-native';
 import React, {useState, useEffect, useRef} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -88,11 +89,6 @@ const WalletScreen = ({navigation, route}) => {
             .then(result => {
               setCardsData(result.data);
               setIsLoading(false);
-              // setRoutes(
-              //   result.data.map(card => ({
-              //     key: card.currency,
-              //   })),
-              // );
             })
             .catch(error => {
               Alert.alert(
