@@ -60,39 +60,39 @@ export default Router = () => {
   const Stack = createNativeStackNavigator();
   const navigation = useNavigation();
 
-  const logoutUser = async () => {
-    const value = await AsyncStorage.getItem('isLoggedIn');
+  // const logoutUser = async () => {
+  //   const value = await AsyncStorage.getItem('isLoggedIn');
 
-    if (value === 'true') {
-      const userData = await AsyncStorage.getItem('userData');
-      const {firstname, member, extrastr} = JSON.parse(userData);
-      const request = await fetch(
-        `${URL_API}&act=''&member=${member}&ss=${extrastr}`,
-      );
+  //   if (value === 'true') {
+  //     const userData = await AsyncStorage.getItem('userData');
+  //     const {firstname, member, extrastr} = JSON.parse(userData);
+  //     const request = await fetch(
+  //       `${URL_API}&act=''&member=${member}&ss=${extrastr}`,
+  //     );
 
-      let response = await request.text();
+  //     let response = await request.text();
 
-      if (response !== "not exist''") {
-        const {result} = JSON.parse(response);
-        if (result === 'logout') {
-          console.log(`Success auto logout: {
-              firstname: ${firstname}
-              member: ${member}
-              extrastr: ${extrastr}
-            }`);
-          await AsyncStorage.removeItem('isLoggedIn');
-          // Go to SignIn Screen
-          navigation.reset({
-            index: 0,
-            routes: [{name: 'First'}],
-          });
-        }
-      }
-    }
-  };
+  //     if (response !== "not exist''") {
+  //       const {result} = JSON.parse(response);
+  //       if (result === 'logout') {
+  //         console.log(`Success auto logout: {
+  //             firstname: ${firstname}
+  //             member: ${member}
+  //             extrastr: ${extrastr}
+  //           }`);
+  //         await AsyncStorage.removeItem('isLoggedIn');
+  //         // Go to SignIn Screen
+  //         navigation.reset({
+  //           index: 0,
+  //           routes: [{name: 'First'}],
+  //         });
+  //       }
+  //     }
+  //   }
+  // };
 
   return (
-    <View style={{flex: 1}} onTouchStart={logoutUser}>
+    <View style={{flex: 1}}>
       <Stack.Navigator
         screenOptions={{headerShown: false}}
         initialRouteName="Splash">
