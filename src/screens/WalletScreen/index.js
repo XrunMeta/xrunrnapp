@@ -11,9 +11,8 @@ import {
   Platform,
   FlatList,
   Dimensions,
-  ImageBackground,
 } from 'react-native';
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -30,17 +29,14 @@ const WalletScreen = ({navigation, route}) => {
   const [cardsData, setCardsData] = useState([]);
 
   const [isLoading, setIsLoading] = useState(true);
-  const refLayout = useRef(null);
 
   // State show text "QR Code"
   const [isShowTextQRCode, setIsShowTextQRCode] = useState(false);
-  const [positionVerticalDots, setPositionVerticalDots] = useState(0);
 
   // State for show QR
   const [isShowQRCodeWallet, setIsShowQRCodeWallet] = useState(false);
   const [cardDataQR, setCardDataQR] = useState([]);
 
-  // State for send to component TableWallet => Total history, transfer history, Received details, Transition history
   const [emptyWallet, setEmptyWallet] = useState(false);
 
   useEffect(() => {
@@ -104,6 +100,9 @@ const WalletScreen = ({navigation, route}) => {
                     text: lang.screen_wallet.confirm_alert
                       ? lang.screen_wallet.confirm_alert
                       : '',
+                    onPress: () => {
+                      setIsLoading(false);
+                    },
                   },
                 ],
               );
@@ -124,12 +123,6 @@ const WalletScreen = ({navigation, route}) => {
   }, [member]);
 
   useEffect(() => {
-    if (cardsData.length > 0 && refLayout.current) {
-      refLayout.current.measure((x, y, width, height, pageX, pageY) => {
-        setPositionVerticalDots(pageY);
-      });
-    }
-
     // Get data current currency/wallet
     const filterDataWallet = cardsData.filter(wallet => wallet.currency == 1);
     setDataWallet(filterDataWallet[0]);
@@ -170,7 +163,7 @@ const WalletScreen = ({navigation, route}) => {
       symbol,
       address,
       displaystr,
-      symbolimg,
+      symbolimg: tempSymbolimg,
       currency,
       Eamount,
       countrysymbol,
@@ -188,6 +181,8 @@ const WalletScreen = ({navigation, route}) => {
       MEMP: '#343b58',
     };
 
+    const symbolimg = tempSymbolimg.replace(/(\r\n|\n|\r)/gm, '');
+
     return (
       <View
         style={[styles.card, {backgroundColor: walletColors[symbol]}]}
@@ -203,6 +198,29 @@ const WalletScreen = ({navigation, route}) => {
               <View style={styles.dot}></View>
               <View style={styles.dot}></View>
             </TouchableOpacity>
+
+            {/* Show/Hide text "QR Code" */}
+            {isShowTextQRCode && (
+              <>
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  style={styles.showQRButton}
+                  onPress={() => {
+                    setIsShowTextQRCode(false);
+                    setIsShowQRCodeWallet(true);
+                  }}>
+                  <Text style={styles.textQRCode}>
+                    {lang.screen_wallet.qrcode_show
+                      ? lang.screen_wallet.qrcode_show
+                      : ''}
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={hideTextQRCode}
+                  style={styles.backgroundShowQR}></TouchableOpacity>
+              </>
+            )}
           </View>
         </View>
 
@@ -294,7 +312,13 @@ const WalletScreen = ({navigation, route}) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={styles.container}
+      onTouchStart={() => {
+        if (isShowTextQRCode) {
+          setIsShowTextQRCode(false);
+        }
+      }}>
       {/* Loading */}
       {isLoading && (
         <View style={styles.loading}>
@@ -357,29 +381,6 @@ const WalletScreen = ({navigation, route}) => {
           />
         </View>
       </View>
-
-      {/* Show/Hide text "QR Code" */}
-      {isShowTextQRCode && (
-        <>
-          <TouchableOpacity
-            activeOpacity={0.9}
-            style={styles.showQRButton(positionVerticalDots)}
-            onPress={() => {
-              setIsShowTextQRCode(false);
-              setIsShowQRCodeWallet(true);
-            }}>
-            <Text style={styles.textQRCode}>
-              {lang.screen_wallet.qrcode_show
-                ? lang.screen_wallet.qrcode_show
-                : ''}
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={hideTextQRCode}
-            style={styles.backgroundShowQR}></TouchableOpacity>
-        </>
-      )}
 
       {/* Show/Hide popup QR */}
       {isShowQRCodeWallet && (
@@ -453,18 +454,18 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     backgroundColor: 'white',
   },
-  showQRButton: positionY => ({
+  showQRButton: {
     position: 'absolute',
     backgroundColor: 'white',
-    width: 200,
+    width: 180,
     right: 0,
     paddingVertical: 10,
     paddingHorizontal: 14,
     borderRadius: 4,
     zIndex: 2,
-    top: positionY + 140,
-    right: 56,
-  }),
+    top: 50,
+    right: 0,
+  },
   backgroundShowQR: {
     position: 'absolute',
     zIndex: 1,
