@@ -306,7 +306,10 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
           <View style={styles.wrapperImageCurrencyQR}>
             <Image
               source={{
-                uri: `data:image/jpeg;base64,${cardDataQR.symbolimg}`,
+                uri: `data:image/jpeg;base64,${cardDataQR.symbolimg.replace(
+                  /(\r\n|\n|\r)/gm,
+                  '',
+                )}`,
               }}
               style={styles.imageCurrencyQR}
             />
