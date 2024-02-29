@@ -1158,7 +1158,7 @@ const styles = StyleSheet.create({
   },
   contentTextHeadDefault: {
     backgroundColor: 'white',
-    maxWidth: 200,
+    maxWidth: 150,
     paddingHorizontal: 16,
     paddingVertical: 4,
     shadowColor: '#000',
