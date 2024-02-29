@@ -420,7 +420,10 @@ function ARScreen() {
                         }}>
                         <Image
                           source={{
-                            uri: `data:image/jpeg;base64,${item.adthumbnail2}`,
+                            uri: `data:image/jpeg;base64,${item.adthumbnail2.replace(
+                              /(\r\n|\n|\r)/gm,
+                              '',
+                            )}`,
                           }}
                           style={{
                             height: 50,
