@@ -7,10 +7,12 @@ import {
   ActivityIndicator,
   Alert,
   ScrollView,
+  Platform,
+  Dimensions,
 } from 'react-native';
 import React, {useEffect, useMemo, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
+import {TabView, TabBar} from 'react-native-tab-view';
 import {
   funcReceivedDetails,
   funcTotalHistory,
@@ -19,7 +21,7 @@ import {
   loadMore,
   getFontFam,
 } from '../../../utils';
-import crashlytics from '@react-native-firebase/crashlytics';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 // Custom TabBar
 const renderTabBar = props => (
@@ -801,8 +803,8 @@ const TableWalletCard = ({
       } catch (err) {
         console.log(`Failed get transaction: ${err}`);
         Alert.alert('', `Failed get transaction: ${err}`);
-        crashlytics().recordError(new Error(err));
-        crashlytics().log(err);
+        // crashlytics().recordError(new Error(err));
+        // crashlytics().log(err);
       }
     };
 
@@ -817,72 +819,95 @@ const TableWalletCard = ({
     }
   }, [totalHistoryLength]);
 
-  const renderScene = SceneMap({
-    totalHistory: () => (
-      <TotalHistory
-        totalTransaction={totalHistory}
-        setTotalTransaction={setTotalHistory}
-        member={member}
-        currency={currentCurrency}
-        days={currentDaysTransactional}
-        lang={lang}
-        seeMore={seeMore}
-        setSeeMore={setBtnSeeMore}
-        routeSwipe={currentSwipe}
-        defaultLoadData={defaultLoadData}
-        lastPosition={lastPosition}
-        setLastPosition={setLastPosition}
-      />
-    ),
-    transferHistory: () => (
-      <TransferHistory
-        totalTransaction={transferHistory}
-        setTotalTransaction={setTransferHistory}
-        member={member}
-        currency={currentCurrency}
-        days={currentDaysTransactional}
-        lang={lang}
-        seeMore={seeMore}
-        setSeeMore={setBtnSeeMore}
-        routeSwipe={currentSwipe}
-        defaultLoadData={defaultLoadData}
-        lastPosition={lastPosition}
-        setLastPosition={setLastPosition}
-      />
-    ),
-    receivedDetails: () => (
-      <ReceivedDetails
-        totalTransaction={receivedDetails}
-        setTotalTransaction={setReceivedDetails}
-        member={member}
-        currency={currentCurrency}
-        days={currentDaysTransactional}
-        lang={lang}
-        seeMore={seeMore}
-        setSeeMore={setBtnSeeMore}
-        routeSwipe={currentSwipe}
-        defaultLoadData={defaultLoadData}
-        lastPosition={lastPosition}
-        setLastPosition={setLastPosition}
-      />
-    ),
-    transitionHistory: () => (
-      <TransitionHistory
-        totalTransaction={transitionHistory}
-        setTotalTransaction={setTransitionHistory}
-        member={member}
-        currency={currentCurrency}
-        days={currentDaysTransactional}
-        lang={lang}
-        seeMore={seeMore}
-        setSeeMore={setBtnSeeMore}
-        routeSwipe={currentSwipe}
-        defaultLoadData={defaultLoadData}
-        lastPosition={lastPosition}
-        setLastPosition={setLastPosition}
-      />
-    ),
-  });
+  const renderScene = ({route}) => {
+    switch (route.key) {
+      case 'totalHistory':
+        return (
+          <TotalHistory
+            totalTransaction={totalHistory}
+            setTotalTransaction={setTotalHistory}
+            member={member}
+            currency={currentCurrency}
+            days={currentDaysTransactional}
+            lang={lang}
+            seeMore={seeMore}
+            setSeeMore={setBtnSeeMore}
+            routeSwipe={currentSwipe}
+            defaultLoadData={defaultLoadData}
+            lastPosition={lastPosition}
+            setLastPosition={setLastPosition}
+          />
+        );
+      case 'transferHistory':
+        return (
+          <TransferHistory
+            totalTransaction={transferHistory}
+            setTotalTransaction={setTransferHistory}
+            member={member}
+            currency={currentCurrency}
+            days={currentDaysTransactional}
+            lang={lang}
+            seeMore={seeMore}
+            setSeeMore={setBtnSeeMore}
+            routeSwipe={currentSwipe}
+            defaultLoadData={defaultLoadData}
+            lastPosition={lastPosition}
+            setLastPosition={setLastPosition}
+          />
+        );
+      case 'receivedDetails':
+        return (
+          <ReceivedDetails
+            totalTransaction={receivedDetails}
+            setTotalTransaction={setReceivedDetails}
+            member={member}
+            currency={currentCurrency}
+            days={currentDaysTransactional}
+            lang={lang}
+            seeMore={seeMore}
+            setSeeMore={setBtnSeeMore}
+            routeSwipe={currentSwipe}
+            defaultLoadData={defaultLoadData}
+            lastPosition={lastPosition}
+            setLastPosition={setLastPosition}
+          />
+        );
+      case 'transitionHistory':
+        return (
+          <TransitionHistory
+            totalTransaction={transitionHistory}
+            setTotalTransaction={setTransitionHistory}
+            member={member}
+            currency={currentCurrency}
+            days={currentDaysTransactional}
+            lang={lang}
+            seeMore={seeMore}
+            setSeeMore={setBtnSeeMore}
+            routeSwipe={currentSwipe}
+            defaultLoadData={defaultLoadData}
+            lastPosition={lastPosition}
+            setLastPosition={setLastPosition}
+          />
+        );
+      default:
+        return (
+          <TotalHistory
+            totalTransaction={totalHistory}
+            setTotalTransaction={setTotalHistory}
+            member={member}
+            currency={currentCurrency}
+            days={currentDaysTransactional}
+            lang={lang}
+            seeMore={seeMore}
+            setSeeMore={setBtnSeeMore}
+            routeSwipe={currentSwipe}
+            defaultLoadData={defaultLoadData}
+            lastPosition={lastPosition}
+            setLastPosition={setLastPosition}
+          />
+        );
+    }
+  };
 
   useEffect(() => {
     const getDefaultDataTransaction = async () => {
@@ -898,8 +923,8 @@ const TableWalletCard = ({
         setTotalHistoryLength(totalHistory.length);
       } catch (err) {
         console.log(err);
-        crashlytics().recordError(new Error(err));
-        crashlytics().log(err);
+        // crashlytics().recordError(new Error(err));
+        // crashlytics().log(err);
       }
     };
 
@@ -978,8 +1003,8 @@ const TableWalletCard = ({
       } catch (err) {
         console.log(`Failed get transaction ${key}: ${err}`);
         Alert.alert('', `Failed get transaction ${key}: ${err}`);
-        crashlytics().recordError(new Error(err));
-        crashlytics().log(err);
+        // crashlytics().recordError(new Error(err));
+        // crashlytics().log(err);
       }
     };
   });
@@ -1112,18 +1137,136 @@ const TableWalletCard = ({
         </View>
 
         <View style={styles.wrapperTabView}>
-          <TabView
-            navigationState={{index, routes}}
-            renderScene={renderScene}
-            onIndexChange={setIndex}
-            initialLayout={{width: layout.width}}
-            renderTabBar={renderTabBar}
-            onSwipeEnd={() => {
-              const key = routes[index].key;
-              onSwipeTransaction(key);
-            }}
-            lazy
-          />
+          {Platform.OS === 'android' ? (
+            <TabView
+              navigationState={{index, routes}}
+              renderScene={renderScene}
+              onIndexChange={setIndex}
+              initialLayout={{width: layout.width}}
+              renderTabBar={renderTabBar}
+              onSwipeEnd={() => {
+                const key = routes[index].key;
+                onSwipeTransaction(key);
+              }}
+            />
+          ) : (
+            <>
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  elevation: 0,
+                  borderBottomColor: '#bbb',
+                  borderBottomWidth: 0.5,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                  paddingHorizontal: 28,
+                  marginTop: 14,
+                }}>
+                {routes.map(route => {
+                  return (
+                    <View
+                      style={{
+                        borderBottomWidth: currentSwipe === route.key ? 1 : 0,
+                        paddingBottom: 10,
+                        borderBottomColor: '#383b50',
+                        maxWidth: 80,
+                      }}>
+                      <Text
+                        style={{
+                          color:
+                            currentSwipe === route.key ? '#383b50' : '#bbb',
+                          textAlign: 'center',
+                          fontFamily: getFontFam() + 'Regular',
+                          fontSize: 13,
+                        }}>
+                        {route.title}
+                      </Text>
+                    </View>
+                  );
+                })}
+              </View>
+
+              <ScrollView
+                showsHorizontalScrollIndicator={false}
+                horizontal
+                pagingEnabled
+                style={{flex: 1}}
+                onMomentumScrollEnd={event => {
+                  const screenWidth = Dimensions.get('window').width;
+                  const {contentOffset} = event.nativeEvent;
+                  const newIndex = Math.floor(contentOffset.x / screenWidth);
+                  // const key = routes[index].key;
+                  // onSwipeTransaction(key);
+                  console.log(newIndex);
+                }}>
+                <View style={{width: Dimensions.get('window').width}}>
+                  <TotalHistory
+                    totalTransaction={totalHistory}
+                    setTotalTransaction={setTotalHistory}
+                    member={member}
+                    currency={currentCurrency}
+                    days={currentDaysTransactional}
+                    lang={lang}
+                    seeMore={seeMore}
+                    setSeeMore={setBtnSeeMore}
+                    routeSwipe={currentSwipe}
+                    defaultLoadData={defaultLoadData}
+                    lastPosition={lastPosition}
+                    setLastPosition={setLastPosition}
+                  />
+                </View>
+                <View style={{width: Dimensions.get('window').width}}>
+                  <TransferHistory
+                    totalTransaction={transferHistory}
+                    setTotalTransaction={setTransferHistory}
+                    member={member}
+                    currency={currentCurrency}
+                    days={currentDaysTransactional}
+                    lang={lang}
+                    seeMore={seeMore}
+                    setSeeMore={setBtnSeeMore}
+                    routeSwipe={currentSwipe}
+                    defaultLoadData={defaultLoadData}
+                    lastPosition={lastPosition}
+                    setLastPosition={setLastPosition}
+                  />
+                </View>
+                <View style={{width: Dimensions.get('window').width}}>
+                  <ReceivedDetails
+                    totalTransaction={receivedDetails}
+                    setTotalTransaction={setReceivedDetails}
+                    member={member}
+                    currency={currentCurrency}
+                    days={currentDaysTransactional}
+                    lang={lang}
+                    seeMore={seeMore}
+                    setSeeMore={setBtnSeeMore}
+                    routeSwipe={currentSwipe}
+                    defaultLoadData={defaultLoadData}
+                    lastPosition={lastPosition}
+                    setLastPosition={setLastPosition}
+                  />
+                </View>
+                <View style={{width: Dimensions.get('window').width}}>
+                  <TransitionHistory
+                    totalTransaction={transitionHistory}
+                    setTotalTransaction={setTransitionHistory}
+                    member={member}
+                    currency={currentCurrency}
+                    days={currentDaysTransactional}
+                    lang={lang}
+                    seeMore={seeMore}
+                    setSeeMore={setBtnSeeMore}
+                    routeSwipe={currentSwipe}
+                    defaultLoadData={defaultLoadData}
+                    lastPosition={lastPosition}
+                    setLastPosition={setLastPosition}
+                  />
+                </View>
+              </ScrollView>
+            </>
+          )}
         </View>
       </View>
     </View>
