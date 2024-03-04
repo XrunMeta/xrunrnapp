@@ -465,6 +465,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     height: 48,
     width: 48,
+    marginTop: -20,
   },
   partBottomShowQR: {
     padding: 20,
@@ -476,9 +477,12 @@ const styles = StyleSheet.create({
     height: 110,
   },
   iconCloseQR: {
-    position: 'absolute',
-    right: 20,
-    top: 10,
+    marginLeft: 'auto',
+    transform: [
+      {
+        translateY: 20,
+      },
+    ],
   },
   actionQRCode: {
     marginTop: 24,
