@@ -1141,13 +1141,13 @@ const TableWalletCard = ({
             <TabView
               navigationState={{index, routes}}
               renderScene={renderScene}
-              onIndexChange={setIndex}
-              initialLayout={{width: layout.width}}
-              renderTabBar={renderTabBar}
-              onSwipeEnd={() => {
-                const key = routes[index].key;
+              onIndexChange={currentIndex => {
+                setIndex(currentIndex);
+                const key = routes[currentIndex].key;
                 onSwipeTransaction(key);
               }}
+              initialLayout={{width: layout.width}}
+              renderTabBar={renderTabBar}
             />
           ) : (
             <>
@@ -1165,13 +1165,15 @@ const TableWalletCard = ({
                 }}>
                 {routes.map(route => {
                   return (
-                    <View
+                    <TouchableOpacity
                       style={{
                         borderBottomWidth: currentSwipe === route.key ? 1 : 0,
                         paddingBottom: 10,
                         borderBottomColor: '#383b50',
                         maxWidth: 80,
-                      }}>
+                      }}
+                      activeOpacity={1}
+                      key={route.key}>
                       <Text
                         style={{
                           color:
@@ -1182,7 +1184,7 @@ const TableWalletCard = ({
                         }}>
                         {route.title}
                       </Text>
-                    </View>
+                    </TouchableOpacity>
                   );
                 })}
               </View>
@@ -1193,12 +1195,15 @@ const TableWalletCard = ({
                 pagingEnabled
                 style={{flex: 1}}
                 onMomentumScrollEnd={event => {
-                  const screenWidth = Dimensions.get('window').width;
-                  const {contentOffset} = event.nativeEvent;
-                  const newIndex = Math.floor(contentOffset.x / screenWidth);
-                  // const key = routes[index].key;
-                  // onSwipeTransaction(key);
-                  console.log(newIndex);
+                  const {contentOffset, layoutMeasurement} = event.nativeEvent;
+                  const newIndex = Math.floor(
+                    contentOffset.x / layoutMeasurement.width,
+                  );
+                  setIndex(newIndex);
+                  if (newIndex !== index) {
+                    const key = routes[newIndex].key;
+                    onSwipeTransaction(key);
+                  }
                 }}>
                 <View style={{width: Dimensions.get('window').width}}>
                   <TotalHistory
