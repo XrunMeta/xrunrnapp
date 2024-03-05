@@ -20,13 +20,16 @@ import * as RNLocalize from 'react-native-localize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
 import {getFontFam} from '../../../utils';
+import Carousel, {Pagination} from 'react-native-snap-carousel';
 
 // Get Language Data
 
 const FirstScreenV2 = ({navigation}) => {
   const [lang, setLang] = useState({});
-  const [activeIndex, setActiveIndex] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
+  const {width} = Dimensions.get('window');
+  const itemWidth = width - 30;
+  const [activeIndex, setActiveIndex] = useState(0);
 
   // Get Map Initial Geolocation
   const getCurrentLocation = async () => {
@@ -205,9 +208,10 @@ const FirstScreenV2 = ({navigation}) => {
         source={item}
         style={[
           styles.sliderImage,
-          index % 2 === 1
-            ? {marginHorizontal: 15, width: Dimensions.get('window').width - 55}
-            : '',
+          {
+            width: Dimensions.get('window').width - 45,
+            alignSelf: 'center',
+          },
         ]}
         resizeMode="cover"
       />
@@ -239,36 +243,36 @@ const FirstScreenV2 = ({navigation}) => {
         </View>
 
         <View style={styles.sliderWrapper}>
-          <FlatList
+          <Carousel
+            layout={'default'}
             data={images}
             renderItem={renderImage}
-            keyExtractor={(item, index) => index.toString()}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            onMomentumScrollEnd={event => {
-              // Menghitung indeks gambar yang sedang aktif
-              const newIndex = Math.round(
-                event.nativeEvent.contentOffset.x /
-                  event.nativeEvent.layoutMeasurement.width,
-              );
-              setActiveIndex(newIndex); // Set indeks gambar aktif
-            }}
+            sliderWidth={width}
+            itemWidth={itemWidth} // Atur lebar item sesuai dengan perhitungan di atas
+            onSnapToItem={index => setActiveIndex(index)} // Fungsi untuk mengubah indeks item aktif saat digulir
           />
-          <View style={styles.sliderNavigator}>
-            {images.map((_, index) => (
-              <View
-                key={index}
-                style={[
-                  styles.sliderDot,
-                  {
-                    backgroundColor:
-                      activeIndex === index ? '#343a59' : '#dcdcdc',
-                  },
-                ]}
-              />
-            ))}
-          </View>
+          {/* Pagination */}
+          <Pagination
+            dotsLength={images.length} // Jumlah titik di pagination
+            activeDotIndex={activeIndex} // Indeks titik aktif
+            containerStyle={{paddingBottom: 0, paddingTop: 15}} // Gaya kontainer pagination
+            dotStyle={{
+              width: 10,
+              height: 10,
+              borderRadius: 5,
+              marginHorizontal: -2,
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            }} // Gaya titik pagination yang aktif
+            inactiveDotStyle={{
+              width: 8,
+              height: 8,
+              borderRadius: 4,
+              marginHorizontal: -2,
+              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+            }} // Gaya titik pagination yang tidak aktif
+            inactiveDotOpacity={0.4} // Opasitas titik pagination yang tidak aktif
+            inactiveDotScale={0.6} // Skala titik pagination yang tidak aktif
+          />
         </View>
 
         <CustomButton
@@ -427,8 +431,7 @@ const styles = StyleSheet.create({
   },
   sliderImage: {
     flex: 1,
-    flexShrink: 0,
-    width: Dimensions.get('window').width - 40,
+    // width: Dimensions.get('window').width,
     height: '95%',
     borderRadius: 10,
   },
