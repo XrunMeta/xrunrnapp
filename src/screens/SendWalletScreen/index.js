@@ -7,7 +7,6 @@ import {
   KeyboardAvoidingView,
   Alert,
   PermissionsAndroid,
-  Linking,
   Animated,
   ActivityIndicator,
   BackHandler,
@@ -20,7 +19,6 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 import ButtonBack from '../../components/ButtonBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInputWallet from '../../components/CustomInputWallet';
-import CustomDropdownWallet from '../../components/CustomDropdownWallet';
 import {URL_API, getLanguage2, getFontFam} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {
@@ -46,11 +44,6 @@ const SendWalletScreen = ({navigation, route}) => {
   // Animated notification in QR
   const [fadeAnim] = useState(new Animated.Value(0));
   const [zIndexAnim, setZIndexAnim] = useState(-1);
-
-  // QR code
-  const barcodeScanned = data => {
-    console.log('Barcode ', data);
-  };
 
   useEffect(() => {
     // Get Language Data
@@ -104,20 +97,6 @@ const SendWalletScreen = ({navigation, route}) => {
     };
 
     cointrace();
-  }, []);
-
-  const requestCameraPermission = async permission => {
-    request(permission).then(result => {
-      console.log(`Permission: ${result}`);
-    });
-  };
-
-  useEffect(() => {
-    if (Platform.OS == 'ios') {
-      requestCameraPermission(PERMISSIONS.IOS.CAMERA);
-    } else {
-      requestCameraPermission(PERMISSIONS.ANDROID.CAMERA);
-    }
   }, []);
 
   const handleBackPress = () => {
@@ -365,15 +344,6 @@ const SendWalletScreen = ({navigation, route}) => {
       } else {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.CAMERA,
-          {
-            title: 'Cool Photo App Camera Permission',
-            message:
-              'Cool Photo App needs access to your camera ' +
-              'so you can take awesome pictures.',
-            buttonNeutral: 'Ask Me Later',
-            buttonNegative: 'Cancel',
-            buttonPositive: 'OK',
-          },
         );
 
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
