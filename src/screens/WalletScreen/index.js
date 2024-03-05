@@ -19,7 +19,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import TableWalletCard from '../../components/TableWallet';
 import {URL_API, getLanguage2, getFontFam} from '../../../utils';
 import ShowQRWallet from '../../components/ShowQRWallet';
-// import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const WalletScreen = ({navigation, route}) => {
   const [lang, setLang] = useState('');
@@ -194,7 +194,7 @@ const WalletScreen = ({navigation, route}) => {
             <TouchableOpacity
               style={styles.wrapperDots}
               activeOpacity={0.6}
-              onPress={(event) => handleShowQR(event, item)}>
+              onPress={event => handleShowQR(event, item)}>
               <View style={styles.dot}></View>
               <View style={styles.dot}></View>
               <View style={styles.dot}></View>
@@ -291,8 +291,7 @@ const WalletScreen = ({navigation, route}) => {
   };
 
   return (
-    <SafeAreaView
-      style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* Loading */}
       {isLoading && (
         <View style={styles.loading}>
@@ -450,7 +449,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     backgroundColor: 'white',
   },
-  showQRButton: (positionTextQRCode) => ({
+  showQRButton: positionTextQRCode => ({
     position: 'absolute',
     backgroundColor: 'white',
     width: 180,
@@ -459,7 +458,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     borderRadius: 4,
     zIndex: 2,
-    top: Platform.OS === 'ios' ? positionTextQRCode + 20 : positionTextQRCode + 30,
+    top:
+      Platform.OS === 'ios' ? positionTextQRCode + 20 : positionTextQRCode + 30,
     right: 48,
   }),
   backgroundShowQR: {
