@@ -7,24 +7,24 @@ import Router from './src/navigation/Router';
 export default function App() {
   const [setIsLoggedIn] = useState(false);
 
-  useEffect(() => {
-    // Fungsi untuk check status login
-    const checkLoginStatus = async () => {
-      try {
-        const value = await AsyncStorage.getItem('isLoggedIn');
+  // useEffect(() => {
+  //   // Fungsi untuk check status login
+  //   const checkLoginStatus = async () => {
+  //     try {
+  //       const value = await AsyncStorage.getItem('isLoggedIn');
 
-        if (value === 'true') {
-          setIsLoggedIn(true);
-        } else {
-          setIsLoggedIn(false);
-        }
-      } catch (error) {
-        console.error('Error checking login status:', error);
-      }
-    };
+  //       if (value === 'true') {
+  //         setIsLoggedIn(true);
+  //       } else {
+  //         setIsLoggedIn(false);
+  //       }
+  //     } catch (error) {
+  //       console.error('Error checking login status:', error);
+  //     }
+  //   };
 
-    checkLoginStatus();
-  }, []);
+  //   checkLoginStatus();
+  // }, []);
 
   return (
     <AuthProvider>
