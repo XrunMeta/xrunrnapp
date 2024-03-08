@@ -604,7 +604,6 @@ const TransitionHistory = ({
         <>
           {totalTransaction.map((item, index) => {
             const {datetime, time, amount, symbol, action: tempAction} = item;
-
             let action;
             let extracode;
 
@@ -732,6 +731,7 @@ const TableWalletCard = ({
   const [index, setIndex] = useState(0);
   const [routes, setRoutes] = useState([]);
   const [currentSwipe, setCurrentSwipe] = useState('totalHistory');
+  const [contentOffsetX, setContentOffsetX] = useState(0);
 
   // Transaction
   const defaultLoadData = 100;
@@ -935,12 +935,14 @@ const TableWalletCard = ({
 
   // Function for hit API transaction
   const getDataTransaction = useMemo(() => {
-    return async key => {
+    return async (key, isIOS) => {
       try {
-        setTotalHistory([]);
-        setTransferHistory([]);
-        setReceivedDetails([]);
-        setTransitionHistory([]);
+        if (!isIOS) {
+          setTotalHistory([]);
+          setTransferHistory([]);
+          setReceivedDetails([]);
+          setTransitionHistory([]);
+        }
 
         switch (key) {
           case 'totalHistory':
@@ -990,7 +992,6 @@ const TableWalletCard = ({
               currentCurrency,
               currentDaysTransactional,
             );
-
             setLastPosition(0);
             setBtnSeeMore(true);
             setTransitionHistory(transitionHistory);
@@ -1023,9 +1024,29 @@ const TableWalletCard = ({
   };
 
   // Hit API for transaction if user swipe table
-  const onSwipeTransaction = async key => {
+  const onSwipeTransaction = async (key, isIOS) => {
     setCurrentSwipe(key);
-    getDataTransaction(key);
+    if (isIOS) {
+      getDataTransaction(key, isIOS);
+    } else {
+      getDataTransaction(key);
+    }
+  };
+
+  // Press Swipe transaction for IOS
+  const onSwipeTransactionIOS = (index, isScroll = false, newIndex) => {
+    if (isScroll) {
+      if (newIndex !== index) {
+        setIndex(newIndex);
+        const key = routes[newIndex].key;
+        onSwipeTransaction(key, true);
+      }
+    } else {
+      setContentOffsetX(411.4285583496094);
+      setIndex(index);
+      const key = routes[index].key;
+      onSwipeTransaction(key, true);
+    }
   };
 
   return (
@@ -1163,7 +1184,7 @@ const TableWalletCard = ({
                   paddingHorizontal: 28,
                   marginTop: 14,
                 }}>
-                {routes.map(route => {
+                {routes.map((route, index) => {
                   return (
                     <TouchableOpacity
                       style={{
@@ -1172,7 +1193,9 @@ const TableWalletCard = ({
                         borderBottomColor: '#383b50',
                         maxWidth: 80,
                       }}
-                      activeOpacity={1}
+                      // onPress={() => {
+                      //   onSwipeTransactionIOS(index);
+                      // }}
                       key={route.key}>
                       <Text
                         style={{
@@ -1193,17 +1216,17 @@ const TableWalletCard = ({
                 showsHorizontalScrollIndicator={false}
                 horizontal
                 pagingEnabled
+                contentOffset={{x: contentOffsetX}}
                 style={{flex: 1}}
                 onMomentumScrollEnd={event => {
                   const {contentOffset, layoutMeasurement} = event.nativeEvent;
+
                   const newIndex = Math.floor(
                     contentOffset.x / layoutMeasurement.width,
                   );
-                  setIndex(newIndex);
-                  if (newIndex !== index) {
-                    const key = routes[newIndex].key;
-                    onSwipeTransaction(key);
-                  }
+                  console.log(contentOffset.x);
+
+                  onSwipeTransactionIOS(index, true, newIndex);
                 }}>
                 <View style={{width: Dimensions.get('window').width}}>
                   <TotalHistory
