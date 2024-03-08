@@ -10,7 +10,7 @@ import {
   Platform,
   Dimensions,
 } from 'react-native';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {TabView, TabBar} from 'react-native-tab-view';
 import {
@@ -732,6 +732,7 @@ const TableWalletCard = ({
   const [routes, setRoutes] = useState([]);
   const [currentSwipe, setCurrentSwipe] = useState('totalHistory');
   const [contentOffsetX, setContentOffsetX] = useState(0);
+  const scrollviewRef = useRef(null);
 
   // Transaction
   const defaultLoadData = 100;
@@ -1042,7 +1043,6 @@ const TableWalletCard = ({
         onSwipeTransaction(key, true);
       }
     } else {
-      setContentOffsetX(411.4285583496094);
       setIndex(index);
       const key = routes[index].key;
       onSwipeTransaction(key, true);
@@ -1193,9 +1193,34 @@ const TableWalletCard = ({
                         borderBottomColor: '#383b50',
                         maxWidth: 80,
                       }}
-                      // onPress={() => {
-                      //   onSwipeTransactionIOS(index);
-                      // }}
+                      onPress={() => {
+                        onSwipeTransactionIOS(index);
+                        scrollviewRef.current.measure(
+                          (x, y, width, height, pageX, pageY) => {
+                            switch (route.key) {
+                              case 'totalHistory':
+                                console.log(`Total History: ${width}`);
+                                setContentOffsetX(0);
+                                break;
+                              case 'transferHistory':
+                                console.log(`Transfer History: ${width}`);
+                                setContentOffsetX(width);
+                                break;
+                              case 'receivedDetails':
+                                console.log(`Received Details: ${width * 2}`);
+                                setContentOffsetX(width * 2);
+                                break;
+                              case 'transitionHistory':
+                                console.log(`Transition History: ${width * 3}`);
+                                setContentOffsetX(width * 3);
+                                break;
+                              default:
+                                setContentOffsetX(0);
+                                break;
+                            }
+                          },
+                        );
+                      }}
                       key={route.key}>
                       <Text
                         style={{
@@ -1218,13 +1243,14 @@ const TableWalletCard = ({
                 pagingEnabled
                 contentOffset={{x: contentOffsetX}}
                 style={{flex: 1}}
+                ref={scrollviewRef}
                 onMomentumScrollEnd={event => {
                   const {contentOffset, layoutMeasurement} = event.nativeEvent;
 
                   const newIndex = Math.floor(
                     contentOffset.x / layoutMeasurement.width,
                   );
-                  console.log(contentOffset.x);
+                  setContentOffsetX(contentOffset.x);
 
                   onSwipeTransactionIOS(index, true, newIndex);
                 }}>
