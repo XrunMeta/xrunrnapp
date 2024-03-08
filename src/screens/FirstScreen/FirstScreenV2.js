@@ -261,7 +261,7 @@ const FirstScreenV2 = ({navigation}) => {
           </Text>
         </View>
 
-        <Button
+        {/* <Button
           title="Crashed me!"
           onPress={() =>
             adul({
@@ -272,7 +272,7 @@ const FirstScreenV2 = ({navigation}) => {
             })
           }
         />
-        <Button title="Test Crash" onPress={() => crashlytics().crash()} />
+        <Button title="Test Crash" onPress={() => crashlytics().crash()} /> */}
 
         <View style={styles.sliderWrapper}>
           <Carousel
