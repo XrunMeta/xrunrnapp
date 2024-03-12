@@ -493,12 +493,14 @@
     "failed_getwallet_alert": "获取您的钱包失败，请稍后重试",
     "failed_alert": "失败",
     "failed_download_qrcode_alert": "无法下载二维码",
-    "see_more": "看更多"
+    "see_more": "看更多",
+    "able_transfer": "Able Tran."
   },
   "screen_send": {
     "send_amount_label": "发送金额",
     "send_amount_placeholder": "请输入要发送的金额。",
     "send_address_label": "发送地址",
+    "send_availables_label": "Avaliables",
     "send_address_placeholder": "请输入要发送的地址。",
     "send_balance": "余额：",
     "send_stock_exchange_label": "股票交易所",
@@ -507,7 +509,8 @@
     "send_address_less": "地址少于40个字母。",
     "send_enough_money": "检查当前金额，并确保您的钱包中有足够的钱，包括燃气费（转账费）",
     "send_verification_code": "发送验证码",
-    "confirm_alert": "确认"
+    "confirm_alert": "确认",
+    "estimated_gas_fee": "Gas fee"
   },
   "screen_complete_send": {
     "title": "转账完成",
