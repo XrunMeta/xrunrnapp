@@ -10,12 +10,14 @@ const CustomInputWallet = ({
   isNumber,
   labelVisible = true,
   customFontSize = 13,
+  readonly = false,
 }) => {
   return (
     <View style={styles.container}>
       {labelVisible && <Text style={styles.label}>{label}</Text>}
       <TextInput
         value={value}
+        readOnly={readonly}
         onChangeText={setValue}
         placeholder={placeholder}
         placeholderTextColor="#a8a8a7"
