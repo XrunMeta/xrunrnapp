@@ -40,6 +40,7 @@ const SendWalletScreen = ({navigation, route}) => {
   const [dataMember, setDataMember] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [cointrace, setCointrace] = useState([]);
+  const [popupSend, setPopupSend] = useState(false);
 
   // Animated notification in QR
   const [fadeAnim] = useState(new Animated.Value(0));
@@ -185,116 +186,7 @@ const SendWalletScreen = ({navigation, route}) => {
         },
       ]);
     } else {
-      setIsLoading(true);
-      const currency = dataWallet.currency;
-      // Get limit transfer
-      fetch(
-        `${URL_API}&act=ap4300-getLimitTransfer&member=${dataMember.member}&currency=${currency}&amountrq=${amount}`,
-        {
-          method: 'POST',
-        },
-      )
-        .then(response => response.json())
-        .then(result => {
-          const {available} = result;
-
-          if (available === 'FALSE') {
-            setIsLoading(false);
-            Alert.alert(
-              '',
-              lang && lang ? lang.screen_send.send_enough_money : '',
-            );
-          } else {
-            if (currency == 11) {
-              setIsLoading(true);
-
-              // Check email
-              fetch(`${URL_API}&act=check-02-email&email=${dataMember.email}`, {
-                method: 'POST',
-              })
-                .then(result => result.json())
-                .then(response => {
-                  const {status} = response;
-                  if (status == 'false') {
-                    Alert.alert(
-                      '',
-                      lang && lang
-                        ? lang.screen_send.send_verification_code
-                        : '',
-                    );
-                  } else {
-                    setIsLoading(false);
-                  }
-                })
-                .catch(err => {
-                  Alert.alert('', 'Check email failed: ', err);
-                  console.log('Check email failed: ', err);
-                  crashlytics().recordError(new Error(err));
-                  crashlytics().log(err);
-                });
-            } else {
-              fetch(
-                // Transfer by stock exchange
-                `${URL_API}&act=ap4300-03&member=${dataMember.member}&addrto=${address}&currency=${currency}&amount=${amount}&coinmarket=${selectedExchange}`,
-                {
-                  method: 'POST',
-                },
-              )
-                .then(result => result.json())
-                .then(() => {
-                  const token = currency == 1 ? 'xr' : 'et';
-
-                  // Transfer coin
-                  fetch(
-                    `${URL_API}&act=postTransfer&member=${dataMember.member}&to=${address}&token=${token}&amount=${amount}`,
-                    {
-                      method: 'POST',
-                    },
-                  )
-                    .then(result => result.json())
-                    .then(response => {
-                      const {status, hash} = response;
-                      console.log(`Status: ${status}, Hash: ${hash}`);
-
-                      if (status == 'success') {
-                        setIsLoading(false);
-                        setAddress('');
-                        setAmount('');
-                        setSelectedExchange('360001');
-                        navigation.navigate('CompleteSend', {
-                          amount,
-                          addrto: address,
-                          txid: hash,
-                          symbol: dataWallet.symbol,
-                          balance,
-                        });
-                      } else {
-                        setIsLoading(false);
-                        Alert.alert('', 'Blockchain has problem or delay.');
-                      }
-                    })
-                    .catch(err => {
-                      Alert.alert('', 'Transfer failed: ', err);
-                      console.log('Transfer failed postTransfer: ', err);
-                      crashlytics().recordError(new Error(err));
-                      crashlytics().log(err);
-                    });
-                })
-                .catch(err => {
-                  Alert.alert('', 'Transferf failed: ', err);
-                  console.log('Transfer failed ap4300-03: ', err);
-                  crashlytics().recordError(new Error(err));
-                  crashlytics().log(err);
-                });
-            }
-          }
-        })
-        .catch(err => {
-          Alert.alert('', 'Check limit transfer failed: ', err);
-          setIsLoading(false);
-          crashlytics().recordError(new Error(err));
-          crashlytics().log(err);
-        });
+      setPopupSend(true);
     }
   };
 
@@ -368,6 +260,99 @@ const SendWalletScreen = ({navigation, route}) => {
     } catch (err) {
       console.warn(`Error permission camera: ${err}`);
     }
+  };
+
+  const cancelSend = () => {
+    setPopupSend(false);
+  };
+
+  const confirmSend = () => {
+    setIsLoading(true);
+    const currency = dataWallet.currency;
+
+    // Get limit transfer
+    fetch(
+      `${URL_API}&act=ap4300-getLimitTransfer&member=${dataMember.member}&currency=${currency}&amountrq=${amount}`,
+      {
+        method: 'POST',
+      },
+    )
+      .then(response => response.json())
+      .then(result => {
+        const {avaliable} = result;
+
+        if (avaliable === 'OK') {
+          fetch(
+            // Transfer by stock exchange
+            `${URL_API}&act=ap4300-03&member=${dataMember.member}&addrto=${address}&currency=${currency}&amount=${amount}&coinmarket=${selectedExchange}`,
+            {
+              method: 'POST',
+            },
+          )
+            .then(result => result.json())
+            .then(() => {
+              const token = currency == 1 ? 'xr' : 'et';
+              // Transfer coin
+              fetch(
+                `${URL_API}&act=postTransfer&member=${dataMember.member}&to=${address}&token=${token}&amount=${amount}`,
+                {
+                  method: 'POST',
+                },
+              )
+                .then(result => result.json())
+                .then(response => {
+                  const {status, hash} = response;
+                  const balance = parseFloat(dataWallet.Wamount).toString();
+
+                  console.log(`Status: ${status}, Hash: ${hash} Post Transfer`);
+                  if (status == 'success') {
+                    setIsLoading(false);
+                    setAddress('');
+                    setAmount('');
+                    setSelectedExchange('360001');
+                    navigation.navigate('CompleteSend', {
+                      amount,
+                      addrto: address,
+                      txid: hash,
+                      symbol: dataWallet.symbol,
+                      balance,
+                    });
+                  } else {
+                    setIsLoading(false);
+                    setPopupSend(false);
+                    setAddress('');
+                    setAmount('');
+                    setSelectedExchange('360001');
+                    Alert.alert('', 'Blockchain has problem or delay.');
+                  }
+                })
+                .catch(err => {
+                  Alert.alert('', 'Transfer failed: ', err);
+                  console.log('Transfer failed postTransfer: ', err);
+                  crashlytics().recordError(new Error(err));
+                  crashlytics().log(err);
+                });
+            })
+            .catch(err => {
+              Alert.alert('', 'Transfer failed: ', err);
+              console.log('Transfer failed ap4300-03: ', err);
+              crashlytics().recordError(new Error(err));
+              crashlytics().log(err);
+            });
+        } else {
+          setIsLoading(false);
+          Alert.alert(
+            '',
+            lang && lang ? lang.screen_send.send_enough_money : '',
+          );
+        }
+      })
+      .catch(err => {
+        Alert.alert('', 'Check limit transfer failed: ', err);
+        setIsLoading(false);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
+      });
   };
 
   const handleQRCodeRead = ({data}) => {
@@ -470,6 +455,14 @@ const SendWalletScreen = ({navigation, route}) => {
                 lang && lang ? lang.screen_send.send_address_placeholder : ''
               }`}
             />
+
+            <CustomInputWallet
+              value={`${dataWallet.limitTransfer}${dataWallet.symbol}`}
+              readonly
+              label={`${
+                lang && lang ? lang.screen_send.send_availables_label : ''
+              }`}
+            />
           </View>
         </View>
 
@@ -548,6 +541,78 @@ const SendWalletScreen = ({navigation, route}) => {
           <Text style={styles.notificationTextInQR}>Scanned: {address}</Text>
         </View>
       </Animated.View>
+
+      {popupSend && (
+        <View style={styles.popupConversion}>
+          <View style={styles.wrapperConversion}>
+            <View style={styles.wrapperPartTop}>
+              <Text style={styles.textChange}>
+                {lang && lang ? lang.screen_notify.send : ''}{' '}
+              </Text>
+              <Text style={styles.textCheckInformation}>
+                {lang && lang
+                  ? lang.screen_conversion.check_conversion_desc
+                  : ''}
+              </Text>
+            </View>
+            <View style={styles.contentConversion}>
+              <View style={styles.wrapperTextConversion}>
+                <Text style={styles.textPartLeft}>
+                  {lang && lang ? lang.screen_setting.close.desc.clo2 : ''}
+                </Text>
+                <Text style={styles.textPartRight}>
+                  {amount}
+                  {dataWallet.symbol}
+                </Text>
+              </View>
+              <View style={styles.wrapperTextConversion}>
+                <Text style={styles.textPartLeft}>
+                  {lang && lang ? lang.screen_complete_send.wallet_address : ''}
+                </Text>
+                <Text style={[styles.textPartRight, {maxWidth: 180}]}>
+                  {address}
+                </Text>
+              </View>
+              <View>
+                <View style={styles.wrapperTextConversion}>
+                  <Text style={styles.textPartLeft}>
+                    {lang && lang ? lang.screen_send.estimated_gas_fee : ''}
+                  </Text>
+                  <Text style={styles.textPartRight}>{'< 0.003 eth'}</Text>
+                </View>
+                <View style={styles.wrapperTextConversion}>
+                  <Text
+                    style={[
+                      styles.textPartLeft,
+                      {color: 'red', marginTop: 10},
+                    ]}>
+                    {lang && lang ? lang.screen_send.note : ''}
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View style={styles.wrapperButton}>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles.buttonConfirm}
+                onPress={cancelSend}>
+                <Text style={styles.textButtonConfirm}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={[
+                  styles.buttonConfirm,
+                  {backgroundColor: '#343c5a', flex: 1.5},
+                ]}
+                onPress={confirmSend}>
+                <Text style={[styles.textButtonConfirm, {color: '#fff'}]}>
+                  {lang && lang ? lang.screen_wallet.confirm_alert : ''}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -642,5 +707,76 @@ const styles = StyleSheet.create({
     zIndex: 999,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  popupConversion: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    zIndex: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  wrapperConversion: {
+    backgroundColor: '#fff',
+    maxWidth: 350,
+  },
+  wrapperPartTop: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 10,
+    paddingTop: 14,
+    paddingBottom: 10,
+  },
+  textChange: {
+    fontFamily: 'Poppins-Medium',
+    color: '#000',
+    textTransform: 'uppercase',
+    fontSize: 13,
+  },
+  textCheckInformation: {
+    fontFamily: 'Poppins-Regular',
+    fontSize: 11,
+    color: '#000',
+  },
+  contentConversion: {
+    borderTopColor: '#343c5a',
+    borderTopWidth: 2,
+    marginHorizontal: 20,
+    paddingVertical: 14,
+    rowGap: 24,
+  },
+  wrapperTextConversion: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  textPartLeft: {
+    color: '#aaa',
+    fontFamily: 'Poppins-Regular',
+    fontSize: 13,
+  },
+  textPartRight: {
+    color: '#000',
+    fontFamily: 'Poppins-Regular',
+    fontSize: 13,
+  },
+  wrapperButton: {
+    flexDirection: 'row',
+  },
+  buttonConfirm: {
+    padding: 10,
+    backgroundColor: '#eee',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textButtonConfirm: {
+    color: '#343c5a',
+    fontFamily: 'Poppins-Medium',
+    textTransform: 'uppercase',
   },
 });
