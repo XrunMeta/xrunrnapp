@@ -74,52 +74,55 @@ const WalletScreen = ({navigation, route}) => {
     getMember();
   }, []);
 
-  useEffect(() => {
-    // Get data member
-    const getUserData = async () => {
-      try {
-        if (member !== '') {
-          // Get data wallet
-          fetch(`${URL_API}&act=app4000-01-rev&member=${member}`, {
+  // Get data member
+  const getUserData = async () => {
+    try {
+      if (member !== '') {
+        // Get data wallet
+        fetch(
+          `${URL_API}&act=app4000-01-rev-01&member=${member}&daysbefore=7`,
+          {
             method: 'POST',
+          },
+        )
+          .then(response => response.json())
+          .then(result => {
+            setCardsData(result.data);
+            setIsLoading(false);
           })
-            .then(response => response.json())
-            .then(result => {
-              setCardsData(result.data);
-              setIsLoading(false);
-            })
-            .catch(error => {
-              Alert.alert(
-                '',
-                `${
-                  lang.screen_wallet.failed_getwallet_alert
-                    ? lang.screen_wallet.failed_getwallet_alert
-                    : ''
-                }`,
-                [
-                  {
-                    text: lang.screen_wallet.confirm_alert
-                      ? lang.screen_wallet.confirm_alert
-                      : '',
-                    onPress: () => {
-                      setIsLoading(false);
-                    },
+          .catch(error => {
+            Alert.alert(
+              '',
+              `${
+                lang.screen_wallet.failed_getwallet_alert
+                  ? lang.screen_wallet.failed_getwallet_alert
+                  : ''
+              }`,
+              [
+                {
+                  text: lang.screen_wallet.confirm_alert
+                    ? lang.screen_wallet.confirm_alert
+                    : '',
+                  onPress: () => {
+                    setIsLoading(false);
                   },
-                ],
-              );
-              crashlytics().recordError(new Error(error));
-              crashlytics().log(error);
-              setIsLoading(false);
-            });
-        }
-      } catch (err) {
-        console.error('Failed to get userData from AsyncStorage:', err);
-        setIsLoading(false);
-        crashlytics().recordError(new Error(err));
-        crashlytics().log(err);
+                },
+              ],
+            );
+            crashlytics().recordError(new Error(error));
+            crashlytics().log(error);
+            setIsLoading(false);
+          });
       }
-    };
+    } catch (err) {
+      console.error('Failed to get userData from AsyncStorage:', err);
+      setIsLoading(false);
+      crashlytics().recordError(new Error(err));
+      crashlytics().log(err);
+    }
+  };
 
+  useEffect(() => {
     getUserData();
   }, [member]);
 
@@ -157,8 +160,21 @@ const WalletScreen = ({navigation, route}) => {
     refreshBalance();
   }, [member]);
 
+  // Refresh app4000-01-rev-01
+  useEffect(() => {
+    if (route.params !== undefined) {
+      if (
+        route.params.completeSend === 'true' ||
+        route.params.completeConversion === 'true'
+      ) {
+        getUserData();
+      }
+    }
+  }, [route]);
+
   const routeComponent = ({item}) => {
     const {
+      limitTransfer,
       amount: tempAmount,
       Wamount: tempWamount,
       symbol,
@@ -167,7 +183,6 @@ const WalletScreen = ({navigation, route}) => {
       symbolimg: tempSymbolimg,
       currency,
       Eamount,
-      countrysymbol,
     } = item;
 
     const Wamount = parseFloat(tempWamount).toFixed(2);
@@ -208,24 +223,36 @@ const WalletScreen = ({navigation, route}) => {
               {lang.screen_wallet.possess ? lang.screen_wallet.possess : ''}
             </Text>
             <Text style={[styles.valueWallet, {marginBottom: 3}]}>
-              {Wamount.replaceAll('.', ',')}
+              {Wamount}
             </Text>
             <Text style={styles.textWallet}>{symbol}</Text>
           </View>
+
+          {currency == 1 && (
+            <View style={styles.wrapperTextwallet}>
+              <Text style={styles.textWallet}>
+                {lang.screen_wallet.able_transfer
+                  ? lang.screen_wallet.able_transfer
+                  : ''}
+              </Text>
+              <Text style={styles.textWallet}>
+                {limitTransfer}
+                {symbol}
+              </Text>
+            </View>
+          )}
 
           <View style={styles.wrapperTextwallet}>
             <Text style={styles.textWallet}>
               {lang.screen_wallet.catch ? lang.screen_wallet.catch : ''}
             </Text>
             <Text style={[styles.valueWallet, {marginBottom: 2}]}>
-              {amount.replaceAll('.', ',')}
+              {amount}
             </Text>
             <Text style={styles.textWallet}>
               {symbol}{' '}
               {symbol === 'XRUN'
-                ? `≈${parseFloat(Eamount)
-                    .toString()
-                    .substring(0, 9)}${countrysymbol}`
+                ? `≈${parseFloat(Eamount).toString().substring(0, 9)}`
                 : ''}
             </Text>
           </View>
@@ -253,7 +280,7 @@ const WalletScreen = ({navigation, route}) => {
             source={{
               uri: `data:image/jpeg;base64,${symbolimg}`,
             }}
-            style={styles.logo}
+            style={styles.logo(currency)}
           />
         </View>
       </View>
@@ -477,6 +504,7 @@ const styles = StyleSheet.create({
   },
   containerTextWallet: {
     marginTop: 20,
+    gap: 4,
   },
   wrapperTextwallet: {
     flexDirection: 'row',
@@ -512,11 +540,11 @@ const styles = StyleSheet.create({
     fontFamily: getFontFam() + 'Regular',
     fontSize: 12,
   },
-  logo: {
+  logo: currency => ({
     height: 40,
     width: 40,
-    marginTop: -6,
-  },
+    marginTop: currency == 1 ? -24 : -2,
+  }),
   loading: {
     position: 'absolute',
     top: 0,
