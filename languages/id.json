@@ -494,12 +494,14 @@
     "failed_getwallet_alert": "Gagal untuk dapatkan dompet Anda, silakan coba lagi nanti",
     "failed_alert": "Gagal",
     "failed_download_qrcode_alert": "Gagal untuk mengunduh qr code",
-    "see_more": "Lihat Lainnya"
+    "see_more": "Lihat Lainnya",
+    "able_transfer": "Able Tran."
   },
   "screen_send": {
     "send_amount_label": "Amount",
     "send_amount_placeholder": "Masukan jumlah yang ingin di kirimkan.",
     "send_address_label": "To",
+    "send_availables_label": "Avaliables",
     "send_address_placeholder": "Masukan Alamat Pengiriman.",
     "send_balance": "Saldo :",
     "send_stock_exchange_label": "Stock exchange",
@@ -507,7 +509,9 @@
     "send_balance_not_enough": "Saldo tidak mencukupi.",
     "send_address_less": "Alamat kurang dari 40 huruf.",
     "send_enough_money": "Periksa jumlah saat ini dan pastikan Anda memiliki cukup uang di dompet Anda termasuk bahan bakar (biaya transfer)",
-    "send_verification_code": "Mengirim kode verifikasi"
+    "send_verification_code": "Mengirim kode verifikasi",
+    "estimated_gas_fee": "Gas fee",
+    "note": "Perhatikan bahwa Anda harus memiliki ethereum untuk mentransfer, Jika tidak, Anda mungkin kehilangan nilai Anda."
   },
   "screen_complete_send": {
     "title": "Berhasil mengirimkan XRUN .",
