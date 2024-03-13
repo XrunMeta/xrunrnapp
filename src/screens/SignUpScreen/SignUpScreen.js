@@ -56,6 +56,8 @@ const SignUpScreen = ({route}) => {
       Alert.alert('Error', lang.screen_signup.validator.emptyPassword);
     } else if (phoneNumber.trim() === '') {
       Alert.alert('Error', lang.screen_signup.validator.emptyPhone);
+    } else if (authenticated == false) {
+      Alert.alert('Error', 'Please verify your phone first');
     } else if (regionID == 0) {
       Alert.alert('Error', lang.screen_signup.validator.emptyArea);
     } else {
@@ -383,6 +385,8 @@ const SignUpScreen = ({route}) => {
               'Failed',
               lang.screen_notExist.field_phoneVerif.invalidNumber,
             );
+            setAuthCode('');
+            setAuthShow(false);
           } else if (firstResObj.data === 'login') {
             // Correct Code
             setAuthCode('');
@@ -500,7 +504,10 @@ const SignUpScreen = ({route}) => {
                 flexDirection: 'row',
               }}>
               <Pressable
-                style={{flexDirection: 'row', marginBottom: -10}}
+                style={{
+                  flexDirection: 'row',
+                  marginBottom: -10,
+                }}
                 onPress={() => chooseRegion(flag, countryCode, country)}>
                 <Image
                   resizeMode="contain"
@@ -536,6 +543,13 @@ const SignUpScreen = ({route}) => {
                 setValue={setPhoneNumber}
                 onChangeText={text => setPhoneNumber(text)}
                 editable={!authenticated}
+                onPressIn={() =>
+                  authenticated &&
+                  Alert.alert(
+                    'Disabled',
+                    'Phone number cannot change after verified',
+                  )
+                }
               />
 
               <TouchableOpacity
@@ -549,7 +563,14 @@ const SignUpScreen = ({route}) => {
                   marginBottom: 0,
                   marginTop: 10,
                 }}
-                onPress={() => onAuth(phoneNumber, countryCode)}>
+                onPress={() =>
+                  authenticated
+                    ? Alert.alert(
+                        'Disabled',
+                        'Phone number cannot change after verified',
+                      )
+                    : onAuth(phoneNumber, countryCode)
+                }>
                 {authLoading ? (
                   <ActivityIndicator size="small" color="white" />
                 ) : (
@@ -574,14 +595,17 @@ const SignUpScreen = ({route}) => {
                 *Unverified
               </Text>
             ) : (
-              <Text
-                style={{
-                  color: 'green',
-                  fontFamily: getFontFam() + 'Medium',
-                  fontSize: 11,
-                }}>
-                *Verified
-              </Text>
+              phoneNumber !== '' &&
+              authenticated && (
+                <Text
+                  style={{
+                    color: 'green',
+                    fontFamily: getFontFam() + 'Medium',
+                    fontSize: 11,
+                  }}>
+                  *Verified
+                </Text>
+              )
             )}
           </View>
 
