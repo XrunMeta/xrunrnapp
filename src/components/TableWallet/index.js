@@ -80,7 +80,6 @@ const TotalHistory = ({
   return (
     <ScrollView
       style={{paddingHorizontal: 28}}
-      overScrollMode="never"
       contentOffset={{y: lastPosition}}>
       {totalTransaction.length > 0 ? (
         <>
@@ -265,7 +264,6 @@ const TransferHistory = ({
   return (
     <ScrollView
       style={{paddingHorizontal: 28}}
-      overScrollMode="never"
       contentOffset={{y: lastPosition}}>
       {totalTransaction.length > 0 ? (
         <>
@@ -413,7 +411,6 @@ const ReceivedDetails = ({
   return (
     <ScrollView
       style={{paddingHorizontal: 28}}
-      overScrollMode="never"
       contentOffset={{y: lastPosition}}>
       {totalTransaction.length > 0 ? (
         <>
@@ -598,7 +595,6 @@ const TransitionHistory = ({
   return (
     <ScrollView
       style={{paddingHorizontal: 28}}
-      overScrollMode="never"
       contentOffset={{y: lastPosition}}>
       {totalTransaction.length > 0 ? (
         <>

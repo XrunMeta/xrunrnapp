@@ -418,7 +418,8 @@ const SendWalletScreen = ({navigation, route}) => {
             <Text style={styles.currencyName}>{dataWallet.symbol}</Text>
             <View style={styles.partScanQR}>
               <Text style={styles.balance}>
-                Balance: {parseFloat(dataWallet.Wamount)} {dataWallet.symbol}
+                Balance: {parseFloat(dataWallet.Wamount)}
+                {dataWallet.symbol}
               </Text>
               <TouchableOpacity
                 style={styles.scanQRCode}

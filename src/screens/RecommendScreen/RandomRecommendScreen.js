@@ -10,6 +10,7 @@ import {
   ScrollView,
   TouchableOpacity,
   SafeAreaView,
+  Platform,
 } from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
@@ -311,7 +312,7 @@ const styles = StyleSheet.create({
   checkMark: {
     color: 'white',
     fontSize: 13,
-    backgroundColor: '#fff',
+    backgroundColor: Platform.OS === 'ios' ? '#fff' : 'transparent',
     fontWeight: 'bold',
     marginTop: -1,
   },
