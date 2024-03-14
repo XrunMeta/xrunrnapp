@@ -21,6 +21,7 @@ import CustomMultipleChecbox from '../../components/CustomCheckbox/CustomMultipl
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API, getLanguage2, getFontFam} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
+import {useAuth} from '../../context/AuthContext/AuthContext';
 
 const SignUpScreen = ({route}) => {
   const [lang, setLang] = useState({});
@@ -42,6 +43,7 @@ const SignUpScreen = ({route}) => {
   const [authLoading, setAuthLoading] = useState(false);
   const [verifyLoading, setVerifyLoading] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
+  const {login} = useAuth();
 
   const navigation = useNavigation();
 
@@ -115,12 +117,62 @@ const SignUpScreen = ({route}) => {
 
               console.log(joinAPI);
 
-              navigation.navigate('EmailVerif', {
-                dataEmail: email,
-                pin: joinPin,
-                signupUrl: joinAPI,
-                mobile: joinMobile,
-              });
+              // navigation.navigate('EmailVerif', {
+              //   dataEmail: email,
+              //   pin: joinPin,
+              //   signupUrl: joinAPI,
+              //   mobile: joinMobile,
+              // });
+
+              // Do SignUp
+              try {
+                const joinRes = await fetch(joinAPI);
+                const joinData = await joinRes.json();
+
+                console.log(
+                  'Ini SignUp Response -> ' + JSON.stringify(joinData),
+                );
+
+                if (joinData.data === 'ok') {
+                  // Check is Registered? If yes do login
+                  try {
+                    const responseLogin = await fetch(
+                      `${URL_API}&act=login-checker&email=${email}&pin=${joinPin}`,
+                    );
+                    const responseLoginData = await responseLogin.text();
+
+                    if (responseLoginData === 'OK') {
+                      navigation.replace('SuccessJoin', {
+                        email: email,
+                        pin: joinPin,
+                      });
+                    } else {
+                      Alert.alert(
+                        'Failed',
+                        lang.screen_emailVerification.notif.errorServer,
+                      );
+                    }
+                  } catch (error) {
+                    // Handle network errors or other exceptions
+                    console.error(
+                      'Error during Check Login Email & Pin:',
+                      error,
+                    );
+                  }
+                } else {
+                  Alert.alert(
+                    'Failed',
+                    lang.screen_emailVerification.notif.errorServer,
+                  );
+                  navigation.navigate('First');
+                }
+              } catch (error) {
+                console.error('Error during Signup:', error);
+                Alert.alert(
+                  'Error',
+                  lang.screen_emailVerification.notif.errorServer,
+                );
+              }
             } else if (referData.result === 'false') {
               setRefferalEmail('');
               Alert.alert(
