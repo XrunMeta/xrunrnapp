@@ -59,7 +59,7 @@ const SignUpScreen = ({route}) => {
     } else if (phoneNumber.trim() === '') {
       Alert.alert('Error', lang.screen_signup.validator.emptyPhone);
     } else if (authenticated == false) {
-      Alert.alert('Error', 'Please verify your phone first');
+      Alert.alert('Error', lang.screen_signup.validator.invalidPhone);
     } else if (regionID == 0) {
       Alert.alert('Error', lang.screen_signup.validator.emptyArea);
     } else {
@@ -598,8 +598,16 @@ const SignUpScreen = ({route}) => {
                 onPressIn={() =>
                   authenticated &&
                   Alert.alert(
-                    'Disabled',
-                    'Phone number cannot change after verified',
+                    lang &&
+                      lang.screen_signup &&
+                      lang.screen_signup.phone_number
+                      ? lang.screen_signup.phone_number.disabled
+                      : '',
+                    lang &&
+                      lang.screen_signup &&
+                      lang.screen_signup.phone_number
+                      ? lang.screen_signup.phone_number.disabledDesc
+                      : '',
                   )
                 }
               />
@@ -618,8 +626,16 @@ const SignUpScreen = ({route}) => {
                 onPress={() =>
                   authenticated
                     ? Alert.alert(
-                        'Disabled',
-                        'Phone number cannot change after verified',
+                        lang &&
+                          lang.screen_signup &&
+                          lang.screen_signup.phone_number
+                          ? lang.screen_signup.phone_number.disabled
+                          : '',
+                        lang &&
+                          lang.screen_signup &&
+                          lang.screen_signup.phone_number
+                          ? lang.screen_signup.phone_number.disabledDesc
+                          : '',
                       )
                     : onAuth(phoneNumber, countryCode)
                 }>
@@ -632,7 +648,11 @@ const SignUpScreen = ({route}) => {
                       fontSize: 11,
                       color: 'white',
                     }}>
-                    Auth
+                    {lang &&
+                    lang.screen_signup &&
+                    lang.screen_signup.phone_number
+                      ? lang.screen_signup.phone_number.auth
+                      : ''}
                   </Text>
                 )}
               </TouchableOpacity>
@@ -644,7 +664,10 @@ const SignUpScreen = ({route}) => {
                   fontFamily: getFontFam() + 'Medium',
                   fontSize: 11,
                 }}>
-                *Unverified
+                *
+                {lang && lang.screen_signup && lang.screen_signup.phone_number
+                  ? lang.screen_signup.phone_number.unverified
+                  : ''}
               </Text>
             ) : (
               phoneNumber !== '' &&
@@ -655,7 +678,10 @@ const SignUpScreen = ({route}) => {
                     fontFamily: getFontFam() + 'Medium',
                     fontSize: 11,
                   }}>
-                  *Verified
+                  *
+                  {lang && lang.screen_signup && lang.screen_signup.phone_number
+                    ? lang.screen_signup.phone_number.verified
+                    : ''}
                 </Text>
               )
             )}
@@ -796,12 +822,7 @@ const SignUpScreen = ({route}) => {
               padding: 10,
               width: 150,
             }}>
-            <Text style={styles.label}>
-              {/* {lang && lang.screen_signup && lang.screen_signup.phone_number
-                ? lang.screen_signup.phone_number.label
-                : ''} */}
-              Code
-            </Text>
+            <Text style={styles.label}>Code</Text>
 
             <TextInput
               keyboardType="numeric"
@@ -841,7 +862,9 @@ const SignUpScreen = ({route}) => {
                     fontSize: 11,
                     color: 'white',
                   }}>
-                  Verify
+                  {lang && lang.screen_signup && lang.screen_signup.phone_number
+                    ? lang.screen_signup.phone_number.auth
+                    : ''}
                 </Text>
               )}
             </TouchableOpacity>

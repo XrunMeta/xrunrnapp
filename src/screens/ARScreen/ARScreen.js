@@ -353,7 +353,7 @@ function ARScreen() {
             <View
               style={{
                 position: 'absolute',
-                backgroundColor: '#001a477a',
+                // backgroundColor: '#001a477a',
                 top: 0,
                 bottom: 0,
                 left: -50,
