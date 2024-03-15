@@ -259,7 +259,7 @@ const WalletScreen = ({navigation, route}) => {
         </View>
 
         <View style={styles.wrapperPartBottom}>
-          <View style={styles.wrapperCopiedHash}>
+          <View style={styles.wrapperCopiedHash(currency)}>
             <View style={styles.wrapperHash}>
               <Text style={styles.hash}>
                 {address.substring(0, 10) +
@@ -528,10 +528,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  wrapperCopiedHash: {
+  wrapperCopiedHash: currency => ({
     flexDirection: 'row',
     gap: 6,
-  },
+    marginTop: currency == 1 ? 0 : 20,
+  }),
   wrapperHash: {
     flexDirection: 'row',
   },
@@ -543,7 +544,7 @@ const styles = StyleSheet.create({
   logo: currency => ({
     height: 40,
     width: 40,
-    marginTop: currency == 1 ? -24 : -2,
+    marginTop: currency == 1 ? -12 : -2,
   }),
   loading: {
     position: 'absolute',
