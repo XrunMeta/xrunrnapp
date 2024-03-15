@@ -47,6 +47,7 @@ function ARScreen() {
   const [brandCount, setBrandCount] = useState(0);
   const [bigCoin, setBigCoin] = useState(0);
   const [compassHeading, setCompassHeading] = useState(0);
+  const [prevCompassHeading, setPrevCompassHeading] = useState(0);
 
   const getCamPermission = async () => {
     try {
@@ -261,7 +262,7 @@ function ARScreen() {
 
       const displayCount = Math.min(
         shuffledData.length - currentIndex,
-        Math.floor(Math.random() * 5) + 1,
+        Math.floor(Math.random() * 5) + 6,
       );
 
       const itemsToDisplay = shuffledData
@@ -369,14 +370,13 @@ function ARScreen() {
                       width: 150,
                       height: 275,
                       display:
-                        item.rotation >= 10 && item.rotation <= 200
+                        item.rotation >= 0 && item.rotation <= 200
                           ? 'block'
                           : item.rotation >= 210 && item.rotation <= 320
                           ? 'block'
                           : item.rotation >= 330 && rotation <= 360
                           ? 'block'
                           : 'none',
-                      // display: 'block',
                     },
                     bouncingCoinAnimatedStyle,
                   ]}>
