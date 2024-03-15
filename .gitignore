@@ -2,9 +2,6 @@
 .gradle/
 build/
 
-# iOS Pods
-./ios/Pods/
-
 # Local configuration file (sdk path, etc)
 local.properties
 
