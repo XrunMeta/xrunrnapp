@@ -212,6 +212,7 @@ const SendWalletScreen = ({navigation, route}) => {
                 break;
               case RESULTS.GRANTED:
                 console.log('The permission is granted');
+                setIsVisibleReadQR(true);
                 break;
               case RESULTS.BLOCKED:
                 request(PERMISSIONS.IOS.CAMERA).then(result => {
