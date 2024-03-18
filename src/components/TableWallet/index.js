@@ -929,7 +929,7 @@ const TableWalletCard = ({
           undefined,
           member,
           1,
-          30,
+          defaultLoadData,
         );
 
         setTotalHistoryLength(totalHistory.length);
