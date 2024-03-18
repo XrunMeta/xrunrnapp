@@ -183,6 +183,7 @@ const WalletScreen = ({navigation, route}) => {
       symbolimg: tempSymbolimg,
       currency,
       Eamount,
+      countrysymbol,
     } = item;
 
     const Wamount = parseFloat(tempWamount).toFixed(2);
@@ -252,7 +253,9 @@ const WalletScreen = ({navigation, route}) => {
             <Text style={styles.textWallet}>
               {symbol}{' '}
               {symbol === 'XRUN'
-                ? `≈${parseFloat(Eamount).toString().substring(0, 9)}`
+                ? `≈${Math.round(
+                    parseFloat(Eamount).toString().substring(0, 9),
+                  )}${countrysymbol}`
                 : ''}
             </Text>
           </View>
