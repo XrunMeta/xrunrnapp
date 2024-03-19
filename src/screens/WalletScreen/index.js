@@ -183,6 +183,7 @@ const WalletScreen = ({navigation, route}) => {
       symbolimg: tempSymbolimg,
       currency,
       Eamount,
+      countrysymbol,
     } = item;
 
     const Wamount = parseFloat(tempWamount).toFixed(2);
@@ -252,14 +253,16 @@ const WalletScreen = ({navigation, route}) => {
             <Text style={styles.textWallet}>
               {symbol}{' '}
               {symbol === 'XRUN'
-                ? `≈${parseFloat(Eamount).toString().substring(0, 9)}`
+                ? `≈${Math.round(
+                    parseFloat(Eamount).toString().substring(0, 9),
+                  )}${countrysymbol}`
                 : ''}
             </Text>
           </View>
         </View>
 
         <View style={styles.wrapperPartBottom}>
-          <View style={styles.wrapperCopiedHash}>
+          <View style={styles.wrapperCopiedHash(currency)}>
             <View style={styles.wrapperHash}>
               <Text style={styles.hash}>
                 {address.substring(0, 10) +
@@ -528,10 +531,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  wrapperCopiedHash: {
+  wrapperCopiedHash: currency => ({
     flexDirection: 'row',
     gap: 6,
-  },
+    marginTop: currency == 1 ? 0 : 20,
+  }),
   wrapperHash: {
     flexDirection: 'row',
   },
@@ -543,7 +547,7 @@ const styles = StyleSheet.create({
   logo: currency => ({
     height: 40,
     width: 40,
-    marginTop: currency == 1 ? -24 : -2,
+    marginTop: currency == 1 ? -12 : -2,
   }),
   loading: {
     position: 'absolute',
