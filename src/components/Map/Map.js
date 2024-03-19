@@ -6,6 +6,7 @@ import {
   Image,
   ActivityIndicator,
   PermissionsAndroid,
+  Platform,
 } from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE, Callout} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
@@ -683,24 +684,46 @@ const MapComponent = ({
                 justifyContent: 'space-between',
                 marginLeft: 10,
               }}>
-              <Text
-                style={{
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  textAlign: 'center',
-                  marginTop: -10,
-                  color: '#343a59',
-                }}>
+              {Platform.OS === 'ios' ? (
                 <Image
-                  source={{uri: `data:image/png;base64,${brandLogo[idx]}`}}
+                  source={{
+                    uri: `data:image/png;base64,${item.brandlogo.replace(
+                      /(\r\n|\n|\r)/gm,
+                      '',
+                    )}`,
+                  }}
                   style={{
                     width: 37,
                     height: 37,
                   }}
                   onError={err => console.log('Error Cuy : ', err)}
                 />
-              </Text>
+              ) : (
+                <Text
+                  style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    textAlign: 'center',
+                    marginTop: -10,
+                    color: '#343a59',
+                  }}>
+                  <Image
+                    source={{
+                      uri: `data:image/png;base64,${item.brandlogo.replace(
+                        /(\r\n|\n|\r)/gm,
+                        '',
+                      )}`,
+                    }}
+                    style={{
+                      width: 37,
+                      height: 37,
+                    }}
+                    onError={err => console.log('Error Cuy : ', err)}
+                  />
+                </Text>
+              )}
+
               <Text
                 key={updateRange}
                 style={{
@@ -778,7 +801,7 @@ const MapComponent = ({
         <MapView
           ref={mapRef}
           style={styles.mapStyle}
-          provider={PROVIDER_GOOGLE}
+          provider={Platform.OS === 'ios' ? PROVIDER_DEFAULT : PROVIDER_GOOGLE}
           initialRegion={{
             latitude: pin.latitude,
             longitude: pin.longitude,
