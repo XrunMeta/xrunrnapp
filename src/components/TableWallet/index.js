@@ -70,13 +70,11 @@ const TotalHistory = ({
 }) => {
   useEffect(() => {
     setTimeout(() => {
-      if (totalTransaction.length > 0) {
-        setLoadingTransaction(false);
-      } else {
+      if (setLoadingTransaction !== undefined) {
         setLoadingTransaction(false);
       }
     }, 1000);
-  }, [totalTransaction]);
+  }, [totalTransaction, setLoadingTransaction]);
 
   return (
     <ScrollView
@@ -255,13 +253,11 @@ const TransferHistory = ({
 }) => {
   useEffect(() => {
     setTimeout(() => {
-      if (totalTransaction.length > 0) {
-        setLoadingTransaction(false);
-      } else {
+      if (setLoadingTransaction !== undefined) {
         setLoadingTransaction(false);
       }
     }, 1000);
-  }, [totalTransaction]);
+  }, [totalTransaction, setLoadingTransaction]);
 
   return (
     <ScrollView
@@ -403,13 +399,11 @@ const ReceivedDetails = ({
 }) => {
   useEffect(() => {
     setTimeout(() => {
-      if (totalTransaction.length > 0) {
-        setLoadingTransaction(false);
-      } else {
+      if (setLoadingTransaction !== undefined) {
         setLoadingTransaction(false);
       }
     }, 1000);
-  }, [totalTransaction]);
+  }, [totalTransaction, setLoadingTransaction]);
 
   return (
     <ScrollView
@@ -588,13 +582,11 @@ const TransitionHistory = ({
 }) => {
   useEffect(() => {
     setTimeout(() => {
-      if (totalTransaction.length > 0) {
-        setLoadingTransaction(false);
-      } else {
+      if (setLoadingTransaction !== undefined) {
         setLoadingTransaction(false);
       }
     }, 1000);
-  }, [totalTransaction]);
+  }, [totalTransaction, setLoadingTransaction]);
 
   return (
     <ScrollView
