@@ -53,6 +53,8 @@ const renderTabBar = props => (
 
 // Content TabView
 const TotalHistory = ({
+  loadingTransaction,
+  setLoadingTransaction,
   routeSwipe,
   totalTransaction,
   setTotalTransaction,
@@ -66,17 +68,16 @@ const TotalHistory = ({
   lastPosition,
   setLastPosition,
 }) => {
-  const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     setTimeout(() => {
       if (totalTransaction.length > 0) {
-        setLoading(false);
+        setLoadingTransaction(false);
       } else {
-        setLoading(false);
+        setLoadingTransaction(false);
       }
-    }, 100);
+    }, 1000);
   }, [totalTransaction]);
+
   return (
     <ScrollView
       style={{paddingHorizontal: 28}}
@@ -215,7 +216,7 @@ const TotalHistory = ({
             </View>
           )}
         </>
-      ) : loading ? (
+      ) : loadingTransaction ? (
         <View
           style={{
             flex: 1,
@@ -237,6 +238,8 @@ const TotalHistory = ({
 };
 
 const TransferHistory = ({
+  loadingTransaction,
+  setLoadingTransaction,
   routeSwipe,
   totalTransaction,
   setTotalTransaction,
@@ -250,15 +253,14 @@ const TransferHistory = ({
   lastPosition,
   setLastPosition,
 }) => {
-  const [loading, setLoading] = useState(true);
   useEffect(() => {
     setTimeout(() => {
       if (totalTransaction.length > 0) {
-        setLoading(false);
+        setLoadingTransaction(false);
       } else {
-        setLoading(false);
+        setLoadingTransaction(false);
       }
-    }, 100);
+    }, 1000);
   }, [totalTransaction]);
 
   return (
@@ -362,7 +364,7 @@ const TransferHistory = ({
             </View>
           )}
         </>
-      ) : loading ? (
+      ) : loadingTransaction ? (
         <View
           style={{
             flex: 1,
@@ -384,6 +386,8 @@ const TransferHistory = ({
 };
 
 const ReceivedDetails = ({
+  loadingTransaction,
+  setLoadingTransaction,
   routeSwipe,
   totalTransaction,
   setTotalTransaction,
@@ -397,15 +401,14 @@ const ReceivedDetails = ({
   lastPosition,
   setLastPosition,
 }) => {
-  const [loading, setLoading] = useState(true);
   useEffect(() => {
     setTimeout(() => {
       if (totalTransaction.length > 0) {
-        setLoading(false);
+        setLoadingTransaction(false);
       } else {
-        setLoading(false);
+        setLoadingTransaction(false);
       }
-    }, 100);
+    }, 1000);
   }, [totalTransaction]);
 
   return (
@@ -546,7 +549,7 @@ const ReceivedDetails = ({
             </View>
           )}
         </>
-      ) : loading ? (
+      ) : loadingTransaction ? (
         <View
           style={{
             flex: 1,
@@ -568,6 +571,8 @@ const ReceivedDetails = ({
 };
 
 const TransitionHistory = ({
+  loadingTransaction,
+  setLoadingTransaction,
   routeSwipe,
   totalTransaction,
   setTotalTransaction,
@@ -581,15 +586,14 @@ const TransitionHistory = ({
   lastPosition,
   setLastPosition,
 }) => {
-  const [loading, setLoading] = useState(true);
   useEffect(() => {
     setTimeout(() => {
       if (totalTransaction.length > 0) {
-        setLoading(false);
+        setLoadingTransaction(false);
       } else {
-        setLoading(false);
+        setLoadingTransaction(false);
       }
-    }, 100);
+    }, 1000);
   }, [totalTransaction]);
 
   return (
@@ -692,7 +696,7 @@ const TransitionHistory = ({
             </View>
           )}
         </>
-      ) : loading ? (
+      ) : loadingTransaction ? (
         <View
           style={{
             flex: 1,
@@ -729,6 +733,7 @@ const TableWalletCard = ({
   const [currentSwipe, setCurrentSwipe] = useState('totalHistory');
   const [contentOffsetX, setContentOffsetX] = useState(0);
   const scrollviewRef = useRef(null);
+  const [loadingTransaction, setLoadingTransaction] = useState(true);
 
   // Transaction
   const defaultLoadData = 100;
@@ -821,6 +826,8 @@ const TableWalletCard = ({
       case 'totalHistory':
         return (
           <TotalHistory
+            loadingTransaction={loadingTransaction}
+            setLoadingTransaction={setLoadingTransaction}
             totalTransaction={totalHistory}
             setTotalTransaction={setTotalHistory}
             member={member}
@@ -838,6 +845,8 @@ const TableWalletCard = ({
       case 'transferHistory':
         return (
           <TransferHistory
+            loadingTransaction={loadingTransaction}
+            setLoadingTransaction={setLoadingTransaction}
             totalTransaction={transferHistory}
             setTotalTransaction={setTransferHistory}
             member={member}
@@ -855,6 +864,8 @@ const TableWalletCard = ({
       case 'receivedDetails':
         return (
           <ReceivedDetails
+            loadingTransaction={loadingTransaction}
+            setLoadingTransaction={setLoadingTransaction}
             totalTransaction={receivedDetails}
             setTotalTransaction={setReceivedDetails}
             member={member}
@@ -872,6 +883,8 @@ const TableWalletCard = ({
       case 'transitionHistory':
         return (
           <TransitionHistory
+            loadingTransaction={loadingTransaction}
+            setLoadingTransaction={setLoadingTransaction}
             totalTransaction={transitionHistory}
             setTotalTransaction={setTransitionHistory}
             member={member}
@@ -889,6 +902,8 @@ const TableWalletCard = ({
       default:
         return (
           <TotalHistory
+            loadingTransaction={loadingTransaction}
+            setLoadingTransaction={setLoadingTransaction}
             totalTransaction={totalHistory}
             setTotalTransaction={setTotalHistory}
             member={member}
@@ -914,7 +929,7 @@ const TableWalletCard = ({
           undefined,
           member,
           1,
-          30,
+          defaultLoadData,
         );
 
         setTotalHistoryLength(totalHistory.length);
@@ -1022,6 +1037,7 @@ const TableWalletCard = ({
 
   // Hit API for transaction if user swipe table
   const onSwipeTransaction = async (key, isIOS) => {
+    setLoadingTransaction(true);
     setCurrentSwipe(key);
     if (isIOS) {
       getDataTransaction(key, isIOS);
