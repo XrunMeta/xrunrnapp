@@ -1011,106 +1011,120 @@ const ModifInfoScreen = ({route}) => {
                         </View>
                       </TouchableOpacity>
                     </View>
+
+                    {/* Country Modal */}
+                    <Modal
+                      animationType="slide"
+                      transparent={true}
+                      visible={countryModalVisible}
+                      onRequestClose={() => {
+                        setModalCountryVisible(false);
+                      }}>
+                      <View style={styles.modalContainer}>
+                        <View style={styles.modalContent}>
+                          <FlatList
+                            data={countryData}
+                            keyExtractor={item => item.code}
+                            ListEmptyComponent={() => (
+                              <View style={{marginVertical: 20}}>
+                                <Text
+                                  style={[
+                                    styles.normalText,
+                                    {textAlign: 'center'},
+                                  ]}>
+                                  {lang &&
+                                  lang.screen_modify_information &&
+                                  lang.screen_modify_information.modal
+                                    ? lang.screen_modify_information.modal.empty
+                                    : ''}
+                                </Text>
+                              </View>
+                            )}
+                            renderItem={({item}) => (
+                              <TouchableOpacity
+                                style={styles.modalItem}
+                                onPress={() => onSelectCountry(item)}>
+                                <Text
+                                  style={[
+                                    styles.modalItemText,
+                                    {marginRight: 10},
+                                  ]}>
+                                  +{item.callnumber}
+                                </Text>
+                                <Text style={styles.modalItemText}>
+                                  {item.country}
+                                </Text>
+                              </TouchableOpacity>
+                            )}
+                          />
+                          <TouchableOpacity
+                            style={styles.closeButton}
+                            onPress={() => setCountryModalVisible(false)}>
+                            <Text style={styles.closeButtonText}>
+                              {lang && lang.screen_modify_information
+                                ? lang.screen_modify_information.close
+                                : ''}
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    </Modal>
+
+                    {/* Area Modal */}
+                    <Modal
+                      animationType="slide"
+                      transparent={true}
+                      visible={areaModalVisible}
+                      onRequestClose={() => {
+                        setModalAreaVisible(false);
+                      }}>
+                      <View style={styles.modalContainer}>
+                        <View style={styles.modalContent}>
+                          <FlatList
+                            data={regionData}
+                            keyExtractor={item => item.subcode}
+                            ListEmptyComponent={() => (
+                              <View style={{marginVertical: 20}}>
+                                <Text
+                                  style={[
+                                    styles.normalText,
+                                    {textAlign: 'center'},
+                                  ]}>
+                                  {lang &&
+                                  lang.screen_modify_information &&
+                                  lang.screen_modify_information.modal
+                                    ? lang.screen_modify_information.modal.empty
+                                    : ''}
+                                </Text>
+                              </View>
+                            )}
+                            renderItem={({item}) => (
+                              <TouchableOpacity
+                                style={styles.modalItem}
+                                onPress={() => onSelectArea(item)}>
+                                <Text style={styles.modalItemText}>
+                                  {item.description}
+                                </Text>
+                              </TouchableOpacity>
+                            )}
+                          />
+                          <TouchableOpacity
+                            style={styles.closeButton}
+                            onPress={() => setAreaModalVisible(false)}>
+                            <Text style={styles.closeButtonText}>
+                              {lang && lang.screen_modify_information
+                                ? lang.screen_modify_information.close
+                                : ''}
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    </Modal>
                   </View>
                 }
               />
             </View>
           </ScrollView>
-
-          {/* Country Modal */}
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={countryModalVisible}
-            onRequestClose={() => {
-              setModalCountryVisible(false);
-            }}>
-            <View style={styles.modalContainer}>
-              <View style={styles.modalContent}>
-                <FlatList
-                  data={countryData}
-                  keyExtractor={item => item.code}
-                  ListEmptyComponent={() => (
-                    <View style={{marginVertical: 20}}>
-                      <Text style={[styles.normalText, {textAlign: 'center'}]}>
-                        {lang &&
-                        lang.screen_modify_information &&
-                        lang.screen_modify_information.modal
-                          ? lang.screen_modify_information.modal.empty
-                          : ''}
-                      </Text>
-                    </View>
-                  )}
-                  renderItem={({item}) => (
-                    <TouchableOpacity
-                      style={styles.modalItem}
-                      onPress={() => onSelectCountry(item)}>
-                      <Text style={[styles.modalItemText, {marginRight: 10}]}>
-                        +{item.callnumber}
-                      </Text>
-                      <Text style={styles.modalItemText}>{item.country}</Text>
-                    </TouchableOpacity>
-                  )}
-                />
-                <TouchableOpacity
-                  style={styles.closeButton}
-                  onPress={() => setCountryModalVisible(false)}>
-                  <Text style={styles.closeButtonText}>
-                    {lang && lang.screen_modify_information
-                      ? lang.screen_modify_information.close
-                      : ''}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
-
-          {/* Area Modal */}
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={areaModalVisible}
-            onRequestClose={() => {
-              setModalAreaVisible(false);
-            }}>
-            <View style={styles.modalContainer}>
-              <View style={styles.modalContent}>
-                <FlatList
-                  data={regionData}
-                  keyExtractor={item => item.subcode}
-                  ListEmptyComponent={() => (
-                    <View style={{marginVertical: 20}}>
-                      <Text style={[styles.normalText, {textAlign: 'center'}]}>
-                        {lang &&
-                        lang.screen_modify_information &&
-                        lang.screen_modify_information.modal
-                          ? lang.screen_modify_information.modal.empty
-                          : ''}
-                      </Text>
-                    </View>
-                  )}
-                  renderItem={({item}) => (
-                    <TouchableOpacity
-                      style={styles.modalItem}
-                      onPress={() => onSelectArea(item)}>
-                      <Text style={styles.modalItemText}>
-                        {item.description}
-                      </Text>
-                    </TouchableOpacity>
-                  )}
-                />
-                <TouchableOpacity
-                  style={styles.closeButton}
-                  onPress={() => setAreaModalVisible(false)}>
-                  <Text style={styles.closeButtonText}>
-                    {lang && lang.screen_modify_information
-                      ? lang.screen_modify_information.close
-                      : ''}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
         </View>
       )}
     </SafeAreaView>
