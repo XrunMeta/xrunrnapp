@@ -8,7 +8,12 @@ import {
   PermissionsAndroid,
   Platform,
 } from 'react-native';
-import MapView, {Marker, PROVIDER_GOOGLE, Callout} from 'react-native-maps';
+import MapView, {
+  Marker,
+  PROVIDER_GOOGLE,
+  Callout,
+  PROVIDER_DEFAULT,
+} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {fetchMarkerData} from './APIGetMarker';

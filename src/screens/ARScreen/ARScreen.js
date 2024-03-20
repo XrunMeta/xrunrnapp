@@ -10,6 +10,7 @@ import {
   Text,
   Dimensions,
   PermissionsAndroid,
+  Platform,
 } from 'react-native';
 import {Camera, useCameraDevice} from 'react-native-vision-camera';
 import Animated, {
@@ -25,6 +26,7 @@ import {URL_API, getLanguage2, getFontFam} from '../../../utils';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import CompassHeading from 'react-native-compass-heading';
+import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 function ARScreen() {
@@ -49,26 +51,48 @@ function ARScreen() {
   const [compassHeading, setCompassHeading] = useState(0);
   const [prevCompassHeading, setPrevCompassHeading] = useState(0);
 
+  // const getCamPermission = async () => {
+  //   try {
+  //     const granted = await PermissionsAndroid.request(
+  //       PermissionsAndroid.PERMISSIONS.CAMERA,
+  //       // {
+  //       //   title: 'Camera Permission',
+  //       //   message:
+  //       //     'XRUN needs access to your camera ' +
+  //       //     'so you can enjoy AR and Catch the Coin!',
+  //       //   buttonPositive: 'OK',
+  //       //   buttonNegative: 'Cancel',
+  //       // },
+  //     );
+
+  //     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+  //       setCameraReady(true);
+  //       setCameraPermission('granted');
+  //     } else {
+  //       console.log('Kamera ga diizinin');
+  //       Linking.openSettings();
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
   const getCamPermission = async () => {
     try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.CAMERA,
-        // {
-        //   title: 'Camera Permission',
-        //   message:
-        //     'XRUN needs access to your camera ' +
-        //     'so you can enjoy AR and Catch the Coin!',
-        //   buttonPositive: 'OK',
-        //   buttonNegative: 'Cancel',
-        // },
-      );
+      let permission;
+      if (Platform.OS === 'android') {
+        permission = PERMISSIONS.ANDROID.CAMERA;
+      } else if (Platform.OS === 'ios') {
+        permission = PERMISSIONS.IOS.CAMERA;
+      }
 
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      const result = await request(permission);
+      if (result === RESULTS.GRANTED) {
+        console.log('Camera permission granted');
         setCameraReady(true);
         setCameraPermission('granted');
       } else {
-        console.log('Kamera ga diizinin');
-        Linking.openSettings();
+        console.log('Camera permission denied');
       }
     } catch (error) {
       console.error(error);
@@ -332,24 +356,43 @@ function ARScreen() {
     };
   });
 
+  const renderCamera = () => {
+    const commonProps = {
+      fps: 25,
+      style: {
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+      },
+      device: device,
+      isActive: true,
+      lowLightBoost: false,
+    };
+
+    if (Platform.OS === 'android') {
+      return (
+        <Camera
+          {...commonProps}
+          torch={flash === 'on' ? 'on' : 'off'}
+          onInitialized={() => setTimeout(() => setFlash('off'), 500)}
+        />
+      );
+    } else if (Platform.OS === 'ios') {
+      return (
+        <Camera
+          {...commonProps}
+          onInitialized={() => setTimeout(() => console.log('Bgst'), 100)}
+        />
+      );
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View>
         {cameraPermission === 'granted' && isCameraReady && device && (
           <>
-            <Camera
-              fps={25}
-              torch={flash === 'on' ? 'on' : 'off'}
-              onInitialized={() => setTimeout(() => setFlash('off'), 1000)}
-              style={{
-                position: 'relative',
-                width: '100%',
-                height: '100%',
-              }}
-              device={device}
-              isActive={true}
-              lowLightBoost={false}
-            />
+            {renderCamera()}
             <View
               style={{
                 position: 'absolute',
