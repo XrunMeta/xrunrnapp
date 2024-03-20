@@ -14,7 +14,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import Share from 'react-native-share';
 import RNFetchBlob from 'rn-fetch-blob';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import crashlytics from '@react-native-firebase/crashlytics';
+// import crashlytics from '@react-native-firebase/crashlytics';
 import {URL_API, getFontFam} from '../../../utils';
 import RNFS from 'react-native-fs';
 
@@ -170,49 +170,92 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
       let second = String(currentDate.getSeconds()).padStart(2, '0');
 
       let fileName = `xrun.qrcode.${year}-${month}-${day}${hour}${minute}${second}.png`;
+      const url = `${apiQRCode}?size=200x200&data=${cardDataQR.address}&margin=10`;
 
-      // Create the download options
-      const {config, fs} = RNFetchBlob;
-      let RootDir = fs.dirs.PictureDir;
-      let options = {
-        fileCache: true,
-        addAndroidDownloads: {
-          path: `${RootDir}/${fileName}`,
-          description: 'Downloading file...',
-          notification: true,
-          useDownloadManager: true,
-        },
-      };
-
-      // Start downloading
-      const res = await config(options).fetch(
-        'GET',
-        `${apiQRCode}?size=200x200&data=${cardDataQR.address}&margin=10`,
-      );
-
-      // Alert after successful downloading
-      console.log('res -> ', JSON.stringify(res));
-      Alert.alert(
-        '',
-        `${fileName} ${
-          lang && lang.screen_wallet.download_qrcode_show
-            ? lang.screen_wallet.download_qrcode_show
-            : ''
-        }`,
-        [
-          {
-            text:
-              lang && lang.screen_wallet.confirm_alert
-                ? lang.screen_wallet.confirm_alert
-                : '',
-            onPress: () => {
-              setDownloadDisable(false);
-              tokener();
-              passwd();
-            },
+      if (Platform.OS === 'android') {
+        // Create the download options
+        const {config, fs} = RNFetchBlob;
+        let RootDir = fs.dirs.PictureDir;
+        let options = {
+          fileCache: true,
+          addAndroidDownloads: {
+            path: `${RootDir}/${fileName}`,
+            description: 'Downloading file...',
+            notification: true,
+            useDownloadManager: true,
           },
-        ],
-      );
+        };
+
+        // Start downloading
+        const res = await config(options).fetch('GET', url);
+        // Alert after successful downloading
+        Alert.alert(
+          '',
+          `${fileName} ${
+            lang && lang.screen_wallet.download_qrcode_show
+              ? lang.screen_wallet.download_qrcode_show
+              : ''
+          }`,
+          [
+            {
+              text:
+                lang && lang.screen_wallet.confirm_alert
+                  ? lang.screen_wallet.confirm_alert
+                  : '',
+              onPress: () => {
+                setDownloadDisable(false);
+                tokener();
+                passwd();
+              },
+            },
+          ],
+        );
+        console.log('res -> ', JSON.stringify(res));
+      } else {
+        const {
+          dirs: {DocumentDir},
+        } = RNFetchBlob.fs;
+        const path = `${DocumentDir}/${fileName}`;
+
+        try {
+          const res = await RNFetchBlob.config({
+            fileCache: true,
+            path,
+          }).fetch('GET', url);
+
+          // Tampilkan di galeri (opsional)
+          if (res.info().status === 200) {
+            // Alert after successful downloading
+            Alert.alert(
+              '',
+              `${fileName} ${
+                lang && lang.screen_wallet.download_qrcode_show
+                  ? lang.screen_wallet.download_qrcode_show
+                  : ''
+              }`,
+              [
+                {
+                  text:
+                    lang && lang.screen_wallet.confirm_alert
+                      ? lang.screen_wallet.confirm_alert
+                      : '',
+                  onPress: () => {
+                    RNFetchBlob.ios.previewDocument(res.data);
+                    setDownloadDisable(false);
+                    tokener();
+                    passwd();
+                  },
+                },
+              ],
+            );
+          }
+
+          console.log('Image download:', path);
+          return path;
+        } catch (error) {
+          console.error('Error download image:', error);
+        }
+      }
     } catch (error) {
       crashlytics().recordError(new Error(error));
       crashlytics().log(error);
