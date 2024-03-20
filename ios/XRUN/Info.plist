@@ -35,6 +35,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>We need permission to save images to your device.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) Need camera accsess to scan QR Code Image </string>
 	<key>NSLocationWhenInUseUsageDescription</key>
