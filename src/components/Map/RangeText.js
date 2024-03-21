@@ -1,6 +1,6 @@
 import {Text} from 'react-native';
 import React from 'react';
-import { getFontFam } from '../../../utils';
+import {getFontFam} from '../../../utils';
 
 const RangeText = ({range}) => {
   return (

@@ -1,8 +1,15 @@
 import {Text, StyleSheet, Pressable, Platform} from 'react-native';
 import React from 'react';
-import { getFontFam } from '../../../utils';
+import {getFontFam} from '../../../utils';
 
-const CustomButton = ({onPress, text, type = 'PRIMARY', bgColor, fgColor, firstScreen}) => {
+const CustomButton = ({
+  onPress,
+  text,
+  type = 'PRIMARY',
+  bgColor,
+  fgColor,
+  firstScreen,
+}) => {
   return (
     <Pressable
       onPress={onPress}
@@ -11,7 +18,7 @@ const CustomButton = ({onPress, text, type = 'PRIMARY', bgColor, fgColor, firstS
       //   [styles.container, styles[`container_${type}`]],
       //   bgColor ? {backgroundColor: bgColor} : {},
       // ]}
-      >
+    >
       <Text
         style={[
           styles.text,
@@ -28,7 +35,7 @@ const styles = StyleSheet.create({
   container: (type, bgColor, firstScreen) => ({
     width: '100%',
     padding: 15,
-    paddingVertical: firstScreen ? Platform.OS == 'ios' ? 12 : 8 : 8,
+    paddingVertical: firstScreen ? (Platform.OS == 'ios' ? 12 : 8) : 8,
     marginTop: 15,
     alignItems: 'center',
     borderRadius: 35,
@@ -45,7 +52,6 @@ const styles = StyleSheet.create({
         ? '#343a59'
         : '#ffdc04'
       : bgColor,
-      
   }),
 
   container_PRIMARY: {

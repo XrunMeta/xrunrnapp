@@ -1,6 +1,6 @@
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React from 'react';
-import { getFontFam } from '../../../utils';
+import {getFontFam} from '../../../utils';
 
 const ButtonList = ({label, onPress}) => {
   return (
@@ -33,13 +33,13 @@ export default ButtonList;
 
 const styles = StyleSheet.create({
   shadow: {
-    shadowColor: "#000000",
+    shadowColor: '#000000',
     shadowOffset: {
       width: 0,
       height: 1,
     },
-    shadowOpacity:  0.16,
+    shadowOpacity: 0.16,
     shadowRadius: 1.51,
-    elevation: 1
+    elevation: 1,
   },
 });

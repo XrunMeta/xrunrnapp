@@ -1,6 +1,6 @@
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
-import { getFontFam } from '../../../utils';
+import {getFontFam} from '../../../utils';
 
 const CustomCheckbox = ({text, isDisable = false}) => {
   const [isChecked, setIsChecked] = useState(true);

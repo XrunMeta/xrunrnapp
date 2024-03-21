@@ -1,6 +1,6 @@
 import {Text, StyleSheet, Pressable, Image} from 'react-native';
 import React from 'react';
-import { getFontFam } from '../../../utils';
+import {getFontFam} from '../../../utils';
 
 const CustomListItem = ({onPress, text, image}) => {
   return (

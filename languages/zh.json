@@ -72,7 +72,13 @@
       "placeholder": "输入您的新密码"
     },
     "phone_number": {
-      "label": "电话号码"
+      "label": "电话号码",
+      "disabled": "已禁用",
+      "disabledDesc": "电话号码在验证后无法更改",
+      "auth": "认证",
+      "unverified": "未验证",
+      "verified": "已验证",
+      "verify": "验证"
     },
     "area": {
       "label": "地区",
@@ -103,7 +109,8 @@
       "emptyPhone": "电话号码为必填项",
       "emptyArea": "必须填写地区",
       "invalidRecommend": "请验证推荐邮箱",
-      "errorServer": "服务器通讯错误。请重试..."
+      "errorServer": "服务器通信出现错误。请重试...",
+      "invalidPhone": "请先验证您的电话号码"
     }
   },
 

@@ -72,7 +72,13 @@
       "placeholder": "Masukan kata sandi baru anda"
     },
     "phone_number": {
-      "label": "Nomor Telepon"
+      "label": "Nomor Telepon",
+      "disabled": "Nonaktifkan",
+      "disabledDesc": "Nomor telepon tidak dapat diubah setelah diverifikasi",
+      "auth": "Autentikasi",
+      "unverified": "Belum Diverifikasi",
+      "verified": "Terverifikasi",
+      "verify": "Verifikasi"
     },
     "area": {
       "label": "Daerah",
@@ -103,7 +109,8 @@
       "emptyPhone": "Nomor telepon harus diisi",
       "emptyArea": "Daerah harus diisi",
       "invalidRecommend": "Harap verifikasi email yang direkomendasikan",
-      "errorServer": "Ada kesalahan komunikasi server. Silakan coba lagi..."
+      "errorServer": "Ada kesalahan komunikasi dengan server. Silakan coba lagi...",
+      "invalidPhone": "Silakan verifikasi nomor telepon Anda terlebih dahulu"
     }
   },
 

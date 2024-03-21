@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   TextInput,
   ActivityIndicator,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
@@ -143,7 +143,8 @@ const CloseMembershipScreen = () => {
               {lang && lang.screen_setting
                 ? lang.screen_setting.close.desc.clo1 + ' '
                 : ''}
-              <Text style={{color: '#ffc404', fontFamily: getFontFam() + 'Medium'}}>
+              <Text
+                style={{color: '#ffc404', fontFamily: getFontFam() + 'Medium'}}>
                 {lang && lang.screen_setting
                   ? lang.screen_setting.close.desc.clo2
                   : ''}

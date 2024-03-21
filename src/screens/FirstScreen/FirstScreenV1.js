@@ -11,7 +11,7 @@ import Logo from '../../../assets/images/logoMain_XRUN.png';
 import CustomButton from '../../components/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import CustomCheckbox from '../../components/CustomCheckbox';
-import { getFontFam } from '../../../utils';
+import {getFontFam} from '../../../utils';
 
 const FirstScreen = () => {
   const {height} = useWindowDimensions();

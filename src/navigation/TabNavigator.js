@@ -1,6 +1,6 @@
 import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import IconGroup from '../components/IconGroup';
-import { getFontFam } from '../../utils';
+import {getFontFam} from '../../utils';
 
 // Daftar nama ikon
 const iconNames = [

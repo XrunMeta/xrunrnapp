@@ -64,7 +64,11 @@ const SuccessCloseMembership = () => {
         <Text
           style={[
             styles.normalText,
-            {textAlign: 'center', fontFamily: getFontFam() + 'Bold', fontSize: 16},
+            {
+              textAlign: 'center',
+              fontFamily: getFontFam() + 'Bold',
+              fontSize: 16,
+            },
           ]}>
           {lang &&
           lang.screen_setting &&

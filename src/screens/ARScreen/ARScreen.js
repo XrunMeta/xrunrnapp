@@ -10,7 +10,7 @@ import {
   Text,
   Dimensions,
   PermissionsAndroid,
-  Platform
+  Platform,
 } from 'react-native';
 import {Camera, useCameraDevice} from 'react-native-vision-camera';
 import Animated, {
@@ -53,37 +53,24 @@ function ARScreen() {
 
   // const getCamPermission = async () => {
   //   try {
-  //     if (Platform.OS === 'android') {
-  //       const granted = await PermissionsAndroid.request(
-  //         PermissionsAndroid.PERMISSIONS.CAMERA,
-  //         // {
-  //         //   title: 'Camera Permission',
-  //         //   message:
-  //         //     'XRUN needs access to your camera ' +
-  //         //     'so you can enjoy AR and Catch the Coin!',
-  //         //   buttonPositive: 'OK',
-  //         //   buttonNegative: 'Cancel',
-  //         // },
-  //       );
-  
-  //       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-  //         setCameraReady(true);
-  //         setCameraPermission('granted');
-  //         console.log('Kamera android diizinin');
-  //       } else {
-  //         console.log('Kamera android ga diizinin');
-  //         Linking.openSettings();
-  //       }
-  //     } else if (Platform.OS === 'ios') {
-  //       const permissionStatus = await check(PERMISSIONS.IOS.CAMERA);
-  //       if (permissionStatus === RESULTS.GRANTED) {
-  //         setCameraReady(true);
-  //         setCameraPermission('granted');
-  //         console.log('Kamera ios diizinin');
-  //       } else {
-  //         console.log('Kamera ios ga diizinin');
-  //         Linking.openSettings();
-  //       }
+  //     const granted = await PermissionsAndroid.request(
+  //       PermissionsAndroid.PERMISSIONS.CAMERA,
+  //       // {
+  //       //   title: 'Camera Permission',
+  //       //   message:
+  //       //     'XRUN needs access to your camera ' +
+  //       //     'so you can enjoy AR and Catch the Coin!',
+  //       //   buttonPositive: 'OK',
+  //       //   buttonNegative: 'Cancel',
+  //       // },
+  //     );
+
+  //     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+  //       setCameraReady(true);
+  //       setCameraPermission('granted');
+  //     } else {
+  //       console.log('Kamera ga diizinin');
+  //       Linking.openSettings();
   //     }
   //   } catch (error) {
   //     console.error(error);
@@ -98,7 +85,6 @@ function ARScreen() {
       } else if (Platform.OS === 'ios') {
         permission = PERMISSIONS.IOS.CAMERA;
       }
-  
       const result = await request(permission);
       if (result === RESULTS.GRANTED) {
         console.log('Camera permission granted');
@@ -383,7 +369,6 @@ function ARScreen() {
       isActive: true,
       lowLightBoost: false,
     };
-  
     if (Platform.OS === 'android') {
       return (
         <Camera

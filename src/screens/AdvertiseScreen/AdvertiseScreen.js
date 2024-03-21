@@ -685,7 +685,9 @@ const AdvertiseScreen = () => {
         <Text
           style={{
             color: focused ? 'black' : 'grey',
-            fontFamily: focused ? getFontFam() + 'Medium' : getFontFam() + 'Regular',
+            fontFamily: focused
+              ? getFontFam() + 'Medium'
+              : getFontFam() + 'Regular',
             fontSize: 13,
             textAlign: 'center',
           }}>

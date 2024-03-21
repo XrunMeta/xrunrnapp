@@ -7,7 +7,7 @@ import {
   Image,
 } from 'react-native';
 import React, {useState} from 'react';
-import { getFontFam } from '../../../utils';
+import {getFontFam} from '../../../utils';
 
 const CustomInput = ({
   label,

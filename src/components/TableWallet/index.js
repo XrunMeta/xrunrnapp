@@ -70,7 +70,7 @@ const TotalHistory = ({
 }) => {
   useEffect(() => {
     setTimeout(() => {
-      if(setLoadingTransaction !== undefined) {
+      if (setLoadingTransaction !== undefined) {
         setLoadingTransaction(false);
       }
     }, 1000);
@@ -253,7 +253,7 @@ const TransferHistory = ({
 }) => {
   useEffect(() => {
     setTimeout(() => {
-       if(setLoadingTransaction !== undefined) {
+      if (setLoadingTransaction !== undefined) {
         setLoadingTransaction(false);
       }
     }, 1000);
@@ -399,7 +399,7 @@ const ReceivedDetails = ({
 }) => {
   useEffect(() => {
     setTimeout(() => {
-       if(setLoadingTransaction !== undefined) {
+      if (setLoadingTransaction !== undefined) {
         setLoadingTransaction(false);
       }
     }, 1000);
@@ -582,7 +582,7 @@ const TransitionHistory = ({
 }) => {
   useEffect(() => {
     setTimeout(() => {
-       if(setLoadingTransaction !== undefined) {
+      if (setLoadingTransaction !== undefined) {
         setLoadingTransaction(false);
       }
     }, 1000);

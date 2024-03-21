@@ -1,6 +1,6 @@
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import React, {useState} from 'react';
-import { getFontFam } from '../../../utils';
+import {getFontFam} from '../../../utils';
 
 const CustomMultipleChecbox = ({
   texts,

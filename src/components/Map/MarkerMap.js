@@ -1,7 +1,7 @@
 import React from 'react';
 import {Image, Text, View} from 'react-native';
 import {Marker, Callout} from 'react-native-maps';
-import { getFontFam } from '../../../utils';
+import {getFontFam} from '../../../utils';
 
 const MarkerMap = ({item, onClick, currentRange, lang, logoMarker}) => {
   const handleMarkerClick = () => {

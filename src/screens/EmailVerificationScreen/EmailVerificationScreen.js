@@ -85,7 +85,7 @@ const EmailVerificationScreen = () => {
     navigation.navigate('SignPassword', {
       mobile: mobile,
     });
-    setModalVisible(false)
+    setModalVisible(false);
   };
 
   const onSignIn = async () => {

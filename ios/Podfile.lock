@@ -982,6 +982,8 @@ PODS:
     - React-Core
   - react-native-geolocation-service (5.3.1):
     - React
+  - react-native-get-random-values (1.11.0):
+    - React-Core
   - react-native-google-maps (1.11.3):
     - Google-Maps-iOS-Utils (= 4.2.2)
     - GoogleMaps (= 7.4.0)
@@ -1167,7 +1169,7 @@ PODS:
     - React-perflogger (= 0.73.3)
   - rn-fetch-blob (0.12.0):
     - React-Core
-  - RNCAsyncStorage (1.22.3):
+  - RNCAsyncStorage (1.23.1):
     - React-Core
   - RNCClipboard (1.13.2):
     - React-Core
@@ -1181,7 +1183,7 @@ PODS:
     - React-Core
   - RNPermissions (4.1.4):
     - React-Core
-  - RNReanimated (3.8.0):
+  - RNReanimated (3.8.1):
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
@@ -1193,8 +1195,6 @@ PODS:
   - RNSensors (7.3.6):
     - React-Core
   - RNShare (10.0.2):
-    - React-Core
-  - RNSVG (13.14.0):
     - React-Core
   - RNVectorIcons (10.0.3):
     - glog
@@ -1264,6 +1264,7 @@ DEPENDENCIES:
   - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-compass-heading (from `../node_modules/react-native-compass-heading`)
   - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
+  - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
   - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
@@ -1301,7 +1302,6 @@ DEPENDENCIES:
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSensors (from `../node_modules/react-native-sensors`)
   - RNShare (from `../node_modules/react-native-share`)
-  - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - VisionCamera (from `../node_modules/react-native-vision-camera`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -1388,6 +1388,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-compass-heading"
   react-native-geolocation-service:
     :path: "../node_modules/react-native-geolocation-service"
+  react-native-get-random-values:
+    :path: "../node_modules/react-native-get-random-values"
   react-native-google-maps:
     :path: "../node_modules/react-native-maps"
   react-native-maps:
@@ -1462,8 +1464,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-sensors"
   RNShare:
     :path: "../node_modules/react-native-share"
-  RNSVG:
-    :path: "../node_modules/react-native-svg"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   VisionCamera:
@@ -1517,6 +1517,7 @@ SPEC CHECKSUMS:
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
   react-native-compass-heading: 1b4403d1c99dfd8311073ca8fc52bfc8e365cfac
   react-native-geolocation-service: 608e1da71a1ac31b4de64d9ef2815f697978c55b
+  react-native-get-random-values: 21325b2244dfa6b58878f51f9aa42821e7ba3d06
   react-native-google-maps: b80d3947411fcf462ec420c3e6122b7fa24beb9a
   react-native-maps: 79610ffcd0ec2ca8e0cefb48aa8ae7c62a75d7cc
   react-native-pager-view: d81ab2060b9caf57ca8c3a0d57467ff407cdb825
@@ -1543,18 +1544,17 @@ SPEC CHECKSUMS:
   React-utils: b22b4a51aa578b3aac1e7c19501c0b9ba358ed79
   ReactCommon: e708b8be8cb317b83e31c6ccfeda8bf6c0d1a2b3
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
-  RNCAsyncStorage: 10591b9e0a91eaffee14e69b3721009759235125
+  RNCAsyncStorage: 826b603ae9c0f88b5ac4e956801f755109fa4d5c
   RNCClipboard: 60fed4b71560d7bfe40e9d35dea9762b024da86d
   RNCPicker: b18aaf30df596e9b1738e7c1f9ee55402a229dca
   RNExitApp: 00036cabe7bacbb413d276d5520bf74ba39afa6a
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNLocalize: 4222a3756cdbe2dc9a5bdf445765a4d2572107cb
   RNPermissions: ae1dee3a89314e848f07ca021e1a3d5c4cb5d0a9
-  RNReanimated: a860676006d1c208811987c2a0f8eb21b8823fb6
+  RNReanimated: 3e23d4be380e295e504b7b3b3a357df60e1168a2
   RNScreens: b582cb834dc4133307562e930e8fa914b8c04ef2
   RNSensors: 117ba71c7eeeea0407ea0c0bb79e3495d602049b
   RNShare: 859ff710211285676b0bcedd156c12437ea1d564
-  RNSVG: d00c8f91c3cbf6d476451313a18f04d220d4f396
   RNVectorIcons: 210f910e834e3485af40693ad4615c1ec22fc02b
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   VisionCamera: 52f98e7628f9deea3e311c3b6d4870bb44445e05
