@@ -16,8 +16,9 @@ import {
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2} from '../../../utils';
-import crashlytics from '@react-native-firebase/crashlytics';
+import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+import RNFetchBlob from 'rn-fetch-blob';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 const NotifyScreen = () => {
   const [lang, setLang] = useState({});
@@ -29,6 +30,7 @@ const NotifyScreen = () => {
   const [loading, setLoading] = useState(true);
   const [isDelete, setIsDelete] = useState(false);
   const scrollViewRef = useRef();
+  const [imageUris, setImageUris] = useState([]);
 
   useEffect(() => {
     // Get Language
@@ -226,6 +228,40 @@ const NotifyScreen = () => {
     }
   };
 
+  // Fungsi untuk menyimpan blob sebagai gambar ke cache
+  // const saveBlobAsImage = async (blob, filename) => {
+  //   try {
+  //     const path = `${RNFetchBlob.fs.dirs.CacheDir}/${filename}`;
+  //     await RNFetchBlob.fs.writeFile(path, blob, 'base64');
+  //     return path;
+  //   } catch (error) {
+  //     console.error('Error saving blob as image:', error);
+  //     throw error;
+  //   }
+  // };
+  const saveBlobAsImage = async (blob, filename) => {
+    const path = `${RNFetchBlob.fs.dirs.CacheDir}/${filename}`;
+    await RNFetchBlob.fs.writeFile(path, blob, 'base64');
+    return path;
+  };
+
+  useEffect(() => {
+    const fetchAndDisplayImages = async () => {
+      try {
+        const imagePaths = await Promise.all(
+          notify.map(async (item) => {
+            return await saveBlobAsImage(item.image, `${item.board}.png`);
+          })
+        );
+        setImageUris(imagePaths);
+      } catch (error) {
+        console.error('Error saving blobs as images on Notify Screen:', error);
+      }
+    };
+
+    fetchAndDisplayImages();
+  }, [notify]);
+
   return (
     <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
       {/* Title */}
@@ -276,7 +312,7 @@ const NotifyScreen = () => {
             <Text
               style={{
                 color: '#ffdc04',
-                fontFamily: 'Roboto-Medium',
+                fontFamily: getFontFam() + 'Medium',
                 fontSize: 16,
               }}>
               {isDelete
@@ -303,7 +339,7 @@ const NotifyScreen = () => {
             <Text
               style={{
                 color: 'grey',
-                fontFamily: 'Roboto-Regular',
+                fontFamily: getFontFam() + 'Regular',
                 fontSize: 13,
               }}>
               {lang && lang.screen_notify && lang.screen_notify.loader
@@ -328,21 +364,25 @@ const NotifyScreen = () => {
 
                   if (!inThisDay) {
                     return (
-                      <Text
-                        style={{
-                          color: 'white',
-                          fontFamily: 'Roboto-Regular',
-                          fontSize: 11,
-                          backgroundColor: '#89919d73',
-                          borderRadius: 115,
-                          alignSelf: 'center',
-                          paddingTop: 3,
-                          paddingBottom: 1,
-                          paddingHorizontal: 8,
-                          marginBottom: 8,
+                      <View style={{
+                        backgroundColor: '#89919d73',
+                        borderRadius: 115,
+                        paddingTop: 3,
+                        paddingBottom: 3,
+                        paddingHorizontal: 8,
+                        marginBottom: 8,
+                        alignItems: 'center',
+                        alignSelf: 'center'
                         }}>
-                        {formatDate(new Date(item.datetime).toISOString())}
-                      </Text>
+                        <Text
+                          style={{
+                            color: 'white',
+                            fontFamily: getFontFam() + 'Regular',
+                            fontSize: 11,
+                          }}>
+                          {formatDate(new Date(item.datetime).toISOString())}
+                        </Text>
+                      </View>
                     );
                   }
                 })()}
@@ -380,11 +420,13 @@ const NotifyScreen = () => {
                     </View>
                   )}
                   <View style={styles.chatBubble}>
+                  {/* {console.log("Nama Imagenya : " , imageUris[idx] + ' -> ' + item.board + ' - ' + idx)} */}
                     {item.image !== null && (
                       <Image
                         source={{
-                          uri: `data:image/jpeg;base64,${item.image}`,
+                          uri: `data:image/jpeg;base64,${item.image.replace(/(\r\n|\n|\r)/gm, '')}`,
                         }}
+                        // source={require('../../../assets/images/logo_xrun.png')}
                         style={{
                           height: 150,
                           width: 'auto',
@@ -393,6 +435,18 @@ const NotifyScreen = () => {
                         }}
                       />
                     )}
+                    {/* {item.image !== null && (
+                      <Image
+                        source={{ uri: `file://${imageUris[idx]}` }}
+                        style={{
+                          height: 150,
+                          width: 'auto',
+                          marginBottom: 15,
+                          borderRadius: 6,
+                        }}
+                        onError={err => console.log('Error Cuy : ', err)}
+                      />
+                    )} */}
                     <Text style={styles.chatText}>{item.title}</Text>
                     {item.contents !== null && item.type != 9303 && (
                       <View>
@@ -475,7 +529,7 @@ const NotifyScreen = () => {
                             }}>
                             <Text
                               style={{
-                                fontFamily: 'Roboto-Medium',
+                                fontFamily: getFontFam() + 'Medium',
                                 fontSize: 13,
                                 color: 'white',
                               }}>
@@ -493,6 +547,7 @@ const NotifyScreen = () => {
                                   ? lang.screen_notify.visit
                                   : ''
                                 : ''}
+                                {' -> ' + item.board + ' - ' + idx}
                             </Text>
                           </TouchableOpacity>
                         )}
@@ -580,13 +635,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
   },
   normalText: {
     color: 'grey',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 13,
   },
   collapseWrapper: {
@@ -620,11 +675,11 @@ const styles = StyleSheet.create({
     borderColor: '#e1e1e1',
     borderRadius: 10,
     paddingHorizontal: 15,
+    paddingTop: 11,
     marginRight: 10,
     color: 'black',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 13,
-    paddingBottom: 10,
   },
   sendButton: {
     backgroundColor: '#051C60',
@@ -635,7 +690,7 @@ const styles = StyleSheet.create({
   },
   sendButtonText: {
     color: 'white',
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: 13,
     marginBottom: 5,
     marginTop: 3,
@@ -660,12 +715,12 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start', // Left Bubble Chat
   },
   chatText: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 13,
     color: 'black',
   },
   timestampText: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 11,
     color: 'grey',
     marginTop: 5,

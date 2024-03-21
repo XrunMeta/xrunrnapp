@@ -11,8 +11,8 @@ import {
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2} from '../../../utils';
-import crashlytics from '@react-native-firebase/crashlytics';
+import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 const CommonProblemScreen = () => {
   const [lang, setLang] = useState({});
@@ -119,7 +119,7 @@ const CommonProblemScreen = () => {
                 <Text
                   onPress={() => toggleDescription(item.board)}
                   style={{
-                    fontFamily: 'Roboto-Regular',
+                    fontFamily: getFontFam() + 'Regular',
                     fontSize: 13,
                     color: 'black',
                     paddingVertical: 18,
@@ -158,13 +158,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
   },
   normalText: {
     color: 'grey',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 13,
   },
   collapseWrapper: {

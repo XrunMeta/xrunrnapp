@@ -3,8 +3,8 @@ import {StyleSheet, Text, View, ScrollView, SafeAreaView} from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import * as RNLocalize from 'react-native-localize';
-import {URL_API, getLanguage2} from '../../../utils';
-import crashlytics from '@react-native-firebase/crashlytics';
+import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 const ClauseForPersonal = () => {
   const [text, setText] = useState('');
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     color: '#051C60',
     margin: 10,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
   }),
   scrollView: {
     flex: 1,
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   text: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 13,
     paddingVertical: 20,
     color: 'grey',

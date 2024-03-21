@@ -19,8 +19,8 @@ import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import jsonData from '../../../testAds';
-import {URL_API, getLanguage2} from '../../../utils';
-import crashlytics from '@react-native-firebase/crashlytics';
+import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 const AdvertiseScreen = () => {
   const [lang, setLang] = useState({});
@@ -433,7 +433,7 @@ const AdvertiseScreen = () => {
           <Text
             style={{
               color: 'black',
-              fontFamily: 'Roboto-Regular',
+              fontFamily: getFontFam() + 'Regular',
               fontSize: 13,
             }}>
             {lang && lang.screen_advertise && lang.screen_advertise.total
@@ -456,7 +456,7 @@ const AdvertiseScreen = () => {
             <Text
               style={{
                 color: 'black',
-                fontFamily: 'Roboto-Regular',
+                fontFamily: getFontFam() + 'Regular',
                 fontSize: 13,
                 marginBottom: -2,
               }}>
@@ -513,7 +513,7 @@ const AdvertiseScreen = () => {
                 <Text
                   style={{
                     color: 'white',
-                    fontFamily: 'Roboto-Medium',
+                    fontFamily: getFontFam() + 'Medium',
                     textAlign: 'center',
                   }}>
                   {lang && lang.screen_advertise && lang.screen_advertise.delete
@@ -685,7 +685,7 @@ const AdvertiseScreen = () => {
         <Text
           style={{
             color: focused ? 'black' : 'grey',
-            fontFamily: focused ? 'Roboto-Medium' : 'Roboto-Regular',
+            fontFamily: focused ? getFontFam() + 'Medium' : getFontFam() + 'Regular',
             fontSize: 13,
             textAlign: 'center',
           }}>
@@ -757,7 +757,7 @@ const AdvertiseScreen = () => {
                 style={{
                   // color: '#ffdc04',
                   color: 'orange',
-                  fontFamily: 'Roboto-Medium',
+                  fontFamily: getFontFam() + 'Medium',
                   fontSize: 13,
                 }}>
                 {isDelete
@@ -816,14 +816,14 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
     marginLeft: -10,
   },
   normalText: {
     color: 'black',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 13,
   },
   loadingContainer: {
@@ -833,13 +833,13 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   smallText: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 11,
     color: 'grey',
     paddingTop: 7,
   },
   mediumText: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: 16,
     color: 'black',
   },
@@ -863,12 +863,12 @@ const styles = StyleSheet.create({
   },
   listBigText: {
     color: 'grey',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 20,
   },
   listNormalText: {
     color: 'grey',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 13,
     marginBottom: -3,
   },
@@ -879,7 +879,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     color: 'grey',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 13,
   },
   checkbox: {

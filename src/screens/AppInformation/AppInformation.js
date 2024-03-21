@@ -3,8 +3,8 @@ import React, {useEffect, useState} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2} from '../../../utils';
-import crashlytics from '@react-native-firebase/crashlytics';
+import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 const AppInformation = () => {
   const [version, setVersion] = useState('');
@@ -74,7 +74,7 @@ const AppInformation = () => {
         }}>
         <Text
           style={{
-            fontFamily: 'Roboto-Regular',
+            fontFamily: getFontFam() + 'Regular',
             fontSize: 13,
             color: 'grey',
             paddingVertical: 20,
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
   },

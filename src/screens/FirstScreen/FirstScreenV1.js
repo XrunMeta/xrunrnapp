@@ -11,6 +11,7 @@ import Logo from '../../../assets/images/logoMain_XRUN.png';
 import CustomButton from '../../components/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import CustomCheckbox from '../../components/CustomCheckbox';
+import { getFontFam } from '../../../utils';
 
 const FirstScreen = () => {
   const {height} = useWindowDimensions();
@@ -54,7 +55,7 @@ const FirstScreen = () => {
                   fontWeight: '500',
                   color: '#343a59',
                   fontSize: 16,
-                  fontFamily: 'Roboto-Medium',
+                  fontFamily: getFontFam() + 'Medium',
                 }}>
                 RESET PASSWORD
               </Text>
@@ -104,7 +105,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: '500',
     color: '#343a59',
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     marginTop: 10,
     marginBottom: 30,
   },

@@ -19,8 +19,8 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import CustomMultipleChecbox from '../../components/CustomCheckbox/CustomMultipleCheckbox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2} from '../../../utils';
-// import crashlytics from '@react-native-firebase/crashlytics';
+import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+// // import crashlytics from '@react-native-firebase/crashlytics';
 
 const ModifInfoScreen = ({route}) => {
   const [lang, setLang] = useState({});
@@ -289,7 +289,7 @@ const ModifInfoScreen = ({route}) => {
           <Text
             style={{
               color: 'white',
-              fontFamily: 'Roboto-Regular',
+              fontFamily: getFontFam() + 'Regular',
               fontSize: 13,
             }}>
             {lang && lang.screen_modify_information
@@ -369,7 +369,7 @@ const ModifInfoScreen = ({route}) => {
                     }}>
                     <Text
                       style={{
-                        fontFamily: 'Roboto-Medium',
+                        fontFamily: getFontFam() + 'Medium',
                         fontSize: 13,
                         marginBottom: -10,
                         color: '#343a59',
@@ -394,7 +394,7 @@ const ModifInfoScreen = ({route}) => {
                       style={{
                         height: 40,
                         paddingBottom: -10,
-                        fontFamily: 'Roboto-Medium',
+                        fontFamily: getFontFam() + 'Medium',
                         fontSize: 13,
                         color: '#343a59',
                         borderBottomColor: '#cccccc',
@@ -456,7 +456,7 @@ const ModifInfoScreen = ({route}) => {
                     }}>
                     <Text
                       style={{
-                        fontFamily: 'Roboto-Medium',
+                        fontFamily: getFontFam() + 'Medium',
                         fontSize: 13,
                         marginBottom: -10,
                         color: '#343a59',
@@ -481,7 +481,7 @@ const ModifInfoScreen = ({route}) => {
                       style={{
                         height: 40,
                         paddingBottom: -10,
-                        fontFamily: 'Roboto-Medium',
+                        fontFamily: getFontFam() + 'Medium',
                         fontSize: 13,
                         color: '#343a59',
                         borderBottomColor: '#cccccc',
@@ -528,7 +528,7 @@ const ModifInfoScreen = ({route}) => {
                     }}>
                     <Text
                       style={{
-                        fontFamily: 'Roboto-Medium',
+                        fontFamily: getFontFam() + 'Medium',
                         fontSize: 13,
                         marginBottom: -10,
                         color: '#343a59',
@@ -546,7 +546,7 @@ const ModifInfoScreen = ({route}) => {
                       style={{
                         height: 40,
                         paddingBottom: -10,
-                        fontFamily: 'Roboto-Medium',
+                        fontFamily: getFontFam() + 'Medium',
                         fontSize: 13,
                         color: '#343a59',
                         borderBottomColor: '#cccccc',
@@ -599,7 +599,7 @@ const ModifInfoScreen = ({route}) => {
                     />
                     <Text
                       style={{
-                        fontFamily: 'Roboto-Medium',
+                        fontFamily: getFontFam() + 'Medium',
                         fontSize: 13,
                         color: '#a8a8a7',
                         alignSelf: 'center',
@@ -623,7 +623,7 @@ const ModifInfoScreen = ({route}) => {
                 style={{width: '100%', paddingHorizontal: 25, marginTop: 30}}>
                 <Text
                   style={{
-                    fontFamily: 'Roboto-Medium',
+                    fontFamily: getFontFam() + 'Medium',
                     fontSize: 13,
                     marginBottom: -10,
                     color: '#343a59',
@@ -647,7 +647,7 @@ const ModifInfoScreen = ({route}) => {
                     ]}>
                     <Text
                       style={{
-                        fontFamily: 'Roboto-Medium',
+                        fontFamily: getFontFam() + 'Medium',
                         fontSize: 13,
                         color: '#343a59',
                         paddingRight: 30,
@@ -662,7 +662,7 @@ const ModifInfoScreen = ({route}) => {
                       <Text
                         style={{
                           color: '#ffc404',
-                          fontFamily: 'Roboto-Medium',
+                          fontFamily: getFontFam() + 'Medium',
                         }}>
                         {password}
                       </Text>
@@ -929,7 +929,7 @@ const ModifInfoScreen = ({route}) => {
                       }}>
                       <Text
                         style={{
-                          fontFamily: 'Roboto-Medium',
+                          fontFamily: getFontFam() + 'Medium',
                           fontSize: 13,
                           marginBottom: -10,
                           color: '#343a59',
@@ -953,7 +953,7 @@ const ModifInfoScreen = ({route}) => {
                           ]}>
                           <Text
                             style={{
-                              fontFamily: 'Roboto-Medium',
+                              fontFamily: getFontFam() + 'Medium',
                               fontSize: 13,
                               color: '#343a59',
                               paddingRight: 30,
@@ -973,7 +973,7 @@ const ModifInfoScreen = ({route}) => {
                       }}>
                       <Text
                         style={{
-                          fontFamily: 'Roboto-Medium',
+                          fontFamily: getFontFam() + 'Medium',
                           fontSize: 13,
                           marginBottom: -10,
                           color: '#343a59',
@@ -997,7 +997,7 @@ const ModifInfoScreen = ({route}) => {
                           ]}>
                           <Text
                             style={{
-                              fontFamily: 'Roboto-Medium',
+                              fontFamily: getFontFam() + 'Medium',
                               fontSize: 13,
                               color: '#343a59',
                               paddingRight: 30,
@@ -1011,106 +1011,120 @@ const ModifInfoScreen = ({route}) => {
                         </View>
                       </TouchableOpacity>
                     </View>
+
+                    {/* Country Modal */}
+                    <Modal
+                      animationType="slide"
+                      transparent={true}
+                      visible={countryModalVisible}
+                      onRequestClose={() => {
+                        setModalCountryVisible(false);
+                      }}>
+                      <View style={styles.modalContainer}>
+                        <View style={styles.modalContent}>
+                          <FlatList
+                            data={countryData}
+                            keyExtractor={item => item.code}
+                            ListEmptyComponent={() => (
+                              <View style={{marginVertical: 20}}>
+                                <Text
+                                  style={[
+                                    styles.normalText,
+                                    {textAlign: 'center'},
+                                  ]}>
+                                  {lang &&
+                                  lang.screen_modify_information &&
+                                  lang.screen_modify_information.modal
+                                    ? lang.screen_modify_information.modal.empty
+                                    : ''}
+                                </Text>
+                              </View>
+                            )}
+                            renderItem={({item}) => (
+                              <TouchableOpacity
+                                style={styles.modalItem}
+                                onPress={() => onSelectCountry(item)}>
+                                <Text
+                                  style={[
+                                    styles.modalItemText,
+                                    {marginRight: 10},
+                                  ]}>
+                                  +{item.callnumber}
+                                </Text>
+                                <Text style={styles.modalItemText}>
+                                  {item.country}
+                                </Text>
+                              </TouchableOpacity>
+                            )}
+                          />
+                          <TouchableOpacity
+                            style={styles.closeButton}
+                            onPress={() => setCountryModalVisible(false)}>
+                            <Text style={styles.closeButtonText}>
+                              {lang && lang.screen_modify_information
+                                ? lang.screen_modify_information.close
+                                : ''}
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    </Modal>
+
+                    {/* Area Modal */}
+                    <Modal
+                      animationType="slide"
+                      transparent={true}
+                      visible={areaModalVisible}
+                      onRequestClose={() => {
+                        setModalAreaVisible(false);
+                      }}>
+                      <View style={styles.modalContainer}>
+                        <View style={styles.modalContent}>
+                          <FlatList
+                            data={regionData}
+                            keyExtractor={item => item.subcode}
+                            ListEmptyComponent={() => (
+                              <View style={{marginVertical: 20}}>
+                                <Text
+                                  style={[
+                                    styles.normalText,
+                                    {textAlign: 'center'},
+                                  ]}>
+                                  {lang &&
+                                  lang.screen_modify_information &&
+                                  lang.screen_modify_information.modal
+                                    ? lang.screen_modify_information.modal.empty
+                                    : ''}
+                                </Text>
+                              </View>
+                            )}
+                            renderItem={({item}) => (
+                              <TouchableOpacity
+                                style={styles.modalItem}
+                                onPress={() => onSelectArea(item)}>
+                                <Text style={styles.modalItemText}>
+                                  {item.description}
+                                </Text>
+                              </TouchableOpacity>
+                            )}
+                          />
+                          <TouchableOpacity
+                            style={styles.closeButton}
+                            onPress={() => setAreaModalVisible(false)}>
+                            <Text style={styles.closeButtonText}>
+                              {lang && lang.screen_modify_information
+                                ? lang.screen_modify_information.close
+                                : ''}
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    </Modal>
                   </View>
                 }
               />
             </View>
           </ScrollView>
-
-          {/* Country Modal */}
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={countryModalVisible}
-            onRequestClose={() => {
-              setModalCountryVisible(false);
-            }}>
-            <View style={styles.modalContainer}>
-              <View style={styles.modalContent}>
-                <FlatList
-                  data={countryData}
-                  keyExtractor={item => item.code}
-                  ListEmptyComponent={() => (
-                    <View style={{marginVertical: 20}}>
-                      <Text style={[styles.normalText, {textAlign: 'center'}]}>
-                        {lang &&
-                        lang.screen_modify_information &&
-                        lang.screen_modify_information.modal
-                          ? lang.screen_modify_information.modal.empty
-                          : ''}
-                      </Text>
-                    </View>
-                  )}
-                  renderItem={({item}) => (
-                    <TouchableOpacity
-                      style={styles.modalItem}
-                      onPress={() => onSelectCountry(item)}>
-                      <Text style={[styles.modalItemText, {marginRight: 10}]}>
-                        +{item.callnumber}
-                      </Text>
-                      <Text style={styles.modalItemText}>{item.country}</Text>
-                    </TouchableOpacity>
-                  )}
-                />
-                <TouchableOpacity
-                  style={styles.closeButton}
-                  onPress={() => setCountryModalVisible(false)}>
-                  <Text style={styles.closeButtonText}>
-                    {lang && lang.screen_modify_information
-                      ? lang.screen_modify_information.close
-                      : ''}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
-
-          {/* Area Modal */}
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={areaModalVisible}
-            onRequestClose={() => {
-              setModalAreaVisible(false);
-            }}>
-            <View style={styles.modalContainer}>
-              <View style={styles.modalContent}>
-                <FlatList
-                  data={regionData}
-                  keyExtractor={item => item.subcode}
-                  ListEmptyComponent={() => (
-                    <View style={{marginVertical: 20}}>
-                      <Text style={[styles.normalText, {textAlign: 'center'}]}>
-                        {lang &&
-                        lang.screen_modify_information &&
-                        lang.screen_modify_information.modal
-                          ? lang.screen_modify_information.modal.empty
-                          : ''}
-                      </Text>
-                    </View>
-                  )}
-                  renderItem={({item}) => (
-                    <TouchableOpacity
-                      style={styles.modalItem}
-                      onPress={() => onSelectArea(item)}>
-                      <Text style={styles.modalItemText}>
-                        {item.description}
-                      </Text>
-                    </TouchableOpacity>
-                  )}
-                />
-                <TouchableOpacity
-                  style={styles.closeButton}
-                  onPress={() => setAreaModalVisible(false)}>
-                  <Text style={styles.closeButtonText}>
-                    {lang && lang.screen_modify_information
-                      ? lang.screen_modify_information.close
-                      : ''}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
         </View>
       )}
     </SafeAreaView>
@@ -1133,18 +1147,18 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   title: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
     fontSize: 22,
     color: '#343a59',
     margin: 10,
   },
   normalText: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 13,
     color: '#343a59',
   },
   label: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: 13,
     color: '#343a59',
     marginBottom: -5,
@@ -1160,7 +1174,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   input: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: 13,
     color: '#a8a8a7',
     borderBottomColor: '#cccccc',
@@ -1199,7 +1213,7 @@ const styles = StyleSheet.create({
   },
   modalItemText: {
     fontSize: 13,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     color: '#343a59',
   },
   closeButton: {
@@ -1212,7 +1226,7 @@ const styles = StyleSheet.create({
   closeButtonText: {
     color: 'white',
     fontSize: 13,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
   },
 });
 

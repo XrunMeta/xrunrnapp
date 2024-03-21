@@ -15,8 +15,9 @@ import ButtonBack from '../../components/ButtonBack/';
 import {useNavigation} from '@react-navigation/native';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2} from '../../../utils';
-import crashlytics from '@react-native-firebase/crashlytics';
+import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+import * as RNLocalize from 'react-native-localize';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 const SignInScreen = () => {
   const [lang, setLang] = useState({});
@@ -159,7 +160,7 @@ const SignInScreen = () => {
             alignSelf: 'flex-start',
             marginLeft: 25,
             color: 'red',
-            fontFamily: 'Roboto-Regular',
+            fontFamily: getFontFam() + 'Regular',
             fontSize: 13,
           }}>
           {lang && lang.screen_signin && lang.screen_signin.validator
@@ -245,12 +246,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
     fontSize: 22,
     color: '#343a59',
   },
   subTitle: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: 16,
     color: '#343a59',
     marginTop: -5,
@@ -267,12 +268,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   normalText: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 13,
     color: '#343a59',
   },
   emailAuth: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: 13,
     color: '#343a59',
   },

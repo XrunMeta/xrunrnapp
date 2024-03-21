@@ -9,12 +9,14 @@ import {
   Alert,
   ScrollView,
   TouchableOpacity,
+  SafeAreaView,
+  Platform
 } from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2} from '../../../utils';
-import crashlytics from '@react-native-firebase/crashlytics';
+import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 const RandomRecommendScreen = () => {
   const [lang, setLang] = useState({});
@@ -153,7 +155,7 @@ const RandomRecommendScreen = () => {
   };
 
   return (
-    <View style={[styles.root, {height: ScreenHeight}]}>
+    <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
       {/* Title */}
       <View style={{flexDirection: 'row'}}>
         <View style={{position: 'absolute', zIndex: 1}}>
@@ -208,7 +210,7 @@ const RandomRecommendScreen = () => {
                 <Text
                   onPress={() => checkBoxToggle(item.email, item.member)}
                   style={{
-                    fontFamily: 'Roboto-Regular',
+                    fontFamily: getFontFam() + 'Regular',
                     fontSize: 13,
                     color: 'black',
                     paddingVertical: 18,
@@ -232,7 +234,7 @@ const RandomRecommendScreen = () => {
           />
         </Pressable>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -252,7 +254,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
   },
@@ -260,7 +262,7 @@ const styles = StyleSheet.create({
     padding: 5,
     justifyContent: 'space-between',
     position: 'absolute',
-    bottom: 10,
+    bottom: 40,
     right: 10,
   },
   additionalLogin: {
@@ -280,14 +282,14 @@ const styles = StyleSheet.create({
     width: 80,
   },
   shadow: {
-    shadowColor: '#000000',
+    shadowColor: "#000000",
     shadowOffset: {
       width: 0,
       height: 1,
     },
-    shadowOpacity: 0.16,
+    shadowOpacity:  0.16,
     shadowRadius: 1.51,
-    elevation: 1,
+    elevation: 1
   },
   checkbox: {
     width: 20,
@@ -310,6 +312,7 @@ const styles = StyleSheet.create({
   checkMark: {
     color: 'white',
     fontSize: 13,
+    backgroundColor: Platform.OS === 'ios' ? '#fff' : 'transparent',
     fontWeight: 'bold',
     marginTop: -1,
   },

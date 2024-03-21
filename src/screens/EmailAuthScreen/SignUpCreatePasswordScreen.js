@@ -13,8 +13,8 @@ import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getLanguage2} from '../../../utils';
-import crashlytics from '@react-native-firebase/crashlytics';
+import {getLanguage2, getFontFam} from '../../../utils';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 const SignUpCreatePassword = () => {
   const [lang, setLang] = useState({});
@@ -87,52 +87,50 @@ const SignUpCreatePassword = () => {
   }, []);
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={[styles.root, {height: ScreenHeight}]}>
-        <ButtonBack onClick={onBack} />
+    <View style={[styles.root, {height: ScreenHeight}]}>
+      <ButtonBack onClick={onBack} />
 
-        {/*  Field - Password */}
-        <CustomInput
-          label={
-            lang && lang.screen_notExist.field_password
-              ? lang.screen_notExist.field_password.label
-              : ''
-          }
-          placeholder={
-            lang && lang.screen_notExist.field_password
-              ? lang.screen_notExist.field_password.placeholder
-              : ''
-          }
-          value={password}
-          setValue={onPasswordChange}
-          secureTextEntry
-          isPassword={true}
-        />
-        <Text
-          style={{
-            alignSelf: 'flex-start',
-            marginLeft: 25,
-            color: isPasswordValid ? 'black' : 'red',
-            fontFamily: 'Roboto-Regular',
-            fontSize: 11,
-            marginRight: 1,
-          }}>
-          {lang && lang.screen_notExist.field_password
-            ? lang.screen_notExist.field_password.validator
-            : ''}
-        </Text>
+      {/*  Field - Password */}
+      <CustomInput
+        label={
+          lang && lang.screen_notExist && lang.screen_notExist.field_password
+            ? lang.screen_notExist.field_password.label
+            : ''
+        }
+        placeholder={
+          lang && lang.screen_notExist && lang.screen_notExist.field_password
+            ? lang.screen_notExist.field_password.placeholder
+            : ''
+        }
+        value={password}
+        setValue={onPasswordChange}
+        secureTextEntry
+        isPassword={true}
+      />
+      <Text
+        style={{
+          alignSelf: 'flex-start',
+          marginLeft: 25,
+          color: isPasswordValid ? 'black' : 'red',
+          fontFamily: getFontFam() + 'Regular',
+          fontSize: 11,
+          marginRight: 1,
+        }}>
+        {lang && lang.screen_notExist && lang.screen_notExist.field_password
+          ? lang.screen_notExist.field_password.validator
+          : ''}
+      </Text>
 
-        <View style={[styles.bottomSection]}>
-          <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
-            <Image
-              source={require('../../../assets/images/icon_next.png')}
-              resizeMode="contain"
-              style={styles.buttonSignInImage}
-            />
-          </Pressable>
-        </View>
+      <View style={[styles.bottomSection]}>
+        <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
+          <Image
+            source={require('../../../assets/images/icon_next.png')}
+            resizeMode="contain"
+            style={styles.buttonSignInImage}
+          />
+        </Pressable>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 

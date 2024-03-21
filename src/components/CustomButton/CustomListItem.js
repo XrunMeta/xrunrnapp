@@ -1,5 +1,6 @@
 import {Text, StyleSheet, Pressable, Image} from 'react-native';
 import React from 'react';
+import { getFontFam } from '../../../utils';
 
 const CustomListItem = ({onPress, text, image}) => {
   return (
@@ -23,15 +24,16 @@ const styles = StyleSheet.create({
     shadowColor: '#969493',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 1,
     },
-    shadowOpacity: 1,
-    shadowRadius: 15,
+    shadowOpacity: 0.16,
+    shadowRadius: 1.51,
+    
     elevation: 1,
     marginVertical: 2,
   },
   mediumText: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: 13,
     color: '#343a59',
     alignSelf: 'center',

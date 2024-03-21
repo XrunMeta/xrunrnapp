@@ -494,12 +494,14 @@
     "failed_getwallet_alert": "지갑을 가져오기 위해 나중에 다시 시도하세요",
     "failed_alert": "실패",
     "failed_download_qrcode_alert": "QR 코드 다운로드 실패",
-    "see_more": "더보기"
+    "see_more": "더보기",
+    "able_transfer": "출금가능"
   },
   "screen_send": {
     "send_amount_label": "보낼 금액",
     "send_amount_placeholder": "보낼 금액을 입력하세요.",
     "send_address_label": "보낼 주소",
+    "send_availables_label": "Avaliables",
     "send_address_placeholder": "보낼 주소를 입력하세요.",
     "send_balance": "잔액 :",
     "send_stock_exchange_label": "주식 거래소",
@@ -508,7 +510,9 @@
     "send_address_less": "주소는 40자 이하로 입력하세요.",
     "send_enough_money": "현재 금액을 확인하고 지갑에 충분한 돈이 있는지 확인하세요 (전송 수수료 포함)",
     "send_verification_code": "인증 코드 전송 중",
-    "confirm_alert": "확인"
+    "confirm_alert": "확인",
+    "estimated_gas_fee": "예상 전송 비용",
+    "note": "请注意，您必须有以太坊才能转账，否则您可能会失去价值。"
   },
   "screen_complete_send": {
     "title": "이체 완료",
@@ -573,5 +577,10 @@
     "tab1": "보관된 광고",
     "tab2": "완료된 광고",
     "total": "합계"
+  },
+
+  "permissions_alert": {
+    "title_camera_permission": "카메라 권한",
+    "desc_camera_permission": "QR 코드 이미지를 스캔하려면 카메라에 액세스해야 합니다."
   }
 }

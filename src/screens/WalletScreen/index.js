@@ -5,42 +5,39 @@ import {
   TouchableOpacity,
   Image,
   Alert,
-  useWindowDimensions,
   ActivityIndicator,
   ScrollView,
   SafeAreaView,
+  Platform,
+  FlatList,
+  Dimensions,
 } from 'react-native';
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
 import Clipboard from '@react-native-clipboard/clipboard';
-import {TabView, SceneMap} from 'react-native-tab-view';
 import TableWalletCard from '../../components/TableWallet';
-import {URL_API, getLanguage2} from '../../../utils';
+import {URL_API, getLanguage2, getFontFam} from '../../../utils';
 import ShowQRWallet from '../../components/ShowQRWallet';
-import crashlytics from '@react-native-firebase/crashlytics';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 const WalletScreen = ({navigation, route}) => {
   const [lang, setLang] = useState('');
-  const layout = useWindowDimensions();
   const [member, setMember] = useState('');
   const [currentCurrency, setCurrentCurrency] = useState('1');
   const [dataWallet, setDataWallet] = useState({});
-  const [index, setIndex] = useState(0);
   const [cardsData, setCardsData] = useState([]);
-  const [routes, setRoutes] = useState([]);
+
   const [isLoading, setIsLoading] = useState(true);
-  const refLayout = useRef(null);
+  const [positionTextQRCode, setPositionTextQRCode] = useState(0);
 
   // State show text "QR Code"
   const [isShowTextQRCode, setIsShowTextQRCode] = useState(false);
-  const [positionVerticalDots, setPositionVerticalDots] = useState(0);
 
   // State for show QR
   const [isShowQRCodeWallet, setIsShowQRCodeWallet] = useState(false);
   const [cardDataQR, setCardDataQR] = useState([]);
 
-  // State for send to component TableWallet => Total history, transfer history, Received details, Transition history
   const [emptyWallet, setEmptyWallet] = useState(false);
 
   useEffect(() => {
@@ -77,60 +74,59 @@ const WalletScreen = ({navigation, route}) => {
     getMember();
   }, []);
 
-  useEffect(() => {
-    // Get data member
-    const getUserData = async () => {
-      try {
-        if (member !== '') {
-          // Get data wallet
-          fetch(`${URL_API}&act=app4000-01-rev&member=${member}`, {
+  // Get data member
+  const getUserData = async () => {
+    try {
+      if (member !== '') {
+        // Get data wallet
+        fetch(
+          `${URL_API}&act=app4000-01-rev-01&member=${member}&daysbefore=7`,
+          {
             method: 'POST',
+          },
+        )
+          .then(response => response.json())
+          .then(result => {
+            setCardsData(result.data);
+            setIsLoading(false);
           })
-            .then(response => response.json())
-            .then(result => {
-              setCardsData(result.data);
-              setIsLoading(false);
-              setRoutes(result.data.map(card => ({key: card.currency})));
-            })
-            .catch(error => {
-              Alert.alert(
-                '',
-                `${
-                  lang.screen_wallet.failed_getwallet_alert
-                    ? lang.screen_wallet.failed_getwallet_alert
-                    : ''
-                }`,
-                [
-                  {
-                    text: lang.screen_wallet.confirm_alert
-                      ? lang.screen_wallet.confirm_alert
-                      : '',
+          .catch(error => {
+            Alert.alert(
+              '',
+              `${
+                lang.screen_wallet.failed_getwallet_alert
+                  ? lang.screen_wallet.failed_getwallet_alert
+                  : ''
+              }`,
+              [
+                {
+                  text: lang.screen_wallet.confirm_alert
+                    ? lang.screen_wallet.confirm_alert
+                    : '',
+                  onPress: () => {
+                    setIsLoading(false);
                   },
-                ],
-              );
-              crashlytics().recordError(new Error(error));
-              crashlytics().log(error);
-              setIsLoading(false);
-            });
-        }
-      } catch (err) {
-        console.error('Failed to get userData from AsyncStorage:', err);
-        setIsLoading(false);
-        crashlytics().recordError(new Error(err));
-        crashlytics().log(err);
+                },
+              ],
+            );
+            crashlytics().recordError(new Error(error));
+            crashlytics().log(error);
+            setIsLoading(false);
+          });
       }
-    };
+    } catch (err) {
+      console.error('Failed to get userData from AsyncStorage:', err);
+      setIsLoading(false);
+      crashlytics().recordError(new Error(err));
+      crashlytics().log(err);
+    }
+  };
 
+  useEffect(() => {
     getUserData();
   }, [member]);
 
   useEffect(() => {
-    if (cardsData.length > 0 && refLayout.current) {
-      refLayout.current.measure((x, y, width, height, pageX, pageY) => {
-        setPositionVerticalDots(pageY);
-      });
-    }
-
     // Get data current currency/wallet
     const filterDataWallet = cardsData.filter(wallet => wallet.currency == 1);
     setDataWallet(filterDataWallet[0]);
@@ -164,27 +160,31 @@ const WalletScreen = ({navigation, route}) => {
     refreshBalance();
   }, [member]);
 
-  const renderScene = SceneMap(
-    Object.fromEntries(
-      cardsData.map(cardData => [
-        cardData.currency,
-        () => routeComponent(cardData, copiedHash, handleShowQR),
-      ]),
-    ),
-  );
+  // Refresh app4000-01-rev-01
+  useEffect(() => {
+    if (route.params !== undefined) {
+      if (
+        route.params.completeSend === 'true' ||
+        route.params.completeConversion === 'true'
+      ) {
+        getUserData();
+      }
+    }
+  }, [route]);
 
-  const routeComponent = (cardData, copiedHash, handleShowQR) => {
+  const routeComponent = ({item}) => {
     const {
+      limitTransfer,
       amount: tempAmount,
       Wamount: tempWamount,
       symbol,
       address,
       displaystr,
-      symbolimg,
+      symbolimg: tempSymbolimg,
       currency,
       Eamount,
       countrysymbol,
-    } = cardData;
+    } = item;
 
     const Wamount = parseFloat(tempWamount).toFixed(2);
     const amount = parseFloat(tempAmount).toFixed(2);
@@ -198,6 +198,8 @@ const WalletScreen = ({navigation, route}) => {
       MEMP: '#343b58',
     };
 
+    const symbolimg = tempSymbolimg.replace(/(\r\n|\n|\r)/gm, '');
+
     return (
       <View
         style={[styles.card, {backgroundColor: walletColors[symbol]}]}
@@ -208,7 +210,7 @@ const WalletScreen = ({navigation, route}) => {
             <TouchableOpacity
               style={styles.wrapperDots}
               activeOpacity={0.6}
-              onPress={() => handleShowQR(cardData)}>
+              onPress={event => handleShowQR(event, item)}>
               <View style={styles.dot}></View>
               <View style={styles.dot}></View>
               <View style={styles.dot}></View>
@@ -222,31 +224,45 @@ const WalletScreen = ({navigation, route}) => {
               {lang.screen_wallet.possess ? lang.screen_wallet.possess : ''}
             </Text>
             <Text style={[styles.valueWallet, {marginBottom: 3}]}>
-              {Wamount.replaceAll('.', ',')}
+              {Wamount}
             </Text>
             <Text style={styles.textWallet}>{symbol}</Text>
           </View>
+
+          {currency == 1 && (
+            <View style={styles.wrapperTextwallet}>
+              <Text style={styles.textWallet}>
+                {lang.screen_wallet.able_transfer
+                  ? lang.screen_wallet.able_transfer
+                  : ''}
+              </Text>
+              <Text style={styles.textWallet}>
+                {limitTransfer}
+                {symbol}
+              </Text>
+            </View>
+          )}
 
           <View style={styles.wrapperTextwallet}>
             <Text style={styles.textWallet}>
               {lang.screen_wallet.catch ? lang.screen_wallet.catch : ''}
             </Text>
             <Text style={[styles.valueWallet, {marginBottom: 2}]}>
-              {amount.replaceAll('.', ',')}
+              {amount}
             </Text>
             <Text style={styles.textWallet}>
               {symbol}{' '}
               {symbol === 'XRUN'
-                ? `≈${parseFloat(Eamount)
-                    .toString()
-                    .substring(0, 9)}${countrysymbol}`
+                ? `≈${Math.round(
+                    parseFloat(Eamount).toString().substring(0, 9),
+                  )}${countrysymbol}`
                 : ''}
             </Text>
           </View>
         </View>
 
         <View style={styles.wrapperPartBottom}>
-          <View style={styles.wrapperCopiedHash}>
+          <View style={styles.wrapperCopiedHash(currency)}>
             <View style={styles.wrapperHash}>
               <Text style={styles.hash}>
                 {address.substring(0, 10) +
@@ -262,15 +278,20 @@ const WalletScreen = ({navigation, route}) => {
           </View>
 
           <Image
-            source={{uri: `data:image/jpeg;base64,${symbolimg}`}}
-            style={styles.logo}
+            width={40}
+            height={40}
+            source={{
+              uri: `data:image/jpeg;base64,${symbolimg}`,
+            }}
+            style={styles.logo(currency)}
           />
         </View>
       </View>
     );
   };
 
-  const handleShowQR = cardData => {
+  const handleShowQR = (event, cardData) => {
+    setPositionTextQRCode(event.nativeEvent.pageY);
     setCardDataQR(cardData);
     setIsShowTextQRCode(true);
   };
@@ -308,7 +329,7 @@ const WalletScreen = ({navigation, route}) => {
           <Text
             style={{
               color: '#fff',
-              fontFamily: 'Roboto-Regular',
+              fontFamily: getFontFam() + 'Regular',
               fontSize: 13,
               marginTop: 10,
             }}>
@@ -333,16 +354,19 @@ const WalletScreen = ({navigation, route}) => {
           <ScrollView style={{flex: 1}}>
             <View style={styles.containerCard}>
               {emptyWallet || (
-                <TabView
-                  navigationState={{index, routes}}
-                  renderScene={renderScene}
-                  onIndexChange={index => {
-                    setIndex(index);
-                    setCurrentCurrency(routes[index].key);
+                <FlatList
+                  data={cardsData}
+                  renderItem={routeComponent}
+                  horizontal
+                  pagingEnabled
+                  showsHorizontalScrollIndicator={false}
+                  onMomentumScrollEnd={event => {
+                    const index = Math.round(
+                      event.nativeEvent.contentOffset.x /
+                        event.nativeEvent.layoutMeasurement.width,
+                    );
+                    setCurrentCurrency(cardsData[index].currency);
                   }}
-                  initialLayout={{width: layout.width}}
-                  renderTabBar={() => null}
-                  overScrollMode={'never'}
                 />
               )}
             </View>
@@ -361,12 +385,11 @@ const WalletScreen = ({navigation, route}) => {
         </View>
       </View>
 
-      {/* Show/Hide text "QR Code" */}
       {isShowTextQRCode && (
         <>
           <TouchableOpacity
             activeOpacity={0.9}
-            style={styles.showQRButton(positionVerticalDots)}
+            style={styles.showQRButton(positionTextQRCode)}
             onPress={() => {
               setIsShowTextQRCode(false);
               setIsShowQRCodeWallet(true);
@@ -403,7 +426,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f3f4f6',
   },
   containerCard: {
-    height: 220,
+    height: 230,
   },
   containerTable: {
     flex: 1,
@@ -419,7 +442,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
   },
@@ -429,8 +452,9 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 0,
     borderRadius: 8,
-    height: 175,
+    height: 190,
     zIndex: 5,
+    width: Dimensions.get('window').width - 58,
   },
   wrapperPartTop: {
     flexDirection: 'row',
@@ -438,7 +462,7 @@ const styles = StyleSheet.create({
   },
   cardName: {
     color: 'white',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     paddingTop: 20,
   },
   wrapperShowQR: {
@@ -455,17 +479,18 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     backgroundColor: 'white',
   },
-  showQRButton: positionY => ({
+  showQRButton: positionTextQRCode => ({
     position: 'absolute',
     backgroundColor: 'white',
-    width: 200,
+    width: 180,
     right: 0,
     paddingVertical: 10,
     paddingHorizontal: 14,
     borderRadius: 4,
     zIndex: 2,
-    top: positionY + 140,
-    right: 56,
+    top:
+      Platform.OS === 'ios' ? positionTextQRCode + 20 : positionTextQRCode + 30,
+    right: 48,
   }),
   backgroundShowQR: {
     position: 'absolute',
@@ -476,12 +501,13 @@ const styles = StyleSheet.create({
     right: 0,
   },
   textQRCode: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     color: 'black',
     fontSize: 20,
   },
   containerTextWallet: {
     marginTop: 20,
+    gap: 4,
   },
   wrapperTextwallet: {
     flexDirection: 'row',
@@ -490,12 +516,13 @@ const styles = StyleSheet.create({
   },
   textWallet: {
     color: 'white',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 13,
   },
   valueWallet: {
     color: 'white',
-    fontFamily: 'Roboto-Medium',
+    fontFamily:
+      Platform.OS === 'ios' ? 'AppleSDGothicNeo-Bold' : 'Roboto-Medium',
     fontSize: 16,
     marginHorizontal: -3,
   },
@@ -504,23 +531,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  wrapperCopiedHash: {
+  wrapperCopiedHash: currency => ({
     flexDirection: 'row',
     gap: 6,
-  },
+    marginTop: currency == 1 ? 0 : 20,
+  }),
   wrapperHash: {
     flexDirection: 'row',
   },
   hash: {
     color: 'white',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 12,
   },
-  logo: {
+  logo: currency => ({
     height: 40,
     width: 40,
-    marginTop: -6,
-  },
+    marginTop: currency == 1 ? -12 : -2,
+  }),
   loading: {
     position: 'absolute',
     top: 0,

@@ -10,6 +10,7 @@ import {
   Text,
   Dimensions,
   PermissionsAndroid,
+  Platform
 } from 'react-native';
 import {Camera, useCameraDevice} from 'react-native-vision-camera';
 import Animated, {
@@ -21,11 +22,12 @@ import Animated, {
 } from 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
-import {URL_API, getLanguage2} from '../../../utils';
+import {URL_API, getLanguage2, getFontFam} from '../../../utils';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import CompassHeading from 'react-native-compass-heading';
-import crashlytics from '@react-native-firebase/crashlytics';
+import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 function ARScreen() {
   const [lang, setLang] = useState({});
@@ -47,27 +49,63 @@ function ARScreen() {
   const [brandCount, setBrandCount] = useState(0);
   const [bigCoin, setBigCoin] = useState(0);
   const [compassHeading, setCompassHeading] = useState(0);
+  const [prevCompassHeading, setPrevCompassHeading] = useState(0);
+
+  // const getCamPermission = async () => {
+  //   try {
+  //     if (Platform.OS === 'android') {
+  //       const granted = await PermissionsAndroid.request(
+  //         PermissionsAndroid.PERMISSIONS.CAMERA,
+  //         // {
+  //         //   title: 'Camera Permission',
+  //         //   message:
+  //         //     'XRUN needs access to your camera ' +
+  //         //     'so you can enjoy AR and Catch the Coin!',
+  //         //   buttonPositive: 'OK',
+  //         //   buttonNegative: 'Cancel',
+  //         // },
+  //       );
+  
+  //       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+  //         setCameraReady(true);
+  //         setCameraPermission('granted');
+  //         console.log('Kamera android diizinin');
+  //       } else {
+  //         console.log('Kamera android ga diizinin');
+  //         Linking.openSettings();
+  //       }
+  //     } else if (Platform.OS === 'ios') {
+  //       const permissionStatus = await check(PERMISSIONS.IOS.CAMERA);
+  //       if (permissionStatus === RESULTS.GRANTED) {
+  //         setCameraReady(true);
+  //         setCameraPermission('granted');
+  //         console.log('Kamera ios diizinin');
+  //       } else {
+  //         console.log('Kamera ios ga diizinin');
+  //         Linking.openSettings();
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   const getCamPermission = async () => {
     try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.CAMERA,
-        // {
-        //   title: 'Camera Permission',
-        //   message:
-        //     'XRUN needs access to your camera ' +
-        //     'so you can enjoy AR and Catch the Coin!',
-        //   buttonPositive: 'OK',
-        //   buttonNegative: 'Cancel',
-        // },
-      );
-
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      let permission;
+      if (Platform.OS === 'android') {
+        permission = PERMISSIONS.ANDROID.CAMERA;
+      } else if (Platform.OS === 'ios') {
+        permission = PERMISSIONS.IOS.CAMERA;
+      }
+  
+      const result = await request(permission);
+      if (result === RESULTS.GRANTED) {
+        console.log('Camera permission granted');
         setCameraReady(true);
         setCameraPermission('granted');
       } else {
-        console.log('Kamera ga diizinin');
-        Linking.openSettings();
+        console.log('Camera permission denied');
       }
     } catch (error) {
       console.error(error);
@@ -158,6 +196,7 @@ function ARScreen() {
   const getARCoin = async (userID, latitude, longitude) => {
     try {
       const apiUrl = `${URL_API}&act=app2000-01&member=${userID}&limit=20&lat=${latitude}&lng=${longitude}`;
+      console.log("API Get AR Coin: " + apiUrl)
       const response = await fetch(apiUrl);
       const responseData = await response.json();
 
@@ -205,11 +244,12 @@ function ARScreen() {
         setCoinAPI(coinsData);
         console.log('Hasil API ada -> ' + coinsData.length);
       } else {
+        console.log('Coin dikosongin');
         setCoinAPI([]);
       }
     } catch (error) {
-      crashlytics().recordError(new Error(error));
-      crashlytics().log(error);
+      // crashlytics().recordError(new Error(error));
+      // crashlytics().log(error);
       console.error('Error calling API:', error);
     }
   };
@@ -261,7 +301,7 @@ function ARScreen() {
 
       const displayCount = Math.min(
         shuffledData.length - currentIndex,
-        Math.floor(Math.random() * 5) + 1,
+        Math.floor(Math.random() * 5) + 6,
       );
 
       const itemsToDisplay = shuffledData
@@ -331,24 +371,43 @@ function ARScreen() {
     };
   });
 
+  const renderCamera = () => {
+    const commonProps = {
+      fps: 25,
+      style: {
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+      },
+      device: device,
+      isActive: true,
+      lowLightBoost: false,
+    };
+  
+    if (Platform.OS === 'android') {
+      return (
+        <Camera
+          {...commonProps}
+          torch={flash === 'on' ? 'on' : 'off'}
+          onInitialized={() => setTimeout(() => setFlash('off'), 500)}
+        />
+      );
+    } else if (Platform.OS === 'ios') {
+      return (
+        <Camera
+          {...commonProps}
+          onInitialized={() => setTimeout(() => console.log('Bgst'), 100)}
+        />
+      );
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View>
         {cameraPermission === 'granted' && isCameraReady && device && (
           <>
-            <Camera
-              fps={25}
-              torch={flash === 'on' ? 'on' : 'off'}
-              onInitialized={() => setTimeout(() => setFlash('off'), 1000)}
-              style={{
-                position: 'relative',
-                width: '100%',
-                height: '100%',
-              }}
-              device={device}
-              isActive={true}
-              lowLightBoost={false}
-            />
+            {renderCamera()}
             <View
               style={{
                 position: 'absolute',
@@ -369,14 +428,13 @@ function ARScreen() {
                       width: 150,
                       height: 275,
                       display:
-                        item.rotation >= 10 && item.rotation <= 200
+                        item.rotation >= 0 && item.rotation <= 200
                           ? 'block'
                           : item.rotation >= 210 && item.rotation <= 320
                           ? 'block'
                           : item.rotation >= 330 && rotation <= 360
                           ? 'block'
                           : 'none',
-                      // display: 'block',
                     },
                     bouncingCoinAnimatedStyle,
                   ]}>
@@ -420,7 +478,10 @@ function ARScreen() {
                         }}>
                         <Image
                           source={{
-                            uri: `data:image/jpeg;base64,${item.adthumbnail2}`,
+                            uri: `data:image/jpeg;base64,${item.adthumbnail2.replace(
+                              /(\r\n|\n|\r)/gm,
+                              '',
+                            )}`,
                           }}
                           style={{
                             height: 50,
@@ -430,7 +491,7 @@ function ARScreen() {
                         />
                         <Text
                           style={{
-                            fontFamily: 'Roboto-Medium',
+                            fontFamily: getFontFam() + 'Medium',
                             fontSize: 16,
                             color: 'white',
                           }}>
@@ -440,7 +501,7 @@ function ARScreen() {
                         </Text>
                         <Text
                           style={{
-                            fontFamily: 'Roboto-Regular',
+                            fontFamily: getFontFam() + 'Regular',
                             fontSize: 13,
                             color: 'grey',
                             marginTop: -7,
@@ -496,7 +557,7 @@ function ARScreen() {
                   <View style={{marginBottom: -20}}>
                     <Text
                       style={{
-                        fontFamily: 'Roboto-Medium',
+                        fontFamily: getFontFam() + 'Medium',
                         fontSize: 10.5,
                         color: 'white',
                       }}>
@@ -508,7 +569,7 @@ function ARScreen() {
                     </Text>
                     <Text
                       style={{
-                        fontFamily: 'Roboto-Medium',
+                        fontFamily: getFontFam() + 'Medium',
                         fontSize: 13,
                         color: 'white',
                       }}>
@@ -519,7 +580,7 @@ function ARScreen() {
                         : ''}
                       <Text
                         style={{
-                          fontFamily: 'Roboto-Bold',
+                          fontFamily: getFontFam() + 'Bold',
                         }}>
                         {brandCount} XRUN
                       </Text>{' '}
@@ -530,7 +591,7 @@ function ARScreen() {
                         : ''}
                       <Text
                         style={{
-                          fontFamily: 'Roboto-Bold',
+                          fontFamily: getFontFam() + 'Bold',
                         }}>
                         {coinAPI.length} BIG XRUN{' '}
                       </Text>
@@ -550,7 +611,7 @@ function ARScreen() {
                     }}>
                     <Text
                       style={{
-                        fontFamily: 'Roboto-Medium',
+                        fontFamily: getFontFam() + 'Medium',
                         fontSize: 13,
                         color: 'white',
                         marginTop: -2,
@@ -572,7 +633,7 @@ function ARScreen() {
                       />
                       <Text
                         style={{
-                          fontFamily: 'Roboto-Bold',
+                          fontFamily: getFontFam() + 'Bold',
                           fontSize: 13,
                           color: '#ffdc04',
                           marginTop: -4,
@@ -653,7 +714,7 @@ function ARScreen() {
               onPress={() => getCamPermission()}>
               <Text
                 style={{
-                  fontFamily: 'Roboto-Medium',
+                  fontFamily: getFontFam() + 'Medium',
                   marginBottom: -3,
                   color: 'white',
                 }}>
@@ -679,7 +740,7 @@ const styles = StyleSheet.create({
   },
   permissionDeniedText: {
     fontSize: 16,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     marginBottom: 20,
     textAlign: 'center',
     color: 'black',

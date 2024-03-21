@@ -8,9 +8,9 @@ import {
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {getLanguage2} from '../../../utils';
+import {getLanguage2, getFontFam} from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import crashlytics from '@react-native-firebase/crashlytics';
+// import crashlytics from '@react-native-firebase/crashlytics';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 
 // ########## Main Function ##########
@@ -64,7 +64,7 @@ const SuccessCloseMembership = () => {
         <Text
           style={[
             styles.normalText,
-            {textAlign: 'center', fontFamily: 'Roboto-Bold', fontSize: 16},
+            {textAlign: 'center', fontFamily: getFontFam() + 'Bold', fontSize: 16},
           ]}>
           {lang &&
           lang.screen_setting &&
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     width: 80,
   },
   normalText: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: 13,
     color: '#343a59',
   },

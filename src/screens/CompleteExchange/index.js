@@ -10,7 +10,7 @@ import {
 import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getLanguage2} from '../../../utils';
-import crashlytics from '@react-native-firebase/crashlytics';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 const CompleteExchange = ({navigation, route}) => {
   const [lang, setLang] = useState('');

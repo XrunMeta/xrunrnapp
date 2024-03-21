@@ -1,14 +1,17 @@
-import {Text, StyleSheet, Pressable} from 'react-native';
+import {Text, StyleSheet, Pressable, Platform} from 'react-native';
 import React from 'react';
+import { getFontFam } from '../../../utils';
 
-const CustomButton = ({onPress, text, type = 'PRIMARY', bgColor, fgColor}) => {
+const CustomButton = ({onPress, text, type = 'PRIMARY', bgColor, fgColor, firstScreen}) => {
   return (
     <Pressable
       onPress={onPress}
-      style={[
-        [styles.container, styles[`container_${type}`]],
-        bgColor ? {backgroundColor: bgColor} : {},
-      ]}>
+      style={styles.container(type, bgColor, firstScreen)}
+      // style={[
+      //   [styles.container, styles[`container_${type}`]],
+      //   bgColor ? {backgroundColor: bgColor} : {},
+      // ]}
+      >
       <Text
         style={[
           styles.text,
@@ -22,14 +25,28 @@ const CustomButton = ({onPress, text, type = 'PRIMARY', bgColor, fgColor}) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  container: (type, bgColor, firstScreen) => ({
     width: '100%',
     padding: 15,
-    paddingVertical: 8,
+    paddingVertical: firstScreen ? Platform.OS == 'ios' ? 12 : 8 : 8,
     marginTop: 15,
     alignItems: 'center',
     borderRadius: 35,
-  },
+    shadowColor: 'black',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 5,
+    backgroundColor: type
+      ? type === 'PRIMARY'
+        ? '#343a59'
+        : '#ffdc04'
+      : bgColor,
+      
+  }),
 
   container_PRIMARY: {
     backgroundColor: '#343a59',
@@ -62,25 +79,25 @@ const styles = StyleSheet.create({
   },
 
   text_PRIMARY: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
     color: 'white',
   },
 
   text: {
     color: '#45494c',
     fontSize: 16,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
   },
 
   text_SECONDARY: {
     color: '#45494c',
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
   },
 
   text_TERTIARY: {
     fontWeight: 'bold',
     color: '#343a59',
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
   },
 });
 
