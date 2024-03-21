@@ -8,6 +8,7 @@ import {
   Alert,
   Platform,
   PermissionsAndroid,
+  Linking,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -136,16 +137,20 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
 
     // Function to check the platform
     // If Platform is Android then check for permissions.
-    if (Platform.OS === 'android' && Platform.Version < 33) {
+    if (Platform.OS === 'android') {
       try {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
         );
+        console.log(granted);
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
           // Start downloading
           downloadFile();
           console.log('Storage Permission Granted.');
-        } else {
+        } else if (granted === 'denied') {
+          setDownloadDisable(false);
+        } else if (granted === 'never_ask_again') {
+          Linking.openSettings();
           setDownloadDisable(false);
         }
       } catch (err) {
