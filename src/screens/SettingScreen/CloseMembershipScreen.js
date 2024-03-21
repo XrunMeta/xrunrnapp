@@ -16,7 +16,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getLanguage2, getFontFam} from '../../../utils';
-import crashlytics from '@react-native-firebase/crashlytics';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 const CloseMembershipScreen = () => {
   const [lang, setLang] = useState('');
@@ -211,7 +211,7 @@ const CloseMembershipScreen = () => {
                       : styles.uncheckedBox,
                   ]}>
                   {checkedRecommendations[0] && (
-                    <Text style={styles.checkMark}>✔</Text>
+                    <Text style={styles.checkMark}>✓</Text>
                   )}
                 </View>
                 <Text
@@ -256,7 +256,7 @@ const CloseMembershipScreen = () => {
                       : styles.uncheckedBox,
                   ]}>
                   {checkedRecommendations[1] && (
-                    <Text style={styles.checkMark}>✔</Text>
+                    <Text style={styles.checkMark}>✓</Text>
                   )}
                 </View>
                 <Text
@@ -301,7 +301,7 @@ const CloseMembershipScreen = () => {
                       : styles.uncheckedBox,
                   ]}>
                   {checkedRecommendations[2] && (
-                    <Text style={styles.checkMark}>✔</Text>
+                    <Text style={styles.checkMark}>✓</Text>
                   )}
                 </View>
                 <Text
@@ -435,6 +435,7 @@ const styles = StyleSheet.create({
   checkedBox: {
     backgroundColor: '#343a59',
     borderColor: '#343a59',
+    
   },
   uncheckedBox: {
     backgroundColor: 'transparent',

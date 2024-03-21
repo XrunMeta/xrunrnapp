@@ -11,6 +11,8 @@ import {
   Modal,
   TouchableWithoutFeedback,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform
 } from 'react-native';
 import React, {useState, useRef, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
@@ -396,6 +398,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flex: 1,
     width: '100%',
+    bottom: 0
   },
   additionalLogin: {
     flexDirection: 'row',

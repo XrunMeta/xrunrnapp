@@ -83,6 +83,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
+    paddingTop: 10,
     paddingBottom: -10,
     fontFamily: getFontFam() + 'Medium',
     fontSize: 13,

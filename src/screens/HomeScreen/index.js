@@ -15,7 +15,7 @@ import MapParent from './MapParentScreen';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API, getFCMToken, getLanguage2, getFontFam} from '../../../utils';
-import crashlytics from '@react-native-firebase/crashlytics';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 export default function Home({route}) {
   const [lang, setLang] = useState({});

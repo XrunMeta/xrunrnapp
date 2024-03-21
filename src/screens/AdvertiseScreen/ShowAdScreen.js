@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {useInterstitialAd, TestIds} from '@react-native-admob/admob';
 import {URL_API, getLanguage2, getFontFam} from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import crashlytics from '@react-native-firebase/crashlytics';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 const realAD = 'ca-app-pub-9457909979646034/7873165988';
 
@@ -24,15 +24,16 @@ const CustomModal = ({visible, text, onOK}) => {
 
 const ShowAdScreen = ({route, navigation}) => {
   const {screenName, member, advertisement, coin, coinScreen} = route.params;
-  const {adLoaded, adDismissed, show} = useInterstitialAd(
-    // TestIds.INTERSTITIAL,
-    realAD,
-    {
-      requestOptions: {
-        requestNonPersonalizedAdsOnly: true,
-      },
-    },
-  );
+//   const {adLoaded, adDismissed, show} = useInterstitialAd(
+//     // TestIds.INTERSTITIAL,
+//     realAD,
+//     {
+//       requestOptions: {
+//         requestNonPersonalizedAdsOnly: true,
+//       },
+//     },
+//   );
+  const {adLoaded, adDismissed, show} = []
   const [modalVisible, setModalVisible] = useState(false);
   const [adCompleted, setAdCompleted] = useState(false);
   const [modalText, setModalText] = useState('');

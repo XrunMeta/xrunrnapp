@@ -1,4 +1,4 @@
-import {Text, StyleSheet, Pressable} from 'react-native';
+import {Text, StyleSheet, Pressable, Platform} from 'react-native';
 import React from 'react';
 import {getFontFam} from '../../../utils';
 

@@ -4,7 +4,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import * as RNLocalize from 'react-native-localize';
 import {URL_API, getLanguage2, getFontFam} from '../../../utils';
-import crashlytics from '@react-native-firebase/crashlytics';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 const ClauseForPersonal = () => {
   const [text, setText] = useState('');

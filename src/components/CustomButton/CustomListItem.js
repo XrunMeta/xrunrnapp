@@ -24,10 +24,11 @@ const styles = StyleSheet.create({
     shadowColor: '#969493',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 1,
     },
-    shadowOpacity: 1,
-    shadowRadius: 15,
+    shadowOpacity: 0.16,
+    shadowRadius: 1.51,
+    
     elevation: 1,
     marginVertical: 2,
   },

@@ -16,7 +16,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API, getLanguage2, getFontFam} from '../../../utils';
-import crashlytics from '@react-native-firebase/crashlytics';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 const RandomRecommendScreen = () => {
   const [lang, setLang] = useState({});
@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
     padding: 5,
     justifyContent: 'space-between',
     position: 'absolute',
-    bottom: 10,
+    bottom: 40,
     right: 10,
   },
   additionalLogin: {
@@ -282,14 +282,14 @@ const styles = StyleSheet.create({
     width: 80,
   },
   shadow: {
-    shadowColor: '#000000',
+    shadowColor: "#000000",
     shadowOffset: {
       width: 0,
       height: 1,
     },
-    shadowOpacity: 0.16,
+    shadowOpacity:  0.16,
     shadowRadius: 1.51,
-    elevation: 1,
+    elevation: 1
   },
   checkbox: {
     width: 20,

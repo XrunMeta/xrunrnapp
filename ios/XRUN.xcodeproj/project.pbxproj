@@ -11,9 +11,9 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		698F53D105188B10CFB1863D /* libPods-XRUN-XRUNTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B4AC7CDC02FA88128B113AC8 /* libPods-XRUN-XRUNTests.a */; };
+		4394B071E46D0FB16D7DFA9E /* libPods-XRUN.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73E05D3A9376788A4DE212A6 /* libPods-XRUN.a */; };
+		5F17A72C1DD7370BDCB66ADD /* libPods-XRUN-XRUNTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 11AC1363A977D60E44A84AD3 /* libPods-XRUN-XRUNTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		F5E2195BF7C08E04A01627FC /* libPods-XRUN.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6940AC9C9E71AFE4E9A848C3 /* libPods-XRUN.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,21 +30,19 @@
 		00E356EE1AD99517003FC87E /* XRUNTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XRUNTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* XRUNTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XRUNTests.m; sourceTree = "<group>"; };
+		11AC1363A977D60E44A84AD3 /* libPods-XRUN-XRUNTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-XRUN-XRUNTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07F961A680F5B00A75B9A /* XRUN.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XRUN.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = XRUN/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = XRUN/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = XRUN/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = XRUN/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = XRUN/main.m; sourceTree = "<group>"; };
-		3B4392A12AC88292D35C810B /* Pods-XRUN.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XRUN.debug.xcconfig"; path = "Target Support Files/Pods-XRUN/Pods-XRUN.debug.xcconfig"; sourceTree = "<group>"; };
-		5709B34CF0A7D63546082F79 /* Pods-XRUN.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XRUN.release.xcconfig"; path = "Target Support Files/Pods-XRUN/Pods-XRUN.release.xcconfig"; sourceTree = "<group>"; };
-		5B7EB9410499542E8C5724F5 /* Pods-XRUN-XRUNTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XRUN-XRUNTests.debug.xcconfig"; path = "Target Support Files/Pods-XRUN-XRUNTests/Pods-XRUN-XRUNTests.debug.xcconfig"; sourceTree = "<group>"; };
-		6940AC9C9E71AFE4E9A848C3 /* libPods-XRUN.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-XRUN.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		27E690E2B3EF2DFE289511A8 /* Pods-XRUN-XRUNTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XRUN-XRUNTests.debug.xcconfig"; path = "Target Support Files/Pods-XRUN-XRUNTests/Pods-XRUN-XRUNTests.debug.xcconfig"; sourceTree = "<group>"; };
+		3179FA4A022427BB22B5589E /* Pods-XRUN.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XRUN.debug.xcconfig"; path = "Target Support Files/Pods-XRUN/Pods-XRUN.debug.xcconfig"; sourceTree = "<group>"; };
+		528EB70C88BFAF5DFF9A95D3 /* Pods-XRUN-XRUNTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XRUN-XRUNTests.release.xcconfig"; path = "Target Support Files/Pods-XRUN-XRUNTests/Pods-XRUN-XRUNTests.release.xcconfig"; sourceTree = "<group>"; };
+		73E05D3A9376788A4DE212A6 /* libPods-XRUN.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-XRUN.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = XRUN/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		821E4CF5F8A0B6FB262F83E7 /* Pods-XRUNTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XRUNTests.debug.xcconfig"; path = "Target Support Files/Pods-XRUNTests/Pods-XRUNTests.debug.xcconfig"; sourceTree = "<group>"; };
-		89C6BE57DB24E9ADA2F236DE /* Pods-XRUN-XRUNTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XRUN-XRUNTests.release.xcconfig"; path = "Target Support Files/Pods-XRUN-XRUNTests/Pods-XRUN-XRUNTests.release.xcconfig"; sourceTree = "<group>"; };
-		B4AC7CDC02FA88128B113AC8 /* libPods-XRUN-XRUNTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-XRUN-XRUNTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		CC70A256135B7BECA783CF34 /* Pods-XRUNTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XRUNTests.release.xcconfig"; path = "Target Support Files/Pods-XRUNTests/Pods-XRUNTests.release.xcconfig"; sourceTree = "<group>"; };
+		D8DA53F1BB4011D85152446C /* Pods-XRUN.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XRUN.release.xcconfig"; path = "Target Support Files/Pods-XRUN/Pods-XRUN.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -53,7 +51,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				698F53D105188B10CFB1863D /* libPods-XRUN-XRUNTests.a in Frameworks */,
+				5F17A72C1DD7370BDCB66ADD /* libPods-XRUN-XRUNTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,7 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F5E2195BF7C08E04A01627FC /* libPods-XRUN.a in Frameworks */,
+				4394B071E46D0FB16D7DFA9E /* libPods-XRUN.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -102,8 +100,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				6940AC9C9E71AFE4E9A848C3 /* libPods-XRUN.a */,
-				B4AC7CDC02FA88128B113AC8 /* libPods-XRUN-XRUNTests.a */,
+				73E05D3A9376788A4DE212A6 /* libPods-XRUN.a */,
+				11AC1363A977D60E44A84AD3 /* libPods-XRUN-XRUNTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -142,12 +140,10 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				3B4392A12AC88292D35C810B /* Pods-XRUN.debug.xcconfig */,
-				5709B34CF0A7D63546082F79 /* Pods-XRUN.release.xcconfig */,
-				5B7EB9410499542E8C5724F5 /* Pods-XRUN-XRUNTests.debug.xcconfig */,
-				89C6BE57DB24E9ADA2F236DE /* Pods-XRUN-XRUNTests.release.xcconfig */,
-				821E4CF5F8A0B6FB262F83E7 /* Pods-XRUNTests.debug.xcconfig */,
-				CC70A256135B7BECA783CF34 /* Pods-XRUNTests.release.xcconfig */,
+				3179FA4A022427BB22B5589E /* Pods-XRUN.debug.xcconfig */,
+				D8DA53F1BB4011D85152446C /* Pods-XRUN.release.xcconfig */,
+				27E690E2B3EF2DFE289511A8 /* Pods-XRUN-XRUNTests.debug.xcconfig */,
+				528EB70C88BFAF5DFF9A95D3 /* Pods-XRUN-XRUNTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -159,12 +155,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "XRUNTests" */;
 			buildPhases = (
-				A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */,
+				02748E8D93F774BDA21324B4 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				BD8E2F582EEA0549FA3C418B /* [CP] Embed Pods Frameworks */,
-				63D0B266B12C5B5F7F52F4EB /* [CP] Copy Pods Resources */,
+				21F238F0119DFC68D34C6686 /* [CP] Embed Pods Frameworks */,
+				B9909B4C6537885645A256C1 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -180,14 +176,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "XRUN" */;
 			buildPhases = (
-				C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */,
+				D6B54AC759D883F054D35514 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				359BB94E1DF938656C077107 /* [CP] Embed Pods Frameworks */,
-				200C5CBF519252548E67C47C /* [CP] Copy Pods Resources */,
+				0EDBA1F4D370B6F37F6C1025 /* [CP] Embed Pods Frameworks */,
+				A4A8AD35AFAAC9955906FB15 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -270,58 +266,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		200C5CBF519252548E67C47C /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-XRUN/Pods-XRUN-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-XRUN/Pods-XRUN-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-XRUN/Pods-XRUN-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		359BB94E1DF938656C077107 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-XRUN/Pods-XRUN-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-XRUN/Pods-XRUN-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-XRUN/Pods-XRUN-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		63D0B266B12C5B5F7F52F4EB /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-XRUN-XRUNTests/Pods-XRUN-XRUNTests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-XRUN-XRUNTests/Pods-XRUN-XRUNTests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-XRUN-XRUNTests/Pods-XRUN-XRUNTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */ = {
+		02748E8D93F774BDA21324B4 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -343,7 +288,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		BD8E2F582EEA0549FA3C418B /* [CP] Embed Pods Frameworks */ = {
+		0EDBA1F4D370B6F37F6C1025 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-XRUN/Pods-XRUN-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-XRUN/Pods-XRUN-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-XRUN/Pods-XRUN-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		21F238F0119DFC68D34C6686 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -360,7 +322,41 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-XRUN-XRUNTests/Pods-XRUN-XRUNTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */ = {
+		A4A8AD35AFAAC9955906FB15 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-XRUN/Pods-XRUN-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-XRUN/Pods-XRUN-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-XRUN/Pods-XRUN-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B9909B4C6537885645A256C1 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-XRUN-XRUNTests/Pods-XRUN-XRUNTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-XRUN-XRUNTests/Pods-XRUN-XRUNTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-XRUN-XRUNTests/Pods-XRUN-XRUNTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D6B54AC759D883F054D35514 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -434,7 +430,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-XRUN-XRUNTests.debug.xcconfig */;
+			baseConfigurationReference = 27E690E2B3EF2DFE289511A8 /* Pods-XRUN-XRUNTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -462,7 +458,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-XRUN-XRUNTests.release.xcconfig */;
+			baseConfigurationReference = 528EB70C88BFAF5DFF9A95D3 /* Pods-XRUN-XRUNTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -487,14 +483,18 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-XRUN.debug.xcconfig */;
+			baseConfigurationReference = 3179FA4A022427BB22B5589E /* Pods-XRUN.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = G4472Y2869;
+				DEVELOPMENT_TEAM = NK998956Q9;
 				ENABLE_BITCODE = NO;
+				EXCLUDED_ARCHS = i386;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				INFOPLIST_FILE = XRUN/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "XRUN Dev";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.adventure-games";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -505,7 +505,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = run.xrun.xrunapps;
 				PRODUCT_NAME = XRUN;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -515,13 +515,18 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-XRUN.release.xcconfig */;
+			baseConfigurationReference = D8DA53F1BB4011D85152446C /* Pods-XRUN.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = G4472Y2869;
+				DEVELOPMENT_TEAM = 677WG96CUJ;
+				ENABLE_BITCODE = NO;
+				EXCLUDED_ARCHS = i386;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				INFOPLIST_FILE = XRUN/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "XRUN Dev";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.adventure-games";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -532,7 +537,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = run.xrun.xrunapps;
 				PRODUCT_NAME = XRUN;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -544,7 +549,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++20";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -630,7 +635,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++20";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
