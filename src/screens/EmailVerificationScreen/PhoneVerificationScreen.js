@@ -299,9 +299,7 @@ const PhoneVerificationScreen = () => {
       {/* Text Section */}
       <View style={styles.textWrapper}>
         <Text style={styles.normalText}>
-          {lang &&
-          lang.screen_notExist &&
-          lang.screen_notExist.field_phoneVerif
+          {lang && lang.screen_notExist && lang.screen_notExist.field_phoneVerif
             ? lang.screen_notExist.field_phoneVerif.label
             : ''}
         </Text>

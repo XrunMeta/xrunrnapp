@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import ButtonBack from '../../components/ButtonBack';
+import {getFontFam} from '../../../utils';
 import {WebView} from 'react-native-webview';
 import { getFontFam } from '../../../utils';
 

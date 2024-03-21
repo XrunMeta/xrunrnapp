@@ -10,7 +10,7 @@ import {
   ScrollView,
   TouchableOpacity,
   SafeAreaView,
-  Platform
+  Platform,
 } from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';

@@ -13,16 +13,31 @@ import {
   BackHandler,
   Alert,
   SafeAreaView,
+  Button,
 } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import React, {useState, useEffect} from 'react';
 import * as RNLocalize from 'react-native-localize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
-import { getFontFam } from '../../../utils';
+import {getFontFam} from '../../../utils';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
-// Get Language Data
+async function adul(user) {
+  crashlytics().log('Tes Pagi');
+  await Promise.all([
+    crashlytics().setUserId(user.uid),
+    crashlytics().setAttribute('credits', String(user.credits)),
+    crashlytics().setAttributes({
+      role: 'admin',
+      followers: '13',
+      email: user.email,
+      username: user.username,
+    }),
+  ]);
+  console.log('Bgst');
+}
 
 const FirstScreenV2 = ({navigation}) => {
   const [lang, setLang] = useState({});
@@ -30,6 +45,10 @@ const FirstScreenV2 = ({navigation}) => {
   const {width} = Dimensions.get('window');
   const itemWidth = width - 30;
   const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    // crashlytics().log('App mounted Lagi');
+  }, []);
 
   // Get Map Initial Geolocation
   const getCurrentLocation = async () => {
@@ -216,7 +235,7 @@ const FirstScreenV2 = ({navigation}) => {
         resizeMode="cover"
       />
     );
-  }
+  };
 
   const exitApp = () => {
     BackHandler.exitApp();
@@ -241,6 +260,19 @@ const FirstScreenV2 = ({navigation}) => {
               : ''}
           </Text>
         </View>
+
+        {/* <Button
+          title="Crashed me!"
+          onPress={() =>
+            adul({
+              uid: 'Aa0Bb1Cc2Dd3Ee4Ff5Gg6Hh7Ii8Jj9',
+              username: 'Joaquin Phoenix',
+              email: 'herubudi@example.com',
+              credits: 12,
+            })
+          }
+        />
+        <Button title="Test Crash" onPress={() => crashlytics().crash()} /> */}
 
         <View style={styles.sliderWrapper}>
           <Carousel
@@ -428,12 +460,11 @@ const styles = StyleSheet.create({
   },
   sliderWrapper: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   sliderImage: {
-    width: Dimensions.get('window').width - 40,
-    height: '100%',
+    flex: 1,
+    // width: Dimensions.get('window').width,
+    height: '95%',
     borderRadius: 10,
   },
   sliderNavigator: {

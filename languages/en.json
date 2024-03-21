@@ -72,7 +72,13 @@
       "placeholder": "Enter your new password"
     },
     "phone_number": {
-      "label": "Phone Number"
+      "label": "Phone Number",
+      "disabled": "Disabled",
+      "disabledDesc": "Phone number cannot change after verified",
+      "auth": "Auth",
+      "unverified": "Unverified",
+      "verified": "Verified",
+      "verify": "Verify"
     },
     "area": {
       "label": "Region",
@@ -103,7 +109,8 @@
       "emptyPhone": "Phone number is required",
       "emptyArea": "Area must be filled",
       "invalidRecommend": "Please verify the recommended email",
-      "errorServer": "There is a server communication error. Please try again..."
+      "errorServer": "There is a server communication error. Please try again...",
+      "invalidPhone": "Please verify your phone number first"
     }
   },
 

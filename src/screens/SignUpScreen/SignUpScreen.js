@@ -8,7 +8,10 @@ import {
   Alert,
   TextInput,
   TouchableWithoutFeedback,
-  SafeAreaView
+  SafeAreaView,
+  TouchableOpacity,
+  Modal,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput';
@@ -18,6 +21,7 @@ import CustomMultipleChecbox from '../../components/CustomCheckbox/CustomMultipl
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API, getLanguage2, getFontFam} from '../../../utils';
 // import crashlytics from '@react-native-firebase/crashlytics';
+import {useAuth} from '../../context/AuthContext/AuthContext';
 
 const SignUpScreen = ({route}) => {
   const [lang, setLang] = useState({});
@@ -25,6 +29,7 @@ const SignUpScreen = ({route}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [authCode, setAuthCode] = useState('');
   const [region, setRegion] = useState('');
   const [regionID, setRegionID] = useState(0);
   const [gender, setGender] = useState('pria');
@@ -34,6 +39,11 @@ const SignUpScreen = ({route}) => {
   const {flag, countryCode = 82, country, code = 'KR'} = route.params || {};
   const [areaData, setAreaData] = useState([]);
   const [isListWrapperVisible, setIsListWrapperVisible] = useState(false);
+  const [authShow, setAuthShow] = useState(false);
+  const [authLoading, setAuthLoading] = useState(false);
+  const [verifyLoading, setVerifyLoading] = useState(false);
+  const [authenticated, setAuthenticated] = useState(false);
+  const {login} = useAuth();
 
   const navigation = useNavigation();
 
@@ -48,6 +58,8 @@ const SignUpScreen = ({route}) => {
       Alert.alert('Error', lang.screen_signup.validator.emptyPassword);
     } else if (phoneNumber.trim() === '') {
       Alert.alert('Error', lang.screen_signup.validator.emptyPhone);
+    } else if (authenticated == false) {
+      Alert.alert('Error', lang.screen_signup.validator.invalidPhone);
     } else if (regionID == 0) {
       Alert.alert('Error', lang.screen_signup.validator.emptyArea);
     } else {
@@ -105,12 +117,62 @@ const SignUpScreen = ({route}) => {
 
               console.log(joinAPI);
 
-              navigation.navigate('EmailVerif', {
-                dataEmail: email,
-                pin: joinPin,
-                signupUrl: joinAPI,
-                mobile: joinMobile,
-              });
+              // navigation.navigate('EmailVerif', {
+              //   dataEmail: email,
+              //   pin: joinPin,
+              //   signupUrl: joinAPI,
+              //   mobile: joinMobile,
+              // });
+
+              // Do SignUp
+              try {
+                const joinRes = await fetch(joinAPI);
+                const joinData = await joinRes.json();
+
+                console.log(
+                  'Ini SignUp Response -> ' + JSON.stringify(joinData),
+                );
+
+                if (joinData.data === 'ok') {
+                  // Check is Registered? If yes do login
+                  try {
+                    const responseLogin = await fetch(
+                      `${URL_API}&act=login-checker&email=${email}&pin=${joinPin}`,
+                    );
+                    const responseLoginData = await responseLogin.text();
+
+                    if (responseLoginData === 'OK') {
+                      navigation.replace('SuccessJoin', {
+                        email: email,
+                        pin: joinPin,
+                      });
+                    } else {
+                      Alert.alert(
+                        'Failed',
+                        lang.screen_emailVerification.notif.errorServer,
+                      );
+                    }
+                  } catch (error) {
+                    // Handle network errors or other exceptions
+                    console.error(
+                      'Error during Check Login Email & Pin:',
+                      error,
+                    );
+                  }
+                } else {
+                  Alert.alert(
+                    'Failed',
+                    lang.screen_emailVerification.notif.errorServer,
+                  );
+                  navigation.navigate('First');
+                }
+              } catch (error) {
+                console.error('Error during Signup:', error);
+                Alert.alert(
+                  'Error',
+                  lang.screen_emailVerification.notif.errorServer,
+                );
+              }
             } else if (referData.result === 'false') {
               setRefferalEmail('');
               Alert.alert(
@@ -319,6 +381,87 @@ const SignUpScreen = ({route}) => {
     }
   }, [region]);
 
+  const onAuth = async (mobile, country) => {
+    if (phoneNumber !== '') {
+      setAuthLoading(true);
+
+      try {
+        const response = await fetch(
+          `${URL_API}&act=login-02&mobile=${mobile}&country=${country}`,
+        );
+        const responseData = await response.json(); // Convert response to JSON
+
+        console.log(responseData.data);
+
+        if (responseData.data === 'ok') {
+          console.log('Kode dikirim boy');
+          setAuthShow(!authShow);
+          setAuthLoading(false);
+        } else {
+          Alert.alert(
+            'Failed',
+            lang.screen_notExist.field_phoneVerif.emptyNumber,
+          );
+        }
+      } catch (error) {
+        // Handle network errors or other exceptions
+        console.error('Error during Phone Auth:', error);
+        crashlytics().recordError(new Error(error));
+        crashlytics().log(error);
+      }
+    } else {
+      Alert.alert('Failed', lang.screen_notExist.field_phoneVerif.emptyNumber);
+    }
+  };
+
+  const onVerify = async (mobile, authCode) => {
+    if (authCode !== '') {
+      setVerifyLoading(true);
+      console.log('Bgst -> ' + mobile + ' ' + authCode);
+      // Check Email & Auth Code Relational
+      try {
+        const responseAuth = await fetch(
+          `${URL_API}&act=login-03&mobile=${mobile}&code=${authCode}`,
+        );
+        const responseAuthText = await responseAuth.text();
+        const responseObjects = responseAuthText.split('}');
+        const firstResObj = JSON.parse(responseObjects[0] + '}');
+
+        if (firstResObj) {
+          console.log('RespAPI login-03 -> ' + JSON.stringify(firstResObj));
+          setVerifyLoading(false);
+
+          if (firstResObj.data === 'false') {
+            // Invalid Number
+            Alert.alert(
+              'Failed',
+              lang.screen_notExist.field_phoneVerif.invalidNumber,
+            );
+            setAuthCode('');
+            setAuthShow(false);
+          } else if (firstResObj.data === 'login') {
+            // Correct Code
+            setAuthCode('');
+            setAuthShow(false);
+            setAuthenticated(true);
+            console.log('Kode udah diverifikasi');
+          } else {
+            // Error Server
+            Alert.alert('Error', lang.screen_signup.validator.errorServer);
+          }
+        } else {
+        }
+      } catch (error) {
+        // Handle network errors or other exceptions
+        console.error('Error during Check Auth Code:', error);
+        crashlytics().recordError(new Error(error));
+        crashlytics().log(error);
+      }
+    } else {
+      Alert.alert('Warning', lang.screen_notExist.field_phoneVerif.emptyCode);
+    }
+  };
+
   return (
     <SafeAreaView>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -413,7 +556,10 @@ const SignUpScreen = ({route}) => {
                 flexDirection: 'row',
               }}>
               <Pressable
-                style={{flexDirection: 'row', marginTop: 12}}
+                style={{
+                  flexDirection: 'row',
+                  marginBottom: -10,
+                }}
                 onPress={() => chooseRegion(flag, countryCode, country)}>
                 <Image
                   resizeMode="contain"
@@ -448,8 +594,98 @@ const SignUpScreen = ({route}) => {
                 value={phoneNumber}
                 setValue={setPhoneNumber}
                 onChangeText={text => setPhoneNumber(text)}
+                editable={!authenticated}
+                onPressIn={() =>
+                  authenticated &&
+                  Alert.alert(
+                    lang &&
+                      lang.screen_signup &&
+                      lang.screen_signup.phone_number
+                      ? lang.screen_signup.phone_number.disabled
+                      : '',
+                    lang &&
+                      lang.screen_signup &&
+                      lang.screen_signup.phone_number
+                      ? lang.screen_signup.phone_number.disabledDesc
+                      : '',
+                  )
+                }
               />
+
+              <TouchableOpacity
+                style={{
+                  // backgroundColor: authenticated ? '#343a59' : '#94949C',
+                  backgroundColor: '#343a59',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 10,
+                  paddingHorizontal: 15,
+                  paddingVertical: 5,
+                  marginBottom: 0,
+                  marginTop: 10,
+                }}
+                onPress={() =>
+                  authenticated
+                    ? Alert.alert(
+                        lang &&
+                          lang.screen_signup &&
+                          lang.screen_signup.phone_number
+                          ? lang.screen_signup.phone_number.disabled
+                          : '',
+                        lang &&
+                          lang.screen_signup &&
+                          lang.screen_signup.phone_number
+                          ? lang.screen_signup.phone_number.disabledDesc
+                          : '',
+                      )
+                    : onAuth(phoneNumber, countryCode)
+                }>
+                {authLoading ? (
+                  <ActivityIndicator size="small" color="white" />
+                ) : (
+                  <Text
+                    style={{
+                      fontFamily: getFontFam() + 'Medium',
+                      fontSize: 11,
+                      color: 'white',
+                    }}>
+                    {lang &&
+                    lang.screen_signup &&
+                    lang.screen_signup.phone_number
+                      ? lang.screen_signup.phone_number.auth
+                      : ''}
+                  </Text>
+                )}
+              </TouchableOpacity>
             </View>
+            {phoneNumber !== '' && !authenticated ? (
+              <Text
+                style={{
+                  color: 'red',
+                  fontFamily: getFontFam() + 'Medium',
+                  fontSize: 11,
+                }}>
+                *
+                {lang && lang.screen_signup && lang.screen_signup.phone_number
+                  ? lang.screen_signup.phone_number.unverified
+                  : ''}
+              </Text>
+            ) : (
+              phoneNumber !== '' &&
+              authenticated && (
+                <Text
+                  style={{
+                    color: 'green',
+                    fontFamily: getFontFam() + 'Medium',
+                    fontSize: 11,
+                  }}>
+                  *
+                  {lang && lang.screen_signup && lang.screen_signup.phone_number
+                    ? lang.screen_signup.phone_number.verified
+                    : ''}
+                </Text>
+              )
+            )}
           </View>
 
           {/*  Field - Region */}
@@ -553,6 +789,89 @@ const SignUpScreen = ({route}) => {
           </View>
         </View>
       </ScrollView>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={authShow}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setAuthShow(!authShow);
+        }}>
+        <View
+          style={{
+            flex: 1,
+            position: 'relative',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <TouchableOpacity
+            onPress={() => setAuthShow(!authShow)}
+            style={{
+              backgroundColor: '#0000004d',
+              flex: 1,
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+            }}
+          />
+          <View
+            style={{
+              backgroundColor: 'white',
+              borderRadius: 10,
+              padding: 10,
+              width: 150,
+            }}>
+            <Text style={styles.label}>Code</Text>
+
+            <TextInput
+              keyboardType="numeric"
+              style={{
+                fontFamily: getFontFam() + 'Medium',
+                fontSize: 13,
+                color: '#343a59',
+                borderBottomColor: '#cccccc',
+                borderBottomWidth: 1,
+                paddingHorizontal: 5,
+                paddingBottom: -10,
+              }}
+              placeholder="Verification code"
+              value={authCode}
+              setValue={setAuthCode}
+              onChangeText={text => setAuthCode(text)}
+              maxLength={4}
+            />
+
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#343a59',
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 10,
+                paddingHorizontal: 15,
+                paddingVertical: 7,
+                marginTop: 20,
+              }}
+              onPress={() => onVerify(phoneNumber, authCode)}>
+              {verifyLoading ? (
+                <ActivityIndicator size="small" color="white" />
+              ) : (
+                <Text
+                  style={{
+                    fontFamily: getFontFam() + 'Medium',
+                    fontSize: 11,
+                    color: 'white',
+                  }}>
+                  {lang && lang.screen_signup && lang.screen_signup.phone_number
+                    ? lang.screen_signup.phone_number.auth
+                    : ''}
+                </Text>
+              )}
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -629,6 +948,7 @@ const styles = StyleSheet.create({
     paddingBottom: -10,
     paddingTop: 5,
     flex: 1,
+    marginRight: 10,
   },
 });
 

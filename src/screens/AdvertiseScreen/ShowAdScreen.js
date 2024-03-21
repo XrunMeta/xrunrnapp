@@ -1,6 +1,6 @@
 import {Modal, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
-// import {useInterstitialAd, TestIds} from '@react-native-admob/admob';
+import {useInterstitialAd, TestIds} from '@react-native-admob/admob';
 import {URL_API, getLanguage2, getFontFam} from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // import crashlytics from '@react-native-firebase/crashlytics';

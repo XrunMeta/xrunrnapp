@@ -74,7 +74,11 @@ const CompleteSend = ({navigation, route}) => {
             : ''}{' '}
         </Text>
         <Text
-          style={{fontSize: 16, fontFamily: getFontFam() + 'Regular', color: '#555'}}>
+          style={{
+            fontSize: 16,
+            fontFamily: getFontFam() + 'Regular',
+            color: '#555',
+          }}>
           {lang &&
           lang.screen_complete_send &&
           lang.screen_complete_send.complete_send
