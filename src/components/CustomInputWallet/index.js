@@ -39,6 +39,8 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS === 'ios' ? 14 : 0,
     paddingBottom: 10,
     paddingLeft: 10,
+    marginTop: Platform.OS === 'ios' ? 14 : 0,
+    paddingBottom: 10,
     borderBottomColor: '#ddd',
     fontFamily: getFontFam() + 'Regular',
     color: '#000',

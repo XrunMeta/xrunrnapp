@@ -10,8 +10,8 @@ import React, {useState, useRef, useEffect} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {getLanguage2, URL_API, getFontFam} from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import crashlytics from '@react-native-firebase/crashlytics';
 import {useAuth} from '../../context/AuthContext/AuthContext';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 // ########## Main Function ##########
 const SuccessJoinScreen = () => {

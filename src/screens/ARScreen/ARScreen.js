@@ -26,8 +26,8 @@ import {URL_API, getLanguage2, getFontFam} from '../../../utils';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import CompassHeading from 'react-native-compass-heading';
-import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
-import crashlytics from '@react-native-firebase/crashlytics';
+import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 function ARScreen() {
   const [lang, setLang] = useState({});
@@ -85,7 +85,6 @@ function ARScreen() {
       } else if (Platform.OS === 'ios') {
         permission = PERMISSIONS.IOS.CAMERA;
       }
-
       const result = await request(permission);
       if (result === RESULTS.GRANTED) {
         console.log('Camera permission granted');
@@ -183,6 +182,7 @@ function ARScreen() {
   const getARCoin = async (userID, latitude, longitude) => {
     try {
       const apiUrl = `${URL_API}&act=app2000-01&member=${userID}&limit=20&lat=${latitude}&lng=${longitude}`;
+      console.log("API Get AR Coin: " + apiUrl)
       const response = await fetch(apiUrl);
       const responseData = await response.json();
 
@@ -230,11 +230,12 @@ function ARScreen() {
         setCoinAPI(coinsData);
         console.log('Hasil API ada -> ' + coinsData.length);
       } else {
+        console.log('Coin dikosongin');
         setCoinAPI([]);
       }
     } catch (error) {
-      crashlytics().recordError(new Error(error));
-      crashlytics().log(error);
+      // crashlytics().recordError(new Error(error));
+      // crashlytics().log(error);
       console.error('Error calling API:', error);
     }
   };
@@ -368,7 +369,6 @@ function ARScreen() {
       isActive: true,
       lowLightBoost: false,
     };
-
     if (Platform.OS === 'android') {
       return (
         <Camera

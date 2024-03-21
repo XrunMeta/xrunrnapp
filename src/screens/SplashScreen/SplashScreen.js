@@ -18,7 +18,7 @@ const SplashScreen = ({navigation}) => {
 		}catch(e) {
 			console.log(`Failed get isLoggedIn from AsyncStorage: ${e}`)
 		}
-	}, 5000);
+	}, 100);
  }, []);
  
  return (

@@ -20,7 +20,7 @@ import {useNavigation} from '@react-navigation/native';
 import CustomMultipleChecbox from '../../components/CustomCheckbox/CustomMultipleCheckbox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API, getLanguage2, getFontFam} from '../../../utils';
-import crashlytics from '@react-native-firebase/crashlytics';
+// import crashlytics from '@react-native-firebase/crashlytics';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 
 const SignUpScreen = ({route}) => {
@@ -620,6 +620,7 @@ const SignUpScreen = ({route}) => {
                   justifyContent: 'center',
                   borderRadius: 10,
                   paddingHorizontal: 15,
+                  paddingVertical: 5,
                   marginBottom: 0,
                   marginTop: 10,
                 }}
@@ -945,6 +946,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingHorizontal: 5,
     paddingBottom: -10,
+    paddingTop: 5,
     flex: 1,
     marginRight: 10,
   },

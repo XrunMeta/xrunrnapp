@@ -10,6 +10,7 @@ import React, {useEffect, useState} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {getFontFam} from '../../../utils';
 import {WebView} from 'react-native-webview';
+import { getFontFam } from '../../../utils';
 
 const PersonalPolicy = () => {
   const [url, setUrl] = useState('https://app.xrun.run/7012.html');

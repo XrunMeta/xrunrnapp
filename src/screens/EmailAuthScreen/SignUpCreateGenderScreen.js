@@ -15,7 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API, getLanguage2, getFontFam} from '../../../utils';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import CustomMultipleChecbox from '../../components/CustomCheckbox/CustomMultipleCheckbox';
-import crashlytics from '@react-native-firebase/crashlytics';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 const SignUpCreateGender = () => {
   const route = useRoute();

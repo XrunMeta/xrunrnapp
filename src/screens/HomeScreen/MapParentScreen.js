@@ -376,7 +376,8 @@ export default function MapParent() {
             style={[
               {
                 position: 'absolute',
-                bottom: -40,
+                // bottom: -40,
+                bottom: 0,
                 left: 0,
                 right: 0,
               },
@@ -386,26 +387,25 @@ export default function MapParent() {
               style={{
                 backgroundColor: '#e4e8e8',
                 paddingHorizontal: 20,
-                paddingVertical: 15,
+                paddingBottom: 15,
                 borderTopStartRadius: 30,
                 borderTopEndRadius: 30,
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                height: 190,
-                paddingBottom: 70,
+                height: 150,
+                paddingBottom: 40,
                 zIndex: 2,
               }}>
+              <View style={{paddingTop: 5}}>
               <Pressable
                 onPress={handleShowDetail}
                 style={{
                   alignItems: 'center',
                   justifyContent: 'center',
                   paddingHorizontal: 90,
-                  paddingTop: 35,
                   zIndex: 1,
                   // backgroundColor: '#FFFFFF4D',
-                  marginTop: -60,
                 }}>
                 <Image
                   source={require('../../../assets/images/icon_bottom.png')}
@@ -416,11 +416,13 @@ export default function MapParent() {
                   }}
                 />
               </Pressable>
+              </View>
               <View
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'center',
+                   flex: 1
                 }}>
                 <Animated.Image
                   source={require('../../../assets/images/icon_arrow.png')}
