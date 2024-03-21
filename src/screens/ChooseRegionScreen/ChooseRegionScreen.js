@@ -13,8 +13,8 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import CustomListItem from '../../components/CustomButton/CustomListItem';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2} from '../../../utils';
-import crashlytics from '@react-native-firebase/crashlytics';
+import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 const ChooseRegionScreen = ({route}) => {
   const [lang, setLang] = useState({});
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
     fontSize: 22,
     color: '#343a59',
   },
@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
   },
   mediumText: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: 13,
     color: '#343a59',
     alignSelf: 'center',
@@ -291,16 +291,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 10,
     marginHorizontal: 20,
-    paddingVertical: 0,
+    paddingVertical: 15,
     borderRadius: 15,
     shadowColor: '#b8b8b8',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 5,
     },
-    shadowOpacity: 0,
-    shadowRadius: 2,
-    elevation: 15,
+    shadowOpacity: 0.36,
+    shadowRadius: 6.68,
+    
+    elevation: 11,
   },
   selectItem: {
     backgroundColor: 'white',

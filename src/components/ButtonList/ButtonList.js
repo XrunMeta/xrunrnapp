@@ -1,5 +1,6 @@
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React from 'react';
+import { getFontFam } from '../../../utils';
 
 const ButtonList = ({label, onPress}) => {
   return (
@@ -16,7 +17,7 @@ const ButtonList = ({label, onPress}) => {
       <View>
         <Text
           style={{
-            fontFamily: 'Roboto-Regular',
+            fontFamily: getFontFam() + 'Regular',
             fontSize: 13,
             color: 'black',
             paddingVertical: 18,
@@ -32,12 +33,13 @@ export default ButtonList;
 
 const styles = StyleSheet.create({
   shadow: {
-    shadowColor: 'black',
+    shadowColor: "#000000",
     shadowOffset: {
       width: 0,
-      height: 10,
+      height: 1,
     },
-    shadowOpacity: 1,
-    shadowRadius: 3.5,
+    shadowOpacity:  0.16,
+    shadowRadius: 1.51,
+    elevation: 1
   },
 });

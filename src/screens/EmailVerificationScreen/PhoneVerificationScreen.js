@@ -16,10 +16,10 @@ import React, {useState, useRef, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import CustomButton from '../../components/CustomButton';
-import {URL_API, getLanguage2} from '../../../utils';
+import {URL_API, getLanguage2, getFontFam} from '../../../utils';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import crashlytics from '@react-native-firebase/crashlytics';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 // ########## Main Function ##########
 const PhoneVerificationScreen = () => {
@@ -293,76 +293,74 @@ const PhoneVerificationScreen = () => {
   };
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={[styles.root, {height: ScreenHeight}]}>
-        <ButtonBack onClick={onBack} />
+    <View style={[styles.root, {height: ScreenHeight}]}>
+      <ButtonBack onClick={onBack} />
 
-        {/* Text Section */}
-        <View style={styles.textWrapper}>
-          <Text style={styles.normalText}>
-            {lang &&
-            lang.screen_notExist &&
-            lang.screen_notExist.field_phoneVerif
-              ? lang.screen_notExist.field_phoneVerif.label
-              : ''}
-          </Text>
-          <Text style={styles.boldText}>{mobile}</Text>
-        </View>
-
-        {/* Code Input */}
-        <View style={styles.codeInputContainer}>
-          {verificationCode.map((code, index) => (
-            <TextInput
-              key={index}
-              ref={ref => (inputRefs.current[index] = ref)}
-              style={[
-                styles.codeInput,
-                activeIndex === index && styles.activeInput,
-              ]}
-              placeholder="0"
-              placeholderTextColor="grey"
-              value={code}
-              onChangeText={text => handleInputChange(text, index)}
-              onKeyPress={({nativeEvent}) => {
-                if (nativeEvent.key === 'Backspace') {
-                  handleInputDelete(index);
-                }
-              }}
-              onFocus={() => setActiveIndex(index)}
-              keyboardType="numeric"
-              maxLength={1}
-            />
-          ))}
-        </View>
-
-        {/* Bottom Section*/}
-        <View style={[styles.bottomSection]}>
-          <View style={styles.additionalLogin}>
-            <Countdown />
-          </View>
-          {isCodeComplete ? (
-            <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
-              <Image
-                source={require('../../../assets/images/icon_next.png')}
-                resizeMode="contain"
-                style={styles.buttonSignInImage}
-              />
-            </Pressable>
-          ) : (
-            <Pressable onPress={onSignInDisabled} style={styles.buttonSignIn}>
-              <Image
-                source={require('../../../assets/images/icon_nextDisable.png')}
-                resizeMode="contain"
-                style={styles.buttonSignInImage}
-              />
-            </Pressable>
-          )}
-        </View>
-
-        {/* Slider Modal */}
-        <SliderModal visible={modalVisible} onClose={toggleModal} />
+      {/* Text Section */}
+      <View style={styles.textWrapper}>
+        <Text style={styles.normalText}>
+          {lang &&
+          lang.screen_notExist &&
+          lang.screen_notExist.field_phoneVerif
+            ? lang.screen_notExist.field_phoneVerif.label
+            : ''}
+        </Text>
+        <Text style={styles.boldText}>{mobile}</Text>
       </View>
-    </ScrollView>
+
+      {/* Code Input */}
+      <View style={styles.codeInputContainer}>
+        {verificationCode.map((code, index) => (
+          <TextInput
+            key={index}
+            ref={ref => (inputRefs.current[index] = ref)}
+            style={[
+              styles.codeInput,
+              activeIndex === index && styles.activeInput,
+            ]}
+            placeholder="0"
+            placeholderTextColor="grey"
+            value={code}
+            onChangeText={text => handleInputChange(text, index)}
+            onKeyPress={({nativeEvent}) => {
+              if (nativeEvent.key === 'Backspace') {
+                handleInputDelete(index);
+              }
+            }}
+            onFocus={() => setActiveIndex(index)}
+            keyboardType="numeric"
+            maxLength={1}
+          />
+        ))}
+      </View>
+
+      {/* Bottom Section*/}
+      <View style={[styles.bottomSection]}>
+        <View style={styles.additionalLogin}>
+          <Countdown />
+        </View>
+        {isCodeComplete ? (
+          <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
+            <Image
+              source={require('../../../assets/images/icon_next.png')}
+              resizeMode="contain"
+              style={styles.buttonSignInImage}
+            />
+          </Pressable>
+        ) : (
+          <Pressable onPress={onSignInDisabled} style={styles.buttonSignIn}>
+            <Image
+              source={require('../../../assets/images/icon_nextDisable.png')}
+              resizeMode="contain"
+              style={styles.buttonSignInImage}
+            />
+          </Pressable>
+        )}
+      </View>
+
+      {/* Slider Modal */}
+      <SliderModal visible={modalVisible} onClose={toggleModal} />
+    </View>
   );
 };
 
@@ -388,12 +386,12 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   normalText: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: 13,
     color: '#343a59',
   },
   boldText: {
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
     fontSize: 18,
     color: '#343a59',
   },
@@ -412,12 +410,12 @@ const styles = StyleSheet.create({
     height: 100,
   },
   emailAuth: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: 13,
     color: '#343a59',
   },
   disableText: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 13,
     color: '#aeb1b5',
   },
@@ -429,7 +427,7 @@ const styles = StyleSheet.create({
   codeInput: {
     width: 40,
     height: 60,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: 20,
     color: '#343a59',
     borderBottomWidth: 2,

@@ -10,8 +10,8 @@ import {
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getLanguage2} from '../../../utils';
-import crashlytics from '@react-native-firebase/crashlytics';
+import {getLanguage2, getFontFam} from '../../../utils';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 const CompleteSend = ({navigation, route}) => {
   const [lang, setLang] = useState('');
@@ -71,7 +71,7 @@ const CompleteSend = ({navigation, route}) => {
         <Text
           style={{
             fontSize: 16,
-            fontFamily: 'Roboto-Regular',
+            fontFamily: getFontFam() + 'Regular',
             color: '#e05c2b',
           }}>
           {lang && lang.screen_wallet && lang.screen_wallet.history_action3306
@@ -79,7 +79,7 @@ const CompleteSend = ({navigation, route}) => {
             : ''}{' '}
         </Text>
         <Text
-          style={{fontSize: 16, fontFamily: 'Roboto-Regular', color: '#555'}}>
+          style={{fontSize: 16, fontFamily: getFontFam() + 'Regular', color: '#555'}}>
           {lang &&
           lang.screen_complete_send &&
           lang.screen_complete_send.complete_send
@@ -106,7 +106,7 @@ const CompleteSend = ({navigation, route}) => {
           }}>
           <Text
             style={{
-              fontFamily: 'Roboto-Regular',
+              fontFamily: getFontFam() + 'Regular',
               color: '#555',
             }}>
             {lang &&
@@ -117,7 +117,7 @@ const CompleteSend = ({navigation, route}) => {
           </Text>
           <Text
             style={{
-              fontFamily: 'Roboto-Regular',
+              fontFamily: getFontFam() + 'Regular',
               color: '#000',
               maxWidth: 180,
             }}>
@@ -135,7 +135,7 @@ const CompleteSend = ({navigation, route}) => {
           }}>
           <Text
             style={{
-              fontFamily: 'Roboto-Regular',
+              fontFamily: getFontFam() + 'Regular',
               color: '#555',
             }}>
             {lang &&
@@ -146,7 +146,7 @@ const CompleteSend = ({navigation, route}) => {
           </Text>
           <Text
             style={{
-              fontFamily: 'Roboto-Regular',
+              fontFamily: getFontFam() + 'Regular',
               color: '#000',
               maxWidth: 180,
             }}>
@@ -163,7 +163,7 @@ const CompleteSend = ({navigation, route}) => {
           }}>
           <Text
             style={{
-              fontFamily: 'Roboto-Regular',
+              fontFamily: getFontFam() + 'Regular',
               color: '#555',
             }}>
             {lang &&
@@ -175,7 +175,7 @@ const CompleteSend = ({navigation, route}) => {
           <View>
             <Text
               style={{
-                fontFamily: 'Roboto-Regular',
+                fontFamily: getFontFam() + 'Regular',
                 color: '#000',
                 maxWidth: 240,
               }}>
@@ -187,7 +187,7 @@ const CompleteSend = ({navigation, route}) => {
 
       <Text
         style={{
-          fontFamily: 'Roboto-Regular',
+          fontFamily: getFontFam() + 'Regular',
           color: '#555',
           paddingHorizontal: 20,
           marginTop: 30,
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
   },

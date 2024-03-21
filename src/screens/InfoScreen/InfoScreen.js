@@ -17,8 +17,8 @@ import ButtonList from '../../components/ButtonList/ButtonList';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
-import {URL_API, getLanguage2} from '../../../utils';
-import crashlytics from '@react-native-firebase/crashlytics';
+import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 const InfoScreen = () => {
   const [lang, setLang] = useState({});
@@ -214,7 +214,7 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
           }}>
           <Text
             style={{
-              fontFamily: 'Roboto-Regular',
+              fontFamily: getFontFam() + 'Regular',
               fontSize: 13,
               color: 'black',
             }}>
@@ -224,7 +224,7 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
           </Text>
           <Text
             style={{
-              fontFamily: 'Roboto-Regular',
+              fontFamily: getFontFam() + 'Regular',
               fontSize: 11,
               color: 'grey',
               marginTop: -3,
@@ -359,7 +359,7 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
             <Text
               style={[
                 styles.modalText,
-                {fontFamily: 'Roboto-Medium', marginBottom: 20},
+                {fontFamily: getFontFam() + 'Medium', marginBottom: 20},
               ]}>
               {refEmail}
             </Text>
@@ -391,7 +391,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
   },
@@ -413,7 +413,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     textAlign: 'left',
     color: '#051C60',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
   },
   modalButton: {
     paddingVertical: 10,
@@ -427,6 +427,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 13,
     color: '#051C60',
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
   },
 });

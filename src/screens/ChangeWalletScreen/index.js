@@ -14,8 +14,8 @@ import React, {useState, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInputWallet from '../../components/CustomInputWallet';
-import {URL_API, getLanguage2} from '../../../utils';
-import crashlytics from '@react-native-firebase/crashlytics';
+import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 const Change = ({navigation, route}) => {
   const [lang, setLang] = useState('');
@@ -517,7 +517,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
   },
@@ -531,12 +531,12 @@ const styles = StyleSheet.create({
   },
   currencyName: {
     color: '#fff',
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: 18,
   },
   balance: {
     color: '#fff',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 13,
   },
   partBottom: {
@@ -559,12 +559,12 @@ const styles = StyleSheet.create({
     width: 95,
   },
   selectNetwork: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     color: '#000',
     marginTop: 10,
   },
   description: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     color: '#bbb',
     marginTop: 4,
   },
@@ -584,7 +584,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   textDay: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     color: 'black',
   },
   wrapperInput: {
@@ -624,13 +624,13 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   textChange: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     color: '#000',
     textTransform: 'uppercase',
     fontSize: 13,
   },
   textCheckInformation: {
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 11,
     color: '#000',
   },
@@ -648,12 +648,12 @@ const styles = StyleSheet.create({
   },
   textPartLeft: {
     color: '#aaa',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 13,
   },
   textPartRight: {
     color: '#000',
-    fontFamily: 'Roboto-Regular',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: 13,
   },
   wrapperButton: {
@@ -668,7 +668,7 @@ const styles = StyleSheet.create({
   },
   textButtonConfirm: {
     color: '#343c5a',
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     textTransform: 'uppercase',
   },
 });

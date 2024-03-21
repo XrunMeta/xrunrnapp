@@ -9,6 +9,7 @@ import {
 import React, {useEffect, useState} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {WebView} from 'react-native-webview';
+import { getFontFam } from '../../../utils';
 
 const PersonalPolicy = () => {
   const [url, setUrl] = useState('https://app.xrun.run/7012.html');
@@ -32,14 +33,14 @@ const PersonalPolicy = () => {
         }}>
         <Text
           style={{
-            fontFamily: 'Roboto-Medium',
+            fontFamily: getFontFam() + 'Medium',
             fontSize: 16,
           }}>
           KEBIJAKAN PRIBADI
         </Text>
         <Text
           style={{
-            fontFamily: 'Roboto-Medium',
+            fontFamily: getFontFam() + 'Medium',
             fontSize: 13,
           }}>
           1. Apa itu Kebijakan Privasi? XRUN LLC (selanjutnya disebut sebagai

@@ -7,13 +7,17 @@ import {
   Dimensions,
 } from 'react-native';
 import React, {useState, useRef, useEffect} from 'react';
-import {useNavigation} from '@react-navigation/native';
-import {getLanguage2} from '../../../utils';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {getLanguage2, URL_API, getFontFam} from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import crashlytics from '@react-native-firebase/crashlytics';
+import {useAuth} from '../../context/AuthContext/AuthContext';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 // ########## Main Function ##########
 const SuccessJoinScreen = () => {
+  const route = useRoute();
+  const {email, pin} = route.params;
+  const {login} = useAuth();
   const navigation = useNavigation();
   let ScreenHeight = Dimensions.get('window').height;
   const [lang, setLang] = useState({});
@@ -26,11 +30,18 @@ const SuccessJoinScreen = () => {
         const screenLang = await getLanguage2(currentLanguage);
 
         setLang(screenLang);
-      } catch (err) {
-        console.error(
-          'Error retrieving selfCoordinate from AsyncStorage:',
-          err,
+
+        const response = await fetch(
+          `${URL_API}&act=login-01&tp=4&email=${email}&pin=${pin}`,
         );
+        const data = await response.json();
+
+        await AsyncStorage.setItem('userEmail', email);
+        await AsyncStorage.setItem('userData', JSON.stringify(data));
+        login();
+        console.log('Signin abis signup bisa boy -> ' + JSON.stringify(data));
+      } catch (err) {
+        console.error('Error retrieving Signin:', err);
         crashlytics().recordError(new Error(err));
         crashlytics().log(err);
       }
@@ -40,7 +51,10 @@ const SuccessJoinScreen = () => {
   }, []);
 
   const onSignIn = async () => {
-    navigation.replace('Home');
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'Home'}],
+    });
   };
 
   return (
@@ -71,7 +85,7 @@ const SuccessJoinScreen = () => {
             {lang && lang.screen_notExist && lang.screen_notExist.field_join
               ? lang.screen_notExist.field_join.str2
               : ''}
-            <Text style={{color: '#da7750', fontFamily: 'Roboto-Medium'}}>
+            <Text style={{color: '#da7750', fontFamily: getFontFam() + 'Medium'}}>
               {lang && lang.screen_notExist && lang.screen_notExist.field_join
                 ? lang.screen_notExist.field_join.str3
                 : ''}
@@ -112,7 +126,7 @@ const styles = StyleSheet.create({
     width: 80,
   },
   normalText: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: 13,
     color: '#343a59',
   },

@@ -11,8 +11,8 @@ import {
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2} from '../../../utils';
-import crashlytics from '@react-native-firebase/crashlytics';
+import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 const OneProblemScreen = () => {
   const [lang, setLang] = useState({});
@@ -114,7 +114,7 @@ const OneProblemScreen = () => {
                     style={{flexDirection: 'row', gap: 10, marginBottom: -3}}>
                     <Text
                       style={{
-                        fontFamily: 'Roboto-Regular',
+                        fontFamily: getFontFam() + 'Regular',
                         fontSize: 11,
                         color: 'grey',
                       }}>
@@ -122,7 +122,7 @@ const OneProblemScreen = () => {
                     </Text>
                     <Text
                       style={{
-                        fontFamily: 'Roboto-Regular',
+                        fontFamily: getFontFam() + 'Regular',
                         fontSize: 11,
                         color: 'grey',
                       }}>
@@ -131,7 +131,7 @@ const OneProblemScreen = () => {
                   </View>
                   <Text
                     style={{
-                      fontFamily: 'Roboto-Regular',
+                      fontFamily: getFontFam() + 'Regular',
                       fontSize: 13,
                       color: 'black',
                     }}>
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: 'Roboto-Bold',
+    fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
   },

@@ -5,7 +5,7 @@ import ButtonList from '../../components/ButtonList/ButtonList';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
 import {getLanguage2} from '../../../utils';
-import crashlytics from '@react-native-firebase/crashlytics';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 const RecommendScreen = () => {
   const navigation = useNavigation();

@@ -1,0 +1,19 @@
+current directory: /Users/nwyoung/Desktop/testiosrn/react-app.xrun/vendor/bundle/ruby/3.3.0/gems/nkf-0.2.0/ext/nkf
+/Users/nwyoung/.rbenv/versions/3.3.0/bin/ruby extconf.rb
+creating Makefile
+
+current directory: /Users/nwyoung/Desktop/testiosrn/react-app.xrun/vendor/bundle/ruby/3.3.0/gems/nkf-0.2.0/ext/nkf
+make DESTDIR\= sitearchdir\=./.gem.20240314-23546-vys160 sitelibdir\=./.gem.20240314-23546-vys160 clean
+
+current directory: /Users/nwyoung/Desktop/testiosrn/react-app.xrun/vendor/bundle/ruby/3.3.0/gems/nkf-0.2.0/ext/nkf
+make DESTDIR\= sitearchdir\=./.gem.20240314-23546-vys160 sitelibdir\=./.gem.20240314-23546-vys160
+compiling nkf.c
+linking shared-object nkf.bundle
+ld: warning: -multiply_defined is obsolete
+
+current directory: /Users/nwyoung/Desktop/testiosrn/react-app.xrun/vendor/bundle/ruby/3.3.0/gems/nkf-0.2.0/ext/nkf
+make DESTDIR\= sitearchdir\=./.gem.20240314-23546-vys160 sitelibdir\=./.gem.20240314-23546-vys160 install
+/usr/bin/install -c -m 0755 nkf.bundle ./.gem.20240314-23546-vys160
+
+current directory: /Users/nwyoung/Desktop/testiosrn/react-app.xrun/vendor/bundle/ruby/3.3.0/gems/nkf-0.2.0/ext/nkf
+make DESTDIR\= sitearchdir\=./.gem.20240314-23546-vys160 sitelibdir\=./.gem.20240314-23546-vys160 clean

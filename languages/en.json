@@ -471,7 +471,7 @@
     "copy_qrcode_show": "The wallet address has been copied.",
     "download_qrcode_show": "Image is saved successfully. Please check the gallery.\n\nPlease check the download folder for the key file. \n\nIf the key file is requested more than once, the file will be damaged (non-recoverable).",
     "copy_qrcode": "The wallet address has been copied. Use it wherever you want.",
-    "table_head_transaction": "Transactional information/Transactional bill",
+    "table_head_transaction": "Transactional information/bill",
     "table_head_send": "Transfer",
     "table_head_change": "Convert",
     "table_head_exchange": "Exchange",
@@ -495,12 +495,14 @@
     "failed_getwallet_alert": "Failed for get your wallet, please try again later",
     "failed_alert": "Failed",
     "failed_download_qrcode_alert": "Failed to download qr code",
-    "see_more": "See More"
+    "see_more": "See More",
+    "able_transfer": "Able Transfer"
   },
   "screen_send": {
     "send_amount_label": "Amount to send",
     "send_amount_placeholder": "Please enter the amount to be sent.",
     "send_address_label": "Address to send",
+    "send_availables_label": "Avaliables",
     "send_address_placeholder": "Please enter the address to be sent.",
     "send_balance": "Balance :",
     "send_stock_exchange_label": "Stock exchange",
@@ -508,7 +510,9 @@
     "send_balance_not_enough": "There is not enough money(or bank balance).",
     "send_address_less": "Address less than 40 letters.",
     "send_enough_money": "Check the current amount and make sure you have enough money in your wallet including gas (transfer fee)",
-    "send_verification_code": "Sending verification code"
+    "send_verification_code": "Sending verification code",
+    "estimated_gas_fee": "Estimated gas fee",
+    "note": "Note that you must have ethereum to transfer, If not you may lost your value."
   },
   "screen_complete_send": {
     "title": "Transfer Completed",
@@ -574,5 +578,10 @@
     "tab1": "An Advertisement in Storage",
     "tab2": "Mission Completed Advertisement",
     "total": "Total"
+  },
+
+  "permissions_alert": {
+    "title_camera_permission": "Permission Camera",
+    "desc_camera_permission": "Need camera accsess to scan QR Code Image"
   }
 }

@@ -14,8 +14,8 @@ import ARScreen from '../ARScreen/ARScreen';
 import MapParent from './MapParentScreen';
 import {useIsFocused, useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getFCMToken, getLanguage2} from '../../../utils';
-import crashlytics from '@react-native-firebase/crashlytics';
+import {URL_API, getFCMToken, getLanguage2, getFontFam} from '../../../utils';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 export default function Home({route}) {
   const [lang, setLang] = useState({});
@@ -161,7 +161,7 @@ export default function Home({route}) {
           }}>
           <Text
             style={{
-              fontFamily: 'Roboto-Light',
+              fontFamily: getFontFam() + 'Light',
               fontSize: 9,
               color: 'white',
             }}>
@@ -313,7 +313,7 @@ export default function Home({route}) {
       ) : (
         <Text
           style={{
-            fontFamily: 'Roboto-Regular',
+            fontFamily: getFontFam() + 'Regular',
             fontSize: 13,
             color: 'red',
             margin: 'auto',
@@ -370,7 +370,7 @@ const styles = StyleSheet.create({
     }),
   },
   tabText: {
-    fontFamily: 'Roboto-Medium',
+    fontFamily: getFontFam() + 'Medium',
     color: 'black',
     fontSize: 10.5,
     marginBottom: -15,
