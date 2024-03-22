@@ -26,7 +26,7 @@ import {URL_API, getLanguage2, getFontFam} from '../../../utils';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import CompassHeading from 'react-native-compass-heading';
-import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 // import crashlytics from '@react-native-firebase/crashlytics';
 
 function ARScreen() {
@@ -182,7 +182,7 @@ function ARScreen() {
   const getARCoin = async (userID, latitude, longitude) => {
     try {
       const apiUrl = `${URL_API}&act=app2000-01&member=${userID}&limit=20&lat=${latitude}&lng=${longitude}`;
-      console.log("API Get AR Coin: " + apiUrl)
+      console.log('API Get AR Coin: ' + apiUrl);
       const response = await fetch(apiUrl);
       const responseData = await response.json();
 
@@ -357,6 +357,10 @@ function ARScreen() {
     };
   });
 
+  const onError = error => {
+    console.error(error);
+  };
+
   const renderCamera = () => {
     const commonProps = {
       fps: 25,
@@ -368,13 +372,14 @@ function ARScreen() {
       device: device,
       isActive: true,
       lowLightBoost: false,
+      onError: onError,
     };
     if (Platform.OS === 'android') {
       return (
         <Camera
           {...commonProps}
           torch={flash === 'on' ? 'on' : 'off'}
-          onInitialized={() => setTimeout(() => setFlash('off'), 500)}
+          onInitialized={() => setTimeout(() => setFlash('off'), 1000)}
         />
       );
     } else if (Platform.OS === 'ios') {
@@ -392,7 +397,17 @@ function ARScreen() {
       <View>
         {cameraPermission === 'granted' && isCameraReady && device && (
           <>
-            {renderCamera()}
+            {/* {renderCamera()} */}
+            <Camera
+              style={{
+                position: 'relative',
+                width: '100%',
+                height: '100%',
+              }}
+              device={device}
+              isActive={true}
+              lowLightBoost={false}
+            />
             <View
               style={{
                 position: 'absolute',
@@ -417,7 +432,7 @@ function ARScreen() {
                           ? 'block'
                           : item.rotation >= 210 && item.rotation <= 320
                           ? 'block'
-                          : item.rotation >= 330 && rotation <= 360
+                          : item.rotation >= 330 && item.rotation <= 360
                           ? 'block'
                           : 'none',
                     },
