@@ -24,16 +24,16 @@ const CustomModal = ({visible, text, onOK}) => {
 
 const ShowAdScreen = ({route, navigation}) => {
   const {screenName, member, advertisement, coin, coinScreen} = route.params;
-//   const {adLoaded, adDismissed, show} = useInterstitialAd(
-//     // TestIds.INTERSTITIAL,
-//     realAD,
-//     {
-//       requestOptions: {
-//         requestNonPersonalizedAdsOnly: true,
-//       },
-//     },
-//   );
-  const {adLoaded, adDismissed, show} = []
+  const {adLoaded, adDismissed, show} = useInterstitialAd(
+    // TestIds.INTERSTITIAL,
+    realAD,
+    {
+      requestOptions: {
+        requestNonPersonalizedAdsOnly: true,
+      },
+    },
+  );
+  // const {adLoaded, adDismissed, show} = []
   const [modalVisible, setModalVisible] = useState(false);
   const [adCompleted, setAdCompleted] = useState(false);
   const [modalText, setModalText] = useState('');
