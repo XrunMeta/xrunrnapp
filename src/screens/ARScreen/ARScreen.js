@@ -374,7 +374,7 @@ function ARScreen() {
         <Camera
           {...commonProps}
           torch={flash === 'on' ? 'on' : 'off'}
-          onInitialized={() => setTimeout(() => setFlash('off'), 500)}
+          onInitialized={() => setTimeout(() => setFlash('off'), 1000)}
         />
       );
     } else if (Platform.OS === 'ios') {

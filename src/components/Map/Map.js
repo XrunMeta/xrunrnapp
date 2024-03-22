@@ -436,7 +436,7 @@ const MapComponent = ({
           // Izin ditolak, beri tahu pengguna atau lakukan tindakan lain
         }
       } catch (err) {
-        console.error(err);
+        console.error("Izin lokasi error: ", err);
       }
     };
 
@@ -525,6 +525,8 @@ const MapComponent = ({
     const watchId = Geolocation.watchPosition(
       position => {
         handlePinChange(position, pinTarget);
+
+        console.log("Pindah brooooooooooo")
 
         // Mengambil koordinat pengguna saat ini
         const userCoordinate = {
@@ -806,7 +808,8 @@ const MapComponent = ({
         <MapView
           ref={mapRef}
           style={styles.mapStyle}
-          provider={Platform.OS === 'ios' ? PROVIDER_DEFAULT : PROVIDER_GOOGLE}
+          // provider={Platform.OS === 'ios' ? PROVIDER_DEFAULT : PROVIDER_GOOGLE}
+          // provider={PROVIDER_GOOGLE}
           initialRegion={{
             latitude: pin.latitude,
             longitude: pin.longitude,
@@ -814,9 +817,9 @@ const MapComponent = ({
             longitudeDelta: 0.001,
           }}
           customMapStyle={customMapStyle}
-          showsUserLocation={true}
-          showsMyLocationButton={false}
-          followsUserLocation={true}>
+          showsUserLocation
+          showsMyLocationButton
+          followsUserLocation>
           {imagesLoaded ? (
             markers
           ) : (
