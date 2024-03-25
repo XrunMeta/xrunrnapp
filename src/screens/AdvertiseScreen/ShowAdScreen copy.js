@@ -1,5 +1,6 @@
 import {Modal, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React, {useEffect, useState} from 'react';
+// import {useInterstitialAd, TestIds} from '@react-native-admob/admob';
 import {
   AdEventType,
   InterstitialAd,
@@ -28,6 +29,16 @@ const CustomModal = ({visible, text, onOK}) => {
 
 const ShowAdScreen = ({route, navigation}) => {
   const {screenName, member, advertisement, coin, coinScreen} = route.params;
+  // const {adLoaded, adDismissed, show} = useInterstitialAd(
+  //   // TestIds.INTERSTITIAL,
+  //   realAD,
+  //   {
+  //     requestOptions: {
+  //       requestNonPersonalizedAdsOnly: true,
+  //     },
+  //   },
+  // );
+  const {adLoaded, adDismissed, show} = [];
   const [modalVisible, setModalVisible] = useState(false);
   const [adCompleted, setAdCompleted] = useState(false);
   const [modalText, setModalText] = useState('');
@@ -54,7 +65,6 @@ const ShowAdScreen = ({route, navigation}) => {
   const initInterstitial = async () => {
     const interstitialAd = InterstitialAd.createForAdRequest(
       TestIds.INTERSTITIAL,
-      // realAD,
     );
 
     interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
@@ -63,11 +73,16 @@ const ShowAdScreen = ({route, navigation}) => {
     });
 
     interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {
-      setAdCompleted(true);
       console.log('Interstitial has closed!');
     });
 
     interstitialAd.load();
+  };
+
+  const showInterstitialAds = async () => {
+    if (interstitialAds) {
+      interstitialAds.show();
+    }
   };
 
   useEffect(() => {
@@ -90,8 +105,20 @@ const ShowAdScreen = ({route, navigation}) => {
   }, []);
 
   useEffect(() => {
+    const loadAd = async () => {
+      if (adLoaded) {
+        console.log('Harusnya nampilin disini');
+        show();
+        setAdCompleted(true);
+      }
+    };
+
+    loadAd();
+  }, [adLoaded, show]);
+
+  useEffect(() => {
     // Cek apakah iklan selesai
-    if (adCompleted) {
+    if (adDismissed && adCompleted) {
       console.log(`
         Member : ${member}
         Adver  : ${advertisement}
@@ -126,13 +153,7 @@ const ShowAdScreen = ({route, navigation}) => {
 
       coinAcquiring();
     }
-  }, [adCompleted, navigation]);
-
-  useEffect(() => {
-    if (interstitialAds) {
-      interstitialAds.show();
-    }
-  }, [interstitialAds]);
+  }, [adDismissed, navigation]);
 
   return (
     <View
@@ -140,8 +161,7 @@ const ShowAdScreen = ({route, navigation}) => {
         styles.root,
         {backgroundColor: modalVisible ? '#000000A5' : 'white'},
       ]}>
-      {/* {!adLoaded && ( */}
-      {!interstitialAds && (
+      {!adLoaded && (
         <>
           <Text
             style={{
@@ -151,6 +171,9 @@ const ShowAdScreen = ({route, navigation}) => {
             }}>
             Loading ads...
           </Text>
+          <TouchableOpacity onPress={showInterstitialAds}>
+            <Text>Interstitial</Text>
+          </TouchableOpacity>
         </>
       )}
 
