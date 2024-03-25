@@ -1,4 +1,4 @@
-import {Modal, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {Modal, StyleSheet, Text, View, TouchableOpacity, Platform} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {
   AdEventType,
@@ -7,9 +7,17 @@ import {
 } from 'react-native-google-mobile-ads';
 import {URL_API, getLanguage2, getFontFam} from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 // import crashlytics from '@react-native-firebase/crashlytics';
 
-const realAD = 'ca-app-pub-9457909979646034/7873165988';
+const androidRealAD = 'ca-app-pub-9457909979646034/7873165988';
+const iosRealAD = 'ca-app-pub-9457909979646034/3743957554';
+
+// Menentukan nilai realAD berdasarkan platform
+const realAD = Platform.select({
+  ios: iosRealAD,
+  android: androidRealAD,
+});
 
 const CustomModal = ({visible, text, onOK}) => {
   return (
@@ -26,26 +34,31 @@ const CustomModal = ({visible, text, onOK}) => {
   );
 };
 
-const ShowAdScreen = ({route, navigation}) => {
+// const ShowAdScreen = ({route, navigation}) => {
+const ShowAdScreen = ({route}) => {
   const {screenName, member, advertisement, coin, coinScreen} = route.params;
   const [modalVisible, setModalVisible] = useState(false);
   const [adCompleted, setAdCompleted] = useState(false);
   const [modalText, setModalText] = useState('');
   const [lang, setLang] = useState({});
   const [interstitialAds, setInterstitialAds] = useState(null);
+  const navigation = useNavigation();
 
   const handleOKPress = () => {
     setModalVisible(false);
     console.log('Apakah ini coin screen? ' + coinScreen);
 
-    if (coinScreen == true) {
-      navigation.replace(screenName, {
-        sendActiveTab: 'Camera',
-      });
-    } else {
-      navigation.replace(screenName);
-    }
+    setTimeout(() => {
+        if (coinScreen == true) {
+            navigation.replace(screenName, {
+                sendActiveTab: 'Camera',
+            });
+        } else {
+            navigation.replace(screenName);
+        }
+    }, 600); // Delay selama 1 detik (1000 milidetik)
   };
+
 
   useEffect(() => {
     initInterstitial();
@@ -80,8 +93,8 @@ const ShowAdScreen = ({route, navigation}) => {
         // Set your language state
         setLang(screenLang);
       } catch (err) {
-        crashlytics().recordError(new Error(err));
-        crashlytics().log(err);
+        // crashlytics().recordError(new Error(err));
+        // crashlytics().log(err);
         console.error('Error in fetchData:', err);
       }
     };
@@ -115,8 +128,8 @@ const ShowAdScreen = ({route, navigation}) => {
             setModalVisible(true);
           }
         } catch (err) {
-          crashlytics().recordError(new Error(err));
-          crashlytics().log(err);
+          // crashlytics().recordError(new Error(err));
+          // crashlytics().log(err);
           console.error(
             'Error retrieving selfCoordinate from AsyncStorage:',
             err,

@@ -8,6 +8,7 @@ import {
   PermissionsAndroid,
   Platform,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import MapView, {
   Marker,
   PROVIDER_GOOGLE,
@@ -15,6 +16,7 @@ import MapView, {
   PROVIDER_DEFAULT,
 } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
+import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {fetchMarkerData} from './APIGetMarker';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -62,19 +64,30 @@ const MapComponent = ({
   };
 
   const locationPermitChecker = async () => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      );
-
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('Izin dikasih bro');
-      } else {
-        // Izin ditolak, beri tahu pengguna atau lakukan tindakan lain
-        console.log('Izin ditolak bro');
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+          {
+            title: `Allow Yarrow to access this devices's location.`,
+            message: '',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          },
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log('You can use the location');
+        } else {
+          console.log('location permission denied');
+        }
+      } catch (err) {
+        console.warn(err);
       }
-    } catch (err) {
-      console.error(err);
+    } else {
+      const auth = await Geolocation.requestAuthorization('whenInUse');
+      // setIosLocation(auth);
+      console.log(auth);
     }
   };
 
@@ -267,7 +280,7 @@ const MapComponent = ({
         },
         {
           enableHighAccuracy: true,
-          distanceFilter: 10,
+          distanceFilter: 0.1,
         },
       );
 
@@ -280,6 +293,8 @@ const MapComponent = ({
 
   // 1 Time Use Effect
   useEffect(() => {
+    console.log("MAAAAAAAAAPPPP");
+
     const getFirstCoordinate = async () => {
       try {
         const selfCoordinate = await AsyncStorage.getItem('selfCoordinate');
@@ -423,20 +438,32 @@ const MapComponent = ({
 
   useEffect(() => {
     const checkLocationPermission = async () => {
-      try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        );
-
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          console.log('Izin diberikan');
-          startLocationUpdates();
-        } else {
-          console.log('Izin ditolak');
-          // Izin ditolak, beri tahu pengguna atau lakukan tindakan lain
+      if (Platform.OS === 'android') {
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.CAMERA,
+            {
+              title: `Allow Yarrow to access this devices's location.`,
+              message: '',
+              buttonNeutral: 'Ask Me Later',
+              buttonNegative: 'Cancel',
+              buttonPositive: 'OK',
+            },
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            console.log('You can use the location');
+            startLocationUpdates();
+          } else {
+            console.log('location permission denied');
+          }
+        } catch (err) {
+          console.warn(err);
         }
-      } catch (err) {
-        console.error("Izin lokasi error: ", err);
+      } else {
+        const auth = await Geolocation.requestAuthorization('whenInUse');
+        // setIosLocation(auth);
+        console.log(auth);
+        startLocationUpdates();
       }
     };
 
@@ -470,7 +497,7 @@ const MapComponent = ({
         },
         {
           enableHighAccuracy: true,
-          distanceFilter: 10,
+          distanceFilter: 0.1,
         },
       );
     };
@@ -559,7 +586,7 @@ const MapComponent = ({
       },
       {
         enableHighAccuracy: true,
-        distanceFilter: 10,
+        distanceFilter: 0.1,
       },
     );
 

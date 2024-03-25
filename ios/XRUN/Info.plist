@@ -43,6 +43,8 @@
 	<string>$(PRODUCT_NAME) Need camera accsess to scan QR Code Image </string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>$(PRODUCT_NAME) Need location access to showing Maps </string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>$(PRODUCT_NAME) Need location access to follow Maps </string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
     <string>We need to access your location to provide location specific points to visit</string>
 	<key>NSPhotoLibraryUsageDescription</key>

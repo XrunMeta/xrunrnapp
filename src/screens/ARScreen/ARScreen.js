@@ -3,13 +3,11 @@ import {
   SafeAreaView,
   StyleSheet,
   View,
-  Linking,
   TouchableOpacity,
   Image,
   ImageBackground,
   Text,
   Dimensions,
-  PermissionsAndroid,
   Platform,
 } from 'react-native';
 import {Camera, useCameraDevice} from 'react-native-vision-camera';
@@ -50,32 +48,6 @@ function ARScreen() {
   const [bigCoin, setBigCoin] = useState(0);
   const [compassHeading, setCompassHeading] = useState(0);
   const [prevCompassHeading, setPrevCompassHeading] = useState(0);
-
-  // const getCamPermission = async () => {
-  //   try {
-  //     const granted = await PermissionsAndroid.request(
-  //       PermissionsAndroid.PERMISSIONS.CAMERA,
-  //       // {
-  //       //   title: 'Camera Permission',
-  //       //   message:
-  //       //     'XRUN needs access to your camera ' +
-  //       //     'so you can enjoy AR and Catch the Coin!',
-  //       //   buttonPositive: 'OK',
-  //       //   buttonNegative: 'Cancel',
-  //       // },
-  //     );
-
-  //     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-  //       setCameraReady(true);
-  //       setCameraPermission('granted');
-  //     } else {
-  //       console.log('Kamera ga diizinin');
-  //       Linking.openSettings();
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
 
   const getCamPermission = async () => {
     try {
@@ -139,12 +111,7 @@ function ARScreen() {
     };
   }, []);
 
-  useEffect(() => {
-console.log("AR Screen di render")
-  }, [])
-
   // Coordinate User Listener
-  // !!!!!!!!!! Error disini
   useEffect(() => {
     const watchId = Geolocation.watchPosition(
       position => {
