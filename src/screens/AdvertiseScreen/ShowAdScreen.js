@@ -8,7 +8,7 @@ import {
 import {URL_API, getLanguage2, getFontFam} from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-// import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const androidRealAD = 'ca-app-pub-9457909979646034/7873165988';
 const iosRealAD = 'ca-app-pub-9457909979646034/3743957554';
@@ -48,7 +48,7 @@ const ShowAdScreen = ({route}) => {
     setModalVisible(false);
     console.log('Apakah ini coin screen? ' + coinScreen);
 
-    setTimeout(() => {
+    // setTimeout(() => {
         if (coinScreen == true) {
             navigation.replace(screenName, {
                 sendActiveTab: 'Camera',
@@ -56,7 +56,7 @@ const ShowAdScreen = ({route}) => {
         } else {
             navigation.replace(screenName);
         }
-    }, 600); // Delay selama 1 detik (1000 milidetik)
+    // }, 600); // Delay selama 1 detik (1000 milidetik)
   };
 
 
@@ -93,8 +93,8 @@ const ShowAdScreen = ({route}) => {
         // Set your language state
         setLang(screenLang);
       } catch (err) {
-        // crashlytics().recordError(new Error(err));
-        // crashlytics().log(err);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
         console.error('Error in fetchData:', err);
       }
     };
@@ -128,8 +128,8 @@ const ShowAdScreen = ({route}) => {
             setModalVisible(true);
           }
         } catch (err) {
-          // crashlytics().recordError(new Error(err));
-          // crashlytics().log(err);
+          crashlytics().recordError(new Error(err));
+          crashlytics().log(err);
           console.error(
             'Error retrieving selfCoordinate from AsyncStorage:',
             err,
