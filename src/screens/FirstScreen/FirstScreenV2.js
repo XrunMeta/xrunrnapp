@@ -22,7 +22,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
 import {getFontFam} from '../../../utils';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
-// import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 async function adul(user) {
   crashlytics().log('Tes Pagi');
@@ -47,7 +47,7 @@ const FirstScreenV2 = ({navigation}) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
-    // crashlytics().log('App mounted Lagi');
+    crashlytics().log('App mounted Lagi');
   }, []);
 
   // Get Map Initial Geolocation

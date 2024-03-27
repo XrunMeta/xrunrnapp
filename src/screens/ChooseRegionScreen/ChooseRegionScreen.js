@@ -14,7 +14,7 @@ import {useNavigation} from '@react-navigation/native';
 import CustomListItem from '../../components/CustomButton/CustomListItem';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API, getLanguage2, getFontFam} from '../../../utils';
-// import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const ChooseRegionScreen = ({route}) => {
   const [lang, setLang] = useState({});
