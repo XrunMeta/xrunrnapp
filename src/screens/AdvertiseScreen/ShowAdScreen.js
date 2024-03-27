@@ -14,13 +14,8 @@ import {
 } from 'react-native-google-mobile-ads';
 import {URL_API, getLanguage2, getFontFam} from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-<<<<<<< HEAD
 import {useNavigation} from '@react-navigation/native';
-// import crashlytics from '@react-native-firebase/crashlytics';
-=======
-import { useNavigation } from '@react-navigation/native';
 import crashlytics from '@react-native-firebase/crashlytics';
->>>>>>> 83a8d206c84aa4633abffdf1040ef101febc9660
 
 const androidRealAD = 'ca-app-pub-9457909979646034/7873165988';
 const iosRealAD = 'ca-app-pub-9457909979646034/3743957554';
