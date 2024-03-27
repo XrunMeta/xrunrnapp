@@ -13,7 +13,7 @@ import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
 import {getLanguage2, getFontFam} from '../../../utils';
-// import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const SettingScreen = () => {
   const {logout} = useAuth();

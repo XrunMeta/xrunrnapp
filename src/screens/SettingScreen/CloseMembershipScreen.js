@@ -16,7 +16,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getLanguage2, getFontFam} from '../../../utils';
-// import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const CloseMembershipScreen = () => {
   const [lang, setLang] = useState('');

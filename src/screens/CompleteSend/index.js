@@ -12,7 +12,7 @@ import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {getLanguage2,getFontFam} from '../../../utils';
-// import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const CompleteSend = ({navigation, route}) => {
   const [lang, setLang] = useState('');

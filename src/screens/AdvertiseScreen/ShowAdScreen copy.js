@@ -8,7 +8,7 @@ import {
 } from 'react-native-google-mobile-ads';
 import {URL_API, getLanguage2, getFontFam} from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const realAD = 'ca-app-pub-9457909979646034/7873165988';
 
