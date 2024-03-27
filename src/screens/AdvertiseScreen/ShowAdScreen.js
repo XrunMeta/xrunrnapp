@@ -1,4 +1,11 @@
-import {Modal, StyleSheet, Text, View, TouchableOpacity, Platform} from 'react-native';
+import {
+  Modal,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Platform,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {
   AdEventType,
@@ -7,7 +14,7 @@ import {
 } from 'react-native-google-mobile-ads';
 import {URL_API, getLanguage2, getFontFam} from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 // import crashlytics from '@react-native-firebase/crashlytics';
 
 const androidRealAD = 'ca-app-pub-9457909979646034/7873165988';
@@ -49,16 +56,15 @@ const ShowAdScreen = ({route}) => {
     console.log('Apakah ini coin screen? ' + coinScreen);
 
     setTimeout(() => {
-        if (coinScreen == true) {
-            navigation.replace(screenName, {
-                sendActiveTab: 'Camera',
-            });
-        } else {
-            navigation.replace(screenName);
-        }
+      if (coinScreen == true) {
+        navigation.replace(screenName, {
+          sendActiveTab: 'Camera',
+        });
+      } else {
+        navigation.replace(screenName);
+      }
     }, 600); // Delay selama 1 detik (1000 milidetik)
   };
-
 
   useEffect(() => {
     initInterstitial();
