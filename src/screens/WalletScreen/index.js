@@ -19,7 +19,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import TableWalletCard from '../../components/TableWallet';
 import {URL_API, getLanguage2, getFontFam} from '../../../utils';
 import ShowQRWallet from '../../components/ShowQRWallet';
-// import crashlytics from '@react-native-firebase/crashlytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const WalletScreen = ({navigation, route}) => {
   const [lang, setLang] = useState('');
