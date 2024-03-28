@@ -150,7 +150,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
         } else if (granted === 'denied') {
           setDownloadDisable(false);
         } else if (granted === 'never_ask_again') {
-          Linking.openSettings();
+          downloadFile();
           setDownloadDisable(false);
         }
       } catch (err) {
