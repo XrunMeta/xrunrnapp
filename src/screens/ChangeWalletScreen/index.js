@@ -9,6 +9,7 @@ import {
   Alert,
   Keyboard,
   SafeAreaView,
+  ScrollView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
@@ -334,26 +335,27 @@ const Change = ({navigation, route}) => {
         </View>
       </View>
 
-      <View style={{backgroundColor: '#fff'}}>
-        <View style={styles.partTop}>
-          <Text style={styles.currencyName}>-</Text>
-          <View style={styles.partScanQR}>
-            <Text style={styles.balance}>
-              {lang && lang ? lang.screen_conversion.acquired_coin : ''}:{' '}
-              {balance}XRUN
-            </Text>
+      <ScrollView overScrollMode="never">
+        <View style={{backgroundColor: '#fff'}}>
+          <View style={styles.partTop}>
+            <Text style={styles.currencyName}>-</Text>
+            <View style={styles.partScanQR}>
+              <Text style={styles.balance}>
+                {lang && lang ? lang.screen_conversion.acquired_coin : ''}:{' '}
+                {balance}XRUN
+              </Text>
+            </View>
           </View>
-        </View>
 
-        <View style={styles.partBottom}>
-          <Text style={styles.selectNetwork}>
-            {lang && lang ? lang.screen_conversion.title : ''}
-          </Text>
-          <Text style={styles.description}>
-            {lang && lang ? lang.screen_conversion.desc : ''}
-          </Text>
+          <View style={styles.partBottom}>
+            <Text style={styles.selectNetwork}>
+              {lang && lang ? lang.screen_conversion.title : ''}
+            </Text>
+            <Text style={styles.description}>
+              {lang && lang ? lang.screen_conversion.desc : ''}
+            </Text>
 
-          {/* <View style={styles.wrapperNetwork}>
+            {/* <View style={styles.wrapperNetwork}>
             <TouchableOpacity
               activeOpacity={1}
               onPress={() => changeSymbol('ETH')}
@@ -392,18 +394,18 @@ const Change = ({navigation, route}) => {
             </TouchableOpacity>
           </View> */}
 
-          <View style={styles.wrapperInput}>
-            <CustomInputWallet
-              value={amount}
-              setValue={setAmount}
-              isNumber
-              labelVisible={false}
-              placeholder={
-                lang && lang ? lang.screen_conversion.input_convert : ''
-              }
-              customFontSize={16}
-            />
-            {/* <CustomInputWallet
+            <View style={styles.wrapperInput}>
+              <CustomInputWallet
+                value={amount}
+                setValue={setAmount}
+                isNumber
+                labelVisible={false}
+                placeholder={
+                  lang && lang ? lang.screen_conversion.input_convert : ''
+                }
+                customFontSize={16}
+              />
+              {/* <CustomInputWallet
               value={address}
               labelVisible={false}
               setValue={setAddress}
@@ -412,9 +414,10 @@ const Change = ({navigation, route}) => {
               }
               customFontSize={16}
             /> */}
+            </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
