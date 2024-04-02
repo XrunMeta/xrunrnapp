@@ -48,7 +48,7 @@ const PhoneLoginScreen = ({route}) => {
     fetchLangData();
   }, []);
 
-  const onSignUp = async () => {
+  const onJoin = async () => {
     if (phoneNumber.trim() === '') {
       Alert.alert('Error', lang.screen_notExist.field_phoneNumber.empty);
     } else {
@@ -68,9 +68,10 @@ const PhoneLoginScreen = ({route}) => {
   };
 
   const onBack = () => {
-    navigation.navigate('SignPassword', {
-      mobile: mobile,
-    });
+    // navigation.navigate('SignPassword', {
+    //   mobile: mobile,
+    // });
+    navigation.goBack();
   };
 
   const chooseRegion = (flag, countryCode, country) => {
@@ -154,7 +155,7 @@ const PhoneLoginScreen = ({route}) => {
       {/* Bottom Section */}
       <View style={[styles.bottomSection]}>
         <View style={styles.additionalLogin}></View>
-        <Pressable onPress={onSignUp} style={styles.buttonSignUp}>
+        <Pressable onPress={onJoin} style={styles.buttonSignUp}>
           <Image
             source={require('../../../assets/images/icon_next.png')}
             resizeMode="contain"

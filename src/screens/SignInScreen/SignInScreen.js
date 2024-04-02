@@ -16,7 +16,6 @@ import {useNavigation} from '@react-navigation/native';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API, getLanguage2, getFontFam} from '../../../utils';
-import * as RNLocalize from 'react-native-localize';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const SignInScreen = () => {
@@ -27,8 +26,6 @@ const SignInScreen = () => {
   const [isEmailValid, setIsEmailValid] = useState(true);
 
   const navigation = useNavigation();
-
-  let ScreenHeight = Dimensions.get('window').height;
 
   const onSignIn = async () => {
     if (email.trim() === '') {
@@ -95,8 +92,8 @@ const SignInScreen = () => {
     setIsEmailValid(isValidEmail(text));
   };
 
-  const onEmailAuth = () => {
-    navigation.navigate('EmailAuth', {screenBack: 'SignIn'});
+  const onSMSAuth = () => {
+    navigation.navigate('PhoneLogin', {screenBack: 'SignIn'});
   };
 
   const onBack = () => {
@@ -210,12 +207,12 @@ const SignInScreen = () => {
 
       <View style={[styles.bottomSection]}>
         <View style={styles.additionalLogin}>
-          <Text style={styles.normalText}>
+          {/* <Text style={styles.normalText}>
             {lang && lang.screen_signin && lang.screen_signin.authcode
               ? lang.screen_signin.authcode.label + ' '
               : ''}
-          </Text>
-          <Pressable onPress={onEmailAuth} style={styles.resetPassword}>
+          </Text> */}
+          <Pressable onPress={onSMSAuth} style={styles.resetPassword}>
             <Text style={styles.emailAuth}>
               {lang && lang.screen_signin && lang.screen_signin.authcode
                 ? lang.screen_signin.authcode.link
