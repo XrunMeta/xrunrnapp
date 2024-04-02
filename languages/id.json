@@ -276,7 +276,8 @@
 
   "screen_showad": {
     "success": "Berhasil mendapatkan Koin",
-    "failed": "Gagal mendapatkan Koin"
+    "failed": "Gagal mendapatkan Koin",
+    "textOK": "OK"
   },
 
   "screen_notify": {

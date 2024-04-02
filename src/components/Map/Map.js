@@ -8,7 +8,7 @@ import {
   PermissionsAndroid,
   Platform,
 } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import MapView, {
   Marker,
   PROVIDER_GOOGLE,
@@ -16,7 +16,7 @@ import MapView, {
   PROVIDER_DEFAULT,
 } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
-import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {fetchMarkerData} from './APIGetMarker';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -293,7 +293,7 @@ const MapComponent = ({
 
   // 1 Time Use Effect
   useEffect(() => {
-    console.log("MAAAAAAAAAPPPP");
+    console.log('MAAAAAAAAAPPPP');
 
     const getFirstCoordinate = async () => {
       try {
@@ -553,7 +553,7 @@ const MapComponent = ({
       position => {
         handlePinChange(position, pinTarget);
 
-        console.log("Pindah brooooooooooo")
+        console.log('Pindah brooooooooooo');
 
         // Mengambil koordinat pengguna saat ini
         const userCoordinate = {
@@ -712,6 +712,7 @@ const MapComponent = ({
               borderBottomRightRadius: 15,
               gap: 7,
               elevation: 4,
+              marginBottom: Platform.OS === 'ios' ? -14 : 0,
             }}>
             <View
               style={{

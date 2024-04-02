@@ -26,14 +26,14 @@ const realAD = Platform.select({
   android: androidRealAD,
 });
 
-const CustomModal = ({visible, text, onOK}) => {
+const CustomModal = ({visible, text, onOK, textOK}) => {
   return (
     <Modal transparent animationType="slide" visible={visible}>
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
           <Text style={styles.modalText}>{text}</Text>
           <TouchableOpacity onPress={onOK} style={styles.okButton}>
-            <Text style={styles.okButtonText}>OK</Text>
+            <Text style={styles.okButtonText}>{textOK}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -47,6 +47,7 @@ const ShowAdScreen = ({route}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [adCompleted, setAdCompleted] = useState(false);
   const [modalText, setModalText] = useState('');
+  const [modalTextOK, setModalTextOK] = useState('');
   const [lang, setLang] = useState({});
   const [interstitialAds, setInterstitialAds] = useState(null);
   const navigation = useNavigation();
@@ -133,6 +134,8 @@ const ShowAdScreen = ({route}) => {
             setModalText(lang.screen_showad.failed);
             setModalVisible(true);
           }
+
+          setModalTextOK(lang.screen_showad.textOK);
         } catch (err) {
           crashlytics().recordError(new Error(err));
           crashlytics().log(err);
@@ -167,6 +170,7 @@ const ShowAdScreen = ({route}) => {
               fontFamily: getFontFam() + 'Regular',
               fontSize: 13,
               color: 'grey',
+              textAlign: 'center',
             }}>
             Loading ads...
           </Text>
@@ -177,6 +181,7 @@ const ShowAdScreen = ({route}) => {
         visible={modalVisible}
         text={modalText}
         onOK={handleOKPress}
+        textOK={modalTextOK}
       />
     </View>
   );
@@ -186,9 +191,8 @@ export default ShowAdScreen;
 
 const styles = StyleSheet.create({
   root: {
-    alignItems: 'center',
-    justifyContent: 'center',
     flex: 1,
+    justifyContent: 'center',
     backgroundColor: '#000000A5',
   },
   modalContainer: {
@@ -199,24 +203,40 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: 'white',
     padding: 20,
-    borderRadius: 10,
+    borderRadius: 12,
     elevation: 5,
+    position: 'absolute',
+    width: '85%',
+    paddingTop: 24,
+    marginHorizontal: 'auto',
   },
   modalText: {
-    fontSize: 13,
+    fontSize: 16,
     fontFamily: getFontFam() + 'Regular',
     marginBottom: 10,
     color: 'black',
+    textAlign: 'center',
   },
   okButton: {
-    backgroundColor: '#343a59',
+    backgroundColor: '#388Dc8',
     paddingHorizontal: 10,
-    paddingVertical: 7,
-    borderRadius: 5,
-    alignSelf: 'flex-end',
+    paddingVertical: 10,
+    borderRadius: 8,
+    width: 110,
+    alignSelf: 'center',
+    marginTop: 2,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
   },
   okButtonText: {
     color: 'white',
     fontFamily: getFontFam() + 'Regular',
+    textAlign: 'center',
   },
 });
