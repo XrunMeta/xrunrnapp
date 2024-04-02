@@ -40,7 +40,7 @@
     },
     "authcode": {
       "label": "Coba",
-      "link": "EMAIL AUTENTIKASI"
+      "link": "SMS Autentikasi"
     },
     "validator": "Email anda tidak valid",
     "alert": {
