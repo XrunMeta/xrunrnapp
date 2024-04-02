@@ -102,11 +102,13 @@ const PhoneVerificationScreen = () => {
           'Failed',
           lang.screen_notExist.field_phoneVerif.invalidNumber,
         );
-        navigation.navigate('SignupByEmail', {
-          mobile: mobile,
-          mobilecode: mobilecode,
-          countrycode: countrycode,
-        });
+        // navigation.navigate('SignupByEmail', {
+        //   mobile: mobile,
+        //   mobilecode: mobilecode,
+        //   countrycode: countrycode,
+        // });
+
+        navigation.replace('SignIn');
 
         console.log(`
           Data dikirim (Phone Verif) :
@@ -151,11 +153,12 @@ const PhoneVerificationScreen = () => {
         }
       } else {
         console.log('ke halaman berikutnya (ap1700)');
-        navigation.navigate('SignupByEmail', {
-          mobile: mobile,
-          mobilecode: mobilecode,
-          countrycode: countrycode,
-        });
+        // navigation.navigate('SignupByEmail', {
+        //   mobile: mobile,
+        //   mobilecode: mobilecode,
+        //   countrycode: countrycode,
+        // });
+        navigation.replace('SignIn');
       }
     } catch (error) {
       // Handle network errors or other exceptions
@@ -213,7 +216,7 @@ const PhoneVerificationScreen = () => {
   // ########## Countdown ##########
   const Countdown = () => {
     // const [seconds, setSeconds] = useState(599); // Duration
-    const [seconds, setSeconds] = useState(5);
+    const [seconds, setSeconds] = useState(0);
 
     useEffect(() => {
       const timer = setInterval(() => {

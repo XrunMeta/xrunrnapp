@@ -40,7 +40,7 @@
     },
     "authcode": {
       "label": "试试",
-      "link": "电子邮件验证码"
+      "link": "短信验证码"
     },
     "validator": "您的电子邮件无效",
     "alert": {

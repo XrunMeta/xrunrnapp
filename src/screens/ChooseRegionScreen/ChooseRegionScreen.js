@@ -291,7 +291,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 10,
     marginHorizontal: 20,
-    paddingVertical: 15,
+    paddingVertical: 5,
     borderRadius: 15,
     shadowColor: '#b8b8b8',
     shadowOffset: {
@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.36,
     shadowRadius: 6.68,
-    
+
     elevation: 11,
   },
   selectItem: {
