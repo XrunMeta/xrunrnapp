@@ -9,6 +9,7 @@ import {
   Platform,
   ScrollView,
   SafeAreaView,
+  Dimensions,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
@@ -99,83 +100,83 @@ const PhoneLoginScreen = ({route}) => {
 
   return (
     <SafeAreaView style={{flex: 1}}>
-		<ScrollView style={[styles.root]}>
-      <ButtonBack onClick={onBack} />
+      <ScrollView style={[styles.root]}>
+        <ButtonBack onClick={onBack} />
 
-      {/*  Field - Phone Number */}
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>
-          {lang &&
-          lang.screen_notExist &&
-          lang.screen_notExist.field_phoneNumber
-            ? lang.screen_notExist.field_phoneNumber.label
-            : ''}
-        </Text>
-        <View
-          style={{
-            width: '100%',
-            flexDirection: 'row',
-			marginTop: Platform.OS === 'ios' ? 10 : 0,
-          }}>
-          <Pressable
-            style={{flexDirection: 'row', marginBottom: -10}}
-            onPress={() => chooseRegion(flag, countryCode, country)}>
-            <Image
-              resizeMode="contain"
-              style={{
-                width: 35,
-                marginRight: 10,
-              }}
-              source={
-                flag == undefined
-                  ? {
-                      uri: 'https://app.xrun.run/flags/kr.png',
-                    }
-                  : {
-                      uri: flag,
-                    }
-              }
+        {/*  Field - Phone Number */}
+        <View style={styles.formGroup}>
+          <Text style={styles.label}>
+            {lang &&
+            lang.screen_notExist &&
+            lang.screen_notExist.field_phoneNumber
+              ? lang.screen_notExist.field_phoneNumber.label
+              : ''}
+          </Text>
+          <View
+            style={{
+              width: '100%',
+              flexDirection: 'row',
+              marginTop: Platform.OS === 'ios' ? 10 : 0,
+            }}>
+            <Pressable
+              style={{flexDirection: 'row', marginBottom: -10}}
+              onPress={() => chooseRegion(flag, countryCode, country)}>
+              <Image
+                resizeMode="contain"
+                style={{
+                  width: 35,
+                  marginRight: 10,
+                }}
+                source={
+                  flag == undefined
+                    ? {
+                        uri: 'https://app.xrun.run/flags/kr.png',
+                      }
+                    : {
+                        uri: flag,
+                      }
+                }
+              />
+              <Text
+                style={{
+                  fontFamily: getFontFam() + 'Medium',
+                  fontSize: 13,
+                  color: '#a8a8a7',
+                  alignSelf: 'center',
+                  paddingRight: 10,
+                }}>
+                +{countryCode == undefined ? '82' : countryCode}
+              </Text>
+            </Pressable>
+            <TextInput
+              keyboardType="numeric"
+              style={styles.input}
+              value={phoneNumber}
+              setValue={setPhoneNumber}
+              onChangeText={text => setPhoneNumber(text)}
             />
-            <Text
-              style={{
-                fontFamily: getFontFam() + 'Medium',
-                fontSize: 13,
-                color: '#a8a8a7',
-                alignSelf: 'center',
-                paddingRight: 10,
-              }}>
-              +{countryCode == undefined ? '82' : countryCode}
-            </Text>
-          </Pressable>
-          <TextInput
-            keyboardType="numeric"
-            style={styles.input}
-            value={phoneNumber}
-            setValue={setPhoneNumber}
-            onChangeText={text => setPhoneNumber(text)}
-          />
+          </View>
         </View>
-      </View>
 
-      {/* Bottom Section */}
-      <View style={[styles.bottomSection]}>
-        <View style={styles.additionalLogin}></View>
-        <Pressable onPress={onJoin} style={styles.buttonSignUp}>
-          <Image
-            source={require('../../../assets/images/icon_next.png')}
-            resizeMode="contain"
-            style={styles.buttonSignUpImage}
-          />
-        </Pressable>
-      </View>
-    </ScrollView>
-	</SafeAreaView>
+        {/* Bottom Section */}
+        <View style={[styles.bottomSection]}>
+          <View style={styles.additionalLogin}></View>
+          <Pressable onPress={onJoin} style={styles.buttonSignUp}>
+            <Image
+              source={require('../../../assets/images/icon_next.png')}
+              resizeMode="contain"
+              style={styles.buttonSignUpImage}
+            />
+          </Pressable>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   root: {
-	flexDirection: 'column',
+    flexDirection: 'column',
   },
   bottomSection: {
     padding: 20,
@@ -183,6 +184,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
+    height: Dimensions.get('window').height - 240,
   },
   additionalLogin: {
     flexDirection: 'row',
@@ -217,7 +219,6 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 25,
     marginTop: 30,
-	height: '200%'
   },
   input: {
     fontFamily: getFontFam() + 'Medium',
