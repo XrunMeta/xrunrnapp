@@ -6,6 +6,9 @@ import {
   Image,
   Alert,
   TextInput,
+  Platform,
+  ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
@@ -95,7 +98,8 @@ const PhoneLoginScreen = ({route}) => {
   };
 
   return (
-    <View style={[styles.root]}>
+    <SafeAreaView style={{flex: 1}}>
+		<ScrollView style={[styles.root]}>
       <ButtonBack onClick={onBack} />
 
       {/*  Field - Phone Number */}
@@ -111,6 +115,7 @@ const PhoneLoginScreen = ({route}) => {
           style={{
             width: '100%',
             flexDirection: 'row',
+			marginTop: Platform.OS === 'ios' ? 10 : 0,
           }}>
           <Pressable
             style={{flexDirection: 'row', marginBottom: -10}}
@@ -163,14 +168,14 @@ const PhoneLoginScreen = ({route}) => {
           />
         </Pressable>
       </View>
-    </View>
+    </ScrollView>
+	</SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   root: {
-    alignItems: 'center',
-    flex: 1,
+	flexDirection: 'column',
   },
   bottomSection: {
     padding: 20,
@@ -212,7 +217,7 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 25,
     marginTop: 30,
-    flex: 1,
+	height: '200%'
   },
   input: {
     fontFamily: getFontFam() + 'Medium',

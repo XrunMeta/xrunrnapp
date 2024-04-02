@@ -7,6 +7,7 @@ import {
   Image,
   TextInput,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
@@ -291,7 +292,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 10,
     marginHorizontal: 20,
-    paddingVertical: 5,
+    paddingVertical: Platform.OS === 'ios' ? 15 : 5,
     borderRadius: 15,
     shadowColor: '#b8b8b8',
     shadowOffset: {

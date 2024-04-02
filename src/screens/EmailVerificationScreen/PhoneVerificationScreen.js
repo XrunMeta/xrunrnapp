@@ -11,6 +11,7 @@ import {
   Modal,
   TouchableWithoutFeedback,
   TouchableOpacity,
+  SafeAreaView,
 } from 'react-native';
 import React, {useState, useRef, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
@@ -296,7 +297,8 @@ const PhoneVerificationScreen = () => {
   };
 
   return (
-    <View style={[styles.root, {height: ScreenHeight}]}>
+    <SafeAreaView>
+		<ScrollView style={[styles.root, {height: ScreenHeight}]}>
       <ButtonBack onClick={onBack} />
 
       {/* Text Section */}
@@ -361,14 +363,13 @@ const PhoneVerificationScreen = () => {
 
       {/* Slider Modal */}
       <SliderModal visible={modalVisible} onClose={toggleModal} />
-    </View>
+    </ScrollView>
+	</SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   root: {
-    alignItems: 'center',
-    flex: 1,
   },
   buttonSignIn: {
     flexDirection: 'row',
@@ -424,7 +425,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
     padding: 20,
-  },
+	height: Dimensions.get('window').height - 370
+},
   codeInput: {
     width: 40,
     height: 60,
