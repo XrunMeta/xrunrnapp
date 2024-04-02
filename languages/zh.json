@@ -276,7 +276,8 @@
 
   "screen_showad": {
     "success": "获取硬币成功",
-    "failed": "获取硬币失败"
+    "failed": "获取硬币失败",
+    "textOK": "好的"
   },
 
   "screen_notify": {
