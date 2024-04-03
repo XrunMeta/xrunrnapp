@@ -255,8 +255,8 @@
   "screen_map": {
     "section_card_shadow": {
       "radius": "반경 1000미터 이내",
-      "amount": "있다",
-      "and": "및",
+      "amount": "개의 잡을 수 있는",
+      "and": " 이 있습니다.",
       "getable": "얻을 수 있음",
       "event": "XRUN 이벤트",
       "diamond": "다이아몬드",
@@ -269,7 +269,7 @@
     },
     "section_marker": {
       "loader": "로딩 중...",
-      "desc1": "가 있는",
+      "desc1": "에서 제공하는",
       "desc2": "이 있습니다."
     }
   },
