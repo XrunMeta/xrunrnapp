@@ -255,8 +255,8 @@
   "screen_map": {
     "section_card_shadow": {
       "radius": "Dalam radius 1000 meter",
-      "amount": "Ada",
-      "and": "dan",
+      "amount": "Anda bisa menangkap",
+      "and": ".",
       "getable": "dapat diperoleh",
       "event": "XRUN Event",
       "diamond": "Diamond",
@@ -269,8 +269,8 @@
     },
     "section_marker": {
       "loader": "Memuat...",
-      "desc1": "Ada sebuah",
-      "desc2": "dengan"
+      "desc1": "Ada",
+      "desc2": "didukung oleh"
     }
   },
 

@@ -255,8 +255,8 @@
   "screen_map": {
     "section_card_shadow": {
       "radius": "Within a radius of 1000 meters",
-      "amount": "There are",
-      "and": "and",
+      "amount": "You can catch",
+      "and": ".",
       "getable": "can be optained",
       "event": "XRUN Event",
       "diamond": "Diamond",
@@ -269,8 +269,8 @@
     },
     "section_marker": {
       "loader": "Loading...",
-      "desc1": "There is an",
-      "desc2": "with"
+      "desc1": "There is",
+      "desc2": "supported by"
     }
   },
 

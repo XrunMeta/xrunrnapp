@@ -36,6 +36,7 @@ const MapComponent = ({
   lang,
   updateRange,
   GPSActive = true,
+  curLang,
 }) => {
   const [pin, setPin] = useState(null); // Get User Coordinate
   const [pinTarget, setPinTarget] = useState(0); // Get Target Coordinate
@@ -782,15 +783,17 @@ const MapComponent = ({
                   marginTop: 3,
                   color: '#343a59',
                 }}>
-                {lang && lang.section_marker
-                  ? lang.section_marker.desc1 + ' '
-                  : ''}
-                {item.brand}
+                {curLang === 'ko' && lang.section_marker.desc1
+                  ? item.brand + ' ' + lang.section_marker.desc1
+                  : !curLang === 'ko' && lang.section_marker.desc1
+                  ? lang.section_marker.desc1 + ' ' + item.brand
+                  : lang.section_marker.desc1 + ' ' + item.brand}
                 {'\n'}
-                {lang && lang.section_marker
-                  ? lang.section_marker.desc2 + ' '
-                  : ''}
-                {item.brand + '.'}
+                {curLang === 'ko' && lang.section_marker.desc2
+                  ? item.brand + ' ' + lang.section_marker.desc2
+                  : !curLang === 'ko' && lang.section_marker.desc2
+                  ? lang.section_marker.desc2 + ' ' + item.brand
+                  : lang.section_marker.desc2 + ' ' + item.brand + '.'}
               </Text>
               <Text
                 style={{

@@ -19,7 +19,8 @@ import Animated, {
 import MapComponent from '../../components/Map/Map';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CompassHeading from 'react-native-compass-heading';
-import {getLanguage2, getFontFam} from '../../../utils';
+import {getLanguage2, getFontFam, getLanguage} from '../../../utils';
+import * as RNLocalize from 'react-native-localize';
 
 // Offset Value of Slider Card
 const initialOffset = 110;
@@ -28,6 +29,7 @@ const defaultOffset = 20;
 // ########## Main Component ##########
 export default function MapParent() {
   const [lang, setLang] = useState({});
+  const [curLang, setCurLang] = useState(null);
   const {isLoggedIn} = useAuth(); // Login Checker
   const [showDetail, setShowDetail] = useState(false); // Slider Card Bool
   const offset = useSharedValue(initialOffset); // Slider Card Animation
@@ -72,6 +74,9 @@ export default function MapParent() {
         // Set Language
         const screenLang = await getLanguage2(currentLanguage);
         setLang(screenLang);
+
+        const deviceLanguage = RNLocalize.getLocales()[0].languageCode;
+        setCurLang(deviceLanguage);
 
         // Set Player Coordinate
         const coordinate = JSON.parse(selfCoordinate);
@@ -221,6 +226,7 @@ export default function MapParent() {
               updateRange={rangeToMarker}
               // GPSActive={GPSActive => setGPSActive(GPSActive)}
               GPSActive={GPSActive => console.log('Status GPS -> ' + GPSActive)}
+              curLang={curLang}
             />
           </View>
 
@@ -253,7 +259,7 @@ export default function MapParent() {
               }}>
               <View
                 style={{
-                  marginBottom: -20,
+                  marginBottom: -40,
                 }}>
                 <Text
                   style={{
@@ -275,6 +281,9 @@ export default function MapParent() {
                       color: 'white',
                       flexWrap: 'wrap',
                     }}>
+                    {curLang != null && curLang === 'ko'
+                      ? markerCount + ' '
+                      : ''}
                     {lang &&
                     lang.screen_map &&
                     lang.screen_map.section_card_shadow
@@ -284,24 +293,13 @@ export default function MapParent() {
                       style={{
                         fontFamily: getFontFam() + 'Bold',
                       }}>
-                      {brandCount} XRUN
-                    </Text>{' '}
+                      {curLang != null && curLang === 'ko' ? '' : markerCount}{' '}
+                      XRUN
+                    </Text>
                     {lang &&
                     lang.screen_map &&
                     lang.screen_map.section_card_shadow
                       ? lang.screen_map.section_card_shadow.and + ' '
-                      : ''}
-                    <Text
-                      style={{
-                        fontFamily: getFontFam() + 'Bold',
-                      }}>
-                      {markerCount} BIG XRUN{' '}
-                    </Text>
-                    {'\n'}
-                    {lang &&
-                    lang.screen_map &&
-                    lang.screen_map.section_card_shadow
-                      ? lang.screen_map.section_card_shadow.getable
                       : ''}
                   </Text>
                 ) : (
@@ -398,31 +396,31 @@ export default function MapParent() {
                 zIndex: 2,
               }}>
               <View style={{paddingTop: 5}}>
-              <Pressable
-                onPress={handleShowDetail}
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  paddingHorizontal: 90,
-                  zIndex: 1,
-                  // backgroundColor: '#FFFFFF4D',
-                }}>
-                <Image
-                  source={require('../../../assets/images/icon_bottom.png')}
-                  resizeMode="contain"
+                <Pressable
+                  onPress={handleShowDetail}
                   style={{
-                    width: 20,
-                    transform: showDetail ? [{rotate: '180deg'}] : [],
-                  }}
-                />
-              </Pressable>
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    paddingHorizontal: 90,
+                    zIndex: 1,
+                    // backgroundColor: '#FFFFFF4D',
+                  }}>
+                  <Image
+                    source={require('../../../assets/images/icon_bottom.png')}
+                    resizeMode="contain"
+                    style={{
+                      width: 20,
+                      transform: showDetail ? [{rotate: '180deg'}] : [],
+                    }}
+                  />
+                </Pressable>
               </View>
               <View
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
                   justifyContent: 'center',
-                   flex: 1
+                  flex: 1,
                 }}>
                 <Animated.Image
                   source={require('../../../assets/images/icon_arrow.png')}
