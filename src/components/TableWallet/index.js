@@ -941,12 +941,12 @@ const TableWalletCard = ({
   const getDataTransaction = useMemo(() => {
     return async (key, isIOS) => {
       try {
-        if (!isIOS) {
-          setTotalHistory([]);
-          setTransferHistory([]);
-          setReceivedDetails([]);
-          setTransitionHistory([]);
-        }
+        // if (!isIOS) {
+        //   setTotalHistory([]);
+        //   setTransferHistory([]);
+        //   setReceivedDetails([]);
+        //   setTransitionHistory([]);
+        // }
 
         switch (key) {
           case 'totalHistory':
