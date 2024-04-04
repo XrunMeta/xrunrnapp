@@ -26,9 +26,11 @@ import LinearGradient from 'react-native-linear-gradient';
 import CompassHeading from 'react-native-compass-heading';
 import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import crashlytics from '@react-native-firebase/crashlytics';
+import * as RNLocalize from 'react-native-localize';
 
 function ARScreen() {
   const [lang, setLang] = useState({});
+  const [curLang, setCurLang] = useState(null);
   const [isCameraReady, setCameraReady] = useState(false);
   const [cameraPermission, setCameraPermission] = useState('pending');
   const device = useCameraDevice('back');
@@ -81,6 +83,9 @@ function ARScreen() {
         // Set Language
         const screenLang = await getLanguage2(currentLanguage, 'screen_map');
         setLang(screenLang);
+
+        const deviceLanguage = RNLocalize.getLocales()[0].languageCode;
+        setCurLang(deviceLanguage);
 
         setUserData(JSON.parse(storedUserData));
       } catch (err) {
@@ -149,7 +154,7 @@ function ARScreen() {
       getARCoin(userData.member, latitude, longitude);
     }
 
-    console.log("Ini berubah")
+    console.log('Ini berubah');
   }, [userLocation, userData]);
 
   // Get API for Showing Coin Object
@@ -528,7 +533,7 @@ function ARScreen() {
                     height: 170,
                     pointerEvents: 'none',
                   }}>
-                  <View style={{marginBottom: -20}}>
+                  <View style={{marginBottom: -35}}>
                     <Text
                       style={{
                         fontFamily: getFontFam() + 'Medium',
@@ -547,6 +552,9 @@ function ARScreen() {
                         fontSize: 13,
                         color: 'white',
                       }}>
+                      {curLang != null && curLang === 'ko'
+                        ? coinAPI.length + ' '
+                        : ''}
                       {lang &&
                       lang.screen_map &&
                       lang.screen_map.section_card_shadow
@@ -556,24 +564,15 @@ function ARScreen() {
                         style={{
                           fontFamily: getFontFam() + 'Bold',
                         }}>
-                        {brandCount} XRUN
-                      </Text>{' '}
+                        {curLang != null && curLang === 'ko'
+                          ? ''
+                          : coinAPI.length}{' '}
+                        XRUN
+                      </Text>
                       {lang &&
                       lang.screen_map &&
                       lang.screen_map.section_card_shadow
                         ? lang.screen_map.section_card_shadow.and + ' '
-                        : ''}
-                      <Text
-                        style={{
-                          fontFamily: getFontFam() + 'Bold',
-                        }}>
-                        {coinAPI.length} BIG XRUN{' '}
-                      </Text>
-                      {'\n'}
-                      {lang &&
-                      lang.screen_map &&
-                      lang.screen_map.section_card_shadow
-                        ? lang.screen_map.section_card_shadow.getable
                         : ''}
                     </Text>
                   </View>
