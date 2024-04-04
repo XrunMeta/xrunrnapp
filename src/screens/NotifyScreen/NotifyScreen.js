@@ -17,7 +17,6 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API, getLanguage2, getFontFam} from '../../../utils';
-import RNFetchBlob from 'rn-fetch-blob';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const NotifyScreen = () => {
@@ -30,7 +29,6 @@ const NotifyScreen = () => {
   const [loading, setLoading] = useState(true);
   const [isDelete, setIsDelete] = useState(false);
   const scrollViewRef = useRef();
-  const [imageUris, setImageUris] = useState([]);
 
   useEffect(() => {
     // Get Language
@@ -212,9 +210,7 @@ const NotifyScreen = () => {
 
               if (jsonData.data[0].count > 0) {
                 // Remove All Inquiry Chat
-                setNotify(prevNotify =>
-                  prevNotify.filter(item => item.type !== 9303),
-                );
+                refreshChatView();
               }
             },
           },
@@ -227,40 +223,6 @@ const NotifyScreen = () => {
       crashlytics().log(error);
     }
   };
-
-  // Fungsi untuk menyimpan blob sebagai gambar ke cache
-  // const saveBlobAsImage = async (blob, filename) => {
-  //   try {
-  //     const path = `${RNFetchBlob.fs.dirs.CacheDir}/${filename}`;
-  //     await RNFetchBlob.fs.writeFile(path, blob, 'base64');
-  //     return path;
-  //   } catch (error) {
-  //     console.error('Error saving blob as image:', error);
-  //     throw error;
-  //   }
-  // };
-  const saveBlobAsImage = async (blob, filename) => {
-    const path = `${RNFetchBlob.fs.dirs.CacheDir}/${filename}`;
-    await RNFetchBlob.fs.writeFile(path, blob, 'base64');
-    return path;
-  };
-
-  useEffect(() => {
-    const fetchAndDisplayImages = async () => {
-      try {
-        const imagePaths = await Promise.all(
-          notify.map(async (item) => {
-            return await saveBlobAsImage(item.image, `${item.board}.png`);
-          })
-        );
-        setImageUris(imagePaths);
-      } catch (error) {
-        console.error('Error saving blobs as images on Notify Screen:', error);
-      }
-    };
-
-    fetchAndDisplayImages();
-  }, [notify]);
 
   return (
     <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
@@ -364,15 +326,16 @@ const NotifyScreen = () => {
 
                   if (!inThisDay) {
                     return (
-                      <View style={{
-                        backgroundColor: '#89919d73',
-                        borderRadius: 115,
-                        paddingTop: 3,
-                        paddingBottom: 3,
-                        paddingHorizontal: 8,
-                        marginBottom: 8,
-                        alignItems: 'center',
-                        alignSelf: 'center'
+                      <View
+                        style={{
+                          backgroundColor: '#89919d73',
+                          borderRadius: 115,
+                          paddingTop: 3,
+                          paddingBottom: 3,
+                          paddingHorizontal: 8,
+                          marginBottom: 8,
+                          alignItems: 'center',
+                          alignSelf: 'center',
                         }}>
                         <Text
                           style={{
@@ -420,13 +383,14 @@ const NotifyScreen = () => {
                     </View>
                   )}
                   <View style={styles.chatBubble}>
-                  {/* {console.log("Nama Imagenya : " , imageUris[idx] + ' -> ' + item.board + ' - ' + idx)} */}
                     {item.image !== null && (
                       <Image
                         source={{
-                          uri: `data:image/jpeg;base64,${item.image.replace(/(\r\n|\n|\r)/gm, '')}`,
+                          uri: `data:image/jpeg;base64,${item.image.replace(
+                            /(\r\n|\n|\r)/gm,
+                            '',
+                          )}`,
                         }}
-                        // source={require('../../../assets/images/logo_xrun.png')}
                         style={{
                           height: 150,
                           width: 'auto',
@@ -435,18 +399,6 @@ const NotifyScreen = () => {
                         }}
                       />
                     )}
-                    {/* {item.image !== null && (
-                      <Image
-                        source={{ uri: `file://${imageUris[idx]}` }}
-                        style={{
-                          height: 150,
-                          width: 'auto',
-                          marginBottom: 15,
-                          borderRadius: 6,
-                        }}
-                        onError={err => console.log('Error Cuy : ', err)}
-                      />
-                    )} */}
                     <Text style={styles.chatText}>{item.title}</Text>
                     {item.contents !== null && item.type != 9303 && (
                       <View>
@@ -547,7 +499,6 @@ const NotifyScreen = () => {
                                   ? lang.screen_notify.visit
                                   : ''
                                 : ''}
-                                {' -> ' + item.board + ' - ' + idx}
                             </Text>
                           </TouchableOpacity>
                         )}
