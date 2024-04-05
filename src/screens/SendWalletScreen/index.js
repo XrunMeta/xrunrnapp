@@ -15,7 +15,6 @@ import {
   Platform,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
-import QRCodeScanner from 'react-native-qrcode-scanner';
 import ButtonBack from '../../components/ButtonBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInputWallet from '../../components/CustomInputWallet';
@@ -28,6 +27,8 @@ import {
   RESULTS,
   openSettings,
 } from 'react-native-permissions';
+import {BarcodeScanner} from 'rn-barcode-zxing';
+import BarcodeMask from 'react-native-barcode-mask';
 
 const SendWalletScreen = ({navigation, route}) => {
   const [lang, setLang] = useState('');
@@ -500,19 +501,26 @@ const SendWalletScreen = ({navigation, route}) => {
             right: 0,
             left: 0,
             zIndex: 20,
-            backgroundColor: '#000',
           }}>
-          <QRCodeScanner
-            showMarker={true}
-            markerStyle={{borderColor: '#26d2ff'}}
-            cameraStyle={{height: '100%'}}
-            onRead={handleQRCodeRead}
-            bottomContent={
-              <View style={styles.wrapperTextScanQR}>
-                <Text style={styles.textScanQR}>Scan Account</Text>
-              </View>
-            }
-          />
+          <BarcodeScanner
+            shouldScan={true}
+            onBarcodesDetected={handleQRCodeRead}
+            scanBarcode={true}
+            showFrame={true}>
+            <BarcodeMask
+              width={280}
+              height={280}
+              showAnimatedLine={true}
+              outerMaskOpacity={1}
+              edgeHeight={48}
+              edgeWidth={48}
+              animatedLineColor={'#FFFFFF'}
+              animatedLineHeight={3}
+              backgroundColor={'rgba(3, 3, 3, 0.3)'}
+              animatedLineWidth={204}
+              lineAnimationDuration={2000}
+            />
+          </BarcodeScanner>
         </View>
       )}
 
