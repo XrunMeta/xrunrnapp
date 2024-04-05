@@ -359,7 +359,7 @@ const SendWalletScreen = ({navigation, route}) => {
   };
 
   const handleQRCodeRead = ({code}) => {
-    const data = code[0];
+    const data = Platform.OS === 'ios' ? code : code[0];
     console.log(`Scanned: ${data}`);
     setAddress(data);
     fadeIn();
