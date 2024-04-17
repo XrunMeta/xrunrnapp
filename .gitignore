@@ -14,7 +14,12 @@ captures/
 .cxx/
 *.apk
 !build-apk/*.apk
+./build-apk/
 output.json
+
+# iOS
+ios/Pods/
+ios/Podfile.lock
 
 # IntelliJ
 *.iml
