@@ -15,7 +15,6 @@ import {
   Platform,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
-import QRCodeScanner from 'react-native-qrcode-scanner';
 import ButtonBack from '../../components/ButtonBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInputWallet from '../../components/CustomInputWallet';
@@ -359,7 +358,7 @@ const SendWalletScreen = ({navigation, route}) => {
   };
 
   const handleQRCodeRead = ({code}) => {
-    const data = code[0];
+    const data = Platform.OS === 'ios' ? code : code[0];
     console.log(`Scanned: ${data}`);
     setAddress(data);
     fadeIn();
@@ -503,18 +502,6 @@ const SendWalletScreen = ({navigation, route}) => {
             left: 0,
             zIndex: 20,
           }}>
-          {/* <QRCodeScanner
-            showMarker={true}
-            markerStyle={{borderColor: '#26d2ff'}}
-            cameraStyle={{height: '100%'}}
-            onRead={handleQRCodeRead}
-            bottomContent={
-              <View style={styles.wrapperTextScanQR}>
-                <Text style={styles.textScanQR}>Scan Account</Text>
-              </View>
-            }
-          /> */}
-
           <BarcodeScanner
             shouldScan={true}
             onBarcodesDetected={handleQRCodeRead}
