@@ -16,10 +16,13 @@ captures/
 !build-apk/*.apk
 ./build-apk/
 output.json
+./app.json
+./android/app/src/main/res/values/strings.xml
 
 # iOS
 ios/Pods/
 ios/Podfile.lock
+ios/XRUN/AppDelegate.mm
 
 # IntelliJ
 *.iml
