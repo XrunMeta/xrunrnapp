@@ -8,7 +8,6 @@ import {
   Alert,
   Platform,
   PermissionsAndroid,
-  Linking,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -22,9 +21,8 @@ import RNFS from 'react-native-fs';
 const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
   const [downloadDisable, setDownloadDisable] = useState(true);
   const [shareDisable, setShareDisable] = useState(true);
-  const apiQRCode = 'https://api.qrserver.com/v1/create-qr-code/';
+  const apiQRCode = process.env.API_QR_CODE;
   const [qrCodeData, setQrCodeData] = useState(null);
-
   // Animated notification in QR
   const [fadeAnim] = useState(new Animated.Value(0));
 
@@ -126,9 +124,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
       setShareDisable(false);
     } catch (error) {
       setShareDisable(false);
-      console.log('Error sharing QR Code:', error.message);
-      crashlytics().recordError(new Error(err));
-      crashlytics().log(err);
+      console.log('Sharing QR Code:', error.message);
     }
   };
 
@@ -136,28 +132,27 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
     setDownloadDisable(true);
 
     // Function to check the platform
-    // If Platform is Android then check for permissions.
     if (Platform.OS === 'android') {
       try {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
         );
         console.log(granted);
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          // Start downloading
-          downloadFile();
-          console.log('Storage Permission Granted.');
-        } else if (granted === 'denied') {
-          setDownloadDisable(false);
-        } else if (granted === 'never_ask_again') {
-          downloadFile();
-          setDownloadDisable(false);
-        }
+        // if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        //   // Start downloading
+        //   downloadFile();
+        //   console.log('Storage Permission Granted.');
+        // } else if (granted === 'denied') {
+        //   setDownloadDisable(false);
+        // } else if (granted === 'never_ask_again') {
+        //   downloadFile();
+        //   setDownloadDisable(false);
+        // }
+        downloadFile();
       } catch (err) {
         // To handle permission related exception
         console.log('++++' + err);
-        crashlytics().recordError(new Error(err));
-        crashlytics().log(err);
+        
       }
     } else {
       downloadFile();
