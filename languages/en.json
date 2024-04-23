@@ -132,7 +132,7 @@
     },
     "timer": {
       "on": "Please send your code in",
-      "off": "A problem has occured",
+      "off": "A problem has occurred",
       "sendAgain": "Send code again",
       "loginPassword": "Login with password"
     },
@@ -510,7 +510,7 @@
     "send_amount_label": "Amount to send",
     "send_amount_placeholder": "Please enter the amount to be sent.",
     "send_address_label": "Address to send",
-    "send_availables_label": "Avaliables",
+    "send_availables_label": "Availables",
     "send_address_placeholder": "Please enter the address to be sent.",
     "send_balance": "Balance :",
     "send_stock_exchange_label": "Stock exchange",
