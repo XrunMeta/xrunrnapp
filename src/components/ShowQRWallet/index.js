@@ -152,7 +152,6 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
       } catch (err) {
         // To handle permission related exception
         console.log('++++' + err);
-        
       }
     } else {
       downloadFile();
@@ -324,7 +323,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
     try {
       const address =
         cardDataQR.address.substring(0, 10) +
-        '...' +
+        '..' +
         cardDataQR.address.substring(cardDataQR.address.length - 10);
       const filePath =
         RNFS.DownloadDirectoryPath +
