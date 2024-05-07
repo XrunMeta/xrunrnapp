@@ -9,20 +9,22 @@ import {
   Platform,
   PermissionsAndroid,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Clipboard from '@react-native-clipboard/clipboard';
 import Share from 'react-native-share';
 import RNFetchBlob from 'rn-fetch-blob';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {URL_API, getFontFam} from '../../../utils';
+import QRCode from 'react-native-qrcode-svg';
 import RNFS from 'react-native-fs';
 
 const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
   const [downloadDisable, setDownloadDisable] = useState(true);
   const [shareDisable, setShareDisable] = useState(true);
   const apiQRCode = process.env.API_QR_CODE;
-  const [qrCodeData, setQrCodeData] = useState(null);
+  const refQR = useRef(null);
+  const [QRImage, setQRImage] = useState(null);
   // Animated notification in QR
   const [fadeAnim] = useState(new Animated.Value(0));
 
@@ -49,11 +51,9 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
             JSON.stringify(cardDataQR.address),
           );
           await AsyncStorage.setItem('qrWallet', base64Data);
-          setQrCodeData(base64Data);
           setDownloadDisable(false);
           setShareDisable(false);
         } else {
-          setQrCodeData(qrWallet);
           setDownloadDisable(false);
           setShareDisable(false);
         }
@@ -67,6 +67,12 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    refQR.current.toDataURL(data => {
+      setQRImage('data:image/png;base64,' + data);
+    });
+  }, [cardDataQR]);
 
   const convertBlobToBase64 = blob => {
     return new Promise((resolve, reject) => {
@@ -110,7 +116,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
     try {
       const options = {
         message: hash,
-        url: `data:image/png;base64,${qrCodeData}`,
+        url: QRImage,
       };
 
       const result = await Share.open(options);
@@ -159,35 +165,22 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
   };
 
   const downloadFile = async () => {
-    try {
-      let currentDate = new Date();
-      let year = currentDate.getFullYear();
-      let month = String(currentDate.getMonth() + 1).padStart(2, '0');
-      let day = String(currentDate.getDate()).padStart(2, '0');
-      let hour = String(currentDate.getHours()).padStart(2, '0');
-      let minute = String(currentDate.getMinutes()).padStart(2, '0');
-      let second = String(currentDate.getSeconds()).padStart(2, '0');
+    let currentDate = new Date();
+    let year = currentDate.getFullYear();
+    let month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    let day = String(currentDate.getDate()).padStart(2, '0');
+    let hour = String(currentDate.getHours()).padStart(2, '0');
+    let minute = String(currentDate.getMinutes()).padStart(2, '0');
+    let second = String(currentDate.getSeconds()).padStart(2, '0');
 
-      let fileName = `xrun.qrcode.${year}-${month}-${day}${hour}${minute}${second}.png`;
-      const url = `${apiQRCode}?size=200x200&data=${cardDataQR.address}&margin=10`;
+    let fileName = `xrun.qrcode.${year}-${month}-${day}${hour}${minute}${second}.png`;
+    const dirs = RNFetchBlob.fs.dirs;
+    const qrcodeData = QRImage.split('data:image/png;base64,');
+    const filepath = `${dirs.DownloadDir}/${fileName}`;
 
-      if (Platform.OS === 'android') {
-        // Create the download options
-        const {config, fs} = RNFetchBlob;
-        let RootDir = fs.dirs.PictureDir;
-        let options = {
-          fileCache: true,
-          addAndroidDownloads: {
-            path: `${RootDir}/${fileName}`,
-            description: 'Downloading file...',
-            notification: true,
-            useDownloadManager: true,
-          },
-        };
-
-        // Start downloading
-        const res = await config(options).fetch('GET', url);
-        // Alert after successful downloading
+    RNFetchBlob.fs
+      .writeFile(filepath, qrcodeData[1], 'base64')
+      .then(() => {
         Alert.alert(
           '',
           `${fileName} ${
@@ -209,76 +202,88 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
             },
           ],
         );
-        console.log('res -> ', JSON.stringify(res));
-      } else {
-        const {
-          dirs: {DocumentDir},
-        } = RNFetchBlob.fs;
-        const path = `${DocumentDir}/${fileName}`;
 
-        try {
-          const res = await RNFetchBlob.config({
-            fileCache: true,
-            path,
-          }).fetch('GET', url);
+        console.log('Saved qrcode successfully');
+      })
+      .catch(errorMessage => console.log(errorMessage));
 
-          // Tampilkan di galeri (opsional)
-          if (res.info().status === 200) {
-            // Alert after successful downloading
-            Alert.alert(
-              '',
-              `${fileName} ${
-                lang && lang.screen_wallet.download_qrcode_show
-                  ? lang.screen_wallet.download_qrcode_show
-                  : ''
-              }`,
-              [
-                {
-                  text:
-                    lang && lang.screen_wallet.confirm_alert
-                      ? lang.screen_wallet.confirm_alert
-                      : '',
-                  onPress: () => {
-                    RNFetchBlob.ios.previewDocument(res.data);
-                    setDownloadDisable(false);
-                    tokener();
-                    passwd();
-                  },
-                },
-              ],
-            );
-          }
+    if (Platform.OS === 'ios') {
+      const options = {
+        title: 'Share is your QRcode',
+        url: refQR,
+      };
 
-          console.log('Image download:', path);
-          return path;
-        } catch (error) {
-          console.error('Error download image:', error);
-        }
+      try {
+        await Share.open(options);
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      crashlytics().recordError(new Error(error));
-      crashlytics().log(error);
-      console.error('Error downloading qr code:', error);
-      Alert.alert(
-        '',
-        `${
-          lang && lang.screen_wallet.failed_download_qrcode_alert
-            ? lang.screen_wallet.failed_download_qrcode_alert
-            : ''
-        }`,
-        [
-          {
-            text:
-              lang && lang.screen_wallet.confirm_alert
-                ? lang.screen_wallet.confirm_alert
-                : '',
-            onPress: () => {
-              setDownloadDisable(false);
-            },
-          },
-        ],
-      );
     }
+    //   if (Platform.OS === 'ios') {
+
+    //     // Create the download options
+    //     // const {config, fs} = RNFetchBlob;
+    //     // let RootDir = fs.dirs.PictureDir;
+    //     // let options = {
+    //     //   fileCache: true,
+    //     //   addAndroidDownloads: {
+    //     //     path: `${RootDir}/${fileName}`,
+    //     //     description: 'Downloading file...',
+    //     //     notification: true,
+    //     //     useDownloadManager: true,
+    //     //   },
+    //     // };
+
+    //     // // Start downloading
+    //     // const res = await config(options).fetch('GET', url);
+    //     // Alert after successful downloading
+
+    //     // console.log('res -> ', JSON.stringify(res));
+    //   } else {
+    //     const {
+    //       dirs: {DocumentDir},
+    //     } = RNFetchBlob.fs;
+    //     const path = `${DocumentDir}/${fileName}`;
+
+    //     try {
+    //       const res = await RNFetchBlob.config({
+    //         fileCache: true,
+    //         path,
+    //       }).fetch('GET', url);
+
+    //       // Tampilkan di galeri (opsional)
+    //       if (res.info().status === 200) {
+    //         // Alert after successful downloading
+    //         Alert.alert(
+    //           '',
+    //           `${fileName} ${
+    //             lang && lang.screen_wallet.download_qrcode_show
+    //               ? lang.screen_wallet.download_qrcode_show
+    //               : ''
+    //           }`,
+    //           [
+    //             {
+    //               text:
+    //                 lang && lang.screen_wallet.confirm_alert
+    //                   ? lang.screen_wallet.confirm_alert
+    //                   : '',
+    //               onPress: () => {
+    //                 RNFetchBlob.ios.previewDocument(res.data);
+    //                 setDownloadDisable(false);
+    //                 tokener();
+    //                 passwd();
+    //               },
+    //             },
+    //           ],
+    //         );
+    //       }
+
+    //       console.log('Image download:', path);
+    //       return path;
+    //     } catch (error) {
+    //       console.error('Error download image:', error);
+    //     }
+    //   }
   };
 
   const tokener = async () => {
@@ -370,20 +375,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
         </View>
         <View style={styles.partBottomShowQR}>
           <View style={styles.wrapperImageQRCode}>
-            {/* <QRCode
-                value={cardDataQR.address}
-                logoSize={50}
-                size={118}
-                logoBackgroundColor="transparent"
-                quietZone={18}
-                getRef={c => (qrCodeRef.current = c)}
-              /> */}
-            {qrCodeData && (
-              <Image
-                source={{uri: `data:image/png;base64,${qrCodeData}`}}
-                style={{width: 110, height: 110}}
-              />
-            )}
+            <QRCode value={cardDataQR.address} getRef={refQR} />
           </View>
 
           <View style={styles.actionQRCode}>
