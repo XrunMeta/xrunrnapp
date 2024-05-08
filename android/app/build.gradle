@@ -140,6 +140,8 @@ dependencies {
     // RN Restarter
     // implementation project(':react-native-restart')
 
+    // implementation 'com.facebook.fresco:animated-gif:2.5.0'
+
     // Google AdMob
     implementation("com.google.android.gms:play-services-ads:22.6.0")
 
@@ -161,6 +163,10 @@ dependencies {
 
     // React native file system
     implementation project(':react-native-fs')
+
+    implementation 'com.facebook.fresco:animated-gif:2.6.0'
+    implementation 'com.facebook.fresco:animated-webp:2.0.0'
+    implementation 'com.facebook.fresco:webpsupport:2.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

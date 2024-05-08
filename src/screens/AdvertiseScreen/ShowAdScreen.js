@@ -16,9 +16,10 @@ import {URL_API, getLanguage2, getFontFam} from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import crashlytics from '@react-native-firebase/crashlytics';
+import FastImage from 'react-native-fast-image';
 
-const androidRealAD = 'ca-app-pub-9457909979646034/7873165988';
-const iosRealAD = 'ca-app-pub-9457909979646034/3743957554';
+const androidRealAD = process.env.ADMOB_ADUNIT_ANDROID;
+const iosRealAD = process.env.ADMOB_ADUNIT_IOS;
 
 // Menentukan nilai realAD berdasarkan platform
 const realAD = Platform.select({
@@ -164,7 +165,15 @@ const ShowAdScreen = ({route}) => {
       ]}>
       {/* {!adLoaded && ( */}
       {!interstitialAds && (
-        <>
+        <View style={{alignItems: 'center'}}>
+          <FastImage
+            style={{width: 150, height: 150}}
+            source={{
+              uri: 'http://3.1.27.93/gif_loader.gif',
+              headers: {Authorization: 'someAuthToken'},
+              priority: FastImage.priority.normal,
+            }}
+          />
           <Text
             style={{
               fontFamily: getFontFam() + 'Regular',
@@ -174,7 +183,7 @@ const ShowAdScreen = ({route}) => {
             }}>
             Loading ads...
           </Text>
-        </>
+        </View>
       )}
 
       <CustomModal
