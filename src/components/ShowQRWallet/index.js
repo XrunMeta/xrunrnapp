@@ -32,7 +32,6 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
     const fetchData = async () => {
       try {
         const addressWallet = await AsyncStorage.getItem('addressWallet');
-        const qrWallet = await AsyncStorage.getItem('qrWallet');
 
         if (JSON.parse(addressWallet) != cardDataQR.address) {
           console.log(
@@ -50,12 +49,6 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
             'addressWallet',
             JSON.stringify(cardDataQR.address),
           );
-          await AsyncStorage.setItem('qrWallet', base64Data);
-          setDownloadDisable(false);
-          setShareDisable(false);
-        } else {
-          setDownloadDisable(false);
-          setShareDisable(false);
         }
       } catch (error) {
         Alert.alert('', 'Error fetching QR code data');
@@ -72,6 +65,8 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
     refQR.current.toDataURL(data => {
       setQRImage('data:image/png;base64,' + data);
     });
+    setDownloadDisable(false);
+    setShareDisable(false);
   }, [cardDataQR]);
 
   const convertBlobToBase64 = blob => {
@@ -144,16 +139,6 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
           PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
         );
         console.log(granted);
-        // if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        //   // Start downloading
-        //   downloadFile();
-        //   console.log('Storage Permission Granted.');
-        // } else if (granted === 'denied') {
-        //   setDownloadDisable(false);
-        // } else if (granted === 'never_ask_again') {
-        //   downloadFile();
-        //   setDownloadDisable(false);
-        // }
         downloadFile();
       } catch (err) {
         // To handle permission related exception
@@ -178,112 +163,77 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
     const qrcodeData = QRImage.split('data:image/png;base64,');
     const filepath = `${dirs.DownloadDir}/${fileName}`;
 
-    RNFetchBlob.fs
-      .writeFile(filepath, qrcodeData[1], 'base64')
-      .then(() => {
-        Alert.alert(
-          '',
-          `${fileName} ${
-            lang && lang.screen_wallet.download_qrcode_show
-              ? lang.screen_wallet.download_qrcode_show
-              : ''
-          }`,
-          [
-            {
-              text:
-                lang && lang.screen_wallet.confirm_alert
-                  ? lang.screen_wallet.confirm_alert
-                  : '',
-              onPress: () => {
-                setDownloadDisable(false);
-                tokener();
-                passwd();
+    if (Platform.OS === 'android') {
+      RNFetchBlob.fs
+        .writeFile(filepath, qrcodeData[1], 'base64')
+        .then(() => {
+          Alert.alert(
+            '',
+            `${fileName} ${
+              lang && lang.screen_wallet.download_qrcode_show
+                ? lang.screen_wallet.download_qrcode_show
+                : ''
+            }`,
+            [
+              {
+                text:
+                  lang && lang.screen_wallet.confirm_alert
+                    ? lang.screen_wallet.confirm_alert
+                    : '',
+                onPress: () => {
+                  setDownloadDisable(false);
+                  tokener();
+                  passwd();
+                },
               },
-            },
-          ],
-        );
+            ],
+          );
 
-        console.log('Saved qrcode successfully');
-      })
-      .catch(errorMessage => console.log(errorMessage));
-
-    if (Platform.OS === 'ios') {
-      const options = {
-        title: 'Share is your QRcode',
-        url: refQR,
-      };
-
+          console.log('Successfully saved QR Image');
+        })
+        .catch(errorMessage => console.log(errorMessage));
+    } else if (Platform.OS === 'ios') {
       try {
-        await Share.open(options);
+        const options = {
+          title: fileName,
+          url: QRImage,
+          message: fileName,
+        };
+
+        const result = await Share.open(options);
+
+        if (result.message == 'com.apple.UIKit.activity.SaveToCameraRoll') {
+          console.log(`Successfully saved QR Image on ios`);
+
+          Alert.alert(
+            '',
+            `${fileName} ${
+              lang && lang.screen_wallet.download_qrcode_show
+                ? lang.screen_wallet.download_qrcode_show
+                : ''
+            }`,
+            [
+              {
+                text:
+                  lang && lang.screen_wallet.confirm_alert
+                    ? lang.screen_wallet.confirm_alert
+                    : '',
+                onPress: () => {
+                  tokener();
+                  passwd();
+                  setDownloadDisable(false);
+                },
+              },
+            ],
+          );
+        }
+
+        setDownloadDisable(false);
       } catch (error) {
-        console.log(error);
+        setDownloadDisable(false);
+        console.log('Failed saved QR Image on ios:', error.message);
       }
     }
-    //   if (Platform.OS === 'ios') {
-
-    //     // Create the download options
-    //     // const {config, fs} = RNFetchBlob;
-    //     // let RootDir = fs.dirs.PictureDir;
-    //     // let options = {
-    //     //   fileCache: true,
-    //     //   addAndroidDownloads: {
-    //     //     path: `${RootDir}/${fileName}`,
-    //     //     description: 'Downloading file...',
-    //     //     notification: true,
-    //     //     useDownloadManager: true,
-    //     //   },
-    //     // };
-
-    //     // // Start downloading
-    //     // const res = await config(options).fetch('GET', url);
-    //     // Alert after successful downloading
-
-    //     // console.log('res -> ', JSON.stringify(res));
-    //   } else {
-    //     const {
-    //       dirs: {DocumentDir},
-    //     } = RNFetchBlob.fs;
-    //     const path = `${DocumentDir}/${fileName}`;
-
-    //     try {
-    //       const res = await RNFetchBlob.config({
-    //         fileCache: true,
-    //         path,
-    //       }).fetch('GET', url);
-
-    //       // Tampilkan di galeri (opsional)
-    //       if (res.info().status === 200) {
-    //         // Alert after successful downloading
-    //         Alert.alert(
-    //           '',
-    //           `${fileName} ${
-    //             lang && lang.screen_wallet.download_qrcode_show
-    //               ? lang.screen_wallet.download_qrcode_show
-    //               : ''
-    //           }`,
-    //           [
-    //             {
-    //               text:
-    //                 lang && lang.screen_wallet.confirm_alert
-    //                   ? lang.screen_wallet.confirm_alert
-    //                   : '',
-    //               onPress: () => {
-    //                 RNFetchBlob.ios.previewDocument(res.data);
-    //                 setDownloadDisable(false);
-    //                 tokener();
-    //                 passwd();
-    //               },
-    //             },
-    //           ],
-    //         );
-    //       }
-
-    //       console.log('Image download:', path);
-    //       return path;
-    //     } catch (error) {
-    //       console.error('Error download image:', error);
-    //     }
-    //   }
   };
 
   const tokener = async () => {
@@ -326,17 +276,21 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
 
   const saveTxtFile = async (response, isPassword = false) => {
     try {
+      let downloadDir =
+        RNFS.DownloadDirectoryPath || RNFS.DocumentDirectoryPath;
+
       const address =
         cardDataQR.address.substring(0, 10) +
-        '..' +
+        '...' +
         cardDataQR.address.substring(cardDataQR.address.length - 10);
-      const filePath =
-        RNFS.DownloadDirectoryPath +
-        `/${address}${isPassword ? '-password' : ''}.txt`;
+      const filePath = `${downloadDir}/${address}${
+        isPassword ? '-password' : ''
+      }.txt`;
+
       await RNFS.writeFile(filePath, response, 'utf8');
       console.log('File saved successfully at:', filePath);
     } catch (err) {
-      console.log(`Failed saved file: ${err}`);
+      console.log(`Failed to save file: ${err.message}`);
     }
   };
 
@@ -375,7 +329,12 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
         </View>
         <View style={styles.partBottomShowQR}>
           <View style={styles.wrapperImageQRCode}>
-            <QRCode value={cardDataQR.address} getRef={refQR} />
+            <QRCode
+              value={cardDataQR.address}
+              getRef={refQR}
+              quietZone={8}
+              size={120}
+            />
           </View>
 
           <View style={styles.actionQRCode}>

@@ -37,6 +37,7 @@ end
 
 target 'XRUN' do
   rn_maps_path = '../node_modules/react-native-maps'
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
   pod 'react-native-google-maps', :path => rn_maps_path
   pod 'FirebaseCoreInternal', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
