@@ -169,9 +169,8 @@ const ShowAdScreen = ({route}) => {
           <FastImage
             style={{width: 150, height: 150}}
             source={{
-              uri: 'http://3.1.27.93/gif_loader.gif',
-              headers: {Authorization: 'someAuthToken'},
-              priority: FastImage.priority.normal,
+              uri: 'https://www.xrun.run/assets/video/gif_loader.gif',
+              priority: FastImage.priority.high,
             }}
           />
           <Text
