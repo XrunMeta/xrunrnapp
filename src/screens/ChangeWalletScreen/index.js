@@ -558,8 +558,8 @@ const styles = StyleSheet.create({
     right: 0,
   },
   buttonImage: {
-    height: 95,
-    width: 95,
+    height: 85,
+    width: 85,
   },
   selectNetwork: {
     fontFamily: getFontFam() + 'Regular',

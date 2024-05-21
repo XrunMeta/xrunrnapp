@@ -404,7 +404,6 @@ const SendWalletScreen = ({navigation, route}) => {
           </Text>
         </View>
       )}
-
       <View style={{flexDirection: 'row'}}>
         <View style={{position: 'absolute', zIndex: 1}}>
           <ButtonBack onClick={onBack} />
@@ -415,7 +414,6 @@ const SendWalletScreen = ({navigation, route}) => {
           </Text>
         </View>
       </View>
-
       <ScrollView overScrollMode="never">
         <View style={{backgroundColor: '#fff'}}>
           <View style={styles.partTop}>
@@ -470,26 +468,26 @@ const SendWalletScreen = ({navigation, route}) => {
             />
           </View>
         </View>
-
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={{flex: 1}}>
-          <TouchableOpacity
-            onPress={onSend}
-            style={styles.button}
-            activeOpacity={0.6}>
-            <Image
-              source={
-                iconNextIsDisabled
-                  ? require('../../../assets/images/icon_nextDisable.png')
-                  : require('../../../assets/images/icon_next.png')
-              }
-              resizeMode="contain"
-              style={styles.buttonImage}
-            />
-          </TouchableOpacity>
-        </KeyboardAvoidingView>
       </ScrollView>
+
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{flex: 1}}>
+        <TouchableOpacity
+          onPress={onSend}
+          style={styles.button}
+          activeOpacity={0.6}>
+          <Image
+            source={
+              iconNextIsDisabled
+                ? require('../../../assets/images/icon_nextDisable.png')
+                : require('../../../assets/images/icon_next.png')
+            }
+            resizeMode="contain"
+            style={styles.buttonImage}
+          />
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
 
       {/* Scan QR code */}
       {isVisibleReadQR && (
@@ -523,7 +521,6 @@ const SendWalletScreen = ({navigation, route}) => {
           </BarcodeScanner>
         </View>
       )}
-
       <Animated.View
         style={{
           alignItems: 'center',
@@ -553,7 +550,6 @@ const SendWalletScreen = ({navigation, route}) => {
           <Text style={styles.notificationTextInQR}>Scanned: {address}</Text>
         </View>
       </Animated.View>
-
       {popupSend && (
         <View style={styles.popupConversion}>
           <View style={styles.wrapperConversion}>
@@ -671,7 +667,7 @@ const styles = StyleSheet.create({
   partBottom: {
     paddingHorizontal: 28,
     paddingTop: 24,
-    paddingBottom: 80,
+    paddingBottom: 24,
     gap: 30,
   },
   button: {
@@ -681,10 +677,13 @@ const styles = StyleSheet.create({
     marginTop: 30,
     marginBottom: 10,
     justifyContent: 'flex-end',
+    position: 'absolute',
+    bottom: 10,
+    right: 0,
   },
   buttonImage: {
-    height: 95,
-    width: 95,
+    height: 85,
+    width: 85,
   },
   partScanQR: {
     flexDirection: 'row',
