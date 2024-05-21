@@ -480,8 +480,8 @@ const SendWalletScreen = ({navigation, route}) => {
           <Image
             source={
               iconNextIsDisabled
-                ? require('../../../assets/images/icon_nextDisable.png')
-                : require('../../../assets/images/icon_next.png')
+                ? require('../../../assets/images/ico-btn-passive.png')
+                : require('../../../assets/images/ico-btn-active.png')
             }
             resizeMode="contain"
             style={styles.buttonImage}
@@ -682,8 +682,8 @@ const styles = StyleSheet.create({
     right: 0,
   },
   buttonImage: {
-    height: 85,
-    width: 85,
+    height: 80,
+    width: 80,
   },
   partScanQR: {
     flexDirection: 'row',
