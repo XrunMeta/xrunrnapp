@@ -74,8 +74,8 @@ const ShowAdScreen = ({route}) => {
 
   const initInterstitial = async () => {
     const interstitialAd = InterstitialAd.createForAdRequest(
-      TestIds.INTERSTITIAL,
-      // realAD,
+      // TestIds.INTERSTITIAL,
+      realAD,
     );
 
     interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
