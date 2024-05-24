@@ -22,7 +22,6 @@ import RNFS from 'react-native-fs';
 const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
   const [downloadDisable, setDownloadDisable] = useState(true);
   const [shareDisable, setShareDisable] = useState(true);
-  const apiQRCode = process.env.API_QR_CODE;
   const refQR = useRef(null);
   const [QRImage, setQRImage] = useState(null);
   // Animated notification in QR
@@ -38,16 +37,6 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
             `New address: ${JSON.parse(addressWallet)} | Old: ${
               cardDataQR.address
             }`,
-          );
-          // Convert image qr code to base64
-          const response = await fetch(
-            `${apiQRCode}?size=200x200&data=${cardDataQR.address}&margin=10`,
-          );
-          const data = await response.blob();
-          const base64Data = await convertBlobToBase64(data);
-          await AsyncStorage.setItem(
-            'addressWallet',
-            JSON.stringify(cardDataQR.address),
           );
         }
       } catch (error) {
@@ -68,17 +57,6 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
     setDownloadDisable(false);
     setShareDisable(false);
   }, [cardDataQR]);
-
-  const convertBlobToBase64 = blob => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onerror = reject;
-      reader.onload = () => {
-        resolve(reader.result.split(',')[1]);
-      };
-      reader.readAsDataURL(blob);
-    });
-  };
 
   // Animation
   const fadeIn = () => {
