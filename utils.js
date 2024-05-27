@@ -303,3 +303,15 @@ export const getFontFam = () => {
     return 'Roboto-';
   }
 };
+
+export const fontSize = type => {
+  if (type === 'note') {
+    return Platform.OS === 'android' ? 11 : 13;
+  } else if (type === 'body') {
+    return Platform.OS === 'android' ? 13 : 15;
+  } else if (type === 'subtitle') {
+    return Platform.OS === 'android' ? 16 : 18;
+  } else if (type === 'title') {
+    return Platform.OS === 'android' ? 22 : 26;
+  }
+};
