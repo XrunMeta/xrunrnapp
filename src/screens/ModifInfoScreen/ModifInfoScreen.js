@@ -19,7 +19,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import CustomMultipleChecbox from '../../components/CustomCheckbox/CustomMultipleCheckbox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const ModifInfoScreen = ({route}) => {
@@ -290,7 +290,7 @@ const ModifInfoScreen = ({route}) => {
             style={{
               color: 'white',
               fontFamily: getFontFam() + 'Regular',
-              fontSize: 13,
+              fontSize: fontSize('body'),
             }}>
             {lang && lang.screen_modify_information
               ? lang.screen_modify_information.loader
@@ -370,7 +370,7 @@ const ModifInfoScreen = ({route}) => {
                     <Text
                       style={{
                         fontFamily: getFontFam() + 'Medium',
-                        fontSize: 13,
+                        fontSize: fontSize('body'),
                         marginBottom: -10,
                         color: '#343a59',
                       }}>
@@ -395,7 +395,7 @@ const ModifInfoScreen = ({route}) => {
                         height: 40,
                         paddingBottom: -10,
                         fontFamily: getFontFam() + 'Medium',
-                        fontSize: 13,
+                        fontSize: fontSize('body'),
                         color: '#343a59',
                         borderBottomColor: '#cccccc',
                         borderBottomWidth: 1,
@@ -457,7 +457,7 @@ const ModifInfoScreen = ({route}) => {
                     <Text
                       style={{
                         fontFamily: getFontFam() + 'Medium',
-                        fontSize: 13,
+                        fontSize: fontSize('body'),
                         marginBottom: -10,
                         color: '#343a59',
                       }}>
@@ -482,7 +482,7 @@ const ModifInfoScreen = ({route}) => {
                         height: 40,
                         paddingBottom: -10,
                         fontFamily: getFontFam() + 'Medium',
-                        fontSize: 13,
+                        fontSize: fontSize('body'),
                         color: '#343a59',
                         borderBottomColor: '#cccccc',
                         borderBottomWidth: 1,
@@ -529,7 +529,7 @@ const ModifInfoScreen = ({route}) => {
                     <Text
                       style={{
                         fontFamily: getFontFam() + 'Medium',
-                        fontSize: 13,
+                        fontSize: fontSize('body'),
                         marginBottom: -10,
                         color: '#343a59',
                       }}>
@@ -547,7 +547,7 @@ const ModifInfoScreen = ({route}) => {
                         height: 40,
                         paddingBottom: -10,
                         fontFamily: getFontFam() + 'Medium',
-                        fontSize: 13,
+                        fontSize: fontSize('body'),
                         color: '#343a59',
                         borderBottomColor: '#cccccc',
                         borderBottomWidth: 1,
@@ -600,7 +600,7 @@ const ModifInfoScreen = ({route}) => {
                     <Text
                       style={{
                         fontFamily: getFontFam() + 'Medium',
-                        fontSize: 13,
+                        fontSize: fontSize('body'),
                         color: '#a8a8a7',
                         alignSelf: 'center',
                         paddingRight: 10,
@@ -624,7 +624,7 @@ const ModifInfoScreen = ({route}) => {
                 <Text
                   style={{
                     fontFamily: getFontFam() + 'Medium',
-                    fontSize: 13,
+                    fontSize: fontSize('body'),
                     marginBottom: -10,
                     color: '#343a59',
                     zIndex: 1,
@@ -648,7 +648,7 @@ const ModifInfoScreen = ({route}) => {
                     <Text
                       style={{
                         fontFamily: getFontFam() + 'Medium',
-                        fontSize: 13,
+                        fontSize: fontSize('body'),
                         color: '#343a59',
                         paddingRight: 30,
                         paddingLeft: -10,
@@ -930,7 +930,7 @@ const ModifInfoScreen = ({route}) => {
                       <Text
                         style={{
                           fontFamily: getFontFam() + 'Medium',
-                          fontSize: 13,
+                          fontSize: fontSize('body'),
                           marginBottom: -10,
                           color: '#343a59',
                           zIndex: 1,
@@ -954,7 +954,7 @@ const ModifInfoScreen = ({route}) => {
                           <Text
                             style={{
                               fontFamily: getFontFam() + 'Medium',
-                              fontSize: 13,
+                              fontSize: fontSize('body'),
                               color: '#343a59',
                               paddingRight: 30,
                               paddingLeft: -10,
@@ -974,7 +974,7 @@ const ModifInfoScreen = ({route}) => {
                       <Text
                         style={{
                           fontFamily: getFontFam() + 'Medium',
-                          fontSize: 13,
+                          fontSize: fontSize('body'),
                           marginBottom: -10,
                           color: '#343a59',
                           zIndex: 1,
@@ -998,7 +998,7 @@ const ModifInfoScreen = ({route}) => {
                           <Text
                             style={{
                               fontFamily: getFontFam() + 'Medium',
-                              fontSize: 13,
+                              fontSize: fontSize('body'),
                               color: '#343a59',
                               paddingRight: 30,
                               paddingLeft: -10,
@@ -1148,18 +1148,18 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: getFontFam() + 'Bold',
-    fontSize: 22,
+    fontSize: fontSize('title'),
     color: '#343a59',
     margin: 10,
   },
   normalText: {
     fontFamily: getFontFam() + 'Regular',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     color: '#343a59',
   },
   label: {
     fontFamily: getFontFam() + 'Medium',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     color: '#343a59',
     marginBottom: -5,
   },
@@ -1175,7 +1175,7 @@ const styles = StyleSheet.create({
   },
   input: {
     fontFamily: getFontFam() + 'Medium',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     color: '#a8a8a7',
     borderBottomColor: '#cccccc',
     borderBottomWidth: 1,
@@ -1212,7 +1212,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   modalItemText: {
-    fontSize: 13,
+    fontSize: fontSize('body'),
     fontFamily: getFontFam() + 'Regular',
     color: '#343a59',
   },
@@ -1225,7 +1225,7 @@ const styles = StyleSheet.create({
   },
   closeButtonText: {
     color: 'white',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     fontFamily: getFontFam() + 'Regular',
   },
 });

@@ -12,7 +12,7 @@ import React, {useState, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getLanguage2, getFontFam} from '../../../utils';
+import {getLanguage2, getFontFam, fontSize} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const SignUpCreateName = () => {
@@ -92,7 +92,7 @@ const SignUpCreateName = () => {
         <Text
           style={{
             fontFamily: getFontFam() + 'Medium',
-            fontSize: 13,
+            fontSize: fontSize('body'),
             color: '#343a59',
             marginBottom: -5,
           }}>
@@ -110,7 +110,7 @@ const SignUpCreateName = () => {
           <TextInput
             style={{
               fontFamily: getFontFam() + 'Medium',
-              fontSize: 13,
+              fontSize: fontSize('body'),
               color: '#343a59',
               borderBottomColor: '#cccccc',
               borderBottomWidth: 1,
@@ -133,7 +133,7 @@ const SignUpCreateName = () => {
           <TextInput
             style={{
               fontFamily: getFontFam() + 'Medium',
-              fontSize: 13,
+              fontSize: fontSize('body'),
               color: '#343a59',
               borderBottomColor: '#cccccc',
               borderBottomWidth: 1,

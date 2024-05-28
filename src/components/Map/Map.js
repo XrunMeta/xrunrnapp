@@ -20,7 +20,7 @@ import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {fetchMarkerData} from './APIGetMarker';
 import RNFetchBlob from 'rn-fetch-blob';
-import {getFontFam} from '../../../utils';
+import {fontSize, getFontFam} from '../../../utils';
 const logo_tempMarker = require('../../../assets/images/logo_tempMarker.png');
 
 // ########## Main Component ##########
@@ -763,7 +763,7 @@ const MapComponent = ({
               <Text
                 key={updateRange}
                 style={{
-                  fontSize: 11,
+                  fontSize: fontSize('note'),
                   fontFamily: getFontFam() + 'Medium',
                   color: '#343a59',
                   marginBottom: 3,
@@ -778,7 +778,7 @@ const MapComponent = ({
               }}>
               <Text
                 style={{
-                  fontSize: 11,
+                  fontSize: fontSize('note'),
                   fontFamily: getFontFam() + 'Medium',
                   marginTop: 3,
                   color: '#343a59',
@@ -797,7 +797,7 @@ const MapComponent = ({
               </Text>
               <Text
                 style={{
-                  fontSize: 18,
+                  fontSize: fontSize('subtitle'),
                   fontFamily: getFontFam() + 'Medium',
                   marginTop: -6,
                   color: 'black',
@@ -828,7 +828,7 @@ const MapComponent = ({
             style={{
               color: 'white',
               fontFamily: getFontFam() + 'Regular',
-              fontSize: 13,
+              fontSize: fontSize('body'),
             }}>
             {lang && lang.section_marker ? lang.section_marker.loader : ''}
           </Text>
@@ -860,7 +860,7 @@ const MapComponent = ({
                 style={{
                   color: 'white',
                   fontFamily: getFontFam() + 'Regular',
-                  fontSize: 13,
+                  fontSize: fontSize('body'),
                 }}>
                 {lang && lang.section_marker
                   ? lang.section_marker.loader

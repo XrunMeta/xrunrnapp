@@ -11,7 +11,7 @@ import {
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const OneProblemScreen = () => {
@@ -115,7 +115,7 @@ const OneProblemScreen = () => {
                     <Text
                       style={{
                         fontFamily: getFontFam() + 'Regular',
-                        fontSize: 11,
+                        fontSize: fontSize('note'),
                         color: 'grey',
                       }}>
                       {item.datetime}
@@ -123,7 +123,7 @@ const OneProblemScreen = () => {
                     <Text
                       style={{
                         fontFamily: getFontFam() + 'Regular',
-                        fontSize: 11,
+                        fontSize: fontSize('note'),
                         color: 'grey',
                       }}>
                       {item.time}
@@ -132,7 +132,7 @@ const OneProblemScreen = () => {
                   <Text
                     style={{
                       fontFamily: getFontFam() + 'Regular',
-                      fontSize: 13,
+                      fontSize: fontSize('body'),
                       color: 'black',
                     }}>
                     {item.title}
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   title: {
-    fontSize: 22,
+    fontSize: fontSize('title'),
     fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
   },
   checkMark: {
     color: 'white',
-    fontSize: 13,
+    fontSize: fontSize('note'),
     fontWeight: 'bold',
     marginTop: -1,
   },

@@ -14,7 +14,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import CustomListItem from '../../components/CustomButton/CustomListItem';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const ChooseRegionScreen = ({route}) => {
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: getFontFam() + 'Bold',
-    fontSize: 22,
+    fontSize: fontSize('title'),
     color: '#343a59',
   },
   bottomSection: {
@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
   },
   mediumText: {
     fontFamily: getFontFam() + 'Medium',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     color: '#343a59',
     alignSelf: 'center',
     paddingRight: 10,

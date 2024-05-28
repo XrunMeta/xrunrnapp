@@ -20,6 +20,7 @@ import {
   funcTransitionHistory,
   loadMore,
   getFontFam,
+  fontSize,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
@@ -41,7 +42,7 @@ const renderTabBar = props => (
           color: focused ? '#383b50' : '#bbb',
           textAlign: 'center',
           fontFamily: getFontFam() + 'Regular',
-          fontSize: 13,
+          fontSize: fontSize('body'),
           maxWidth: 80,
           borderBottomColor: 'yellow',
         }}>
@@ -1232,7 +1233,7 @@ const TableWalletCard = ({
                             currentSwipe === route.key ? '#383b50' : '#bbb',
                           textAlign: 'center',
                           fontFamily: getFontFam() + 'Regular',
-                          fontSize: 13,
+                          fontSize: fontSize('body'),
                         }}>
                         {route.title}
                       </Text>
@@ -1349,7 +1350,7 @@ const styles = StyleSheet.create({
   textHead: {
     textAlign: 'center',
     fontFamily: getFontFam() + 'Medium',
-    fontSize: 15,
+    fontSize: fontSize('subtitle'),
     color: '#000',
     minWidth: 80,
     textTransform: 'uppercase',
@@ -1389,7 +1390,7 @@ const styles = StyleSheet.create({
   },
   textDay: {
     fontFamily: getFontFam() + 'Medium',
-    fontSize: 15,
+    fontSize: fontSize('subtitle'),
     color: 'black',
     marginBottom: 4,
   },
@@ -1410,11 +1411,11 @@ const styles = StyleSheet.create({
     color: 'black',
     marginBottom: 10,
     fontFamily: getFontFam() + 'Regular',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     maxWidth: 150,
   },
   date: {
-    fontSize: 11,
+    fontSize: fontSize('note'),
     marginTop: 3,
     fontFamily: getFontFam() + 'Regular',
     color: '#aaa',
@@ -1425,7 +1426,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   price: {
-    fontSize: 13,
+    fontSize: fontSize('body'),
     fontFamily: getFontFam() + 'Regular',
     color: 'black',
     textAlign: 'right',
@@ -1433,7 +1434,7 @@ const styles = StyleSheet.create({
   status: {
     color: '#999',
     textAlign: 'right',
-    fontSize: 13,
+    fontSize: fontSize('body'),
   },
   textNotFoundHistory: {
     fontFamily: getFontFam() + 'Regular',

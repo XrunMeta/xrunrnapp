@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, TouchableOpacity, Text} from 'react-native';
-import {getFontFam} from '../../../utils';
+import {fontSize, getFontFam} from '../../../utils';
 
 const CustomTabView = ({state, descriptors, navigation, position}) => {
   console.log(`
@@ -67,12 +67,12 @@ const styles = StyleSheet.create({
   },
   tabBarText: {
     fontFamily: getFontFam() + 'Regular', // Font family of the tab text
-    fontSize: 16,
+    fontSize: fontSize('subtitle'),
     color: 'white', // Font color of the tab text
   },
   tabBarTextFocused: {
     fontFamily: getFontFam() + 'Bold', // Font family of the focused tab text
-    fontSize: 16,
+    fontSize: fontSize('subtitle'),
     color: '#ffdc04', // Font color of the focused tab text
   },
 });

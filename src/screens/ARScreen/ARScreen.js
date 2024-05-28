@@ -20,7 +20,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
-import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import CompassHeading from 'react-native-compass-heading';
@@ -471,7 +471,7 @@ function ARScreen() {
                         <Text
                           style={{
                             fontFamily: getFontFam() + 'Medium',
-                            fontSize: 16,
+                            fontSize: fontSize('subtitle'),
                             color: 'white',
                           }}>
                           {/* 0.05XRUN */}
@@ -481,7 +481,7 @@ function ARScreen() {
                         <Text
                           style={{
                             fontFamily: getFontFam() + 'Regular',
-                            fontSize: 13,
+                            fontSize: fontSize('body'),
                             color: 'grey',
                             marginTop: -7,
                           }}>
@@ -537,7 +537,7 @@ function ARScreen() {
                     <Text
                       style={{
                         fontFamily: getFontFam() + 'Medium',
-                        fontSize: 10.5,
+                        fontSize: fontSize('note'),
                         color: 'white',
                       }}>
                       {lang &&
@@ -549,7 +549,7 @@ function ARScreen() {
                     <Text
                       style={{
                         fontFamily: getFontFam() + 'Medium',
-                        fontSize: 13,
+                        fontSize: fontSize('body'),
                         color: 'white',
                       }}>
                       {curLang != null && curLang === 'ko'
@@ -585,7 +585,7 @@ function ARScreen() {
                     <Text
                       style={{
                         fontFamily: getFontFam() + 'Medium',
-                        fontSize: 13,
+                        fontSize: fontSize('body'),
                         color: 'white',
                         marginTop: -2,
                       }}>
@@ -607,7 +607,7 @@ function ARScreen() {
                       <Text
                         style={{
                           fontFamily: getFontFam() + 'Bold',
-                          fontSize: 13,
+                          fontSize: fontSize('body'),
                           color: '#ffdc04',
                           marginTop: -4,
                         }}>
@@ -712,7 +712,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   permissionDeniedText: {
-    fontSize: 16,
+    fontSize: fontSize('subtitle'),
     fontFamily: getFontFam() + 'Medium',
     marginBottom: 20,
     textAlign: 'center',

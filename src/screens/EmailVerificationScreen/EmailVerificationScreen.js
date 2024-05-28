@@ -12,13 +12,13 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   KeyboardAvoidingView,
-  Platform
+  Platform,
 } from 'react-native';
 import React, {useState, useRef, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import CustomButton from '../../components/CustomButton/';
-import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -383,12 +383,12 @@ const styles = StyleSheet.create({
   },
   normalText: {
     fontFamily: getFontFam() + 'Medium',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     color: '#343a59',
   },
   boldText: {
     fontFamily: getFontFam() + 'Bold',
-    fontSize: 18,
+    fontSize: fontSize('subtitle'),
     color: '#343a59',
   },
   bottomSection: {
@@ -398,7 +398,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flex: 1,
     width: '100%',
-    bottom: 0
+    bottom: 0,
   },
   additionalLogin: {
     flexDirection: 'row',
@@ -408,12 +408,12 @@ const styles = StyleSheet.create({
   },
   emailAuth: {
     fontFamily: getFontFam() + 'Medium',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     color: '#343a59',
   },
   disableText: {
     fontFamily: getFontFam() + 'Regular',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     color: '#aeb1b5',
   },
   codeInputContainer: {
@@ -426,7 +426,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 60,
     fontFamily: getFontFam() + 'Medium',
-    fontSize: 20,
+    fontSize: fontSize('title'),
     color: '#343a59',
     borderBottomWidth: 2,
     borderRadius: 5,
@@ -453,7 +453,7 @@ const styles = StyleSheet.create({
     paddingBottom: 50,
   },
   modalText: {
-    fontSize: 18,
+    fontSize: fontSize('subtitle'),
     marginBottom: 20,
   },
   closeButton: {

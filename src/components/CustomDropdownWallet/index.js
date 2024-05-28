@@ -1,7 +1,7 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {Picker} from '@react-native-picker/picker';
-import {getFontFam} from '../../../utils';
+import {fontSize, getFontFam} from '../../../utils';
 
 const CustomDropdownWallet = ({
   label,
@@ -52,6 +52,6 @@ const styles = StyleSheet.create({
     fontFamily: getFontFam() + 'Regular',
     color: '#000',
     backgroundColor: '#fff',
-    fontSize: 13,
+    fontSize: fontSize('body'),
   },
 });

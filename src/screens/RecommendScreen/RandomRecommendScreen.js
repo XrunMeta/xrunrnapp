@@ -15,7 +15,7 @@ import {
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const RandomRecommendScreen = () => {
@@ -211,7 +211,7 @@ const RandomRecommendScreen = () => {
                   onPress={() => checkBoxToggle(item.email, item.member)}
                   style={{
                     fontFamily: getFontFam() + 'Regular',
-                    fontSize: 13,
+                    fontSize: fontSize('body'),
                     color: 'black',
                     paddingVertical: 18,
                   }}>
@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   title: {
-    fontSize: 22,
+    fontSize: fontSize('title'),
     fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
@@ -282,14 +282,14 @@ const styles = StyleSheet.create({
     width: 80,
   },
   shadow: {
-    shadowColor: "#000000",
+    shadowColor: '#000000',
     shadowOffset: {
       width: 0,
       height: 1,
     },
-    shadowOpacity:  0.16,
+    shadowOpacity: 0.16,
     shadowRadius: 1.51,
-    elevation: 1
+    elevation: 1,
   },
   checkbox: {
     width: 20,
@@ -311,7 +311,7 @@ const styles = StyleSheet.create({
   },
   checkMark: {
     color: 'white',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     backgroundColor: Platform.OS === 'ios' ? '#fff' : 'transparent',
     fontWeight: 'bold',
     marginTop: -1,

@@ -1,6 +1,6 @@
 import {Text, StyleSheet, Pressable, Platform} from 'react-native';
 import React from 'react';
-import {getFontFam} from '../../../utils';
+import {fontSize, getFontFam} from '../../../utils';
 
 const CustomButton = ({
   onPress,
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
 
   text: {
     color: '#45494c',
-    fontSize: 16,
+    fontSize: fontSize('subtitle'),
     fontFamily: getFontFam() + 'Medium',
   },
 

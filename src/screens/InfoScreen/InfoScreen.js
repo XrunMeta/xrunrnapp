@@ -17,7 +17,7 @@ import ButtonList from '../../components/ButtonList/ButtonList';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
-import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const InfoScreen = () => {
@@ -215,7 +215,7 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
           <Text
             style={{
               fontFamily: getFontFam() + 'Regular',
-              fontSize: 13,
+              fontSize: fontSize('body'),
               color: 'black',
             }}>
             {userDetails && userDetails.firstname
@@ -225,7 +225,7 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
           <Text
             style={{
               fontFamily: getFontFam() + 'Regular',
-              fontSize: 11,
+              fontSize: fontSize('note'),
               color: 'grey',
               marginTop: -3,
             }}>
@@ -390,7 +390,7 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   title: {
-    fontSize: 22,
+    fontSize: fontSize('title'),
     fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
@@ -410,7 +410,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   modalText: {
-    fontSize: 13,
+    fontSize: fontSize('body'),
     textAlign: 'left',
     color: '#051C60',
     fontFamily: getFontFam() + 'Regular',
@@ -425,7 +425,7 @@ const styles = StyleSheet.create({
   },
   modalButtonText: {
     textAlign: 'center',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     color: '#051C60',
     fontFamily: getFontFam() + 'Bold',
   },

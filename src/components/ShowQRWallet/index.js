@@ -15,7 +15,7 @@ import Share from 'react-native-share';
 import RNFetchBlob from 'rn-fetch-blob';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import crashlytics from '@react-native-firebase/crashlytics';
-import {URL_API, getFontFam} from '../../../utils';
+import {URL_API, fontSize, getFontFam} from '../../../utils';
 import QRCode from 'react-native-qrcode-svg';
 import RNFS from 'react-native-fs';
 
@@ -424,7 +424,7 @@ const styles = StyleSheet.create({
     fontFamily: getFontFam() + 'Medium',
     textAlign: 'center',
     color: '#fff',
-    fontSize: 24,
+    fontSize: fontSize('title'),
     marginTop: 10,
   },
   wrapperImageCurrencyQR: {

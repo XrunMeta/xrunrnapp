@@ -15,7 +15,7 @@ import React, {useState, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getLanguage2, getFontFam} from '../../../utils';
+import {getLanguage2, getFontFam, fontSize} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const PhoneLoginScreen = ({route}) => {
@@ -140,7 +140,7 @@ const PhoneLoginScreen = ({route}) => {
               <Text
                 style={{
                   fontFamily: getFontFam() + 'Medium',
-                  fontSize: 13,
+                  fontSize: fontSize('body'),
                   color: '#a8a8a7',
                   alignSelf: 'center',
                   paddingRight: 10,
@@ -194,12 +194,12 @@ const styles = StyleSheet.create({
   },
   normalText: {
     fontFamily: getFontFam() + 'Regular',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     color: '#343a59',
   },
   label: {
     fontFamily: getFontFam() + 'Medium',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     color: '#343a59',
     marginBottom: -5,
   },
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
   },
   input: {
     fontFamily: getFontFam() + 'Medium',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     color: '#343a59',
     borderBottomColor: '#cccccc',
     borderBottomWidth: 1,

@@ -4,6 +4,7 @@ import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import SocialSignInButtons from '../../components/SocialSignInButtons';
 import {useNavigation} from '@react-navigation/native';
+import {fontSize} from '../../../utils';
 
 const ForgotPasswordScreen = () => {
   const [username, setUsername] = useState('');
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    fontSize: 22,
+    fontSize: fontSize('title'),
     fontWeight: 'bold',
     color: '#051C60',
     margin: 10,

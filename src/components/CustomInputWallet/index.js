@@ -1,6 +1,6 @@
 import {StyleSheet, Text, View, TextInput, Platform} from 'react-native';
 import React from 'react';
-import {getFontFam} from '../../../utils';
+import {fontSize, getFontFam} from '../../../utils';
 
 const CustomInputWallet = ({
   label,
@@ -9,7 +9,7 @@ const CustomInputWallet = ({
   placeholder,
   isNumber,
   labelVisible = true,
-  customFontSize = 13,
+  customFontSize = fontSize('body'),
   readonly = false,
 }) => {
   return (

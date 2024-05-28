@@ -11,7 +11,7 @@ import {
 import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Clipboard from '@react-native-clipboard/clipboard';
-import {getLanguage2,getFontFam} from '../../../utils';
+import {getLanguage2, getFontFam, fontSize} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const CompleteSend = ({navigation, route}) => {
@@ -65,7 +65,7 @@ const CompleteSend = ({navigation, route}) => {
         }}>
         <Text
           style={{
-            fontSize: 16,
+            fontSize: fontSize('subtitle'),
             fontFamily: getFontFam() + 'Regular',
             color: '#e05c2b',
           }}>
@@ -75,7 +75,7 @@ const CompleteSend = ({navigation, route}) => {
         </Text>
         <Text
           style={{
-            fontSize: 16,
+            fontSize: fontSize('subtitle'),
             fontFamily: getFontFam() + 'Regular',
             color: '#555',
           }}>
@@ -117,7 +117,7 @@ const CompleteSend = ({navigation, route}) => {
             style={{
               fontFamily: getFontFam() + 'Regular',
               color: '#000',
-              fontSize: 13,
+              fontSize: fontSize('body'),
               maxWidth: 180,
             }}>
             {addrto}
@@ -147,7 +147,7 @@ const CompleteSend = ({navigation, route}) => {
             style={{
               fontFamily: getFontFam() + 'Medium',
               color: '#e05c2b',
-              fontSize: 15,
+              fontSize: fontSize('subtitle'),
               maxWidth: 180,
             }}>
             {amount}
@@ -173,7 +173,7 @@ const CompleteSend = ({navigation, route}) => {
               style={{
                 fontFamily: getFontFam() + 'Medium',
                 color: '#e05c2b',
-                fontSize: 15,
+                fontSize: fontSize('subtitle'),
                 maxWidth: 240,
               }}>
               {txid}
@@ -186,7 +186,7 @@ const CompleteSend = ({navigation, route}) => {
               onPress={() => copiedTXID(txid)}>
               <Text
                 style={{
-                  fontSize: 15,
+                  fontSize: fontSize('subtitle'),
                   color: '#555',
                   marginTop: 4,
                   textAlign: 'right',
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   title: {
-    fontSize: 22,
+    fontSize: fontSize('title'),
     fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
