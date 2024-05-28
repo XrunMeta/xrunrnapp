@@ -16,7 +16,7 @@ import {
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const NotifyScreen = () => {
@@ -275,7 +275,7 @@ const NotifyScreen = () => {
               style={{
                 color: '#ffdc04',
                 fontFamily: getFontFam() + 'Medium',
-                fontSize: 16,
+                fontSize: fontSize('subtitle'),
               }}>
               {isDelete
                 ? lang && lang.screen_notify && lang.screen_notify.deletAll
@@ -302,7 +302,7 @@ const NotifyScreen = () => {
               style={{
                 color: 'grey',
                 fontFamily: getFontFam() + 'Regular',
-                fontSize: 13,
+                fontSize: fontSize('body'),
               }}>
               {lang && lang.screen_notify && lang.screen_notify.loader
                 ? lang.screen_notify.loader
@@ -341,7 +341,7 @@ const NotifyScreen = () => {
                           style={{
                             color: 'white',
                             fontFamily: getFontFam() + 'Regular',
-                            fontSize: 11,
+                            fontSize: fontSize('note'),
                           }}>
                           {formatDate(new Date(item.datetime).toISOString())}
                         </Text>
@@ -482,7 +482,7 @@ const NotifyScreen = () => {
                             <Text
                               style={{
                                 fontFamily: getFontFam() + 'Medium',
-                                fontSize: 13,
+                                fontSize: fontSize('body'),
                                 color: 'white',
                               }}>
                               {/* Bilal ganteng :D */}
@@ -585,7 +585,7 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   title: {
-    fontSize: 22,
+    fontSize: fontSize('title'),
     fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
@@ -593,7 +593,7 @@ const styles = StyleSheet.create({
   normalText: {
     color: 'grey',
     fontFamily: getFontFam() + 'Regular',
-    fontSize: 13,
+    fontSize: fontSize('body'),
   },
   collapseWrapper: {
     paddingHorizontal: 5,
@@ -630,7 +630,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
     color: 'black',
     fontFamily: getFontFam() + 'Regular',
-    fontSize: 13,
+    fontSize: fontSize('body'),
   },
   sendButton: {
     backgroundColor: '#051C60',
@@ -642,7 +642,7 @@ const styles = StyleSheet.create({
   sendButtonText: {
     color: 'white',
     fontFamily: getFontFam() + 'Medium',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     marginBottom: 5,
     marginTop: 3,
   },
@@ -667,12 +667,12 @@ const styles = StyleSheet.create({
   },
   chatText: {
     fontFamily: getFontFam() + 'Regular',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     color: 'black',
   },
   timestampText: {
     fontFamily: getFontFam() + 'Regular',
-    fontSize: 11,
+    fontSize: fontSize('note'),
     color: 'grey',
     marginTop: 5,
     textAlign: 'right',

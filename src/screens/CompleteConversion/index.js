@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getLanguage2, getFontFam} from '../../../utils';
+import {getLanguage2, getFontFam, fontSize} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const CompleteSend = ({navigation, route}) => {
@@ -70,7 +70,7 @@ const CompleteSend = ({navigation, route}) => {
         }}>
         <Text
           style={{
-            fontSize: 16,
+            fontSize: fontSize('subtitle'),
             fontFamily: getFontFam() + 'Regular',
             color: '#e05c2b',
           }}>
@@ -80,7 +80,7 @@ const CompleteSend = ({navigation, route}) => {
         </Text>
         <Text
           style={{
-            fontSize: 16,
+            fontSize: fontSize('subtitle'),
             fontFamily: getFontFam() + 'Regular',
             color: '#555',
           }}>
@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   title: {
-    fontSize: 22,
+    fontSize: fontSize('title'),
     fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,

@@ -19,7 +19,7 @@ import Animated, {
 import MapComponent from '../../components/Map/Map';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CompassHeading from 'react-native-compass-heading';
-import {getLanguage2, getFontFam, getLanguage} from '../../../utils';
+import {getLanguage2, getFontFam, getLanguage, fontSize} from '../../../utils';
 import * as RNLocalize from 'react-native-localize';
 
 // Offset Value of Slider Card
@@ -264,7 +264,7 @@ export default function MapParent() {
                 <Text
                   style={{
                     fontFamily: getFontFam() + 'Medium',
-                    fontSize: 10.5,
+                    fontSize: fontSize('note'),
                     color: 'white',
                   }}>
                   {lang &&
@@ -277,7 +277,7 @@ export default function MapParent() {
                   <Text
                     style={{
                       fontFamily: getFontFam() + 'Medium',
-                      fontSize: 13,
+                      fontSize: fontSize('body'),
                       color: 'white',
                       flexWrap: 'wrap',
                     }}>
@@ -306,7 +306,7 @@ export default function MapParent() {
                   <Text
                     style={{
                       fontFamily: getFontFam() + 'Medium',
-                      fontSize: 13,
+                      fontSize: fontSize('body'),
                       color: 'white',
                       marginBottom: 3,
                     }}>
@@ -331,7 +331,7 @@ export default function MapParent() {
                 <Text
                   style={{
                     fontFamily: getFontFam() + 'Medium',
-                    fontSize: 13,
+                    fontSize: fontSize('body'),
                     color: 'white',
                     marginBottom: 2,
                   }}>
@@ -353,7 +353,7 @@ export default function MapParent() {
                   <Text
                     style={{
                       fontFamily: getFontFam() + 'Bold',
-                      fontSize: 13,
+                      fontSize: fontSize('body'),
                       color: '#ffdc04',
                       marginTop: -4,
                     }}>
@@ -495,18 +495,18 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: getFontFam() + 'Bold',
-    fontSize: 22,
+    fontSize: fontSize('title'),
     color: '#343a59',
   },
   subTitle: {
     fontFamily: getFontFam() + 'Medium',
-    fontSize: 22,
+    fontSize: fontSize('title'),
     color: '#343a59',
     marginBottom: -9,
   },
   desc: {
     fontFamily: getFontFam() + 'Medium',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     color: '#343a59',
   },
   navWrapper: {

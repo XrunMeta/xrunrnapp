@@ -19,7 +19,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import CustomMultipleChecbox from '../../components/CustomCheckbox/CustomMultipleCheckbox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 
@@ -517,7 +517,7 @@ const SignUpScreen = ({route}) => {
                 marginLeft: 25,
                 color: 'red',
                 fontFamily: getFontFam() + 'Medium',
-                fontSize: 13,
+                fontSize: fontSize('body'),
               }}>
               {lang && lang.screen_signup && lang.screen_signup.validator
                 ? lang.screen_signup.validator.invalidEmail
@@ -580,7 +580,7 @@ const SignUpScreen = ({route}) => {
                 <Text
                   style={{
                     fontFamily: getFontFam() + 'Medium',
-                    fontSize: 13,
+                    fontSize: fontSize('body'),
                     color: '#a8a8a7',
                     alignSelf: 'center',
                     paddingRight: 10,
@@ -646,7 +646,7 @@ const SignUpScreen = ({route}) => {
                   <Text
                     style={{
                       fontFamily: getFontFam() + 'Medium',
-                      fontSize: 11,
+                      fontSize: fontSize('note'),
                       color: 'white',
                     }}>
                     {lang &&
@@ -663,7 +663,7 @@ const SignUpScreen = ({route}) => {
                 style={{
                   color: 'red',
                   fontFamily: getFontFam() + 'Medium',
-                  fontSize: 11,
+                  fontSize: fontSize('note'),
                 }}>
                 *
                 {lang && lang.screen_signup && lang.screen_signup.phone_number
@@ -677,7 +677,7 @@ const SignUpScreen = ({route}) => {
                   style={{
                     color: 'green',
                     fontFamily: getFontFam() + 'Medium',
-                    fontSize: 11,
+                    fontSize: fontSize('note'),
                   }}>
                   *
                   {lang && lang.screen_signup && lang.screen_signup.phone_number
@@ -829,7 +829,7 @@ const SignUpScreen = ({route}) => {
               keyboardType="numeric"
               style={{
                 fontFamily: getFontFam() + 'Medium',
-                fontSize: 13,
+                fontSize: fontSize('body'),
                 color: '#343a59',
                 borderBottomColor: '#cccccc',
                 borderBottomWidth: 1,
@@ -860,7 +860,7 @@ const SignUpScreen = ({route}) => {
                 <Text
                   style={{
                     fontFamily: getFontFam() + 'Medium',
-                    fontSize: 11,
+                    fontSize: fontSize('note'),
                     color: 'white',
                   }}>
                   {lang && lang.screen_signup && lang.screen_signup.phone_number
@@ -889,7 +889,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: getFontFam() + 'Bold',
-    fontSize: 22,
+    fontSize: fontSize('title'),
     color: '#343a59',
   },
   bottomSection: {
@@ -907,12 +907,12 @@ const styles = StyleSheet.create({
   },
   normalText: {
     fontFamily: getFontFam() + 'Regular',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     color: '#343a59',
   },
   label: {
     fontFamily: getFontFam() + 'Medium',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     color: '#343a59',
     marginBottom: -5,
   },
@@ -940,7 +940,7 @@ const styles = StyleSheet.create({
   },
   input: {
     fontFamily: getFontFam() + 'Medium',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     color: '#343a59',
     borderBottomColor: '#cccccc',
     borderBottomWidth: 1,

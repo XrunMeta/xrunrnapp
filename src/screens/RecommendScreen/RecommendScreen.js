@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import ButtonList from '../../components/ButtonList/ButtonList';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
-import {getLanguage2, getFontFam} from '../../../utils';
+import {getLanguage2, getFontFam, fontSize} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const RecommendScreen = () => {
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   title: {
-    fontSize: 22,
+    fontSize: fontSize('title'),
     fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,

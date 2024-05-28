@@ -3,7 +3,7 @@ import {StyleSheet, Text, View, ScrollView, SafeAreaView} from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import * as RNLocalize from 'react-native-localize';
-import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const ClauseForPersonal = () => {
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   },
   title: locale => ({
     marginLeft: locale === 'id' || locale === 'en' ? 55 : 0,
-    fontSize: 22,
+    fontSize: fontSize('title'),
     color: '#051C60',
     margin: 10,
     fontFamily: getFontFam() + 'Bold',
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: getFontFam() + 'Regular',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     paddingVertical: 20,
     color: 'grey',
   },

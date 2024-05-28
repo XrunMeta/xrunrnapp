@@ -18,7 +18,7 @@ import React, {useState, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInputWallet from '../../components/CustomInputWallet';
-import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {
   request,
@@ -397,7 +397,7 @@ const SendWalletScreen = ({navigation, route}) => {
             style={{
               color: '#fff',
               fontFamily: getFontFam() + 'Regular',
-              fontSize: 13,
+              fontSize: fontSize('body'),
               marginTop: 10,
             }}>
             Loading...
@@ -641,7 +641,7 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   title: {
-    fontSize: 22,
+    fontSize: fontSize('title'),
     fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
@@ -657,12 +657,12 @@ const styles = StyleSheet.create({
   currencyName: {
     color: '#fff',
     fontFamily: getFontFam() + 'Medium',
-    fontSize: 16,
+    fontSize: fontSize('subtitle'),
   },
   balance: {
     color: '#fff',
     fontFamily: getFontFam() + 'Regular',
-    fontSize: 13,
+    fontSize: fontSize('body'),
   },
   partBottom: {
     paddingHorizontal: 28,
@@ -746,11 +746,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
     color: '#000',
     textTransform: 'uppercase',
-    fontSize: 13,
+    fontSize: fontSize('body'),
   },
   textCheckInformation: {
     fontFamily: 'Poppins-Regular',
-    fontSize: 11,
+    fontSize: fontSize('note'),
     color: '#000',
   },
   contentConversion: {
@@ -768,12 +768,12 @@ const styles = StyleSheet.create({
   textPartLeft: {
     color: '#aaa',
     fontFamily: 'Poppins-Regular',
-    fontSize: 13,
+    fontSize: fontSize('body'),
   },
   textPartRight: {
     color: '#000',
     fontFamily: 'Poppins-Regular',
-    fontSize: 13,
+    fontSize: fontSize('body'),
   },
   wrapperButton: {
     flexDirection: 'row',

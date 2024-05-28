@@ -19,7 +19,7 @@ import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import jsonData from '../../../testAds';
-import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const AdvertiseScreen = () => {
@@ -434,7 +434,7 @@ const AdvertiseScreen = () => {
             style={{
               color: 'black',
               fontFamily: getFontFam() + 'Regular',
-              fontSize: 13,
+              fontSize: fontSize('body'),
             }}>
             {lang && lang.screen_advertise && lang.screen_advertise.total
               ? lang.screen_advertise.total
@@ -457,7 +457,7 @@ const AdvertiseScreen = () => {
               style={{
                 color: 'black',
                 fontFamily: getFontFam() + 'Regular',
-                fontSize: 13,
+                fontSize: fontSize('body'),
                 marginBottom: -2,
               }}>
               {selectedFilter.desc}
@@ -688,7 +688,7 @@ const AdvertiseScreen = () => {
             fontFamily: focused
               ? getFontFam() + 'Medium'
               : getFontFam() + 'Regular',
-            fontSize: 13,
+            fontSize: fontSize('body'),
             textAlign: 'center',
           }}>
           {route.key === 'first'
@@ -760,7 +760,7 @@ const AdvertiseScreen = () => {
                   // color: '#ffdc04',
                   color: 'orange',
                   fontFamily: getFontFam() + 'Medium',
-                  fontSize: 13,
+                  fontSize: fontSize('body'),
                 }}>
                 {isDelete
                   ? lang &&
@@ -817,7 +817,7 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   title: {
-    fontSize: 22,
+    fontSize: fontSize('title'),
     fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
@@ -826,7 +826,7 @@ const styles = StyleSheet.create({
   normalText: {
     color: 'black',
     fontFamily: getFontFam() + 'Regular',
-    fontSize: 13,
+    fontSize: fontSize('body'),
   },
   loadingContainer: {
     ...StyleSheet.absoluteFill,
@@ -836,13 +836,13 @@ const styles = StyleSheet.create({
   },
   smallText: {
     fontFamily: getFontFam() + 'Regular',
-    fontSize: 11,
+    fontSize: fontSize('note'),
     color: 'grey',
     paddingTop: 7,
   },
   mediumText: {
     fontFamily: getFontFam() + 'Medium',
-    fontSize: 16,
+    fontSize: fontSize('subtitle'),
     color: 'black',
   },
   list: {
@@ -866,12 +866,12 @@ const styles = StyleSheet.create({
   listBigText: {
     color: 'grey',
     fontFamily: getFontFam() + 'Regular',
-    fontSize: 20,
+    fontSize: fontSize('title'),
   },
   listNormalText: {
     color: 'grey',
     fontFamily: getFontFam() + 'Regular',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     marginBottom: -3,
   },
   emptyContainer: {
@@ -882,7 +882,7 @@ const styles = StyleSheet.create({
   emptyText: {
     color: 'grey',
     fontFamily: getFontFam() + 'Regular',
-    fontSize: 13,
+    fontSize: fontSize('body'),
   },
   checkbox: {
     width: 20,
@@ -904,7 +904,7 @@ const styles = StyleSheet.create({
   },
   checkMark: {
     color: 'white',
-    fontSize: 11,
+    fontSize: fontSize('note'),
     marginTop: -2,
     fontWeight: 'bold',
   },

@@ -11,7 +11,7 @@ import Logo from '../../../assets/images/logoMain_XRUN.png';
 import CustomButton from '../../components/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import CustomCheckbox from '../../components/CustomCheckbox';
-import {getFontFam} from '../../../utils';
+import {fontSize, getFontFam} from '../../../utils';
 
 const FirstScreen = () => {
   const {height} = useWindowDimensions();
@@ -54,7 +54,7 @@ const FirstScreen = () => {
                 style={{
                   fontWeight: '500',
                   color: '#343a59',
-                  fontSize: 16,
+                  fontSize: fontSize('subtitle'),
                   fontFamily: getFontFam() + 'Medium',
                 }}>
                 RESET PASSWORD
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   title: {
-    fontSize: 22,
+    fontSize: fontSize('title'),
     fontWeight: '500',
     color: '#343a59',
     fontFamily: getFontFam() + 'Medium',

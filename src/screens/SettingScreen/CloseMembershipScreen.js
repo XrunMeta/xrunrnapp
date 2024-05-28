@@ -15,7 +15,7 @@ import {
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getLanguage2, getFontFam} from '../../../utils';
+import {getLanguage2, getFontFam, fontSize} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const CloseMembershipScreen = () => {
@@ -104,7 +104,7 @@ const CloseMembershipScreen = () => {
             style={{
               color: 'white',
               fontFamily: getFontFam() + 'Regular',
-              fontSize: 13,
+              fontSize: fontSize('body'),
             }}>
             {lang && lang.screen_map && lang.screen_map.section_marker
               ? lang.screen_map.section_marker.loader
@@ -138,7 +138,7 @@ const CloseMembershipScreen = () => {
               style={{
                 color: 'black',
                 fontFamily: getFontFam() + 'Regular',
-                fontSize: 16,
+                fontSize: fontSize('subtitle'),
               }}>
               {lang && lang.screen_setting
                 ? lang.screen_setting.close.desc.clo1 + ' '
@@ -157,7 +157,7 @@ const CloseMembershipScreen = () => {
               style={{
                 color: 'black',
                 fontFamily: getFontFam() + 'Regular',
-                fontSize: 13,
+                fontSize: fontSize('body'),
                 marginTop: 15,
               }}>
               {lang && lang.screen_setting
@@ -168,7 +168,7 @@ const CloseMembershipScreen = () => {
               style={{
                 color: '#ffc404',
                 fontFamily: getFontFam() + 'Medium',
-                fontSize: 13,
+                fontSize: fontSize('body'),
                 marginTop: -2,
               }}>
               {lang && lang.screen_setting
@@ -217,7 +217,7 @@ const CloseMembershipScreen = () => {
                 <Text
                   style={{
                     fontFamily: getFontFam() + 'Regular',
-                    fontSize: 13,
+                    fontSize: fontSize('body'),
                     color: 'black',
                     paddingVertical: 5,
                   }}>
@@ -262,7 +262,7 @@ const CloseMembershipScreen = () => {
                 <Text
                   style={{
                     fontFamily: getFontFam() + 'Regular',
-                    fontSize: 13,
+                    fontSize: fontSize('body'),
                     color: 'black',
                     paddingVertical: 5,
                   }}>
@@ -307,7 +307,7 @@ const CloseMembershipScreen = () => {
                 <Text
                   style={{
                     fontFamily: getFontFam() + 'Regular',
-                    fontSize: 13,
+                    fontSize: fontSize('body'),
                     color: 'black',
                     paddingVertical: 5,
                   }}>
@@ -365,7 +365,7 @@ const styles = StyleSheet.create({
     height: 40,
     paddingBottom: -10,
     fontFamily: getFontFam() + 'Medium',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     color: '#343a59',
     borderBottomColor: '#cccccc',
     borderBottomWidth: 1,
@@ -384,7 +384,7 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   title: {
-    fontSize: 22,
+    fontSize: fontSize('title'),
     fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
@@ -435,7 +435,6 @@ const styles = StyleSheet.create({
   checkedBox: {
     backgroundColor: '#343a59',
     borderColor: '#343a59',
-    
   },
   uncheckedBox: {
     backgroundColor: 'transparent',
@@ -443,7 +442,7 @@ const styles = StyleSheet.create({
   },
   checkMark: {
     color: 'white',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     fontWeight: 'bold',
     marginTop: -1,
   },

@@ -3,7 +3,7 @@ import {StyleSheet, Text, View, ScrollView, SafeAreaView} from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import * as RNLocalize from 'react-native-localize';
-import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const ServiceClause = () => {
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   title: {
-    fontSize: 22,
+    fontSize: fontSize('title'),
     fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: getFontFam() + 'Regular',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     color: 'grey',
     paddingVertical: 20,
   },

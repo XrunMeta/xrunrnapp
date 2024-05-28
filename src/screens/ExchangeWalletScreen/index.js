@@ -13,7 +13,7 @@ import React, {useState, useEffect, useRef} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInputWallet from '../../components/CustomInputWallet';
-import {URL_API, getLanguage2} from '../../../utils';
+import {URL_API, fontSize, getLanguage2} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const Exchange = ({navigation, route}) => {
@@ -270,7 +270,7 @@ const Exchange = ({navigation, route}) => {
             style={{
               color: '#fff',
               fontFamily: 'Poppins-Regular',
-              fontSize: 13,
+              fontSize: fontSize('body'),
               marginTop: 10,
             }}>
             Loading...
@@ -370,7 +370,7 @@ const Exchange = ({navigation, route}) => {
                   ? lang.screen_conversion.input_exchanged
                   : ''
               }
-              customFontSize={16}
+              customFontSize={fontSize('subtitle')}
             />
           </View>
           <Text style={styles.estimate}>{estimate}XRUN</Text>
@@ -487,7 +487,7 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   title: {
-    fontSize: 22,
+    fontSize: fontSize('title'),
     fontFamily: 'Poppins-Bold',
     color: '#051C60',
     margin: 10,
@@ -503,12 +503,12 @@ const styles = StyleSheet.create({
   currencyName: {
     color: '#fff',
     fontFamily: 'Poppins-Medium',
-    fontSize: 18,
+    fontSize: fontSize('subtitle'),
   },
   balance: {
     color: '#fff',
     fontFamily: 'Poppins-Regular',
-    fontSize: 13,
+    fontSize: fontSize('body'),
   },
   partBottom: {
     paddingHorizontal: 28,
@@ -597,11 +597,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
     color: '#000',
     textTransform: 'uppercase',
-    fontSize: 13,
+    fontSize: fontSize('body'),
   },
   textCheckInformation: {
     fontFamily: 'Poppins-Regular',
-    fontSize: 11,
+    fontSize: fontSize('note'),
     color: '#000',
   },
   contentConversion: {
@@ -618,12 +618,12 @@ const styles = StyleSheet.create({
   textPartLeft: {
     color: '#aaa',
     fontFamily: 'Poppins-Regular',
-    fontSize: 13,
+    fontSize: fontSize('body'),
   },
   textPartRight: {
     color: '#000',
     fontFamily: 'Poppins-Regular',
-    fontSize: 13,
+    fontSize: fontSize('body'),
   },
   wrapperButton: {
     flexDirection: 'row',
@@ -641,7 +641,7 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   estimate: {
-    fontSize: 24,
+    fontSize: fontSize('title'),
     fontFamily: 'Poppins-Regular',
     color: '#aaa',
     textAlign: 'right',

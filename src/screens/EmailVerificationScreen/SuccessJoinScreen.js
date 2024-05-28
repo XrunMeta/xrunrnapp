@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import React, {useState, useRef, useEffect} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {getLanguage2, URL_API, getFontFam} from '../../../utils';
+import {getLanguage2, URL_API, getFontFam, fontSize} from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import crashlytics from '@react-native-firebase/crashlytics';
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   },
   normalText: {
     fontFamily: getFontFam() + 'Medium',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     color: '#343a59',
   },
   bottomSection: {

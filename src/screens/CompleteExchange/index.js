@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getLanguage2} from '../../../utils';
+import {fontSize, getLanguage2} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const CompleteExchange = ({navigation, route}) => {
@@ -68,7 +68,7 @@ const CompleteExchange = ({navigation, route}) => {
         }}>
         <Text
           style={{
-            fontSize: 16,
+            fontSize: fontSize('subtitle'),
             fontFamily: 'Poppins-Regular',
             color: '#e05c2b',
           }}>
@@ -77,7 +77,11 @@ const CompleteExchange = ({navigation, route}) => {
             : ''}{' '}
         </Text>
         <Text
-          style={{fontSize: 16, fontFamily: 'Poppins-Regular', color: '#555'}}>
+          style={{
+            fontSize: fontSize('subtitle'),
+            fontFamily: 'Poppins-Regular',
+            color: '#555',
+          }}>
           {lang && lang ? lang.screen_complete_send.complete_send : ''}
         </Text>
       </View>
@@ -228,7 +232,7 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   title: {
-    fontSize: 22,
+    fontSize: fontSize('title'),
     fontFamily: 'Poppins-Bold',
     color: '#051C60',
     margin: 10,

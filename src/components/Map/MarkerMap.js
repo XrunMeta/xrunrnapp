@@ -1,7 +1,7 @@
 import React from 'react';
 import {Image, Text, View} from 'react-native';
 import {Marker, Callout} from 'react-native-maps';
-import {getFontFam} from '../../../utils';
+import {fontSize, getFontFam} from '../../../utils';
 
 const MarkerMap = ({item, onClick, currentRange, lang, logoMarker}) => {
   const handleMarkerClick = () => {
@@ -68,7 +68,7 @@ const MarkerMap = ({item, onClick, currentRange, lang, logoMarker}) => {
             </Text>
             <Text
               style={{
-                fontSize: 11,
+                fontSize: fontSize('note'),
                 fontFamily: getFontFam() + 'Medium',
               }}>
               {currentRange.toFixed(2)}m
@@ -81,7 +81,7 @@ const MarkerMap = ({item, onClick, currentRange, lang, logoMarker}) => {
             }}>
             <Text
               style={{
-                fontSize: 11,
+                fontSize: fontSize('note'),
                 fontFamily: getFontFam() + 'Medium',
                 marginTop: 3,
               }}>
@@ -97,7 +97,7 @@ const MarkerMap = ({item, onClick, currentRange, lang, logoMarker}) => {
             </Text>
             <Text
               style={{
-                fontSize: 18,
+                fontSize: fontSize('subtitle'),
                 fontFamily: getFontFam() + 'Medium',
                 marginBottom: -5,
                 color: 'black',

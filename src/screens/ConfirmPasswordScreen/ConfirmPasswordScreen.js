@@ -13,7 +13,7 @@ import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const ConfirmPassword = () => {
@@ -178,14 +178,14 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   title: {
-    fontSize: 22,
+    fontSize: fontSize('title'),
     fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
   },
   subTitle: {
     fontFamily: getFontFam() + 'Medium',
-    fontSize: 11,
+    fontSize: fontSize('note'),
     color: '#343a59',
     marginTop: -3,
   },
@@ -205,12 +205,12 @@ const styles = StyleSheet.create({
   },
   normalText: {
     fontFamily: getFontFam() + 'Regular',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     color: '#343a59',
   },
   emailAuth: {
     fontFamily: getFontFam() + 'Medium',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     color: '#343a59',
   },
   buttonSignIn: {

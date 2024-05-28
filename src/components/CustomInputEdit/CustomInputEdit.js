@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import ButtonBack from '../ButtonBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getLanguage2, getFontFam} from '../../../utils';
+import {getLanguage2, getFontFam, fontSize} from '../../../utils';
 
 const CustomInputEdit = ({
   title,
@@ -114,7 +114,7 @@ const CustomInputEdit = ({
                 }}>
                 <Text
                   style={{
-                    fontSize: 22,
+                    fontSize: fontSize('title'),
                     fontFamily: getFontFam() + 'Bold',
                     color: '#051C60',
                     margin: 10,
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontFamily: getFontFam() + 'Medium',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     marginBottom: -10,
     color: '#343a59',
     zIndex: 1,
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
   },
   input: {
     fontFamily: getFontFam() + 'Medium',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     color: '#343a59',
     paddingRight: 30,
     paddingLeft: -10,

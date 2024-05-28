@@ -17,7 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
 import Clipboard from '@react-native-clipboard/clipboard';
 import TableWalletCard from '../../components/TableWallet';
-import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
 import ShowQRWallet from '../../components/ShowQRWallet';
 import crashlytics from '@react-native-firebase/crashlytics';
 
@@ -273,7 +273,10 @@ const WalletScreen = ({navigation, route}) => {
             <TouchableOpacity
               activeOpacity={0.7}
               onPress={() => copiedHash(address)}>
-              <Image source={require('../../../assets/images/clipboard.png')} />
+              <Image
+                source={require('../../../assets/images/clipboard.png')}
+                style={{width: 18, height: 18}}
+              />
             </TouchableOpacity>
           </View>
 
@@ -330,7 +333,7 @@ const WalletScreen = ({navigation, route}) => {
             style={{
               color: '#fff',
               fontFamily: getFontFam() + 'Regular',
-              fontSize: 13,
+              fontSize: fontSize('body'),
               marginTop: 10,
             }}>
             Loading...
@@ -353,22 +356,22 @@ const WalletScreen = ({navigation, route}) => {
         <View style={styles.containerCard}>
           <ScrollView style={{flex: 1}}>
             <View style={styles.containerCard}>
-              {emptyWallet || (
-                <FlatList
-                  data={cardsData}
-                  renderItem={routeComponent}
-                  horizontal
-                  pagingEnabled
-                  showsHorizontalScrollIndicator={false}
-                  onMomentumScrollEnd={event => {
-                    const index = Math.round(
-                      event.nativeEvent.contentOffset.x /
-                        event.nativeEvent.layoutMeasurement.width,
-                    );
-                    setCurrentCurrency(cardsData[index].currency);
-                  }}
-                />
-              )}
+              {/* {emptyWallet || ( */}
+              <FlatList
+                data={cardsData}
+                renderItem={routeComponent}
+                horizontal
+                pagingEnabled
+                showsHorizontalScrollIndicator={false}
+                onMomentumScrollEnd={event => {
+                  const index = Math.round(
+                    event.nativeEvent.contentOffset.x /
+                      event.nativeEvent.layoutMeasurement.width,
+                  );
+                  setCurrentCurrency(cardsData[index].currency);
+                }}
+              />
+              {/* )} */}
             </View>
           </ScrollView>
         </View>
@@ -441,7 +444,7 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   title: {
-    fontSize: 22,
+    fontSize: fontSize('title'),
     fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
@@ -482,7 +485,7 @@ const styles = StyleSheet.create({
   showQRButton: positionTextQRCode => ({
     position: 'absolute',
     backgroundColor: 'white',
-    width: 180,
+    width: 200,
     right: 0,
     paddingVertical: 10,
     paddingHorizontal: 14,
@@ -501,9 +504,9 @@ const styles = StyleSheet.create({
     right: 0,
   },
   textQRCode: {
-    fontFamily: getFontFam() + 'Medium',
+    fontFamily: getFontFam(),
     color: 'black',
-    fontSize: 20,
+    fontSize: fontSize('title'),
   },
   containerTextWallet: {
     marginTop: 20,
@@ -517,13 +520,13 @@ const styles = StyleSheet.create({
   textWallet: {
     color: 'white',
     fontFamily: getFontFam() + 'Regular',
-    fontSize: 13,
+    fontSize: fontSize('body'),
   },
   valueWallet: {
     color: 'white',
     fontFamily:
       Platform.OS === 'ios' ? 'AppleSDGothicNeo-Bold' : 'Roboto-Medium',
-    fontSize: 16,
+    fontSize: fontSize('subtitle'),
     marginHorizontal: -3,
   },
   wrapperPartBottom: {
@@ -542,7 +545,7 @@ const styles = StyleSheet.create({
   hash: {
     color: 'white',
     fontFamily: getFontFam() + 'Regular',
-    fontSize: 12,
+    fontSize: fontSize('body'),
   },
   logo: currency => ({
     height: 40,

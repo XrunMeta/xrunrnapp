@@ -20,7 +20,7 @@ import React, {useState, useEffect} from 'react';
 import * as RNLocalize from 'react-native-localize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
-import {getFontFam} from '../../../utils';
+import {fontSize, getFontFam} from '../../../utils';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import crashlytics from '@react-native-firebase/crashlytics';
 
@@ -396,7 +396,7 @@ const FirstScreenV2 = ({navigation}) => {
                       style={{
                         color: 'black',
                         fontFamily: getFontFam() + 'Medium',
-                        fontSize: 13,
+                        fontSize: fontSize('body'),
                         textAlign: 'right',
                         paddingLeft: 10,
                       }}>
@@ -408,7 +408,7 @@ const FirstScreenV2 = ({navigation}) => {
                       style={{
                         color: 'black',
                         fontFamily: getFontFam() + 'Medium',
-                        fontSize: 13,
+                        fontSize: fontSize('body'),
                         textAlign: 'right',
                         paddingLeft: 10,
                       }}>
@@ -454,7 +454,7 @@ const styles = StyleSheet.create({
     marginVertical: 25,
   },
   title: {
-    fontSize: 22,
+    fontSize: fontSize('title'),
     color: '#343a59',
     fontFamily: getFontFam() + 'Bold',
   },
@@ -486,7 +486,7 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: getFontFam() + 'Regular',
     textAlign: 'center',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     lineHeight: 19,
     color: '#343a59',
   },
@@ -494,7 +494,7 @@ const styles = StyleSheet.create({
     color: '#343a59',
     fontFamily: getFontFam() + 'Regular',
     textDecorationLine: 'underline',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     position: 'relative',
   },
   modalContainer: {
@@ -515,12 +515,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   modalTitle: {
-    fontSize: 22,
+    fontSize: fontSize('title'),
     color: '#343a59',
     fontFamily: getFontFam() + 'Bold',
   },
   modalDescription: {
-    fontSize: 13,
+    fontSize: fontSize('body'),
     color: 'black',
     fontFamily: getFontFam() + 'Regular',
     marginBottom: 20,

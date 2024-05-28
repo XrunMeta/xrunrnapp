@@ -1,6 +1,6 @@
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
-import {getFontFam} from '../../../utils';
+import {fontSize, getFontFam} from '../../../utils';
 
 const CustomCheckbox = ({text, isDisable = false}) => {
   const [isChecked, setIsChecked] = useState(true);
@@ -54,12 +54,12 @@ const styles = StyleSheet.create({
   text: {
     fontWeight: '500',
     color: '#343a59',
-    fontSize: 16,
+    fontSize: fontSize('subtitle'),
     fontFamily: getFontFam() + 'Medium',
   },
   checkMark: {
     color: 'white',
-    fontSize: 16,
+    fontSize: fontSize('subtitle'),
     fontWeight: 'bold',
   },
 });

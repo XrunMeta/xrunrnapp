@@ -6,7 +6,7 @@ import {
   InterstitialAd,
   TestIds,
 } from 'react-native-google-mobile-ads';
-import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import crashlytics from '@react-native-firebase/crashlytics';
 
@@ -166,7 +166,7 @@ const ShowAdScreen = ({route, navigation}) => {
           <Text
             style={{
               fontFamily: getFontFam() + 'Regular',
-              fontSize: 13,
+              fontSize: fontSize('body'),
               color: 'grey',
             }}>
             Loading ads...
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   modalText: {
-    fontSize: 13,
+    fontSize: fontSize('body'),
     fontFamily: getFontFam() + 'Regular',
     marginBottom: 10,
     color: 'black',

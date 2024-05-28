@@ -1,6 +1,6 @@
 import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import IconGroup from '../components/IconGroup';
-import {getFontFam} from '../../utils';
+import {fontSize, getFontFam} from '../../utils';
 
 // Daftar nama ikon
 const iconNames = [
@@ -218,7 +218,7 @@ export default TabNavigator;
 const styles = StyleSheet.create({
   normalText: {
     fontFamily: getFontFam() + 'Medium',
-    fontSize: 13,
+    fontSize: fontSize('body'),
     color: '#343a59',
   },
 });

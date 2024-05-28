@@ -12,7 +12,7 @@ import {
   InterstitialAd,
   TestIds,
 } from 'react-native-google-mobile-ads';
-import {URL_API, getLanguage2, getFontFam} from '../../../utils';
+import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import crashlytics from '@react-native-firebase/crashlytics';
@@ -176,7 +176,7 @@ const ShowAdScreen = ({route}) => {
           <Text
             style={{
               fontFamily: getFontFam() + 'Regular',
-              fontSize: 13,
+              fontSize: fontSize('body'),
               color: 'grey',
               textAlign: 'center',
             }}>
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 'auto',
   },
   modalText: {
-    fontSize: 16,
+    fontSize: fontSize('subtitle'),
     fontFamily: getFontFam() + 'Regular',
     marginBottom: 10,
     color: 'black',
