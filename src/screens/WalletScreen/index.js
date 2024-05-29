@@ -485,7 +485,7 @@ const styles = StyleSheet.create({
   showQRButton: positionTextQRCode => ({
     position: 'absolute',
     backgroundColor: 'white',
-    width: 200,
+    width: 180,
     right: 0,
     paddingVertical: 10,
     paddingHorizontal: 14,
@@ -506,7 +506,7 @@ const styles = StyleSheet.create({
   textQRCode: {
     fontFamily: getFontFam(),
     color: 'black',
-    fontSize: fontSize('title'),
+    fontSize: fontSize('subtitle'),
   },
   containerTextWallet: {
     marginTop: 20,
