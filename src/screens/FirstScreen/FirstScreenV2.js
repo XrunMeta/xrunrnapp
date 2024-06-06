@@ -190,22 +190,22 @@ const FirstScreenV2 = ({navigation}) => {
     setLang(language);
   }, []);
 
-  useEffect(() => {
-    if (lang.popup) {
-      Alert.alert(
-        '',
-        lang && lang.popup && lang.popup.notice ? lang.popup.notice : '',
-        [
-          {
-            text:
-              lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
-                ? lang.screen_wallet.confirm_alert
-                : '',
-          },
-        ],
-      );
-    }
-  }, [lang]);
+//   useEffect(() => {
+//     if (lang.popup) {
+//       Alert.alert(
+//         '',
+//         lang && lang.popup && lang.popup.notice ? lang.popup.notice : '',
+//         [
+//           {
+//             text:
+//               lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
+//                 ? lang.screen_wallet.confirm_alert
+//                 : '',
+//           },
+//         ],
+//       );
+//     }
+//   }, [lang]);
 
   const onSignIn = () => {
     navigation.navigate('SignIn');
