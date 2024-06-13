@@ -69,7 +69,10 @@ const ShowAdScreen = ({route}) => {
   };
 
   useEffect(() => {
-    initInterstitial();
+    // initInterstitial();
+
+    // this for test, delete when finish
+    setAdCompleted(true);
   }, []);
 
   const initInterstitial = async () => {
