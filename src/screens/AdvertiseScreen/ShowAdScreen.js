@@ -69,10 +69,12 @@ const ShowAdScreen = ({route}) => {
   };
 
   useEffect(() => {
-    // initInterstitial();
+    initInterstitial();
 
     // this for test, delete when finish
-    setAdCompleted(true);
+    // setTimeout(() => {
+    //   setAdCompleted(true);
+    // }, 1000);
   }, []);
 
   const initInterstitial = async () => {
@@ -131,11 +133,11 @@ const ShowAdScreen = ({route}) => {
           console.log('Coin Acq Response -> ' + JSON.stringify(data.data[0]));
 
           // If Success
-          if (data && parseInt(data.data[0].count) > 0) {
-            setModalText(lang.screen_showad.success);
+          if (data && parseInt(data.data[0].count) == 1) {
+            setModalText(lang?.screen_showad?.success);
             setModalVisible(true);
           } else {
-            setModalText(lang.screen_showad.failed);
+            setModalText(lang?.screen_showad?.failed);
             setModalVisible(true);
           }
 
@@ -183,7 +185,7 @@ const ShowAdScreen = ({route}) => {
               color: 'grey',
               textAlign: 'center',
             }}>
-            Loading ads...
+            Loading...
           </Text>
         </View>
       )}
