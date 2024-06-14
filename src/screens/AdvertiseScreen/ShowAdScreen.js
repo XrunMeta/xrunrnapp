@@ -70,11 +70,6 @@ const ShowAdScreen = ({route}) => {
 
   useEffect(() => {
     initInterstitial();
-
-    // this for test, delete when finish
-    // setTimeout(() => {
-    //   setAdCompleted(true);
-    // }, 1000);
   }, []);
 
   const initInterstitial = async () => {
@@ -185,7 +180,7 @@ const ShowAdScreen = ({route}) => {
               color: 'grey',
               textAlign: 'center',
             }}>
-            Loading...
+            Loading
           </Text>
         </View>
       )}
