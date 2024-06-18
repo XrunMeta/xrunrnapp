@@ -7,6 +7,7 @@ import * as RNLocalize from 'react-native-localize';
 const authcode = process.env.GATEWAY_AUTH_CODE;
 const gateway = process.env.GATEWAY;
 export const URL_API = gateway + authcode;
+export const URL_API_NODEJS = process.env.GATEWAY_NODEJS;
 
 const funcTransaction = async (
   nameTransaction,

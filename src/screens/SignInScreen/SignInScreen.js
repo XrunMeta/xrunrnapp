@@ -15,7 +15,13 @@ import ButtonBack from '../../components/ButtonBack/';
 import {useNavigation} from '@react-navigation/native';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  URL_API,
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  URL_API_NODEJS,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const SignInScreen = () => {
@@ -45,12 +51,23 @@ const SignInScreen = () => {
       );
     } else {
       try {
-        const response = await fetch(
-          `${URL_API}&act=login-01&tp=4&email=${email}&pin=${password}`,
-        );
-        const data = await response.json();
+        const parameters = {
+          type: 4,
+          email,
+          pin: password,
+        };
 
-        if (data.data === 'false') {
+        const response = await fetch(`${URL_API_NODEJS}/login-01`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${process.env.GATEWAY_AUTH_CODE}`,
+          },
+          body: JSON.stringify(parameters),
+        });
+        const result = await response.json();
+
+        if (result.isVerified === 'false') {
           Alert.alert(
             lang ? lang.screen_signin.alert.fail : '',
             lang ? lang.screen_signin.failedLogin : '',
@@ -59,8 +76,11 @@ const SignInScreen = () => {
           setEmail('');
           setPassword('');
         } else {
-          await AsyncStorage.setItem('userEmail', email);
-          await AsyncStorage.setItem('userData', JSON.stringify(data));
+          await AsyncStorage.setItem('userEmail', result.data[0].email);
+          await AsyncStorage.setItem(
+            'userData',
+            JSON.stringify(result.data[0]),
+          );
           login();
 
           navigation.reset({

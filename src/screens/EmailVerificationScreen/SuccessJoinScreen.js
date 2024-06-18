@@ -31,15 +31,28 @@ const SuccessJoinScreen = () => {
 
         setLang(screenLang);
 
-        const response = await fetch(
-          `${URL_API}&act=login-01&tp=4&email=${email}&pin=${pin}`,
-        );
-        const data = await response.json();
+        const parameters = {
+          type: 4,
+          email,
+          pin: password,
+        };
 
-        await AsyncStorage.setItem('userEmail', email);
-        await AsyncStorage.setItem('userData', JSON.stringify(data));
+        const response = await fetch(`${URL_API_NODEJS}/login-01`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${process.env.GATEWAY_AUTH_CODE}`,
+          },
+          body: JSON.stringify(parameters),
+        });
+        const result = await response.json();
+
+        await AsyncStorage.setItem('userEmail', result.data[0].email);
+        await AsyncStorage.setItem('userData', JSON.stringify(result.data[0]));
         login();
-        console.log('Signin abis signup bisa boy -> ' + JSON.stringify(data));
+        console.log(
+          'Signin abis signup bisa boy -> ' + JSON.stringify(result.data[0]),
+        );
       } catch (err) {
         console.error('Error retrieving Signin:', err);
         crashlytics().recordError(new Error(err));
