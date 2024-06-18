@@ -51,6 +51,10 @@
 	<string>We need permission to save images to your device.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) Need image access to showing Image </string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This application uses your location data to get the latitude and longitude of your location to make it easy to search for or find coins around your location.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This application uses your location data to get the latitude and longitude of your location to make it easy to search for or find coins around your location.</string>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>
