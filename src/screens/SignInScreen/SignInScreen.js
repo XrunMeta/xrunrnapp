@@ -60,7 +60,10 @@ const SignInScreen = () => {
 
         const gatewayFetch = await gatewayFetcher('login-01', 'POST', body);
 
-        if (gatewayFetch.data[0].isVerified === 'false') {
+        if (
+          gatewayFetch?.data[0]?.isVerified === 'false' ||
+          gatewayFetch === 'error'
+        ) {
           Alert.alert(
             lang ? lang.screen_signin.alert.fail : '',
             lang ? lang.screen_signin.failedLogin : '',
