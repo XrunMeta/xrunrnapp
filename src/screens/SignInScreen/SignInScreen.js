@@ -21,6 +21,7 @@ import {
   getFontFam,
   fontSize,
   URL_API_NODEJS,
+  gatewayFetcher,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
@@ -51,43 +52,36 @@ const SignInScreen = () => {
       );
     } else {
       try {
-        const parameters = {
+        const body = {
           type: 4,
           email,
           pin: password,
         };
 
-        const response = await fetch(`${URL_API_NODEJS}/login-01`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${process.env.GATEWAY_AUTH_CODE}`,
-          },
-          body: JSON.stringify(parameters),
-        });
-        const result = await response.json();
+        const gatewayFetch = await gatewayFetcher('login-01', 'POST', body);
+        console.log({gatewayFetch});
 
-        if (result.isVerified === 'false') {
-          Alert.alert(
-            lang ? lang.screen_signin.alert.fail : '',
-            lang ? lang.screen_signin.failedLogin : '',
-          );
+        // if (gatewayFetch.isVerified === 'false') {
+        //   Alert.alert(
+        //     lang ? lang.screen_signin.alert.fail : '',
+        //     lang ? lang.screen_signin.failedLogin : '',
+        //   );
 
-          setEmail('');
-          setPassword('');
-        } else {
-          await AsyncStorage.setItem('userEmail', result.data[0].email);
-          await AsyncStorage.setItem(
-            'userData',
-            JSON.stringify(result.data[0]),
-          );
-          login();
+        //   setEmail('');
+        //   setPassword('');
+        // } else {
+        //   await AsyncStorage.setItem('userEmail', gatewayFetch.data[0].email);
+        //   await AsyncStorage.setItem(
+        //     'userData',
+        //     JSON.stringify(gatewayFetch.data[0]),
+        //   );
+        //   login();
 
-          navigation.reset({
-            index: 0,
-            routes: [{name: 'Home'}],
-          });
-        }
+        //   navigation.reset({
+        //     index: 0,
+        //     routes: [{name: 'Home'}],
+        //   });
+        // }
       } catch (error) {
         console.error('Error:', error);
         Alert.alert(

@@ -316,3 +316,58 @@ export const fontSize = type => {
     return Platform.OS === 'android' ? 22 : 26;
   }
 };
+
+// Fetch from Gateway
+export const gatewayFetcher = async (act, method, body) => {
+  const GATEWAY_NODEJS = process.env.GATEWAY_NODEJS;
+  const url = GATEWAY_NODEJS + '/' + act;
+
+  console.log(`Requesting URL: ${url}`);
+  console.log(`Request method: ${method}`);
+  console.log(`Request body:`, body);
+
+  try {
+    const response = await fetch(url, {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authcode}`,
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      // Handle HTTP errors
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log(`Response:`, result);
+    return result;
+  } catch (error) {
+    console.error('Error in gatewayFetcher:', error);
+    return 'error';
+  }
+};
+
+// const funcTransaction = async (
+//   nameTransaction,
+//   act,
+//   member,
+//   currency,
+//   daysbefore,
+//   startwith,
+// ) => {
+//   try {
+//     const request = await fetch(
+//       `${URL_API}&act=${act}&startwith=${startwith}&member=${member}&currency=${currency}&daysbefore=${daysbefore}`,
+//     );
+//     const response = await request.json();
+//     return response.data;
+//   } catch (err) {
+//     console.log(`Failed get ${nameTransaction}: ${err}`);
+//     Alert.alert('', `Failed get ${nameTransaction}: ${err}`);
+//     crashlytics().recordError(new Error(err));
+//     crashlytics().log(err);
+//   }
+// };
