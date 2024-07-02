@@ -18,7 +18,13 @@ import React, {useState, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInputWallet from '../../components/CustomInputWallet';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  URL_API,
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  gatewayFetcher,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {
   request,
@@ -85,9 +91,8 @@ const SendWalletScreen = ({navigation, route}) => {
   useEffect(() => {
     const cointrace = async () => {
       try {
-        const response = await fetch(`${URL_API}&act=ap4300-cointrace`);
-        const result = await response.json();
-        setCointrace(result.data);
+        const coinTrace = await gatewayFetcher('ap4300-cointrace', 'GET');
+        setCointrace(coinTrace.data);
         setIsLoading(false);
       } catch (err) {
         setIsLoading(false);
@@ -268,93 +273,101 @@ const SendWalletScreen = ({navigation, route}) => {
     setPopupSend(false);
   };
 
-  const confirmSend = () => {
+  const confirmSend = async () => {
     setIsLoading(true);
     const currency = dataWallet.currency;
 
-    // Get limit transfer
-    fetch(
-      `${URL_API}&act=ap4300-getLimitTransfer&member=${dataMember.member}&currency=${currency}&amountrq=${amount}`,
-      {
-        method: 'POST',
-      },
-    )
-      .then(response => response.json())
-      .then(result => {
-        const {avaliable} = result;
+    // Fetch for get limit transfer amount user
+    const bodyGetLimitTransfer = {
+      member: dataMember.member,
+      amountrq: amount,
+      currency,
+    };
 
-        if (avaliable === 'OK') {
-          fetch(
-            // Transfer by stock exchange
-            `${URL_API}&act=ap4300-03&member=${dataMember.member}&addrto=${address}&currency=${currency}&amount=${amount}&coinmarket=${selectedExchange}`,
-            {
-              method: 'POST',
-            },
-          )
-            .then(result => result.json())
-            .then(() => {
-              const token = currency == 1 ? 'xr' : 'et';
-              // Transfer coin
-              fetch(
-                `${URL_API}&act=postTransfer&member=${dataMember.member}&to=${address}&token=${token}&amount=${amount}`,
-                {
-                  method: 'POST',
-                },
-              )
-                .then(result => result.json())
-                .then(response => {
-                  const {status, hash} = response;
-                  const balance = parseFloat(dataWallet.Wamount).toString();
+    const getLimitTransfer = await gatewayFetcher(
+      'ap4300-getLimitTransfer',
+      'POST',
+      bodyGetLimitTransfer,
+    );
 
-                  console.log(`Status: ${status}, Hash: ${hash} Post Transfer`);
-                  if (status == 'success') {
-                    setIsLoading(false);
-                    setAddress('');
-                    setAmount('');
-                    setSelectedExchange('360001');
-                    navigation.navigate('CompleteSend', {
-                      amount,
-                      addrto: address,
-                      txid: hash,
-                      symbol: dataWallet.symbol,
-                      balance,
-                    });
-                  } else {
-                    setIsLoading(false);
-                    setPopupSend(false);
-                    setAddress('');
-                    setAmount('');
-                    setSelectedExchange('360001');
-                    Alert.alert('', 'Blockchain has problem or delay.');
-                  }
-                })
-                .catch(err => {
-                  Alert.alert('', 'Transfer failed: ', err);
-                  console.log('Transfer failed postTransfer: ', err);
-                  crashlytics().recordError(new Error(err));
-                  crashlytics().log(err);
-                });
-            })
-            .catch(err => {
-              Alert.alert('', 'Transfer failed: ', err);
-              console.log('Transfer failed ap4300-03: ', err);
-              crashlytics().recordError(new Error(err));
-              crashlytics().log(err);
-            });
-        } else {
-          setIsLoading(false);
-          Alert.alert(
-            '',
-            lang && lang ? lang.screen_send.send_enough_money : '',
+    if (getLimitTransfer.data) {
+      if (getLimitTransfer.data[0].available === 'OK') {
+        // Fetch for transfer by stock exchange
+        const bodyTransferByStockExchange = {
+          member: dataMember.member,
+          addrto: address,
+          currency,
+          amount,
+          coinmarket: selectedExchange,
+        };
+
+        const transferByStockExchange = await gatewayFetcher(
+          'ap4300-03',
+          'POST',
+          bodyTransferByStockExchange,
+        );
+
+        if (transferByStockExchange.data) {
+          // Fetch for transfer coin
+          const bodyTransferCoin = {
+            member: dataMember.member,
+            to: address,
+            currency,
+            amount,
+          };
+
+          const transferCoin = await gatewayFetcher(
+            'postTransfer',
+            'POST',
+            bodyTransferCoin,
           );
+
+          if (transferCoin.data) {
+            const balance = parseFloat(dataWallet.Wamount).toString();
+            const {status, hash} = transferCoin.data.rtn;
+
+            if (status == 'success') {
+              setIsLoading(false);
+              setAddress('');
+              setAmount('');
+              setSelectedExchange('360001');
+              navigation.navigate('CompleteSend', {
+                amount,
+                addrto: address,
+                txid: hash,
+                symbol: dataWallet.symbol,
+                balance,
+              });
+            } else {
+              setIsLoading(false);
+              setPopupSend(false);
+              setAddress('');
+              setAmount('');
+              setSelectedExchange('360001');
+              Alert.alert('', 'Blockchain has problem or delay.');
+            }
+          } else {
+            Alert.alert('', 'Transfer failed');
+            console.log('Transfer failed postTransfer');
+            crashlytics().recordError(new Error('Transfer failed ap4300-03'));
+            crashlytics().log('Transfer failed ap4300-03');
+          }
+        } else {
+          Alert.alert('', 'Transfer failed');
+          console.log('Transfer failed ap4300-03');
+          crashlytics().recordError(new Error('Transfer failed ap4300-03'));
+          crashlytics().log('Transfer failed ap4300-03');
         }
-      })
-      .catch(err => {
-        Alert.alert('', 'Check limit transfer failed: ', err);
+      } else {
         setIsLoading(false);
-        crashlytics().recordError(new Error(err));
-        crashlytics().log(err);
-      });
+        Alert.alert('', lang && lang ? lang.screen_send.send_enough_money : '');
+      }
+    } else {
+      Alert.alert('', 'Check limit transfer failed');
+      setIsLoading(false);
+      crashlytics().recordError(new Error('Transfer failed ap4300-03'));
+      crashlytics().log('Transfer failed ap4300-03');
+    }
   };
 
   const handleQRCodeRead = ({code}) => {
