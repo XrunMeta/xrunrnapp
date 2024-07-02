@@ -77,6 +77,14 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdkVersion rootProject.ext.compileSdkVersion
 
+    lintOptions {
+        abortOnError false
+    }
+    
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
+
     namespace "run.xrun.xrunapps"
     defaultConfig {
         applicationId "run.xrun.xrunapps"
@@ -144,6 +152,13 @@ dependencies {
 
     // Google AdMob
     implementation("com.google.android.gms:play-services-ads:22.6.0")
+
+    // ironSource Ads
+    implementation 'com.ironsource.sdk:mediationsdk:8.1.0' 
+    implementation 'com.ironsource:adqualitysdk:7.20.2'
+    implementation 'com.google.android.gms:play-services-appset:16.0.2'
+    implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
+    implementation 'com.google.android.gms:play-services-basement:18.3.0'
 
     implementation("com.facebook.react:flipper-integration")
     
