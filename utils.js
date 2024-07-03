@@ -342,8 +342,8 @@ export const gatewayFetcher = async (act, method, body) => {
   } catch (error) {
     console.log(`Error in gatewayFetcher: ${error}`);
 
-    crashlytics().recordError(new Error(err));
-    crashlytics().log(err);
+    crashlytics().recordError(new Error(error));
+    crashlytics().log(error);
 
     return 'error';
   }
