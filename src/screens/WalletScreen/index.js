@@ -17,7 +17,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
 import Clipboard from '@react-native-clipboard/clipboard';
 import TableWalletCard from '../../components/TableWallet';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  gatewayFetcher,
+  URL_API,
+} from '../../../utils';
 import ShowQRWallet from '../../components/ShowQRWallet';
 import crashlytics from '@react-native-firebase/crashlytics';
 
@@ -39,6 +45,10 @@ const WalletScreen = ({navigation, route}) => {
   const [cardDataQR, setCardDataQR] = useState([]);
 
   const [emptyWallet, setEmptyWallet] = useState(false);
+
+  const body = {
+    member,
+  };
 
   useEffect(() => {
     // Get Language Data
@@ -113,6 +123,50 @@ const WalletScreen = ({navigation, route}) => {
             crashlytics().log(error);
             setIsLoading(false);
           });
+
+        // const gatewayFetch = await gatewayFetcher(
+        //   'app4000-01-rev-01',
+        //   'POST',
+        //   body,
+        // );
+
+        // if (gatewayFetch) {
+        //   console.log(gatewayFetch);
+        //   setCardsData(gatewayFetch.data);
+        //   setIsLoading(false);
+        // } else {
+        //   Alert.alert(
+        //     '',
+        //     `${
+        //       lang.screen_wallet.failed_getwallet_alert
+        //         ? lang.screen_wallet.failed_getwallet_alert
+        //         : ''
+        //     }`,
+        //     [
+        //       {
+        //         text: lang.screen_wallet.confirm_alert
+        //           ? lang.screen_wallet.confirm_alert
+        //           : '',
+        //         onPress: () => {
+        //           setIsLoading(false);
+        //         },
+        //       },
+        //     ],
+        //   );
+        //   crashlytics().recordError(
+        //     new Error(
+        //       lang.screen_wallet.failed_getwallet_alert
+        //         ? lang.screen_wallet.failed_getwallet_alert
+        //         : '',
+        //     ),
+        //   );
+        //   crashlytics().log(
+        //     lang.screen_wallet.failed_getwallet_alert
+        //       ? lang.screen_wallet.failed_getwallet_alert
+        //       : '',
+        //   );
+        //   setIsLoading(false);
+        // }
       }
     } catch (err) {
       console.error('Failed to get userData from AsyncStorage:', err);
@@ -145,11 +199,13 @@ const WalletScreen = ({navigation, route}) => {
     const refreshBalance = async () => {
       try {
         if (member) {
-          const fetchData = await fetch(
-            `${URL_API}&act=refreshBalances&member=${member}`,
+          const gatewayFetch = await gatewayFetcher(
+            'refreshBalances',
+            'POST',
+            body,
           );
-          const result = await fetchData.json();
-          console.log(`Result refreshBalances: ${result}`);
+
+          console.log(`Result refreshBalances: ${gatewayFetch.data[0].count}`);
         }
       } catch (err) {
         crashlytics().recordError(new Error(err));

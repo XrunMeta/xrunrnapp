@@ -316,3 +316,35 @@ export const fontSize = type => {
     return Platform.OS === 'android' ? 22 : 26;
   }
 };
+
+// Fetch from Gateway
+export const gatewayFetcher = async (act, method, body) => {
+  const GATEWAY_NODEJS = process.env.GATEWAY_NODEJS;
+  const url = GATEWAY_NODEJS + '/' + act;
+
+  try {
+    const response = await fetch(url, {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authcode}`,
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      // Handle HTTP errors
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    return result;
+  } catch (error) {
+    console.log(`Error in gatewayFetcher: ${error}`);
+
+    crashlytics().recordError(new Error(error));
+    crashlytics().log(error);
+
+    return 'error';
+  }
+};

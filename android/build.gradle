@@ -12,6 +12,9 @@ buildscript {
         google()
         mavenCentral()
         jcenter()
+        maven {
+            url 'https://android-sdk.is.com/'
+        }
     }
     dependencies {
         classpath("com.android.tools.build:gradle")
