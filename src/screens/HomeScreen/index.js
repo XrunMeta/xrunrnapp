@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Alert,
   BackHandler,
+  Linking,
 } from 'react-native';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import ARScreen from '../ARScreen/ARScreen';
@@ -31,11 +32,12 @@ export default function Home({route}) {
   const [activeTab, setActiveTab] = useState('Map');
   const isFocused = useIsFocused();
   const [countAds, setCountAds] = useState(0);
+  const [showWebView, setShowWebView] = useState(false)
 
   const navigation = useNavigation();
 
   const handleTabChange = tabName => {
-    setActiveTab(tabName);
+      setActiveTab(tabName);
   };
 
   useEffect(() => {
@@ -199,7 +201,12 @@ export default function Home({route}) {
                 ? lang.screen_bottomTab.wallet.title
                 : 'Wallet',
               () => {
+
+				if (showWebView == false) {
+					Linking.openURL('https://www.xrun.run/');
+				  } else {
                 navigation.navigate('WalletHome');
+				  }
               },
             )}
             {renderTabButton(

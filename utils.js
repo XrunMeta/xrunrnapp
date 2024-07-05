@@ -322,6 +322,8 @@ export const gatewayFetcher = async (act, method, body) => {
   const GATEWAY_NODEJS = process.env.GATEWAY_NODEJS;
   const url = GATEWAY_NODEJS + '/' + act;
 
+  console.log({url})
+
   try {
     const response = await fetch(url, {
       method: method,
