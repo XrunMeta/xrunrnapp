@@ -43,7 +43,6 @@ const SignUpScreen = ({route}) => {
   const [authLoading, setAuthLoading] = useState(false);
   const [verifyLoading, setVerifyLoading] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
-  const {login} = useAuth();
 
   const navigation = useNavigation();
 
@@ -58,146 +57,48 @@ const SignUpScreen = ({route}) => {
       Alert.alert('Error', lang.screen_signup.validator.emptyPassword);
     } else if (phoneNumber.trim() === '') {
       Alert.alert('Error', lang.screen_signup.validator.emptyPhone);
-    } else if (authenticated == false) {
-      Alert.alert('Error', lang.screen_signup.validator.invalidPhone);
     } else if (regionID == 0) {
       Alert.alert('Error', lang.screen_signup.validator.emptyArea);
     } else {
-      // Pemanggilan API ke link yang diberikan
-      const apiUrl = `${URL_API}&act=login-checker-email&email=${email}`;
+      // Check the email
+      const requestCheckEmail = await fetch(
+        `${URL_API}&act=login-checker-email&email=${email}`,
+      );
+      const responseCheckEmail = await requestCheckEmail.text();
 
-      try {
-        // Check is email duplicate
-        const response = await fetch(apiUrl);
-        const responseData = await response.text();
+      if (responseCheckEmail === 'OK') {
+        // Check for the referral email
+        const requestReferralEmail = await fetch(
+          `${URL_API}&act=ap1810-i01&email=${refferalEmail}`,
+        );
+        const responseReferralEmail = await requestReferralEmail.json();
 
-        if (responseData === 'OK') {
-          const referURL = `${URL_API}&act=ap1810-i01&email=${refferalEmail}`;
-
-          try {
-            // Check is email referral is verified
-            const referRes = await fetch(referURL);
-            const referData = await referRes.json();
-
-            // Do Signup
-            if (referData.result === 'true') {
-              const joinRefMem = referData.member;
-              const joinName = name.toString().split(' ');
-              const joinFirstName = joinName[0];
-              const joinLastName = joinName.slice(1).join(' ') || '';
-              const joinGender = gender === 'pria' ? 2110 : 2111;
-              const joinMobile = phoneNumber.toString();
-              const joinAges =
-                age === '10'
-                  ? 2210
-                  : age === '20'
-                  ? 2220
-                  : age === '30'
-                  ? 2230
-                  : age === '40'
-                  ? 2240
-                  : 2250;
-              const joinRegion = regionID.toString();
-              const joinPin = password.toString();
-
-              const joinAPI =
-                `${URL_API}&act=login-06-joinAndAccount` +
-                `&email=${email}` +
-                `&pin=${joinPin}` +
-                `&firstname=${joinFirstName}` +
-                `&lastname=${joinLastName}` +
-                `&gender=${joinGender}` +
-                `&mobile=${joinMobile}` +
-                `&mobilecode=${countryCode}` +
-                `&countrycode=${code}` +
-                `&country=${countryCode}` +
-                `&region=${joinRegion}` +
-                `&age=${joinAges}` +
-                `&recommand=${joinRefMem}`;
-
-              console.log(joinAPI);
-
-              // navigation.navigate('EmailVerif', {
-              //   dataEmail: email,
-              //   pin: joinPin,
-              //   signupUrl: joinAPI,
-              //   mobile: joinMobile,
-              // });
-
-              // Do SignUp
-              try {
-                const joinRes = await fetch(joinAPI);
-                const joinData = await joinRes.json();
-
-                console.log(
-                  'Ini SignUp Response -> ' + JSON.stringify(joinData),
-                );
-
-                if (joinData.data === 'ok') {
-                  // Check is Registered? If yes do login
-                  try {
-                    const responseLogin = await fetch(
-                      `${URL_API}&act=login-checker&email=${email}&pin=${joinPin}`,
-                    );
-                    const responseLoginData = await responseLogin.text();
-
-                    if (responseLoginData === 'OK') {
-                      navigation.replace('SuccessJoin', {
-                        email: email,
-                        pin: joinPin,
-                      });
-                    } else {
-                      Alert.alert(
-                        'Failed',
-                        lang.screen_emailVerification.notif.errorServer,
-                      );
-                    }
-                  } catch (error) {
-                    // Handle network errors or other exceptions
-                    console.error(
-                      'Error during Check Login Email & Pin:',
-                      error,
-                    );
-                  }
-                } else {
-                  Alert.alert(
-                    'Failed',
-                    lang.screen_emailVerification.notif.errorServer,
-                  );
-                  navigation.navigate('First');
-                }
-              } catch (error) {
-                console.error('Error during Signup:', error);
-                Alert.alert(
-                  'Error',
-                  lang.screen_emailVerification.notif.errorServer,
-                );
-              }
-            } else if (referData.result === 'false') {
-              setRefferalEmail('');
-              Alert.alert(
-                'Failed',
-                lang.screen_signup.validator.invalidRecommend,
-              );
-            } else {
-              Alert.alert('Error', lang.screen_signup.validator.errorServer);
-            }
-          } catch (error) {
-            console.error('Error during API call:', error);
-            Alert.alert('Error', lang.screen_signup.validator.errorServer);
-            crashlytics().recordError(new Error(error));
-            crashlytics().log(error);
-          }
-        } else if (responseData === 'NO') {
-          Alert.alert('Failed', lang.screen_signup.validator.duplicatedEmail);
+        if (responseReferralEmail.result === 'true') {
+          navigation.navigate('EmailVerif', {
+            dataUser: {
+              name,
+              email,
+              phoneNumber,
+              region: regionID,
+              age,
+              refferalEmail,
+              pin: password,
+              gender,
+              mobileCode: countryCode,
+              countryCode: code,
+              recommand: responseReferralEmail.member,
+            },
+          });
+        } else if (referData.result === 'false') {
+          setRefferalEmail('');
+          Alert.alert('Failed', lang.screen_signup.validator.invalidRecommend);
         } else {
           Alert.alert('Error', lang.screen_signup.validator.errorServer);
         }
-      } catch (error) {
-        console.error('Error during API call:', error);
+      } else if (responseCheckEmail === 'NO') {
+        Alert.alert('Failed', lang.screen_signup.validator.duplicatedEmail);
+      } else {
         Alert.alert('Error', lang.screen_signup.validator.errorServer);
-        crashlytics().recordError(new Error(error));
-        crashlytics().log(error);
       }
     }
   };
@@ -611,81 +512,7 @@ const SignUpScreen = ({route}) => {
                   )
                 }
               />
-
-              <TouchableOpacity
-                style={{
-                  // backgroundColor: authenticated ? '#343a59' : '#94949C',
-                  backgroundColor: '#343a59',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: 10,
-                  paddingHorizontal: 15,
-                  paddingVertical: 5,
-                  marginBottom: 0,
-                  marginTop: 10,
-                }}
-                onPress={() =>
-                  authenticated
-                    ? Alert.alert(
-                        lang &&
-                          lang.screen_signup &&
-                          lang.screen_signup.phone_number
-                          ? lang.screen_signup.phone_number.disabled
-                          : '',
-                        lang &&
-                          lang.screen_signup &&
-                          lang.screen_signup.phone_number
-                          ? lang.screen_signup.phone_number.disabledDesc
-                          : '',
-                      )
-                    : onAuth(phoneNumber, countryCode)
-                }>
-                {authLoading ? (
-                  <ActivityIndicator size="small" color="white" />
-                ) : (
-                  <Text
-                    style={{
-                      fontFamily: getFontFam() + 'Medium',
-                      fontSize: fontSize('note'),
-                      color: 'white',
-                    }}>
-                    {lang &&
-                    lang.screen_signup &&
-                    lang.screen_signup.phone_number
-                      ? lang.screen_signup.phone_number.auth
-                      : ''}
-                  </Text>
-                )}
-              </TouchableOpacity>
             </View>
-            {phoneNumber !== '' && !authenticated ? (
-              <Text
-                style={{
-                  color: 'red',
-                  fontFamily: getFontFam() + 'Medium',
-                  fontSize: fontSize('note'),
-                }}>
-                *
-                {lang && lang.screen_signup && lang.screen_signup.phone_number
-                  ? lang.screen_signup.phone_number.unverified
-                  : ''}
-              </Text>
-            ) : (
-              phoneNumber !== '' &&
-              authenticated && (
-                <Text
-                  style={{
-                    color: 'green',
-                    fontFamily: getFontFam() + 'Medium',
-                    fontSize: fontSize('note'),
-                  }}>
-                  *
-                  {lang && lang.screen_signup && lang.screen_signup.phone_number
-                    ? lang.screen_signup.phone_number.verified
-                    : ''}
-                </Text>
-              )
-            )}
           </View>
 
           {/*  Field - Region */}
