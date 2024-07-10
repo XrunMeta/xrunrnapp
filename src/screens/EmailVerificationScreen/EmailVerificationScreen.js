@@ -26,7 +26,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const EmailVerificationScreen = () => {
   const route = useRoute();
   const {login} = useAuth();
-  const {dataEmail, pin, signupUrl, mobile} = route.params;
+  const {dataUser} = route.params;
   const [verificationCode, setVerificationCode] = useState([
     '',
     '',
@@ -44,7 +44,7 @@ const EmailVerificationScreen = () => {
   const emailAuth = async () => {
     try {
       const response = await fetch(
-        `${URL_API}&act=login-02-email&email=${dataEmail}`,
+        `${URL_API}&act=login-02-email&email=${dataUser.email}`,
       );
       const responseData = await response.text(); // Convert response to JSON
 
@@ -52,7 +52,6 @@ const EmailVerificationScreen = () => {
         Alert.alert('Failed', lang.screen_emailVerification.notif.invalidEmail);
       } else {
         console.log('Kode dikirim boy');
-        console.log(signupUrl);
       }
     } catch (error) {
       // Handle network errors or other exceptions
@@ -83,18 +82,88 @@ const EmailVerificationScreen = () => {
 
   const onLoginPassword = () => {
     navigation.navigate('SignPassword', {
-      mobile: mobile,
+      mobile: dataUser.mobile,
     });
     setModalVisible(false);
   };
 
+  // add new member -> act = login-06-joinAndAccount
+  const addNewMember = async () => {
+    const {
+      name,
+      email,
+      phoneNumber,
+      pin,
+      region,
+      age: tempAge,
+      gender: tempGender,
+      mobileCode,
+      countryCode,
+      recommand,
+    } = dataUser;
+
+    try {
+      const firstname = name.split(' ')[0];
+      const lastname = name.split(' ').slice(1).join(' ');
+      const age =
+        tempAge === '10'
+          ? 2210
+          : tempAge === '20'
+          ? 2220
+          : tempAge === '30'
+          ? 2230
+          : tempAge === '40'
+          ? 2240
+          : 2250;
+      const gender = tempGender === 'pria' ? 2110 : 2111;
+      console.log(
+        `Firstname: ${firstname} | Lastname: ${lastname} | Email: ${email} | Pin: ${pin} | Phone Number: ${phoneNumber} | age: ${age} | region: ${region} | gender: ${gender} | Country Code: ${countryCode} | Mobile Code: ${mobileCode} | Recommand: ${recommand}`,
+      );
+
+      const request = await fetch(
+        `${URL_API}&act=login-06-joinAndAccount&email=${email}&pin=${pin}&firstname=${firstname}&lastname=${lastname}&gender=${gender}&mobile=${phoneNumber}&mobilecode=${mobileCode}&countrycode=${countryCode}&country=${mobileCode}&region=${region}&age=${age}&recommand=${recommand}`,
+      );
+      const response = await request.json();
+      console.log(`Data SignUp response: ${JSON.stringify(response)}`);
+
+      if (response.data === 'ok') {
+        loginChecker();
+      }
+    } catch (error) {
+      console.log(`Error during Signup: ${error}`);
+      Alert.alert('Error', lang.screen_emailVerification.notif.errorServer);
+    }
+  };
+
+  // Check login with email and password/pin
+  const loginChecker = async () => {
+    const {email, pin} = dataUser;
+
+    try {
+      const request = await fetch(
+        `${URL_API}&act=login-checker&email=${email}&pin=${pin}`,
+      );
+      const response = await request.text();
+
+      if (response === 'OK') {
+        navigation.replace('SuccessJoin', {
+          email,
+          pin,
+        });
+      } else {
+        Alert.alert('Failed', lang.screen_emailVerification.notif.errorServer);
+      }
+    } catch (error) {
+      console.log(`Error during check login email & pin: ${error}`);
+    }
+  };
+
   const onSignIn = async () => {
     const getAuthCode = verificationCode.join('');
-
     // Check Email & Auth Code Relational
     try {
       const responseAuth = await fetch(
-        `${URL_API}&act=login-03-email&email=${dataEmail}&code=${getAuthCode}`,
+        `${URL_API}&act=login-03-email&email=${dataUser.email}&code=${getAuthCode}`,
       );
       const responseAuthData = await responseAuth.json();
 
@@ -103,46 +172,7 @@ const EmailVerificationScreen = () => {
       if (responseAuthData.data === 'false') {
         Alert.alert('Failed', lang.screen_emailVerification.notif.wrongCode);
       } else {
-        // Do SignUp
-        try {
-          const joinRes = await fetch(signupUrl);
-          const joinData = await joinRes.json();
-
-          console.log('Ini SignUp Response -> ' + JSON.stringify(joinData));
-
-          if (joinData.data === 'ok') {
-            // Check is Registered? If yes do login
-            try {
-              const responseLogin = await fetch(
-                `${URL_API}&act=login-checker&email=${dataEmail}&pin=${pin}`,
-              );
-              const responseLoginData = await responseLogin.text();
-
-              if (responseLoginData === 'OK') {
-                await AsyncStorage.setItem('userEmail', dataEmail);
-                login();
-                navigation.replace('SuccessJoin');
-              } else {
-                Alert.alert(
-                  'Failed',
-                  lang.screen_emailVerification.notif.errorServer,
-                );
-              }
-            } catch (error) {
-              // Handle network errors or other exceptions
-              console.error('Error during Check Login Email & Pin:', error);
-            }
-          } else {
-            Alert.alert(
-              'Failed',
-              lang.screen_emailVerification.notif.errorServer,
-            );
-            navigation.navigate('First');
-          }
-        } catch (error) {
-          console.error('Error during Signup:', error);
-          Alert.alert('Error', lang.screen_emailVerification.notif.errorServer);
-        }
+        addNewMember();
       }
     } catch (error) {
       // Handle network errors or other exceptions
@@ -301,7 +331,7 @@ const EmailVerificationScreen = () => {
             ? lang.screen_emailVerification.email.label
             : ''}
         </Text>
-        <Text style={styles.boldText}>{dataEmail}</Text>
+        <Text style={styles.boldText}>{dataUser.email}</Text>
       </View>
 
       {/* Code Input */}
