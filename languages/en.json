@@ -40,7 +40,7 @@
     },
     "authcode": {
       "label": "Try",
-      "link": "SMS Authcode"
+      "link": "Email Authcode"
     },
     "validator": "Your Email is not Valid",
     "alert": {

@@ -61,6 +61,8 @@ const SignInScreen = () => {
         } else {
           await AsyncStorage.setItem('userEmail', email);
           await AsyncStorage.setItem('userData', JSON.stringify(data));
+
+          console.log({data});
           login();
 
           navigation.reset({
@@ -93,7 +95,8 @@ const SignInScreen = () => {
   };
 
   const onSMSAuth = () => {
-    navigation.navigate('PhoneLogin', {screenBack: 'SignIn'});
+    // navigation.navigate('PhoneLogin', {screenBack: 'SignIn'});
+    navigation.navigate('EmailAuth', {screenBack: 'SignIn'});
   };
 
   const onBack = () => {

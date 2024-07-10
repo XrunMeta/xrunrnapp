@@ -112,7 +112,21 @@ const EmailVerificationLoginScreen = () => {
           if (responseLoginData.data === 'false') {
             navigation.replace('SignUp');
           } else {
+            const userData = {
+              ages: responseLoginData.ages,
+              country: responseLoginData.country,
+              email: responseLoginData.email,
+              extrastr: responseLoginData.extrastr,
+              firstname: responseLoginData.firstname,
+              gender: responseLoginData.gender,
+              lastname: responseLoginData.lastname,
+              member: responseLoginData.member,
+              mobilecode: responseLoginData.mobilecode,
+            };
+
             await AsyncStorage.setItem('userEmail', dataEmail);
+            await AsyncStorage.setItem('userData', JSON.stringify(userData));
+            console.log({userData});
             login();
             navigation.reset({
               index: 0,
