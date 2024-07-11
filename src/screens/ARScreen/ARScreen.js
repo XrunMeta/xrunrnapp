@@ -407,20 +407,13 @@ function ARScreen() {
                       width: 150,
                       height: 275,
                       display:
-                        // item.rotation >= 0 && item.rotation <= 200
-                        //   ? 'block'
-                        //   : item.rotation >= 210 && item.rotation <= 320
-                        //   ? 'block'
-                        //   : item.rotation >= 330 && item.rotation <= 360
-                        //   ? 'block'
-                        //   : 'none',
                         item.rotation >= 0 && item.rotation <= 200
                           ? 'block'
                           : item.rotation >= 210 && item.rotation <= 320
                           ? 'block'
                           : item.rotation >= 330 && item.rotation <= 360
                           ? 'block'
-                          : 'block',
+                          : 'none',
                     },
                     bouncingCoinAnimatedStyle,
                   ]}>
@@ -454,14 +447,15 @@ function ARScreen() {
                         </>
                       )}
                       <ImageBackground
-                        source={require('../../../assets/images/image_arcoin_wrapper.png')}
+                        source={require('../../../assets/images/image_arcoin_wrapper2.png')}
                         style={{
                           resizeMode: 'contain',
-                          height: 155,
-                          width: 114,
+                          height: 165,
+                          width: 120,
                           marginTop: -30,
                           alignItems: 'center',
                           justifyContent: 'center',
+                          borderRadius: 55,
                         }}>
                         <Image
                           source={{
@@ -471,9 +465,9 @@ function ARScreen() {
                             )}`,
                           }}
                           style={{
-                            height: 50,
-                            width: 50,
-                            marginTop: -35,
+                            height: 45,
+                            width: 45,
+                            marginTop: -40,
                           }}
                         />
                         <Text
@@ -481,6 +475,7 @@ function ARScreen() {
                             fontFamily: getFontFam() + 'Medium',
                             fontSize: fontSize('subtitle'),
                             color: 'white',
+                            marginTop: 5,
                           }}>
                           {/* 0.05XRUN */}
                           {item.coins}
@@ -491,7 +486,7 @@ function ARScreen() {
                             fontFamily: getFontFam() + 'Regular',
                             fontSize: fontSize('body'),
                             color: 'grey',
-                            marginTop: -7,
+                            marginTop: 3,
                           }}>
                           {/* 2M */}
                           {item.distance}M
