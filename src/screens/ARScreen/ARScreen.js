@@ -407,13 +407,20 @@ function ARScreen() {
                       width: 150,
                       height: 275,
                       display:
+                        // item.rotation >= 0 && item.rotation <= 200
+                        //   ? 'block'
+                        //   : item.rotation >= 210 && item.rotation <= 320
+                        //   ? 'block'
+                        //   : item.rotation >= 330 && item.rotation <= 360
+                        //   ? 'block'
+                        //   : 'none',
                         item.rotation >= 0 && item.rotation <= 200
                           ? 'block'
                           : item.rotation >= 210 && item.rotation <= 320
                           ? 'block'
                           : item.rotation >= 330 && item.rotation <= 360
                           ? 'block'
-                          : 'none',
+                          : 'block',
                     },
                     bouncingCoinAnimatedStyle,
                   ]}>
@@ -424,7 +431,8 @@ function ARScreen() {
                         item.advertisement,
                         item.coin,
                       )
-                    }>
+                    }
+                    disabled={parseFloat(item.distance) < 30 ? false : true}>
                     <View
                       style={{
                         justifyContent: 'center',
