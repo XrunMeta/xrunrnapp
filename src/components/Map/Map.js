@@ -849,7 +849,7 @@ const MapComponent = ({
           }}
           customMapStyle={customMapStyle}
           showsUserLocation
-          showsMyLocationButton
+          showsMyLocationButton={false}
           followsUserLocation>
           {imagesLoaded ? (
             markers
