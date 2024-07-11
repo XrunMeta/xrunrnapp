@@ -529,7 +529,8 @@ const styles = StyleSheet.create({
     zIndex: 1,
     padding: 10,
     marginVertical: 5,
-    right: 0,
+    right: 10,
+    // backgroundColor: 'pink',
   },
   container: {
     position: 'absolute',
