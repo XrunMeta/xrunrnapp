@@ -24,7 +24,8 @@
     },
     "terms": "the terms & conditions",
     "privacy": "privacy policy",
-    "information": "information use"
+    "information": "information use",
+    "updateVersion": "We have new version at Playstore"
   },
 
   "screen_signin": {
@@ -264,7 +265,7 @@
       "noCoin2": "at close range"
     },
     "section_slider_card": {
-      "desc1": "There is a XRUN of",
+      "desc1": "There is an obtainable XRUN (this)",
       "desc2": "that can be acquired."
     },
     "section_marker": {
