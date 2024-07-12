@@ -368,6 +368,12 @@ function ARScreen() {
     }
   };
 
+  const filteredCoins = coins.filter(item => parseFloat(item.distance) < 30);
+  const selectedCoinIndex =
+    filteredCoins.length > 0
+      ? Math.floor(Math.random() * filteredCoins.length)
+      : null;
+
   return (
     <SafeAreaView style={styles.container}>
       <View>
@@ -398,8 +404,17 @@ function ARScreen() {
                   style={[
                     {
                       position: 'absolute',
-                      left: item.position.x,
-                      top: item.position.y,
+                      left:
+                        selectedCoinIndex !== null &&
+                        filteredCoins[selectedCoinIndex].coin === item.coin
+                          ? WINDOW_WIDTH / 2 - 60
+                          : item.position.x,
+                      top:
+                        selectedCoinIndex !== null &&
+                        filteredCoins[selectedCoinIndex].coin === item.coin
+                          ? WINDOW_HEIGHT / 2 - 270
+                          : item.position.y,
+                      zIndex: parseFloat(item.distance) < 30 ? 20 : 1,
                       width: 150,
                       height: 275,
                       display:

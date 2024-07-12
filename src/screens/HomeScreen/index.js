@@ -351,6 +351,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     bottom: 0,
     position: 'absolute',
+    zIndex: 100,
   },
   middleTabContainer: {
     flexDirection: 'row',
