@@ -24,7 +24,8 @@
     },
     "terms": "条款和条件",
     "privacy": "隐私政策",
-    "information": "信息使用"
+    "information": "信息使用",
+    "updateVersion": "我们在 Playstore 上有新版本"
   },
 
   "screen_signin": {
@@ -264,7 +265,7 @@
       "noCoin2": "在近距离"
     },
     "section_slider_card": {
-      "desc1": "有一个XRUN",
+      "desc1": "有XRUN可供获取",
       "desc2": "可以获得的。"
     },
     "section_marker": {

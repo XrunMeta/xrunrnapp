@@ -23,6 +23,7 @@ import Geolocation from 'react-native-geolocation-service';
 import {fontSize, getFontFam} from '../../../utils';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import crashlytics from '@react-native-firebase/crashlytics';
+import VersionCheck from 'react-native-version-check';
 
 async function adul(user) {
   crashlytics().log('Tes Pagi');
@@ -45,6 +46,8 @@ const FirstScreenV2 = ({navigation}) => {
   const {width} = Dimensions.get('window');
   const itemWidth = width - 30;
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isPopupUpdateVersionShow, setIsPopupUpdateVersionShow] =
+    useState(false);
 
   useEffect(() => {
     crashlytics().log('App mounted Lagi');
@@ -137,17 +140,25 @@ const FirstScreenV2 = ({navigation}) => {
   getCurrentLocation();
 
   useEffect(() => {
-    const checkIsLoggedIn = async () => {
+    const checkLatestVersion = async () => {
       const isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
-      if (isLoggedIn) {
-        navigation.reset({routes: [{name: 'Home'}]});
-        return;
-      } else {
-        // navigation.reset({routes: [{name: 'First'}]});
-      }
+
+      VersionCheck.needUpdate({
+        currentVersion: VersionCheck.getCurrentVersion(),
+        latestVersion: '2.0.2',
+      }).then(res => {
+        if (res.isNeeded) {
+          setIsPopupUpdateVersionShow(true);
+        } else {
+          if (isLoggedIn) {
+            navigation.reset({routes: [{name: 'Home'}]});
+            return;
+          }
+        }
+      });
     };
 
-    checkIsLoggedIn();
+    checkLatestVersion();
   }, []);
 
   const setCurrentLanguage = async language => {
@@ -190,22 +201,22 @@ const FirstScreenV2 = ({navigation}) => {
     setLang(language);
   }, []);
 
-//   useEffect(() => {
-//     if (lang.popup) {
-//       Alert.alert(
-//         '',
-//         lang && lang.popup && lang.popup.notice ? lang.popup.notice : '',
-//         [
-//           {
-//             text:
-//               lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
-//                 ? lang.screen_wallet.confirm_alert
-//                 : '',
-//           },
-//         ],
-//       );
-//     }
-//   }, [lang]);
+  //   useEffect(() => {
+  //     if (lang.popup) {
+  //       Alert.alert(
+  //         '',
+  //         lang && lang.popup && lang.popup.notice ? lang.popup.notice : '',
+  //         [
+  //           {
+  //             text:
+  //               lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
+  //                 ? lang.screen_wallet.confirm_alert
+  //                 : '',
+  //           },
+  //         ],
+  //       );
+  //     }
+  //   }, [lang]);
 
   const onSignIn = () => {
     navigation.navigate('SignIn');
@@ -243,6 +254,10 @@ const FirstScreenV2 = ({navigation}) => {
 
   const openAppSettings = () => {
     Linking.openSettings();
+  };
+
+  const openPlaystoreToUpdate = async () => {
+    Linking.openURL(await VersionCheck.getStoreUrl());
   };
 
   return (
@@ -370,6 +385,52 @@ const FirstScreenV2 = ({navigation}) => {
               : ''}
           </Text>
         </View>
+
+        {/* Popup check the app using latest version or not */}
+        {isPopupUpdateVersionShow && (
+          <Modal
+            transparent={true}
+            animationType="slide"
+            visible={isPopupUpdateVersionShow}
+            onRequestClose={() => setModalVisible(false)}>
+            <View style={styles.modalContainer}>
+              <View style={[styles.modalCard, {paddingVertical: 20}]}>
+                <Text style={styles.modalTitle}>
+                  {lang && lang.screen_first && lang.screen_first.updateVersion
+                    ? lang.screen_first.updateVersion
+                    : ''}
+                </Text>
+                <View
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <TouchableOpacity
+                    activeOpacity={0.6}
+                    onPress={openPlaystoreToUpdate}
+                    style={{
+                      marginTop: 24,
+                      backgroundColor: '#ffdc04',
+                      padding: 10,
+                      width: 120,
+                      borderRadius: 6,
+                    }}>
+                    <Text
+                      style={{
+                        color: 'black',
+                        fontFamily: getFontFam() + 'Medium',
+                        fontSize: fontSize('subtitle'),
+                        textAlign: 'center',
+                      }}>
+                      Update
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Modal>
+        )}
 
         {modalVisible && (
           <Modal

@@ -446,15 +446,7 @@ export default function MapParent() {
                       lang.screen_map.section_slider_card
                         ? lang.screen_map.section_slider_card.desc1
                         : ''}
-                    </Text>{' '}
-                    <Text style={{fontFamily: getFontFam() + 'Bold'}}>
-                      XRUN
-                    </Text>{' '}
-                    {lang &&
-                    lang.screen_map &&
-                    lang.screen_map.section_slider_card
-                      ? lang.screen_map.section_slider_card.desc2
-                      : ''}
+                    </Text>
                   </Text>
                 </View>
                 <Image

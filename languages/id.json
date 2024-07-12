@@ -24,7 +24,8 @@
     },
     "terms": "syarat & ketentuan",
     "privacy": "kebijakan privasi",
-    "information": "penggunaan informasi"
+    "information": "penggunaan informasi",
+    "updateVersion": "Kami memiliki versi baru di Playstore"
   },
 
   "screen_signin": {
@@ -264,7 +265,7 @@
       "noCoin2": "pada jarak dekat"
     },
     "section_slider_card": {
-      "desc1": "Ada XRUN dari",
+      "desc1": "Ada XRUN yang tersedia untuk diakuisisi",
       "desc2": "yang dapat diperoleh."
     },
     "section_marker": {
