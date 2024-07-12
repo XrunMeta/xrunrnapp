@@ -52,6 +52,7 @@
     "react-native-snap-carousel": "^3.9.1",
     "react-native-svg": "^15.2.0",
     "react-native-tab-view": "^3.5.2",
+    "react-native-version-check": "^3.4.7",
     "react-native-viewpager": "^0.2.13",
     "react-native-vision-camera": "^3.9.1",
     "react-native-webview": "^13.6.0",

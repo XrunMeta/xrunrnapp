@@ -9,12 +9,12 @@ const SplashScreen = ({navigation}) => {
       try {
         const isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
 
-        if (isLoggedIn) {
-          navigation.reset({index: 0, routes: [{name: 'Home'}]});
-          return;
-        } else {
-          navigation.reset({index: 0, routes: [{name: 'First'}]});
-        }
+        // if (isLoggedIn) {
+        //   navigation.reset({index: 0, routes: [{name: 'Home'}]});
+        //   return;
+        // } else {
+        navigation.reset({index: 0, routes: [{name: 'First'}]});
+        // }
       } catch (e) {
         console.log(`Failed get isLoggedIn from AsyncStorage: ${e}`);
       }
