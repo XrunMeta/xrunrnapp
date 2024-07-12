@@ -145,7 +145,7 @@ const FirstScreenV2 = ({navigation}) => {
 
       VersionCheck.needUpdate({
         currentVersion: VersionCheck.getCurrentVersion(),
-        latestVersion: '2.0.3',
+        latestVersion: '2.0.2',
       }).then(res => {
         if (res.isNeeded) {
           setIsPopupUpdateVersionShow(true);
