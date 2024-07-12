@@ -24,7 +24,6 @@ import {fontSize, getFontFam} from '../../../utils';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import crashlytics from '@react-native-firebase/crashlytics';
 import VersionCheck from 'react-native-version-check';
-import DeviceInfo from 'react-native-device-info';
 
 async function adul(user) {
   crashlytics().log('Tes Pagi');
