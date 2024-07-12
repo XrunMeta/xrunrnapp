@@ -272,7 +272,6 @@ function ARScreen() {
       const itemsToDisplay = shuffledData
         .slice(currentIndex, currentIndex + displayCount)
         .map(item => {
-          // const rotation = Math.random() * 360; // Menetapkan rotasi acak untuk koin
           const rotation = Math.random() * compassHeading; // Menetapkan rotasi acak untuk koin
           const x = Math.random() * (WINDOW_WIDTH - COIN_WIDTH); // Menetapkan posisi X acak untuk koin
           const y = (Math.random() - 0.1) * (WINDOW_HEIGHT - COIN_HEIGHT); // Menetapkan posisi Y acak untuk koin
@@ -319,8 +318,6 @@ function ARScreen() {
     // Hentikan interval ketika komponen di-unmount
     return () => {
       clearInterval(intervalId);
-      // bouncingCoinTranslateY.value = -250;
-      // blinkOpacity.value = 1;
     };
   }, [coinAPI, coins]); // Perubahan coins ditambahkan di sini
 
@@ -376,7 +373,6 @@ function ARScreen() {
       <View>
         {cameraPermission === 'granted' && isCameraReady && device && (
           <>
-            {/* {renderCamera()} */}
             <Camera
               style={{
                 position: 'relative',
@@ -417,19 +413,20 @@ function ARScreen() {
                     },
                     bouncingCoinAnimatedStyle,
                   ]}>
-                  <TouchableOpacity
-                    onPress={() =>
-                      clickedCoin(
-                        userData.member,
-                        item.advertisement,
-                        item.coin,
-                      )
-                    }
-                    disabled={parseFloat(item.distance) < 30 ? false : true}>
+                  <ImageBackground
+                    source={require('../../../assets/images/image_arcoin_wrapper2.png')}
+                    style={{
+                      resizeMode: 'contain',
+                      height: 165,
+                      width: 120,
+                      alignItems: 'center',
+                      borderRadius: 55,
+                    }}>
                     <View
                       style={{
                         justifyContent: 'center',
                         alignItems: 'center',
+                        position: 'relative',
                       }}>
                       {parseFloat(item.distance) < 30 && (
                         <>
@@ -440,22 +437,29 @@ function ARScreen() {
                                 resizeMode: 'contain',
                                 height: 140,
                                 width: 140,
+                                position: 'absolute',
+                                top: -105,
                               },
                               blinkAnimatedStyle,
                             ]}
                           />
                         </>
                       )}
-                      <ImageBackground
-                        source={require('../../../assets/images/image_arcoin_wrapper2.png')}
+                      <TouchableOpacity
+                        onPress={() =>
+                          clickedCoin(
+                            userData.member,
+                            item.advertisement,
+                            item.coin,
+                          )
+                        }
+                        disabled={parseFloat(item.distance) < 30 ? false : true}
                         style={{
-                          resizeMode: 'contain',
-                          height: 165,
-                          width: 120,
-                          marginTop: -30,
+                          height: 125,
+                          width: 125,
+                          borderRadius: 100,
                           alignItems: 'center',
                           justifyContent: 'center',
-                          borderRadius: 55,
                         }}>
                         <Image
                           source={{
@@ -467,7 +471,6 @@ function ARScreen() {
                           style={{
                             height: 45,
                             width: 45,
-                            marginTop: -40,
                           }}
                         />
                         <Text
@@ -477,7 +480,6 @@ function ARScreen() {
                             color: 'white',
                             marginTop: 5,
                           }}>
-                          {/* 0.05XRUN */}
                           {item.coins}
                           {item.title}
                         </Text>
@@ -488,13 +490,12 @@ function ARScreen() {
                             color: 'grey',
                             marginTop: 3,
                           }}>
-                          {/* 2M */}
                           {item.distance}M
                         </Text>
                         {console.log('Rotasi Coin -> ' + item.rotation)}
-                      </ImageBackground>
+                      </TouchableOpacity>
                     </View>
-                  </TouchableOpacity>
+                  </ImageBackground>
                 </Animated.View>
               ))}
             </View>
@@ -517,7 +518,6 @@ function ARScreen() {
                     bottom: -20,
                     left: 0,
                     right: 0,
-                    // transform: [{translateY: 110}],
                   },
                 ]}>
                 <LinearGradient
