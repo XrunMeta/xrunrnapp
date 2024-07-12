@@ -387,9 +387,9 @@ function ARScreen() {
               style={{
                 position: 'absolute',
                 // backgroundColor: '#001a477a',
-                top: 0,
+                top: 125,
                 bottom: 0,
-                left: -50,
+                left: 10,
                 right: -50,
               }}>
               {coins.map((item, index) => (
