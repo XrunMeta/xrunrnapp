@@ -549,69 +549,79 @@ const MapComponent = ({
     clickedRange(nearestMarkerDistance);
   }, [nearestMarkerDistance]);
 
-  useEffect(() => {
-    const watchId = Geolocation.watchPosition(
-      position => {
-        handlePinChange(position, pinTarget);
+  // Masalah blink
+  // useEffect(() => {
+  //   const watchId = Geolocation.watchPosition(
+  //     position => {
+  //       handlePinChange(position, pinTarget);
 
-        console.log('Pindah brooooooooooo');
+  //       console.log('Pindah brooooooooooo');
 
-        // Mengambil koordinat pengguna saat ini
-        const userCoordinate = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        };
+  //       // Mengambil koordinat pengguna saat ini
+  //       const userCoordinate = {
+  //         latitude: position.coords.latitude,
+  //         longitude: position.coords.longitude,
+  //       };
 
-        // Menghitung jarak antara koordinat pengguna saat ini dan sebelumnya
-        const distance = calculateDistance(
-          prevUserCoordinate.current.latitude,
-          prevUserCoordinate.current.longitude,
-          userCoordinate.latitude,
-          userCoordinate.longitude,
-        );
+  //       // Menghitung jarak antara koordinat pengguna saat ini dan sebelumnya
+  //       const distance = calculateDistance(
+  //         prevUserCoordinate.current.latitude,
+  //         prevUserCoordinate.current.longitude,
+  //         userCoordinate.latitude,
+  //         userCoordinate.longitude,
+  //       );
 
-        // Jika perbedaan jarak melebihi 0.001, perbarui `pin` dan `degToTarget`
-        if (distance > 0.0015) {
-          handlePinChange(position, pinTarget);
+  //       // Jika perbedaan jarak melebihi 0.001, perbarui `pin` dan `degToTarget`
+  //       if (distance > 0.0015) {
+  //         handlePinChange(position, pinTarget);
 
-          // Simpan koordinat pengguna saat ini sebagai koordinat sebelumnya
-          prevUserCoordinate.current = userCoordinate;
+  //         // Simpan koordinat pengguna saat ini sebagai koordinat sebelumnya
+  //         prevUserCoordinate.current = userCoordinate;
 
-          console.log('Jarak melebihi 0.0015 : ' + distance);
+  //         console.log('Jarak melebihi 0.0015 : ' + distance);
 
-          getSelfCoordinate();
-        }
-      },
-      error => {
-        console.error(error);
-      },
-      {
-        enableHighAccuracy: true,
-        distanceFilter: 0.1,
-      },
-    );
+  //         getSelfCoordinate();
+  //       }
+  //     },
+  //     error => {
+  //       console.error(error);
+  //     },
+  //     {
+  //       enableHighAccuracy: true,
+  //       distanceFilter: 0.1,
+  //     },
+  //   );
 
-    return () => {
-      Geolocation.clearWatch(watchId);
+  //   return () => {
+  //     Geolocation.clearWatch(watchId);
+  //   };
+  // }, [handlePinChange, pinTarget]);
+
+  const directToCurrentLocation = () => {
+    const initialRegion = {
+      latitude: pin.latitude,
+      longitude: pin.longitude,
+      latitudeDelta: 0.001,
+      longitudeDelta: 0.001,
     };
-  }, [handlePinChange, pinTarget]);
+    mapRef.current.animateToRegion(initialRegion, 1000);
+
+    onResetMap();
+    console.log('Map RESETTTTTT');
+  };
 
   // As 'shouldResetMap' change useEffect
   useEffect(() => {
     if (pin?.latitude != null && mapRef?.current) {
-      const initialRegion = {
-        latitude: pin.latitude,
-        longitude: pin.longitude,
-        latitudeDelta: 0.001,
-        longitudeDelta: 0.001,
-      };
-
-      mapRef.current.animateToRegion(initialRegion, 1000);
-
-      onResetMap();
-      console.log('Map RESETTTTTT');
+      directToCurrentLocation();
     }
-  }, [shouldResetMap, pin]);
+  }, [pin, mapRef]);
+
+  useEffect(() => {
+    if (shouldResetMap) {
+      directToCurrentLocation();
+    }
+  }, [shouldResetMap]);
 
   // When Marker is Clicked
   const handleMarkerClick = item => {
@@ -688,8 +698,7 @@ const MapComponent = ({
           latitude: parseFloat(item.lat),
           longitude: parseFloat(item.lng),
         }}
-        title={item.title}
-        onPress={() => handleMarkerClick(item)}>
+        title={item.title}>
         <Image
           // source={{uri: `file://${adThumbnail[idx]}`}}
           // style={{width: 15, height: 15}}
