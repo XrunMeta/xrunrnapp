@@ -3,8 +3,6 @@ import React, {useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {AuthProvider} from './src/context/AuthContext/AuthContext';
 import Router from './src/navigation/Router';
-import {LogBox} from 'react-native';
-LogBox.ignoreAllLogs();
 
 export default function App() {
   const [setIsLoggedIn] = useState(false);
