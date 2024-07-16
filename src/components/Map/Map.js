@@ -8,15 +8,8 @@ import {
   PermissionsAndroid,
   Platform,
 } from 'react-native';
-import {useFocusEffect} from '@react-navigation/native';
-import MapView, {
-  Marker,
-  PROVIDER_GOOGLE,
-  Callout,
-  PROVIDER_DEFAULT,
-} from 'react-native-maps';
+import MapView, {Marker, Callout} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
-import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {fetchMarkerData} from './APIGetMarker';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -39,6 +32,7 @@ const MapComponent = ({
   curLang,
 }) => {
   const [pin, setPin] = useState(null); // Get User Coordinate
+  const [astorUserData, setAstorUserData] = useState(null);
   const [pinTarget, setPinTarget] = useState(0); // Get Target Coordinate
   const [loading, setLoading] = useState(true); // Get Loading Info
   const [markersData, setMarkersData] = useState([]); // Save Marker Data from API
@@ -118,150 +112,148 @@ const MapComponent = ({
             userCoordinate.longitude,
           );
 
-          if (distance > 0.0015) {
-            handlePinChange(position, pinTarget);
+          // handlePinChange(position, pinTarget);
 
-            // Simpan koordinat pengguna saat ini sebagai koordinat sebelumnya
-            prevUserCoordinate.current = userCoordinate;
-            try {
-              console.log(
-                'Lokasi berubah:',
-                distance + ' -> ',
-                position.coords.altitude +
-                  '  lat:' +
-                  position.coords.latitude +
-                  '  lng:' +
-                  position.coords.longitude,
-              );
+          // Simpan koordinat pengguna saat ini sebagai koordinat sebelumnya
+          prevUserCoordinate.current = userCoordinate;
+          try {
+            console.log(
+              'Lokasi berubah:',
+              distance + ' -> ',
+              position.coords.altitude +
+                '  lat:' +
+                position.coords.latitude +
+                '  lng:' +
+                position.coords.longitude,
+            );
 
-              const coordinate = {
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
-              };
+            const coordinate = {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            };
 
-              // Set data posisi pengguna
-              setPin(coordinate);
+            // Set data posisi pengguna
+            setPin(coordinate);
 
-              // Panggil API untuk mendapatkan data koin di peta
-              const data = await fetchMarkerData(
-                coordinate.latitude,
-                coordinate.longitude,
-                getUserData.member,
-              );
+            // Panggil API untuk mendapatkan data koin di peta
+            const data = await fetchMarkerData(
+              coordinate.latitude,
+              coordinate.longitude,
+              getUserData.member,
+            );
 
-              if (data) {
-                setMarkersData(data.data);
+            if (data) {
+              setMarkersData(data.data);
 
-                console.log('getSelfCoordinate() dipanggil');
+              console.log('getSelfCoordinate() dipanggil');
 
-                // Set default coordinate for Pin Target
-                const nearestCoin = data.data.reduce(
-                  (nearest, item) => {
-                    const markerLatitude = parseFloat(item.lat);
-                    const markerLongitude = parseFloat(item.lng);
-                    const targetDistance = calculateDistance(
-                      coordinate.latitude,
-                      coordinate.longitude,
-                      markerLatitude,
-                      markerLongitude,
-                    );
-
-                    if (targetDistance < nearest.targetDistance) {
-                      return {
-                        targetDistance,
-                        latitude: markerLatitude,
-                        longitude: markerLongitude,
-                      };
-                    }
-
-                    return nearest;
-                  },
-                  {targetDistance: Number.MAX_VALUE, latitude: 0, longitude: 0},
-                );
-
-                setPinTarget({
-                  latitude: nearestCoin.latitude,
-                  longitude: nearestCoin.longitude,
-                });
-
-                // Get XRUN Brand
-                let brandcount = 0;
-                let currentBrand = null;
-
-                // Hitung jarak dari pengguna ke setiap marker dan temukan yang terdekat
-                const userLatitude = coordinate.latitude;
-                const userLongitude = coordinate.longitude;
-
-                let nearestDistance = Number.MAX_VALUE;
-
-                data.data.forEach(item => {
-                  const brand = item.advertisement;
-
-                  // Make sure Brand(Advertisement) isn't duplicate
-                  if (brand !== currentBrand) {
-                    currentBrand = brand;
-                    brandcount++;
-                  }
-
+              // Set default coordinate for Pin Target
+              const nearestCoin = data.data.reduce(
+                (nearest, item) => {
                   const markerLatitude = parseFloat(item.lat);
                   const markerLongitude = parseFloat(item.lng);
-                  const distance = calculateDistance(
-                    userLatitude,
-                    userLongitude,
+                  const targetDistance = calculateDistance(
+                    coordinate.latitude,
+                    coordinate.longitude,
                     markerLatitude,
                     markerLongitude,
                   );
 
-                  if (distance < nearestDistance) {
-                    nearestDistance = distance;
+                  if (targetDistance < nearest.targetDistance) {
+                    return {
+                      targetDistance,
+                      latitude: markerLatitude,
+                      longitude: markerLongitude,
+                    };
                   }
+
+                  return nearest;
+                },
+                {targetDistance: Number.MAX_VALUE, latitude: 0, longitude: 0},
+              );
+
+              setPinTarget({
+                latitude: nearestCoin.latitude,
+                longitude: nearestCoin.longitude,
+              });
+
+              // Get XRUN Brand
+              let brandcount = 0;
+              let currentBrand = null;
+
+              // Hitung jarak dari pengguna ke setiap marker dan temukan yang terdekat
+              const userLatitude = coordinate.latitude;
+              const userLongitude = coordinate.longitude;
+
+              let nearestDistance = Number.MAX_VALUE;
+
+              data.data.forEach(item => {
+                const brand = item.advertisement;
+
+                // Make sure Brand(Advertisement) isn't duplicate
+                if (brand !== currentBrand) {
+                  currentBrand = brand;
+                  brandcount++;
+                }
+
+                const markerLatitude = parseFloat(item.lat);
+                const markerLongitude = parseFloat(item.lng);
+                const distance = calculateDistance(
+                  userLatitude,
+                  userLongitude,
+                  markerLatitude,
+                  markerLongitude,
+                );
+
+                if (distance < nearestDistance) {
+                  nearestDistance = distance;
+                }
+              });
+
+              // Set nilai awal untuk clickedRange dan nearestMarkerDistance
+              clickedRange(nearestDistance);
+              setNearestMarkerDistance(nearestDistance);
+
+              // Get Big Coin
+              const getBigCoin = data.data.filter(
+                item => item.isbigcoin === '1',
+              ).length;
+
+              // Set to Props
+              markerCount(data.data.length);
+              brandCount(brandcount);
+              bigCoinCount(getBigCoin);
+
+              // Save BLOB to State
+              const imagePromises = data.data.map(async item => {
+                const adThumbnail = await saveBlobAsImage(
+                  item.adthumbnail2,
+                  `${item.coin}.png`,
+                );
+
+                const brandLogo = item.brandlogo;
+
+                return {brandLogo, adThumbnail};
+              });
+
+              // Waiting All Promise is finish
+              Promise.all(imagePromises)
+                .then(images => {
+                  const brandLogos = images.map(image => image.brandLogo);
+                  const adThumbnails = images.map(image => image.adThumbnail);
+
+                  setBrandLogo(brandLogos);
+                  setAdThumbnail(adThumbnails);
+
+                  setImagesLoaded(true);
+                  setLoading(false);
+                })
+                .catch(error => {
+                  console.error('Error while loading images:', error);
                 });
-
-                // Set nilai awal untuk clickedRange dan nearestMarkerDistance
-                clickedRange(nearestDistance);
-                setNearestMarkerDistance(nearestDistance);
-
-                // Get Big Coin
-                const getBigCoin = data.data.filter(
-                  item => item.isbigcoin === '1',
-                ).length;
-
-                // Set to Props
-                markerCount(data.data.length);
-                brandCount(brandcount);
-                bigCoinCount(getBigCoin);
-
-                // Save BLOB to State
-                const imagePromises = data.data.map(async item => {
-                  const adThumbnail = await saveBlobAsImage(
-                    item.adthumbnail2,
-                    `${item.coin}.png`,
-                  );
-
-                  const brandLogo = item.brandlogo;
-
-                  return {brandLogo, adThumbnail};
-                });
-
-                // Waiting All Promise is finish
-                Promise.all(imagePromises)
-                  .then(images => {
-                    const brandLogos = images.map(image => image.brandLogo);
-                    const adThumbnails = images.map(image => image.adThumbnail);
-
-                    setBrandLogo(brandLogos);
-                    setAdThumbnail(adThumbnails);
-
-                    setImagesLoaded(true);
-                    setLoading(false);
-                  })
-                  .catch(error => {
-                    console.error('Error while loading images:', error);
-                  });
-              }
-            } catch (error) {
-              console.error('Error dalam pemrosesan posisi:', error);
             }
+          } catch (error) {
+            console.error('Error dalam pemrosesan posisi:', error);
           }
         },
         error => {
@@ -292,72 +284,169 @@ const MapComponent = ({
     }
   };
 
+  const getFirstCoordinate = async () => {
+    try {
+      const selfCoordinate = await AsyncStorage.getItem('selfCoordinate');
+      const userData = await AsyncStorage.getItem('userData');
+
+      if (selfCoordinate !== null) {
+        const coordinate = JSON.parse(selfCoordinate);
+        const getUserData = JSON.parse(userData);
+
+        setAstorUserData(getUserData);
+        setPin(coordinate);
+
+        // Call API for getting Coin on Map
+        const data = await fetchMarkerData(
+          coordinate.latitude,
+          coordinate.longitude,
+          getUserData.member,
+        );
+
+        if (data) {
+          setMarkersData(data.data);
+
+          console.log('getFirstCoordinate() dipanggil');
+
+          // Set default coordinate for Pin Target
+          const nearestCoin = data.data.reduce(
+            (nearest, item) => {
+              const markerLatitude = parseFloat(item.lat);
+              const markerLongitude = parseFloat(item.lng);
+              const targetDistance = calculateDistance(
+                coordinate.latitude,
+                coordinate.longitude,
+                markerLatitude,
+                markerLongitude,
+              );
+
+              if (targetDistance < nearest.targetDistance) {
+                return {
+                  targetDistance,
+                  latitude: markerLatitude,
+                  longitude: markerLongitude,
+                };
+              }
+
+              return nearest;
+            },
+            {targetDistance: Number.MAX_VALUE, latitude: 0, longitude: 0},
+          );
+
+          setPinTarget({
+            latitude: nearestCoin.latitude,
+            longitude: nearestCoin.longitude,
+          });
+
+          // Get XRUN Brand
+          let brandcount = 0;
+          let currentBrand = null;
+
+          // Hitung jarak dari pengguna ke setiap marker dan temukan yang terdekat
+          const userLatitude = coordinate.latitude;
+          const userLongitude = coordinate.longitude;
+
+          let nearestDistance = Number.MAX_VALUE;
+
+          data.data.forEach(item => {
+            const brand = item.advertisement;
+
+            // Make sure Brand(Advertisement) isn't duplicate
+            if (brand !== currentBrand) {
+              currentBrand = brand;
+              brandcount++;
+            }
+
+            const markerLatitude = parseFloat(item.lat);
+            const markerLongitude = parseFloat(item.lng);
+            const distance = calculateDistance(
+              userLatitude,
+              userLongitude,
+              markerLatitude,
+              markerLongitude,
+            );
+
+            if (distance < nearestDistance) {
+              nearestDistance = distance;
+            }
+          });
+
+          // Set nilai awal untuk clickedRange dan nearestMarkerDistance
+          clickedRange(nearestDistance);
+          setNearestMarkerDistance(nearestDistance);
+
+          // Get Big Coin
+          const getBigCoin = data.data.filter(
+            item => item.isbigcoin === '1',
+          ).length;
+
+          // Set to Props
+          markerCount(data.data.length);
+          brandCount(brandcount);
+          bigCoinCount(getBigCoin);
+
+          // Save BLOB to State
+          const imagePromises = data.data.map(async item => {
+            const adThumbnail = await saveBlobAsImage(
+              item.adthumbnail2,
+              `${item.coin}.png`,
+            );
+
+            const brandLogo = item.brandlogo;
+
+            return {brandLogo, adThumbnail};
+          });
+
+          // Waiting All Promise is finish
+          Promise.all(imagePromises)
+            .then(images => {
+              const brandLogos = images.map(image => image.brandLogo);
+              const adThumbnails = images.map(image => image.adThumbnail);
+
+              setBrandLogo(brandLogos);
+              setAdThumbnail(adThumbnails);
+
+              setImagesLoaded(true);
+              setLoading(false);
+            })
+            .catch(error => {
+              console.error('Error while loading images:', error);
+            });
+        }
+      }
+    } catch (err) {
+      console.error('Error retrieving selfCoordinate from AsyncStorage:', err);
+    }
+  };
+
   // 1 Time Use Effect
   useEffect(() => {
-    console.log('MAAAAAAAAAPPPP');
+    getFirstCoordinate();
+    locationPermitChecker();
+  }, []);
 
-    const getFirstCoordinate = async () => {
-      try {
-        const selfCoordinate = await AsyncStorage.getItem('selfCoordinate');
-        const userData = await AsyncStorage.getItem('userData');
+  const resetCoin = () => {
+    try {
+      Geolocation.getCurrentPosition(
+        async position => {
+          // Get user coordinate
+          const coordinate = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          };
 
-        if (selfCoordinate !== null) {
-          const coordinate = JSON.parse(selfCoordinate);
-          const getUserData = JSON.parse(userData);
-
-          setPin(coordinate);
-
-          // Call API for getting Coin on Map
           const data = await fetchMarkerData(
             coordinate.latitude,
             coordinate.longitude,
-            getUserData.member,
+            astorUserData.member,
           );
 
           if (data) {
-            setMarkersData(data.data);
-
-            console.log('getFirstCoordinate() dipanggil');
-
-            // Set default coordinate for Pin Target
-            const nearestCoin = data.data.reduce(
-              (nearest, item) => {
-                const markerLatitude = parseFloat(item.lat);
-                const markerLongitude = parseFloat(item.lng);
-                const targetDistance = calculateDistance(
-                  coordinate.latitude,
-                  coordinate.longitude,
-                  markerLatitude,
-                  markerLongitude,
-                );
-
-                if (targetDistance < nearest.targetDistance) {
-                  return {
-                    targetDistance,
-                    latitude: markerLatitude,
-                    longitude: markerLongitude,
-                  };
-                }
-
-                return nearest;
-              },
-              {targetDistance: Number.MAX_VALUE, latitude: 0, longitude: 0},
-            );
-
-            setPinTarget({
-              latitude: nearestCoin.latitude,
-              longitude: nearestCoin.longitude,
-            });
+            setMarkersData(data?.data);
 
             // Get XRUN Brand
             let brandcount = 0;
             let currentBrand = null;
-
-            // Hitung jarak dari pengguna ke setiap marker dan temukan yang terdekat
-            const userLatitude = coordinate.latitude;
-            const userLongitude = coordinate.longitude;
-
-            let nearestDistance = Number.MAX_VALUE;
 
             data.data.forEach(item => {
               const brand = item.advertisement;
@@ -367,24 +456,7 @@ const MapComponent = ({
                 currentBrand = brand;
                 brandcount++;
               }
-
-              const markerLatitude = parseFloat(item.lat);
-              const markerLongitude = parseFloat(item.lng);
-              const distance = calculateDistance(
-                userLatitude,
-                userLongitude,
-                markerLatitude,
-                markerLongitude,
-              );
-
-              if (distance < nearestDistance) {
-                nearestDistance = distance;
-              }
             });
-
-            // Set nilai awal untuk clickedRange dan nearestMarkerDistance
-            clickedRange(nearestDistance);
-            setNearestMarkerDistance(nearestDistance);
 
             // Get Big Coin
             const getBigCoin = data.data.filter(
@@ -419,22 +491,34 @@ const MapComponent = ({
 
                 setImagesLoaded(true);
                 setLoading(false);
+                console.log('resetCoin() has called');
               })
               .catch(error => {
                 console.error('Error while loading images:', error);
               });
           }
-        }
-      } catch (err) {
-        console.error(
-          'Error retrieving selfCoordinate from AsyncStorage:',
-          err,
-        );
-      }
-    };
+        },
+        error => {
+          console.log(error.code, error.message);
+        },
+        {
+          enableHighAccuracy: true,
+          distanceFilter: 0.1,
+        },
+      );
+    } catch (error) {
+      console.error('Error retrieving resetCoin', err);
+    }
+  };
 
-    getFirstCoordinate();
-    locationPermitChecker();
+  // Reset Coin on Map by 15s
+  useEffect(() => {
+    const interval = setInterval(() => {
+      resetCoin();
+      console.log('Reset coin by 15s');
+    }, 15000);
+
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -549,79 +633,72 @@ const MapComponent = ({
     clickedRange(nearestMarkerDistance);
   }, [nearestMarkerDistance]);
 
-  // Masalah blink
-  // useEffect(() => {
-  //   const watchId = Geolocation.watchPosition(
-  //     position => {
-  //       handlePinChange(position, pinTarget);
+  useEffect(() => {
+    const watchId = Geolocation.watchPosition(
+      position => {
+        handlePinChange(position, pinTarget);
 
-  //       console.log('Pindah brooooooooooo');
+        console.log('Pindah brooooooooooo');
 
-  //       // Mengambil koordinat pengguna saat ini
-  //       const userCoordinate = {
-  //         latitude: position.coords.latitude,
-  //         longitude: position.coords.longitude,
-  //       };
+        // Mengambil koordinat pengguna saat ini
+        const userCoordinate = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        };
 
-  //       // Menghitung jarak antara koordinat pengguna saat ini dan sebelumnya
-  //       const distance = calculateDistance(
-  //         prevUserCoordinate.current.latitude,
-  //         prevUserCoordinate.current.longitude,
-  //         userCoordinate.latitude,
-  //         userCoordinate.longitude,
-  //       );
+        // Menghitung jarak antara koordinat pengguna saat ini dan sebelumnya
+        const distance = calculateDistance(
+          prevUserCoordinate.current.latitude,
+          prevUserCoordinate.current.longitude,
+          userCoordinate.latitude,
+          userCoordinate.longitude,
+        );
 
-  //       // Jika perbedaan jarak melebihi 0.001, perbarui `pin` dan `degToTarget`
-  //       if (distance > 0.0015) {
-  //         handlePinChange(position, pinTarget);
+        // Jika perbedaan jarak melebihi 0.001, perbarui `pin` dan `degToTarget`
+        if (distance > 0.0015) {
+          handlePinChange(position, pinTarget);
 
-  //         // Simpan koordinat pengguna saat ini sebagai koordinat sebelumnya
-  //         prevUserCoordinate.current = userCoordinate;
+          // Simpan koordinat pengguna saat ini sebagai koordinat sebelumnya
+          prevUserCoordinate.current = userCoordinate;
 
-  //         console.log('Jarak melebihi 0.0015 : ' + distance);
+          console.log('Moves over 0.0015 : ' + distance);
 
-  //         getSelfCoordinate();
-  //       }
-  //     },
-  //     error => {
-  //       console.error(error);
-  //     },
-  //     {
-  //       enableHighAccuracy: true,
-  //       distanceFilter: 0.1,
-  //     },
-  //   );
+          // getSelfCoordinate();
+          resetCoin();
+        }
+      },
+      error => {
+        console.error(error);
+      },
+      {
+        enableHighAccuracy: true,
+        distanceFilter: 0.1,
+      },
+    );
 
-  //   return () => {
-  //     Geolocation.clearWatch(watchId);
-  //   };
-  // }, [handlePinChange, pinTarget]);
-
-  const directToCurrentLocation = () => {
-    const initialRegion = {
-      latitude: pin.latitude,
-      longitude: pin.longitude,
-      latitudeDelta: 0.001,
-      longitudeDelta: 0.001,
+    return () => {
+      Geolocation.clearWatch(watchId);
     };
-    mapRef.current.animateToRegion(initialRegion, 1000);
-
-    onResetMap();
-    console.log('Map RESETTTTTT');
-  };
+  }, [handlePinChange, pinTarget]);
 
   // As 'shouldResetMap' change useEffect
   useEffect(() => {
     if (pin?.latitude != null && mapRef?.current) {
-      directToCurrentLocation();
-    }
-  }, [pin, mapRef]);
+      const initialRegion = {
+        latitude: pin.latitude,
+        longitude: pin.longitude,
+        latitudeDelta: 0.0015,
+        longitudeDelta: 0.0015,
+        // latitudeDelta: 0.01,
+        // longitudeDelta: 0.01,
+      };
 
-  useEffect(() => {
-    if (shouldResetMap) {
-      directToCurrentLocation();
+      mapRef.current.animateToRegion(initialRegion, 1000);
+
+      onResetMap();
+      console.log('Map RESETTTTTT');
     }
-  }, [shouldResetMap]);
+  }, [shouldResetMap, pin]);
 
   // When Marker is Clicked
   const handleMarkerClick = item => {
@@ -698,7 +775,8 @@ const MapComponent = ({
           latitude: parseFloat(item.lat),
           longitude: parseFloat(item.lng),
         }}
-        title={item.title}>
+        title={item.title}
+        onPress={() => handleMarkerClick(item)}>
         <Image
           // source={{uri: `file://${adThumbnail[idx]}`}}
           // style={{width: 15, height: 15}}
@@ -853,8 +931,8 @@ const MapComponent = ({
           initialRegion={{
             latitude: pin.latitude,
             longitude: pin.longitude,
-            latitudeDelta: 0.001,
-            longitudeDelta: 0.001,
+            latitudeDelta: 0.0015,
+            longitudeDelta: 0.0015,
           }}
           customMapStyle={customMapStyle}
           showsUserLocation
