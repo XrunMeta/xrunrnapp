@@ -637,15 +637,12 @@ const MapComponent = ({
     const watchId = Geolocation.watchPosition(
       position => {
         handlePinChange(position, pinTarget);
-
         console.log('Pindah brooooooooooo');
-
         // Mengambil koordinat pengguna saat ini
         const userCoordinate = {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
         };
-
         // Menghitung jarak antara koordinat pengguna saat ini dan sebelumnya
         const distance = calculateDistance(
           prevUserCoordinate.current.latitude,
@@ -653,16 +650,12 @@ const MapComponent = ({
           userCoordinate.latitude,
           userCoordinate.longitude,
         );
-
         // Jika perbedaan jarak melebihi 0.001, perbarui `pin` dan `degToTarget`
-        if (distance > 0.0015) {
+        if (distance > 0.01) {
           handlePinChange(position, pinTarget);
-
           // Simpan koordinat pengguna saat ini sebagai koordinat sebelumnya
           prevUserCoordinate.current = userCoordinate;
-
-          console.log('Moves over 0.0015 : ' + distance);
-
+          console.log('Moves over 0.01 : ' + distance);
           // getSelfCoordinate();
           resetCoin();
         }
@@ -755,7 +748,7 @@ const MapComponent = ({
 
   useEffect(() => {
     if (markerRef.current) {
-      markerRef.current.showCallout();
+      // markerRef.current.showCallout();
     }
   });
 
@@ -775,8 +768,7 @@ const MapComponent = ({
           latitude: parseFloat(item.lat),
           longitude: parseFloat(item.lng),
         }}
-        title={item.title}
-        onPress={() => handleMarkerClick(item)}>
+        title={item.title}>
         <Image
           // source={{uri: `file://${adThumbnail[idx]}`}}
           // style={{width: 15, height: 15}}
