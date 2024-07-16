@@ -49,6 +49,7 @@ const FirstScreenV2 = ({navigation}) => {
   useEffect(() => {
     crashlytics().log('App mounted Lagi');
 
+    // Check current version app and playstore version
     const checkLatestVersion = async () => {
       const isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
 
@@ -73,8 +74,6 @@ const FirstScreenV2 = ({navigation}) => {
 
     checkLatestVersion();
   }, []);
-
-  // Check current version app and playstore version
 
   // Get Map Initial Geolocation
   const getCurrentLocation = async () => {
