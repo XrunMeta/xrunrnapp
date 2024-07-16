@@ -8,15 +8,8 @@ import {
   PermissionsAndroid,
   Platform,
 } from 'react-native';
-import {useFocusEffect} from '@react-navigation/native';
-import MapView, {
-  Marker,
-  PROVIDER_GOOGLE,
-  Callout,
-  PROVIDER_DEFAULT,
-} from 'react-native-maps';
+import MapView, {Marker, Callout} from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
-import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {fetchMarkerData} from './APIGetMarker';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -39,6 +32,7 @@ const MapComponent = ({
   curLang,
 }) => {
   const [pin, setPin] = useState(null); // Get User Coordinate
+  const [astorUserData, setAstorUserData] = useState(null);
   const [pinTarget, setPinTarget] = useState(0); // Get Target Coordinate
   const [loading, setLoading] = useState(true); // Get Loading Info
   const [markersData, setMarkersData] = useState([]); // Save Marker Data from API
@@ -118,8 +112,7 @@ const MapComponent = ({
             userCoordinate.longitude,
           );
 
-          // if (distance > 0.0015) {
-          handlePinChange(position, pinTarget);
+          // handlePinChange(position, pinTarget);
 
           // Simpan koordinat pengguna saat ini sebagai koordinat sebelumnya
           prevUserCoordinate.current = userCoordinate;
@@ -262,7 +255,6 @@ const MapComponent = ({
           } catch (error) {
             console.error('Error dalam pemrosesan posisi:', error);
           }
-          // }
         },
         error => {
           console.error('Error dalam mendapatkan lokasi:', error) +
@@ -301,6 +293,7 @@ const MapComponent = ({
         const coordinate = JSON.parse(selfCoordinate);
         const getUserData = JSON.parse(userData);
 
+        setAstorUserData(getUserData);
         setPin(coordinate);
 
         // Call API for getting Coin on Map
@@ -432,12 +425,97 @@ const MapComponent = ({
     locationPermitChecker();
   }, []);
 
+  const resetCoin = () => {
+    try {
+      Geolocation.getCurrentPosition(
+        async position => {
+          // Get user coordinate
+          const coordinate = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          };
+
+          const data = await fetchMarkerData(
+            coordinate.latitude,
+            coordinate.longitude,
+            astorUserData.member,
+          );
+
+          if (data) {
+            setMarkersData(data?.data);
+
+            // Get XRUN Brand
+            let brandcount = 0;
+            let currentBrand = null;
+
+            data.data.forEach(item => {
+              const brand = item.advertisement;
+
+              // Make sure Brand(Advertisement) isn't duplicate
+              if (brand !== currentBrand) {
+                currentBrand = brand;
+                brandcount++;
+              }
+            });
+
+            // Get Big Coin
+            const getBigCoin = data.data.filter(
+              item => item.isbigcoin === '1',
+            ).length;
+
+            // Set to Props
+            markerCount(data.data.length);
+            brandCount(brandcount);
+            bigCoinCount(getBigCoin);
+
+            // Save BLOB to State
+            const imagePromises = data.data.map(async item => {
+              const adThumbnail = await saveBlobAsImage(
+                item.adthumbnail2,
+                `${item.coin}.png`,
+              );
+
+              const brandLogo = item.brandlogo;
+
+              return {brandLogo, adThumbnail};
+            });
+
+            // Waiting All Promise is finish
+            Promise.all(imagePromises)
+              .then(images => {
+                const brandLogos = images.map(image => image.brandLogo);
+                const adThumbnails = images.map(image => image.adThumbnail);
+
+                setBrandLogo(brandLogos);
+                setAdThumbnail(adThumbnails);
+
+                setImagesLoaded(true);
+                setLoading(false);
+                console.log('resetCoin() has called');
+              })
+              .catch(error => {
+                console.error('Error while loading images:', error);
+              });
+          }
+        },
+        error => {
+          console.log(error.code, error.message);
+        },
+        {
+          enableHighAccuracy: true,
+          distanceFilter: 0.1,
+        },
+      );
+    } catch (error) {
+      console.error('Error retrieving resetCoin', err);
+    }
+  };
+
   // Reset Coin on Map by 15s
   useEffect(() => {
     const interval = setInterval(() => {
-      getSelfCoordinate();
-      // getFirstCoordinate();
-      console.log('Coin reset by 15s');
+      resetCoin();
+      console.log('Reset coin by 15s');
     }, 15000);
 
     return () => clearInterval(interval);
@@ -576,8 +654,6 @@ const MapComponent = ({
           userCoordinate.longitude,
         );
 
-        console.log('AAAAAAAAAAAAAAAAAAA -> ' + distance);
-
         // Jika perbedaan jarak melebihi 0.001, perbarui `pin` dan `degToTarget`
         if (distance > 0.0015) {
           handlePinChange(position, pinTarget);
@@ -585,18 +661,10 @@ const MapComponent = ({
           // Simpan koordinat pengguna saat ini sebagai koordinat sebelumnya
           prevUserCoordinate.current = userCoordinate;
 
-          console.log('Jarak melebihi 0.0015 : ' + distance);
+          console.log('Moves over 0.0015 : ' + distance);
 
-          getSelfCoordinate();
-        } else if (distance > 0.0001) {
-          handlePinChange(position, pinTarget);
-
-          // Simpan koordinat pengguna saat ini sebagai koordinat sebelumnya
-          prevUserCoordinate.current = userCoordinate;
-
-          console.log('Jarak melebihi 0.0005 : ' + distance);
-
-          getSelfCoordinate();
+          // getSelfCoordinate();
+          resetCoin();
         }
       },
       error => {
