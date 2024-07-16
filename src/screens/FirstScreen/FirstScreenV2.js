@@ -49,19 +49,29 @@ const FirstScreenV2 = ({navigation}) => {
   useEffect(() => {
     crashlytics().log('App mounted Lagi');
 
-    // Using this package for check version: https://github.com/kimxogus/react-native-version-check
-    VersionCheck.getLatestVersion({
-      provider: 'playStore', // for Android
-    }).then(latestVersion => {
-      const currentVersion = VersionCheck.getCurrentVersion();
-      console.log(
-        `Current version app: ${currentVersion} || Playstore version app: ${latestVersion}`,
-      );
+    const checkLatestVersion = async () => {
+      const isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
 
-      if (currentVersion < latestVersion) {
-        setIsPopupUpdateVersionShow(true);
-      }
-    });
+      // Using this package for check version: https://github.com/kimxogus/react-native-version-check
+      VersionCheck.getLatestVersion({
+        provider: 'playStore', // for Android
+      }).then(latestVersion => {
+        const currentVersion = VersionCheck.getCurrentVersion();
+        console.log(
+          `Current version app: ${currentVersion} || Playstore version app: ${latestVersion}`,
+        );
+
+        if (currentVersion < latestVersion) {
+          setIsPopupUpdateVersionShow(true);
+        } else {
+          if (isLoggedIn) {
+            navigation.reset({routes: [{name: 'Home'}]});
+          }
+        }
+      });
+    };
+
+    checkLatestVersion();
   }, []);
 
   // Check current version app and playstore version
