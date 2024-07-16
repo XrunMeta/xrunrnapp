@@ -3,7 +3,6 @@ import {
   Text,
   Image,
   StyleSheet,
-  FlatList,
   Linking,
   Platform,
   PermissionsAndroid,
@@ -11,9 +10,7 @@ import {
   Modal,
   TouchableOpacity,
   BackHandler,
-  Alert,
   SafeAreaView,
-  Button,
 } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import React, {useState, useEffect} from 'react';
@@ -51,7 +48,23 @@ const FirstScreenV2 = ({navigation}) => {
 
   useEffect(() => {
     crashlytics().log('App mounted Lagi');
+
+    // Using this package for check version: https://github.com/kimxogus/react-native-version-check
+    VersionCheck.getLatestVersion({
+      provider: 'playStore', // for Android
+    }).then(latestVersion => {
+      const currentVersion = VersionCheck.getCurrentVersion();
+      console.log(
+        `Current version app: ${currentVersion} || Playstore version app: ${latestVersion}`,
+      );
+
+      if (currentVersion < latestVersion) {
+        setIsPopupUpdateVersionShow(true);
+      }
+    });
   }, []);
+
+  // Check current version app and playstore version
 
   // Get Map Initial Geolocation
   const getCurrentLocation = async () => {
@@ -138,28 +151,6 @@ const FirstScreenV2 = ({navigation}) => {
 
   // Panggil fungsi ini saat Anda ingin mendapatkan koordinat
   getCurrentLocation();
-
-  useEffect(() => {
-    const checkLatestVersion = async () => {
-      const isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
-
-      VersionCheck.needUpdate({
-        currentVersion: VersionCheck.getCurrentVersion(),
-        latestVersion: '2.0.2',
-      }).then(res => {
-        if (res.isNeeded) {
-          setIsPopupUpdateVersionShow(true);
-        } else {
-          if (isLoggedIn) {
-            navigation.reset({routes: [{name: 'Home'}]});
-            return;
-          }
-        }
-      });
-    };
-
-    checkLatestVersion();
-  }, []);
 
   const setCurrentLanguage = async language => {
     try {
@@ -275,19 +266,6 @@ const FirstScreenV2 = ({navigation}) => {
               : ''}
           </Text>
         </View>
-
-        {/* <Button
-          title="Crashed me!"
-          onPress={() =>
-            adul({
-              uid: 'Aa0Bb1Cc2Dd3Ee4Ff5Gg6Hh7Ii8Jj9',
-              username: 'Joaquin Phoenix',
-              email: 'herubudi@example.com',
-              credits: 12,
-            })
-          }
-        />
-        <Button title="Test Crash" onPress={() => crashlytics().crash()} /> */}
 
         <View style={styles.sliderWrapper}>
           <Carousel
