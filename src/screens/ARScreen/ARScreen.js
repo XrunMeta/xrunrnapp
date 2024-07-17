@@ -17,6 +17,7 @@ import Animated, {
   withSpring,
   Easing,
   withRepeat,
+  withTiming,
 } from 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
@@ -50,6 +51,11 @@ function ARScreen() {
   const [bigCoin, setBigCoin] = useState(0);
   const [compassHeading, setCompassHeading] = useState(0);
   const [prevCompassHeading, setPrevCompassHeading] = useState(0);
+
+  // Random move coin
+  const [filterCoinsRandomMove, setFilterCoinsRandomMove] = useState([]);
+  const randomLeft = useSharedValue(0);
+  const randomTop = useSharedValue(0);
 
   const getCamPermission = async () => {
     try {
@@ -314,6 +320,47 @@ function ARScreen() {
     };
   }, [coinAPI, coins]); // Perubahan coins ditambahkan di sini
 
+  // Start Random move coin
+  useEffect(() => {
+    if (coins.length > 0) {
+      const getRandomIndexCoin = (array, count = 4) => {
+        const indexes = Array.from(array.keys());
+
+        // Acak urutan indeks
+        indexes.sort(() => Math.random() - 0.5);
+
+        // Ambil 4 indeks pertama
+        return indexes.slice(0, count);
+      };
+
+      getRandomIndexCoin(coins);
+
+      const randomIndexCoin = getRandomIndexCoin(coins);
+      console.log(
+        `Random Index Coin: ${randomIndexCoin} || Length coins: ${coins.length}`,
+      );
+      setFilterCoinsRandomMove(randomIndexCoin);
+    }
+  }, [coins]);
+
+  const getRandomPosition = () => ({
+    left: Math.random() * (WINDOW_WIDTH - 150), // 150 adalah lebar element
+    top: Math.random() * (WINDOW_HEIGHT - 275), // 275 adalah tinggi element
+  });
+
+  useEffect(() => {
+    if (filterCoinsRandomMove) {
+      const timeoutCoin = setTimeout(() => {
+        const {left, top} = getRandomPosition();
+        randomLeft.value = withTiming(left, {duration: 500});
+        randomTop.value = withTiming(top, {duration: 500});
+      }, 500);
+
+      return () => clearTimeout(timeoutCoin);
+    }
+  }, [filterCoinsRandomMove]);
+  // End Random move coin
+
   const animateBouncingCoin = () => {
     bouncingCoinTranslateY.value = withRepeat(
       withSpring(10, {
@@ -407,123 +454,132 @@ function ARScreen() {
                 left: 10,
                 right: -50,
               }}>
-              {coins.map((item, index) => (
-                <Animated.View
-                  key={item.coin}
-                  style={[
-                    {
-                      position: 'absolute',
-                      left:
-                        selectedCoinIndex !== null &&
-                        filteredCoins[selectedCoinIndex].coin === item.coin
+              {coins.map((item, index) => {
+                const filteredCoinsRandomMove =
+                  filterCoinsRandomMove.includes(index);
+
+                return (
+                  <Animated.View
+                    key={item.coin}
+                    style={[
+                      {
+                        position: 'absolute',
+                        left: filteredCoinsRandomMove
+                          ? randomLeft
+                          : selectedCoinIndex !== null &&
+                            filteredCoins[selectedCoinIndex].coin === item.coin
                           ? WINDOW_WIDTH / 2 - 60
                           : item.position.x,
-                      top:
-                        selectedCoinIndex !== null &&
-                        filteredCoins[selectedCoinIndex].coin === item.coin
+                        top: filteredCoinsRandomMove
+                          ? randomTop
+                          : selectedCoinIndex !== null &&
+                            filteredCoins[selectedCoinIndex].coin === item.coin
                           ? WINDOW_HEIGHT / 2 - 270
                           : item.position.y,
-                      zIndex: parseFloat(item.distance) < 30 ? 20 : 1,
-                      width: 150,
-                      height: 275,
-                      display:
-                        item.rotation >= 0 && item.rotation <= 200
-                          ? 'block'
-                          : item.rotation >= 210 && item.rotation <= 320
-                          ? 'block'
-                          : item.rotation >= 330 && item.rotation <= 360
-                          ? 'block'
-                          : 'none',
-                    },
-                    // item.transY,
-                    bouncingCoinAnimatedStyle,
-                    // bouncingCoinAnimatedStyle(bouncingCoinTranslateY.value),
-                  ]}>
-                  <ImageBackground
-                    source={require('../../../assets/images/image_arcoin_wrapper2.png')}
-                    style={{
-                      resizeMode: 'contain',
-                      height: 165,
-                      width: 120,
-                      alignItems: 'center',
-                      borderRadius: 55,
-                    }}>
-                    <View
+                        zIndex: parseFloat(item.distance) < 30 ? 20 : 1,
+                        width: 150,
+                        height: 275,
+                        display:
+                          item.rotation >= 0 && item.rotation <= 200
+                            ? 'block'
+                            : item.rotation >= 210 && item.rotation <= 320
+                            ? 'block'
+                            : item.rotation >= 330 && item.rotation <= 360
+                            ? 'block'
+                            : 'none',
+                      },
+                      // item.transY,
+                      bouncingCoinAnimatedStyle,
+                      // bouncingCoinAnimatedStyle(bouncingCoinTranslateY.value),
+                    ]}>
+                    <ImageBackground
+                      source={require('../../../assets/images/image_arcoin_wrapper2.png')}
                       style={{
-                        justifyContent: 'center',
+                        resizeMode: 'contain',
+                        height: 165,
+                        width: 120,
                         alignItems: 'center',
-                        position: 'relative',
+                        borderRadius: 55,
                       }}>
-                      {parseFloat(item.distance) < 30 && (
-                        <>
-                          <Animated.Image
-                            source={require('../../../assets/images/icon_catch.png')}
-                            style={[
-                              {
-                                resizeMode: 'contain',
-                                height: 140,
-                                width: 140,
-                                position: 'absolute',
-                                top: -105,
-                              },
-                              blinkAnimatedStyle,
-                            ]}
-                          />
-                        </>
-                      )}
-                      <TouchableOpacity
-                        onPress={() =>
-                          clickedCoin(
-                            userData.member,
-                            item.advertisement,
-                            item.coin,
-                          )
-                        }
-                        disabled={parseFloat(item.distance) < 30 ? false : true}
+                      <View
                         style={{
-                          height: 125,
-                          width: 125,
-                          borderRadius: 100,
-                          alignItems: 'center',
                           justifyContent: 'center',
+                          alignItems: 'center',
+                          position: 'relative',
                         }}>
-                        <Image
-                          source={{
-                            uri: `data:image/jpeg;base64,${item.adthumbnail2.replace(
-                              /(\r\n|\n|\r)/gm,
-                              '',
-                            )}`,
-                          }}
+                        {parseFloat(item.distance) < 30 && (
+                          <>
+                            <Animated.Image
+                              source={require('../../../assets/images/icon_catch.png')}
+                              style={[
+                                {
+                                  resizeMode: 'contain',
+                                  height: 140,
+                                  width: 140,
+                                  position: 'absolute',
+                                  top: -105,
+                                },
+                                blinkAnimatedStyle,
+                              ]}
+                            />
+                          </>
+                        )}
+                        <TouchableOpacity
+                          onPress={() =>
+                            clickedCoin(
+                              userData.member,
+                              item.advertisement,
+                              item.coin,
+                            )
+                          }
+                          disabled={
+                            parseFloat(item.distance) < 30 ? false : true
+                          }
                           style={{
-                            height: 45,
-                            width: 45,
-                          }}
-                        />
-                        <Text
-                          style={{
-                            fontFamily: getFontFam() + 'Medium',
-                            fontSize: fontSize('subtitle'),
-                            color: 'white',
-                            marginTop: 5,
+                            height: 125,
+                            width: 125,
+                            borderRadius: 100,
+                            alignItems: 'center',
+                            justifyContent: 'center',
                           }}>
-                          {item.coins}
-                          {item.title}
-                        </Text>
-                        <Text
-                          style={{
-                            fontFamily: getFontFam() + 'Regular',
-                            fontSize: fontSize('body'),
-                            color: 'grey',
-                            marginTop: 3,
-                          }}>
-                          {item.distance}M
-                        </Text>
-                        {console.log('Rotasi Coin -> ' + item.rotation)}
-                      </TouchableOpacity>
-                    </View>
-                  </ImageBackground>
-                </Animated.View>
-              ))}
+                          <Image
+                            source={{
+                              uri: `data:image/jpeg;base64,${item.adthumbnail2.replace(
+                                /(\r\n|\n|\r)/gm,
+                                '',
+                              )}`,
+                            }}
+                            style={{
+                              height: 45,
+                              width: 45,
+                            }}
+                          />
+                          <Text
+                            style={{
+                              fontFamily: getFontFam() + 'Medium',
+                              fontSize: fontSize('subtitle'),
+                              color: 'white',
+                              marginTop: 5,
+                            }}>
+                            {item.coins}
+                            {item.title}
+                          </Text>
+                          <Text
+                            style={{
+                              fontFamily: getFontFam() + 'Regular',
+                              fontSize: fontSize('body'),
+                              color: 'grey',
+                              marginTop: 3,
+                            }}>
+                            {item.distance}M
+                          </Text>
+                          {console.log('Rotasi Coin -> ' + item.rotation)}
+                        </TouchableOpacity>
+                      </View>
+                    </ImageBackground>
+                  </Animated.View>
+                );
+              })}
             </View>
             <View
               style={{
