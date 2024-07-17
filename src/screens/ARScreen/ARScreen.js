@@ -72,8 +72,6 @@ function ARScreen() {
     }
   };
 
-  getCamPermission();
-
   useEffect(() => {
     const getUserData = async () => {
       try {
@@ -96,6 +94,7 @@ function ARScreen() {
       }
     };
 
+    getCamPermission();
     getUserData();
 
     // Get Device Rotation
@@ -229,22 +228,6 @@ function ARScreen() {
     });
   };
 
-  const animateBouncingCoin = () => {
-    bouncingCoinTranslateY.value = withRepeat(
-      withSpring(10, {
-        mass: 2.1,
-        damping: 10,
-        stiffness: 192,
-        overshootClamping: false,
-        restDisplacementThreshold: 0.01,
-        restSpeedThreshold: 0.01,
-        reduceMotion: Easing.bounce,
-      }),
-      -1,
-      true,
-    );
-  };
-
   const animateBlink = () => {
     blinkOpacity.value = withRepeat(
       withSpring(0, {duration: 500}),
@@ -256,6 +239,11 @@ function ARScreen() {
         }
       },
     );
+  };
+
+  // Get random int for coin show animation from
+  const getRandomInt = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
   useEffect(() => {
@@ -275,6 +263,8 @@ function ARScreen() {
           const rotation = Math.random() * compassHeading; // Menetapkan rotasi acak untuk koin
           const x = Math.random() * (WINDOW_WIDTH - COIN_WIDTH); // Menetapkan posisi X acak untuk koin
           const y = (Math.random() - 0.1) * (WINDOW_HEIGHT - COIN_HEIGHT); // Menetapkan posisi Y acak untuk koin
+          const randVertical = getRandomInt(-300, 300);
+          const transY = randVertical;
 
           return {
             ...item,
@@ -283,6 +273,7 @@ function ARScreen() {
               y,
             },
             rotation,
+            transY,
           };
         });
 
@@ -296,7 +287,9 @@ function ARScreen() {
 
       setTimeout(() => {
         setCoins([]);
-        bouncingCoinTranslateY.value = -250;
+        const randVertical = getRandomInt(-300, 300);
+
+        bouncingCoinTranslateY.value = randVertical;
         blinkOpacity.value = 1;
       }, 3000);
 
@@ -321,9 +314,25 @@ function ARScreen() {
     };
   }, [coinAPI, coins]); // Perubahan coins ditambahkan di sini
 
+  const animateBouncingCoin = () => {
+    bouncingCoinTranslateY.value = withRepeat(
+      withSpring(10, {
+        mass: 2.1,
+        damping: 10,
+        stiffness: 192,
+        overshootClamping: false,
+        restDisplacementThreshold: 0.01,
+        restSpeedThreshold: 0.01,
+        reduceMotion: Easing.bounce,
+      }),
+      -1,
+      true,
+    );
+  };
+
   const bouncingCoinAnimatedStyle = useAnimatedStyle(() => {
     return {
-      transform: [{translateY: bouncingCoinTranslateY.value}],
+      transform: [{translateX: bouncingCoinTranslateY.value}],
     };
   });
 
@@ -426,7 +435,9 @@ function ARScreen() {
                           ? 'block'
                           : 'none',
                     },
+                    // item.transY,
                     bouncingCoinAnimatedStyle,
+                    // bouncingCoinAnimatedStyle(bouncingCoinTranslateY.value),
                   ]}>
                   <ImageBackground
                     source={require('../../../assets/images/image_arcoin_wrapper2.png')}
