@@ -167,6 +167,9 @@ dependencies {
     implementation 'com.facebook.fresco:animated-gif:2.6.0'
     implementation 'com.facebook.fresco:animated-webp:2.0.0'
     implementation 'com.facebook.fresco:webpsupport:2.0.0'
+
+    // Version checker
+    implementation project(':react-native-version-check')
 }
 
 apply plugin: 'com.google.gms.google-services'
