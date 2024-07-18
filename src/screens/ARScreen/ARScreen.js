@@ -54,8 +54,18 @@ function ARScreen() {
 
   // Random move coin
   const [filterCoinsRandomMove, setFilterCoinsRandomMove] = useState([]);
-  const randomLeft = useSharedValue(0);
-  const randomTop = useSharedValue(0);
+  const randomLefts = [
+    useSharedValue(0),
+    useSharedValue(0),
+    useSharedValue(0),
+    useSharedValue(0),
+  ];
+  const randomTops = [
+    useSharedValue(0),
+    useSharedValue(0),
+    useSharedValue(0),
+    useSharedValue(0),
+  ];
 
   const getCamPermission = async () => {
     try {
@@ -323,42 +333,44 @@ function ARScreen() {
   // Start Random move coin
   useEffect(() => {
     if (coins.length > 0) {
-      const getRandomIndexCoin = (array, count = 4) => {
-        const indexes = Array.from(array.keys());
-
-        // Acak urutan indeks
-        indexes.sort(() => Math.random() - 0.5);
-
-        // Ambil 4 indeks pertama
-        return indexes.slice(0, count);
+      const getRandomIndexCoin = (count = 4) => {
+        // Ambil indeks 0 sampai 3 atau sesuai dengan jumlah koin yang ada
+        return Array.from(
+          {length: Math.min(count, coins.length)},
+          (_, index) => index,
+        );
       };
 
-      getRandomIndexCoin(coins);
-
-      const randomIndexCoin = getRandomIndexCoin(coins);
-      console.log(
-        `Random Index Coin: ${randomIndexCoin} || Length coins: ${coins.length}`,
-      );
+      const randomIndexCoin = getRandomIndexCoin();
       setFilterCoinsRandomMove(randomIndexCoin);
     }
   }, [coins]);
 
   const getRandomPosition = () => ({
-    left: Math.random() * (WINDOW_WIDTH - 150), // 150 adalah lebar element
-    top: Math.random() * (WINDOW_HEIGHT - 275), // 275 adalah tinggi element
+    left: Math.random() * (WINDOW_WIDTH - 100),
+    top: Math.random() * (WINDOW_HEIGHT - 350),
   });
 
   useEffect(() => {
-    if (filterCoinsRandomMove) {
+    if (filterCoinsRandomMove.length > 0) {
       const timeoutCoin = setTimeout(() => {
-        const {left, top} = getRandomPosition();
-        randomLeft.value = withTiming(left, {duration: 500});
-        randomTop.value = withTiming(top, {duration: 500});
-      }, 500);
+        filterCoinsRandomMove.forEach((_, index) => {
+          const {left, top} = getRandomPosition();
+          randomLefts[index].value = withTiming(left, {
+            duration: 700,
+            easing: Easing.inOut(Easing.quad),
+          });
+          randomTops[index].value = withTiming(top, {
+            duration: 700,
+            easing: Easing.inOut(Easing.quad),
+          });
+        });
+      }, 700);
 
       return () => clearTimeout(timeoutCoin);
     }
   }, [filterCoinsRandomMove]);
+
   // End Random move coin
 
   const animateBouncingCoin = () => {
@@ -455,8 +467,7 @@ function ARScreen() {
                 right: -50,
               }}>
               {coins.map((item, index) => {
-                const filteredCoinsRandomMove =
-                  filterCoinsRandomMove.includes(index);
+                const isRandomCoin = filterCoinsRandomMove.includes(index);
 
                 return (
                   <Animated.View
@@ -464,14 +475,14 @@ function ARScreen() {
                     style={[
                       {
                         position: 'absolute',
-                        left: filteredCoinsRandomMove
-                          ? randomLeft
+                        left: isRandomCoin
+                          ? randomLefts[index]
                           : selectedCoinIndex !== null &&
                             filteredCoins[selectedCoinIndex].coin === item.coin
                           ? WINDOW_WIDTH / 2 - 60
                           : item.position.x,
-                        top: filteredCoinsRandomMove
-                          ? randomTop
+                        top: isRandomCoin
+                          ? randomTops[index]
                           : selectedCoinIndex !== null &&
                             filteredCoins[selectedCoinIndex].coin === item.coin
                           ? WINDOW_HEIGHT / 2 - 270
