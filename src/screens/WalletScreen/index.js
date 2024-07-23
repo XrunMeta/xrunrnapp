@@ -12,7 +12,7 @@ import {
   FlatList,
   Dimensions,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -39,6 +39,7 @@ const WalletScreen = ({navigation, route}) => {
   const [cardDataQR, setCardDataQR] = useState([]);
 
   const [emptyWallet, setEmptyWallet] = useState(false);
+  const flatlistRef = useRef(null);
 
   useEffect(() => {
     // Get Language Data
@@ -73,6 +74,23 @@ const WalletScreen = ({navigation, route}) => {
 
     getMember();
   }, []);
+
+  // Start Flatlist ref
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (flatlistRef.current && cardsData.length > 1) {
+        flatlistRef.current.scrollToIndex({animated: true, index: 0});
+      }
+    }, 100); // Delay to ensure FlatList is fully rendered
+    return () => clearTimeout(timer);
+  }, [cardsData]);
+
+  const getItemLayout = (data, index) => ({
+    length: Dimensions.get('window').width,
+    offset: Dimensions.get('window').width * index,
+    index,
+  });
+  // End flatlist ref
 
   // Get data member
   const getUserData = async () => {
@@ -167,6 +185,7 @@ const WalletScreen = ({navigation, route}) => {
         route.params.completeSend === 'true' ||
         route.params.completeConversion === 'true'
       ) {
+        setCurrentCurrency('1');
         getUserData();
       }
     }
@@ -358,8 +377,10 @@ const WalletScreen = ({navigation, route}) => {
             <View style={styles.containerCard}>
               {/* {emptyWallet || ( */}
               <FlatList
+                ref={flatlistRef}
                 data={cardsData}
                 renderItem={routeComponent}
+                getItemLayout={getItemLayout}
                 horizontal
                 pagingEnabled
                 showsHorizontalScrollIndicator={false}
