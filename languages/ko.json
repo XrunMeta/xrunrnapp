@@ -520,7 +520,9 @@
     "send_verification_code": "인증 코드 전송 중",
     "confirm_alert": "확인",
     "estimated_gas_fee": "예상 전송 비용",
-    "note": "请注意，您必须有以太坊才能转账，否则您可能会失去价值。"
+    "note": "请注意，您必须有以太坊才能转账，否则您可能会失去价值。",
+    "next": "다음",
+    "confirm": "확인하다"
   },
   "screen_complete_send": {
     "title": "이체 완료",
