@@ -14,11 +14,18 @@ import {
   SafeAreaView,
   Platform,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInputWallet from '../../components/CustomInputWallet';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  URL_API,
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  URL_API_NODEJS,
+  authcode,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {
   request,
@@ -41,11 +48,22 @@ const SendWalletScreen = ({navigation, route}) => {
   const [dataMember, setDataMember] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [cointrace, setCointrace] = useState([]);
-  const [popupSend, setPopupSend] = useState(false);
+  const [isPopupSend, setIsPopupSend] = useState(false);
+  const [isPopupSendConfirmation, setIsPopupSendConfirmation] = useState(false);
 
   // Animated notification in QR
   const [fadeAnim] = useState(new Animated.Value(0));
   const [zIndexAnim, setZIndexAnim] = useState(-1);
+
+  // Estimated gas
+  const [estimatedGas, setEstimatedGas] = useState(0);
+  const [countEstimatedGas, setCountEstimatedGas] = useState(0);
+  const [isInitialCallGasEstimated, setIsInitialCallGasEstimated] =
+    useState(false);
+  const [isTextBlinking, setIsTextBlinking] = useState(false);
+  const [isDisableButtonConfirm, setIsDisableButtonConfirm] = useState(false);
+  const fadeAnimEstimatedGas = useRef(new Animated.Value(1)).current;
+  const [totalTransfer, setTotalTransfer] = useState(0);
 
   useEffect(() => {
     // Get Language Data
@@ -80,6 +98,121 @@ const SendWalletScreen = ({navigation, route}) => {
 
     getUserData();
   }, []);
+
+  // Initial execute gas estimated
+  useEffect(() => {
+    let logIntervalId;
+
+    if (estimatedGas && isInitialCallGasEstimated) {
+      setIsLoading(false);
+      setIsPopupSend(true);
+      console.log(`Run the setInterval for call function getEstimatedGas()`);
+
+      // Set up an interval to log the refresh count every 1 second
+      logIntervalId = setInterval(() => {
+        setCountEstimatedGas(prevCount => {
+          const newCount = (prevCount % 30) + 1; // Reset to 1 after 30
+          console.log(`Countdown refresh gas estimated: ${newCount}`);
+
+          if (newCount === 30) {
+            console.log('Disable button confirm');
+            setIsDisableButtonConfirm(true);
+            setIsTextBlinking(true);
+            getEstimatedGas();
+          }
+          return newCount;
+        });
+      }, 1000);
+
+      // Cleanup function to clear both intervals
+      return () => {
+        clearInterval(logIntervalId);
+        console.log('Intervals cleared.');
+      };
+    }
+  }, [estimatedGas, isInitialCallGasEstimated]);
+
+  // Function for get estimated gas
+  const getEstimatedGas = async () => {
+    try {
+      const token = dataWallet.currency == 1 ? 'xr' : 'et';
+
+      const requestBody = {
+        token,
+        from: dataWallet.address,
+        to: address,
+        amount: amount,
+      };
+
+      console.log(`Gas estimated token: ${token}`);
+
+      const request = await fetch(`${URL_API_NODEJS}/gasEstimated`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authcode}`,
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      const responses = await request.json();
+      const results = responses['data']['result'][0]['data'];
+      const totalGasCostEth = results['totalGasCostEth'];
+
+      console.log(`Total gas cost ETH: ${totalGasCostEth}`);
+      setEstimatedGas(totalGasCostEth);
+
+      console.log('Active button confirm');
+      setIsDisableButtonConfirm(false);
+      setIsTextBlinking(false);
+
+      if (!isInitialCallGasEstimated) {
+        setIsInitialCallGasEstimated(true);
+      }
+    } catch (e) {
+      console.log(`Error gas estimated: ${e}`);
+    }
+  };
+
+  // Animated blink text estimated gas
+  // If button disable run the blinking animated
+  useEffect(() => {
+    if (isTextBlinking) {
+      blink();
+    } else {
+      fadeAnimEstimatedGas.setValue(1);
+      Animated.timing(fadeAnimEstimatedGas).stop();
+    }
+  }, [isTextBlinking]);
+
+  const blink = () => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(fadeAnimEstimatedGas, {
+          toValue: 0,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(fadeAnimEstimatedGas, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+      ]),
+    ).start();
+  };
+
+  // Disable confirm send if balance not enough
+  useEffect(() => {
+    if (isPopupSendConfirmation) {
+      const balance = parseFloat(dataWallet.Wamount);
+      if (totalTransfer > balance) {
+        setIsDisableButtonConfirm(true);
+      } else {
+        setIsDisableButtonConfirm(false);
+      }
+    }
+  }, [isPopupSendConfirmation, isDisableButtonConfirm]);
 
   // List stock exchange
   useEffect(() => {
@@ -187,7 +320,8 @@ const SendWalletScreen = ({navigation, route}) => {
         },
       ]);
     } else {
-      setPopupSend(true);
+      getEstimatedGas();
+      setIsLoading(true);
     }
   };
 
@@ -265,96 +399,112 @@ const SendWalletScreen = ({navigation, route}) => {
   };
 
   const cancelSend = () => {
-    setPopupSend(false);
+    setIsPopupSend(false);
+    setIsPopupSendConfirmation(false);
+
+    setIsInitialCallGasEstimated(false);
+    setCountEstimatedGas(0);
+    setIsDisableButtonConfirm(false);
+    setIsTextBlinking(false);
   };
 
-  const confirmSend = () => {
-    setIsLoading(true);
-    const currency = dataWallet.currency;
+  const onConfirmSend = () => {
+    // Confirm transfer
 
-    // Get limit transfer
-    fetch(
-      `${URL_API}&act=ap4300-getLimitTransfer&member=${dataMember.member}&currency=${currency}&amountrq=${amount}`,
-      {
-        method: 'POST',
-      },
-    )
-      .then(response => response.json())
-      .then(result => {
-        const {avaliable} = result;
-
-        if (avaliable === 'OK') {
-          fetch(
-            // Transfer by stock exchange
-            `${URL_API}&act=ap4300-03&member=${dataMember.member}&addrto=${address}&currency=${currency}&amount=${amount}&coinmarket=${selectedExchange}`,
-            {
-              method: 'POST',
-            },
-          )
-            .then(result => result.json())
-            .then(() => {
-              const token = currency == 1 ? 'xr' : 'et';
-              // Transfer coin
-              fetch(
-                `${URL_API}&act=postTransfer&member=${dataMember.member}&to=${address}&token=${token}&amount=${amount}`,
-                {
-                  method: 'POST',
-                },
-              )
-                .then(result => result.json())
-                .then(response => {
-                  const {status, hash} = response;
-                  const balance = parseFloat(dataWallet.Wamount).toString();
-
-                  console.log(`Status: ${status}, Hash: ${hash} Post Transfer`);
-                  if (status == 'success') {
-                    setIsLoading(false);
-                    setAddress('');
-                    setAmount('');
-                    setSelectedExchange('360001');
-                    navigation.navigate('CompleteSend', {
-                      amount,
-                      addrto: address,
-                      txid: hash,
-                      symbol: dataWallet.symbol,
-                      balance,
-                    });
-                  } else {
-                    setIsLoading(false);
-                    setPopupSend(false);
-                    setAddress('');
-                    setAmount('');
-                    setSelectedExchange('360001');
-                    Alert.alert('', 'Blockchain has problem or delay.');
-                  }
-                })
-                .catch(err => {
-                  Alert.alert('', 'Transfer failed: ', err);
-                  console.log('Transfer failed postTransfer: ', err);
-                  crashlytics().recordError(new Error(err));
-                  crashlytics().log(err);
-                });
-            })
-            .catch(err => {
-              Alert.alert('', 'Transfer failed: ', err);
-              console.log('Transfer failed ap4300-03: ', err);
-              crashlytics().recordError(new Error(err));
-              crashlytics().log(err);
-            });
-        } else {
-          setIsLoading(false);
-          Alert.alert(
-            '',
-            lang && lang ? lang.screen_send.send_enough_money : '',
-          );
-        }
-      })
-      .catch(err => {
-        Alert.alert('', 'Check limit transfer failed: ', err);
-        setIsLoading(false);
-        crashlytics().recordError(new Error(err));
-        crashlytics().log(err);
-      });
+    if (isPopupSendConfirmation) {
+      console.log('sip');
+      // const currency = dataWallet.currency;
+      // // Get limit transfer
+      // fetch(
+      //   `${URL_API}&act=ap4300-getLimitTransfer&member=${dataMember.member}&currency=${currency}&amountrq=${amount}`,
+      //   {
+      //     method: 'POST',
+      //   },
+      // )
+      //   .then(response => response.json())
+      //   .then(result => {
+      //     const {avaliable} = result;
+      //     if (avaliable === 'OK') {
+      //       fetch(
+      //         // Transfer by stock exchange
+      //         `${URL_API}&act=ap4300-03&member=${dataMember.member}&addrto=${address}&currency=${currency}&amount=${amount}&coinmarket=${selectedExchange}`,
+      //         {
+      //           method: 'POST',
+      //         },
+      //       )
+      //         .then(result => result.json())
+      //         .then(() => {
+      //           const token = currency == 1 ? 'xr' : 'et';
+      //           // Transfer coin
+      //           fetch(
+      //             `${URL_API}&act=postTransfer&member=${dataMember.member}&to=${address}&token=${token}&amount=${amount}`,
+      //             {
+      //               method: 'POST',
+      //             },
+      //           )
+      //             .then(result => result.json())
+      //             .then(response => {
+      //               const {status, hash} = response;
+      //               const balance = parseFloat(dataWallet.Wamount).toString();
+      //               console.log(
+      //                 `Status: ${status}, Hash: ${hash} Post Transfer`,
+      //               );
+      //               if (status == 'success') {
+      //                 setIsLoading(false);
+      //                 setAddress('');
+      //                 setAmount('');
+      //                 setSelectedExchange('360001');
+      //                 navigation.navigate('CompleteSend', {
+      //                   amount,
+      //                   addrto: address,
+      //                   txid: hash,
+      //                   symbol: dataWallet.symbol,
+      //                   balance,
+      //                 });
+      //               } else {
+      //                 setIsLoading(false);
+      //                 setIsPopupSend(false);
+      //                 setAddress('');
+      //                 setAmount('');
+      //                 setSelectedExchange('360001');
+      //                 Alert.alert('', 'Blockchain has problem or delay.');
+      //               }
+      //             })
+      //             .catch(err => {
+      //               Alert.alert('', 'Transfer failed: ', err);
+      //               console.log('Transfer failed postTransfer: ', err);
+      //               crashlytics().recordError(new Error(err));
+      //               crashlytics().log(err);
+      //             });
+      //         })
+      //         .catch(err => {
+      //           Alert.alert('', 'Transfer failed: ', err);
+      //           console.log('Transfer failed ap4300-03: ', err);
+      //           crashlytics().recordError(new Error(err));
+      //           crashlytics().log(err);
+      //         });
+      //     } else {
+      //       setIsLoading(false);
+      //       Alert.alert(
+      //         '',
+      //         lang && lang ? lang.screen_send.send_enough_money : '',
+      //       );
+      //     }
+      //   })
+      //   .catch(err => {
+      //     Alert.alert('', 'Check limit transfer failed: ', err);
+      //     setIsLoading(false);
+      //     crashlytics().recordError(new Error(err));
+      //     crashlytics().log(err);
+      //   });
+    }
+    // Next transfer for confirmation
+    else {
+      setIsDisableButtonConfirm(true);
+      setIsPopupSendConfirmation(true);
+      const total = parseFloat(estimatedGas) + parseFloat(amount);
+      setTotalTransfer(total);
+    }
   };
 
   const handleQRCodeRead = ({code}) => {
@@ -550,7 +700,7 @@ const SendWalletScreen = ({navigation, route}) => {
           <Text style={styles.notificationTextInQR}>Scanned: {address}</Text>
         </View>
       </Animated.View>
-      {popupSend && (
+      {isPopupSend && (
         <View style={styles.popupConversion}>
           <View style={styles.wrapperConversion}>
             <View style={styles.wrapperPartTop}>
@@ -564,40 +714,108 @@ const SendWalletScreen = ({navigation, route}) => {
               </Text>
             </View>
             <View style={styles.contentConversion}>
-              <View style={styles.wrapperTextConversion}>
-                <Text style={styles.textPartLeft}>
-                  {lang && lang ? lang.screen_setting.close.desc.clo2 : ''}
-                </Text>
-                <Text style={styles.textPartRight}>
-                  {amount}
-                  {dataWallet.symbol}
-                </Text>
-              </View>
-              <View style={styles.wrapperTextConversion}>
-                <Text style={styles.textPartLeft}>
-                  {lang && lang ? lang.screen_complete_send.wallet_address : ''}
-                </Text>
-                <Text style={[styles.textPartRight, {maxWidth: 180}]}>
-                  {address}
-                </Text>
-              </View>
-              <View>
-                <View style={styles.wrapperTextConversion}>
-                  <Text style={styles.textPartLeft}>
-                    {lang && lang ? lang.screen_send.estimated_gas_fee : ''}
-                  </Text>
-                  <Text style={styles.textPartRight}>{'< 0.003 eth'}</Text>
-                </View>
-                <View style={styles.wrapperTextConversion}>
-                  <Text
-                    style={[
-                      styles.textPartLeft,
-                      {color: 'red', marginTop: 10},
-                    ]}>
-                    {lang && lang ? lang.screen_send.note : ''}
-                  </Text>
-                </View>
-              </View>
+              {isPopupSendConfirmation ? (
+                <>
+                  <View style={styles.wrapperTextConversion}>
+                    <Text style={styles.textPartLeft}>
+                      {' '}
+                      {lang && lang ? lang.screen_setting.close.desc.clo2 : ''}
+                    </Text>
+                    <Text style={styles.textPartRight}>
+                      {amount}
+                      {dataWallet.symbol}
+                    </Text>
+                  </View>
+                  <View style={styles.wrapperTextConversion}>
+                    <Text style={styles.textPartLeft}>
+                      {lang && lang
+                        ? lang.screen_complete_send.wallet_address
+                        : ''}
+                    </Text>
+                    <Text style={[styles.textPartRight, {maxWidth: 180}]}>
+                      {address}
+                    </Text>
+                  </View>
+                  <View>
+                    <View style={styles.wrapperTextConversion}>
+                      <Text style={styles.textPartLeft}>
+                        {lang && lang ? lang.screen_send.estimated_gas_fee : ''}
+                      </Text>
+                      <Animated.Text
+                        style={{
+                          opacity: fadeAnimEstimatedGas,
+                        }}>
+                        <Text style={styles.textPartRight}>
+                          {parseFloat(estimatedGas).toString().substring(0, 12)}
+                          ETH
+                        </Text>
+                      </Animated.Text>
+                    </View>
+                  </View>
+                  <View style={styles.wrapperTextConversion}>
+                    <Text style={styles.textPartLeft}>
+                      {' '}
+                      {lang && lang ? lang.screen_advertise.total : ''}
+                    </Text>
+                    <Animated.Text
+                      style={{
+                        opacity: fadeAnimEstimatedGas,
+                      }}>
+                      <Text style={styles.textPartRight}>
+                        {totalTransfer.toString().substring(0, 12)}
+                        ETH
+                      </Text>
+                    </Animated.Text>
+                  </View>
+                </>
+              ) : (
+                <>
+                  <View style={styles.wrapperTextConversion}>
+                    <Text style={styles.textPartLeft}>
+                      {lang && lang ? lang.screen_setting.close.desc.clo2 : ''}
+                    </Text>
+                    <Text style={styles.textPartRight}>
+                      {amount}
+                      {dataWallet.symbol}
+                    </Text>
+                  </View>
+                  <View style={styles.wrapperTextConversion}>
+                    <Text style={styles.textPartLeft}>
+                      {lang && lang
+                        ? lang.screen_complete_send.wallet_address
+                        : ''}
+                    </Text>
+                    <Text style={[styles.textPartRight, {maxWidth: 180}]}>
+                      {address}
+                    </Text>
+                  </View>
+                  <View>
+                    <View style={styles.wrapperTextConversion}>
+                      <Text style={styles.textPartLeft}>
+                        {lang && lang ? lang.screen_send.estimated_gas_fee : ''}
+                      </Text>
+                      <Animated.Text
+                        style={{
+                          opacity: fadeAnimEstimatedGas,
+                        }}>
+                        <Text style={styles.textPartRight}>
+                          {parseFloat(estimatedGas).toString().substring(0, 12)}
+                          ETH
+                        </Text>
+                      </Animated.Text>
+                    </View>
+                    <View style={styles.wrapperTextConversion}>
+                      <Text
+                        style={[
+                          styles.textPartLeft,
+                          {color: 'red', marginTop: 10},
+                        ]}>
+                        {lang && lang ? lang.screen_send.note : ''}
+                      </Text>
+                    </View>
+                  </View>
+                </>
+              )}
             </View>
             <View style={styles.wrapperButton}>
               <TouchableOpacity
@@ -610,11 +828,23 @@ const SendWalletScreen = ({navigation, route}) => {
                 activeOpacity={0.7}
                 style={[
                   styles.buttonConfirm,
-                  {backgroundColor: '#343c5a', flex: 1.5},
+                  {
+                    backgroundColor: `${
+                      isDisableButtonConfirm ? '#ccc' : '#343c5a'
+                    }`,
+                    flex: 1.5,
+                  },
                 ]}
-                onPress={confirmSend}>
+                disabled={isDisableButtonConfirm}
+                onPress={onConfirmSend}>
                 <Text style={[styles.textButtonConfirm, {color: '#fff'}]}>
-                  {lang && lang ? lang.screen_wallet.confirm_alert : ''}
+                  {isPopupSendConfirmation
+                    ? lang && lang
+                      ? lang.screen_send.confirm
+                      : ''
+                    : lang && lang
+                    ? lang.screen_send.next
+                    : ''}
                 </Text>
               </TouchableOpacity>
             </View>

@@ -520,7 +520,9 @@
     "send_enough_money": "Periksa jumlah saat ini dan pastikan Anda memiliki cukup uang di dompet Anda termasuk bahan bakar (biaya transfer)",
     "send_verification_code": "Mengirim kode verifikasi",
     "estimated_gas_fee": "Gas fee",
-    "note": "Perhatikan bahwa Anda harus memiliki ethereum untuk mentransfer, Jika tidak, Anda mungkin kehilangan nilai Anda."
+    "note": "Perhatikan bahwa Anda harus memiliki ethereum untuk mentransfer, Jika tidak, Anda mungkin kehilangan nilai Anda.",
+    "next": "Berikutnya",
+    "confirm": "Konfirmasi"
   },
   "screen_complete_send": {
     "title": "Berhasil mengirimkan XRUN .",

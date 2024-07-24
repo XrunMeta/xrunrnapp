@@ -521,7 +521,9 @@
     "send_enough_money": "Check the current amount and make sure you have enough money in your wallet including gas (transfer fee)",
     "send_verification_code": "Sending verification code",
     "estimated_gas_fee": "Estimated gas fee",
-    "note": "Note that you must have ethereum to transfer, If not you may lost your value."
+    "note": "Note that you must have ethereum to transfer, If not you may lost your value.",
+    "next": "Next",
+    "confirm": "Confirm"
   },
   "screen_complete_send": {
     "title": "Transfer Completed",

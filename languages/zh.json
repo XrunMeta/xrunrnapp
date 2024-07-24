@@ -519,7 +519,10 @@
     "send_enough_money": "检查当前金额，并确保您的钱包中有足够的钱，包括燃气费（转账费）",
     "send_verification_code": "发送验证码",
     "confirm_alert": "确认",
-    "estimated_gas_fee": "Gas fee"
+    "estimated_gas_fee": "Gas fee",
+    "note": "请注意，您必须拥有以太币才能进行转账，否则，您可能会失去您的价值。",
+    "next": "下一个",
+    "confirm": "确认"
   },
   "screen_complete_send": {
     "title": "转账完成",
