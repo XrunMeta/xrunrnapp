@@ -170,6 +170,13 @@ dependencies {
 
     // Version checker
     implementation project(':react-native-version-check')
+
+    // ironSource Ads
+    implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
+    implementation 'com.google.android.gms:play-services-basement:18.3.0'
+    implementation 'com.google.android.gms:play-services-appset:16.0.2'
+    implementation 'com.ironsource.sdk:mediationsdk:8.2.1' 
+    implementation 'com.ironsource:adqualitysdk:7.20.2'
 }
 
 apply plugin: 'com.google.gms.google-services'
