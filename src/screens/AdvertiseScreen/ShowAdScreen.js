@@ -5,6 +5,7 @@ import {
   View,
   TouchableOpacity,
   Platform,
+  Button,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {
@@ -12,19 +13,27 @@ import {
   InterstitialAd,
   TestIds,
 } from 'react-native-google-mobile-ads';
+import {IronSource} from 'ironsource-mediation';
 import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import crashlytics from '@react-native-firebase/crashlytics';
 import FastImage from 'react-native-fast-image';
 
-const androidRealAD = process.env.ADMOB_ADUNIT_ANDROID;
-const iosRealAD = process.env.ADMOB_ADUNIT_IOS;
+const android_admobAdunit = process.env.ADMOB_ADUNIT_ANDROID;
+const ios_admobAdunit = process.env.ADMOB_ADUNIT_IOS;
 
-// Menentukan nilai realAD berdasarkan platform
-const realAD = Platform.select({
-  ios: iosRealAD,
-  android: androidRealAD,
+const android_ironAdunit = process.env.IRON_ADUNIT_ANDROID;
+const ios_ironAdunit = process.env.IRON_ADUNIT_IOS;
+
+// Ads AD UNIT
+const admobAdunit = Platform.select({
+  android: android_admobAdunit,
+  ios: ios_admobAdunit,
+});
+const ironAdunit = Platform.select({
+  android: android_ironAdunit,
+  ios: ios_ironAdunit,
 });
 
 const CustomModal = ({visible, text, onOK, textOK}) => {
@@ -42,7 +51,6 @@ const CustomModal = ({visible, text, onOK, textOK}) => {
   );
 };
 
-// const ShowAdScreen = ({route, navigation}) => {
 const ShowAdScreen = ({route}) => {
   const {screenName, member, advertisement, coin, coinScreen} = route.params;
   const [modalVisible, setModalVisible] = useState(false);
@@ -51,11 +59,11 @@ const ShowAdScreen = ({route}) => {
   const [modalTextOK, setModalTextOK] = useState('');
   const [lang, setLang] = useState({});
   const [interstitialAds, setInterstitialAds] = useState(null);
+  const [isIronReady, setIsIronReady] = useState(false);
   const navigation = useNavigation();
 
   const handleOKPress = () => {
     setModalVisible(false);
-    console.log('Apakah ini coin screen? ' + coinScreen);
 
     setTimeout(() => {
       if (coinScreen == true) {
@@ -65,17 +73,13 @@ const ShowAdScreen = ({route}) => {
       } else {
         navigation.replace(screenName);
       }
-    }, 600); // Delay selama 1 detik (1000 milidetik)
+    }, 600);
   };
 
-  useEffect(() => {
-    initInterstitial();
-  }, []);
-
-  const initInterstitial = async () => {
+  const initAdmob = async () => {
     const interstitialAd = InterstitialAd.createForAdRequest(
-      // TestIds.INTERSTITIAL,
-      realAD,
+      TestIds.INTERSTITIAL,
+      // admobAdunit,
     );
 
     interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
@@ -89,6 +93,78 @@ const ShowAdScreen = ({route}) => {
     });
 
     interstitialAd.load();
+  };
+
+  const initIronSource = async () => {
+    try {
+      // This API can be called in parallel
+      IronSource.validateIntegration().catch(e => console.error(e));
+
+      // Set adapters and network SDKs to debug
+      await IronSource.setAdaptersDebug(true);
+
+      // This should be enabled to detect network condition errors
+      await IronSource.shouldTrackNetworkState(true);
+
+      // GDPR Consent
+      await IronSource.setConsent(true);
+
+      // COPPA
+      await IronSource.setMetaData('is_child_directed', ['false']);
+
+      // Do not use advertiserId for this.
+      // Use an application user id.
+      // await IronSource.setUserId(APP_USER_ID)
+      await IronSource.setUserId('userTest');
+
+      // To init with all ad units
+      await IronSource.init(ironAdunit);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const ironListener = {
+    onAdReady: adInfo => {
+      console.log({AdReady: adInfo});
+      setIsIronReady(true);
+    },
+    onAdLoadFailed: error => {
+      console.log({AdLoadFailed: error});
+      setIsIronReady(false);
+    },
+    onAdOpened: adInfo => {
+      console.log({AdOpened: adInfo});
+    },
+    onAdClosed: adInfo => {
+      console.log({AdClosed: adInfo});
+      setIsIronReady(false);
+    },
+    onAdShowFailed: (error, adInfo) => {
+      console.log({AdShowFailed: adInfo, error});
+      setIsIronReady(false);
+    },
+    onAdClicked: adInfo => {
+      console.log({AdClicked: adInfo});
+    },
+    onAdShowSucceeded: adInfo => {
+      console.log({AdShowSucceeded: adInfo});
+      setIsIronReady(false);
+    },
+  };
+
+  // Function to handle load button press
+  const handleLoadPress = async () => {
+    await IronSource.loadInterstitial();
+  };
+
+  // Function to handle show button press
+  const handleShowPress = async () => {
+    if (await IronSource.isInterstitialReady()) {
+      IronSource.showInterstitial();
+    } else {
+      console.log('Interstitial ad is not ready.');
+    }
   };
 
   useEffect(() => {
@@ -106,6 +182,10 @@ const ShowAdScreen = ({route}) => {
         console.error('Error in fetchData:', err);
       }
     };
+
+    initAdmob();
+    initIronSource();
+    IronSource.setLevelPlayInterstitialListener(ironListener);
 
     fetchData();
   }, []);
@@ -163,34 +243,44 @@ const ShowAdScreen = ({route}) => {
         styles.root,
         {backgroundColor: modalVisible ? '#000000A5' : 'white'},
       ]}>
-      {/* {!adLoaded && ( */}
-      {!interstitialAds && (
-        <View style={{alignItems: 'center'}}>
-          <FastImage
-            style={{width: 150, height: 150}}
-            source={{
-              uri: 'https://www.xrun.run/assets/video/gif_loader.gif',
-              priority: FastImage.priority.high,
-            }}
-          />
-          <Text
-            style={{
-              fontFamily: getFontFam() + 'Regular',
-              fontSize: fontSize('body'),
-              color: 'grey',
-              textAlign: 'center',
-            }}>
-            Loading
-          </Text>
+      {/* {!interstitialAds && ( */}
+      <View style={{alignItems: 'center'}}>
+        <FastImage
+          style={{width: 150, height: 150}}
+          source={{
+            uri: 'https://www.xrun.run/assets/video/gif_loader.gif',
+            priority: FastImage.priority.high,
+          }}
+        />
+        <Text
+          style={{
+            fontFamily: getFontFam() + 'Regular',
+            fontSize: fontSize('body'),
+            color: 'grey',
+            textAlign: 'center',
+          }}>
+          Loading
+        </Text>
+        <View style={{marginBottom: 20}}>
+          <Button title="Load Interstitial" onPress={handleLoadPress} />
         </View>
-      )}
+        <View style={{marginBottom: 20}}>
+          <Button
+            title="Show Interstitial"
+            onPress={handleShowPress}
+            disabled={!isIronReady}
+          />
+        </View>
+        <Text>Interstitial status: {isIronReady ? 'Ready' : 'Not Ready'}</Text>
+      </View>
+      {/* )} */}
 
-      <CustomModal
+      {/* <CustomModal
         visible={modalVisible}
         text={modalText}
         onOK={handleOKPress}
         textOK={modalTextOK}
-      />
+      /> */}
     </View>
   );
 };
