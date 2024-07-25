@@ -11,7 +11,9 @@ import {
   TouchableOpacity,
   BackHandler,
   SafeAreaView,
+  Button,
 } from 'react-native';
+import {IronSource} from 'ironsource-mediation';
 import CustomButton from '../../components/CustomButton';
 import React, {useState, useEffect} from 'react';
 import * as RNLocalize from 'react-native-localize';
@@ -22,21 +24,6 @@ import Carousel, {Pagination} from 'react-native-snap-carousel';
 import crashlytics from '@react-native-firebase/crashlytics';
 import VersionCheck from 'react-native-version-check';
 
-async function adul(user) {
-  crashlytics().log('Tes Pagi');
-  await Promise.all([
-    crashlytics().setUserId(user.uid),
-    crashlytics().setAttribute('credits', String(user.credits)),
-    crashlytics().setAttributes({
-      role: 'admin',
-      followers: '13',
-      email: user.email,
-      username: user.username,
-    }),
-  ]);
-  console.log('Bgst');
-}
-
 const FirstScreenV2 = ({navigation}) => {
   const [lang, setLang] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
@@ -45,6 +32,39 @@ const FirstScreenV2 = ({navigation}) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPopupUpdateVersionShow, setIsPopupUpdateVersionShow] =
     useState(false);
+  const [isIronReady, setIsIronReady] = useState(false);
+
+  async function initIronSource() {
+    try {
+      const XRUN_IRON_ADUNIT = process.env.XRUN_IRON_ADUNIT;
+      const EXAMPLE_IRON_ADUNIT = process.env.EXAMPLE_IRON_ADUNIT;
+
+      // This API can be called in parallel
+      IronSource.validateIntegration().catch(e => console.error(e));
+
+      // Set adapters and network SDKs to debug
+      await IronSource.setAdaptersDebug(true);
+
+      // This should be enabled to detect network condition errors
+      await IronSource.shouldTrackNetworkState(true);
+
+      // GDPR Consent
+      await IronSource.setConsent(true);
+
+      // COPPA
+      await IronSource.setMetaData('is_child_directed', ['false']);
+
+      // Do not use advertiserId for this.
+      // Use an application user id.
+      // await IronSource.setUserId(APP_USER_ID)
+      await IronSource.setUserId('userTest');
+
+      // To init with all ad units
+      await IronSource.init(EXAMPLE_IRON_ADUNIT); // Example ID
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
   useEffect(() => {
     crashlytics().log('App mounted Lagi');
@@ -72,7 +92,38 @@ const FirstScreenV2 = ({navigation}) => {
       });
     };
 
+    const listener = {
+      onAdReady: adInfo => {
+        console.log({AdReady: adInfo});
+        setIsIronReady(true);
+      },
+      onAdLoadFailed: error => {
+        console.log({AdLoadFailed: error});
+        setIsIronReady(false);
+      },
+      onAdOpened: adInfo => {
+        console.log({AdOpened: adInfo});
+      },
+      onAdClosed: adInfo => {
+        console.log({AdClosed: adInfo});
+        setIsIronReady(false);
+      },
+      onAdShowFailed: (error, adInfo) => {
+        console.log({AdShowFailed: adInfo, error});
+        setIsIronReady(false);
+      },
+      onAdClicked: adInfo => {
+        console.log({AdClicked: adInfo});
+      },
+      onAdShowSucceeded: adInfo => {
+        console.log({AdShowSucceeded: adInfo});
+        setIsIronReady(false);
+      },
+    };
+
     checkLatestVersion();
+    initIronSource();
+    IronSource.setLevelPlayInterstitialListener(listener);
   }, []);
 
   // Get Map Initial Geolocation
@@ -201,23 +252,6 @@ const FirstScreenV2 = ({navigation}) => {
     setLang(language);
   }, []);
 
-  //   useEffect(() => {
-  //     if (lang.popup) {
-  //       Alert.alert(
-  //         '',
-  //         lang && lang.popup && lang.popup.notice ? lang.popup.notice : '',
-  //         [
-  //           {
-  //             text:
-  //               lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
-  //                 ? lang.screen_wallet.confirm_alert
-  //                 : '',
-  //           },
-  //         ],
-  //       );
-  //     }
-  //   }, [lang]);
-
   const onSignIn = () => {
     navigation.navigate('SignIn');
   };
@@ -258,6 +292,20 @@ const FirstScreenV2 = ({navigation}) => {
 
   const openPlaystoreToUpdate = async () => {
     Linking.openURL(await VersionCheck.getStoreUrl());
+  };
+
+  // Function to handle load button press
+  const handleLoadPress = async () => {
+    await IronSource.loadInterstitial();
+  };
+
+  // Function to handle show button press
+  const handleShowPress = async () => {
+    if (await IronSource.isInterstitialReady()) {
+      IronSource.showInterstitial();
+    } else {
+      console.log('Interstitial ad is not ready.');
+    }
   };
 
   return (
@@ -327,6 +375,18 @@ const FirstScreenV2 = ({navigation}) => {
           type="SECONDARY"
           onPress={onJoin}
         />
+
+        <View style={{marginBottom: 20}}>
+          <Button title="Load Interstitial" onPress={handleLoadPress} />
+        </View>
+        <View style={{marginBottom: 20}}>
+          <Button
+            title="Show Interstitial"
+            onPress={handleShowPress}
+            disabled={!isIronReady}
+          />
+        </View>
+        <Text>Interstitial status: {isIronReady ? 'Ready' : 'Not Ready'}</Text>
 
         <View style={styles.descWrapper}>
           <Text style={styles.text}>
