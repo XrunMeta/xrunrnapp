@@ -78,8 +78,8 @@ const ShowAdScreen = ({route}) => {
 
   const loadAdmobAd = () => {
     const ad = InterstitialAd.createForAdRequest(
-      // TestIds.INTERSTITIAL,
-      admobAdUnit,
+      TestIds.INTERSTITIAL,
+      // admobAdUnit,
     );
 
     ad.addAdEventListener(AdEventType.LOADED, () => {
@@ -232,7 +232,7 @@ const ShowAdScreen = ({route}) => {
             }}>
             Loading
           </Text>
-          <Text>
+          {/* <Text>
             Interstitial status:{' '}
             {showIronSourceAd
               ? isIronReady
@@ -241,7 +241,7 @@ const ShowAdScreen = ({route}) => {
               : interstitialAd
               ? 'Ready'
               : 'Not Ready'}
-          </Text>
+          </Text> */}
         </View>
       )}
 
