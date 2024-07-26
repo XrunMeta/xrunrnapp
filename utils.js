@@ -316,3 +316,18 @@ export const fontSize = type => {
     return Platform.OS === 'android' ? 22 : 26;
   }
 };
+
+export const refreshBalances = async member => {
+  try {
+    if (member) {
+      const fetchData = await fetch(
+        `${URL_API}&act=refreshBalances&member=${member}`,
+      );
+      const result = await fetchData.json();
+      console.log(`Result refreshBalances: ${result}`);
+    }
+  } catch (err) {
+    crashlytics().recordError(new Error(err));
+    crashlytics().log(err);
+  }
+};
