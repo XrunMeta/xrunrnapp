@@ -17,7 +17,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
 import Clipboard from '@react-native-clipboard/clipboard';
 import TableWalletCard from '../../components/TableWallet';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  URL_API,
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  refreshBalances,
+} from '../../../utils';
 import ShowQRWallet from '../../components/ShowQRWallet';
 import crashlytics from '@react-native-firebase/crashlytics';
 
@@ -97,6 +103,8 @@ const WalletScreen = ({navigation, route}) => {
     try {
       if (member !== '') {
         // Get data wallet
+        console.log('Load data wallet....');
+
         fetch(
           `${URL_API}&act=app4000-01-rev-01&member=${member}&daysbefore=7`,
           {
@@ -107,6 +115,7 @@ const WalletScreen = ({navigation, route}) => {
           .then(result => {
             setCardsData(result.data);
             setIsLoading(false);
+            console.log('Wallet data has been loaded');
           })
           .catch(error => {
             Alert.alert(
@@ -160,22 +169,7 @@ const WalletScreen = ({navigation, route}) => {
 
   // Refresh balance
   useEffect(() => {
-    const refreshBalance = async () => {
-      try {
-        if (member) {
-          const fetchData = await fetch(
-            `${URL_API}&act=refreshBalances&member=${member}`,
-          );
-          const result = await fetchData.json();
-          console.log(`Result refreshBalances: ${result}`);
-        }
-      } catch (err) {
-        crashlytics().recordError(new Error(err));
-        crashlytics().log(err);
-      }
-    };
-
-    refreshBalance();
+    refreshBalances(member);
   }, [member]);
 
   // Refresh app4000-01-rev-01
@@ -185,6 +179,7 @@ const WalletScreen = ({navigation, route}) => {
         route.params.completeSend === 'true' ||
         route.params.completeConversion === 'true'
       ) {
+        setIsLoading(true);
         setCurrentCurrency('1');
         getUserData();
       }
