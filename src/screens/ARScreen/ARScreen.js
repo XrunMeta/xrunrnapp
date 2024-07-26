@@ -543,9 +543,9 @@ function ARScreen() {
                               item.coin,
                             )
                           }
-                          disabled={
-                            parseFloat(item.distance) < 30 ? false : true
-                          }
+                          // disabled={
+                          //   parseFloat(item.distance) < 30 ? false : true
+                          // }
                           style={{
                             height: 125,
                             width: 125,
@@ -572,8 +572,9 @@ function ARScreen() {
                               color: 'white',
                               marginTop: 5,
                             }}>
-                            {item.coins}
-                            {item.title}
+                            {/* {item.coins}
+                            {item.title} */}
+                            {item.coin}
                           </Text>
                           <Text
                             style={{
