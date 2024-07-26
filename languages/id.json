@@ -521,6 +521,7 @@
     "send_verification_code": "Mengirim kode verifikasi",
     "estimated_gas_fee": "Gas fee",
     "note": "Perhatikan bahwa Anda harus memiliki ethereum untuk mentransfer, Jika tidak, Anda mungkin kehilangan nilai Anda.",
+    "note_insufficient_balance": "Anda tidak memiliki saldo yang cukup di akun Anda untuk membayar biaya transaksi di jaringan mainnet Ethereum",
     "next": "Berikutnya",
     "confirm": "Konfirmasi"
   },

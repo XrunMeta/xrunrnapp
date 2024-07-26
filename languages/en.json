@@ -522,6 +522,7 @@
     "send_verification_code": "Sending verification code",
     "estimated_gas_fee": "Estimated gas fee",
     "note": "Note that you must have ethereum to transfer, If not you may lost your value.",
+    "note_insufficient_balance": "You do not have enough balance in your account to pay for transaction fees on Ethereum mainnet network",
     "next": "Next",
     "confirm": "Confirm"
   },
