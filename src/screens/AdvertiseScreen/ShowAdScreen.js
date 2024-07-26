@@ -402,6 +402,7 @@ const ShowAdScreen = ({route}) => {
   const [interstitialAds, setInterstitialAds] = useState(null);
   const [isIronReady, setIsIronReady] = useState(false);
   const [showIronSourceAd, setShowIronSourceAd] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
 
   const handleOKPress = () => {
@@ -476,11 +477,13 @@ const ShowAdScreen = ({route}) => {
     onAdReady: adInfo => {
       console.log({AdReady: adInfo});
       setIsIronReady(true);
+      setIsLoading(false); // Stop loading when ad is ready
       IronSource.showInterstitial(); // Show the ad when ready
     },
     onAdLoadFailed: error => {
       console.log({AdLoadFailed: error});
       setIsIronReady(false);
+      setIsLoading(false); // Stop loading if ad failed to load
     },
     onAdOpened: adInfo => {
       console.log({AdOpened: adInfo});
@@ -576,6 +579,7 @@ const ShowAdScreen = ({route}) => {
   useEffect(() => {
     if (interstitialAds) {
       interstitialAds.show();
+      setIsLoading(false); // Stop loading when ad is shown
     }
   }, [interstitialAds]);
 
@@ -585,37 +589,36 @@ const ShowAdScreen = ({route}) => {
         styles.root,
         {backgroundColor: modalVisible ? '#000000A5' : 'white'},
       ]}>
-      {!interstitialAds ||
-        (!isIronReady && (
-          <View style={{alignItems: 'center'}}>
-            <FastImage
-              style={{width: 150, height: 150}}
-              source={{
-                uri: 'https://www.xrun.run/assets/video/gif_loader.gif',
-                priority: FastImage.priority.high,
-              }}
-            />
-            <Text
-              style={{
-                fontFamily: getFontFam() + 'Regular',
-                fontSize: fontSize('body'),
-                color: 'grey',
-                textAlign: 'center',
-              }}>
-              Loading
-            </Text>
-            <Text>
-              Interstitial status:{' '}
-              {showIronSourceAd
-                ? isIronReady
-                  ? 'Ready'
-                  : 'Not Ready'
-                : interstitialAds
+      {isLoading && (
+        <View style={{alignItems: 'center'}}>
+          <FastImage
+            style={{width: 150, height: 150}}
+            source={{
+              uri: 'https://www.xrun.run/assets/video/gif_loader.gif',
+              priority: FastImage.priority.high,
+            }}
+          />
+          <Text
+            style={{
+              fontFamily: getFontFam() + 'Regular',
+              fontSize: fontSize('body'),
+              color: 'grey',
+              textAlign: 'center',
+            }}>
+            Loading
+          </Text>
+          <Text>
+            Interstitial status:{' '}
+            {showIronSourceAd
+              ? isIronReady
                 ? 'Ready'
-                : 'Not Ready'}
-            </Text>
-          </View>
-        ))}
+                : 'Not Ready'
+              : interstitialAds
+              ? 'Ready'
+              : 'Not Ready'}
+          </Text>
+        </View>
+      )}
 
       <CustomModal
         visible={modalVisible}
