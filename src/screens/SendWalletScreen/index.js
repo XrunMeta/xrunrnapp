@@ -25,6 +25,7 @@ import {
   fontSize,
   URL_API_NODEJS,
   authcode,
+  refreshBalances,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {
@@ -40,8 +41,11 @@ import BarcodeMask from 'react-native-barcode-mask';
 const SendWalletScreen = ({navigation, route}) => {
   const [lang, setLang] = useState('');
   const [iconNextIsDisabled, setIconNextIsDisabled] = useState(true);
-  const [amount, setAmount] = useState('');
-  const [address, setAddress] = useState('');
+  const [amount, setAmount] = useState('0.0000002');
+  const [address, setAddress] = useState(
+    '0x30a9B3fcFCc0aD66B70f2d473b39a35252002d89',
+  );
+  const [token, setToken] = useState('');
   const {dataWallet} = route.params;
   const [selectedExchange, setSelectedExchange] = useState('360001');
   const [isVisibleReadQR, setIsVisibleReadQR] = useState(false);
@@ -55,15 +59,23 @@ const SendWalletScreen = ({navigation, route}) => {
   const [fadeAnim] = useState(new Animated.Value(0));
   const [zIndexAnim, setZIndexAnim] = useState(-1);
 
-  // Estimated gas
-  const [estimatedGas, setEstimatedGas] = useState(0);
+  // About Estimated gas
+  const [gasEstimate, setGasEstimate] = useState(0);
+  const [gasPrice, setGasPrice] = useState(0);
+  const [totalGasCostEth, setTotalGasCostEth] = useState(0);
+
   const [countEstimatedGas, setCountEstimatedGas] = useState(0);
   const [isInitialCallGasEstimated, setIsInitialCallGasEstimated] =
     useState(false);
+
   const [isTextBlinking, setIsTextBlinking] = useState(false);
   const [isDisableButtonConfirm, setIsDisableButtonConfirm] = useState(false);
   const fadeAnimEstimatedGas = useRef(new Animated.Value(1)).current;
+
   const [totalTransfer, setTotalTransfer] = useState(0);
+  const [isInsufficientBalance, setIsInsufficientBalance] = useState(false);
+
+  const [logIntervalId, setLogIntervalId] = useState(null);
 
   useEffect(() => {
     // Get Language Data
@@ -97,19 +109,21 @@ const SendWalletScreen = ({navigation, route}) => {
     };
 
     getUserData();
+
+    // Set token xr or et
+    const token = dataWallet.currency == 1 ? 'xr' : 'et';
+    setToken(token);
   }, []);
 
-  // Initial execute gas estimated
+  // Interval gas estimated
   useEffect(() => {
-    let logIntervalId;
-
-    if (estimatedGas && isInitialCallGasEstimated) {
+    if (totalGasCostEth && isInitialCallGasEstimated) {
       setIsLoading(false);
       setIsPopupSend(true);
       console.log(`Run the setInterval for call function getEstimatedGas()`);
 
       // Set up an interval to log the refresh count every 1 second
-      logIntervalId = setInterval(() => {
+      const intervalId = setInterval(() => {
         setCountEstimatedGas(prevCount => {
           const newCount = (prevCount % 30) + 1; // Reset to 1 after 30
           console.log(`Countdown refresh gas estimated: ${newCount}`);
@@ -124,53 +138,85 @@ const SendWalletScreen = ({navigation, route}) => {
         });
       }, 1000);
 
-      // Cleanup function to clear both intervals
+      setLogIntervalId(intervalId);
+
+      // Cleanup function to clear the interval
       return () => {
-        clearInterval(logIntervalId);
-        console.log('Intervals cleared.');
+        clearInterval(intervalId);
+        console.log('Interval cleared.');
       };
     }
-  }, [estimatedGas, isInitialCallGasEstimated]);
+  }, [totalGasCostEth, isInitialCallGasEstimated]);
 
   // Function for get estimated gas
   const getEstimatedGas = async () => {
     try {
-      const token = dataWallet.currency == 1 ? 'xr' : 'et';
-
-      const requestBody = {
-        token,
-        from: dataWallet.address,
-        to: address,
-        amount: amount,
-      };
-
       console.log(`Gas estimated token: ${token}`);
 
-      const request = await fetch(`${URL_API_NODEJS}/gasEstimated`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${authcode}`,
-        },
-        body: JSON.stringify(requestBody),
-      });
+      const gasOracleResponse = await fetch(
+        `https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=${process.env.ETHERSCAN_APIKEY}`,
+      );
+      const gasOracleData = await gasOracleResponse.json();
+
+      if (gasOracleData.status !== '1') {
+        setIsLoading(false);
+        Alert.alert(lang.global_error.error, '', [
+          {
+            text: 'OK',
+          },
+        ]);
+        cancelGasEstimated();
+        return;
+      }
+
+      const priorityGasTracker = gasOracleData.result.SafeGasPrice;
+
+      const request = await fetch(
+        `${URL_API}&act=gasEstimated&from=${dataWallet.address}&to=${address}&amount=${amount}&token=${token}&priorityGasTracker=${priorityGasTracker}`,
+      );
 
       const responses = await request.json();
-      const results = responses['data']['result'][0]['data'];
-      const totalGasCostEth = results['totalGasCostEth'];
+      const results = responses['data'];
 
-      console.log(`Total gas cost ETH: ${totalGasCostEth}`);
-      setEstimatedGas(totalGasCostEth);
+      const gasEstimateFromAPI = results['gasLimit'];
+      const gasPriceFromAPI = results['gasPrice'];
+      const totalGasCostEthFromAPI = results['totalGasCostEth'];
+
+      console.log(`Total gas cost ETH: ${totalGasCostEthFromAPI}`);
+      if (!totalGasCostEthFromAPI || !gasEstimateFromAPI || !gasPriceFromAPI) {
+        setIsLoading(false);
+        Alert.alert(lang.global_error.error, '', [
+          {
+            text: 'OK',
+          },
+        ]);
+        cancelSend();
+      }
+
+      setGasEstimate(gasEstimateFromAPI);
+      setGasPrice(gasPriceFromAPI);
+      setTotalGasCostEth(totalGasCostEthFromAPI);
 
       console.log('Active button confirm');
       setIsDisableButtonConfirm(false);
       setIsTextBlinking(false);
+
+      const total = parseFloat(totalGasCostEthFromAPI) + parseFloat(amount);
+      setTotalTransfer(total);
 
       if (!isInitialCallGasEstimated) {
         setIsInitialCallGasEstimated(true);
       }
     } catch (e) {
       console.log(`Error gas estimated: ${e}`);
+      setIsLoading(false);
+      Alert.alert(lang.global_error.error, '', [
+        {
+          text: 'OK',
+        },
+      ]);
+
+      cancelGasEstimated();
     }
   };
 
@@ -206,13 +252,45 @@ const SendWalletScreen = ({navigation, route}) => {
   useEffect(() => {
     if (isPopupSendConfirmation) {
       const balance = parseFloat(dataWallet.Wamount);
-      if (totalTransfer > balance) {
+
+      console.log(
+        `Total transfer: ${totalTransfer} | Balance: ${balance} | Gas estimated: ${totalGasCostEth} | Total transfer > balance: ${
+          totalTransfer > balance
+        }`,
+      );
+      if (totalTransfer > balance || isTextBlinking) {
         setIsDisableButtonConfirm(true);
       } else {
         setIsDisableButtonConfirm(false);
       }
+
+      // Show note/text if user insufficient balance
+      if (totalTransfer > balance) {
+        setIsInsufficientBalance(true);
+      } else {
+        setIsInsufficientBalance(false);
+      }
     }
-  }, [isPopupSendConfirmation, isDisableButtonConfirm]);
+  }, [
+    isPopupSendConfirmation,
+    isDisableButtonConfirm,
+    isTextBlinking,
+    totalTransfer,
+  ]);
+
+  // Cancel call gasEstimated
+  const cancelGasEstimated = () => {
+    setIsPopupSend(false);
+    setIsPopupSendConfirmation(false);
+
+    setIsInitialCallGasEstimated(false);
+    setCountEstimatedGas(0);
+
+    setIsDisableButtonConfirm(false);
+    setIsTextBlinking(false);
+
+    setIsInsufficientBalance(false);
+  };
 
   // List stock exchange
   useEffect(() => {
@@ -399,110 +477,121 @@ const SendWalletScreen = ({navigation, route}) => {
   };
 
   const cancelSend = () => {
-    setIsPopupSend(false);
-    setIsPopupSendConfirmation(false);
-
-    setIsInitialCallGasEstimated(false);
-    setCountEstimatedGas(0);
-    setIsDisableButtonConfirm(false);
-    setIsTextBlinking(false);
+    cancelGasEstimated();
   };
 
   const onConfirmSend = () => {
     // Confirm transfer
-
     if (isPopupSendConfirmation) {
-      console.log('sip');
-      // const currency = dataWallet.currency;
-      // // Get limit transfer
-      // fetch(
-      //   `${URL_API}&act=ap4300-getLimitTransfer&member=${dataMember.member}&currency=${currency}&amountrq=${amount}`,
-      //   {
-      //     method: 'POST',
-      //   },
-      // )
-      //   .then(response => response.json())
-      //   .then(result => {
-      //     const {avaliable} = result;
-      //     if (avaliable === 'OK') {
-      //       fetch(
-      //         // Transfer by stock exchange
-      //         `${URL_API}&act=ap4300-03&member=${dataMember.member}&addrto=${address}&currency=${currency}&amount=${amount}&coinmarket=${selectedExchange}`,
-      //         {
-      //           method: 'POST',
-      //         },
-      //       )
-      //         .then(result => result.json())
-      //         .then(() => {
-      //           const token = currency == 1 ? 'xr' : 'et';
-      //           // Transfer coin
-      //           fetch(
-      //             `${URL_API}&act=postTransfer&member=${dataMember.member}&to=${address}&token=${token}&amount=${amount}`,
-      //             {
-      //               method: 'POST',
-      //             },
-      //           )
-      //             .then(result => result.json())
-      //             .then(response => {
-      //               const {status, hash} = response;
-      //               const balance = parseFloat(dataWallet.Wamount).toString();
-      //               console.log(
-      //                 `Status: ${status}, Hash: ${hash} Post Transfer`,
-      //               );
-      //               if (status == 'success') {
-      //                 setIsLoading(false);
-      //                 setAddress('');
-      //                 setAmount('');
-      //                 setSelectedExchange('360001');
-      //                 navigation.navigate('CompleteSend', {
-      //                   amount,
-      //                   addrto: address,
-      //                   txid: hash,
-      //                   symbol: dataWallet.symbol,
-      //                   balance,
-      //                 });
-      //               } else {
-      //                 setIsLoading(false);
-      //                 setIsPopupSend(false);
-      //                 setAddress('');
-      //                 setAmount('');
-      //                 setSelectedExchange('360001');
-      //                 Alert.alert('', 'Blockchain has problem or delay.');
-      //               }
-      //             })
-      //             .catch(err => {
-      //               Alert.alert('', 'Transfer failed: ', err);
-      //               console.log('Transfer failed postTransfer: ', err);
-      //               crashlytics().recordError(new Error(err));
-      //               crashlytics().log(err);
-      //             });
-      //         })
-      //         .catch(err => {
-      //           Alert.alert('', 'Transfer failed: ', err);
-      //           console.log('Transfer failed ap4300-03: ', err);
-      //           crashlytics().recordError(new Error(err));
-      //           crashlytics().log(err);
-      //         });
-      //     } else {
-      //       setIsLoading(false);
-      //       Alert.alert(
-      //         '',
-      //         lang && lang ? lang.screen_send.send_enough_money : '',
-      //       );
-      //     }
-      //   })
-      //   .catch(err => {
-      //     Alert.alert('', 'Check limit transfer failed: ', err);
-      //     setIsLoading(false);
-      //     crashlytics().recordError(new Error(err));
-      //     crashlytics().log(err);
-      //   });
+      console.log(`Confirm transfer`);
+
+      // Clear the interval and reset countEstimatedGas
+      if (logIntervalId) {
+        clearInterval(logIntervalId);
+        setCountEstimatedGas(0);
+        console.log('Interval cleared and count reset.');
+      }
+
+      setIsLoading(true);
+      cancelSend();
+
+      console.log(
+        `Confirm send Amount: ${amount} | Gas estimate: ${gasEstimate} | Gas Price: ${gasPrice}`,
+      );
+
+      const currency = dataWallet.currency;
+
+      // Get limit transfer
+      fetch(
+        `${URL_API}&act=ap4300-getLimitTransfer&member=${dataMember.member}&currency=${currency}&amountrq=${amount}`,
+        {
+          method: 'POST',
+        },
+      )
+        .then(response => response.json())
+        .then(result => {
+          const {avaliable} = result;
+          if (avaliable === 'OK') {
+            fetch(
+              // Transfer by stock exchange
+              `${URL_API}&act=ap4300-03&member=${dataMember.member}&addrto=${address}&currency=${currency}&amount=${amount}&coinmarket=${selectedExchange}`,
+              {
+                method: 'POST',
+              },
+            )
+              .then(result => result.json())
+              .then(() => {
+                // Transfer coin
+                fetch(
+                  `${URL_API}&act=postTransferNew&to=${address}&amount=${amount}&token=${token}&member=${dataMember.member}&gasEstimate=${gasEstimate}&gasPrice=${gasPrice}`,
+                )
+                  .then(result => result.json())
+                  .then(response => {
+                    const {status, hash} = response;
+
+                    const balance = parseFloat(dataWallet.Wamount).toString();
+                    console.log(
+                      `Transfer complete.... Token: ${token} | Status: ${status} | Hash: ${hash} | act=postTransfer`,
+                    );
+                    if (status == 'success') {
+                      setIsLoading(false);
+                      setAddress('');
+                      setAmount('');
+                      setSelectedExchange('360001');
+
+                      // Update/Refresh balance
+                      refreshBalances(dataMember.member);
+
+                      navigation.navigate('CompleteSend', {
+                        amount,
+                        addrto: address,
+                        txid: hash,
+                        symbol: dataWallet.symbol,
+                        balance,
+                      });
+                    } else {
+                      setIsLoading(false);
+                      setIsPopupSend(false);
+                      setAddress('');
+                      setAmount('');
+                      setSelectedExchange('360001');
+                      Alert.alert('', 'Blockchain has problem or delay.');
+                    }
+                  })
+                  .catch(err => {
+                    Alert.alert('', 'Transfer failed: ', err);
+                    console.log('Transfer failed postTransfer: ', err);
+                    crashlytics().recordError(new Error(err));
+                    crashlytics().log(err);
+                  });
+              })
+              .catch(err => {
+                Alert.alert('', 'Transfer failed: ', err);
+                console.log('Transfer failed ap4300-03: ', err);
+                crashlytics().recordError(new Error(err));
+                crashlytics().log(err);
+              });
+          } else {
+            setIsLoading(false);
+            Alert.alert(
+              '',
+              lang && lang ? lang.screen_send.send_enough_money : '',
+            );
+          }
+        })
+        .catch(err => {
+          Alert.alert('', 'Check limit transfer failed: ', err);
+          setIsLoading(false);
+          crashlytics().recordError(new Error(err));
+          crashlytics().log(err);
+        });
     }
     // Next transfer for confirmation
     else {
       setIsDisableButtonConfirm(true);
       setIsPopupSendConfirmation(true);
-      const total = parseFloat(estimatedGas) + parseFloat(amount);
+
+      const total = parseFloat(totalGasCostEth) + parseFloat(amount);
       setTotalTransfer(total);
     }
   };
@@ -746,7 +835,9 @@ const SendWalletScreen = ({navigation, route}) => {
                           opacity: fadeAnimEstimatedGas,
                         }}>
                         <Text style={styles.textPartRight}>
-                          {parseFloat(estimatedGas).toString().substring(0, 12)}
+                          {parseFloat(totalGasCostEth)
+                            .toString()
+                            .substring(0, 12)}
                           ETH
                         </Text>
                       </Animated.Text>
@@ -767,6 +858,15 @@ const SendWalletScreen = ({navigation, route}) => {
                       </Text>
                     </Animated.Text>
                   </View>
+                  {isInsufficientBalance && (
+                    <View style={styles.wrapperTextConversion}>
+                      <Text style={[styles.textPartLeft, {color: 'red'}]}>
+                        {lang && lang
+                          ? lang.screen_send.note_insufficient_balance
+                          : ''}
+                      </Text>
+                    </View>
+                  )}
                 </>
               ) : (
                 <>
@@ -799,20 +899,18 @@ const SendWalletScreen = ({navigation, route}) => {
                           opacity: fadeAnimEstimatedGas,
                         }}>
                         <Text style={styles.textPartRight}>
-                          {parseFloat(estimatedGas).toString().substring(0, 12)}
+                          {parseFloat(totalGasCostEth)
+                            .toString()
+                            .substring(0, 12)}
                           ETH
                         </Text>
                       </Animated.Text>
                     </View>
-                    <View style={styles.wrapperTextConversion}>
-                      <Text
-                        style={[
-                          styles.textPartLeft,
-                          {color: 'red', marginTop: 10},
-                        ]}>
-                        {lang && lang ? lang.screen_send.note : ''}
-                      </Text>
-                    </View>
+                  </View>
+                  <View style={styles.wrapperTextConversion}>
+                    <Text style={[styles.textPartLeft, {color: 'red'}]}>
+                      {lang && lang ? lang.screen_send.note : ''}
+                    </Text>
                   </View>
                 </>
               )}
