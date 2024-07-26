@@ -41,10 +41,8 @@ import BarcodeMask from 'react-native-barcode-mask';
 const SendWalletScreen = ({navigation, route}) => {
   const [lang, setLang] = useState('');
   const [iconNextIsDisabled, setIconNextIsDisabled] = useState(true);
-  const [amount, setAmount] = useState('0.0000002');
-  const [address, setAddress] = useState(
-    '0x30a9B3fcFCc0aD66B70f2d473b39a35252002d89',
-  );
+  const [amount, setAmount] = useState('');
+  const [address, setAddress] = useState('');
   const [token, setToken] = useState('');
   const {dataWallet} = route.params;
   const [selectedExchange, setSelectedExchange] = useState('360001');
