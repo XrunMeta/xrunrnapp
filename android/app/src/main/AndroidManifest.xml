@@ -32,12 +32,29 @@
         tools:replace="android:value"
       />
 
-      <!-- RN AR Viewer
-      <meta-data 
-        android:name="com.google.ar.core" 
-        android:value="required" 
-        tools:replace="android:value" 
-      /> -->
+      <!-- ironSource Ads -->
+      <activity
+        android:name="com.ironsource.sdk.controller.ControllerActivity"
+        android:configChanges="orientation|screenSize"
+        android:hardwareAccelerated="true" />
+      <activity
+        android:name="com.ironsource.sdk.controller.InterstitialActivity"
+        android:configChanges="orientation|screenSize"
+        android:hardwareAccelerated="true"
+        android:theme="@android:style/Theme.Translucent" />
+      <activity
+        android:name="com.ironsource.sdk.controller.OpenUrlActivity"
+        android:configChanges="orientation|screenSize"
+        android:hardwareAccelerated="true"
+        android:theme="@android:style/Theme.Translucent" />
+      <activity
+        android:name="com.ironsource.mediationsdk.testSuite.TestSuiteActivity"
+        android:configChanges="orientation|screenSize"
+        android:hardwareAccelerated="true"
+        android:theme="@android:style/Theme.NoTitleBar" />
+      <provider
+        android:name="com.ironsource.lifecycle.IronsourceLifecycleProvider"
+        android:authorities="${applicationId}.IronsourceLifecycleProvider" />
 
       <activity
         android:name=".MainActivity"

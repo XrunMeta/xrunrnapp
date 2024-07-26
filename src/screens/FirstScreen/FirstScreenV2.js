@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   BackHandler,
   SafeAreaView,
+  Button,
 } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import React, {useState, useEffect} from 'react';
@@ -21,21 +22,6 @@ import {fontSize, getFontFam} from '../../../utils';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import crashlytics from '@react-native-firebase/crashlytics';
 import VersionCheck from 'react-native-version-check';
-
-async function adul(user) {
-  crashlytics().log('Tes Pagi');
-  await Promise.all([
-    crashlytics().setUserId(user.uid),
-    crashlytics().setAttribute('credits', String(user.credits)),
-    crashlytics().setAttributes({
-      role: 'admin',
-      followers: '13',
-      email: user.email,
-      username: user.username,
-    }),
-  ]);
-  console.log('Bgst');
-}
 
 const FirstScreenV2 = ({navigation}) => {
   const [lang, setLang] = useState({});
@@ -200,23 +186,6 @@ const FirstScreenV2 = ({navigation}) => {
     const language = langData;
     setLang(language);
   }, []);
-
-  //   useEffect(() => {
-  //     if (lang.popup) {
-  //       Alert.alert(
-  //         '',
-  //         lang && lang.popup && lang.popup.notice ? lang.popup.notice : '',
-  //         [
-  //           {
-  //             text:
-  //               lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
-  //                 ? lang.screen_wallet.confirm_alert
-  //                 : '',
-  //           },
-  //         ],
-  //       );
-  //     }
-  //   }, [lang]);
 
   const onSignIn = () => {
     navigation.navigate('SignIn');

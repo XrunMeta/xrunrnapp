@@ -12,19 +12,26 @@ import {
   InterstitialAd,
   TestIds,
 } from 'react-native-google-mobile-ads';
+import {IronSource} from 'ironsource-mediation';
 import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import crashlytics from '@react-native-firebase/crashlytics';
 import FastImage from 'react-native-fast-image';
 
-const androidRealAD = process.env.ADMOB_ADUNIT_ANDROID;
-const iosRealAD = process.env.ADMOB_ADUNIT_IOS;
+const androidAdmobAdUnit = process.env.ADMOB_ADUNIT_ANDROID;
+const iosAdmobAdUnit = process.env.ADMOB_ADUNIT_IOS;
 
-// Menentukan nilai realAD berdasarkan platform
-const realAD = Platform.select({
-  ios: iosRealAD,
-  android: androidRealAD,
+const androidIronAdUnit = process.env.IRON_ADUNIT_ANDROID;
+const iosIronAdUnit = process.env.IRON_ADUNIT_IOS;
+
+const admobAdUnit = Platform.select({
+  android: androidAdmobAdUnit,
+  ios: iosAdmobAdUnit,
+});
+const ironAdUnit = Platform.select({
+  android: androidIronAdUnit,
+  ios: iosIronAdUnit,
 });
 
 const CustomModal = ({visible, text, onOK, textOK}) => {
@@ -42,7 +49,6 @@ const CustomModal = ({visible, text, onOK, textOK}) => {
   );
 };
 
-// const ShowAdScreen = ({route, navigation}) => {
 const ShowAdScreen = ({route}) => {
   const {screenName, member, advertisement, coin, coinScreen} = route.params;
   const [modalVisible, setModalVisible] = useState(false);
@@ -50,100 +56,144 @@ const ShowAdScreen = ({route}) => {
   const [modalText, setModalText] = useState('');
   const [modalTextOK, setModalTextOK] = useState('');
   const [lang, setLang] = useState({});
-  const [interstitialAds, setInterstitialAds] = useState(null);
+  const [interstitialAd, setInterstitialAd] = useState(null);
+  const [isIronReady, setIsIronReady] = useState(false);
+  const [showIronSourceAd, setShowIronSourceAd] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
 
   const handleOKPress = () => {
     setModalVisible(false);
-    console.log('Apakah ini coin screen? ' + coinScreen);
 
     setTimeout(() => {
-      if (coinScreen == true) {
+      if (coinScreen) {
         navigation.replace(screenName, {
           sendActiveTab: 'Camera',
         });
       } else {
         navigation.replace(screenName);
       }
-    }, 600); // Delay selama 1 detik (1000 milidetik)
+    }, 600);
   };
 
-  useEffect(() => {
-    initInterstitial();
-  }, []);
-
-  const initInterstitial = async () => {
-    const interstitialAd = InterstitialAd.createForAdRequest(
-      // TestIds.INTERSTITIAL,
-      realAD,
+  const loadAdmobAd = () => {
+    const ad = InterstitialAd.createForAdRequest(
+      TestIds.INTERSTITIAL,
+      // admobAdUnit,
     );
 
-    interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
-      setInterstitialAds(interstitialAd);
-      console.log('Interstitial has loaded!');
+    ad.addAdEventListener(AdEventType.LOADED, () => {
+      setInterstitialAd(ad);
+      console.log('AdMob interstitial ad loaded.');
     });
 
-    interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {
+    ad.addAdEventListener(AdEventType.CLOSED, () => {
       setAdCompleted(true);
-      console.log('Interstitial has closed!');
+      console.log('AdMob interstitial ad closed.');
     });
 
-    interstitialAd.load();
+    ad.addAdEventListener(AdEventType.ERROR, () => {
+      console.log('AdMob interstitial ad failed to load.');
+      loadIronSourceAd();
+    });
+
+    ad.load();
+  };
+
+  const loadIronSourceAd = async () => {
+    try {
+      IronSource.validateIntegration().catch(e => console.error(e));
+
+      await IronSource.setAdaptersDebug(true);
+      await IronSource.shouldTrackNetworkState(true);
+      await IronSource.setConsent(true);
+      await IronSource.setMetaData('is_child_directed', ['false']);
+      await IronSource.setUserId('userTest');
+      await IronSource.init(ironAdUnit);
+
+      IronSource.setLevelPlayInterstitialListener({
+        onAdReady: adInfo => {
+          console.log({AdReady: adInfo});
+          setIsIronReady(true);
+          setIsLoading(false);
+          IronSource.showInterstitial();
+        },
+        onAdLoadFailed: error => {
+          console.log({AdLoadFailed: error});
+          setIsIronReady(false);
+          setIsLoading(false);
+          loadAdmobAd();
+        },
+        onAdClosed: adInfo => {
+          console.log({AdClosed: adInfo});
+          setAdCompleted(true);
+          setIsIronReady(false);
+        },
+        onAdShowFailed: (error, adInfo) => {
+          console.log({AdShowFailed: adInfo, error});
+          setIsIronReady(false);
+        },
+      });
+
+      await IronSource.loadInterstitial();
+    } catch (e) {
+      console.error(e);
+      loadAdmobAd();
+    }
+  };
+
+  const initAds = async () => {
+    if (coin % 2 === 1) {
+      setShowIronSourceAd(true);
+      await loadIronSourceAd();
+    } else {
+      setShowIronSourceAd(false);
+      await loadAdmobAd();
+    }
   };
 
   useEffect(() => {
-    // Get Language Data
-    const fetchData = async () => {
+    const fetchLanguageData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
         const screenLang = await getLanguage2(currentLanguage);
-
-        // Set your language state
         setLang(screenLang);
       } catch (err) {
         crashlytics().recordError(new Error(err));
         crashlytics().log(err);
-        console.error('Error in fetchData:', err);
+        console.error('Error fetching language data:', err);
       }
     };
 
-    fetchData();
+    fetchLanguageData();
+    initAds();
   }, []);
 
   useEffect(() => {
-    // Cek apakah iklan selesai
     if (adCompleted) {
-      console.log(`
-        Member : ${member}
-        Adver  : ${advertisement}
-        Coin   : ${coin}
-      `);
-      // Coin Acquired
       const coinAcquiring = async () => {
         try {
           const response = await fetch(
             `${URL_API}&act=app3100-01&advertisement=${advertisement}&coin=${coin}&member=${member}`,
           );
           const data = await response.json();
-          console.log('Coin Acq Response -> ' + JSON.stringify(data.data[0]));
+          console.log(
+            'Coin acquisition response:',
+            JSON.stringify(data.data[0]),
+          );
 
-          // If Success
-          if (data && parseInt(data.data[0].count) == 1) {
+          if (data && parseInt(data.data[0].count) === 1) {
             setModalText(lang?.screen_showad?.success);
-            setModalVisible(true);
           } else {
             setModalText(lang?.screen_showad?.failed);
-            setModalVisible(true);
           }
 
+          setModalVisible(true);
           setModalTextOK(lang.screen_showad.textOK);
         } catch (err) {
           crashlytics().recordError(new Error(err));
           crashlytics().log(err);
-          console.error(
-            'Error retrieving selfCoordinate from AsyncStorage:',
-            err,
-          );
+          console.error('Error in coin acquisition:', err);
         }
       };
 
@@ -152,10 +202,11 @@ const ShowAdScreen = ({route}) => {
   }, [adCompleted, navigation]);
 
   useEffect(() => {
-    if (interstitialAds) {
-      interstitialAds.show();
+    if (interstitialAd) {
+      interstitialAd.show();
+      setIsLoading(false);
     }
-  }, [interstitialAds]);
+  }, [interstitialAd]);
 
   return (
     <View
@@ -163,8 +214,7 @@ const ShowAdScreen = ({route}) => {
         styles.root,
         {backgroundColor: modalVisible ? '#000000A5' : 'white'},
       ]}>
-      {/* {!adLoaded && ( */}
-      {!interstitialAds && (
+      {isLoading && (
         <View style={{alignItems: 'center'}}>
           <FastImage
             style={{width: 150, height: 150}}
@@ -182,6 +232,16 @@ const ShowAdScreen = ({route}) => {
             }}>
             Loading
           </Text>
+          {/* <Text>
+            Interstitial status:{' '}
+            {showIronSourceAd
+              ? isIronReady
+                ? 'Ready'
+                : 'Not Ready'
+              : interstitialAd
+              ? 'Ready'
+              : 'Not Ready'}
+          </Text> */}
         </View>
       )}
 
@@ -243,8 +303,9 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
   },
   okButtonText: {
+    fontSize: fontSize('body'),
+    fontFamily: getFontFam() + 'Bold',
     color: 'white',
-    fontFamily: getFontFam() + 'Regular',
     textAlign: 'center',
   },
 });
