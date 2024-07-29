@@ -59,6 +59,8 @@ const ShowAdScreen = ({route}) => {
   const [interstitialAd, setInterstitialAd] = useState(null);
   const [isIronReady, setIsIronReady] = useState(false);
   const [showIronSourceAd, setShowIronSourceAd] = useState(false);
+  const [isAdmobLoading, setIsAdmobLoading] = useState(false);
+  const [isIronLoading, setIsIronLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
 
@@ -76,34 +78,88 @@ const ShowAdScreen = ({route}) => {
     }, 600);
   };
 
-  const loadAdmobAd = () => {
-    const ad = InterstitialAd.createForAdRequest(
-      TestIds.INTERSTITIAL,
-      // admobAdUnit,
-    );
+  const loadAdmobAd = async () => {
+    if (isAdmobLoading) return; // Mencegah permintaan ulang
+    setIsAdmobLoading(true);
 
-    ad.addAdEventListener(AdEventType.LOADED, () => {
-      setInterstitialAd(ad);
-      console.log('AdMob interstitial ad loaded.');
-    });
+    try {
+      const ad = InterstitialAd.createForAdRequest(
+        // TestIds.INTERSTITIAL,
+        admobAdUnit,
+      );
 
-    ad.addAdEventListener(AdEventType.CLOSED, () => {
-      setAdCompleted(true);
-      console.log('AdMob interstitial ad closed.');
-    });
+      ad.addAdEventListener(AdEventType.LOADED, () => {
+        setInterstitialAd(ad);
+        setIsAdmobLoading(false);
+        console.log('AdMob interstitial ad loaded.');
+      });
 
-    ad.addAdEventListener(AdEventType.ERROR, () => {
-      console.log('AdMob interstitial ad failed to load.');
-      loadIronSourceAd();
-    });
+      ad.addAdEventListener(AdEventType.CLOSED, () => {
+        setAdCompleted(true);
+        console.log('AdMob interstitial ad closed.');
+      });
 
-    ad.load();
+      ad.addAdEventListener(AdEventType.ERROR, async error => {
+        console.error('AdMob interstitial ad failed to load:', error);
+        setIsAdmobLoading(false);
+        await loadIronSourceAd();
+      });
+
+      await ad.load();
+    } catch (error) {
+      console.error('Error loading AdMob ad:', error);
+      setIsAdmobLoading(false);
+      await loadIronSourceAd();
+    }
   };
 
+  // const loadIronSourceAd = async () => {
+  //   try {
+  //     IronSource.validateIntegration().catch(e => console.error(e));
+
+  //     await IronSource.setAdaptersDebug(true);
+  //     await IronSource.shouldTrackNetworkState(true);
+  //     await IronSource.setConsent(true);
+  //     await IronSource.setMetaData('is_child_directed', ['false']);
+  //     await IronSource.setUserId('userTest');
+  //     await IronSource.init(ironAdUnit);
+
+  //     IronSource.setLevelPlayInterstitialListener({
+  //       onAdReady: adInfo => {
+  //         console.log({AdReady: adInfo});
+  //         setIsIronReady(true);
+  //         setIsLoading(false);
+  //         IronSource.showInterstitial();
+  //       },
+  //       onAdLoadFailed: async error => {
+  //         console.log({AdLoadFailed: error});
+  //         setIsIronReady(false);
+  //         setIsLoading(false);
+  //         await loadAdmobAd();
+  //       },
+  //       onAdClosed: adInfo => {
+  //         console.log({AdClosed: adInfo});
+  //         setAdCompleted(true);
+  //         setIsIronReady(false);
+  //       },
+  //       onAdShowFailed: (error, adInfo) => {
+  //         console.log({AdShowFailed: adInfo, error});
+  //         setIsIronReady(false);
+  //       },
+  //     });
+
+  //     await IronSource.loadInterstitial();
+  //   } catch (e) {
+  //     console.error(e);
+  //     await loadAdmobAd();
+  //   }
+  // };
   const loadIronSourceAd = async () => {
+    if (isIronLoading) return; // Mencegah permintaan ulang
+    setIsIronLoading(true);
+
     try {
       IronSource.validateIntegration().catch(e => console.error(e));
-
       await IronSource.setAdaptersDebug(true);
       await IronSource.shouldTrackNetworkState(true);
       await IronSource.setConsent(true);
@@ -115,14 +171,14 @@ const ShowAdScreen = ({route}) => {
         onAdReady: adInfo => {
           console.log({AdReady: adInfo});
           setIsIronReady(true);
-          setIsLoading(false);
+          setIsIronLoading(false);
           IronSource.showInterstitial();
         },
-        onAdLoadFailed: error => {
+        onAdLoadFailed: async error => {
           console.log({AdLoadFailed: error});
           setIsIronReady(false);
-          setIsLoading(false);
-          loadAdmobAd();
+          setIsIronLoading(false);
+          await loadAdmobAd();
         },
         onAdClosed: adInfo => {
           console.log({AdClosed: adInfo});
@@ -138,7 +194,8 @@ const ShowAdScreen = ({route}) => {
       await IronSource.loadInterstitial();
     } catch (e) {
       console.error(e);
-      loadAdmobAd();
+      setIsIronLoading(false);
+      await loadAdmobAd();
     }
   };
 
