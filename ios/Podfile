@@ -47,6 +47,7 @@ target 'XRUN' do
   pod 'FirebaseCoreExtension', :modular_headers => true
   pod 'GoogleDataTransport', :modular_headers => true
   pod 'nanopb', :modular_headers => true
+  pod 'IronSourceAdQualitySDK', '7.20.1'
 
 
   config = use_native_modules!
