@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>XRUN Go</string>
+	<string>XRUN</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -24,10 +24,16 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-9457909979646034~5020701276</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAdvertisingAttributionReportEndpoint</key>
+	<string>https://postbakcs-is.com</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
 			<key>localhost</key>
@@ -44,17 +50,13 @@
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>We need to access your location to provide location specific points to visit</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>$(PRODUCT_NAME) Need location access to follow Maps </string>
+	<string>This application uses your location data to get the latitude and longitude of your location to make it easy to search for or find coins around your location.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>$(PRODUCT_NAME) Need location access to showing Maps </string>
+	<string>This application uses your location data to get the latitude and longitude of your location to make it easy to search for or find coins around your location.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>We need permission to save images to your device.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) Need image access to showing Image </string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This application uses your location data to get the latitude and longitude of your location to make it easy to search for or find coins around your location.</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This application uses your location data to get the latitude and longitude of your location to make it easy to search for or find coins around your location.</string>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>
@@ -252,6 +254,10 @@
 		<dict>
 			<key>SKAdNetworkIdentifier</key>
 			<string>3qcr597p9d.skadnetwork</string>
+		</dict>
+		<dict>
+			<key>SKAdNetworkIdentifier</key>
+			<string>su67r6k2v3.skadnetwork</string>
 		</dict>
 	</array>
 	<key>UILaunchStoryboardName</key>

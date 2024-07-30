@@ -543,7 +543,7 @@
 				EXCLUDED_ARCHS = i386;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				INFOPLIST_FILE = XRUN/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "XRUN Go";
+				INFOPLIST_KEY_CFBundleDisplayName = "XRUN";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.adventure-games";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -555,7 +555,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = run.xrun.xrunapps;
+				PRODUCT_BUNDLE_IDENTIFIER = run.xrun.xrunapp;
 				PRODUCT_NAME = XRUN;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -576,7 +576,7 @@
 				EXCLUDED_ARCHS = i386;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				INFOPLIST_FILE = XRUN/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "XRUN Go";
+				INFOPLIST_KEY_CFBundleDisplayName = "XRUN";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.adventure-games";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -588,7 +588,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = run.xrun.xrunapps;
+				PRODUCT_BUNDLE_IDENTIFIER = run.xrun.xrunapp;
 				PRODUCT_NAME = XRUN;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
