@@ -167,7 +167,7 @@ const WalletScreen = ({navigation, route}) => {
     setDataWallet(filterDataWallet[0]);
   }, [currentCurrency]);
 
-  // Refresh balance
+  // Refresh balance / Update amount
   useEffect(() => {
     refreshBalances(member);
   }, [member]);
@@ -181,7 +181,6 @@ const WalletScreen = ({navigation, route}) => {
       ) {
         setIsLoading(true);
         setCurrentCurrency('1');
-        getUserData();
       }
     }
   }, [route]);
@@ -385,6 +384,7 @@ const WalletScreen = ({navigation, route}) => {
                       event.nativeEvent.layoutMeasurement.width,
                   );
                   setCurrentCurrency(cardsData[index].currency);
+                  refreshBalances(member);
                 }}
               />
               {/* )} */}
