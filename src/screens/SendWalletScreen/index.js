@@ -23,8 +23,6 @@ import {
   getLanguage2,
   getFontFam,
   fontSize,
-  URL_API_NODEJS,
-  authcode,
   refreshBalances,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
@@ -40,6 +38,8 @@ import BarcodeMask from 'react-native-barcode-mask';
 
 const SendWalletScreen = ({navigation, route}) => {
   const [lang, setLang] = useState('');
+  const [balance, setBalance] = useState(0);
+  const [limitTransfer, setLimitTransfer] = useState(0);
   const [iconNextIsDisabled, setIconNextIsDisabled] = useState(true);
   const [amount, setAmount] = useState('');
   const [address, setAddress] = useState('');
@@ -168,6 +168,7 @@ const SendWalletScreen = ({navigation, route}) => {
       }
 
       const priorityGasTracker = gasOracleData.result.SafeGasPrice;
+      console.log(`Priority gas tracker: ${priorityGasTracker}`);
 
       const request = await fetch(
         `${URL_API}&act=gasEstimated&from=${dataWallet.address}&to=${address}&amount=${amount}&token=${token}&priorityGasTracker=${priorityGasTracker}`,
@@ -249,8 +250,6 @@ const SendWalletScreen = ({navigation, route}) => {
   // Disable confirm send if balance not enough
   useEffect(() => {
     if (isPopupSendConfirmation) {
-      const balance = parseFloat(dataWallet.Wamount);
-
       console.log(
         `Total transfer: ${totalTransfer} | Balance: ${balance} | Gas estimated: ${totalGasCostEth} | Total transfer > balance: ${
           totalTransfer > balance
@@ -290,25 +289,67 @@ const SendWalletScreen = ({navigation, route}) => {
     setIsInsufficientBalance(false);
   };
 
-  // List stock exchange
+  // Get list stock exchange
+  const stockExchange = async () => {
+    try {
+      const response = await fetch(`${URL_API}&act=ap4300-cointrace`);
+      const result = await response.json();
+      setCointrace(result.data);
+      return result.data;
+    } catch (error) {
+      setIsLoading(false);
+      Alert.alert('Error get data listCrypto: ', error);
+      console.log('Error get data listCrypto: ', error);
+      crashlytics().recordError(new Error(error));
+      crashlytics().log(error);
+    }
+  };
+
+  // Get balance
+  const getBalance = async () => {
+    try {
+      const request = await fetch(
+        `${URL_API}&act=app4300-temp-amount&member=${dataMember.member}&currency=${dataWallet.currency}`,
+      );
+      const response = await request.json();
+      const result = response.data;
+      if (result.length > 0) {
+        setBalance(parseFloat(result[0].Wamount));
+        setLimitTransfer(result[0].limittransfer);
+
+        const listStockExchange = await stockExchange();
+        setCointrace(listStockExchange);
+
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        Alert.alert('Error get data balance: ', error);
+        console.log('Error get data balance: ', error);
+        crashlytics().recordError(new Error(error));
+        crashlytics().log(error);
+      }
+    } catch (error) {
+      setIsLoading(false);
+      Alert.alert('Error get data balance: ', error);
+      console.log('Error get data balance: ', error);
+      crashlytics().recordError(new Error(error));
+      crashlytics().log(error);
+    }
+  };
+
   useEffect(() => {
-    const cointrace = async () => {
-      try {
-        const response = await fetch(`${URL_API}&act=ap4300-cointrace`);
-        const result = await response.json();
-        setCointrace(result.data);
-        setIsLoading(false);
-      } catch (err) {
-        setIsLoading(false);
-        Alert.alert('Error get data listCrypto: ', err);
-        console.log('Error get data listCrypto: ', err);
-        crashlytics().recordError(new Error(err));
-        crashlytics().log(err);
+    // Init refresh balance, cointrace, and get balance
+    const initFunc = async () => {
+      if (dataWallet && dataMember.member) {
+        // Refresh / update balance
+        await refreshBalances(dataMember.member);
+
+        getBalance();
       }
     };
 
-    cointrace();
-  }, []);
+    initFunc();
+  }, [dataWallet, dataMember]);
 
   const handleBackPress = () => {
     if (isVisibleReadQR) {
@@ -331,7 +372,7 @@ const SendWalletScreen = ({navigation, route}) => {
   }, [isVisibleReadQR]);
 
   useEffect(() => {
-    if (amount === '' || amount > parseFloat(dataWallet.Wamount).toString()) {
+    if (amount === '' || amount > balance) {
       setIconNextIsDisabled(true);
     } else if (amount == 0) {
       setIconNextIsDisabled(true);
@@ -347,8 +388,6 @@ const SendWalletScreen = ({navigation, route}) => {
   };
 
   const onSend = () => {
-    const balance = parseFloat(dataWallet.Wamount).toString();
-
     if (amount === '') {
       Alert.alert(
         '',
@@ -527,7 +566,6 @@ const SendWalletScreen = ({navigation, route}) => {
                   .then(response => {
                     const {status, hash} = response;
 
-                    const balance = parseFloat(dataWallet.Wamount).toString();
                     console.log(
                       `Transfer complete.... Token: ${token} | Status: ${status} | Hash: ${hash} | act=postTransfer`,
                     );
@@ -537,15 +575,11 @@ const SendWalletScreen = ({navigation, route}) => {
                       setAmount('');
                       setSelectedExchange('360001');
 
-                      // Update/Refresh balance
-                      refreshBalances(dataMember.member);
-
                       navigation.navigate('CompleteSend', {
                         amount,
                         addrto: address,
                         txid: hash,
                         symbol: dataWallet.symbol,
-                        balance,
                       });
                     } else {
                       setIsLoading(false);
@@ -657,7 +691,7 @@ const SendWalletScreen = ({navigation, route}) => {
             <Text style={styles.currencyName}>{dataWallet.symbol}</Text>
             <View style={styles.partScanQR}>
               <Text style={styles.balance}>
-                Balance: {parseFloat(dataWallet.Wamount)}
+                Balance: {balance}
                 {dataWallet.symbol}
               </Text>
               <TouchableOpacity
@@ -697,7 +731,7 @@ const SendWalletScreen = ({navigation, route}) => {
             />
 
             <CustomInputWallet
-              value={`${dataWallet.limitTransfer}${dataWallet.symbol}`}
+              value={`${limitTransfer}${dataWallet.symbol}`}
               readonly
               label={`${
                 lang && lang ? lang.screen_send.send_availables_label : ''
