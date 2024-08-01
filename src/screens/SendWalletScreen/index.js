@@ -323,8 +323,8 @@ const SendWalletScreen = ({navigation, route}) => {
         setIsLoading(false);
       } else {
         setIsLoading(false);
-        Alert.alert('Error get data balance: ', error);
-        console.log('Error get data balance: ', error);
+        Alert.alert('Error get data balance');
+        console.log('Error get data balance');
         crashlytics().recordError(new Error(error));
         crashlytics().log(error);
       }
@@ -344,6 +344,7 @@ const SendWalletScreen = ({navigation, route}) => {
         // Refresh / update balance
         await refreshBalances(dataMember.member);
 
+        // Get balance
         getBalance();
       }
     };
