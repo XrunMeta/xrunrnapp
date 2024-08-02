@@ -384,7 +384,6 @@ const WalletScreen = ({navigation, route}) => {
                       event.nativeEvent.layoutMeasurement.width,
                   );
                   setCurrentCurrency(cardsData[index].currency);
-                  refreshBalances(member);
                 }}
               />
               {/* )} */}
