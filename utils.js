@@ -9,114 +9,43 @@ const gateway = process.env.GATEWAY;
 export const URL_API = gateway + authcode;
 export const URL_API_NODEJS = process.env.GATEWAY_NODEJS;
 
-const funcTransaction = async (
-  nameTransaction,
+export const listTransactionsHistory = async (
+  nameList,
   act,
   member,
   currency,
   daysbefore,
-  startwith,
+  startwith = 0,
 ) => {
   try {
     const request = await fetch(
       `${URL_API}&act=${act}&startwith=${startwith}&member=${member}&currency=${currency}&daysbefore=${daysbefore}`,
     );
     const response = await request.json();
+    console.log(`Success load data list transaction: ${nameList}`);
     return response.data;
   } catch (err) {
-    console.log(`Failed get ${nameTransaction}: ${err}`);
-    Alert.alert('', `Failed get ${nameTransaction}: ${err}`);
+    console.log(`Failed get ${nameList}: ${err}`);
+    Alert.alert('', `Failed get ${nameList}`);
     crashlytics().recordError(new Error(err));
     crashlytics().log(err);
   }
 };
 
-export const funcTotalHistory = async (
-  nameTransaction = 'totalHistory',
-  act = 'app4200-05',
-  member,
-  currency,
-  daysbefore,
-  startwith = 0,
-) => {
-  return await funcTransaction(
-    nameTransaction,
-    act,
-    member,
-    currency,
-    daysbefore,
-    startwith,
-  );
-};
-
-export const funcTransferHistory = async (
-  nameTransaction = 'transferHistory',
-  act = 'app4200-06',
-  member,
-  currency,
-  daysbefore,
-  startwith = 0,
-) => {
-  return await funcTransaction(
-    nameTransaction,
-    act,
-    member,
-    currency,
-    daysbefore,
-    startwith,
-  );
-};
-
-export const funcReceivedDetails = async (
-  nameTransaction = 'receivedDetails',
-  act = 'app4200-01',
-  member,
-  currency,
-  daysbefore,
-  startwith = 0,
-) => {
-  return await funcTransaction(
-    nameTransaction,
-    act,
-    member,
-    currency,
-    daysbefore,
-    startwith,
-  );
-};
-
-export const funcTransitionHistory = async (
-  nameTransaction = 'transitionHistory',
-  act = 'app4200-03',
-  member,
-  currency,
-  daysbefore,
-  startwith = 0,
-) => {
-  return await funcTransaction(
-    nameTransaction,
-    act,
-    member,
-    currency,
-    daysbefore,
-    startwith,
-  );
-};
-
-// Load button see more if cliok
-const fetchDetailTransaction = async (
+// Load button see more if click
+const loadDetailTransaction = async (
   routeSwipe,
   totalData,
   setTotalData,
   member,
   currency,
   days,
-  setSeeMore,
+  setSeeBtnMore,
   lastPosition,
   setLastPosition,
 ) => {
   setLastPosition(lastPosition + 20000);
-  console.log(totalData.length);
+
   switch (routeSwipe) {
     case 'totalHistory':
       const resultTotalHistory = await funcTotalHistory(
@@ -129,7 +58,7 @@ const fetchDetailTransaction = async (
       );
 
       if (resultTotalHistory.length == 0) {
-        setSeeMore(false);
+        setSeeBtnMore(false);
       }
 
       setTotalData(prevData => [...prevData, ...resultTotalHistory]);
@@ -146,7 +75,7 @@ const fetchDetailTransaction = async (
       );
 
       if (resultTransferHistory.length == 0) {
-        setSeeMore(false);
+        setSeeBtnMore(false);
       }
 
       setTotalData(prevData => [...prevData, ...resultTransferHistory]);
@@ -163,7 +92,7 @@ const fetchDetailTransaction = async (
       );
 
       if (resultReceivedDetails.length == 0) {
-        setSeeMore(false);
+        setSeeBtnMore(false);
       }
 
       setTotalData(prevData => [...prevData, ...resultReceivedDetails]);
@@ -180,7 +109,7 @@ const fetchDetailTransaction = async (
       );
 
       if (resultTransitionHistory.length == 0) {
-        setSeeMore(false);
+        setSeeBtnMore(false);
       }
 
       setTotalData(prevData => [...prevData, ...resultTransitionHistory]);
@@ -204,19 +133,18 @@ export const loadMore = (
   member,
   currency,
   days,
-  setSeeMore,
+  setSeeBtnMore,
   lastPosition,
   setLastPosition,
 ) => {
-  console.log(totalData);
-  fetchDetailTransaction(
+  loadDetailTransaction(
     routeSwipe,
     totalData,
     setTotalData,
     member,
     currency,
     days,
-    setSeeMore,
+    setSeeBtnMore,
     lastPosition,
     setLastPosition,
   );
