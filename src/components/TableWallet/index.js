@@ -10,17 +10,14 @@ import {
   Platform,
   Dimensions,
 } from 'react-native';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {TabView, TabBar} from 'react-native-tab-view';
 import {
-  funcReceivedDetails,
-  funcTotalHistory,
-  funcTransferHistory,
-  funcTransitionHistory,
   loadMore,
   getFontFam,
   fontSize,
+  listTransactionsHistory,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
@@ -52,10 +49,79 @@ const renderTabBar = props => (
   />
 );
 
+// Function for language action
+const actionFunc = (switchKey, lang) => {
+  switch (switchKey) {
+    case '3304':
+      return lang && lang.screen_wallet.history_action3304
+        ? lang.screen_wallet.history_action3304
+        : '';
+      break;
+    case '3651':
+      return lang && lang.screen_wallet.history_action3651
+        ? lang.screen_wallet.history_action3651
+        : '';
+      break;
+    case '3305':
+      return lang && lang.screen_wallet.history_action3305
+        ? lang.screen_wallet.history_action3305
+        : '';
+      break;
+    case '3306':
+      return lang && lang.screen_wallet.history_action3306
+        ? lang.screen_wallet.history_action3306
+        : '';
+      break;
+    case '3307':
+      return lang && lang.screen_wallet.history_action3307
+        ? lang.screen_wallet.history_action3307
+        : '';
+      break;
+    case '3308':
+      return lang && lang.screen_wallet.history_action3308
+        ? lang.screen_wallet.history_action3308
+        : '';
+      break;
+    default:
+      return lang && lang.screen_wallet.history_action3305
+        ? lang.screen_wallet.history_action3305
+        : '';
+      break;
+  }
+};
+
+// Function for language extracode
+const extracodeFunc = (switchKey, lang) => {
+  switch (switchKey) {
+    case '9453':
+      return lang && lang.screen_wallet.history_extracode9453
+        ? lang.screen_wallet.history_extracode9453
+        : '';
+      break;
+    case '9416':
+      extracode = '-';
+      break;
+    case '9001':
+      return lang && lang.screen_wallet.history_extracode9001
+        ? lang.screen_wallet.history_extracode9001
+        : '';
+      break;
+    case '9002':
+      return lang && lang.screen_wallet.history_extracode9002
+        ? lang.screen_wallet.history_extracode9002
+        : '';
+      break;
+    default:
+      return lang && lang.screen_wallet.history_extracodesuccess
+        ? lang.screen_wallet.history_extracodesuccess
+        : '';
+      break;
+  }
+};
+
 // Content TabView
 const TotalHistory = ({
   loadingTransaction,
-  setLoadingTransaction,
   routeSwipe,
   totalTransaction,
   setTotalTransaction,
@@ -63,20 +129,12 @@ const TotalHistory = ({
   currency,
   days,
   lang,
-  seeMore,
+  btnSeeMore,
   setSeeMore,
   defaultLoadData,
   lastPosition,
   setLastPosition,
 }) => {
-  useEffect(() => {
-    setTimeout(() => {
-      if (setLoadingTransaction !== undefined) {
-        setLoadingTransaction(false);
-      }
-    }, 1000);
-  }, [totalTransaction, setLoadingTransaction]);
-
   return (
     <ScrollView
       style={{paddingHorizontal: 28}}
@@ -93,83 +151,8 @@ const TotalHistory = ({
               action: tempAction,
             } = item;
 
-            let action;
-            let extracode;
-
-            switch (tempAction) {
-              case '3304':
-                action =
-                  lang && lang.screen_wallet.history_action3304
-                    ? lang.screen_wallet.history_action3304
-                    : '';
-                break;
-              case '3651':
-                action =
-                  lang && lang.screen_wallet.history_action3651
-                    ? lang.screen_wallet.history_action3651
-                    : '';
-                break;
-              case '3305':
-                action =
-                  lang && lang.screen_wallet.history_action3305
-                    ? lang.screen_wallet.history_action3305
-                    : '';
-                break;
-              case '3306':
-                action =
-                  lang && lang.screen_wallet.history_action3306
-                    ? lang.screen_wallet.history_action3306
-                    : '';
-                break;
-              case '3307':
-                action =
-                  lang && lang.screen_wallet.history_action3307
-                    ? lang.screen_wallet.history_action3307
-                    : '';
-                break;
-              case '3308':
-                action =
-                  lang && lang.screen_wallet.history_action3308
-                    ? lang.screen_wallet.history_action3308
-                    : '';
-                break;
-              default:
-                action =
-                  lang && lang.screen_wallet.history_action3305
-                    ? lang.screen_wallet.history_action3305
-                    : '';
-                break;
-            }
-
-            switch (tempExtracode) {
-              case '9453':
-                extracode =
-                  lang && lang.screen_wallet.history_extracode9453
-                    ? lang.screen_wallet.history_extracode9453
-                    : '';
-                break;
-              case '9416':
-                extracode = '-';
-                break;
-              case '9001':
-                extracode =
-                  lang && lang.screen_wallet.history_extracode9001
-                    ? lang.screen_wallet.history_extracode9001
-                    : '';
-                break;
-              case '9002':
-                extracode =
-                  lang && lang.screen_wallet.history_extracode9002
-                    ? lang.screen_wallet.history_extracode9002
-                    : '';
-                break;
-              default:
-                extracode =
-                  lang && lang.screen_wallet.history_extracodesuccess
-                    ? lang.screen_wallet.history_extracodesuccess
-                    : '';
-                break;
-            }
+            let action = actionFunc(tempAction, lang);
+            let extracode = extracodeFunc(tempExtracode, lang);
 
             return (
               <View key={index} style={styles.wrapperItemTable}>
@@ -188,7 +171,7 @@ const TotalHistory = ({
             );
           })}
 
-          {seeMore && totalTransaction.length > defaultLoadData && (
+          {btnSeeMore && totalTransaction.length > defaultLoadData && (
             <View style={{marginTop: 20, marginBottom: 20}}>
               <TouchableOpacity
                 style={styles.btnSeeMore}
@@ -238,7 +221,6 @@ const TotalHistory = ({
 
 const TransferHistory = ({
   loadingTransaction,
-  setLoadingTransaction,
   routeSwipe,
   totalTransaction,
   setTotalTransaction,
@@ -246,20 +228,12 @@ const TransferHistory = ({
   currency,
   days,
   lang,
-  seeMore,
+  btnSeeMore,
   setSeeMore,
   defaultLoadData,
   lastPosition,
   setLastPosition,
 }) => {
-  useEffect(() => {
-    setTimeout(() => {
-      if (setLoadingTransaction !== undefined) {
-        setLoadingTransaction(false);
-      }
-    }, 1000);
-  }, [totalTransaction, setLoadingTransaction]);
-
   return (
     <ScrollView
       style={{paddingHorizontal: 28}}
@@ -269,53 +243,8 @@ const TransferHistory = ({
           {totalTransaction.map((item, index) => {
             const {datetime, time, amount, symbol, action: tempAction} = item;
 
-            let action;
+            let action = actionFunc(tempAction, lang);
             let extracode;
-
-            switch (tempAction) {
-              case '3304':
-                action =
-                  lang && lang.screen_wallet.history_action3304
-                    ? lang.screen_wallet.history_action3304
-                    : '';
-                break;
-              case '3651':
-                action =
-                  lang && lang.screen_wallet.history_action3651
-                    ? lang.screen_wallet.history_action3651
-                    : '';
-                break;
-              case '3305':
-                action =
-                  lang && lang.screen_wallet.history_action3305
-                    ? lang.screen_wallet.history_action3305
-                    : '';
-                break;
-              case '3306':
-                action =
-                  lang && lang.screen_wallet.history_action3306
-                    ? lang.screen_wallet.history_action3306
-                    : '';
-                break;
-              case '3307':
-                action =
-                  lang && lang.screen_wallet.history_action3307
-                    ? lang.screen_wallet.history_action3307
-                    : '';
-                break;
-              case '3308':
-                action =
-                  lang && lang.screen_wallet.history_action3308
-                    ? lang.screen_wallet.history_action3308
-                    : '';
-                break;
-              default:
-                action =
-                  lang && lang.screen_wallet.history_action3305
-                    ? lang.screen_wallet.history_action3305
-                    : '';
-                break;
-            }
 
             return (
               <View style={styles.wrapperItemTable} key={index}>
@@ -334,7 +263,7 @@ const TransferHistory = ({
             );
           })}
 
-          {seeMore && totalTransaction.length > defaultLoadData && (
+          {btnSeeMore && totalTransaction.length > defaultLoadData && (
             <View style={{marginTop: 20, marginBottom: 20}}>
               <TouchableOpacity
                 style={styles.btnSeeMore}
@@ -384,7 +313,6 @@ const TransferHistory = ({
 
 const ReceivedDetails = ({
   loadingTransaction,
-  setLoadingTransaction,
   routeSwipe,
   totalTransaction,
   setTotalTransaction,
@@ -392,20 +320,12 @@ const ReceivedDetails = ({
   currency,
   days,
   lang,
-  seeMore,
+  btnSeeMore,
   setSeeMore,
   defaultLoadData,
   lastPosition,
   setLastPosition,
 }) => {
-  useEffect(() => {
-    setTimeout(() => {
-      if (setLoadingTransaction !== undefined) {
-        setLoadingTransaction(false);
-      }
-    }, 1000);
-  }, [totalTransaction, setLoadingTransaction]);
-
   return (
     <ScrollView
       style={{paddingHorizontal: 28}}
@@ -422,83 +342,8 @@ const ReceivedDetails = ({
               action: tempAction,
             } = item;
 
-            let action;
-            let extracode;
-
-            switch (tempAction) {
-              case '3304':
-                action =
-                  lang && lang.screen_wallet.history_action3304
-                    ? lang.screen_wallet.history_action3304
-                    : '';
-                break;
-              case '3651':
-                action =
-                  lang && lang.screen_wallet.history_action3651
-                    ? lang.screen_wallet.history_action3651
-                    : '';
-                break;
-              case '3305':
-                action =
-                  lang && lang.screen_wallet.history_action3305
-                    ? lang.screen_wallet.history_action3305
-                    : '';
-                break;
-              case '3306':
-                action =
-                  lang && lang.screen_wallet.history_action3306
-                    ? lang.screen_wallet.history_action3306
-                    : '';
-                break;
-              case '3307':
-                action =
-                  lang && lang.screen_wallet.history_action3307
-                    ? lang.screen_wallet.history_action3307
-                    : '';
-                break;
-              case '3308':
-                action =
-                  lang && lang.screen_wallet.history_action3308
-                    ? lang.screen_wallet.history_action3308
-                    : '';
-                break;
-              default:
-                action =
-                  lang && lang.screen_wallet.history_action3305
-                    ? lang.screen_wallet.history_action3305
-                    : '';
-                break;
-            }
-
-            switch (tempExtracode) {
-              case '9453':
-                extracode =
-                  lang && lang.screen_wallet.history_extracode9453
-                    ? lang.screen_wallet.history_extracode9453
-                    : '';
-                break;
-              case '9416':
-                extracode = '-';
-                break;
-              case '9001':
-                extracode =
-                  lang && lang.screen_wallet.history_extracode9001
-                    ? lang.screen_wallet.history_extracode9001
-                    : '';
-                break;
-              case '9002':
-                extracode =
-                  lang && lang.screen_wallet.history_extracode9002
-                    ? lang.screen_wallet.history_extracode9002
-                    : '';
-                break;
-              default:
-                extracode =
-                  lang && lang.screen_wallet.history_extracodesuccess
-                    ? lang.screen_wallet.history_extracodesuccess
-                    : '';
-                break;
-            }
+            let action = actionFunc(tempAction, lang);
+            let extracode = extracodeFunc(tempExtracode, lang);
 
             return (
               <View key={index} style={styles.wrapperItemTable}>
@@ -517,7 +362,7 @@ const ReceivedDetails = ({
             );
           })}
 
-          {seeMore && totalTransaction.length > defaultLoadData && (
+          {btnSeeMore && totalTransaction.length > defaultLoadData && (
             <View style={{marginTop: 20, marginBottom: 20}}>
               <TouchableOpacity
                 style={styles.btnSeeMore}
@@ -567,7 +412,6 @@ const ReceivedDetails = ({
 
 const TransitionHistory = ({
   loadingTransaction,
-  setLoadingTransaction,
   routeSwipe,
   totalTransaction,
   setTotalTransaction,
@@ -575,121 +419,77 @@ const TransitionHistory = ({
   currency,
   days,
   lang,
-  seeMore,
+  btnSeeMore,
   setSeeMore,
   defaultLoadData,
   lastPosition,
   setLastPosition,
 }) => {
-  useEffect(() => {
-    setTimeout(() => {
-      if (setLoadingTransaction !== undefined) {
-        setLoadingTransaction(false);
-      }
-    }, 1000);
-  }, [totalTransaction, setLoadingTransaction]);
-
   return (
     <ScrollView
       style={{paddingHorizontal: 28}}
       contentOffset={{y: lastPosition}}>
-      {totalTransaction.length > 0 ? (
-        <>
-          {totalTransaction.map((item, index) => {
-            const {datetime, time, amount, symbol, action: tempAction} = item;
-            let action;
-            let extracode;
+      {!loadingTransaction ? (
+        totalTransaction.length > 0 ? (
+          <>
+            {totalTransaction.map((item, index) => {
+              const {datetime, time, amount, symbol, action: tempAction} = item;
 
-            switch (tempAction) {
-              case '3304':
-                action =
-                  lang && lang.screen_wallet.history_action3304
-                    ? lang.screen_wallet.history_action3304
-                    : '';
-                break;
-              case '3651':
-                action =
-                  lang && lang.screen_wallet.history_action3651
-                    ? lang.screen_wallet.history_action3651
-                    : '';
-                break;
-              case '3305':
-                action =
-                  lang && lang.screen_wallet.history_action3305
-                    ? lang.screen_wallet.history_action3305
-                    : '';
-                break;
-              case '3306':
-                action =
-                  lang && lang.screen_wallet.history_action3306
-                    ? lang.screen_wallet.history_action3306
-                    : '';
-                break;
-              case '3307':
-                action =
-                  lang && lang.screen_wallet.history_action3307
-                    ? lang.screen_wallet.history_action3307
-                    : '';
-                break;
-              case '3308':
-                action =
-                  lang && lang.screen_wallet.history_action3308
-                    ? lang.screen_wallet.history_action3308
-                    : '';
-                break;
-              default:
-                action =
-                  lang && lang.screen_wallet.history_action3305
-                    ? lang.screen_wallet.history_action3305
-                    : '';
-                break;
-            }
+              let action = actionFunc(tempAction, lang);
+              let extracode;
 
-            return (
-              <View style={styles.wrapperItemTable} key={index}>
-                <View>
-                  <Text style={styles.details}>{action}</Text>
-                  <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
-                </View>
-                <View>
-                  <View style={styles.wrapperPrice}>
-                    <Text style={styles.price}>{amount} </Text>
-                    <Text style={styles.price}>{symbol}</Text>
+              return (
+                <View style={styles.wrapperItemTable} key={index}>
+                  <View>
+                    <Text style={styles.details}>{action}</Text>
+                    <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
                   </View>
-                  <Text style={styles.status}>{extracode}</Text>
+                  <View>
+                    <View style={styles.wrapperPrice}>
+                      <Text style={styles.price}>{amount} </Text>
+                      <Text style={styles.price}>{symbol}</Text>
+                    </View>
+                    <Text style={styles.status}>{extracode}</Text>
+                  </View>
                 </View>
-              </View>
-            );
-          })}
+              );
+            })}
 
-          {seeMore && totalTransaction.length > defaultLoadData && (
-            <View style={{marginTop: 20, marginBottom: 20}}>
-              <TouchableOpacity
-                style={styles.btnSeeMore}
-                activeOpacity={0.7}
-                onPress={() =>
-                  loadMore(
-                    routeSwipe,
-                    totalTransaction,
-                    setTotalTransaction,
-                    member,
-                    currency,
-                    days,
-                    setSeeMore,
-                    lastPosition,
-                    setLastPosition,
-                  )
-                }>
-                <Text style={styles.textSeeMore}>
-                  {lang && lang.screen_wallet
-                    ? lang.screen_wallet.see_more
-                    : ''}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        </>
-      ) : loadingTransaction ? (
+            {btnSeeMore && totalTransaction.length > defaultLoadData && (
+              <View style={{marginTop: 20, marginBottom: 20}}>
+                <TouchableOpacity
+                  style={styles.btnSeeMore}
+                  activeOpacity={0.7}
+                  onPress={() =>
+                    loadMore(
+                      routeSwipe,
+                      totalTransaction,
+                      setTotalTransaction,
+                      member,
+                      currency,
+                      days,
+                      setSeeMore,
+                      lastPosition,
+                      setLastPosition,
+                    )
+                  }>
+                  <Text style={styles.textSeeMore}>
+                    {lang && lang.screen_wallet
+                      ? lang.screen_wallet.see_more
+                      : ''}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </>
+        ) : (
+          <Text style={styles.textNotFoundHistory}>
+            {lang && lang.screen_wallet.history_not_found
+              ? lang.screen_wallet.history_not_found
+              : ''}
+          </Text>
+        )
+      ) : (
         <View
           style={{
             flex: 1,
@@ -699,12 +499,6 @@ const TransitionHistory = ({
           }}>
           <ActivityIndicator size="large" color="#ccc" />
         </View>
-      ) : (
-        <Text style={styles.textNotFoundHistory}>
-          {lang && lang.screen_wallet.history_not_found
-            ? lang.screen_wallet.history_not_found
-            : ''}
-        </Text>
       )}
     </ScrollView>
   );
@@ -730,9 +524,16 @@ const TableWalletCard = ({
 
   // Transaction
   const defaultLoadData = 100;
-  const [seeMore, setBtnSeeMore] = useState(true);
+  const [btnSeeMore, setBtnSeeMore] = useState(true);
   const [lastPosition, setLastPosition] = useState(0);
   const [totalHistoryLength, setTotalHistoryLength] = useState(0);
+
+  const act = {
+    totalHistory: 'app4200-05',
+    transferHistory: 'app4200-06',
+    receivedDetails: 'app4200-01',
+    transitionHistory: 'app4200-03',
+  };
 
   // Detail Transaction
   const [totalHistory, setTotalHistory] = useState([]);
@@ -740,6 +541,7 @@ const TableWalletCard = ({
   const [receivedDetails, setReceivedDetails] = useState([]);
   const [transitionHistory, setTransitionHistory] = useState([]);
 
+  // Update automatic list transaction after transfer/convert
   useEffect(() => {
     if (route.params !== undefined) {
       if (
@@ -785,27 +587,31 @@ const TableWalletCard = ({
     ]);
   }, [lang]);
 
-  // Hit API for transaction if user change days
-  useEffect(() => {
-    const funcTransaction = async () => {
-      try {
-        if (member !== '') {
-          if (routes.length > 0) {
-            const key = routes[index].key;
-            getDataTransaction(key);
-          }
+  const updateListTransactionWithChangeDay = useCallback(async () => {
+    try {
+      if (member !== '') {
+        setLoadingTransaction(true);
+        if (routes.length > 0) {
+          const key = routes[index].key;
+          getDataTransaction(key);
         }
-      } catch (err) {
-        console.log(`Failed get transaction: ${err}`);
-        Alert.alert('', `Failed get transaction: ${err}`);
-        crashlytics().recordError(new Error(err));
-        crashlytics().log(err);
       }
-    };
-
-    funcTransaction();
+    } catch (err) {
+      console.log(`Failed get transaction: ${err}`);
+      Alert.alert('', `Failed get transaction`);
+      crashlytics().recordError(new Error(err));
+      crashlytics().log(err);
+    }
   }, [member, currentCurrency, currentDaysTransactional]);
 
+  // Hit API for transaction if user change days
+  useEffect(() => {
+    if (member) {
+      updateListTransactionWithChangeDay();
+    }
+  }, [member, currentCurrency, currentDaysTransactional]);
+
+  // If user can't have transaction in 100 days, the wallet will empty
   useEffect(() => {
     if (totalHistoryLength === 0 && currentCurrency == 1) {
       setEmptyWallet(true);
@@ -820,14 +626,13 @@ const TableWalletCard = ({
         return (
           <TotalHistory
             loadingTransaction={loadingTransaction}
-            setLoadingTransaction={setLoadingTransaction}
             totalTransaction={totalHistory}
             setTotalTransaction={setTotalHistory}
             member={member}
             currency={currentCurrency}
             days={currentDaysTransactional}
             lang={lang}
-            seeMore={seeMore}
+            btnSeeMore={btnSeeMore}
             setSeeMore={setBtnSeeMore}
             routeSwipe={currentSwipe}
             defaultLoadData={defaultLoadData}
@@ -839,14 +644,13 @@ const TableWalletCard = ({
         return (
           <TransferHistory
             loadingTransaction={loadingTransaction}
-            setLoadingTransaction={setLoadingTransaction}
             totalTransaction={transferHistory}
             setTotalTransaction={setTransferHistory}
             member={member}
             currency={currentCurrency}
             days={currentDaysTransactional}
             lang={lang}
-            seeMore={seeMore}
+            btnSeeMore={btnSeeMore}
             setSeeMore={setBtnSeeMore}
             routeSwipe={currentSwipe}
             defaultLoadData={defaultLoadData}
@@ -858,14 +662,13 @@ const TableWalletCard = ({
         return (
           <ReceivedDetails
             loadingTransaction={loadingTransaction}
-            setLoadingTransaction={setLoadingTransaction}
             totalTransaction={receivedDetails}
             setTotalTransaction={setReceivedDetails}
             member={member}
             currency={currentCurrency}
             days={currentDaysTransactional}
             lang={lang}
-            seeMore={seeMore}
+            btnSeeMore={btnSeeMore}
             setSeeMore={setBtnSeeMore}
             routeSwipe={currentSwipe}
             defaultLoadData={defaultLoadData}
@@ -877,14 +680,13 @@ const TableWalletCard = ({
         return (
           <TransitionHistory
             loadingTransaction={loadingTransaction}
-            setLoadingTransaction={setLoadingTransaction}
             totalTransaction={transitionHistory}
             setTotalTransaction={setTransitionHistory}
             member={member}
             currency={currentCurrency}
             days={currentDaysTransactional}
             lang={lang}
-            seeMore={seeMore}
+            btnSeeMore={btnSeeMore}
             setSeeMore={setBtnSeeMore}
             routeSwipe={currentSwipe}
             defaultLoadData={defaultLoadData}
@@ -896,14 +698,13 @@ const TableWalletCard = ({
         return (
           <TotalHistory
             loadingTransaction={loadingTransaction}
-            setLoadingTransaction={setLoadingTransaction}
             totalTransaction={totalHistory}
             setTotalTransaction={setTotalHistory}
             member={member}
             currency={currentCurrency}
             days={currentDaysTransactional}
             lang={lang}
-            seeMore={seeMore}
+            btnSeeMore={btnSeeMore}
             setSeeMore={setBtnSeeMore}
             routeSwipe={currentSwipe}
             defaultLoadData={defaultLoadData}
@@ -914,103 +715,117 @@ const TableWalletCard = ({
     }
   };
 
-  useEffect(() => {
-    const getDefaultDataTransaction = async () => {
-      try {
-        const totalHistory = await funcTotalHistory(
-          undefined,
-          undefined,
-          member,
-          1,
-          defaultLoadData,
-        );
+  // Call API for get total history, only run once
+  const defaultListTransactionsHistory = useCallback(async () => {
+    try {
+      const totalHistory = await listTransactionsHistory(
+        'totalHistory',
+        act.totalHistory,
+        member,
+        currentCurrency,
+        defaultLoadData,
+      );
+      console.log('Run defaultListTransactionsHistory() function once');
 
-        setTotalHistoryLength(totalHistory.length);
-      } catch (err) {
-        console.log(err);
-        crashlytics().recordError(new Error(err));
-        crashlytics().log(err);
-      }
-    };
-
-    if (member !== '') {
-      getDefaultDataTransaction();
+      setTotalHistoryLength(totalHistory.length);
+    } catch (error) {
+      Alert.alert('', 'Failed get default list transactions history');
+      console.log(`Failed get default list transactions history: ${error}`);
+      crashlytics().recordError(new Error(error));
+      crashlytics().log(error);
     }
-  }, [member]);
+  }, [member, defaultLoadData]);
 
-  // Function for hit API transaction
+  useEffect(() => {
+    if (member) {
+      defaultListTransactionsHistory();
+    }
+  }, [member, defaultLoadData]);
+
+  // Check length data history transaction
+  const checkLengthHistoryDataTransaction = length => {
+    if (length <= 0) {
+      setLoadingTransaction(false);
+    }
+  };
+
+  // Function for call API list transactions history
   const getDataTransaction = useMemo(() => {
     return async (key, isIOS) => {
       try {
-        // if (!isIOS) {
-        //   setTotalHistory([]);
-        //   setTransferHistory([]);
-        //   setReceivedDetails([]);
-        //   setTransitionHistory([]);
-        // }
+        if (!isIOS) {
+          setTotalHistory([]);
+          setTransferHistory([]);
+          setReceivedDetails([]);
+          setTransitionHistory([]);
+        }
+
+        setLastPosition(0);
+        setBtnSeeMore(true);
 
         switch (key) {
           case 'totalHistory':
-            const totalHistory = await funcTotalHistory(
-              undefined,
-              undefined,
+            const totalHistory = await listTransactionsHistory(
+              key,
+              act[key],
               member,
               currentCurrency,
               currentDaysTransactional,
             );
 
-            setLastPosition(0);
-            setBtnSeeMore(true);
             setTotalHistory(totalHistory);
+            checkLengthHistoryDataTransaction(totalHistory.length);
             break;
+
           case 'transferHistory':
-            const transferHistory = await funcTransferHistory(
-              undefined,
-              undefined,
+            const transferHistory = await listTransactionsHistory(
+              key,
+              act[key],
               member,
               currentCurrency,
               currentDaysTransactional,
             );
 
-            setLastPosition(0);
-            setBtnSeeMore(true);
             setTransferHistory(transferHistory);
+            checkLengthHistoryDataTransaction(transferHistory.length);
             break;
+
           case 'receivedDetails':
-            const receivedDetails = await funcReceivedDetails(
-              undefined,
-              undefined,
+            const receivedDetails = await listTransactionsHistory(
+              key,
+              act[key],
               member,
               currentCurrency,
               currentDaysTransactional,
             );
 
-            setLastPosition(0);
-            setBtnSeeMore(true);
             setReceivedDetails(receivedDetails);
+            checkLengthHistoryDataTransaction(receivedDetails.length);
             break;
+
           case 'transitionHistory':
-            const transitionHistory = await funcTransitionHistory(
-              undefined,
-              undefined,
+            const transitionHistory = await listTransactionsHistory(
+              key,
+              act[key],
               member,
               currentCurrency,
               currentDaysTransactional,
             );
-            setLastPosition(0);
-            setBtnSeeMore(true);
+
             setTransitionHistory(transitionHistory);
+            checkLengthHistoryDataTransaction(transitionHistory.length);
             break;
+
           default:
-            console.log(`Failed get transaction ${key}: ${err}`);
-            Alert.alert('', `Failed get transaction ${key}: ${err}`);
+            console.log(`Failed get transaction ${key}`);
+            Alert.alert('', `Failed get list transactions ${key}`);
             break;
         }
-      } catch (err) {
-        console.log(`Failed get transaction ${key}: ${err}`);
-        Alert.alert('', `Failed get transaction ${key}: ${err}`);
-        crashlytics().recordError(new Error(err));
-        crashlytics().log(err);
+      } catch (error) {
+        console.log(`Failed get transaction ${key}: ${error}`);
+        Alert.alert('', `Failed get transaction ${key}`);
+        crashlytics().recordError(new Error(error));
+        crashlytics().log(error);
       }
     };
   });
@@ -1204,19 +1019,15 @@ const TableWalletCard = ({
                           (x, y, width, height, pageX, pageY) => {
                             switch (route.key) {
                               case 'totalHistory':
-                                console.log(`Total History: ${width}`);
                                 setContentOffsetX(0);
                                 break;
                               case 'transferHistory':
-                                console.log(`Transfer History: ${width}`);
                                 setContentOffsetX(width);
                                 break;
                               case 'receivedDetails':
-                                console.log(`Received Details: ${width * 2}`);
                                 setContentOffsetX(width * 2);
                                 break;
                               case 'transitionHistory':
-                                console.log(`Transition History: ${width * 3}`);
                                 setContentOffsetX(width * 3);
                                 break;
                               default:
@@ -1267,7 +1078,7 @@ const TableWalletCard = ({
                     currency={currentCurrency}
                     days={currentDaysTransactional}
                     lang={lang}
-                    seeMore={seeMore}
+                    btnSeeMore={btnSeeMore}
                     setSeeMore={setBtnSeeMore}
                     routeSwipe={currentSwipe}
                     defaultLoadData={defaultLoadData}
@@ -1283,7 +1094,7 @@ const TableWalletCard = ({
                     currency={currentCurrency}
                     days={currentDaysTransactional}
                     lang={lang}
-                    seeMore={seeMore}
+                    btnSeeMore={btnSeeMore}
                     setSeeMore={setBtnSeeMore}
                     routeSwipe={currentSwipe}
                     defaultLoadData={defaultLoadData}
@@ -1299,7 +1110,7 @@ const TableWalletCard = ({
                     currency={currentCurrency}
                     days={currentDaysTransactional}
                     lang={lang}
-                    seeMore={seeMore}
+                    btnSeeMore={btnSeeMore}
                     setSeeMore={setBtnSeeMore}
                     routeSwipe={currentSwipe}
                     defaultLoadData={defaultLoadData}
@@ -1315,7 +1126,7 @@ const TableWalletCard = ({
                     currency={currentCurrency}
                     days={currentDaysTransactional}
                     lang={lang}
-                    seeMore={seeMore}
+                    btnSeeMore={btnSeeMore}
                     setSeeMore={setBtnSeeMore}
                     routeSwipe={currentSwipe}
                     defaultLoadData={defaultLoadData}
