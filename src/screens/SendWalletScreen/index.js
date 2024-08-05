@@ -43,6 +43,7 @@ const SendWalletScreen = ({navigation, route}) => {
   const [iconNextIsDisabled, setIconNextIsDisabled] = useState(true);
   const [amount, setAmount] = useState('');
   const [address, setAddress] = useState('');
+  const [currency, setCurrency] = useState('1');
   const [token, setToken] = useState('');
   const {dataWallet} = route.params;
   const [selectedExchange, setSelectedExchange] = useState('360001');
@@ -74,6 +75,18 @@ const SendWalletScreen = ({navigation, route}) => {
   const [isInsufficientBalance, setIsInsufficientBalance] = useState(false);
 
   const [logIntervalId, setLogIntervalId] = useState(null);
+
+  // Set currency and set token
+  useEffect(() => {
+    if (dataWallet.currency) {
+      // Set currency
+      setCurrency(dataWallet.currency);
+
+      // Set token xr or et
+      const token = dataWallet.currency == 1 ? 'xr' : 'et';
+      setToken(token);
+    }
+  }, [dataWallet]);
 
   useEffect(() => {
     // Get Language Data
@@ -107,10 +120,6 @@ const SendWalletScreen = ({navigation, route}) => {
     };
 
     getUserData();
-
-    // Set token xr or et
-    const token = dataWallet.currency == 1 ? 'xr' : 'et';
-    setToken(token);
   }, []);
 
   // Interval gas estimated
@@ -328,18 +337,20 @@ const SendWalletScreen = ({navigation, route}) => {
         const listStockExchange = await stockExchange();
         setCointrace(listStockExchange);
 
+        setCurrency(dataWallet.currency);
+
         setIsLoading(false);
       } else {
         setIsLoading(false);
         Alert.alert('Error get data balance');
-        console.log('Error get data balance');
+        console.log(`Error get data balance: ${error}`);
         crashlytics().recordError(new Error(error));
         crashlytics().log(error);
       }
     } catch (error) {
       setIsLoading(false);
-      Alert.alert('Error get data balance: ', error);
-      console.log('Error get data balance: ', error);
+      Alert.alert('Error get data balance');
+      console.log(`Error get data balance: ${error}`);
       crashlytics().recordError(new Error(error));
       crashlytics().log(error);
     }
@@ -394,59 +405,6 @@ const SendWalletScreen = ({navigation, route}) => {
 
   const onBack = () => {
     navigation.navigate('WalletHome');
-  };
-
-  const onSend = () => {
-    if (amount === '') {
-      Alert.alert(
-        '',
-        lang && lang ? lang.screen_send.send_amount_placeholder : '',
-        [
-          {
-            text: lang && lang ? lang.screen_wallet.confirm_alert : '',
-          },
-        ],
-      );
-    } else if (amount == 0) {
-      Alert.alert(
-        '',
-        lang && lang ? lang.screen_send.send_amount_greater_zero : '',
-        [
-          {
-            text: lang && lang ? lang.screen_wallet.confirm_alert : '',
-          },
-        ],
-      );
-    } else if (amount > balance) {
-      Alert.alert(
-        '',
-        lang && lang ? lang.screen_send.send_balance_not_enough : '',
-        [
-          {
-            text: lang && lang ? lang.screen_wallet.confirm_alert : '',
-          },
-        ],
-      );
-    } else if (address === '') {
-      Alert.alert(
-        '',
-        lang && lang ? lang.screen_send.send_address_placeholder : '',
-        [
-          {
-            text: lang && lang ? lang.screen_wallet.confirm_alert : '',
-          },
-        ],
-      );
-    } else if (address.length < 40) {
-      Alert.alert('', lang && lang ? lang.screen_send.send_address_less : '', [
-        {
-          text: lang && lang ? lang.screen_wallet.confirm_alert : '',
-        },
-      ]);
-    } else {
-      getEstimatedGas();
-      setIsLoading(true);
-    }
   };
 
   const onQRCodeScan = async () => {
@@ -522,8 +480,154 @@ const SendWalletScreen = ({navigation, route}) => {
     }
   };
 
-  const cancelSend = () => {
-    cancelGasEstimated();
+  // Execute function transfer
+
+  // Checking limit transfer
+  const getLimitTransfer = async () => {
+    try {
+      const request = await fetch(
+        `${URL_API}&act=ap4300-getLimitTransfer&member=${dataMember.member}&currency=${currency}&amountrq=${amount}`,
+      );
+      const response = await request.json();
+
+      const avaliable = response.avaliable;
+      return avaliable;
+    } catch (error) {
+      Alert.alert('Check limit transfer failed');
+      console.log(`Check limit transfer failed: ${error}`);
+      setIsLoading(false);
+      crashlytics().recordError(new Error(error));
+      crashlytics().log(error);
+    }
+  };
+
+  // Transfer by stock exchange
+  const transferByStockExchange = async () => {
+    try {
+      const request = await fetch(
+        `${URL_API}&act=ap4300-03&member=${dataMember.member}&addrto=${address}&currency=${currency}&amount=${amount}&coinmarket=${selectedExchange}`,
+      );
+      const response = await request.json();
+      const data = response.data;
+      return data;
+    } catch (error) {
+      Alert.alert(lang.global_error.network_busy);
+      console.log(`Transfer failed ap4300-03: ${error}`);
+      gasEstimateNetworkBusy();
+      crashlytics().recordError(new Error(error));
+      crashlytics().log(error);
+    }
+  };
+
+  // Post transfer
+  const postTransfer = async () => {
+    try {
+      const dataStockExchange = await transferByStockExchange();
+
+      if (dataStockExchange) {
+        const request = await fetch(
+          `${URL_API}&act=postTransferNew&to=${address}&amount=${amount}&token=${token}&member=${dataMember.member}&gasEstimate=${gasEstimate}&gasPrice=${gasPrice}`,
+        );
+        const response = await request.json();
+
+        const {status, hash} = response;
+        console.log(
+          `Transfer complete.... Token: ${token} | Status: ${status} | Hash: ${hash} | act=postTransferNew`,
+        );
+
+        if (status === 'success') {
+          setIsLoading(false);
+          setAddress('');
+          setAmount('');
+          setSelectedExchange('360001');
+
+          navigation.navigate('CompleteSend', {
+            amount,
+            addrto: address,
+            txid: hash,
+            symbol: dataWallet.symbol,
+          });
+        } else {
+          Alert.alert(lang.global_error.network_busy);
+          console.log('Transfer failed postTransfer');
+          gasEstimateNetworkBusy();
+        }
+      } else {
+        Alert.alert(lang.global_error.network_busy);
+        console.log(`Transfer failed ap4300-03: ${error}`);
+        gasEstimateNetworkBusy();
+        crashlytics().recordError(new Error(error));
+        crashlytics().log(error);
+      }
+    } catch (error) {
+      Alert.alert(lang.global_error.network_busy);
+      console.log(`Transfer failed postTransfer: ${error}`);
+      gasEstimateNetworkBusy();
+      crashlytics().recordError(new Error(error));
+      crashlytics().log(error);
+    }
+  };
+
+  const onSend = async () => {
+    if (amount === '') {
+      Alert.alert(
+        '',
+        lang && lang ? lang.screen_send.send_amount_placeholder : '',
+        [
+          {
+            text: lang && lang ? lang.screen_wallet.confirm_alert : '',
+          },
+        ],
+      );
+    } else if (amount == 0) {
+      Alert.alert(
+        '',
+        lang && lang ? lang.screen_send.send_amount_greater_zero : '',
+        [
+          {
+            text: lang && lang ? lang.screen_wallet.confirm_alert : '',
+          },
+        ],
+      );
+    } else if (amount > balance) {
+      Alert.alert(
+        '',
+        lang && lang ? lang.screen_send.send_balance_not_enough : '',
+        [
+          {
+            text: lang && lang ? lang.screen_wallet.confirm_alert : '',
+          },
+        ],
+      );
+    } else if (address === '') {
+      Alert.alert(
+        '',
+        lang && lang ? lang.screen_send.send_address_placeholder : '',
+        [
+          {
+            text: lang && lang ? lang.screen_wallet.confirm_alert : '',
+          },
+        ],
+      );
+    } else if (address.length < 40) {
+      Alert.alert('', lang && lang ? lang.screen_send.send_address_less : '', [
+        {
+          text: lang && lang ? lang.screen_wallet.confirm_alert : '',
+        },
+      ]);
+    } else {
+      setIsLoading(true);
+
+      const statusLimitTransfer = await getLimitTransfer();
+      // Check the limit transfer available
+      if (statusLimitTransfer === 'OK') {
+        getEstimatedGas();
+      } else {
+        Alert.alert(lang && lang ? lang.screen_send.send_empty_limit : '');
+        console.log(`Check limit transfer failed`);
+        setIsLoading(false);
+      }
+    }
   };
 
   const onConfirmSend = () => {
@@ -544,86 +648,7 @@ const SendWalletScreen = ({navigation, route}) => {
         `Confirm send Amount: ${amount} | Gas estimate: ${gasEstimate} | Gas Price: ${gasPrice}`,
       );
 
-      const currency = dataWallet.currency;
-
-      // Get limit transfer
-      fetch(
-        `${URL_API}&act=ap4300-getLimitTransfer&member=${dataMember.member}&currency=${currency}&amountrq=${amount}`,
-        {
-          method: 'POST',
-        },
-      )
-        .then(response => response.json())
-        .then(result => {
-          const {avaliable} = result;
-          if (avaliable === 'OK') {
-            fetch(
-              // Transfer by stock exchange
-              `${URL_API}&act=ap4300-03&member=${dataMember.member}&addrto=${address}&currency=${currency}&amount=${amount}&coinmarket=${selectedExchange}`,
-              {
-                method: 'POST',
-              },
-            )
-              .then(result => result.json())
-              .then(() => {
-                // Transfer coin
-                fetch(
-                  `${URL_API}&act=postTransferNew&to=${address}&amount=${amount}&token=${token}&member=${dataMember.member}&gasEstimate=${gasEstimate}&gasPrice=${gasPrice}`,
-                )
-                  .then(result => result.json())
-                  .then(response => {
-                    const {status, hash} = response;
-
-                    console.log(
-                      `Transfer complete.... Token: ${token} | Status: ${status} | Hash: ${hash} | act=postTransfer`,
-                    );
-                    if (status == 'success') {
-                      setIsLoading(false);
-                      setAddress('');
-                      setAmount('');
-                      setSelectedExchange('360001');
-
-                      navigation.navigate('CompleteSend', {
-                        amount,
-                        addrto: address,
-                        txid: hash,
-                        symbol: dataWallet.symbol,
-                      });
-                    } else {
-                      gasEstimateNetworkBusy();
-                      setSelectedExchange('360001');
-                      Alert.alert(lang.global_error.network_busy);
-                    }
-                  })
-                  .catch(err => {
-                    gasEstimateNetworkBusy();
-                    Alert.alert(lang.global_error.network_busy);
-                    console.log('Transfer failed postTransfer: ', err);
-                    crashlytics().recordError(new Error(err));
-                    crashlytics().log(err);
-                  });
-              })
-              .catch(err => {
-                Alert.alert(lang.global_error.network_busy);
-                console.log('Transfer failed ap4300-03: ', err);
-                gasEstimateNetworkBusy();
-                crashlytics().recordError(new Error(err));
-                crashlytics().log(err);
-              });
-          } else {
-            setIsLoading(false);
-            Alert.alert(
-              '',
-              lang && lang ? lang.screen_send.send_empty_limit : '',
-            );
-          }
-        })
-        .catch(err => {
-          Alert.alert('Check limit transfer failed');
-          setIsLoading(false);
-          crashlytics().recordError(new Error(err));
-          crashlytics().log(err);
-        });
+      postTransfer();
     }
     // Next transfer for confirmation
     else {
@@ -960,7 +985,7 @@ const SendWalletScreen = ({navigation, route}) => {
               <TouchableOpacity
                 activeOpacity={0.7}
                 style={styles.buttonConfirm}
-                onPress={cancelSend}>
+                onPress={cancelGasEstimated}>
                 <Text style={styles.textButtonConfirm}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
