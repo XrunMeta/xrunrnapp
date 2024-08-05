@@ -518,7 +518,7 @@
     "send_amount_greater_zero": "Please enter an amount greater than zero.",
     "send_balance_not_enough": "There is not enough money(or bank balance).",
     "send_address_less": "Address less than 40 letters.",
-    "send_enough_money": "Check the current amount and make sure you have enough money in your wallet including gas (transfer fee)",
+    "send_empty_limit": "The transfer limit available must greater than 0",
     "send_verification_code": "Sending verification code",
     "estimated_gas_fee": "Estimated gas fee",
     "note": "Note that you must have ethereum to transfer, If not you may lost your value.",
@@ -568,7 +568,8 @@
     "cancel_exchange": "Cancel"
   },
   "global_error": {
-    "error": "It's a server problem. Please try in a few minutes."
+    "error": "It's a server problem. Please try in a few minutes.",
+    "network_busy": "Network is busy now"
   },
 
   "screen_advertise": {

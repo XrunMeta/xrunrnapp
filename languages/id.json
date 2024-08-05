@@ -517,7 +517,7 @@
     "send_amount_greater_zero": "Harap masukkan jumlah yang lebih besar dari 0.",
     "send_balance_not_enough": "Saldo tidak mencukupi.",
     "send_address_less": "Alamat kurang dari 40 huruf.",
-    "send_enough_money": "Periksa jumlah saat ini dan pastikan Anda memiliki cukup uang di dompet Anda termasuk bahan bakar (biaya transfer)",
+    "send_empty_limit": "Batas transfer yang tersedia harus lebih dari 0",
     "send_verification_code": "Mengirim kode verifikasi",
     "estimated_gas_fee": "Gas fee",
     "note": "Perhatikan bahwa Anda harus memiliki ethereum untuk mentransfer, Jika tidak, Anda mungkin kehilangan nilai Anda.",
@@ -567,7 +567,8 @@
     "cancel_exchange": "Batal"
   },
   "global_error": {
-    "error": "Server telah masalah. Silakan mencoba lagi nanti."
+    "error": "Server telah masalah. Silakan mencoba lagi nanti.",
+    "network_busy": "Jaringan sedang sibuk sekarang"
   },
 
   "screen_advertise": {
