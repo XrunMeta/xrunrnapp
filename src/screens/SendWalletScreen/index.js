@@ -158,12 +158,9 @@ const SendWalletScreen = ({navigation, route}) => {
 
       if (gasOracleData.status !== '1') {
         setIsLoading(false);
-        Alert.alert(lang.global_error.error, '', [
-          {
-            text: 'OK',
-          },
-        ]);
-        cancelGasEstimated();
+        Alert.alert(lang.global_error.network_busy);
+
+        gasEstimateNetworkBusy();
         return;
       }
 
@@ -184,12 +181,9 @@ const SendWalletScreen = ({navigation, route}) => {
       console.log(`Total gas cost ETH: ${totalGasCostEthFromAPI}`);
       if (!totalGasCostEthFromAPI || !gasEstimateFromAPI || !gasPriceFromAPI) {
         setIsLoading(false);
-        Alert.alert(lang.global_error.error, '', [
-          {
-            text: 'OK',
-          },
-        ]);
-        cancelSend();
+        Alert.alert(lang.global_error.network_busy);
+
+        gasEstimateNetworkBusy();
       }
 
       setGasEstimate(gasEstimateFromAPI);
@@ -209,13 +203,9 @@ const SendWalletScreen = ({navigation, route}) => {
     } catch (e) {
       console.log(`Error gas estimated: ${e}`);
       setIsLoading(false);
-      Alert.alert(lang.global_error.error, '', [
-        {
-          text: 'OK',
-        },
-      ]);
+      Alert.alert(lang.global_error.network_busy);
 
-      cancelGasEstimated();
+      gasEstimateNetworkBusy();
     }
   };
 
@@ -284,6 +274,24 @@ const SendWalletScreen = ({navigation, route}) => {
     setCountEstimatedGas(0);
 
     setIsDisableButtonConfirm(false);
+    setIsTextBlinking(false);
+
+    setIsInsufficientBalance(false);
+  };
+
+  // If gas estimate API network busy
+  const gasEstimateNetworkBusy = () => {
+    setIsLoading(false);
+
+    setTotalGasCostEth('???');
+    setTotalTransfer('???');
+
+    setIsPopupSendConfirmation(false);
+
+    setIsInitialCallGasEstimated(false);
+    setCountEstimatedGas(0);
+
+    setIsDisableButtonConfirm(true);
     setIsTextBlinking(false);
 
     setIsInsufficientBalance(false);
@@ -531,7 +539,6 @@ const SendWalletScreen = ({navigation, route}) => {
       }
 
       setIsLoading(true);
-      cancelSend();
 
       console.log(
         `Confirm send Amount: ${amount} | Gas estimate: ${gasEstimate} | Gas Price: ${gasPrice}`,
@@ -583,24 +590,23 @@ const SendWalletScreen = ({navigation, route}) => {
                         symbol: dataWallet.symbol,
                       });
                     } else {
-                      setIsLoading(false);
-                      setIsPopupSend(false);
-                      setAddress('');
-                      setAmount('');
+                      gasEstimateNetworkBusy();
                       setSelectedExchange('360001');
-                      Alert.alert('', 'Blockchain has problem or delay.');
+                      Alert.alert(lang.global_error.network_busy);
                     }
                   })
                   .catch(err => {
-                    Alert.alert('', 'Transfer failed: ', err);
+                    gasEstimateNetworkBusy();
+                    Alert.alert(lang.global_error.network_busy);
                     console.log('Transfer failed postTransfer: ', err);
                     crashlytics().recordError(new Error(err));
                     crashlytics().log(err);
                   });
               })
               .catch(err => {
-                Alert.alert('', 'Transfer failed: ', err);
+                Alert.alert(lang.global_error.network_busy);
                 console.log('Transfer failed ap4300-03: ', err);
+                gasEstimateNetworkBusy();
                 crashlytics().recordError(new Error(err));
                 crashlytics().log(err);
               });
@@ -608,12 +614,12 @@ const SendWalletScreen = ({navigation, route}) => {
             setIsLoading(false);
             Alert.alert(
               '',
-              lang && lang ? lang.screen_send.send_enough_money : '',
+              lang && lang ? lang.screen_send.send_empty_limit : '',
             );
           }
         })
         .catch(err => {
-          Alert.alert('', 'Check limit transfer failed: ', err);
+          Alert.alert('Check limit transfer failed');
           setIsLoading(false);
           crashlytics().recordError(new Error(err));
           crashlytics().log(err);
@@ -868,10 +874,11 @@ const SendWalletScreen = ({navigation, route}) => {
                           opacity: fadeAnimEstimatedGas,
                         }}>
                         <Text style={styles.textPartRight}>
-                          {parseFloat(totalGasCostEth)
-                            .toString()
-                            .substring(0, 12)}
-                          ETH
+                          {typeof totalGasCostEth === 'string'
+                            ? totalGasCostEth
+                            : parseFloat(totalGasCostEth)
+                                .toString()
+                                .substring(0, 12) + 'ETH'}
                         </Text>
                       </Animated.Text>
                     </View>
@@ -932,10 +939,11 @@ const SendWalletScreen = ({navigation, route}) => {
                           opacity: fadeAnimEstimatedGas,
                         }}>
                         <Text style={styles.textPartRight}>
-                          {parseFloat(totalGasCostEth)
-                            .toString()
-                            .substring(0, 12)}
-                          ETH
+                          {typeof totalGasCostEth === 'string'
+                            ? totalGasCostEth
+                            : parseFloat(totalGasCostEth)
+                                .toString()
+                                .substring(0, 12) + 'ETH'}
                         </Text>
                       </Animated.Text>
                     </View>
