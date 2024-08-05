@@ -516,7 +516,7 @@
     "send_amount_greater_zero": "请输入大于零的金额。",
     "send_balance_not_enough": "没有足够的钱（或银行余额）。",
     "send_address_less": "地址少于40个字母。",
-    "send_enough_money": "检查当前金额，并确保您的钱包中有足够的钱，包括燃气费（转账费）",
+    "send_empty_limit": "可用转账限额必须大于 0。",
     "send_verification_code": "发送验证码",
     "confirm_alert": "确认",
     "estimated_gas_fee": "Gas fee",
@@ -567,7 +567,8 @@
     "cancel_exchange": "取消"
   },
   "global_error": {
-    "error": "服务器有问题，请稍后再试."
+    "error": "服务器有问题，请稍后再试.",
+    "network_busy": "网络繁忙"
   },
 
   "screen_advertise": {
