@@ -12,7 +12,7 @@ import ButtonList from '../../components/ButtonList/ButtonList';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
-import {getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {getLanguage2, getFontFam, fontSize, URL_API} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const SettingScreen = () => {
@@ -21,6 +21,9 @@ const SettingScreen = () => {
 
   const navigation = useNavigation();
 
+  const [member, setMember] = useState(0);
+  const [statusOtherChain, setStatusOtherChain] = useState('off');
+
   useEffect(() => {
     // Get Language
     const fetchData = async () => {
@@ -28,6 +31,10 @@ const SettingScreen = () => {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
         const screenLang = await getLanguage2(currentLanguage);
         setLang(screenLang);
+
+        const userData = await AsyncStorage.getItem('userData');
+        const dataMember = JSON.parse(userData);
+        setMember(dataMember.member);
       } catch (err) {
         crashlytics().recordError(new Error(err));
         crashlytics().log(err);
@@ -37,6 +44,21 @@ const SettingScreen = () => {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (member) {
+      const statusOtherChain = async () => {
+        const request = await fetch(
+          `${URL_API}&act=show-other-chains&member=${member}`,
+        );
+        const response = await request.json();
+        const status = response.status;
+        setStatusOtherChain(status.toLowerCase());
+      };
+
+      statusOtherChain();
+    }
+  }, [member]);
 
   const onBack = () => {
     navigation.navigate('InfoHome');
@@ -136,6 +158,16 @@ const SettingScreen = () => {
               lang && lang ? lang.screen_setting.category.account.close : ''
             }
             onPress={onClose}
+          />
+          <ButtonList
+            label={lang && lang ? lang.screen_setting.other_chain.info : ''}
+            isHaveSubText
+            subText={statusOtherChain}
+            onPress={() =>
+              Alert.alert(
+                lang && lang ? lang.screen_setting.other_chain.alert_press : '',
+              )
+            }
           />
         </ScrollView>
       </View>
