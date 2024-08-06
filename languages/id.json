@@ -469,6 +469,10 @@
     },
     "button": {
       "logout": "Apakah Anda yakin ingin keluar?"
+    },
+    "other_chain": {
+      "info": "Tampilkan Rantai Lainnya",
+      "alert_press": "Hanya admin yang bisa mengubah"
     }
   },
   "screen_wallet": {

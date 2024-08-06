@@ -470,6 +470,10 @@
     },
     "button": {
       "logout": "Are you sure you want to logout?"
+    },
+    "other_chain": {
+      "info": "Show Other Chains",
+      "alert_press": "Only admin can change"
     }
   },
   "screen_wallet": {
