@@ -29,7 +29,7 @@ import crashlytics from '@react-native-firebase/crashlytics';
 
 const WalletScreen = ({navigation, route}) => {
   const [lang, setLang] = useState('');
-  const [member, setMember] = useState('');
+  const [member, setMember] = useState(0);
   const [currentCurrency, setCurrentCurrency] = useState('1');
   const [dataWallet, setDataWallet] = useState({});
   const [cardsData, setCardsData] = useState([]);
@@ -46,6 +46,8 @@ const WalletScreen = ({navigation, route}) => {
 
   const [emptyWallet, setEmptyWallet] = useState(false);
   const flatlistRef = useRef(null);
+
+  const [statusOtherChain, setStatusOtherChain] = useState('off');
 
   useEffect(() => {
     // Get Language Data
@@ -101,10 +103,9 @@ const WalletScreen = ({navigation, route}) => {
   // Get data member
   const getUserData = async () => {
     try {
-      if (member !== '') {
+      if (member) {
         // Get data wallet
         console.log('Load data wallet....');
-
         fetch(
           `${URL_API}&act=app4000-01-rev-01&member=${member}&daysbefore=7`,
           {
@@ -139,6 +140,9 @@ const WalletScreen = ({navigation, route}) => {
             crashlytics().recordError(new Error(error));
             crashlytics().log(error);
             setIsLoading(false);
+            console.log(
+              `Failed for get your wallet, please try again later: ${error}`,
+            );
           });
       }
     } catch (err) {
@@ -151,6 +155,18 @@ const WalletScreen = ({navigation, route}) => {
 
   useEffect(() => {
     getUserData();
+
+    // Get status other chain, if off just show ETH network, if on show ALL network
+    const statusOtherChain = async () => {
+      const request = await fetch(
+        `${URL_API}&act=show-other-chains&member=${member}`,
+      );
+      const response = await request.json();
+      const status = response.status;
+      setStatusOtherChain(status.toLowerCase());
+    };
+
+    statusOtherChain();
   }, [member]);
 
   useEffect(() => {
@@ -185,34 +201,20 @@ const WalletScreen = ({navigation, route}) => {
     }
   }, [route]);
 
-  const routeComponent = ({item}) => {
-    const {
-      limitTransfer,
-      amount: tempAmount,
-      Wamount: tempWamount,
-      symbol,
-      address,
-      displaystr,
-      symbolimg: tempSymbolimg,
-      currency,
-      Eamount,
-      countrysymbol,
-    } = item;
-
-    const Wamount = parseFloat(tempWamount).toFixed(2);
-    const amount = parseFloat(tempAmount).toFixed(2);
-
-    // Hexa colors wallet
-    const walletColors = {
-      XRUN: '#187f9a',
-      ETH: '#a84249',
-      DIGX: '#343b58',
-      RUN: '#DEA936',
-      MEMP: '#343b58',
-    };
-
-    const symbolimg = tempSymbolimg.replace(/(\r\n|\n|\r)/gm, '');
-
+  const uiCardWallet = (
+    walletColors,
+    displaystr,
+    Wamount,
+    Eamount,
+    symbol,
+    currency,
+    limitTransfer,
+    amount,
+    countrysymbol,
+    address,
+    symbolimg,
+    subcurrency,
+  ) => {
     return (
       <View
         style={[styles.card, {backgroundColor: walletColors[symbol]}]}
@@ -256,7 +258,11 @@ const WalletScreen = ({navigation, route}) => {
             </View>
           )}
 
-          <View style={styles.wrapperTextwallet}>
+          <View
+            style={{
+              opacity: subcurrency == 5201 ? 0 : 1,
+              ...styles.wrapperTextwallet,
+            }}>
             <Text style={styles.textWallet}>
               {lang.screen_wallet.catch ? lang.screen_wallet.catch : ''}
             </Text>
@@ -304,6 +310,72 @@ const WalletScreen = ({navigation, route}) => {
         </View>
       </View>
     );
+  };
+
+  const routeComponent = ({item}) => {
+    const {
+      limitTransfer,
+      amount: tempAmount,
+      Wamount: tempWamount,
+      symbol,
+      address,
+      displaystr,
+      symbolimg: tempSymbolimg,
+      currency,
+      Eamount,
+      countrysymbol,
+      subcurrency,
+    } = item;
+
+    const Wamount = parseFloat(tempWamount).toFixed(2);
+    const amount = parseFloat(tempAmount).toFixed(2);
+
+    // Hexa colors wallet
+    const walletColors = {
+      XRUN: '#187f9a',
+      ETH: '#a84249',
+      DIGX: '#343b58',
+      RUN: '#DEA936',
+      MEMP: '#4b5068',
+      POL: '#9339D5',
+    };
+
+    const symbolimg = tempSymbolimg.replace(/(\r\n|\n|\r)/gm, '');
+
+    console.log(statusOtherChain);
+    if (statusOtherChain === 'on') {
+      return uiCardWallet(
+        walletColors,
+        displaystr,
+        Wamount,
+        Eamount,
+        symbol,
+        currency,
+        limitTransfer,
+        amount,
+        countrysymbol,
+        address,
+        symbolimg,
+        subcurrency,
+      );
+    } else {
+      if (subcurrency == 5000 || subcurrency == 5100) {
+        return uiCardWallet(
+          walletColors,
+          displaystr,
+          Wamount,
+          Eamount,
+          symbol,
+          currency,
+          limitTransfer,
+          amount,
+          countrysymbol,
+          address,
+          symbolimg,
+          subcurrency,
+        );
+      }
+    }
   };
 
   const handleShowQR = (event, cardData) => {
@@ -369,24 +441,24 @@ const WalletScreen = ({navigation, route}) => {
         <View style={styles.containerCard}>
           <ScrollView style={{flex: 1}}>
             <View style={styles.containerCard}>
-              {/* {emptyWallet || ( */}
-              <FlatList
-                ref={flatlistRef}
-                data={cardsData}
-                renderItem={routeComponent}
-                getItemLayout={getItemLayout}
-                horizontal
-                pagingEnabled
-                showsHorizontalScrollIndicator={false}
-                onMomentumScrollEnd={event => {
-                  const index = Math.round(
-                    event.nativeEvent.contentOffset.x /
-                      event.nativeEvent.layoutMeasurement.width,
-                  );
-                  setCurrentCurrency(cardsData[index].currency);
-                }}
-              />
-              {/* )} */}
+              {emptyWallet || (
+                <FlatList
+                  ref={flatlistRef}
+                  data={cardsData}
+                  renderItem={routeComponent}
+                  getItemLayout={getItemLayout}
+                  horizontal
+                  pagingEnabled
+                  showsHorizontalScrollIndicator={false}
+                  onMomentumScrollEnd={event => {
+                    const index = Math.round(
+                      event.nativeEvent.contentOffset.x /
+                        event.nativeEvent.layoutMeasurement.width,
+                    );
+                    setCurrentCurrency(cardsData[index].currency);
+                  }}
+                />
+              )}
             </View>
           </ScrollView>
         </View>
