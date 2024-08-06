@@ -468,6 +468,10 @@
     },
     "button": {
       "logout": "로그아웃 하시겠습니까?"
+    },
+    "other_chain": {
+      "info": "다른 체인 표시",
+      "alert_press": "관리자만 변경할 수 있습니다."
     }
   },
   "screen_wallet": {

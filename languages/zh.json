@@ -468,6 +468,10 @@
     },
     "button": {
       "logout": "您确定要注销吗？"
+    },
+    "other_chain": {
+      "info": "显示其他连锁店",
+      "alert_press": "只有管​​理员可以更改"
     }
   },
   "screen_wallet": {
