@@ -818,7 +818,7 @@ const TableWalletCard = ({
 
           default:
             console.log(`Failed get transaction ${key}`);
-            Alert.alert('', `Failed get list transactions ${key}`);
+            Alert.alert(`Failed get list transactions ${key}`);
             break;
         }
       } catch (error) {
