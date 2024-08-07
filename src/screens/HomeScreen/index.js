@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   Alert,
   BackHandler,
+  Platform,
+  Linking,
 } from 'react-native';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import ARScreen from '../ARScreen/ARScreen';
@@ -141,7 +143,13 @@ export default function Home({route}) {
       ]}
       onPress={() => {
         console.log('Pergi ke ' + tabName);
-        onPress();
+        if (Platform.OS === 'android' && tabName === 'Wallet') {
+          navigation.navigate('WalletHome');
+        } else if (Platform.OS === 'ios' && tabName === 'Wallet') {
+          Linking.openURL('https://www.facebook.com');
+        } else {
+          onPress();
+        }
       }}>
       <Image
         source={icon}
@@ -199,7 +207,9 @@ export default function Home({route}) {
                 ? lang.screen_bottomTab.wallet.title
                 : 'Wallet',
               () => {
-                navigation.navigate('WalletHome');
+                {
+                  navigation.navigate('WalletHome');
+                }
               },
             )}
             {renderTabButton(
