@@ -525,8 +525,14 @@
     "send_empty_limit": "The transfer limit available must greater than 0",
     "send_verification_code": "Sending verification code",
     "estimated_gas_fee": "Estimated gas fee",
-    "note": "Note that you must have ethereum to transfer, If not you may lost your value.",
-    "note_insufficient_balance": "You do not have enough balance in your account to pay for transaction fees on Ethereum mainnet network",
+    "notes": {
+      "note1": "Note that you must have",
+      "note2": "to transfer, If not you may lost your value."
+    },
+    "note_insufficient_balance": {
+      "note1": "You do not have enough balance in your account to pay for transaction fees on",
+      "note2": "mainnet network"
+    },
     "next": "Next",
     "confirm": "Confirm"
   },
