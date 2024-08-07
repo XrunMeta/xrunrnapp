@@ -40,19 +40,26 @@ const SendWalletScreen = ({navigation, route}) => {
   const [lang, setLang] = useState('');
   const [balance, setBalance] = useState(0);
   const [limitTransfer, setLimitTransfer] = useState(0);
-  const [iconNextIsDisabled, setIconNextIsDisabled] = useState(true);
-  const [amount, setAmount] = useState('');
-  const [address, setAddress] = useState('');
+  const [amount, setAmount] = useState('0.00002');
+  const [address, setAddress] = useState(
+    '0x30a9B3fcFCc0aD66B70f2d473b39a35252002d89',
+  );
+
+  const [chainId, setChainId] = useState(1);
   const [currency, setCurrency] = useState('1');
   const [token, setToken] = useState('');
+  const [network, setNetwork] = useState('');
+
   const {dataWallet} = route.params;
   const [selectedExchange, setSelectedExchange] = useState('360001');
   const [isVisibleReadQR, setIsVisibleReadQR] = useState(false);
   const [dataMember, setDataMember] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
   const [cointrace, setCointrace] = useState([]);
+
+  const [isLoading, setIsLoading] = useState(true);
   const [isPopupSend, setIsPopupSend] = useState(false);
   const [isPopupSendConfirmation, setIsPopupSendConfirmation] = useState(false);
+  const [isIconNextDisabled, setIsIconNextDisabled] = useState(true);
 
   // Animated notification in QR
   const [fadeAnim] = useState(new Animated.Value(0));
@@ -61,7 +68,7 @@ const SendWalletScreen = ({navigation, route}) => {
   // About Estimated gas
   const [gasEstimate, setGasEstimate] = useState(0);
   const [gasPrice, setGasPrice] = useState(0);
-  const [totalGasCostEth, setTotalGasCostEth] = useState(0);
+  const [totalGasCost, setTotalGasCost] = useState(0);
 
   const [countEstimatedGas, setCountEstimatedGas] = useState(0);
   const [isInitialCallGasEstimated, setIsInitialCallGasEstimated] =
@@ -85,6 +92,31 @@ const SendWalletScreen = ({navigation, route}) => {
       // Set token xr or et
       const token = dataWallet.currency == 1 ? 'xr' : 'et';
       setToken(token);
+    }
+  }, [dataWallet]);
+
+  // Set the current network
+  useEffect(() => {
+    if (dataWallet.subcurrency) {
+      const subcurrency = dataWallet.subcurrency;
+
+      switch (subcurrency) {
+        case '5000':
+        case '5100':
+          setNetwork('ETH');
+          setChainId(1);
+          break;
+        case '5200':
+        case '5201':
+          setNetwork('POL');
+          setChainId(137);
+          setToken('');
+          break;
+        default:
+          setNetwork('ETH');
+          setChainId(1);
+          break;
+      }
     }
   }, [dataWallet]);
 
@@ -124,7 +156,7 @@ const SendWalletScreen = ({navigation, route}) => {
 
   // Interval gas estimated
   useEffect(() => {
-    if (totalGasCostEth && isInitialCallGasEstimated) {
+    if (totalGasCost && isInitialCallGasEstimated) {
       setIsLoading(false);
       setIsPopupSend(true);
       console.log(`Run the setInterval for call function getEstimatedGas()`);
@@ -153,42 +185,27 @@ const SendWalletScreen = ({navigation, route}) => {
         console.log('Interval cleared.');
       };
     }
-  }, [totalGasCostEth, isInitialCallGasEstimated]);
+  }, [totalGasCost, isInitialCallGasEstimated]);
 
   // Function for get estimated gas
   const getEstimatedGas = async () => {
     try {
-      console.log(`Gas estimated token: ${token}`);
-
-      const gasOracleResponse = await fetch(
-        `https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=${process.env.ETHERSCAN_APIKEY}`,
+      console.log(
+        `Gas estimated network ${network} | chainId: ${chainId} | token: ${token}`,
       );
-      const gasOracleData = await gasOracleResponse.json();
-
-      if (gasOracleData.status !== '1') {
-        setIsLoading(false);
-        Alert.alert(lang.global_error.network_busy);
-
-        gasEstimateNetworkBusy();
-        return;
-      }
-
-      const priorityGasTracker = gasOracleData.result.SafeGasPrice;
-      console.log(`Priority gas tracker: ${priorityGasTracker}`);
 
       const request = await fetch(
-        `${URL_API}&act=gasEstimated&from=${dataWallet.address}&to=${address}&amount=${amount}&token=${token}&priorityGasTracker=${priorityGasTracker}`,
+        `${URL_API}&act=gasEstimated&from=${dataWallet.address}&to=${address}&amount=${amount}&token=${token}&network=${network}&chainId=${chainId}`,
       );
-
       const responses = await request.json();
       const results = responses['data'];
 
       const gasEstimateFromAPI = results['gasLimit'];
       const gasPriceFromAPI = results['gasPrice'];
-      const totalGasCostEthFromAPI = results['totalGasCostEth'];
+      const totalGasCostFromAPI = results['totalGasCost'];
 
-      console.log(`Total gas cost ETH: ${totalGasCostEthFromAPI}`);
-      if (!totalGasCostEthFromAPI || !gasEstimateFromAPI || !gasPriceFromAPI) {
+      console.log(`Total gas cost ${network}: ${totalGasCostFromAPI}`);
+      if (!totalGasCostFromAPI || !gasEstimateFromAPI || !gasPriceFromAPI) {
         setIsLoading(false);
         Alert.alert(lang.global_error.network_busy);
 
@@ -197,24 +214,24 @@ const SendWalletScreen = ({navigation, route}) => {
 
       setGasEstimate(gasEstimateFromAPI);
       setGasPrice(gasPriceFromAPI);
-      setTotalGasCostEth(totalGasCostEthFromAPI);
+      setTotalGasCost(totalGasCostFromAPI);
 
       console.log('Active button confirm');
       setIsDisableButtonConfirm(false);
       setIsTextBlinking(false);
 
-      const total = parseFloat(totalGasCostEthFromAPI) + parseFloat(amount);
+      const total = parseFloat(totalGasCostFromAPI) + parseFloat(amount);
       setTotalTransfer(total);
 
       if (!isInitialCallGasEstimated) {
         setIsInitialCallGasEstimated(true);
       }
-    } catch (e) {
-      console.log(`Error gas estimated: ${e}`);
-      setIsLoading(false);
+    } catch (error) {
       Alert.alert(lang.global_error.network_busy);
-
+      setIsLoading(false);
       gasEstimateNetworkBusy();
+
+      console.log(`Error gas estimated: ${error}`);
     }
   };
 
@@ -250,7 +267,7 @@ const SendWalletScreen = ({navigation, route}) => {
   useEffect(() => {
     if (isPopupSendConfirmation) {
       console.log(
-        `Total transfer: ${totalTransfer} | Balance: ${balance} | Gas estimated: ${totalGasCostEth} | Total transfer > balance: ${
+        `Total transfer: ${totalTransfer} | Balance: ${balance} | Gas estimated: ${totalGasCost} | Total transfer > balance: ${
           totalTransfer > balance
         }`,
       );
@@ -292,7 +309,7 @@ const SendWalletScreen = ({navigation, route}) => {
   const gasEstimateNetworkBusy = () => {
     setIsLoading(false);
 
-    setTotalGasCostEth('???');
+    setTotalGasCost('???');
     setTotalTransfer('???');
 
     setIsPopupSendConfirmation(false);
@@ -393,13 +410,13 @@ const SendWalletScreen = ({navigation, route}) => {
 
   useEffect(() => {
     if (amount === '' || amount > balance) {
-      setIconNextIsDisabled(true);
+      setIsIconNextDisabled(true);
     } else if (amount == 0) {
-      setIconNextIsDisabled(true);
+      setIsIconNextDisabled(true);
     } else if (address === '' || address.length < 40) {
-      setIconNextIsDisabled(true);
+      setIsIconNextDisabled(true);
     } else {
-      setIconNextIsDisabled(false);
+      setIsIconNextDisabled(false);
     }
   }, [amount, address]);
 
@@ -655,7 +672,7 @@ const SendWalletScreen = ({navigation, route}) => {
       setIsDisableButtonConfirm(true);
       setIsPopupSendConfirmation(true);
 
-      const total = parseFloat(totalGasCostEth) + parseFloat(amount);
+      const total = parseFloat(totalGasCost) + parseFloat(amount);
       setTotalTransfer(total);
     }
   };
@@ -782,7 +799,7 @@ const SendWalletScreen = ({navigation, route}) => {
           activeOpacity={0.6}>
           <Image
             source={
-              iconNextIsDisabled
+              isIconNextDisabled
                 ? require('../../../assets/images/ico-btn-passive.png')
                 : require('../../../assets/images/ico-btn-active.png')
             }
@@ -869,6 +886,7 @@ const SendWalletScreen = ({navigation, route}) => {
             <View style={styles.contentConversion}>
               {isPopupSendConfirmation ? (
                 <>
+                  {/* With total transfer */}
                   <View style={styles.wrapperTextConversion}>
                     <Text style={styles.textPartLeft}>
                       {' '}
@@ -899,11 +917,11 @@ const SendWalletScreen = ({navigation, route}) => {
                           opacity: fadeAnimEstimatedGas,
                         }}>
                         <Text style={styles.textPartRight}>
-                          {typeof totalGasCostEth === 'string'
-                            ? totalGasCostEth
-                            : parseFloat(totalGasCostEth)
+                          {totalGasCost === '???'
+                            ? totalGasCost
+                            : `${parseFloat(totalGasCost)
                                 .toString()
-                                .substring(0, 12) + 'ETH'}
+                                .substring(0, 12)}${network}`}
                         </Text>
                       </Animated.Text>
                     </View>
@@ -919,7 +937,7 @@ const SendWalletScreen = ({navigation, route}) => {
                       }}>
                       <Text style={styles.textPartRight}>
                         {totalTransfer.toString().substring(0, 12)}
-                        ETH
+                        {network}
                       </Text>
                     </Animated.Text>
                   </View>
@@ -927,7 +945,16 @@ const SendWalletScreen = ({navigation, route}) => {
                     <View style={styles.wrapperTextConversion}>
                       <Text style={[styles.textPartLeft, {color: 'red'}]}>
                         {lang && lang
-                          ? lang.screen_send.note_insufficient_balance
+                          ? lang.screen_send.note_insufficient_balance.note1
+                          : ''}
+                        <Text style={{textTransform: 'capitalize'}}>
+                          {' '}
+                          {network === 'ETH'
+                            ? 'ethereum'
+                            : dataWallet.displaystr}{' '}
+                        </Text>
+                        {lang && lang
+                          ? lang.screen_send.note_insufficient_balance.note2
                           : ''}
                       </Text>
                     </View>
@@ -935,6 +962,7 @@ const SendWalletScreen = ({navigation, route}) => {
                 </>
               ) : (
                 <>
+                  {/* Without total transfer */}
                   <View style={styles.wrapperTextConversion}>
                     <Text style={styles.textPartLeft}>
                       {lang && lang ? lang.screen_setting.close.desc.clo2 : ''}
@@ -964,18 +992,25 @@ const SendWalletScreen = ({navigation, route}) => {
                           opacity: fadeAnimEstimatedGas,
                         }}>
                         <Text style={styles.textPartRight}>
-                          {typeof totalGasCostEth === 'string'
-                            ? totalGasCostEth
-                            : parseFloat(totalGasCostEth)
+                          {totalGasCost === '???'
+                            ? totalGasCost
+                            : `${parseFloat(totalGasCost)
                                 .toString()
-                                .substring(0, 12) + 'ETH'}
+                                .substring(0, 12)}${network}`}
                         </Text>
                       </Animated.Text>
                     </View>
                   </View>
                   <View style={styles.wrapperTextConversion}>
                     <Text style={[styles.textPartLeft, {color: 'red'}]}>
-                      {lang && lang ? lang.screen_send.note : ''}
+                      {lang && lang ? lang.screen_send.notes.note1 : ''}
+                      <Text style={{textTransform: 'lowercase'}}>
+                        {' '}
+                        {network === 'ETH'
+                          ? 'ethereum'
+                          : dataWallet.displaystr}{' '}
+                      </Text>
+                      {lang && lang ? lang.screen_send.notes.note2 : ''}
                     </Text>
                   </View>
                 </>
