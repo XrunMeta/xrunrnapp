@@ -55,6 +55,7 @@ import CompleteConversion from '../screens/CompleteConversion';
 import SuccessCloseMembership from '../screens/SettingScreen/SuccessCloseMembership';
 import Exchange from '../screens/ExchangeWalletScreen';
 import SplashScreen from '../screens/SplashScreen/SplashScreen';
+import iOSWallet from '../screens/WalletScreen/iosWalllet';
 
 export default Router = () => {
   const Stack = createNativeStackNavigator();
@@ -172,6 +173,7 @@ export default Router = () => {
 
         {/* Wallet */}
         <Stack.Screen name="WalletHome" component={WalletScreen} />
+        <Stack.Screen name="iOSWallet" component={iOSWallet} />
         <Stack.Screen name="SendWallet" component={SendWalletScreen} />
         <Stack.Screen name="ShowAd" component={ShowAdScreen} />
         <Stack.Screen name="CompleteSend" component={CompleteSend} />
