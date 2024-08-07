@@ -157,16 +157,19 @@ const WalletScreen = ({navigation, route}) => {
     getUserData();
 
     // Get status other chain, if off just show ETH network, if on show ALL network
-    const statusOtherChain = async () => {
-      const request = await fetch(
-        `${URL_API}&act=show-other-chains&member=${member}`,
-      );
-      const response = await request.json();
-      const status = response.status;
-      setStatusOtherChain(status.toLowerCase());
-    };
+    if (member) {
+      const statusOtherChain = async () => {
+        const request = await fetch(
+          `${URL_API}&act=show-other-chains&member=${member}`,
+        );
+        const response = await request.json();
+        const status = response.status;
+        console.log(`Status show other chains: ${status}`);
+        setStatusOtherChain(status.toLowerCase());
+      };
 
-    statusOtherChain();
+      statusOtherChain();
+    }
   }, [member]);
 
   useEffect(() => {
@@ -214,6 +217,7 @@ const WalletScreen = ({navigation, route}) => {
     address,
     symbolimg,
     subcurrency,
+    item,
   ) => {
     return (
       <View
@@ -260,7 +264,7 @@ const WalletScreen = ({navigation, route}) => {
 
           <View
             style={{
-              opacity: subcurrency == 5201 ? 0 : 1,
+              opacity: subcurrency != 5000 && subcurrency != 5100 ? 0 : 1,
               ...styles.wrapperTextwallet,
             }}>
             <Text style={styles.textWallet}>
@@ -342,7 +346,6 @@ const WalletScreen = ({navigation, route}) => {
 
     const symbolimg = tempSymbolimg.replace(/(\r\n|\n|\r)/gm, '');
 
-    console.log(statusOtherChain);
     if (statusOtherChain === 'on') {
       return uiCardWallet(
         walletColors,
@@ -357,6 +360,7 @@ const WalletScreen = ({navigation, route}) => {
         address,
         symbolimg,
         subcurrency,
+        item,
       );
     } else {
       if (subcurrency == 5000 || subcurrency == 5100) {
@@ -373,6 +377,7 @@ const WalletScreen = ({navigation, route}) => {
           address,
           symbolimg,
           subcurrency,
+          item,
         );
       }
     }
