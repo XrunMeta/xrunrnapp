@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   Alert,
   BackHandler,
+  Platform,
+  Linking,
 } from 'react-native';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import ARScreen from '../ARScreen/ARScreen';
@@ -141,7 +143,13 @@ export default function Home({route}) {
       ]}
       onPress={() => {
         console.log('Pergi ke ' + tabName);
-        onPress();
+        if (Platform.OS === 'android' && tabName === 'Wallet') {
+          navigation.replace('WalletHome');
+        } else if (Platform.OS === 'ios' && tabName === 'Wallet') {
+          Linking.openURL('https://www.facebook.com');
+        } else {
+          onPress();
+        }
       }}>
       <Image
         source={icon}
@@ -199,7 +207,9 @@ export default function Home({route}) {
                 ? lang.screen_bottomTab.wallet.title
                 : 'Wallet',
               () => {
-                navigation.navigate('WalletHome');
+                {
+                  navigation.replace('WalletHome');
+                }
               },
             )}
             {renderTabButton(
@@ -209,7 +219,7 @@ export default function Home({route}) {
                 ? lang.screen_bottomTab.advertise.title
                 : 'Advertise',
               () => {
-                navigation.navigate('AdvertiseHome');
+                navigation.replace('AdvertiseHome');
               },
             )}
 
@@ -301,7 +311,7 @@ export default function Home({route}) {
                 ? lang.screen_bottomTab.notify.title
                 : 'Notify',
               () => {
-                navigation.navigate('NotifyHome');
+                navigation.replace('NotifyHome');
               },
             )}
             {renderTabButton(
@@ -311,7 +321,7 @@ export default function Home({route}) {
                 ? lang.screen_bottomTab.info.title
                 : 'Info',
               () => {
-                navigation.navigate('InfoHome');
+                navigation.replace('InfoHome');
               },
             )}
           </View>
