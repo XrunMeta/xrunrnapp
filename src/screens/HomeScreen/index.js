@@ -144,7 +144,7 @@ export default function Home({route}) {
       onPress={() => {
         console.log('Pergi ke ' + tabName);
         if (Platform.OS === 'android' && tabName === 'Wallet') {
-          navigation.navigate('WalletHome');
+          navigation.replace('WalletHome');
         } else if (Platform.OS === 'ios' && tabName === 'Wallet') {
           Linking.openURL('https://www.facebook.com');
         } else {
@@ -208,7 +208,7 @@ export default function Home({route}) {
                 : 'Wallet',
               () => {
                 {
-                  navigation.navigate('WalletHome');
+                  navigation.replace('WalletHome');
                 }
               },
             )}
@@ -219,7 +219,7 @@ export default function Home({route}) {
                 ? lang.screen_bottomTab.advertise.title
                 : 'Advertise',
               () => {
-                navigation.navigate('AdvertiseHome');
+                navigation.replace('AdvertiseHome');
               },
             )}
 
@@ -311,7 +311,7 @@ export default function Home({route}) {
                 ? lang.screen_bottomTab.notify.title
                 : 'Notify',
               () => {
-                navigation.navigate('NotifyHome');
+                navigation.replace('NotifyHome');
               },
             )}
             {renderTabButton(
@@ -321,7 +321,7 @@ export default function Home({route}) {
                 ? lang.screen_bottomTab.info.title
                 : 'Info',
               () => {
-                navigation.navigate('InfoHome');
+                navigation.replace('InfoHome');
               },
             )}
           </View>
