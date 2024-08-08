@@ -1,20 +1,26 @@
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, Switch} from 'react-native';
 import React from 'react';
 import {fontSize, getFontFam} from '../../../utils';
 
-const ButtonList = ({label, onPress, isHaveSubText, subText = 'off'}) => {
+const ButtonList = ({
+  label,
+  onPress,
+  isHaveSubText,
+  isStatusOtherChains,
+  statusOtherChains = 'off',
+  changeStatusOtherChains,
+}) => {
   return (
     <TouchableOpacity
       onPress={onPress}
       style={{
-        backgroundColor: isHaveSubText ? '#dfdfdf' : 'white',
+        backgroundColor: 'white',
         paddingHorizontal: 12,
         marginHorizontal: 8,
         borderRadius: 10,
         marginVertical: 4,
         ...styles.shadow,
-      }}
-      activeOpacity={isHaveSubText && 1}>
+      }}>
       <View
         style={{
           flexDirection: 'row',
@@ -31,16 +37,25 @@ const ButtonList = ({label, onPress, isHaveSubText, subText = 'off'}) => {
           {label}
         </Text>
         {isHaveSubText && (
-          <Text
-            style={{
-              fontFamily: getFontFam() + 'Regular',
-              fontSize: fontSize('body'),
-              color: 'black',
-              paddingVertical: 18,
-              textTransform: 'capitalize',
-            }}>
-            {subText}
-          </Text>
+          <View style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
+            <Switch
+              trackColor={{false: 'grey', true: 'tomato'}}
+              thumbColor={'#f4f3f4'}
+              ios_backgroundColor={'grey'}
+              onValueChange={changeStatusOtherChains}
+              value={isStatusOtherChains}
+            />
+            <Text
+              style={{
+                fontFamily: getFontFam() + 'Regular',
+                fontSize: fontSize('body'),
+                color: 'black',
+                paddingVertical: 18,
+                textTransform: 'capitalize',
+              }}>
+              {statusOtherChains}
+            </Text>
+          </View>
         )}
       </View>
     </TouchableOpacity>

@@ -5,6 +5,7 @@ import {
   ScrollView,
   Alert,
   SafeAreaView,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -23,6 +24,9 @@ const SettingScreen = () => {
 
   const [member, setMember] = useState(0);
   const [statusOtherChain, setStatusOtherChain] = useState('off');
+  const [isStatusOtherChains, setIsStatusOtherChains] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Get Language
@@ -49,11 +53,14 @@ const SettingScreen = () => {
     if (member) {
       const statusOtherChain = async () => {
         const request = await fetch(
-          `${URL_API}&act=show-other-chains&member=${member}`,
+          `${URL_API}&act=showOtherChains&member=${member}`,
         );
         const response = await request.json();
         const status = response.status;
+        console.log(`Status show other chains: ${status}`);
         setStatusOtherChain(status.toLowerCase());
+        setIsStatusOtherChains(status.toLowerCase() === 'on' ? true : false);
+        setIsLoading(false);
       };
 
       statusOtherChain();
@@ -98,8 +105,59 @@ const SettingScreen = () => {
     navigation.navigate('CloseMember');
   };
 
+  const changeStatusOtherChains = () => {
+    // setIsLoading(true);
+
+    if (isStatusOtherChains) {
+      setStatusOtherChain('off');
+    } else {
+      setStatusOtherChain('on');
+    }
+
+    setIsStatusOtherChains(prevIsStatusOtherChains => !prevIsStatusOtherChains);
+
+    // Save status show other chain
+    const saveStatusOtherChain = async () => {
+      const request = await fetch(
+        `${URL_API}&act=saveStatusShowOtherChains&member=${member}&status=${
+          isStatusOtherChains ? 'off' : 'on'
+        }`,
+      );
+      const response = await request.json();
+
+      const status = response.status;
+
+      console.log(response.message);
+
+      if (status === 'success') {
+        setIsLoading(false);
+      } else {
+        console.log(`Failed save show other chains`);
+        setIsLoading(false);
+      }
+    };
+
+    saveStatusOtherChain();
+  };
+
   return (
     <SafeAreaView style={styles.root}>
+      {/* Loading */}
+      {isLoading && (
+        <View style={styles.loading}>
+          <ActivityIndicator size={'large'} color={'#fff'} />
+          <Text
+            style={{
+              color: '#fff',
+              fontFamily: getFontFam() + 'Regular',
+              fontSize: fontSize('body'),
+              marginTop: 10,
+            }}>
+            Loading...
+          </Text>
+        </View>
+      )}
+
       {/* Title */}
       <View style={{flexDirection: 'row'}}>
         <View style={{position: 'absolute', zIndex: 1}}>
@@ -162,12 +220,10 @@ const SettingScreen = () => {
           <ButtonList
             label={lang && lang ? lang.screen_setting.other_chain.info : ''}
             isHaveSubText
-            subText={statusOtherChain}
-            onPress={() =>
-              Alert.alert(
-                lang && lang ? lang.screen_setting.other_chain.alert_press : '',
-              )
-            }
+            isStatusOtherChains={isStatusOtherChains}
+            statusOtherChains={statusOtherChain}
+            changeStatusOtherChains={changeStatusOtherChains}
+            onPress={changeStatusOtherChains}
           />
         </ScrollView>
       </View>
@@ -196,5 +252,16 @@ const styles = StyleSheet.create({
     fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
+  },
+  loading: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    zIndex: 999,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

@@ -160,7 +160,7 @@ const WalletScreen = ({navigation, route}) => {
     if (member) {
       const statusOtherChain = async () => {
         const request = await fetch(
-          `${URL_API}&act=show-other-chains&member=${member}`,
+          `${URL_API}&act=showOtherChains&member=${member}`,
         );
         const response = await request.json();
         const status = response.status;
@@ -342,6 +342,7 @@ const WalletScreen = ({navigation, route}) => {
       RUN: '#DEA936',
       MEMP: '#4b5068',
       POL: '#9339D5',
+      Q8p: '#9339D5',
     };
 
     const symbolimg = tempSymbolimg.replace(/(\r\n|\n|\r)/gm, '');
