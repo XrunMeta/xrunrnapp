@@ -40,10 +40,8 @@ const SendWalletScreen = ({navigation, route}) => {
   const [lang, setLang] = useState('');
   const [balance, setBalance] = useState(0);
   const [limitTransfer, setLimitTransfer] = useState(0);
-  const [amount, setAmount] = useState('0.00002');
-  const [address, setAddress] = useState(
-    '0x30a9B3fcFCc0aD66B70f2d473b39a35252002d89',
-  );
+  const [amount, setAmount] = useState('');
+  const [address, setAddress] = useState('');
 
   const [chainId, setChainId] = useState(1);
   const [currency, setCurrency] = useState('1');
@@ -187,44 +185,76 @@ const SendWalletScreen = ({navigation, route}) => {
     }
   }, [totalGasCost, isInitialCallGasEstimated]);
 
+  // Request for get gas tracker to Inufra API
+  const gasTracker = async chainId => {
+    try {
+      const requestGasTracker = await fetch(
+        `https://gas.api.infura.io/v3/${process.env.INFURA_APIKEY}/networks/${chainId}/suggestedGasFees`,
+      );
+      const response = await requestGasTracker.json();
+      const priorityGasTracker = response.low.suggestedMaxPriorityFeePerGas;
+      return priorityGasTracker;
+    } catch (error) {
+      Alert.alert(lang.global_error.network_busy);
+      setIsLoading(false);
+      gasEstimateNetworkBusy();
+
+      console.log(`Error gas tracker: ${error}`);
+    }
+  };
+
   // Function for get estimated gas
   const getEstimatedGas = async () => {
     try {
       console.log(
         `Gas estimated network ${network} | chainId: ${chainId} | token: ${token}`,
       );
-
+      const priorityGasTracker = await gasTracker(chainId);
+      // Request for get gas estimated to gateway.php
       const request = await fetch(
-        `${URL_API}&act=gasEstimated&from=${dataWallet.address}&to=${address}&amount=${amount}&token=${token}&network=${network}&chainId=${chainId}`,
+        `${URL_API}&act=gasEstimated&from=${dataWallet.address}&to=${address}&amount=${amount}&token=${token}&network=${network}&chainId=${chainId}&priorityGasTracker=${priorityGasTracker}`,
       );
       const responses = await request.json();
       const results = responses['data'];
 
-      const gasEstimateFromAPI = results['gasLimit'];
-      const gasPriceFromAPI = results['gasPrice'];
-      const totalGasCostFromAPI = results['totalGasCost'];
+      // If data array not empty from response API
 
-      console.log(`Total gas cost ${network}: ${totalGasCostFromAPI}`);
-      if (!totalGasCostFromAPI || !gasEstimateFromAPI || !gasPriceFromAPI) {
+      if (results.length > 0) {
+        const gasEstimateFromAPI = results[0]['gasLimit'];
+        const gasPriceFromAPI = results[0]['gasPrice'];
+        const totalGasCostFromAPI = results[0]['totalGasCost'];
+
+        console.log(`Total gas cost ${network}: ${totalGasCostFromAPI}`);
+        if (!totalGasCostFromAPI || !gasEstimateFromAPI || !gasPriceFromAPI) {
+          setIsLoading(false);
+          Alert.alert(lang.global_error.network_busy);
+
+          gasEstimateNetworkBusy();
+        }
+
+        setGasEstimate(gasEstimateFromAPI);
+        setGasPrice(gasPriceFromAPI);
+        setTotalGasCost(totalGasCostFromAPI);
+
+        console.log('Active button confirm');
+        setIsDisableButtonConfirm(false);
+        setIsTextBlinking(false);
+
+        const total = parseFloat(totalGasCostFromAPI) + parseFloat(amount);
+        setTotalTransfer(total);
+
+        if (!isInitialCallGasEstimated) {
+          setIsInitialCallGasEstimated(true);
+        }
+      } else {
+        const messageResponse = responses['message'];
+
+        if (messageResponse === 'insufficient funds') {
+          Alert.alert(lang.screen_send.note_insufficient_balance_total);
+        }
+
         setIsLoading(false);
-        Alert.alert(lang.global_error.network_busy);
-
         gasEstimateNetworkBusy();
-      }
-
-      setGasEstimate(gasEstimateFromAPI);
-      setGasPrice(gasPriceFromAPI);
-      setTotalGasCost(totalGasCostFromAPI);
-
-      console.log('Active button confirm');
-      setIsDisableButtonConfirm(false);
-      setIsTextBlinking(false);
-
-      const total = parseFloat(totalGasCostFromAPI) + parseFloat(amount);
-      setTotalTransfer(total);
-
-      if (!isInitialCallGasEstimated) {
-        setIsInitialCallGasEstimated(true);
       }
     } catch (error) {
       Alert.alert(lang.global_error.network_busy);
