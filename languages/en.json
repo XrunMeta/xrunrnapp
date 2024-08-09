@@ -533,6 +533,7 @@
       "note1": "You do not have enough balance in your account to pay for transaction fees on",
       "note2": "mainnet network"
     },
+    "note_insufficient_balance_total": "Insufficient funds with gas fee + amount",
     "next": "Next",
     "confirm": "Confirm"
   },

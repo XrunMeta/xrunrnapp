@@ -532,6 +532,7 @@
       "note1": "귀하의 계좌에 거래 수수료를 지불할 만큼 충분한 잔액이 없습니다.",
       "note2": "메인넷 네트워크"
     },
+    "note_insufficient_balance_total": "가스비 + 금액이 부족합니다",
     "next": "다음",
     "confirm": "확인하다"
   },

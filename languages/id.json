@@ -532,6 +532,7 @@
       "note1": "Anda tidak memiliki saldo yang cukup di akun Anda untuk membayar biaya",
       "note2": "di jaringan mainnet"
     },
+    "note_insufficient_balance_total": "Dana tidak mencukupi dengan biaya gas + jumlah",
     "next": "Berikutnya",
     "confirm": "Konfirmasi"
   },

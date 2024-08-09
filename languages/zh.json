@@ -532,6 +532,7 @@
       "note1": "您的账户余额不足以支付交易费用",
       "note2": "主网网络"
     },
+    "note_insufficient_balance_total": "资金不足（gas 费 + 金额）",
     "next": "下一个",
     "confirm": "确认"
   },
