@@ -10,6 +10,7 @@ import {
   Alert,
   Modal,
   SafeAreaView,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -26,6 +27,8 @@ const InfoScreen = () => {
   const [userDetails, setUserDetails] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
   const [refEmail, setRefEmail] = useState('');
+
+  const [isLoading, setIsLoading] = useState(true);
 
   let ScreenHeight = Dimensions.get('window').height;
 
@@ -49,6 +52,7 @@ const InfoScreen = () => {
         const userData = userJsonData.data[0];
 
         console.log('Info Screen -> ' + JSON.stringify(userData));
+        setIsLoading(false);
 
         setUserDetails({
           email: userData.email,
@@ -66,6 +70,7 @@ const InfoScreen = () => {
         console.error('Error fetching user data: ', err);
         crashlytics().recordError(new Error(err));
         crashlytics().log(err);
+        setIsLoading(false);
       }
     };
 
@@ -186,6 +191,22 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
 
   return (
     <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
+      {/* Loading */}
+      {isLoading && (
+        <View style={styles.loading}>
+          <ActivityIndicator size={'large'} color={'#fff'} />
+          <Text
+            style={{
+              color: '#fff',
+              fontFamily: getFontFam() + 'Regular',
+              fontSize: fontSize('body'),
+              marginTop: 10,
+            }}>
+            Loading...
+          </Text>
+        </View>
+      )}
+
       {/* Title */}
       <View style={{flexDirection: 'row'}}>
         <View style={{position: 'absolute', zIndex: 1}}>
@@ -428,5 +449,16 @@ const styles = StyleSheet.create({
     fontSize: fontSize('body'),
     color: '#051C60',
     fontFamily: getFontFam() + 'Bold',
+  },
+  loading: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    zIndex: 999,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
