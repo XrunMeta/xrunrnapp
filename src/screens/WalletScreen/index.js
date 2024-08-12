@@ -83,15 +83,21 @@ const WalletScreen = ({navigation, route}) => {
     getMember();
   }, []);
 
-  // Start Flatlist ref
+  // Start Flatlist ref for after transfer success automatic move to XRUN card
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (flatlistRef.current && cardsData.length > 1) {
-        flatlistRef.current.scrollToIndex({animated: true, index: 0});
+      if (flatlistRef.current && cardsData.length > 1 && route.params) {
+        if (
+          route.params.completeSend === 'true' ||
+          route.params.completeConversion === 'true'
+        ) {
+          console.log('Move to XRUN card');
+          flatlistRef.current.scrollToIndex({animated: true, index: 0});
+        }
       }
     }, 100); // Delay to ensure FlatList is fully rendered
     return () => clearTimeout(timer);
-  }, [cardsData]);
+  }, [flatlistRef, cardsData, route]);
 
   const getItemLayout = (data, index) => ({
     length: Dimensions.get('window').width,
@@ -198,7 +204,7 @@ const WalletScreen = ({navigation, route}) => {
         route.params.completeSend === 'true' ||
         route.params.completeConversion === 'true'
       ) {
-        setIsLoading(true);
+        setIsLoading(false);
         setCurrentCurrency('1');
       }
     }
@@ -348,6 +354,7 @@ const WalletScreen = ({navigation, route}) => {
     const symbolimg = tempSymbolimg.replace(/(\r\n|\n|\r)/gm, '');
 
     if (statusOtherChain === 'on') {
+      // If status other chain == on show all networks, like ETH, MATIC, BNB, etc...
       return uiCardWallet(
         walletColors,
         displaystr,
@@ -364,6 +371,7 @@ const WalletScreen = ({navigation, route}) => {
         item,
       );
     } else {
+      // If status other chain == off just show ETH network
       if (subcurrency == 5000 || subcurrency == 5100) {
         return uiCardWallet(
           walletColors,
