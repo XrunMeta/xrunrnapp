@@ -11,7 +11,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {fontSize, getFontFam} from '../../../utils';
 import {WebView} from 'react-native-webview';
 
-const iOSWallet = () => {
+const IOSWallet = () => {
   const [url, setUrl] = useState('https://app.xrun.run/7012.html');
 
   return (
@@ -193,7 +193,7 @@ const iOSWallet = () => {
   );
 };
 
-export default iOSWallet;
+export default IOSWallet;
 
 const styles = StyleSheet.create({
   root: {
