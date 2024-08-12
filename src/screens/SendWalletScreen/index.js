@@ -573,7 +573,7 @@ const SendWalletScreen = ({navigation, route}) => {
 
       if (dataStockExchange) {
         const request = await fetch(
-          `${URL_API}&act=postTransferNew&to=${address}&amount=${amount}&token=${token}&member=${dataMember.member}&gasEstimate=${gasEstimate}&gasPrice=${gasPrice}`,
+          `${URL_API}&act=postTransferNew&to=${address}&amount=${amount}&token=${token}&member=${dataMember.member}&gasEstimate=${gasEstimate}&gasPrice=${gasPrice}&network=${network}&chainId=${chainId}`,
         );
         const response = await request.json();
 
