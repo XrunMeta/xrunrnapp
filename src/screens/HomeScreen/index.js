@@ -14,7 +14,11 @@ import {
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import ARScreen from '../ARScreen/ARScreen';
 import MapParent from './MapParentScreen';
-import {useIsFocused, useNavigation} from '@react-navigation/native';
+import {
+  CommonActions,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   URL_API,
@@ -144,7 +148,7 @@ export default function Home({route}) {
       onPress={() => {
         console.log('Pergi ke ' + tabName);
         if (Platform.OS === 'android' && tabName === 'Wallet') {
-          navigation.replace('WalletHome');
+          navigation.dispatch(CommonActions.navigate('WalletHome'));
         } else if (Platform.OS === 'ios' && tabName === 'Wallet') {
           Linking.openURL('https://www.facebook.com');
         } else {
@@ -208,7 +212,7 @@ export default function Home({route}) {
                 : 'Wallet',
               () => {
                 {
-                  navigation.replace('WalletHome');
+                  navigation.dispatch(CommonActions.navigate('WalletHome'));
                 }
               },
             )}
@@ -219,7 +223,7 @@ export default function Home({route}) {
                 ? lang.screen_bottomTab.advertise.title
                 : 'Advertise',
               () => {
-                navigation.replace('AdvertiseHome');
+                navigation.dispatch(CommonActions.navigate('AdvertiseHome'));
               },
             )}
 
@@ -311,7 +315,7 @@ export default function Home({route}) {
                 ? lang.screen_bottomTab.notify.title
                 : 'Notify',
               () => {
-                navigation.replace('NotifyHome');
+                navigation.dispatch(CommonActions.navigate('NotifyHome'));
               },
             )}
             {renderTabButton(
@@ -321,7 +325,7 @@ export default function Home({route}) {
                 ? lang.screen_bottomTab.info.title
                 : 'Info',
               () => {
-                navigation.replace('InfoHome');
+                navigation.dispatch(CommonActions.navigate('InfoHome'));
               },
             )}
           </View>
