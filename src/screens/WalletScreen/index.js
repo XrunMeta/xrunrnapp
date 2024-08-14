@@ -349,6 +349,7 @@ const WalletScreen = ({navigation, route}) => {
       MEMP: '#4b5068',
       POL: '#9339D5',
       Q8p: '#9339D5',
+      BNB: '#f0b90b',
     };
 
     const symbolimg = tempSymbolimg.replace(/(\r\n|\n|\r)/gm, '');
