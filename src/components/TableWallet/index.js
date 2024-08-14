@@ -429,67 +429,59 @@ const TransitionHistory = ({
     <ScrollView
       style={{paddingHorizontal: 28}}
       contentOffset={{y: lastPosition}}>
-      {!loadingTransaction ? (
-        totalTransaction.length > 0 ? (
-          <>
-            {totalTransaction.map((item, index) => {
-              const {datetime, time, amount, symbol, action: tempAction} = item;
+      {totalTransaction.length > 0 ? (
+        <>
+          {totalTransaction.map((item, index) => {
+            const {datetime, time, amount, symbol, action: tempAction} = item;
 
-              let action = actionFunc(tempAction, lang);
-              let extracode;
+            let action = actionFunc(tempAction, lang);
+            let extracode;
 
-              return (
-                <View style={styles.wrapperItemTable} key={index}>
-                  <View>
-                    <Text style={styles.details}>{action}</Text>
-                    <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
-                  </View>
-                  <View>
-                    <View style={styles.wrapperPrice}>
-                      <Text style={styles.price}>{amount} </Text>
-                      <Text style={styles.price}>{symbol}</Text>
-                    </View>
-                    <Text style={styles.status}>{extracode}</Text>
-                  </View>
+            return (
+              <View style={styles.wrapperItemTable} key={index}>
+                <View>
+                  <Text style={styles.details}>{action}</Text>
+                  <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
                 </View>
-              );
-            })}
-
-            {btnSeeMore && totalTransaction.length > defaultLoadData && (
-              <View style={{marginTop: 20, marginBottom: 20}}>
-                <TouchableOpacity
-                  style={styles.btnSeeMore}
-                  activeOpacity={0.7}
-                  onPress={() =>
-                    loadMore(
-                      routeSwipe,
-                      totalTransaction,
-                      setTotalTransaction,
-                      member,
-                      currency,
-                      days,
-                      setSeeMore,
-                      lastPosition,
-                      setLastPosition,
-                    )
-                  }>
-                  <Text style={styles.textSeeMore}>
-                    {lang && lang.screen_wallet
-                      ? lang.screen_wallet.see_more
-                      : ''}
-                  </Text>
-                </TouchableOpacity>
+                <View>
+                  <View style={styles.wrapperPrice}>
+                    <Text style={styles.price}>{amount} </Text>
+                    <Text style={styles.price}>{symbol}</Text>
+                  </View>
+                  <Text style={styles.status}>{extracode}</Text>
+                </View>
               </View>
-            )}
-          </>
-        ) : (
-          <Text style={styles.textNotFoundHistory}>
-            {lang && lang.screen_wallet.history_not_found
-              ? lang.screen_wallet.history_not_found
-              : ''}
-          </Text>
-        )
-      ) : (
+            );
+          })}
+
+          {btnSeeMore && totalTransaction.length > defaultLoadData && (
+            <View style={{marginTop: 20, marginBottom: 20}}>
+              <TouchableOpacity
+                style={styles.btnSeeMore}
+                activeOpacity={0.7}
+                onPress={() =>
+                  loadMore(
+                    routeSwipe,
+                    totalTransaction,
+                    setTotalTransaction,
+                    member,
+                    currency,
+                    days,
+                    setSeeMore,
+                    lastPosition,
+                    setLastPosition,
+                  )
+                }>
+                <Text style={styles.textSeeMore}>
+                  {lang && lang.screen_wallet
+                    ? lang.screen_wallet.see_more
+                    : ''}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </>
+      ) : loadingTransaction ? (
         <View
           style={{
             flex: 1,
@@ -499,6 +491,12 @@ const TransitionHistory = ({
           }}>
           <ActivityIndicator size="large" color="#ccc" />
         </View>
+      ) : (
+        <Text style={styles.textNotFoundHistory}>
+          {lang && lang.screen_wallet.history_not_found
+            ? lang.screen_wallet.history_not_found
+            : ''}
+        </Text>
       )}
     </ScrollView>
   );
@@ -799,8 +797,8 @@ const TableWalletCard = ({
               currentDaysTransactional,
             );
 
-            setReceivedDetails(receivedDetails);
             checkLengthHistoryDataTransaction(receivedDetails.length);
+            setReceivedDetails(receivedDetails);
             break;
 
           case 'transitionHistory':
@@ -812,8 +810,8 @@ const TableWalletCard = ({
               currentDaysTransactional,
             );
 
-            setTransitionHistory(transitionHistory);
             checkLengthHistoryDataTransaction(transitionHistory.length);
+            setTransitionHistory(transitionHistory);
             break;
 
           default:
