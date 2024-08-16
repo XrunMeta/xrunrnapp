@@ -82,8 +82,8 @@ android {
         applicationId "run.xrun.xrunapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 108
-        versionName "2.0.3"
+        versionCode 109
+        versionName "2.0.4"
         missingDimensionStrategy 'react-native-camera', 'general'
     }
     signingConfigs {

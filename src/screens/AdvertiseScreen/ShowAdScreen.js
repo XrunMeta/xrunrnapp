@@ -164,7 +164,7 @@ const ShowAdScreen = ({route}) => {
       await IronSource.shouldTrackNetworkState(true);
       await IronSource.setConsent(true);
       await IronSource.setMetaData('is_child_directed', ['false']);
-      await IronSource.setUserId('userTest');
+      await IronSource.setUserId(member ? member : 'userTest');
       await IronSource.init(ironAdUnit);
 
       IronSource.setLevelPlayInterstitialListener({
