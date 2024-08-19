@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
+import VersionCheck from 'react-native-version-check';
 
 const AppInformation = () => {
   const [version, setVersion] = useState('');
@@ -14,13 +15,13 @@ const AppInformation = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const currentVersion = VersionCheck.getCurrentVersion();
         const response = await fetch(`${URL_API}&act=version`);
         const data = await response.json();
 
         if (data) {
           setVersion({
-            // version: data.version,
-            version: '2.0.2',
+            version: currentVersion,
             url: data.url,
           });
         }
@@ -44,7 +45,7 @@ const AppInformation = () => {
     currGetLanguage();
 
     fetchData();
-  });
+  }, []);
 
   const onBack = () => {
     navigation.navigate('InfoHome');
