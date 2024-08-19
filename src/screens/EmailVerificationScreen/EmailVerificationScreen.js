@@ -48,6 +48,8 @@ const EmailVerificationScreen = () => {
       );
       const responseData = await response.text(); // Convert response to JSON
 
+      console.log({responseDataAuth: responseData});
+
       if (responseData.data === 'false') {
         Alert.alert('Failed', lang.screen_emailVerification.notif.invalidEmail);
       } else {
@@ -227,8 +229,8 @@ const EmailVerificationScreen = () => {
 
   // ########## Countdown ##########
   const Countdown = () => {
-    // const [seconds, setSeconds] = useState(599); // Duration
-    const [seconds, setSeconds] = useState(5);
+    const [seconds, setSeconds] = useState(599); // Duration
+    // const [seconds, setSeconds] = useState(5);
 
     useEffect(() => {
       const timer = setInterval(() => {
