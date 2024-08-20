@@ -456,24 +456,22 @@ const WalletScreen = ({navigation, route}) => {
         <View style={styles.containerCard}>
           <ScrollView style={{flex: 1}}>
             <View style={styles.containerCard}>
-              {emptyWallet || (
-                <FlatList
-                  ref={flatlistRef}
-                  data={cardsData}
-                  renderItem={routeComponent}
-                  getItemLayout={getItemLayout}
-                  horizontal
-                  pagingEnabled
-                  showsHorizontalScrollIndicator={false}
-                  onMomentumScrollEnd={event => {
-                    const index = Math.round(
-                      event.nativeEvent.contentOffset.x /
-                        event.nativeEvent.layoutMeasurement.width,
-                    );
-                    setCurrentCurrency(cardsData[index].currency);
-                  }}
-                />
-              )}
+              <FlatList
+                ref={flatlistRef}
+                data={cardsData}
+                renderItem={routeComponent}
+                getItemLayout={getItemLayout}
+                horizontal
+                pagingEnabled
+                showsHorizontalScrollIndicator={false}
+                onMomentumScrollEnd={event => {
+                  const index = Math.round(
+                    event.nativeEvent.contentOffset.x /
+                      event.nativeEvent.layoutMeasurement.width,
+                  );
+                  setCurrentCurrency(cardsData[index].currency);
+                }}
+              />
             </View>
           </ScrollView>
         </View>
