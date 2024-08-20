@@ -110,6 +110,11 @@ const SendWalletScreen = ({navigation, route}) => {
           setChainId(137);
           setToken('');
           break;
+        case '5300':
+          setNetwork('BNB');
+          setChainId(56);
+          setToken('');
+          break;
         default:
           setNetwork('ETH');
           setChainId(1);
