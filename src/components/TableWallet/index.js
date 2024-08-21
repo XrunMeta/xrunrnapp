@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {TabView, TabBar} from 'react-native-tab-view';
+import {TabView, TabBar, SceneMap} from 'react-native-tab-view';
 import {
   loadMore,
   getFontFam,
@@ -135,6 +135,7 @@ const TotalHistory = ({
   lastPosition,
   setLastPosition,
 }) => {
+  console.log('Total History');
   return (
     <ScrollView
       style={{paddingHorizontal: 28}}
@@ -234,6 +235,8 @@ const TransferHistory = ({
   lastPosition,
   setLastPosition,
 }) => {
+  console.log('Transfer History');
+
   return (
     <ScrollView
       style={{paddingHorizontal: 28}}
@@ -502,12 +505,17 @@ const TransitionHistory = ({
   );
 };
 
+// Memoized
+const MemoizedTotalHistory = React.memo(TotalHistory);
+const MemoizedTransferHistory = React.memo(TransferHistory);
+const MemoizedReceivedDetails = React.memo(ReceivedDetails);
+const MemoizedTransitionHistory = React.memo(TransitionHistory);
+
 const TableWalletCard = ({
   member,
   dataWallet,
   currentCurrency,
   lang,
-  setEmptyWallet,
   route,
 }) => {
   const navigation = useNavigation();
@@ -609,109 +617,92 @@ const TableWalletCard = ({
     }
   }, [member, currentCurrency, currentDaysTransactional]);
 
-  // If user can't have transaction in 100 days, the wallet will empty
-  useEffect(() => {
-    if (totalHistoryLength === 0 && currentCurrency == 1) {
-      setEmptyWallet(true);
-    } else {
-      setEmptyWallet(false);
-    }
-  }, [totalHistoryLength]);
-
-  const renderScene = ({route}) => {
-    switch (route.key) {
-      case 'totalHistory':
-        return (
-          <TotalHistory
-            loadingTransaction={loadingTransaction}
-            totalTransaction={totalHistory}
-            setTotalTransaction={setTotalHistory}
-            member={member}
-            currency={currentCurrency}
-            days={currentDaysTransactional}
-            lang={lang}
-            btnSeeMore={btnSeeMore}
-            setSeeMore={setBtnSeeMore}
-            routeSwipe={currentSwipe}
-            defaultLoadData={defaultLoadData}
-            lastPosition={lastPosition}
-            setLastPosition={setLastPosition}
-          />
-        );
-      case 'transferHistory':
-        return (
-          <TransferHistory
-            loadingTransaction={loadingTransaction}
-            totalTransaction={transferHistory}
-            setTotalTransaction={setTransferHistory}
-            member={member}
-            currency={currentCurrency}
-            days={currentDaysTransactional}
-            lang={lang}
-            btnSeeMore={btnSeeMore}
-            setSeeMore={setBtnSeeMore}
-            routeSwipe={currentSwipe}
-            defaultLoadData={defaultLoadData}
-            lastPosition={lastPosition}
-            setLastPosition={setLastPosition}
-          />
-        );
-      case 'receivedDetails':
-        return (
-          <ReceivedDetails
-            loadingTransaction={loadingTransaction}
-            totalTransaction={receivedDetails}
-            setTotalTransaction={setReceivedDetails}
-            member={member}
-            currency={currentCurrency}
-            days={currentDaysTransactional}
-            lang={lang}
-            btnSeeMore={btnSeeMore}
-            setSeeMore={setBtnSeeMore}
-            routeSwipe={currentSwipe}
-            defaultLoadData={defaultLoadData}
-            lastPosition={lastPosition}
-            setLastPosition={setLastPosition}
-          />
-        );
-      case 'transitionHistory':
-        return (
-          <TransitionHistory
-            loadingTransaction={loadingTransaction}
-            totalTransaction={transitionHistory}
-            setTotalTransaction={setTransitionHistory}
-            member={member}
-            currency={currentCurrency}
-            days={currentDaysTransactional}
-            lang={lang}
-            btnSeeMore={btnSeeMore}
-            setSeeMore={setBtnSeeMore}
-            routeSwipe={currentSwipe}
-            defaultLoadData={defaultLoadData}
-            lastPosition={lastPosition}
-            setLastPosition={setLastPosition}
-          />
-        );
-      default:
-        return (
-          <TotalHistory
-            loadingTransaction={loadingTransaction}
-            totalTransaction={totalHistory}
-            setTotalTransaction={setTotalHistory}
-            member={member}
-            currency={currentCurrency}
-            days={currentDaysTransactional}
-            lang={lang}
-            btnSeeMore={btnSeeMore}
-            setSeeMore={setBtnSeeMore}
-            routeSwipe={currentSwipe}
-            defaultLoadData={defaultLoadData}
-            lastPosition={lastPosition}
-            setLastPosition={setLastPosition}
-          />
-        );
-    }
-  };
+  const renderScene = useMemo(() => {
+    return SceneMap({
+      totalHistory: () => (
+        <MemoizedTotalHistory
+          loadingTransaction={loadingTransaction}
+          totalTransaction={totalHistory}
+          setTotalTransaction={setTotalHistory}
+          member={member}
+          currency={currentCurrency}
+          days={currentDaysTransactional}
+          lang={lang}
+          btnSeeMore={btnSeeMore}
+          setSeeMore={setBtnSeeMore}
+          routeSwipe={currentSwipe}
+          defaultLoadData={defaultLoadData}
+          lastPosition={lastPosition}
+          setLastPosition={setLastPosition}
+        />
+      ),
+      transferHistory: () => (
+        <MemoizedTransferHistory
+          loadingTransaction={loadingTransaction}
+          totalTransaction={transferHistory}
+          setTotalTransaction={setTransferHistory}
+          member={member}
+          currency={currentCurrency}
+          days={currentDaysTransactional}
+          lang={lang}
+          btnSeeMore={btnSeeMore}
+          setSeeMore={setBtnSeeMore}
+          routeSwipe={currentSwipe}
+          defaultLoadData={defaultLoadData}
+          lastPosition={lastPosition}
+          setLastPosition={setLastPosition}
+        />
+      ),
+      receivedDetails: () => (
+        <MemoizedReceivedDetails
+          loadingTransaction={loadingTransaction}
+          totalTransaction={receivedDetails}
+          setTotalTransaction={setReceivedDetails}
+          member={member}
+          currency={currentCurrency}
+          days={currentDaysTransactional}
+          lang={lang}
+          btnSeeMore={btnSeeMore}
+          setSeeMore={setBtnSeeMore}
+          routeSwipe={currentSwipe}
+          defaultLoadData={defaultLoadData}
+          lastPosition={lastPosition}
+          setLastPosition={setLastPosition}
+        />
+      ),
+      transitionHistory: () => (
+        <MemoizedTransitionHistory
+          loadingTransaction={loadingTransaction}
+          totalTransaction={transitionHistory}
+          setTotalTransaction={setTransitionHistory}
+          member={member}
+          currency={currentCurrency}
+          days={currentDaysTransactional}
+          lang={lang}
+          btnSeeMore={btnSeeMore}
+          setSeeMore={setBtnSeeMore}
+          routeSwipe={currentSwipe}
+          defaultLoadData={defaultLoadData}
+          lastPosition={lastPosition}
+          setLastPosition={setLastPosition}
+        />
+      ),
+    });
+  }, [
+    loadingTransaction,
+    totalHistory,
+    transferHistory,
+    receivedDetails,
+    transitionHistory,
+    member,
+    currentCurrency,
+    currentDaysTransactional,
+    lang,
+    btnSeeMore,
+    currentSwipe,
+    defaultLoadData,
+    lastPosition,
+  ]);
 
   // Call API for get total history, only run once
   const defaultListTransactionsHistory = useCallback(async () => {
@@ -987,6 +978,8 @@ const TableWalletCard = ({
               }}
               initialLayout={{width: layout.width}}
               renderTabBar={renderTabBar}
+              lazy
+              lazyPreloadDistance={0}
             />
           ) : (
             <>
