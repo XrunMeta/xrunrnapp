@@ -44,7 +44,6 @@ const WalletScreen = ({navigation, route}) => {
   const [isShowQRCodeWallet, setIsShowQRCodeWallet] = useState(false);
   const [cardDataQR, setCardDataQR] = useState([]);
 
-  const [emptyWallet, setEmptyWallet] = useState(false);
   const flatlistRef = useRef(null);
 
   const [statusOtherChain, setStatusOtherChain] = useState('off');
@@ -482,7 +481,6 @@ const WalletScreen = ({navigation, route}) => {
             dataWallet={dataWallet}
             currentCurrency={currentCurrency}
             lang={lang}
-            setEmptyWallet={setEmptyWallet}
             route={route}
           />
         </View>
