@@ -138,67 +138,11 @@ const Change = ({navigation, route}) => {
           ? lang.screen_conversion.coin_above_0
           : '',
       );
-      // } else if (address === '') {
-      //   Alert.alert(
-      //     '',
-      //     lang && lang ? lang.screen_send.send_address_placeholder : '',
-      //     [
-      //       {
-      //         text: lang && lang ? lang.screen_wallet.confirm_alert : '',
-      //       },
-      //     ],
-      //   );
-      // } else if (address.length < 40) {
-      //   Alert.alert('', lang && lang ? lang.screen_send.send_address_less : '', [
-      //     {
-      //       text: lang && lang ? lang.screen_wallet.confirm_alert : '',
-      //     },
-      //   ]);
     } else {
       setPopupConversion(true);
       console.log(amount.length);
       setConversionRequest(parseFloat(amount).toFixed(9));
       Keyboard.dismiss();
-
-      // Info checker load
-      // const infoCheckerLoad = async () => {
-      //   const request = await fetch(
-      //     `${URL_API}&act=app4420-01&currency=${currency}&member=${dataMember.member}&amount=${amount}`,
-      //   );
-      //   const response = await request.json();
-      //   const result = await response.data[0];
-
-      //   const {symbol: resultSymbol, amount: resultAmount, fee} = result;
-      // };
-
-      // Not using same like code in java
-      // infoCheckerLoad();
-
-      // let totalConverted;
-
-      // switch (symbol) {
-      //   case 'ETH':
-      //     totalConverted = parseFloat(amount) * (450 / 2139400.0);
-      //     setEstimate(totalConverted);
-      //     setIsNaNConverted(isNaN(totalConverted));
-      //     break;
-      //   case 'TRX':
-      //     totalConverted = parseFloat(amount) * (450 / 86.0);
-      //     setEstimate(totalConverted);
-      //     setIsNaNConverted(isNaN(totalConverted));
-      //     break;
-      //   case 'MATIC':
-      //     totalConverted = parseFloat(amount) * (450 / 1230.0);
-      //     setEstimate(totalConverted);
-      //     setIsNaNConverted(isNaN(totalConverted));
-      //     break;
-      //   default:
-      //     // Default ETH
-      //     totalConverted = parseFloat(amount) * (450 / 2139400.0);
-      //     setEstimate(totalConverted);
-      //     setIsNaNConverted(isNaN(totalConverted));
-      //     break;
-      // }
     }
   };
 
@@ -206,62 +150,10 @@ const Change = ({navigation, route}) => {
     setPopupConversion(false);
   };
 
-  // const currentActiveSymbol = '#fedc00';
-  // const changeSymbol = currentSymbol => {
-  //   setSymbol(currentSymbol);
-
-  //   switch (currentSymbol) {
-  //     case 'ETH':
-  //       setSubcurrency('5205');
-  //       break;
-  //     case 'TRX':
-  //       setSubcurrency('5201');
-  //       break;
-  //     case 'MATIC':
-  //       setSubcurrency('5203');
-  //       break;
-  //     default:
-  //       setSubcurrency('5205');
-  //       break;
-  //   }
-  // };
-
   const confirmConversion = async () => {
     if (isNaNCoverted) {
       Alert.alert('', 'Invalid input amount.');
       setPopupConversion(false);
-      // } else if (address === '') {
-      //   Alert.alert(
-      //     '',
-      //     lang && lang.screen_send && lang.screen_send.send_address_placeholder
-      //       ? lang.screen_send.send_address_placeholder
-      //       : '',
-      //     [
-      //       {
-      //         text:
-      //           lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
-      //             ? lang.screen_wallet.confirm_alert
-      //             : '',
-      //       },
-      //     ],
-      //   );
-      //   setPopupConversion(false);
-      // } else if (address.length < 40) {
-      //   Alert.alert(
-      //     '',
-      //     lang && lang.screen_send && lang.screen_send.send_address_less
-      //       ? lang.screen_send.send_address_less
-      //       : '',
-      //     [
-      //       {
-      //         text:
-      //           lang && lang.screen_wallet && lang.screen_wallet.confirm_alert
-      //             ? lang.screen_wallet.confirm_alert
-      //             : '',
-      //       },
-      //     ],
-      //   );
-      //   setPopupConversion(false);
     } else {
       setIsLoading(true);
 
@@ -355,45 +247,6 @@ const Change = ({navigation, route}) => {
               {lang && lang ? lang.screen_conversion.desc : ''}
             </Text>
 
-            {/* <View style={styles.wrapperNetwork}>
-            <TouchableOpacity
-              activeOpacity={1}
-              onPress={() => changeSymbol('ETH')}
-              style={[
-                styles.wrapperTextNetwork,
-                symbol === 'ETH' && {
-                  backgroundColor: currentActiveSymbol,
-                },
-              ]}>
-              <Text style={styles.textDay}>ETH</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={1}
-              onPress={() => changeSymbol('TRX')}
-              style={[
-                styles.wrapperTextNetwork,
-                symbol === 'TRX' && {
-                  backgroundColor: currentActiveSymbol,
-                },
-              ]}>
-              <Text style={styles.textDay}>TRON</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={1}
-              onPress={() => changeSymbol('MATIC')}
-              style={[
-                styles.wrapperTextNetwork,
-                symbol === 'MATIC' && {
-                  backgroundColor: currentActiveSymbol,
-                },
-                {
-                  width: 130,
-                },
-              ]}>
-              <Text style={styles.textDay}>MATIC(POLYGON)</Text>
-            </TouchableOpacity>
-          </View> */}
-
             <View style={styles.wrapperInput}>
               <CustomInputWallet
                 value={amount}
@@ -405,15 +258,6 @@ const Change = ({navigation, route}) => {
                 }
                 customFontSize={fontSize('subtitle')}
               />
-              {/* <CustomInputWallet
-              value={address}
-              labelVisible={false}
-              setValue={setAddress}
-              placeholder={
-                lang && lang ? lang.screen_send.send_address_placeholder : ''
-              }
-              customFontSize={16}
-            /> */}
             </View>
           </View>
         </View>
@@ -452,17 +296,6 @@ const Change = ({navigation, route}) => {
               </Text>
             </View>
             <View style={styles.contentConversion}>
-              {/* <View style={styles.wrapperTextConversion}>
-                <Text style={styles.textPartLeft}>
-                  {lang && lang
-                    ? lang.complete_conversion.target_converted
-                    : ''}
-                </Text>
-                <Text style={styles.textPartRight}>
-                  {estimate.toFixed(6).replaceAll('.', ',')}
-                  {symbol}
-                </Text>
-              </View> */}
               <View style={styles.wrapperTextConversion}>
                 <Text style={styles.textPartLeft}>
                   {lang && lang
