@@ -573,7 +573,7 @@ const ModifInfoScreen = ({route}) => {
                     width: '100%',
                     flexDirection: 'row',
                     backgroundColor: '#e5e5e56e',
-                    height: 30,
+                    height: 40,
                     marginTop: 5,
                   }}>
                   <Pressable

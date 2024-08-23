@@ -418,6 +418,7 @@ const styles = StyleSheet.create({
   },
   showQRHash: {
     fontFamily: getFontFam() + 'Regular',
+    fontSize: fontSize('body'),
     color: '#fff',
   },
   titleQR: {

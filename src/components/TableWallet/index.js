@@ -1246,6 +1246,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#bbb',
     borderBottomWidth: 0.55,
     paddingBottom: 10,
+    fontSize: fontSize('body'),
   },
   btnSeeMore: {
     borderWidth: 1,

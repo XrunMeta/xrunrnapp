@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
   label: {
     color: '#000',
     fontFamily: getFontFam() + 'Regular',
+    fontSize: fontSize('body'),
   },
   input: customFontSize => ({
     borderBottomWidth: 1,

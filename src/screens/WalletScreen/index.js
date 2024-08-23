@@ -527,7 +527,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f3f4f6',
   },
   containerCard: {
-    height: 230,
+    height: 260,
   },
   containerTable: {
     flex: 1,
@@ -553,7 +553,7 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 0,
     borderRadius: 8,
-    height: 190,
+    height: 220,
     zIndex: 5,
     width: Dimensions.get('window').width - 58,
   },
@@ -564,6 +564,7 @@ const styles = StyleSheet.create({
   cardName: {
     color: 'white',
     fontFamily: getFontFam() + 'Regular',
+    fontSize: fontSize('body'),
     paddingTop: 20,
   },
   wrapperShowQR: {
@@ -635,7 +636,7 @@ const styles = StyleSheet.create({
   wrapperCopiedHash: currency => ({
     flexDirection: 'row',
     gap: 6,
-    marginTop: currency == 1 ? 0 : 20,
+    marginTop: currency == 1 ? 0 : 24,
   }),
   wrapperHash: {
     flexDirection: 'row',
@@ -648,7 +649,7 @@ const styles = StyleSheet.create({
   logo: currency => ({
     height: 40,
     width: 40,
-    marginTop: currency == 1 ? -12 : -2,
+    marginTop: currency == 1 ? -12 : 14,
   }),
   loading: {
     position: 'absolute',

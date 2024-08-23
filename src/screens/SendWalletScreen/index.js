@@ -1121,12 +1121,12 @@ const styles = StyleSheet.create({
   currencyName: {
     color: '#fff',
     fontFamily: getFontFam() + 'Medium',
-    fontSize: fontSize('subtitle'),
+    fontSize: fontSize('body'),
   },
   balance: {
     color: '#fff',
     fontFamily: getFontFam() + 'Regular',
-    fontSize: fontSize('body'),
+    fontSize: fontSize('note'),
   },
   partBottom: {
     paddingHorizontal: 28,
