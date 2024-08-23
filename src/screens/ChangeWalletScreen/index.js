@@ -398,9 +398,11 @@ const styles = StyleSheet.create({
     fontFamily: getFontFam() + 'Regular',
     color: '#000',
     marginTop: 10,
+    fontSize: fontSize('body'),
   },
   description: {
     fontFamily: getFontFam() + 'Regular',
+    fontSize: fontSize('body'),
     color: '#bbb',
     marginTop: 4,
   },

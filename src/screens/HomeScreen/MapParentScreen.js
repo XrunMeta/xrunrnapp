@@ -277,7 +277,7 @@ export default function MapParent() {
                   <Text
                     style={{
                       fontFamily: getFontFam() + 'Medium',
-                      fontSize: fontSize('body'),
+                      fontSize: fontSize('note'),
                       color: 'white',
                       flexWrap: 'wrap',
                     }}>
@@ -306,7 +306,7 @@ export default function MapParent() {
                   <Text
                     style={{
                       fontFamily: getFontFam() + 'Medium',
-                      fontSize: fontSize('body'),
+                      fontSize: fontSize('note'),
                       color: 'white',
                       marginBottom: 3,
                     }}>
@@ -331,7 +331,7 @@ export default function MapParent() {
                 <Text
                   style={{
                     fontFamily: getFontFam() + 'Medium',
-                    fontSize: fontSize('body'),
+                    fontSize: fontSize('note'),
                     color: 'white',
                     marginBottom: 2,
                   }}>
@@ -353,7 +353,7 @@ export default function MapParent() {
                   <Text
                     style={{
                       fontFamily: getFontFam() + 'Bold',
-                      fontSize: fontSize('body'),
+                      fontSize: fontSize('note'),
                       color: '#ffdc04',
                       marginTop: -4,
                     }}>
@@ -498,7 +498,7 @@ const styles = StyleSheet.create({
   },
   desc: {
     fontFamily: getFontFam() + 'Medium',
-    fontSize: fontSize('body'),
+    fontSize: fontSize('note'),
     color: '#343a59',
   },
   navWrapper: {

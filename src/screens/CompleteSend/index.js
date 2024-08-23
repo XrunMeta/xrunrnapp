@@ -97,7 +97,6 @@ const CompleteSend = ({navigation, route}) => {
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
-            alignItems: 'center',
             paddingVertical: 20,
             borderBottomColor: '#bbb',
             borderBottomWidth: 0.7,
@@ -106,6 +105,7 @@ const CompleteSend = ({navigation, route}) => {
             style={{
               fontFamily: getFontFam() + 'Regular',
               color: '#555',
+              fontSize: fontSize('body'),
             }}>
             {lang &&
             lang.screen_complete_send &&
@@ -127,7 +127,6 @@ const CompleteSend = ({navigation, route}) => {
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
-            alignItems: 'center',
             paddingVertical: 20,
             borderBottomColor: '#bbb',
             borderBottomWidth: 0.7,
@@ -135,6 +134,7 @@ const CompleteSend = ({navigation, route}) => {
           <Text
             style={{
               fontFamily: getFontFam() + 'Regular',
+              fontSize: fontSize('body'),
               color: '#555',
             }}>
             {lang &&
@@ -147,7 +147,7 @@ const CompleteSend = ({navigation, route}) => {
             style={{
               fontFamily: getFontFam() + 'Medium',
               color: '#e05c2b',
-              fontSize: fontSize('subtitle'),
+              fontSize: fontSize('body'),
               maxWidth: 180,
             }}>
             {amount}
@@ -158,13 +158,13 @@ const CompleteSend = ({navigation, route}) => {
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
-            alignItems: 'center',
             paddingVertical: 20,
           }}>
           <Text
             style={{
               fontFamily: getFontFam() + 'Regular',
               color: '#555',
+              fontSize: fontSize('body'),
             }}>
             TXID
           </Text>
@@ -173,7 +173,7 @@ const CompleteSend = ({navigation, route}) => {
               style={{
                 fontFamily: getFontFam() + 'Medium',
                 color: '#e05c2b',
-                fontSize: fontSize('subtitle'),
+                fontSize: fontSize('body'),
                 maxWidth: 240,
               }}>
               {txid}
@@ -186,7 +186,7 @@ const CompleteSend = ({navigation, route}) => {
               onPress={() => copiedTXID(txid)}>
               <Text
                 style={{
-                  fontSize: fontSize('subtitle'),
+                  fontSize: fontSize('body'),
                   color: '#555',
                   marginTop: 4,
                   textAlign: 'right',
@@ -204,6 +204,7 @@ const CompleteSend = ({navigation, route}) => {
           color: '#555',
           textAlign: 'center',
           marginTop: 30,
+          fontSize: fontSize('body'),
         }}>
         실제 전송은 네트워크 상황에 따라 지연될 수 있습니다.
       </Text>

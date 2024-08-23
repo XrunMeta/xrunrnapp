@@ -235,11 +235,11 @@ export const getFontFam = () => {
 
 export const fontSize = type => {
   if (type === 'note') {
-    return Platform.OS === 'android' ? 11 : 13;
+    return Platform.OS === 'android' ? 13 : 14;
   } else if (type === 'body') {
-    return Platform.OS === 'android' ? 13 : 15;
+    return Platform.OS === 'android' ? 16 : 16;
   } else if (type === 'subtitle') {
-    return Platform.OS === 'android' ? 16 : 18;
+    return Platform.OS === 'android' ? 19 : 19;
   } else if (type === 'title') {
     return Platform.OS === 'android' ? 22 : 26;
   }

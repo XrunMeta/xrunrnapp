@@ -141,6 +141,7 @@ const CompleteSend = ({navigation, route}) => {
             style={{
               fontFamily: getFontFam() + 'Regular',
               color: '#555',
+              fontSize: fontSize('body'),
             }}>
             {lang &&
             lang.complete_conversion &&
@@ -152,6 +153,7 @@ const CompleteSend = ({navigation, route}) => {
             style={{
               fontFamily: getFontFam() + 'Regular',
               color: '#000',
+              fontSize: fontSize('body'),
               maxWidth: 180,
             }}>
             {originamount}XRUN
@@ -195,6 +197,7 @@ const CompleteSend = ({navigation, route}) => {
           color: '#555',
           paddingHorizontal: 20,
           marginTop: 30,
+          fontSize: fontSize('body'),
         }}>
         {lang && lang.complete_conversion && lang.complete_conversion.desc
           ? lang.complete_conversion.desc
