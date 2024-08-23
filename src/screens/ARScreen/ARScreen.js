@@ -137,8 +137,10 @@ function ARScreen() {
       position => {
         // Get user Coordinate
         const userCoordinate = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
+          // latitude: position.coords.latitude,
+          // longitude: position.coords.longitude,
+          latitude: '-6.085638',
+          longitude: '106.746304',
         };
 
         setUserLocation(userCoordinate);
@@ -468,6 +470,32 @@ function ARScreen() {
               }}>
               {coins.map((item, index) => {
                 const isRandomCoin = filterCoinsRandomMove.includes(index);
+                {
+                  /* const moveUncatchLeft =
+                  parseFloat(item.distance) < 30
+                    ? item.position.x
+                    : item.position.x - 200;
+                const moveUncatchTop =
+                  parseFloat(item.distance) < 30
+                    ? item.position.y
+                    : item.position.y - 150; */
+                }
+                const moveUncatchLeft =
+                  parseFloat(item.distance) < 30
+                    ? item.position.x
+                    : item.position.x > WINDOW_WIDTH / 2
+                    ? WINDOW_WIDTH - 1500 // posisikan lebih ke kanan layar
+                    : -50; // posisikan lebih ke kiri layar
+                const moveUncatchTop =
+                  parseFloat(item.distance) < 30
+                    ? item.position.y
+                    : item.position.y > WINDOW_HEIGHT / 2
+                    ? WINDOW_HEIGHT - 975 // posisikan lebih ke bawah layar
+                    : -50; // posisikan lebih ke atas layar
+
+                {
+                  /* console.log({moveUncatchLeft, moveUncatchTop}); */
+                }
 
                 return (
                   <Animated.View
@@ -479,14 +507,14 @@ function ARScreen() {
                           ? randomLefts[index]
                           : selectedCoinIndex !== null &&
                             filteredCoins[selectedCoinIndex].coin === item.coin
-                          ? WINDOW_WIDTH / 2 - 60
-                          : item.position.x,
+                          ? WINDOW_WIDTH / 2 - 600
+                          : moveUncatchLeft,
                         top: isRandomCoin
                           ? randomTops[index]
                           : selectedCoinIndex !== null &&
                             filteredCoins[selectedCoinIndex].coin === item.coin
                           ? WINDOW_HEIGHT / 2 - 270
-                          : item.position.y,
+                          : moveUncatchTop,
                         zIndex: parseFloat(item.distance) < 30 ? 20 : 1,
                         width: 150,
                         height: 275,
