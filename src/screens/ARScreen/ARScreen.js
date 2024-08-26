@@ -264,6 +264,74 @@ function ARScreen() {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
+  // useEffect(() => {
+  //   let currentIndex = 0;
+
+  //   const displayItems = () => {
+  //     const shuffledData = [...coinAPI].sort(() => Math.random() - 0.5);
+
+  //     const displayCount = Math.min(
+  //       shuffledData.length - currentIndex,
+  //       Math.floor(Math.random() * 5) + 6,
+  //     );
+
+  //     const itemsToDisplay = shuffledData
+  //       .slice(currentIndex, currentIndex + displayCount)
+  //       .map(item => {
+  //         const rotation = Math.random() * compassHeading; // Menetapkan rotasi acak untuk koin
+  //         const x = Math.random() * (WINDOW_WIDTH - COIN_WIDTH); // Menetapkan posisi X acak untuk koin
+  //         const y = (Math.random() - 0.1) * (WINDOW_HEIGHT - COIN_HEIGHT); // Menetapkan posisi Y acak untuk koin
+  //         const randVertical = getRandomInt(-300, 300);
+  //         const transY = randVertical;
+
+  //         return {
+  //           ...item,
+  //           position: {
+  //             x,
+  //             y,
+  //           },
+  //           rotation,
+  //           transY,
+  //         };
+  //       });
+
+  //     setCoins(itemsToDisplay);
+
+  //     // Animasikan setiap koin
+  //     animateBouncingCoin();
+
+  //     // Mulai animasi blink setiap kali koin berubah
+  //     animateBlink();
+
+  //     setTimeout(() => {
+  //       setCoins([]);
+  //       const randVertical = getRandomInt(-300, 300);
+
+  //       bouncingCoinTranslateY.value = randVertical;
+  //       blinkOpacity.value = 1;
+  //     }, 3000);
+
+  //     currentIndex = (currentIndex + displayCount) % shuffledData.length;
+
+  //     // Catch Image Showing
+  //     var appendedCatchShow = catchShow + 1;
+  //     if (appendedCatchShow <= 3) {
+  //       setCatchShow(appendedCatchShow);
+  //     } else {
+  //       setCatchShow(0);
+  //     }
+
+  //     console.log('Jumlah Catch Show -> ' + appendedCatchShow);
+  //   };
+
+  //   const intervalId = setInterval(displayItems, 6000);
+
+  //   // Hentikan interval ketika komponen di-unmount
+  //   return () => {
+  //     clearInterval(intervalId);
+  //   };
+  // }, [coinAPI, coins]); // Perubahan coins ditambahkan di sini
+
   useEffect(() => {
     let currentIndex = 0;
 
@@ -303,13 +371,20 @@ function ARScreen() {
       // Mulai animasi blink setiap kali koin berubah
       animateBlink();
 
+      // Tambahkan animasi tambahan pada detik ke-4
+      setTimeout(() => {
+        console.log('Animasi detik ke-4 dimulai');
+        // Tambahkan animasi yang diinginkan di sini, misalnya:
+        animateAdditionalEffect();
+      }, 4000); // 4000 milidetik = 4 detik
+
       setTimeout(() => {
         setCoins([]);
         const randVertical = getRandomInt(-300, 300);
 
         bouncingCoinTranslateY.value = randVertical;
         blinkOpacity.value = 1;
-      }, 3000);
+      }, 7000);
 
       currentIndex = (currentIndex + displayCount) % shuffledData.length;
 
@@ -324,13 +399,13 @@ function ARScreen() {
       console.log('Jumlah Catch Show -> ' + appendedCatchShow);
     };
 
-    const intervalId = setInterval(displayItems, 4000);
+    const intervalId = setInterval(displayItems, 8000);
 
     // Hentikan interval ketika komponen di-unmount
     return () => {
       clearInterval(intervalId);
     };
-  }, [coinAPI, coins]); // Perubahan coins ditambahkan di sini
+  }, [coinAPI, coins]);
 
   // Start Random move coin
   useEffect(() => {
@@ -391,6 +466,26 @@ function ARScreen() {
     );
   };
 
+  const animateAdditionalEffect = () => {
+    const getRandom = Math.floor(Math.random() * 10000);
+    const randomSpringValue = getRandom % 2 == 0 ? 1000 : -1000;
+    console.log('Anjeeengggg -> ' + randomSpringValue);
+
+    bouncingCoinTranslateY.value = withRepeat(
+      withSpring(randomSpringValue, {
+        mass: 2.1,
+        damping: 10,
+        stiffness: 192,
+        overshootClamping: false,
+        restDisplacementThreshold: 0.01,
+        restSpeedThreshold: 0.01,
+        reduceMotion: Easing.bounce,
+      }),
+      -1, // Ulangi terus menerus
+      true, // Membalikkan arah setiap kali siklus selesai
+    );
+  };
+
   const bouncingCoinAnimatedStyle = useAnimatedStyle(() => {
     return {
       transform: [{translateX: bouncingCoinTranslateY.value}],
@@ -402,41 +497,6 @@ function ARScreen() {
       opacity: blinkOpacity.value,
     };
   });
-
-  const onError = error => {
-    console.error(error);
-  };
-
-  const renderCamera = () => {
-    const commonProps = {
-      fps: 25,
-      style: {
-        position: 'relative',
-        width: '100%',
-        height: '100%',
-      },
-      device: device,
-      isActive: true,
-      lowLightBoost: false,
-      onError: onError,
-    };
-    if (Platform.OS === 'android') {
-      return (
-        <Camera
-          {...commonProps}
-          torch={flash === 'on' ? 'on' : 'off'}
-          onInitialized={() => setTimeout(() => setFlash('off'), 1000)}
-        />
-      );
-    } else if (Platform.OS === 'ios') {
-      return (
-        <Camera
-          {...commonProps}
-          onInitialized={() => setTimeout(() => console.log('Bgst'), 100)}
-        />
-      );
-    }
-  };
 
   const filteredCoins = coins.filter(item => parseFloat(item.distance) < 30);
   const selectedCoinIndex =

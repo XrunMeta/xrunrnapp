@@ -17,6 +17,7 @@ import Animated, {
   withSpring,
   Easing,
   withRepeat,
+  withTiming,
 } from 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
@@ -37,7 +38,6 @@ function ARScreen() {
   const [coins, setCoins] = useState([]);
   const [coinAPI, setCoinAPI] = useState([]);
   const bouncingCoinTranslateY = useSharedValue(-250);
-  const bouncingCoinTranslateX = useSharedValue(0);
   const blinkOpacity = useSharedValue(1);
   const {width: WINDOW_WIDTH, height: WINDOW_HEIGHT} = Dimensions.get('window');
   const COIN_WIDTH = 150; // Ganti dengan lebar gambar koin Anda
@@ -51,6 +51,21 @@ function ARScreen() {
   const [bigCoin, setBigCoin] = useState(0);
   const [compassHeading, setCompassHeading] = useState(0);
   const [prevCompassHeading, setPrevCompassHeading] = useState(0);
+
+  // Random move coin
+  const [filterCoinsRandomMove, setFilterCoinsRandomMove] = useState([]);
+  const randomLefts = [
+    useSharedValue(0),
+    useSharedValue(0),
+    useSharedValue(0),
+    useSharedValue(0),
+  ];
+  const randomTops = [
+    useSharedValue(0),
+    useSharedValue(0),
+    useSharedValue(0),
+    useSharedValue(0),
+  ];
 
   const getCamPermission = async () => {
     try {
@@ -72,8 +87,6 @@ function ARScreen() {
       console.error(error);
     }
   };
-
-  getCamPermission();
 
   useEffect(() => {
     const getUserData = async () => {
@@ -97,6 +110,7 @@ function ARScreen() {
       }
     };
 
+    getCamPermission();
     getUserData();
 
     // Get Device Rotation
@@ -123,8 +137,10 @@ function ARScreen() {
       position => {
         // Get user Coordinate
         const userCoordinate = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
+          // latitude: position.coords.latitude,
+          // longitude: position.coords.longitude,
+          latitude: '-6.085638',
+          longitude: '106.746304',
         };
 
         setUserLocation(userCoordinate);
@@ -230,64 +246,22 @@ function ARScreen() {
     });
   };
 
-  const animateBouncingCoin = direction => {
-    // bouncingCoinTranslateY.value = withRepeat(
-    //   withSpring(10, {
-    //     mass: 2.1,
-    //     damping: 10,
-    //     stiffness: 192,
-    //     overshootClamping: false,
-    //     restDisplacementThreshold: 0.01,
-    //     restSpeedThreshold: 0.01,
-    //     reduceMotion: Easing.bounce,
-    //   }),
-    //   -1,
-    //   true,
-    // );
-
-    // const initialTranslateX = direction === 'left' ? -250 : 250;
-    // bouncingCoinTranslateY.value = withRepeat(
-    //   withSpring(initialTranslateX, {
-    //     mass: 2.1,
-    //     damping: 10,
-    //     stiffness: 192,
-    //     overshootClamping: false,
-    //     restDisplacementThreshold: 0.01,
-    //     restSpeedThreshold: 0.01,
-    //     reduceMotion: Easing.bounce,
-    //   }),
-    //   -1,
-    //   true,
-    // );
-
-    const initialTranslateX =
-      direction === 'left' ? -WINDOW_WIDTH : WINDOW_WIDTH;
-    bouncingCoinTranslateX.value = withTiming(initialTranslateX, {duration: 0});
-    bouncingCoinTranslateX.value = withSpring(0, {
-      mass: 2.1,
-      damping: 10,
-      stiffness: 192,
-      overshootClamping: false,
-      restDisplacementThreshold: 0.01,
-      restSpeedThreshold: 0.01,
-      easing: Easing.bounce,
-    });
-  };
-
   const animateBlink = () => {
     blinkOpacity.value = withRepeat(
       withSpring(0, {duration: 500}),
       -1,
       true,
-      // (_, isFinished) => {
-      //   if (isFinished) {
-      //     blinkOpacity.value = 1; // Setel kembali opacity ke nilai awal setelah selesai
-      //   }
-      // },
-      () => {
-        blinkOpacity.value = 1; // Setel kembali opacity ke nilai awal setelah selesai
+      (_, isFinished) => {
+        if (isFinished) {
+          blinkOpacity.value = 1; // Setel kembali opacity ke nilai awal setelah selesai
+        }
       },
     );
+  };
+
+  // Get random int for coin show animation from
+  const getRandomInt = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
   useEffect(() => {
@@ -304,10 +278,11 @@ function ARScreen() {
       const itemsToDisplay = shuffledData
         .slice(currentIndex, currentIndex + displayCount)
         .map(item => {
-          // const rotation = Math.random() * 360; // Menetapkan rotasi acak untuk koin
           const rotation = Math.random() * compassHeading; // Menetapkan rotasi acak untuk koin
           const x = Math.random() * (WINDOW_WIDTH - COIN_WIDTH); // Menetapkan posisi X acak untuk koin
           const y = (Math.random() - 0.1) * (WINDOW_HEIGHT - COIN_HEIGHT); // Menetapkan posisi Y acak untuk koin
+          const randVertical = getRandomInt(-300, 300);
+          const transY = randVertical;
 
           return {
             ...item,
@@ -316,65 +291,105 @@ function ARScreen() {
               y,
             },
             rotation,
-            direction: Math.random() > 0.5 ? 'left' : 'right',
+            transY,
           };
         });
-      // .map((item, index) => ({
-      //   ...item,
-      //   key: currentIndex + index,
-      // }));
 
       setCoins(itemsToDisplay);
-      currentIndex += displayCount;
-
-      if (currentIndex < shuffledData.length) {
-        setTimeout(displayItems, 1000);
-      }
 
       // Animasikan setiap koin
-      // animateBouncingCoin();
+      animateBouncingCoin();
 
       // Mulai animasi blink setiap kali koin berubah
-      // animateBlink();
+      animateBlink();
 
       setTimeout(() => {
         setCoins([]);
-        bouncingCoinTranslateY.value = -250;
+        const randVertical = getRandomInt(-300, 300);
+
+        bouncingCoinTranslateY.value = randVertical;
         blinkOpacity.value = 1;
       }, 3000);
 
-      // currentIndex = (currentIndex + displayCount) % shuffledData.length;
+      currentIndex = (currentIndex + displayCount) % shuffledData.length;
 
-      // // Catch Image Showing
-      // var appendedCatchShow = catchShow + 1;
-      // if (appendedCatchShow <= 3) {
-      //   setCatchShow(appendedCatchShow);
-      // } else {
-      //   setCatchShow(0);
-      // }
+      // Catch Image Showing
+      var appendedCatchShow = catchShow + 1;
+      if (appendedCatchShow <= 3) {
+        setCatchShow(appendedCatchShow);
+      } else {
+        setCatchShow(0);
+      }
 
-      // console.log('Jumlah Catch Show -> ' + appendedCatchShow);
+      console.log('Jumlah Catch Show -> ' + appendedCatchShow);
     };
 
-    // const intervalId = setInterval(displayItems, 4000);
+    const intervalId = setInterval(displayItems, 4000);
 
-    // // Hentikan interval ketika komponen di-unmount
-    // return () => {
-    //   clearInterval(intervalId);
-    //   // bouncingCoinTranslateY.value = -250;
-    //   // blinkOpacity.value = 1;
-    // };
-    displayItems();
-    // }, [coinAPI, coins]); // Perubahan coins ditambahkan di sini
-  }, [coinAPI]); // Perubahan coins ditambahkan di sini
+    // Hentikan interval ketika komponen di-unmount
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [coinAPI, coins]); // Perubahan coins ditambahkan di sini
 
-  const bouncingCoinStyle = useAnimatedStyle(() => ({
-    transform: [{translateY: bouncingCoinTranslateX.value}],
-  }));
+  // Start Random move coin
+  useEffect(() => {
+    if (coins.length > 0) {
+      const getRandomIndexCoin = (count = 4) => {
+        // Ambil indeks 0 sampai 3 atau sesuai dengan jumlah koin yang ada
+        return Array.from(
+          {length: Math.min(count, coins.length)},
+          (_, index) => index,
+        );
+      };
 
-  const blinkingStyle = useAnimatedStyle(() => ({
-    opacity: blinkOpacity.value,
-  }));
+      const randomIndexCoin = getRandomIndexCoin();
+      setFilterCoinsRandomMove(randomIndexCoin);
+    }
+  }, [coins]);
+
+  const getRandomPosition = () => ({
+    left: Math.random() * (WINDOW_WIDTH - 100),
+    top: Math.random() * (WINDOW_HEIGHT - 350),
+  });
+
+  useEffect(() => {
+    if (filterCoinsRandomMove.length > 0) {
+      const timeoutCoin = setTimeout(() => {
+        filterCoinsRandomMove.forEach((_, index) => {
+          const {left, top} = getRandomPosition();
+          randomLefts[index].value = withTiming(left, {
+            duration: 700,
+            easing: Easing.inOut(Easing.quad),
+          });
+          randomTops[index].value = withTiming(top, {
+            duration: 700,
+            easing: Easing.inOut(Easing.quad),
+          });
+        });
+      }, 700);
+
+      return () => clearTimeout(timeoutCoin);
+    }
+  }, [filterCoinsRandomMove]);
+
+  // End Random move coin
+
+  const animateBouncingCoin = () => {
+    bouncingCoinTranslateY.value = withRepeat(
+      withSpring(10, {
+        mass: 2.1,
+        damping: 10,
+        stiffness: 192,
+        overshootClamping: false,
+        restDisplacementThreshold: 0.01,
+        restSpeedThreshold: 0.01,
+        reduceMotion: Easing.bounce,
+      }),
+      -1,
+      true,
+    );
+  };
 
   const bouncingCoinAnimatedStyle = useAnimatedStyle(() => {
     return {
@@ -423,12 +438,17 @@ function ARScreen() {
     }
   };
 
+  const filteredCoins = coins.filter(item => parseFloat(item.distance) < 30);
+  const selectedCoinIndex =
+    filteredCoins.length > 0
+      ? Math.floor(Math.random() * filteredCoins.length)
+      : null;
+
   return (
     <SafeAreaView style={styles.container}>
       <View>
         {cameraPermission === 'granted' && isCameraReady && device && (
           <>
-            {/* {renderCamera()} */}
             <Camera
               style={{
                 position: 'relative',
@@ -443,116 +463,162 @@ function ARScreen() {
               style={{
                 position: 'absolute',
                 // backgroundColor: '#001a477a',
-                top: 0,
+                top: 125,
                 bottom: 0,
-                left: -50,
+                left: 10,
                 right: -50,
               }}>
-              {coins.map((item, index) => (
-                <Animated.View
-                  key={item.coin}
-                  style={[
-                    {
-                      position: 'absolute',
-                      // left: item.position.x,
-                      // top: item.position.y,
-                      top: Math.random() * (WINDOW_HEIGHT - COIN_HEIGHT),
-                      left: Math.random() * (WINDOW_WIDTH - COIN_WIDTH),
-                      width: 150,
-                      height: 275,
-                      display:
-                        item.rotation >= 0 && item.rotation <= 200
-                          ? 'block'
-                          : item.rotation >= 210 && item.rotation <= 320
-                          ? 'block'
-                          : item.rotation >= 330 && item.rotation <= 360
-                          ? 'block'
-                          : 'none',
-                    },
-                    // bouncingCoinAnimatedStyle,
-                    bouncingCoinStyle,
-                  ]}>
-                  <TouchableOpacity
-                    onPress={() =>
-                      clickedCoin(
-                        userData.member,
-                        item.advertisement,
-                        item.coin,
-                      )
-                    }
-                    disabled={parseFloat(item.distance) < 30 ? false : true}>
-                    <View
+              {coins.map((item, index) => {
+                const isRandomCoin = filterCoinsRandomMove.includes(index);
+                {
+                  /* const moveUncatchLeft =
+                  parseFloat(item.distance) < 30
+                    ? item.position.x
+                    : item.position.x - 200;
+                const moveUncatchTop =
+                  parseFloat(item.distance) < 30
+                    ? item.position.y
+                    : item.position.y - 150; */
+                }
+                const moveUncatchLeft =
+                  parseFloat(item.distance) < 30
+                    ? item.position.x
+                    : item.position.x > WINDOW_WIDTH / 2
+                    ? WINDOW_WIDTH - 1500 // posisikan lebih ke kanan layar
+                    : -50; // posisikan lebih ke kiri layar
+                const moveUncatchTop =
+                  parseFloat(item.distance) < 30
+                    ? item.position.y
+                    : item.position.y > WINDOW_HEIGHT / 2
+                    ? WINDOW_HEIGHT - 975 // posisikan lebih ke bawah layar
+                    : -50; // posisikan lebih ke atas layar
+
+                {
+                  /* console.log({moveUncatchLeft, moveUncatchTop}); */
+                }
+
+                return (
+                  <Animated.View
+                    key={item.coin}
+                    style={[
+                      {
+                        position: 'absolute',
+                        left: isRandomCoin
+                          ? randomLefts[index]
+                          : selectedCoinIndex !== null &&
+                            filteredCoins[selectedCoinIndex].coin === item.coin
+                          ? WINDOW_WIDTH / 2 - 600
+                          : moveUncatchLeft,
+                        top: isRandomCoin
+                          ? randomTops[index]
+                          : selectedCoinIndex !== null &&
+                            filteredCoins[selectedCoinIndex].coin === item.coin
+                          ? WINDOW_HEIGHT / 2 - 270
+                          : moveUncatchTop,
+                        zIndex: parseFloat(item.distance) < 30 ? 20 : 1,
+                        width: 150,
+                        height: 275,
+                        display:
+                          item.rotation >= 0 && item.rotation <= 200
+                            ? 'block'
+                            : item.rotation >= 210 && item.rotation <= 320
+                            ? 'block'
+                            : item.rotation >= 330 && item.rotation <= 360
+                            ? 'block'
+                            : 'none',
+                      },
+                      // item.transY,
+                      bouncingCoinAnimatedStyle,
+                      // bouncingCoinAnimatedStyle(bouncingCoinTranslateY.value),
+                    ]}>
+                    <ImageBackground
+                      source={require('../../../assets/images/image_arcoin_wrapper2.png')}
                       style={{
-                        justifyContent: 'center',
+                        resizeMode: 'contain',
+                        height: 165,
+                        width: 120,
                         alignItems: 'center',
+                        borderRadius: 55,
                       }}>
-                      {parseFloat(item.distance) < 30 && (
-                        <>
-                          <Animated.Image
-                            source={require('../../../assets/images/icon_catch.png')}
-                            style={[
-                              {
-                                resizeMode: 'contain',
-                                height: 140,
-                                width: 140,
-                              },
-                              // blinkAnimatedStyle,
-                              blinkingStyle,
-                            ]}
-                          />
-                        </>
-                      )}
-                      <ImageBackground
-                        source={require('../../../assets/images/image_arcoin_wrapper2.png')}
+                      <View
                         style={{
-                          resizeMode: 'contain',
-                          height: 165,
-                          width: 120,
-                          marginTop: -30,
-                          alignItems: 'center',
                           justifyContent: 'center',
-                          borderRadius: 55,
+                          alignItems: 'center',
+                          position: 'relative',
                         }}>
-                        <Image
-                          source={{
-                            uri: `data:image/jpeg;base64,${item.adthumbnail2.replace(
-                              /(\r\n|\n|\r)/gm,
-                              '',
-                            )}`,
-                          }}
+                        {parseFloat(item.distance) < 30 && (
+                          <>
+                            <Animated.Image
+                              source={require('../../../assets/images/icon_catch.png')}
+                              style={[
+                                {
+                                  resizeMode: 'contain',
+                                  height: 140,
+                                  width: 140,
+                                  position: 'absolute',
+                                  top: -105,
+                                },
+                                blinkAnimatedStyle,
+                              ]}
+                            />
+                          </>
+                        )}
+                        <TouchableOpacity
+                          onPress={() =>
+                            clickedCoin(
+                              userData.member,
+                              item.advertisement,
+                              item.coin,
+                            )
+                          }
+                          disabled={
+                            parseFloat(item.distance) < 30 ? false : true
+                          }
                           style={{
-                            height: 45,
-                            width: 45,
-                            marginTop: -40,
-                          }}
-                        />
-                        <Text
-                          style={{
-                            fontFamily: getFontFam() + 'Medium',
-                            fontSize: fontSize('subtitle'),
-                            color: 'white',
-                            marginTop: 5,
+                            height: 125,
+                            width: 125,
+                            borderRadius: 100,
+                            alignItems: 'center',
+                            justifyContent: 'center',
                           }}>
-                          {/* 0.05XRUN */}
-                          {item.coins}
-                          {item.title}
-                        </Text>
-                        <Text
-                          style={{
-                            fontFamily: getFontFam() + 'Regular',
-                            fontSize: fontSize('body'),
-                            color: 'grey',
-                            marginTop: 3,
-                          }}>
-                          {/* 2M */}
-                          {item.distance}M
-                        </Text>
-                        {console.log('Rotasi Coin -> ' + item.rotation)}
-                      </ImageBackground>
-                    </View>
-                  </TouchableOpacity>
-                </Animated.View>
-              ))}
+                          <Image
+                            source={{
+                              uri: `data:image/jpeg;base64,${item.adthumbnail2.replace(
+                                /(\r\n|\n|\r)/gm,
+                                '',
+                              )}`,
+                            }}
+                            style={{
+                              height: 45,
+                              width: 45,
+                            }}
+                          />
+                          <Text
+                            style={{
+                              fontFamily: getFontFam() + 'Medium',
+                              fontSize: fontSize('subtitle'),
+                              color: 'white',
+                              marginTop: 5,
+                            }}>
+                            {item.coins}
+                            {item.title}
+                          </Text>
+                          <Text
+                            style={{
+                              fontFamily: getFontFam() + 'Regular',
+                              fontSize: fontSize('body'),
+                              color: 'grey',
+                              marginTop: 3,
+                            }}>
+                            {item.distance}M
+                          </Text>
+                          {console.log('Rotasi Coin -> ' + item.rotation)}
+                        </TouchableOpacity>
+                      </View>
+                    </ImageBackground>
+                  </Animated.View>
+                );
+              })}
             </View>
             <View
               style={{
@@ -573,7 +639,6 @@ function ARScreen() {
                     bottom: -20,
                     left: 0,
                     right: 0,
-                    // transform: [{translateY: 110}],
                   },
                 ]}>
                 <LinearGradient
