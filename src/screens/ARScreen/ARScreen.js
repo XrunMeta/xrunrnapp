@@ -44,13 +44,11 @@ function ARScreen() {
   const COIN_HEIGHT = 275; // Ganti dengan tinggi gambar koin Anda
   const [userData, setUserData] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
-  const [flash, setFlash] = useState('on');
   const [catchShow, setCatchShow] = useState(0);
   const navigation = useNavigation();
   const [brandCount, setBrandCount] = useState(0);
   const [bigCoin, setBigCoin] = useState(0);
   const [compassHeading, setCompassHeading] = useState(0);
-  const [prevCompassHeading, setPrevCompassHeading] = useState(0);
 
   // Random move coin
   const [filterCoinsRandomMove, setFilterCoinsRandomMove] = useState([]);
@@ -137,10 +135,10 @@ function ARScreen() {
       position => {
         // Get user Coordinate
         const userCoordinate = {
-          // latitude: position.coords.latitude,
-          // longitude: position.coords.longitude,
-          latitude: '-6.085638',
-          longitude: '106.746304',
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          // latitude: '-6.085638',
+          // longitude: '106.746304',
         };
 
         setUserLocation(userCoordinate);
@@ -264,74 +262,6 @@ function ARScreen() {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
-  // useEffect(() => {
-  //   let currentIndex = 0;
-
-  //   const displayItems = () => {
-  //     const shuffledData = [...coinAPI].sort(() => Math.random() - 0.5);
-
-  //     const displayCount = Math.min(
-  //       shuffledData.length - currentIndex,
-  //       Math.floor(Math.random() * 5) + 6,
-  //     );
-
-  //     const itemsToDisplay = shuffledData
-  //       .slice(currentIndex, currentIndex + displayCount)
-  //       .map(item => {
-  //         const rotation = Math.random() * compassHeading; // Menetapkan rotasi acak untuk koin
-  //         const x = Math.random() * (WINDOW_WIDTH - COIN_WIDTH); // Menetapkan posisi X acak untuk koin
-  //         const y = (Math.random() - 0.1) * (WINDOW_HEIGHT - COIN_HEIGHT); // Menetapkan posisi Y acak untuk koin
-  //         const randVertical = getRandomInt(-300, 300);
-  //         const transY = randVertical;
-
-  //         return {
-  //           ...item,
-  //           position: {
-  //             x,
-  //             y,
-  //           },
-  //           rotation,
-  //           transY,
-  //         };
-  //       });
-
-  //     setCoins(itemsToDisplay);
-
-  //     // Animasikan setiap koin
-  //     animateBouncingCoin();
-
-  //     // Mulai animasi blink setiap kali koin berubah
-  //     animateBlink();
-
-  //     setTimeout(() => {
-  //       setCoins([]);
-  //       const randVertical = getRandomInt(-300, 300);
-
-  //       bouncingCoinTranslateY.value = randVertical;
-  //       blinkOpacity.value = 1;
-  //     }, 3000);
-
-  //     currentIndex = (currentIndex + displayCount) % shuffledData.length;
-
-  //     // Catch Image Showing
-  //     var appendedCatchShow = catchShow + 1;
-  //     if (appendedCatchShow <= 3) {
-  //       setCatchShow(appendedCatchShow);
-  //     } else {
-  //       setCatchShow(0);
-  //     }
-
-  //     console.log('Jumlah Catch Show -> ' + appendedCatchShow);
-  //   };
-
-  //   const intervalId = setInterval(displayItems, 6000);
-
-  //   // Hentikan interval ketika komponen di-unmount
-  //   return () => {
-  //     clearInterval(intervalId);
-  //   };
-  // }, [coinAPI, coins]); // Perubahan coins ditambahkan di sini
-
   useEffect(() => {
     let currentIndex = 0;
 
@@ -448,8 +378,6 @@ function ARScreen() {
     }
   }, [filterCoinsRandomMove]);
 
-  // End Random move coin
-
   const animateBouncingCoin = () => {
     bouncingCoinTranslateY.value = withRepeat(
       withSpring(10, {
@@ -469,7 +397,6 @@ function ARScreen() {
   const animateAdditionalEffect = () => {
     const getRandom = Math.floor(Math.random() * 10000);
     const randomSpringValue = getRandom % 2 == 0 ? 1000 : -1000;
-    console.log('Anjeeengggg -> ' + randomSpringValue);
 
     bouncingCoinTranslateY.value = withRepeat(
       withSpring(randomSpringValue, {
