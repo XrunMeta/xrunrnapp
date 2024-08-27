@@ -39,13 +39,14 @@ const FirstScreenV2 = ({navigation}) => {
     const checkLatestVersion = async () => {
       const isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
 
+	  const provider = Platform.OS === 'ios' ? 'appStore' : 'playStore';
+
       // Using this package for check version: https://github.com/kimxogus/react-native-version-check
-      VersionCheck.getLatestVersion({
-        provider: 'playStore', // for Android
-      }).then(latestVersion => {
+      VersionCheck.getLatestVersion({provider})
+	  	.then(latestVersion => {
         const currentVersion = VersionCheck.getCurrentVersion();
         console.log(
-          `Current version app: ${currentVersion} || Playstore version app: ${latestVersion}`,
+          `Current version app: ${currentVersion} || ${provider} version app: ${latestVersion}`,
         );
 
         if (currentVersion < latestVersion) {
