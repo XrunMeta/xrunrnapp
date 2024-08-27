@@ -150,7 +150,7 @@ export default function Home({route}) {
         if (Platform.OS === 'android' && tabName === 'Wallet') {
           navigation.dispatch(CommonActions.navigate('WalletHome'));
         } else if (Platform.OS === 'ios' && tabName === 'Wallet') {
-          Linking.openURL('https://www.facebook.com');
+          Linking.openURL('https://www.xrun.run/walletsite/');
         } else {
           onPress();
         }
