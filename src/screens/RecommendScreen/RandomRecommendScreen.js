@@ -90,6 +90,11 @@ const RandomRecommendScreen = () => {
           );
           const data = await response.json();
 
+          // Save/Update recommend
+          await fetch(
+            `${URL_API}&act=saveRecommend&member=${userData.member}&recommand=${checkedID}`,
+          );
+
           if (data.data === 'ok') {
             Alert.alert(
               lang && lang.alert ? lang.alert.title.success : '',
