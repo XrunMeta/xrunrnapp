@@ -46,6 +46,34 @@ export default function Home({route}) {
   };
 
   useEffect(() => {
+    const getShowWalletStatus = async () => {
+      try {
+        const response = await fetch(
+          `${URL_API}&act=ap1000-i01`,
+        );
+        const data = await response.json();
+
+        console.log("Bahlul : " + data.result)
+
+        if (data.result == 1 && Platform.OS === 'ios') {
+          setShowWallet(true);
+        } else if (Platform.OS === 'android') {
+          setShowWallet(true)
+        } 
+      } catch (error) {
+        console.error(
+          'Error get show wallet status: ',
+          err,
+        );
+        crashlytics().recordError(new Error(error));
+        crashlytics().log(error);
+      }
+    };
+
+    getShowWalletStatus() // Get Show Wallet Status
+  }, [])
+
+  useEffect(() => {
     if (sendActiveTab) {
       console.log('Di Home Screen disuruh buka Tab -> ' + sendActiveTab);
       setActiveTab(sendActiveTab);
@@ -148,7 +176,7 @@ export default function Home({route}) {
 	  onPress={() => {
 		console.log('Pergi ke ' + tabName);
 		if (tabName === 'Wallet') {
-		  if (Platform.OS === 'android' && showWallet) {
+		  if (Platform.OS === 'android') {
 			navigation.dispatch(CommonActions.navigate('WalletHome'));
 		  } else if (Platform.OS === 'ios' && showWallet) {
 			Linking.openURL('https://www.xrun.run/walletsite/');
