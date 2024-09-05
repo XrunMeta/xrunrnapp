@@ -37,6 +37,7 @@ export default function Home({route}) {
   const [activeTab, setActiveTab] = useState('Map');
   const isFocused = useIsFocused();
   const [countAds, setCountAds] = useState(0);
+  const [showWallet, setShowWallet] = useState(false)
 
   const navigation = useNavigation();
 
@@ -139,57 +140,61 @@ export default function Home({route}) {
     return () => backHandler.remove();
   }, [isFocused]);
 
-  const renderTabButton = (tabName, icon, text, onPress) => (
-    <TouchableOpacity
-      style={[
-        styles.buttonTabItem,
-        // {backgroundColor: activeTab === tabName ? '#ffdc04' : 'transparent'},
-      ]}
-      onPress={() => {
-        console.log('Pergi ke ' + tabName);
-        if (Platform.OS === 'android' && tabName === 'Wallet') {
-          navigation.dispatch(CommonActions.navigate('WalletHome'));
-        } else if (Platform.OS === 'ios' && tabName === 'Wallet') {
-          Linking.openURL('https://www.xrun.run/walletsite/');
-        } else {
-          onPress();
-        }
-      }}>
-      <Image
-        source={icon}
-        resizeMode="contain"
-        style={{
-          width: 25,
-          height: 25,
-          // tintColor: activeTab === tabName ? 'black' : '#343a59',
-        }}
-      />
-      {tabName === 'Advertise' && countAds > 0 && (
-        <View
-          style={{
-            backgroundColor: tabName === 'Advertise' ? 'green' : 'pink',
-            width: 30,
-            height: 30,
-            borderRadius: 20,
-            alignItems: 'center',
-            justifyContent: 'center',
-            position: 'absolute',
-            top: -12,
-            right: 8,
-          }}>
-          <Text
-            style={{
-              fontFamily: getFontFam() + 'Light',
-              fontSize: fontSize('note'),
-              color: 'white',
-            }}>
-            {countAds > 100 ? countAds : '99+'}
-          </Text>
-        </View>
-      )}
-
-      <Text style={styles.tabText}>{text}</Text>
-    </TouchableOpacity>
+	const renderTabButton = (tabName, icon, text, onPress) => (
+	<TouchableOpacity
+	  style={[
+		styles.buttonTabItem,
+	  ]}
+	  onPress={() => {
+		console.log('Pergi ke ' + tabName);
+		if (tabName === 'Wallet') {
+		  if (Platform.OS === 'android' && showWallet) {
+			navigation.dispatch(CommonActions.navigate('WalletHome'));
+		  } else if (Platform.OS === 'ios' && showWallet) {
+			Linking.openURL('https://www.xrun.run/walletsite/');
+		  } else if (!showWallet) {
+			Linking.openURL('https://www.xrun.run/');
+		  } else {
+			onPress();
+		  }
+		} else {
+		  onPress();
+		}
+	  }}>
+	  <Image
+		source={icon}
+		resizeMode="contain"
+		style={{
+		  width: 25,
+		  height: 25,
+		}}
+	  />
+	  {tabName === 'Advertise' && countAds > 0 && (
+		<View
+		  style={{
+			backgroundColor: tabName === 'Advertise' ? 'green' : 'pink',
+			width: 30,
+			height: 30,
+			borderRadius: 20,
+			alignItems: 'center',
+			justifyContent: 'center',
+			position: 'absolute',
+			top: -12,
+			right: 8,
+		  }}>
+		  <Text
+			style={{
+			  fontFamily: getFontFam() + 'Light',
+			  fontSize: fontSize('note'),
+			  color: 'white',
+			}}>
+			{countAds > 100 ? countAds : '99+'}
+		  </Text>
+		</View>
+	  )}
+  
+	  <Text style={styles.tabText}>{text}</Text>
+	</TouchableOpacity>
   );
 
   if (isLoggedIn == undefined) {
@@ -204,18 +209,24 @@ export default function Home({route}) {
 
           {/* Bottom Tab Navigator */}
           <View style={styles.bottomTabContainer}>
-            {renderTabButton(
-              'Wallet',
-              require('../../../assets/images/icon_wallet.png'),
-              lang && lang.screen_bottomTab && lang.screen_bottomTab.wallet
-                ? lang.screen_bottomTab.wallet.title
-                : 'Wallet',
-              () => {
-                {
-                  navigation.dispatch(CommonActions.navigate('WalletHome'));
-                }
-              },
-            )}
+			{renderTabButton(
+				'Wallet',
+				showWallet
+					? require('../../../assets/images/icon_wallet.png')
+					: require('../../../assets/images/icon_web.png'),
+				showWallet
+					? lang && lang.screen_bottomTab && lang.screen_bottomTab.wallet
+					? lang.screen_bottomTab.wallet.title
+					: 'Wallet'
+					: 'Site',
+				() => {
+					if (showWallet) {
+						Linking.openURL('https://www.xrun.run/walletsite');
+					} else {
+						Linking.openURL('https://www.xrun.run/');
+					}
+				},
+			)}
             {renderTabButton(
               'Advertise',
               require('../../../assets/images/icon_advertisement.png'),
