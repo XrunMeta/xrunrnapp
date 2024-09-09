@@ -11,6 +11,7 @@ import {
   Modal,
   TouchableWithoutFeedback,
   TouchableOpacity,
+  Keyboard,
 } from 'react-native';
 import React, {useState, useRef, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
@@ -282,6 +283,7 @@ const EmailVerificationLoginScreen = () => {
   };
 
   return (
+	<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={[styles.root, {height: ScreenHeight}]}>
         <ButtonBack onClick={onBack} />
@@ -352,6 +354,7 @@ const EmailVerificationLoginScreen = () => {
         <SliderModal visible={modalVisible} onClose={toggleModal} />
       </View>
     </ScrollView>
+	</TouchableWithoutFeedback>
   );
 };
 
