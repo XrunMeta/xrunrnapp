@@ -25,10 +25,10 @@ import {useAuth} from '../../context/AuthContext/AuthContext';
 
 const SignUpScreen = ({route}) => {
   const [lang, setLang] = useState({});
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [name, setName] = useState('test');
+  const [email, setEmail] = useState('tes@gmail.com');
+  const [password, setPassword] = useState('Test123@@');
+  const [phoneNumber, setPhoneNumber] = useState('81298486647');
   const [authCode, setAuthCode] = useState('');
   const [region, setRegion] = useState('');
   const [regionID, setRegionID] = useState(0);
