@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  Keyboard,
 } from 'react-native';
 import React, {useState, useRef, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
@@ -118,12 +119,13 @@ const EmailVerificationScreen = () => {
           ? 2240
           : 2250;
       const gender = tempGender === 'pria' ? 2110 : 2111;
+	  const os = Platform.OS === 'ios' ? 3113 : 3112;
       console.log(
-        `Firstname: ${firstname} | Lastname: ${lastname} | Email: ${email} | Pin: ${pin} | Phone Number: ${phoneNumber} | age: ${age} | region: ${region} | gender: ${gender} | Country Code: ${countryCode} | Mobile Code: ${mobileCode} | Recommand: ${recommand}`,
+        `Firstname: ${firstname} | Lastname: ${lastname} | Email: ${email} | Pin: ${pin} | Phone Number: ${phoneNumber} | age: ${age} | region: ${region} | gender: ${gender} | Country Code: ${countryCode} | Mobi	le Code: ${mobileCode} | Recommand: ${recommand} : OS: ${os}`,
       );
 
       const request = await fetch(
-        `${URL_API}&act=login-06-joinAndAccount&email=${email}&pin=${pin}&firstname=${firstname}&lastname=${lastname}&gender=${gender}&mobile=${phoneNumber}&mobilecode=${mobileCode}&countrycode=${countryCode}&country=${mobileCode}&region=${region}&age=${age}&recommand=${recommand}`,
+        `${URL_API}&act=login-06-joinAndAccount&email=${email}&pin=${pin}&firstname=${firstname}&lastname=${lastname}&gender=${gender}&mobile=${phoneNumber}&mobilecode=${mobileCode}&countrycode=${countryCode}&country=${mobileCode}&region=${region}&age=${age}&recommand=${recommand}&os=${os}`,
       );
       const response = await request.json();
       console.log(`Data SignUp response: ${JSON.stringify(response)}`);
@@ -321,74 +323,76 @@ const EmailVerificationScreen = () => {
   };
 
   return (
-    <View style={[styles.root, {height: ScreenHeight}]}>
-      <ButtonBack onClick={onBack} />
+	<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+		<View style={[styles.root, {height: ScreenHeight}]}>
+			<ButtonBack onClick={onBack} />
 
-      {/* Text Section */}
-      <View style={styles.textWrapper}>
-        <Text style={styles.normalText}>
-          {lang &&
-          lang.screen_emailVerification &&
-          lang.screen_emailVerification.email
-            ? lang.screen_emailVerification.email.label
-            : ''}
-        </Text>
-        <Text style={styles.boldText}>{dataUser.email}</Text>
-      </View>
+			{/* Text Section */}
+			<View style={styles.textWrapper}>
+				<Text style={styles.normalText}>
+				{lang &&
+				lang.screen_emailVerification &&
+				lang.screen_emailVerification.email
+					? lang.screen_emailVerification.email.label
+					: ''}
+				</Text>
+				<Text style={styles.boldText}>{dataUser.email}</Text>
+			</View>
 
-      {/* Code Input */}
-      <View style={styles.codeInputContainer}>
-        {verificationCode.map((code, index) => (
-          <TextInput
-            key={index}
-            ref={ref => (inputRefs.current[index] = ref)}
-            style={[
-              styles.codeInput,
-              activeIndex === index && styles.activeInput,
-            ]}
-            value={code}
-            placeholder="0"
-            placeholderTextColor="grey"
-            onChangeText={text => handleInputChange(text, index)}
-            onKeyPress={({nativeEvent}) => {
-              if (nativeEvent.key === 'Backspace') {
-                handleInputDelete(index);
-              }
-            }}
-            onFocus={() => setActiveIndex(index)}
-            keyboardType="numeric"
-            maxLength={1}
-          />
-        ))}
-      </View>
+			{/* Code Input */}
+			<View style={styles.codeInputContainer}>
+				{verificationCode.map((code, index) => (
+				<TextInput
+					key={index}
+					ref={ref => (inputRefs.current[index] = ref)}
+					style={[
+					styles.codeInput,
+					activeIndex === index && styles.activeInput,
+					]}
+					value={code}
+					placeholder="0"
+					placeholderTextColor="grey"
+					onChangeText={text => handleInputChange(text, index)}
+					onKeyPress={({nativeEvent}) => {
+					if (nativeEvent.key === 'Backspace') {
+						handleInputDelete(index);
+					}
+					}}
+					onFocus={() => setActiveIndex(index)}
+					keyboardType="numeric"
+					maxLength={1}
+				/>
+				))}
+			</View>
 
-      {/* Bottom Section*/}
-      <View style={[styles.bottomSection]}>
-        <View style={styles.additionalLogin}>
-          <Countdown />
-        </View>
-        {isCodeComplete ? (
-          <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
-            <Image
-              source={require('../../../assets/images/icon_next.png')}
-              resizeMode="contain"
-              style={styles.buttonSignInImage}
-            />
-          </Pressable>
-        ) : (
-          <Pressable onPress={onSignInDisabled} style={styles.buttonSignIn}>
-            <Image
-              source={require('../../../assets/images/icon_nextDisable.png')}
-              resizeMode="contain"
-              style={styles.buttonSignInImage}
-            />
-          </Pressable>
-        )}
-      </View>
+			{/* Bottom Section*/}
+			<View style={[styles.bottomSection]}>
+				<View style={styles.additionalLogin}>
+				<Countdown />
+				</View>
+				{isCodeComplete ? (
+				<Pressable onPress={onSignIn} style={styles.buttonSignIn}>
+					<Image
+					source={require('../../../assets/images/icon_next.png')}
+					resizeMode="contain"
+					style={styles.buttonSignInImage}
+					/>
+				</Pressable>
+				) : (
+				<Pressable onPress={onSignInDisabled} style={styles.buttonSignIn}>
+					<Image
+					source={require('../../../assets/images/icon_nextDisable.png')}
+					resizeMode="contain"
+					style={styles.buttonSignInImage}
+					/>
+				</Pressable>
+				)}
+			</View>
 
-      {/* Slider Modal */}
-      <SliderModal visible={modalVisible} onClose={toggleModal} />
-    </View>
+			{/* Slider Modal */}
+			<SliderModal visible={modalVisible} onClose={toggleModal} />
+		</View>
+	</TouchableWithoutFeedback>
   );
 };
 
