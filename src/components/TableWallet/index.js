@@ -712,7 +712,7 @@ const TableWalletCard = ({
         act.totalHistory,
         member,
         currentCurrency,
-        defaultLoadData,
+        currentDaysTransactional,
       );
       console.log('Run defaultListTransactionsHistory() function once');
 
