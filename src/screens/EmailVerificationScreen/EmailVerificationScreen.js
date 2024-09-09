@@ -119,12 +119,13 @@ const EmailVerificationScreen = () => {
           ? 2240
           : 2250;
       const gender = tempGender === 'pria' ? 2110 : 2111;
+	  const os = Platform.OS === 'ios' ? 3113 : 3112;
       console.log(
-        `Firstname: ${firstname} | Lastname: ${lastname} | Email: ${email} | Pin: ${pin} | Phone Number: ${phoneNumber} | age: ${age} | region: ${region} | gender: ${gender} | Country Code: ${countryCode} | Mobile Code: ${mobileCode} | Recommand: ${recommand}`,
+        `Firstname: ${firstname} | Lastname: ${lastname} | Email: ${email} | Pin: ${pin} | Phone Number: ${phoneNumber} | age: ${age} | region: ${region} | gender: ${gender} | Country Code: ${countryCode} | Mobi	le Code: ${mobileCode} | Recommand: ${recommand} : OS: ${os}`,
       );
 
       const request = await fetch(
-        `${URL_API}&act=login-06-joinAndAccount&email=${email}&pin=${pin}&firstname=${firstname}&lastname=${lastname}&gender=${gender}&mobile=${phoneNumber}&mobilecode=${mobileCode}&countrycode=${countryCode}&country=${mobileCode}&region=${region}&age=${age}&recommand=${recommand}`,
+        `${URL_API}&act=login-06-joinAndAccount&email=${email}&pin=${pin}&firstname=${firstname}&lastname=${lastname}&gender=${gender}&mobile=${phoneNumber}&mobilecode=${mobileCode}&countrycode=${countryCode}&country=${mobileCode}&region=${region}&age=${age}&recommand=${recommand}&os=${os}`,
       );
       const response = await request.json();
       console.log(`Data SignUp response: ${JSON.stringify(response)}`);
