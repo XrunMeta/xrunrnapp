@@ -22,9 +22,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {useAuth} from '../../context/AuthContext/AuthContext';
+import SelectDropdown from 'react-native-select-dropdown';
 
 const SignUpScreen = ({route}) => {
   const [lang, setLang] = useState({});
+  const [currentLang, setCurrentLang] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -38,13 +40,24 @@ const SignUpScreen = ({route}) => {
   const [isEmailValid, setIsEmailValid] = useState(true);
   const {flag, countryCode = 82, country, code = 'KR'} = route.params || {};
   const [areaData, setAreaData] = useState([]);
-  const [isListWrapperVisible, setIsListWrapperVisible] = useState(false);
   const [authShow, setAuthShow] = useState(false);
   const [authLoading, setAuthLoading] = useState(false);
   const [verifyLoading, setVerifyLoading] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
 
+  // Dropdown region
+  const [isSelected, setIsSelected] = useState(false);
+  const [resetKey, setResetKey] = useState(0);
+
   const navigation = useNavigation();
+
+  useEffect(() => {
+    // Reset region dan isSelected when countryCode change
+    setRegion('');
+    setIsSelected(false);
+    setRegionID(0);
+    setResetKey(prevKey => prevKey + 1);
+  }, [countryCode]);
 
   const onSignUp = async () => {
     if (name.trim() === '') {
@@ -156,6 +169,7 @@ const SignUpScreen = ({route}) => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
         const screenLang = await getLanguage2(currentLanguage);
+        setCurrentLang(currentLanguage);
 
         // Set your language state
         setLang(screenLang);
@@ -197,93 +211,6 @@ const SignUpScreen = ({route}) => {
         crashlytics().log(error);
       });
   }, [countryCode]);
-
-  // ListWrapper
-  const ListWrapper = ({onClose}) => {
-    return (
-      <TouchableWithoutFeedback
-        onPress={() => {
-          setIsListWrapperVisible(false);
-          onClose();
-        }}
-        style={{
-          flex: 1,
-        }}>
-        <View
-          style={{
-            flex: 1,
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-          }}>
-          <ScrollView
-            style={{
-              position: 'absolute',
-              top: '56.5%', // Sesuaikan sesuai kebutuhan
-              left: 0,
-              right: 0,
-              backgroundColor: 'white',
-              borderWidth: 1,
-              borderColor: '#ccc',
-              borderRadius: 5,
-              maxHeight: 155, // Sesuaikan sesuai kebutuhan
-              overflowY: 'auto',
-              elevation: 4,
-              padding: 5,
-              marginHorizontal: 25,
-            }}>
-            {areaData
-              .filter(item => {
-                return item.description
-                  .toLowerCase()
-                  .includes(region.toLowerCase());
-              })
-              .map((item, index) => (
-                <Pressable
-                  style={{
-                    borderBottomWidth: 1,
-                    borderBottomColor: '#dbdbdb',
-                    paddingTop: 5,
-                    paddingBottom: 2,
-                    marginHorizontal: 5,
-                  }}
-                  key={index}
-                  onPress={() => {
-                    setRegion(item.description);
-                    setRegionID(item.subcode);
-                    setIsListWrapperVisible(false);
-                  }}>
-                  {console.log(item.description)}
-                  <Text style={styles.normalText}>{item.description}</Text>
-                </Pressable>
-              ))}
-          </ScrollView>
-        </View>
-      </TouchableWithoutFeedback>
-    );
-  };
-
-  const closeButton = () => {
-    setIsListWrapperVisible(false);
-  };
-
-  useEffect(() => {
-    if (region !== '') {
-      setIsListWrapperVisible(true);
-    } else {
-      setIsListWrapperVisible(false);
-    }
-  }, [region]);
-
-  useEffect(() => {
-    if (region.trim() !== '') {
-      setIsListWrapperVisible(true);
-    } else {
-      setIsListWrapperVisible(false);
-    }
-  }, [region]);
 
   const onAuth = async (mobile, country) => {
     if (phoneNumber !== '') {
@@ -519,7 +446,7 @@ const SignUpScreen = ({route}) => {
           </View>
 
           {/*  Field - Region */}
-          <CustomInput
+          {/* <CustomInput
             label={
               lang && lang.screen_signup && lang.screen_signup.area
                 ? lang.screen_signup.area.label
@@ -533,9 +460,82 @@ const SignUpScreen = ({route}) => {
             value={region}
             setValue={setRegion}
             isPassword={false}
-          />
+          /> */}
 
-          {isListWrapperVisible && <ListWrapper onClose={closeButton} />}
+          <View style={{width: '100%', paddingHorizontal: 25, marginTop: 30}}>
+            <Text style={styles.label}>
+              {lang && lang.screen_signup && lang.screen_signup.area
+                ? lang.screen_signup.area.label
+                : ''}
+            </Text>
+            <SelectDropdown
+              key={resetKey}
+              data={
+                areaData.length > 0
+                  ? areaData
+                  : [
+                      {
+                        description:
+                          currentLang === 'ko'
+                            ? '지역을 찾을 수 없습니다'
+                            : 'Region not found',
+                        isPlaceholder: true,
+                      },
+                    ]
+              }
+              onSelect={(selectedItem, index) => {
+                setRegion(selectedItem.description);
+                setRegionID(selectedItem.subcode);
+                setIsSelected(true);
+              }}
+              renderButton={(selectedItem, isOpened) => {
+                const isDisabled = areaData.length === 0;
+                return (
+                  <View
+                    style={[
+                      styles.dropdownButtonStyle,
+                      isDisabled && styles.disabledDropdownButton,
+                    ]}>
+                    <Text
+                      style={[
+                        styles.dropdownButtonTxtStyle,
+                        isDisabled && styles.disabledDropdownButtonText,
+                      ]}>
+                      {isDisabled
+                        ? currentLang === 'ko'
+                          ? '지역을 찾을 수 없습니다'
+                          : 'Region not found'
+                        : isSelected && selectedItem && selectedItem.description
+                        ? selectedItem.description
+                        : currentLang === 'ko'
+                        ? '선택'
+                        : 'Select'}
+                    </Text>
+                  </View>
+                );
+              }}
+              renderItem={(item, index, isSelected) => {
+                if (item.isPlaceholder) {
+                  return null; // Don't render anything for placeholder item
+                }
+                return (
+                  <View
+                    style={{
+                      ...styles.dropdownItemStyle,
+                      ...(isSelected && {backgroundColor: '#bae6fd'}),
+                    }}>
+                    <Text style={styles.dropdownItemTxtStyle}>
+                      {item.description}
+                    </Text>
+                  </View>
+                );
+              }}
+              showsVerticalScrollIndicator={false}
+              dropdownStyle={styles.dropdownMenuStyle}
+              disabled={areaData.length === 0}
+              disableAutoScroll={true}
+            />
+          </View>
 
           {/*  Field - Gender */}
           <View style={[styles.formGroup, {zIndex: -1}]}>
@@ -779,6 +779,51 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     flex: 1,
     marginRight: 10,
+  },
+  dropdownButtonStyle: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+    borderBottomColor: '#cccccc',
+    paddingBottom: 6,
+    borderBottomWidth: 1,
+  },
+  dropdownButtonTxtStyle: {
+    flex: 1,
+    fontFamily: getFontFam() + 'Medium',
+    fontSize: fontSize('body'),
+    color: '#343a59',
+  },
+  dropdownMenuStyle: {
+    backgroundColor: '#E9ECEF',
+    borderRadius: 8,
+    height: 300,
+  },
+  dropdownItemStyle: {
+    width: '100%',
+    flexDirection: 'row',
+    paddingHorizontal: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 8,
+    fontFamily: getFontFam() + 'Regular',
+    fontSize: fontSize('body'),
+    color: '#343a59',
+  },
+  dropdownItemTxtStyle: {
+    flex: 1,
+    fontFamily: getFontFam() + 'Regular',
+    fontSize: fontSize('body'),
+    color: '#343a59',
+  },
+  disabledDropdownButton: {
+    opacity: 0.5,
+    backgroundColor: '#f0f0f0',
+  },
+  disabledDropdownButtonText: {
+    color: '#888',
   },
 });
 
