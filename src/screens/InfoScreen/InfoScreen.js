@@ -120,7 +120,7 @@ const InfoScreen = () => {
 Let's join XRUN!!!
 Referral me!
 Email : ${userDetails.email}
-https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
+https://play.google.com/store/apps/details?id=run.xrun.xrunapps`,
       });
 
       if (result.action === Share.sharedAction) {
