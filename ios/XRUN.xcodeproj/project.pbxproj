@@ -556,7 +556,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = run.xrun.xrunappss;
+				PRODUCT_BUNDLE_IDENTIFIER = run.xrun.xrunapp;
 				PRODUCT_NAME = XRUN;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -595,7 +595,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = run.xrun.xrunappss;
+				PRODUCT_BUNDLE_IDENTIFIER = run.xrun.xrunapp;
 				PRODUCT_NAME = XRUN;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
