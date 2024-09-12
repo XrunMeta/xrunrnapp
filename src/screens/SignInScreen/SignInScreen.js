@@ -15,14 +15,20 @@ import ButtonBack from '../../components/ButtonBack/';
 import {useNavigation} from '@react-navigation/native';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  URL_API_NODEJS,
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  authcode,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const SignInScreen = () => {
   const [lang, setLang] = useState({});
   const {login} = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('ggg@hhh.com');
+  const [password, setPassword] = useState('111!!!aAAA');
   const [isEmailValid, setIsEmailValid] = useState(true);
 
   const navigation = useNavigation();
@@ -45,12 +51,22 @@ const SignInScreen = () => {
       );
     } else {
       try {
-        const response = await fetch(
-          `${URL_API}&act=login-01&tp=4&email=${email}&pin=${password}`,
-        );
+        const response = await fetch(`${URL_API_NODEJS}/login-01`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authcode}`,
+          },
+          body: JSON.stringify({
+            type: 4,
+            email,
+            pin: password,
+          }),
+        });
+
         const data = await response.json();
 
-        if (data.data === 'false') {
+        if (data.status !== 'success') {
           Alert.alert(
             lang ? lang.screen_signin.alert.fail : '',
             lang ? lang.screen_signin.failedLogin : '',
@@ -60,7 +76,7 @@ const SignInScreen = () => {
           setPassword('');
         } else {
           await AsyncStorage.setItem('userEmail', email);
-          await AsyncStorage.setItem('userData', JSON.stringify(data));
+          await AsyncStorage.setItem('userData', JSON.stringify(data.data[0]));
 
           console.log({data});
           login();
