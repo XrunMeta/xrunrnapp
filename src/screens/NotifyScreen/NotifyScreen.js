@@ -16,7 +16,13 @@ import {
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  URL_API_NODEJS,
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  authcode,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const NotifyScreen = () => {
@@ -43,15 +49,18 @@ const NotifyScreen = () => {
         const getData = JSON.parse(userData);
         setUserData(getData);
 
-        const response = await fetch(
-          `${URL_API}&act=ap6000-01&member=${getData.member}&start=0`,
-        );
+        const response = await fetch(`${URL_API_NODEJS}/ap6000-01`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authcode}`,
+          },
+          body: JSON.stringify({
+            member: getData?.member,
+            start: 0,
+          }),
+        });
         const data = await response.json();
-
-        console.log(
-          'Bgst -> ' +
-            `${URL_API}&act=ap6000-01&member=${getData.member}&start=0`,
-        );
 
         if (data && data.data.length > 0) {
           const reversedNotify = data.data.reverse();
