@@ -189,10 +189,10 @@ function ARScreen() {
         },
         body: JSON.stringify({
           member: userID,
-          // latitude,
-          // longitude,
-          latitude: -6.125316,
-          longitude: 106.70025,
+          latitude,
+          longitude,
+          // latitude: -6.125316,
+          // longitude: 106.70025,
           limit: 120,
         }),
       });

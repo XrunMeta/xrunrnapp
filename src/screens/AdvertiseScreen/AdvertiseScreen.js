@@ -19,7 +19,13 @@ import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import jsonData from '../../../testAds';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  URL_API_NODEJS,
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  authcode,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const AdvertiseScreen = () => {
@@ -77,9 +83,17 @@ const AdvertiseScreen = () => {
 
         setUserData(getData);
 
-        const response = await fetch(
-          `${URL_API}&act=app5010-02&member=${getData.member}`,
-        );
+        const response = await fetch(`${URL_API_NODEJS}/app5010-02`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authcode}`,
+          },
+          body: JSON.stringify({
+            member: getData?.member,
+          }),
+        });
+
         const data = await response.json();
 
         if (data && data.data.length > 0) {
@@ -126,12 +140,19 @@ const AdvertiseScreen = () => {
   const fetchAdsData = async (orderField, member) => {
     console.log('Call API nih bray');
     try {
-      const response = await fetch(
-        `${URL_API}&act=app5010-01&orderField=${orderField}&member=${member}`,
-      );
-      const data = await response.json();
+      const response = await fetch(`${URL_API_NODEJS}/app5010-01`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authcode}`,
+        },
+        body: JSON.stringify({
+          member,
+          orderField,
+        }),
+      });
 
-      console.log('Jumlah data Ads Storage -> ' + data.data.length);
+      const data = await response.json();
 
       if (data) {
         setStorageAds(data.data);
@@ -270,7 +291,7 @@ const AdvertiseScreen = () => {
                 ]);
               }
             } catch (err) {
-              console.error('Error fetching ads data:', err);
+              console.error('Error delete all chat:', err);
               crashlytics().recordError(new Error(err));
               crashlytics().log(err);
             }
@@ -326,7 +347,7 @@ const AdvertiseScreen = () => {
         ]);
       }
     } catch (err) {
-      console.error('Error fetching ads data:', err);
+      console.error('Error delete Selected Ads:', err);
       crashlytics().recordError(new Error(err));
       crashlytics().log(err);
     }
