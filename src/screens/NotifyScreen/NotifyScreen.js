@@ -191,12 +191,18 @@ const NotifyScreen = () => {
   // Delete Chat
   const deleteChat = async data => {
     try {
-      const response = await fetch(
-        `${URL_API}&act=ap6000-03&member=${userData.member}&board=${data.board}`,
-      );
+      const response = await fetch(`${URL_API_NODEJS}/ap6000-03`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authcode}`,
+        },
+        body: JSON.stringify({
+          member: userData?.member,
+          board: data?.board,
+        }),
+      });
       const jsonData = await response.json();
-
-      console.log(jsonData);
 
       if (jsonData.data[0].count == 1) {
         // Remove clicked Chat
@@ -231,7 +237,17 @@ const NotifyScreen = () => {
               setIsDelete(false);
 
               const response = await fetch(
-                `${URL_API}&act=ap6000-04delete&member=${userData.member}`,
+                `${URL_API_NODEJS}/ap6000-04delete`,
+                {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${authcode}`,
+                  },
+                  body: JSON.stringify({
+                    member: userData?.member,
+                  }),
+                },
               );
               const jsonData = await response.json();
 
