@@ -21,7 +21,13 @@ import Animated, {
 } from 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  URL_API_NODEJS,
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  authcode,
+} from '../../../utils';
 import {useNavigation} from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import CompassHeading from 'react-native-compass-heading';
@@ -175,9 +181,22 @@ function ARScreen() {
   // Get API for Showing Coin Object
   const getARCoin = async (userID, latitude, longitude) => {
     try {
-      const apiUrl = `${URL_API}&act=app2000-01&member=${userID}&limit=20&lat=${latitude}&lng=${longitude}`;
-      console.log('API Get AR Coin: ' + apiUrl);
-      const response = await fetch(apiUrl);
+      const response = await fetch(`${URL_API_NODEJS}/app2000-01`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authcode}`,
+        },
+        body: JSON.stringify({
+          member: userID,
+          // latitude,
+          // longitude,
+          latitude: -6.125316,
+          longitude: 106.70025,
+          limit: 120,
+        }),
+      });
+
       const responseData = await response.json();
 
       if (responseData.data && responseData.data.length > 0) {
@@ -558,9 +577,9 @@ function ARScreen() {
                               item.coin,
                             )
                           }
-                          disabled={
-                            parseFloat(item.distance) < 30 ? false : true
-                          }
+                          // disabled={
+                          //   parseFloat(item.distance) < 30 ? false : true
+                          // }
                           style={{
                             height: 125,
                             width: 125,

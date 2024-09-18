@@ -13,7 +13,13 @@ import {
   TestIds,
 } from 'react-native-google-mobile-ads';
 import {IronSource} from 'ironsource-mediation';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  URL_API_NODEJS,
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  authcode,
+} from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import crashlytics from '@react-native-firebase/crashlytics';
@@ -230,10 +236,23 @@ const ShowAdScreen = ({route}) => {
     if (adCompleted) {
       const coinAcquiring = async () => {
         try {
-          const response = await fetch(
-            `${URL_API}&act=app3100-01&advertisement=${advertisement}&coin=${coin}&member=${member}`,
-          );
+          const response = await fetch(`${URL_API_NODEJS}/app3100-01`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${authcode}`,
+            },
+            body: JSON.stringify({
+              advertisement,
+              coin,
+              member,
+            }),
+          });
+
           const data = await response.json();
+
+          console.log({data});
+
           console.log(
             'Coin acquisition response:',
             JSON.stringify(data.data[0]),
