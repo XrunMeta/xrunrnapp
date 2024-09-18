@@ -15,7 +15,14 @@ import Share from 'react-native-share';
 import RNFetchBlob from 'rn-fetch-blob';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import crashlytics from '@react-native-firebase/crashlytics';
-import {URL_API, fontSize, getFontFam} from '../../../utils';
+import {
+  URL_API,
+  URL_API_NODEJS,
+  authcode,
+  fontSize,
+  gatewayNodeJS,
+  getFontFam,
+} from '../../../utils';
 import QRCode from 'react-native-qrcode-svg';
 import RNFS from 'react-native-fs';
 
@@ -216,15 +223,14 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
 
   const tokener = async () => {
     try {
-      const requestTokener = await fetch(
-        `${URL_API}&act=app4000-tokener&address=${cardDataQR.address}`,
-        {
-          method: 'POST',
-        },
-      );
-      const response = await requestTokener.text();
-      console.log(`Response app4000-tokener: ${response}`);
-      await saveTxtFile(response);
+      const body = {
+        address: cardDataQR.address,
+      };
+
+      const result = await gatewayNodeJS('app4000-tokener', 'POST', body);
+      const value = result.data[0].value;
+      console.log(`Response app4000-tokener: ${value}`);
+      await saveTxtFile(value);
     } catch (err) {
       crashlytics().recordError(new Error(err));
       crashlytics().log(err);
@@ -235,15 +241,14 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
 
   const passwd = async () => {
     try {
-      const requestPasswd = await fetch(
-        `${URL_API}&act=app4000-passwd&address=${cardDataQR.address}`,
-        {
-          method: 'POST',
-        },
-      );
-      const response = await requestPasswd.text();
-      console.log(`Response app4000-passwd: ${response}`);
-      await saveTxtFile(response, true);
+      const body = {
+        address: cardDataQR.address,
+      };
+
+      const result = await gatewayNodeJS('app4000-passwd', 'POST', body);
+      const value = result.data[0].value;
+      console.log(`Response app4000-tokener: ${value}`);
+      await saveTxtFile(value, true);
     } catch (err) {
       crashlytics().recordError(new Error(err));
       crashlytics().log(err);

@@ -18,12 +18,16 @@ export const listTransactionsHistory = async (
   startwith = 0,
 ) => {
   try {
-    const request = await fetch(
-      `${URL_API}&act=${act}&startwith=${startwith}&member=${member}&currency=${currency}&daysbefore=${daysbefore}`,
-    );
-    const response = await request.json();
+    const body = {
+      startwith,
+      member,
+      currency,
+      daysbefore,
+    };
+
+    const result = await gatewayNodeJS(act, 'POST', body);
     console.log(`Success load data list transaction: ${nameList}`);
-    return response.data;
+    return result.data;
   } catch (err) {
     console.log(`Failed get ${nameList}: ${err}`);
     Alert.alert('', `Failed get ${nameList}`);
@@ -248,14 +252,42 @@ export const fontSize = type => {
 export const refreshBalances = async member => {
   try {
     if (member) {
-      const fetchData = await fetch(
-        `${URL_API}&act=refreshBalances&member=${member}`,
-      );
-      const result = await fetchData.json();
-      console.log(`Result refreshBalances: ${result}`);
+      const body = {
+        member,
+      };
+
+      const result = await gatewayNodeJS('refreshBalances', 'POST', body);
+      const count = result.data[0].count;
+      console.log(`Result refreshBalances: ${count}`);
     }
-  } catch (err) {
-    crashlytics().recordError(new Error(err));
-    crashlytics().log(err);
+  } catch (error) {
+    crashlytics().recordError(new Error(error));
+    crashlytics().log(error);
+  }
+};
+
+export const gatewayNodeJS = async (route, method = 'GET', body = {}) => {
+  try {
+    const options = {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authcode}`,
+      },
+    };
+
+    // Hanya tambahkan body jika metode bukan GET
+    if (method !== 'GET' && method !== 'HEAD') {
+      options.body = JSON.stringify(body);
+    }
+
+    const request = await fetch(`${URL_API_NODEJS}/${route}`, options);
+    const response = await request.json();
+    return response;
+  } catch (error) {
+    console.log(`Error gateway NodeJS: ${error}`);
+    Alert.alert('Failed get gateway NodeJS');
+    crashlytics().recordError(new Error(error));
+    crashlytics().log(error);
   }
 };

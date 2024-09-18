@@ -24,6 +24,7 @@ import {
   getFontFam,
   fontSize,
   refreshBalances,
+  gatewayNodeJS,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {
@@ -215,15 +216,21 @@ const SendWalletScreen = ({navigation, route}) => {
         `Gas estimated network ${network} | chainId: ${chainId} | token: ${token}`,
       );
       const priorityGasTracker = await gasTracker(chainId);
-      // Request for get gas estimated to gateway.php
-      const request = await fetch(
-        `${URL_API}&act=gasEstimated&from=${dataWallet.address}&to=${address}&amount=${amount}&token=${token}&network=${network}&chainId=${chainId}&priorityGasTracker=${priorityGasTracker}`,
-      );
-      const responses = await request.json();
-      const results = responses['data'];
+
+      const body = {
+        from: dataWallet.address,
+        to: address,
+        amount,
+        token,
+        network,
+        chainId,
+        priorityGasTracker,
+      };
+
+      const result = await gatewayNodeJS('gasEstimated', 'POST', body);
+      const results = result.data;
 
       // If data array not empty from response API
-
       if (results.length > 0) {
         const gasEstimateFromAPI = results[0]['gasLimit'];
         const gasPriceFromAPI = results[0]['gasPrice'];
@@ -361,10 +368,10 @@ const SendWalletScreen = ({navigation, route}) => {
   // Get list stock exchange
   const stockExchange = async () => {
     try {
-      const response = await fetch(`${URL_API}&act=ap4300-cointrace`);
-      const result = await response.json();
-      setCointrace(result.data);
-      return result.data;
+      const result = await gatewayNodeJS('ap4300-cointrace');
+      const data = result.data;
+      setCointrace(data);
+      return data;
     } catch (error) {
       setIsLoading(false);
       Alert.alert('Error get data listCrypto: ', error);
@@ -377,14 +384,17 @@ const SendWalletScreen = ({navigation, route}) => {
   // Get balance
   const getBalance = async () => {
     try {
-      const request = await fetch(
-        `${URL_API}&act=app4300-temp-amount&member=${dataMember.member}&currency=${dataWallet.currency}`,
-      );
-      const response = await request.json();
-      const result = response.data;
-      if (result.length > 0) {
-        setBalance(parseFloat(result[0].Wamount));
-        setLimitTransfer(result[0].limittransfer);
+      const body = {
+        member: dataMember.member,
+        currency: dataWallet.currency,
+      };
+
+      const result = await gatewayNodeJS('app4300-temp-amount', 'POST', body);
+      const results = result.data;
+
+      if (results.length > 0) {
+        setBalance(parseFloat(results[0].Wamount));
+        setLimitTransfer(results[0].limittransfer);
 
         const listStockExchange = await stockExchange();
         setCointrace(listStockExchange);
@@ -537,13 +547,19 @@ const SendWalletScreen = ({navigation, route}) => {
   // Checking limit transfer
   const getLimitTransfer = async () => {
     try {
-      const request = await fetch(
-        `${URL_API}&act=ap4300-getLimitTransfer&member=${dataMember.member}&currency=${currency}&amountrq=${amount}`,
-      );
-      const response = await request.json();
+      const body = {
+        member: dataMember.member,
+        currency,
+        amountrq: amount,
+      };
 
-      const avaliable = response.avaliable;
-      return avaliable;
+      const result = await gatewayNodeJS(
+        'ap4300-getLimitTransfer',
+        'POST',
+        body,
+      );
+      const available = result.data[0].available;
+      return available;
     } catch (error) {
       Alert.alert('Check limit transfer failed');
       console.log(`Check limit transfer failed: ${error}`);
