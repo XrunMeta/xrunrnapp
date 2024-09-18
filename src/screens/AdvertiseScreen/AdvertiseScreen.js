@@ -247,8 +247,19 @@ const AdvertiseScreen = () => {
           onPress: async () => {
             try {
               const response = await fetch(
-                `${URL_API}&act=app5010-03-deleteall&member=${userData.member}`,
+                `${URL_API_NODEJS}/app5010-03-deleteall`,
+                {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${authcode}`,
+                  },
+                  body: JSON.stringify({
+                    member: userData?.member,
+                  }),
+                },
               );
+
               const data = await response.json();
 
               if (data && data.data && data.data.length > 0) {
@@ -306,9 +317,16 @@ const AdvertiseScreen = () => {
     console.log('Hapus ID => ' + selectedItems);
 
     try {
-      const response = await fetch(
-        `${URL_API}&act=app5010-03-delete&transaction=${selectedItems}`,
-      );
+      const response = await fetch(`${URL_API_NODEJS}/app5010-03-delete`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authcode}`,
+        },
+        body: JSON.stringify({
+          transaction: selectedItems,
+        }),
+      });
       const data = await response.json();
 
       if (data && data.data && data.data.length > 0) {
