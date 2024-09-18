@@ -4,15 +4,15 @@ import {URL_API_NODEJS, authcode} from '../../../utils';
 export const fetchMarkerData = async (latitude, longitude, member) => {
   try {
     const response = await fetch(`${URL_API_NODEJS}/app2000-01`, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${authcode}`,
       },
       body: JSON.stringify({
         member,
-        lat: latitude,
-        lng: longitude,
+        latitude,
+        longitude,
         limit: 120,
       }),
     });
