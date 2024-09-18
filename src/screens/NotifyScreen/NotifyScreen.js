@@ -135,12 +135,22 @@ const NotifyScreen = () => {
       );
     } else {
       try {
-        const response = await fetch(
-          `${URL_API}&act=ap6000-02&member=${userData.member}&title=${text}`,
-        );
+        const response = await fetch(`${URL_API_NODEJS}/ap6000-02`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authcode}`,
+          },
+          body: JSON.stringify({
+            member: userData?.member,
+            title: text,
+          }),
+        });
         const data = await response.json();
 
-        if (data.data[0].count == 1) {
+        console.log(data.data[0].affectedRows);
+
+        if (data.data[0].affectedRows == 1) {
           refreshChatView();
         }
       } catch (error) {
@@ -154,9 +164,17 @@ const NotifyScreen = () => {
   // Fungsi untuk memperbarui tampilan chat
   const refreshChatView = async () => {
     try {
-      const response = await fetch(
-        `${URL_API}&act=ap6000-01&member=${userData.member}&start=0`,
-      );
+      const response = await fetch(`${URL_API_NODEJS}/ap6000-01`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authcode}`,
+        },
+        body: JSON.stringify({
+          member: userData?.member,
+          start: 0,
+        }),
+      });
       const data = await response.json();
 
       if (data && data.data.length > 0) {
