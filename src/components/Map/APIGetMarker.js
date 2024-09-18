@@ -11,8 +11,8 @@ export const fetchMarkerData = async (latitude, longitude, member) => {
       },
       body: JSON.stringify({
         member,
-        latitude,
-        longitude,
+        latitude: -6.125316,
+        longitude: 106.70025,
         limit: 120,
       }),
     });
