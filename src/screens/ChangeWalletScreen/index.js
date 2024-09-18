@@ -15,7 +15,13 @@ import React, {useState, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInputWallet from '../../components/CustomInputWallet';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  URL_API,
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  gatewayNodeJS,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const Change = ({navigation, route}) => {
@@ -79,12 +85,19 @@ const Change = ({navigation, route}) => {
     const getBalance = async () => {
       try {
         if (Object.keys(dataMember).length !== 0) {
-          const fetchData = await fetch(
-            `${URL_API}&act=app4300-temp-amount&member=${dataMember.member}&currency=${currency}`,
+          const body = {
+            member: dataMember.member,
+            currency,
+          };
+
+          const result = await gatewayNodeJS(
+            'app4300-temp-amount',
+            'POST',
+            body,
           );
 
-          const response = await fetchData.json();
-          const balance = await response.data[0].amount;
+          const results = result.data;
+          const balance = results[0].amount;
           setBalance(balance);
           setIsLoading(false);
         }
@@ -140,7 +153,6 @@ const Change = ({navigation, route}) => {
       );
     } else {
       setPopupConversion(true);
-      console.log(amount.length);
       setConversionRequest(parseFloat(amount).toFixed(9));
       Keyboard.dismiss();
     }
@@ -158,23 +170,22 @@ const Change = ({navigation, route}) => {
       setIsLoading(true);
 
       try {
-        const request = await fetch(
-          `${URL_API}&act=app4420-02-conv&currency=${currency}&member=${
-            dataMember.member
-          }&address=${address}&amount=${String(
-            amount,
-          )}&extracurrency=${subcurrency}`,
-        );
+        const body = {
+          member: dataMember.member,
+          currency,
+          amount: String(amount),
+        };
 
-        const response = await request.json();
-        const result = response.data[0].count;
+        const result = await gatewayNodeJS('app4420-02-conv', 'POST', body);
+        const count = result.data[0].count;
+
         setIsLoading(false);
         setPopupConversion(false);
         setAmount('');
         setAddress('');
         setSymbol('XRUN');
 
-        console.log(`Success conversion request: ${result}`);
+        console.log(`Success conversion request: ${count}`);
 
         navigation.navigate('CompleteConversion', {
           symbol,

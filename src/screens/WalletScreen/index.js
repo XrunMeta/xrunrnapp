@@ -18,11 +18,11 @@ import ButtonBack from '../../components/ButtonBack';
 import Clipboard from '@react-native-clipboard/clipboard';
 import TableWalletCard from '../../components/TableWallet';
 import {
-  URL_API,
   getLanguage2,
   getFontFam,
   fontSize,
   refreshBalances,
+  gatewayNodeJS,
 } from '../../../utils';
 import ShowQRWallet from '../../components/ShowQRWallet';
 import crashlytics from '@react-native-firebase/crashlytics';
@@ -105,50 +105,23 @@ const WalletScreen = ({navigation, route}) => {
   });
   // End flatlist ref
 
-  // Get data member
+  // Get data member and show the card list
   const getUserData = async () => {
     try {
       if (member) {
         // Get data wallet
         console.log('Load data wallet....');
-        fetch(
-          `${URL_API}&act=app4000-01-rev-01&member=${member}&daysbefore=7`,
-          {
-            method: 'POST',
-          },
-        )
-          .then(response => response.json())
-          .then(result => {
-            setCardsData(result.data);
-            setIsLoading(false);
-            console.log('Wallet data has been loaded');
-          })
-          .catch(error => {
-            Alert.alert(
-              '',
-              `${
-                lang.screen_wallet.failed_getwallet_alert
-                  ? lang.screen_wallet.failed_getwallet_alert
-                  : ''
-              }`,
-              [
-                {
-                  text: lang.screen_wallet.confirm_alert
-                    ? lang.screen_wallet.confirm_alert
-                    : '',
-                  onPress: () => {
-                    setIsLoading(false);
-                  },
-                },
-              ],
-            );
-            crashlytics().recordError(new Error(error));
-            crashlytics().log(error);
-            setIsLoading(false);
-            console.log(
-              `Failed for get your wallet, please try again later: ${error}`,
-            );
-          });
+
+        const body = {
+          member,
+          daysbefore: 7,
+        };
+
+        const result = await gatewayNodeJS('app4000-01-rev-01', 'POST', body);
+
+        setCardsData(result.data);
+        setIsLoading(false);
+        console.log('Wallet data has been loaded');
       }
     } catch (err) {
       console.error('Failed to get userData from AsyncStorage:', err);
@@ -164,12 +137,12 @@ const WalletScreen = ({navigation, route}) => {
     // Get status other chain, if off just show ETH network, if on show ALL network
     if (member) {
       const statusOtherChain = async () => {
-        const request = await fetch(
-          `${URL_API}&act=showOtherChains&member=${member}`,
-        );
-        const response = await request.json();
-        const status = response.status;
-        console.log(`Status show other chains: ${status}`);
+        const body = {
+          member,
+        };
+
+        const result = await gatewayNodeJS('showOtherChains', 'POST', body);
+        const status = result.data[0].status;
         setStatusOtherChain(status.toLowerCase());
       };
 
