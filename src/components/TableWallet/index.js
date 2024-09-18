@@ -870,7 +870,7 @@ const TableWalletCard = ({
               : ''}
           </Text>
         </TouchableOpacity>
-        {currentCurrency !== '4' ? (
+        {currentCurrency !== 4 ? (
           <>
             <TouchableOpacity
               activeOpacity={0.6}
@@ -887,7 +887,7 @@ const TableWalletCard = ({
               </Text>
             </TouchableOpacity>
 
-            {currentCurrency === '1' ? (
+            {currentCurrency === 1 ? (
               <TouchableOpacity
                 activeOpacity={0.6}
                 style={styles.contentTextHead}
