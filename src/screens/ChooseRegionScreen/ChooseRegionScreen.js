@@ -14,7 +14,13 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import CustomListItem from '../../components/CustomButton/CustomListItem';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  URL_API_NODEJS,
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  authcode,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const ChooseRegionScreen = ({route}) => {
@@ -53,10 +59,16 @@ const ChooseRegionScreen = ({route}) => {
 
   useEffect(() => {
     // Get Country List
-    fetch(`${URL_API}&act=countries`)
+    fetch(`${URL_API_NODEJS}/countries`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authcode}`,
+      },
+    })
       .then(response => response.json())
       .then(jsonData => {
-        setData(jsonData);
+        setData(jsonData.data);
         setIsLoading(false);
       })
       .catch(error => {
@@ -65,7 +77,6 @@ const ChooseRegionScreen = ({route}) => {
         crashlytics().recordError(new Error(error));
         crashlytics().log(error);
       });
-
     // Get Language
     const fetchLangData = async () => {
       try {
@@ -216,8 +227,8 @@ const ChooseRegionScreen = ({route}) => {
                 key={item.code + '-' + item.subcode}
                 text={'+' + item.callnumber + ') ' + item.country}
                 image={
-                  {uri: item.lcode}
-                    ? {uri: item.lcode}
+                  {uri: `https://app.xrun.run/flags/${item.lcode}.png`}
+                    ? {uri: `https://app.xrun.run/flags/${item.lcode}.png`}
                     : require('../../../assets/images/icon_none.png')
                 }
                 onPress={() => chooseRegion(item)}
