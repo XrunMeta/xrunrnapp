@@ -259,12 +259,11 @@ const SendWalletScreen = ({navigation, route}) => {
           setIsInitialCallGasEstimated(true);
         }
       } else {
-        const messageResponse = responses['message'];
+        const messageResponse = result['message'];
 
         if (messageResponse === 'insufficient funds') {
           Alert.alert(lang.screen_send.note_insufficient_balance_total);
         }
-
         setIsLoading(false);
         gasEstimateNetworkBusy();
       }
@@ -572,11 +571,16 @@ const SendWalletScreen = ({navigation, route}) => {
   // Transfer by stock exchange
   const transferByStockExchange = async () => {
     try {
-      const request = await fetch(
-        `${URL_API}&act=ap4300-03&member=${dataMember.member}&addrto=${address}&currency=${currency}&amount=${amount}&coinmarket=${selectedExchange}`,
-      );
-      const response = await request.json();
-      const data = response.data;
+      const body = {
+        member: dataMember.member,
+        addrto: address,
+        currency,
+        amount,
+        coinmarket: selectedExchange,
+      };
+
+      const result = await gatewayNodeJS('ap4300-03', 'POST', body);
+      const data = result.data[0].data;
       return data;
     } catch (error) {
       Alert.alert(lang.global_error.network_busy);
@@ -593,12 +597,29 @@ const SendWalletScreen = ({navigation, route}) => {
       const dataStockExchange = await transferByStockExchange();
 
       if (dataStockExchange) {
-        const request = await fetch(
-          `${URL_API}&act=postTransferNew&to=${address}&amount=${amount}&token=${token}&member=${dataMember.member}&gasEstimate=${gasEstimate}&gasPrice=${gasPrice}&network=${network}&chainId=${chainId}`,
-        );
-        const response = await request.json();
+        const body = {
+          to: address,
+          amount,
+          token,
+          member: dataMember.member,
+          gasEstimate,
+          gasPrice,
+          network,
+          chainId,
+        };
 
-        const {status, hash} = response;
+        const result = await gatewayNodeJS('postTransferNew', 'POST', body);
+        const status = result.status;
+        const hash = result.data[0].rtn.hash;
+
+        if (!hash || hash === 'undefined') {
+          Alert.alert(lang.screen_signup.validator.errorServer);
+          gasEstimateNetworkBusy();
+          setIsLoading(false);
+          console.log('Transfer failed postTransfer');
+          return;
+        }
+
         console.log(
           `Transfer complete.... Token: ${token} | Status: ${status} | Hash: ${hash} | act=postTransferNew`,
         );
@@ -619,11 +640,13 @@ const SendWalletScreen = ({navigation, route}) => {
           Alert.alert(lang.global_error.network_busy);
           console.log('Transfer failed postTransfer');
           gasEstimateNetworkBusy();
+          setIsLoading(false);
         }
       } else {
         Alert.alert(lang.global_error.network_busy);
         console.log(`Transfer failed ap4300-03: ${error}`);
         gasEstimateNetworkBusy();
+        setIsLoading(false);
         crashlytics().recordError(new Error(error));
         crashlytics().log(error);
       }
@@ -631,6 +654,7 @@ const SendWalletScreen = ({navigation, route}) => {
       Alert.alert(lang.global_error.network_busy);
       console.log(`Transfer failed postTransfer: ${error}`);
       gasEstimateNetworkBusy();
+      setIsLoading(false);
       crashlytics().recordError(new Error(error));
       crashlytics().log(error);
     }
