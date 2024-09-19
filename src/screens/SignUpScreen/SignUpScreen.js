@@ -7,7 +7,6 @@ import {
   Image,
   Alert,
   TextInput,
-  TouchableWithoutFeedback,
   SafeAreaView,
   TouchableOpacity,
   Modal,
@@ -19,9 +18,14 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import CustomMultipleChecbox from '../../components/CustomCheckbox/CustomMultipleCheckbox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  URL_API_NODEJS,
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  authcode,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
-import {useAuth} from '../../context/AuthContext/AuthContext';
 import SelectDropdown from 'react-native-select-dropdown';
 
 const SignUpScreen = ({route}) => {
@@ -41,7 +45,6 @@ const SignUpScreen = ({route}) => {
   const {flag, countryCode = 82, country, code = 'KR'} = route.params || {};
   const [areaData, setAreaData] = useState([]);
   const [authShow, setAuthShow] = useState(false);
-  const [authLoading, setAuthLoading] = useState(false);
   const [verifyLoading, setVerifyLoading] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
 
@@ -75,20 +78,40 @@ const SignUpScreen = ({route}) => {
     } else {
       // Check the email
       const requestCheckEmail = await fetch(
-        `${URL_API}&act=login-checker-email&email=${email}`,
+        `${URL_API_NODEJS}/login-checker-email`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authcode}`,
+          },
+          body: JSON.stringify({
+            email,
+          }),
+        },
       );
-      const responseCheckEmail = await requestCheckEmail.text();
+      const responseCheckEmail = await requestCheckEmail.json();
 
-      if (responseCheckEmail === 'OK') {
+      if (responseCheckEmail?.data[0]?.value == 'OK') {
         // Check for the referral email
         const requestReferralEmail = await fetch(
-          `${URL_API}&act=ap1810-i01&email=${refferalEmail}`,
+          `${URL_API_NODEJS}/ap1810-i01`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${authcode}`,
+            },
+            body: JSON.stringify({
+              email: refferalEmail,
+            }),
+          },
         );
         const responseReferralEmail = await requestReferralEmail.json();
 
-        if (responseReferralEmail.result === 'true') {
+        if (responseCheckEmail?.data[0]?.result == true) {
           const referralMember =
-            refferalEmail === '' ? 0 : responseReferralEmail.member;
+            refferalEmail === '' ? 0 : responseReferralEmail?.data[0]?.member;
 
           navigation.navigate('EmailVerif', {
             dataUser: {
@@ -105,13 +128,13 @@ const SignUpScreen = ({route}) => {
               recommand: referralMember,
             },
           });
-        } else if (responseCheckEmail.result === 'false') {
+        } else if (responseCheckEmail?.data[0]?.result == false) {
           setRefferalEmail('');
           Alert.alert('Failed', lang.screen_signup.validator.invalidRecommend);
         } else {
           Alert.alert('Error', lang.screen_signup.validator.errorServer);
         }
-      } else if (responseCheckEmail === 'NO') {
+      } else if (responseCheckEmail?.data[0]?.value == 'NO') {
         Alert.alert('Failed', lang.screen_signup.validator.duplicatedEmail);
       } else {
         Alert.alert('Error', lang.screen_signup.validator.errorServer);
@@ -182,7 +205,16 @@ const SignUpScreen = ({route}) => {
 
     fetchData();
 
-    fetch(`${URL_API}&act=app7190-01&country=${countryCode}`)
+    fetch(`${URL_API_NODEJS}/app7190-01`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authcode}`,
+      },
+      body: JSON.stringify({
+        country: countryCode,
+      }),
+    })
       .then(response => response.json())
       .then(jsonData => {
         var jsonToArr = Object.values(jsonData);
@@ -198,7 +230,16 @@ const SignUpScreen = ({route}) => {
 
   // Get Update Area Data
   useEffect(() => {
-    fetch(`${URL_API}&act=app7190-01&country=${countryCode ? countryCode : 82}`)
+    fetch(`${URL_API_NODEJS}/app7190-01`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authcode}`,
+      },
+      body: JSON.stringify({
+        country: countryCode ? countryCode : 82,
+      }),
+    })
       .then(response => response.json())
       .then(jsonData => {
         var jsonToArr = Object.values(jsonData);
@@ -212,57 +253,32 @@ const SignUpScreen = ({route}) => {
       });
   }, [countryCode]);
 
-  const onAuth = async (mobile, country) => {
-    if (phoneNumber !== '') {
-      setAuthLoading(true);
-
-      try {
-        const response = await fetch(
-          `${URL_API}&act=login-02&mobile=${mobile}&country=${country}`,
-        );
-        const responseData = await response.json(); // Convert response to JSON
-
-        console.log(responseData.data);
-
-        if (responseData.data === 'ok') {
-          console.log('Kode dikirim boy');
-          setAuthShow(!authShow);
-          setAuthLoading(false);
-        } else {
-          Alert.alert(
-            'Failed',
-            lang.screen_notExist.field_phoneVerif.emptyNumber,
-          );
-        }
-      } catch (error) {
-        // Handle network errors or other exceptions
-        console.error('Error during Phone Auth:', error);
-        crashlytics().recordError(new Error(error));
-        crashlytics().log(error);
-      }
-    } else {
-      Alert.alert('Failed', lang.screen_notExist.field_phoneVerif.emptyNumber);
-    }
-  };
-
   const onVerify = async (mobile, authCode) => {
     if (authCode !== '') {
       setVerifyLoading(true);
       console.log('Bgst -> ' + mobile + ' ' + authCode);
       // Check Email & Auth Code Relational
       try {
-        const responseAuth = await fetch(
-          `${URL_API}&act=login-03&mobile=${mobile}&code=${authCode}`,
-        );
-        const responseAuthText = await responseAuth.text();
-        const responseObjects = responseAuthText.split('}');
-        const firstResObj = JSON.parse(responseObjects[0] + '}');
+        const responseAuth = await fetch(`${URL_API_NODEJS}/login-03`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authcode}`,
+          },
+          body: JSON.stringify({
+            mobile,
+            code: authCode,
+          }),
+        });
+        const firstResObj = await responseAuth.json();
 
         if (firstResObj) {
-          console.log('RespAPI login-03 -> ' + JSON.stringify(firstResObj));
+          console.log(
+            'RespAPI login-03 -> ' + JSON.stringify(firstResObj?.data[0]),
+          );
           setVerifyLoading(false);
 
-          if (firstResObj.data === 'false') {
+          if (firstResObj?.data[0]?.data == false) {
             // Invalid Number
             Alert.alert(
               'Failed',
@@ -270,7 +286,7 @@ const SignUpScreen = ({route}) => {
             );
             setAuthCode('');
             setAuthShow(false);
-          } else if (firstResObj.data === 'login') {
+          } else if (firstResObj?.data[0]?.data == 'login') {
             // Correct Code
             setAuthCode('');
             setAuthShow(false);
@@ -446,22 +462,6 @@ const SignUpScreen = ({route}) => {
           </View>
 
           {/*  Field - Region */}
-          {/* <CustomInput
-            label={
-              lang && lang.screen_signup && lang.screen_signup.area
-                ? lang.screen_signup.area.label
-                : ''
-            }
-            placeholder={
-              lang && lang.screen_signup && lang.screen_signup.area
-                ? lang.screen_signup.area.placeholder
-                : ''
-            }
-            value={region}
-            setValue={setRegion}
-            isPassword={false}
-          /> */}
-
           <View style={{width: '100%', paddingHorizontal: 25, marginTop: 30}}>
             <Text style={styles.label}>
               {lang && lang.screen_signup && lang.screen_signup.area
