@@ -109,7 +109,7 @@ const SignUpScreen = ({route}) => {
         );
         const responseReferralEmail = await requestReferralEmail.json();
 
-        if (responseCheckEmail?.data[0]?.result == true) {
+        if (responseReferralEmail?.data[0]?.result == true) {
           const referralMember =
             refferalEmail === '' ? 0 : responseReferralEmail?.data[0]?.member;
 
@@ -420,7 +420,7 @@ const SignUpScreen = ({route}) => {
                           uri: 'https://app.xrun.run/flags/kr.png',
                         }
                       : {
-                          uri: flag,
+                          uri: `https://app.xrun.run/flags/${flag}.png`,
                         }
                   }
                 />

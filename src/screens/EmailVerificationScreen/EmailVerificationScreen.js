@@ -3,7 +3,6 @@ import {
   Text,
   TextInput,
   StyleSheet,
-  ScrollView,
   Pressable,
   Image,
   Dimensions,
@@ -11,7 +10,6 @@ import {
   Modal,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  KeyboardAvoidingView,
   Platform,
   Keyboard,
 } from 'react-native';
@@ -19,7 +17,13 @@ import React, {useState, useRef, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import CustomButton from '../../components/CustomButton/';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  URL_API_NODEJS,
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  authcode,
+} from '../../../utils';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -44,14 +48,21 @@ const EmailVerificationScreen = () => {
 
   const emailAuth = async () => {
     try {
-      const response = await fetch(
-        `${URL_API}&act=login-02-email&email=${dataUser.email}`,
-      );
-      const responseData = await response.text(); // Convert response to JSON
+      const response = await fetch(`${URL_API_NODEJS}/check-02-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authcode}`,
+        },
+        body: JSON.stringify({
+          email: dataUser?.email,
+        }),
+      });
+      const responseData = await response.json(); // Convert response to JSON
 
       console.log({responseDataAuth: responseData});
 
-      if (responseData.data === 'false') {
+      if (responseData?.data[0]?.status == 'false') {
         Alert.alert('Failed', lang.screen_emailVerification.notif.invalidEmail);
       } else {
         console.log('Kode dikirim boy');
@@ -119,18 +130,37 @@ const EmailVerificationScreen = () => {
           ? 2240
           : 2250;
       const gender = tempGender === 'pria' ? 2110 : 2111;
-	  const os = Platform.OS === 'ios' ? 3113 : 3112;
+      const os = Platform.OS === 'ios' ? 3113 : 3112;
       console.log(
         `Firstname: ${firstname} | Lastname: ${lastname} | Email: ${email} | Pin: ${pin} | Phone Number: ${phoneNumber} | age: ${age} | region: ${region} | gender: ${gender} | Country Code: ${countryCode} | Mobi	le Code: ${mobileCode} | Recommand: ${recommand} : OS: ${os}`,
       );
 
-      const request = await fetch(
-        `${URL_API}&act=login-06-joinAndAccount&email=${email}&pin=${pin}&firstname=${firstname}&lastname=${lastname}&gender=${gender}&mobile=${phoneNumber}&mobilecode=${mobileCode}&countrycode=${countryCode}&country=${mobileCode}&region=${region}&age=${age}&recommand=${recommand}&os=${os}`,
-      );
+      const request = await fetch(`${URL_API_NODEJS}/login-06-joinAndAccount`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authcode}`,
+        },
+        body: JSON.stringify({
+          email,
+          pin,
+          firstname,
+          lastname,
+          gender,
+          mobile: phoneNumber,
+          mobilecode: mobileCode,
+          countrycode: countryCode,
+          country: mobileCode,
+          region,
+          age,
+          recommand,
+          os,
+        }),
+      });
       const response = await request.json();
       console.log(`Data SignUp response: ${JSON.stringify(response)}`);
 
-      if (response.data === 'ok') {
+      if (response?.data[0]?.text == 'ok') {
         loginChecker();
       }
     } catch (error) {
@@ -144,12 +174,22 @@ const EmailVerificationScreen = () => {
     const {email, pin} = dataUser;
 
     try {
-      const request = await fetch(
-        `${URL_API}&act=login-checker&email=${email}&pin=${pin}`,
-      );
-      const response = await request.text();
+      const request = await fetch(`${URL_API_NODEJS}/login-checker`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authcode}`,
+        },
+        body: JSON.stringify({
+          email,
+          pin,
+        }),
+      });
+      const response = await request.json();
 
-      if (response === 'OK') {
+      console.log({response});
+
+      if (response.data[0].value == 'OK') {
         navigation.replace('SuccessJoin', {
           email,
           pin,
@@ -166,14 +206,21 @@ const EmailVerificationScreen = () => {
     const getAuthCode = verificationCode.join('');
     // Check Email & Auth Code Relational
     try {
-      const responseAuth = await fetch(
-        `${URL_API}&act=login-03-email&email=${dataUser.email}&code=${getAuthCode}`,
-      );
+      const responseAuth = await fetch(`${URL_API_NODEJS}/login-03-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authcode}`,
+        },
+        body: JSON.stringify({
+          email: dataUser?.email,
+          code: getAuthCode,
+        }),
+      });
       const responseAuthData = await responseAuth.json();
+      console.log(responseAuthData);
 
-      console.log(JSON.stringify(responseAuthData));
-
-      if (responseAuthData.data === 'false') {
+      if (responseAuthData.status !== 'success') {
         Alert.alert('Failed', lang.screen_emailVerification.notif.wrongCode);
       } else {
         addNewMember();
@@ -323,76 +370,76 @@ const EmailVerificationScreen = () => {
   };
 
   return (
-	<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-		<View style={[styles.root, {height: ScreenHeight}]}>
-			<ButtonBack onClick={onBack} />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={[styles.root, {height: ScreenHeight}]}>
+        <ButtonBack onClick={onBack} />
 
-			{/* Text Section */}
-			<View style={styles.textWrapper}>
-				<Text style={styles.normalText}>
-				{lang &&
-				lang.screen_emailVerification &&
-				lang.screen_emailVerification.email
-					? lang.screen_emailVerification.email.label
-					: ''}
-				</Text>
-				<Text style={styles.boldText}>{dataUser.email}</Text>
-			</View>
+        {/* Text Section */}
+        <View style={styles.textWrapper}>
+          <Text style={styles.normalText}>
+            {lang &&
+            lang.screen_emailVerification &&
+            lang.screen_emailVerification.email
+              ? lang.screen_emailVerification.email.label
+              : ''}
+          </Text>
+          <Text style={styles.boldText}>{dataUser.email}</Text>
+        </View>
 
-			{/* Code Input */}
-			<View style={styles.codeInputContainer}>
-				{verificationCode.map((code, index) => (
-				<TextInput
-					key={index}
-					ref={ref => (inputRefs.current[index] = ref)}
-					style={[
-					styles.codeInput,
-					activeIndex === index && styles.activeInput,
-					]}
-					value={code}
-					placeholder="0"
-					placeholderTextColor="grey"
-					onChangeText={text => handleInputChange(text, index)}
-					onKeyPress={({nativeEvent}) => {
-					if (nativeEvent.key === 'Backspace') {
-						handleInputDelete(index);
-					}
-					}}
-					onFocus={() => setActiveIndex(index)}
-					keyboardType="numeric"
-					maxLength={1}
-				/>
-				))}
-			</View>
+        {/* Code Input */}
+        <View style={styles.codeInputContainer}>
+          {verificationCode.map((code, index) => (
+            <TextInput
+              key={index}
+              ref={ref => (inputRefs.current[index] = ref)}
+              style={[
+                styles.codeInput,
+                activeIndex === index && styles.activeInput,
+              ]}
+              value={code}
+              placeholder="0"
+              placeholderTextColor="grey"
+              onChangeText={text => handleInputChange(text, index)}
+              onKeyPress={({nativeEvent}) => {
+                if (nativeEvent.key === 'Backspace') {
+                  handleInputDelete(index);
+                }
+              }}
+              onFocus={() => setActiveIndex(index)}
+              keyboardType="numeric"
+              maxLength={1}
+            />
+          ))}
+        </View>
 
-			{/* Bottom Section*/}
-			<View style={[styles.bottomSection]}>
-				<View style={styles.additionalLogin}>
-				<Countdown />
-				</View>
-				{isCodeComplete ? (
-				<Pressable onPress={onSignIn} style={styles.buttonSignIn}>
-					<Image
-					source={require('../../../assets/images/icon_next.png')}
-					resizeMode="contain"
-					style={styles.buttonSignInImage}
-					/>
-				</Pressable>
-				) : (
-				<Pressable onPress={onSignInDisabled} style={styles.buttonSignIn}>
-					<Image
-					source={require('../../../assets/images/icon_nextDisable.png')}
-					resizeMode="contain"
-					style={styles.buttonSignInImage}
-					/>
-				</Pressable>
-				)}
-			</View>
+        {/* Bottom Section*/}
+        <View style={[styles.bottomSection]}>
+          <View style={styles.additionalLogin}>
+            <Countdown />
+          </View>
+          {isCodeComplete ? (
+            <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
+              <Image
+                source={require('../../../assets/images/icon_next.png')}
+                resizeMode="contain"
+                style={styles.buttonSignInImage}
+              />
+            </Pressable>
+          ) : (
+            <Pressable onPress={onSignInDisabled} style={styles.buttonSignIn}>
+              <Image
+                source={require('../../../assets/images/icon_nextDisable.png')}
+                resizeMode="contain"
+                style={styles.buttonSignInImage}
+              />
+            </Pressable>
+          )}
+        </View>
 
-			{/* Slider Modal */}
-			<SliderModal visible={modalVisible} onClose={toggleModal} />
-		</View>
-	</TouchableWithoutFeedback>
+        {/* Slider Modal */}
+        <SliderModal visible={modalVisible} onClose={toggleModal} />
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
