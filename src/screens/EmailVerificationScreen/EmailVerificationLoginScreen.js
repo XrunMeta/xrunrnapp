@@ -103,19 +103,37 @@ const EmailVerificationLoginScreen = () => {
 
     // Check Email & Auth Code Relational
     try {
-      const responseAuth = await fetch(
-        `${URL_API}&act=login-03-email&email=${dataEmail}&code=${getAuthCode}`,
-      );
-      const responseAuthData = await responseAuth.json();
+      const responseAuth = await fetch(`${URL_API_NODEJS}/login-03-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authcode}`,
+        },
+        body: JSON.stringify({
+          email: dataEmail,
+          code: getAuthCode,
+        }),
+      });
 
+      const responseAuthData = await responseAuth.json();
       console.log(JSON.stringify(responseAuthData));
 
-      if (responseAuthData.data === 'false') {
+      if (responseAuthData.status !== 'success') {
         Alert.alert('Failed', lang.screen_emailVerification.notif.wrongCode);
       } else {
         try {
           const responseLogin = await fetch(
-            `${URL_API}&act=login-04-email&email=${dataEmail}`,
+            `${URL_API_NODEJS}/login-04-email`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${authcode}`,
+              },
+              body: JSON.stringify({
+                email: dataEmail,
+              }),
+            },
           );
           const responseLoginData = await responseLogin.json();
 
@@ -123,19 +141,19 @@ const EmailVerificationLoginScreen = () => {
             'RespAPI login-04-email -> ' + JSON.stringify(responseLoginData),
           );
 
-          if (responseLoginData.data === 'false') {
+          if (responseLoginData.status !== 'success') {
             navigation.replace('SignUp');
           } else {
             const userData = {
-              ages: responseLoginData.ages,
-              country: responseLoginData.country,
-              email: responseLoginData.email,
-              extrastr: responseLoginData.extrastr,
-              firstname: responseLoginData.firstname,
-              gender: responseLoginData.gender,
-              lastname: responseLoginData.lastname,
-              member: responseLoginData.member,
-              mobilecode: responseLoginData.mobilecode,
+              ages: responseLoginData?.data[0]?.ages,
+              country: responseLoginData?.data[0]?.country,
+              email: responseLoginData?.data[0]?.email,
+              extrastr: responseLoginData?.data[0]?.extrastr,
+              firstname: responseLoginData?.data[0]?.firstname,
+              gender: responseLoginData?.data[0]?.gender,
+              lastname: responseLoginData?.data[0]?.lastname,
+              member: responseLoginData?.data[0]?.member,
+              mobilecode: responseLoginData?.data[0]?.mobilecode,
             };
 
             await AsyncStorage.setItem('userEmail', dataEmail);
