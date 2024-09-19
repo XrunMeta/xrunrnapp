@@ -13,7 +13,13 @@ import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  URL_API,
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  gatewayNodeJS,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const ConfirmPassword = () => {
@@ -37,13 +43,13 @@ const ConfirmPassword = () => {
       );
     } else {
       try {
-        const response = await fetch(
-          // `${URL_API}&act=login-checker&email=${email}&pin=${password}`,
-          `${URL_API}&act=app7100-01&email=${email}&pin=${password}`,
-        );
-        const data = await response.json();
+        const body = {
+          email,
+          pin: password,
+        };
+        const result = await gatewayNodeJS('app7100-01', 'POST', body);
 
-        if (data.data[0].count == 1) {
+        if (result.data[0].count == 1) {
           navigation.replace('ModifInfo');
         } else {
           Alert.alert(
