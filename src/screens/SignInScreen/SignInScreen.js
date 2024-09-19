@@ -27,8 +27,8 @@ import crashlytics from '@react-native-firebase/crashlytics';
 const SignInScreen = () => {
   const [lang, setLang] = useState({});
   const {login} = useAuth();
-  const [email, setEmail] = useState('ggg@hhh.com');
-  const [password, setPassword] = useState('111!!!aAAA');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(true);
 
   const navigation = useNavigation();
