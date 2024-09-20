@@ -3,7 +3,13 @@ import {StyleSheet, Text, View, ScrollView, SafeAreaView} from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import * as RNLocalize from 'react-native-localize';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  URL_API_NODEJS,
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  authcode,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const ServiceClause = () => {
@@ -20,11 +26,17 @@ const ServiceClause = () => {
         const language = RNLocalize.getLocales()[0].languageCode;
         if (!language) return;
 
-        let apiUrl = `${URL_API}&act=app7010-01`;
+        let apiUrl = `app7010-01`;
         if (language === 'id') apiUrl += '-id';
         if (language === 'ko') apiUrl += '-kr';
 
-        const response = await fetch(apiUrl);
+        const response = await fetch(`${URL_API_NODEJS}/${apiUrl}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authcode}`,
+          },
+        });
         const result = await response.json();
         if (result) setText(result?.data[0]?.c);
       } catch (err) {
