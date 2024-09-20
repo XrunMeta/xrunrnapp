@@ -36,6 +36,8 @@ const ChooseRegionScreen = ({route}) => {
   } = route.params || {};
   const [isLoading, setIsLoading] = useState(true);
 
+  useEffect(() => console.log(flag), [flag]);
+
   const onBack = (code, flag, cCountryCode, cCountry) => {
     if (screenName) {
       navigation.navigate('PhoneLogin', {
