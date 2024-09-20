@@ -218,7 +218,6 @@ const EmailVerificationScreen = () => {
         }),
       });
       const responseAuthData = await responseAuth.json();
-      console.log(responseAuthData);
 
       if (responseAuthData.status !== 'success') {
         Alert.alert('Failed', lang.screen_emailVerification.notif.wrongCode);

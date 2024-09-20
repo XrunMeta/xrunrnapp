@@ -13,7 +13,7 @@ import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2} from '../../../utils';
+import {URL_API_NODEJS, getLanguage2, authcode} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const SignUpByEmailScreen = () => {
@@ -34,13 +34,22 @@ const SignUpByEmailScreen = () => {
       Alert.alert('Error', lang.screen_notExist.field_email.invalidEmail);
     } else {
       try {
-        const apiUrl = `${URL_API}&act=login-checker-email&email=${email}`;
-        const response = await fetch(apiUrl);
-        const responseData = await response.text();
+        const apiUrl = await fetch(`${URL_API_NODEJS}/login-checker-email`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authcode}`,
+          },
+          body: JSON.stringify({
+            email,
+          }),
+        });
+        const response = await apiUrl.json();
+        const responseData = await response.data[0];
 
         console.log('RespAPI login-checker-email -> ' + responseData);
 
-        if (responseData === 'OK') {
+        if (responseData.value == 'OK') {
           navigation.navigate('SignupCreatePassword', {
             mobile: mobile,
             mobilecode: mobilecode,
