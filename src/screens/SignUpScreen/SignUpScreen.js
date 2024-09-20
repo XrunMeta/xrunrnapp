@@ -54,6 +54,8 @@ const SignUpScreen = ({route}) => {
 
   const navigation = useNavigation();
 
+  useEffect(() => console.log(flag), []);
+
   useEffect(() => {
     // Reset region dan isSelected when countryCode change
     setRegion('');
