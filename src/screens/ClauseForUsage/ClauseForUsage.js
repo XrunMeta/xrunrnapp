@@ -1,9 +1,15 @@
 import {StyleSheet, Text, View, ScrollView, SafeAreaView} from 'react-native';
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import * as RNLocalize from 'react-native-localize';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  URL_API_NODEJS,
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  authcode,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const ClauseForUsage = () => {
@@ -20,7 +26,7 @@ const ClauseForUsage = () => {
 
         const language = RNLocalize.getLocales()[0].languageCode;
         if (language) {
-          let apiUrl = `${URL_API}&act=app7010-01`;
+          let apiUrl = `app7010-01`;
           if (language === 'id') {
             apiUrl += '-id';
           } else if (language === 'ko') {
@@ -29,7 +35,13 @@ const ClauseForUsage = () => {
 
           console.log('Bgst -> ' + language + ' -> ' + apiUrl);
 
-          const response = await fetch(apiUrl);
+          const response = await fetch(`${URL_API_NODEJS}/${apiUrl}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${authcode}`,
+            },
+          });
           const result = await response.json();
           if (result) {
             const firstElement = result.data[2].c;
