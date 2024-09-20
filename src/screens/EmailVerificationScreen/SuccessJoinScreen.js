@@ -44,7 +44,7 @@ const SuccessJoinScreen = () => {
             Authorization: `Bearer ${authcode}`,
           },
           body: JSON.stringify({
-            tp: 4,
+            type: 4,
             email,
             pin,
           }),
