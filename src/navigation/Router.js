@@ -48,9 +48,6 @@ import CompleteSend from '../screens/CompleteSend';
 import CompleteExchange from '../screens/CompleteExchange';
 import Change from '../screens/ChangeWalletScreen';
 import {View} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API} from '../../utils';
 import CompleteConversion from '../screens/CompleteConversion';
 import SuccessCloseMembership from '../screens/SettingScreen/SuccessCloseMembership';
 import Exchange from '../screens/ExchangeWalletScreen';
@@ -59,38 +56,6 @@ import IOSWallet from '../screens/WalletScreen/IOSWallet';
 
 export default Router = () => {
   const Stack = createNativeStackNavigator();
-  const navigation = useNavigation();
-
-  // const logoutUser = async () => {
-  //   const value = await AsyncStorage.getItem('isLoggedIn');
-
-  //   if (value === 'true') {
-  //     const userData = await AsyncStorage.getItem('userData');
-  //     const {firstname, member, extrastr} = JSON.parse(userData);
-  //     const request = await fetch(
-  //       `${URL_API}&act=''&member=${member}&ss=${extrastr}`,
-  //     );
-
-  //     let response = await request.text();
-
-  //     if (response !== "not exist''") {
-  //       const {result} = JSON.parse(response);
-  //       if (result === 'logout') {
-  //         console.log(`Success auto logout: {
-  //             firstname: ${firstname}
-  //             member: ${member}
-  //             extrastr: ${extrastr}
-  //           }`);
-  //         await AsyncStorage.removeItem('isLoggedIn');
-  //         // Go to SignIn Screen
-  //         navigation.reset({
-  //           index: 0,
-  //           routes: [{name: 'First'}],
-  //         });
-  //       }
-  //     }
-  //   }
-  // };
 
   return (
     <View style={{flex: 1}}>
