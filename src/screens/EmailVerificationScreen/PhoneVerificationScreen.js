@@ -17,7 +17,13 @@ import React, {useState, useRef, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import CustomButton from '../../components/CustomButton';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  URL_API_NODEJS,
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  authcode,
+} from '../../../utils';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import crashlytics from '@react-native-firebase/crashlytics';
@@ -36,12 +42,21 @@ const PhoneVerificationScreen = () => {
 
   const phoneAuth = async () => {
     try {
-      const response = await fetch(`${URL_API}&act=login-02&mobile=${mobile}`);
+      const response = await fetch(`${URL_API_NODEJS}/login-02`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authcode}`,
+        },
+        body: JSON.stringify({
+          mobile,
+        }),
+      });
       const responseData = await response.json(); // Convert response to JSON
 
-      console.log(responseData.data);
+      console.log(responseData.data[0]);
 
-      if (responseData.data === 'ok') {
+      if (responseData?.data[0]?.status == true) {
         console.log('Kode dikirim boy');
       } else {
         Alert.alert(
@@ -88,16 +103,23 @@ const PhoneVerificationScreen = () => {
 
     // Check Email & Auth Code Relational
     try {
-      const responseAuth = await fetch(
-        `${URL_API}&act=login-03&mobile=${mobile}&code=${getAuthCode}`,
-      );
-      const responseAuthText = await responseAuth.text();
-      const responseObjects = responseAuthText.split('}');
-      const firstResObj = JSON.parse(responseObjects[0] + '}');
+      const responseAuth = await fetch(`${URL_API_NODEJS}/login-03`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authcode}`,
+        },
+        body: JSON.stringify({
+          mobile,
+          code: getAuthCode,
+        }),
+      });
+      const responseAuthText = await responseAuth.json();
+      const firstResObj = responseAuthText?.data[0];
 
       console.log('RespAPI login-03 -> ' + JSON.stringify(firstResObj));
 
-      if (firstResObj.data === 'false') {
+      if (firstResObj.data == false) {
         // Invalid Number
         Alert.alert(
           'Failed',
@@ -117,21 +139,29 @@ const PhoneVerificationScreen = () => {
             MobCode => ${mobilecode}
             CouCode => ${countrycode}
         `);
-      } else if (firstResObj.data === 'login') {
+      } else if (firstResObj?.data == 'login') {
         // Login Automatically
         try {
-          const responseLogin = await fetch(
-            `${URL_API}&act=login-01&tp=2&mobile=${mobile}`,
-          );
+          const responseLogin = await fetch(`${URL_API_NODEJS}/login-01`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${authcode}`,
+            },
+            body: JSON.stringify({
+              mobile,
+              type: 2,
+            }),
+          });
           const responseLoginData = await responseLogin.json();
 
           console.log(
             JSON.stringify(responseLoginData) +
               ' -> data:' +
-              responseLoginData.data,
+              responseLoginData?.data[0]?.data,
           );
 
-          if (responseLoginData.data === 'false') {
+          if (responseLoginData?.status !== 'success') {
             console.log('ke halaman berikutnya (ap1700)');
             navigation.navigate('SignupByEmail', {
               mobile: mobile,
