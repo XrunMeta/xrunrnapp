@@ -204,16 +204,18 @@ const NotifyScreen = () => {
       });
       const jsonData = await response.json();
 
+      // Remove clicked Chat
+      setNotify(prevNotify =>
+        prevNotify.filter(item => item.board !== data.board),
+      );
+
       if (jsonData.data[0].count == 1) {
-        // Remove clicked Chat
-        setNotify(prevNotify =>
-          prevNotify.filter(item => item.board !== data.board),
-        );
+        console.log('Berhasil apus coy -> ' + data.board);
       } else {
-        console.log('GHagal coy -> ' + data.board);
+        console.log('Gagal apus coy -> ' + data.board);
       }
     } catch (error) {
-      console.error('Error sending chat:', error);
+      console.error('Error deleted chat:', error);
       crashlytics().recordError(new Error(error));
       crashlytics().log(error);
     }
