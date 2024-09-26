@@ -78,7 +78,7 @@ const SignInScreen = () => {
           await AsyncStorage.setItem('userEmail', email);
           await AsyncStorage.setItem('userData', JSON.stringify(data.data[0]));
 
-          console.log({data});
+          console.log('data login -> ', data?.data[0]);
           login();
 
           navigation.reset({
