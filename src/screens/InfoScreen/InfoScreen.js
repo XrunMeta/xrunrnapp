@@ -11,6 +11,7 @@ import {
   Modal,
   SafeAreaView,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -51,8 +52,10 @@ const InfoScreen = () => {
         const AsyncUserData = await AsyncStorage.getItem('userData');
         const data = JSON.parse(AsyncUserData);
 
+        console.log({data});
+
         const body = {
-          member: data.member,
+          member: data?.member,
         };
 
         const result = await gatewayNodeJS('app7110-01', 'POST', body);
@@ -122,12 +125,17 @@ const InfoScreen = () => {
 
   const onShare = async () => {
     try {
+      const storeapp =
+        Platform.OS === 'ios'
+          ? 'https://apps.apple.com/id/app/xrun-go/id6502924173'
+          : 'https://play.google.com/store/apps/details?id=run.xrun.xrunapp';
+
       const result = await Share.share({
         message: `
 Let's join XRUN!!!
 Referral me!
 Email : ${userDetails.email}
-https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
+${storeapp}`,
       });
 
       if (result.action === Share.sharedAction) {
