@@ -52,32 +52,32 @@ const renderTabBar = props => (
 // Function for language action
 const actionFunc = (switchKey, lang) => {
   switch (switchKey) {
-    case '3304':
+    case 3304:
       return lang && lang.screen_wallet.history_action3304
         ? lang.screen_wallet.history_action3304
         : '';
       break;
-    case '3651':
+    case 3651:
       return lang && lang.screen_wallet.history_action3651
         ? lang.screen_wallet.history_action3651
         : '';
       break;
-    case '3305':
+    case 3305:
       return lang && lang.screen_wallet.history_action3305
         ? lang.screen_wallet.history_action3305
         : '';
       break;
-    case '3306':
+    case 3306:
       return lang && lang.screen_wallet.history_action3306
         ? lang.screen_wallet.history_action3306
         : '';
       break;
-    case '3307':
+    case 3307:
       return lang && lang.screen_wallet.history_action3307
         ? lang.screen_wallet.history_action3307
         : '';
       break;
-    case '3308':
+    case 3308:
       return lang && lang.screen_wallet.history_action3308
         ? lang.screen_wallet.history_action3308
         : '';
@@ -93,20 +93,20 @@ const actionFunc = (switchKey, lang) => {
 // Function for language extracode
 const extracodeFunc = (switchKey, lang) => {
   switch (switchKey) {
-    case '9453':
+    case 9453:
       return lang && lang.screen_wallet.history_extracode9453
         ? lang.screen_wallet.history_extracode9453
         : '';
       break;
-    case '9416':
+    case 9416:
       extracode = '-';
       break;
-    case '9001':
+    case 9001:
       return lang && lang.screen_wallet.history_extracode9001
         ? lang.screen_wallet.history_extracode9001
         : '';
       break;
-    case '9002':
+    case 9002:
       return lang && lang.screen_wallet.history_extracode9002
         ? lang.screen_wallet.history_extracode9002
         : '';
