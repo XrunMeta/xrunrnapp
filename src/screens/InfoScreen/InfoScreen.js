@@ -34,6 +34,7 @@ const InfoScreen = () => {
   const [userDetails, setUserDetails] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
   const [refEmail, setRefEmail] = useState('');
+  const [isRecommend, setIsRecommend] = useState(false);
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -76,6 +77,27 @@ const InfoScreen = () => {
           region: userData.region,
           ages: userData.ages,
         });
+
+        const bodyRecommend = {
+          member: userData?.member,
+        };
+        const resultRecommend = await gatewayNodeJS(
+          'app7420-03',
+          'POST',
+          bodyRecommend,
+        );
+        console.log('Recommend status -> ', resultRecommend?.data[0]);
+
+        setRefEmail(
+          resultRecommend?.data[0]?.email
+            ? resultRecommend?.data[0]?.email
+            : '',
+        );
+        setIsRecommend(
+          resultRecommend?.data[0]?.data
+            ? resultRecommend?.data[0]?.data
+            : false,
+        );
       } catch (err) {
         console.error('Error fetching user data: ', err);
         crashlytics().recordError(new Error(err));
@@ -175,15 +197,7 @@ ${storeapp}`,
 
   const onRecommend = async () => {
     // Check is Member has recommended
-    const body = {
-      member: userDetails.member,
-    };
-    const result = await gatewayNodeJS('app7420-03', 'POST', body);
-    console.log(result);
-
-    setRefEmail(result.data[0].email);
-
-    if (result.data[0].data === 'ok') {
+    if (isRecommend === 'ok') {
       navigation.navigate('Recommend');
     } else if (result.data[0].data === 'over') {
       setModalVisible(true);
