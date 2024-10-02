@@ -40,7 +40,7 @@
       "placeholder": "密码"
     },
     "authcode": {
-      "label": "试试",
+      "label": "如果您忘记了密码，您可以使用电子邮件验证码登录。",
       "link": "邮箱验证码"
     },
     "validator": "您的电子邮件无效",
