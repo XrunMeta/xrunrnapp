@@ -210,11 +210,11 @@ const SignInScreen = () => {
 
       <View style={[styles.bottomSection]}>
         <View style={styles.additionalLogin}>
-          {/* <Text style={styles.normalText}>
+          <Text style={styles.normalText}>
             {lang && lang.screen_signin && lang.screen_signin.authcode
               ? lang.screen_signin.authcode.label + ' '
               : ''}
-          </Text> */}
+          </Text>
           <Pressable onPress={onSMSAuth} style={styles.resetPassword}>
             <Text style={styles.emailAuth}>
               {lang && lang.screen_signin && lang.screen_signin.authcode
@@ -264,13 +264,14 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   additionalLogin: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    marginTop: -56,
   },
   normalText: {
     fontFamily: getFontFam() + 'Regular',
     fontSize: fontSize('body'),
     color: '#343a59',
+    maxWidth: 240,
+    marginBottom: 8,
   },
   emailAuth: {
     fontFamily: getFontFam() + 'Medium',

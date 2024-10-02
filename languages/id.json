@@ -40,7 +40,7 @@
       "placeholder": "Kata sandi"
     },
     "authcode": {
-      "label": "Coba",
+      "label": "Jika Anda lupa kata sandi, Anda dapat sing-in menggunakan kode verifikasi email Anda.",
       "link": "Email Autentikasi"
     },
     "validator": "Email anda tidak valid",
