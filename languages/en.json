@@ -40,7 +40,7 @@
       "placeholder": "Password"
     },
     "authcode": {
-      "label": "Try",
+      "label": "If you have forgotten your password, you can sign-in using your email verification code.",
       "link": "Email Authcode"
     },
     "validator": "Your Email is not Valid",

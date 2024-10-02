@@ -40,7 +40,7 @@
       "placeholder": "비밀번호"
     },
     "authcode": {
-      "label": "시도",
+      "label": "비밀번호를 잊으셨다면 이메일 인증코드를 통해 로그인 할 수 있습니다",
       "link": "Email 인증코드"
     },
     "validator": "이메일이 유효하지 않습니다",
