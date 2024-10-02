@@ -40,7 +40,7 @@
       "placeholder": "Password"
     },
     "authcode": {
-      "label": "Try",
+      "label": "If you have forgotten your password, you can sign-in using your email verification code.",
       "link": "Email Authcode"
     },
     "validator": "Your Email is not Valid",
@@ -484,7 +484,7 @@
     "copy_qrcode_show": "The wallet address has been copied.",
     "download_qrcode_show": "Image is saved successfully. Please check the gallery.\n\nPlease check the download folder for the key file. \n\nIf the key file is requested more than once, the file will be damaged (non-recoverable).",
     "copy_qrcode": "The wallet address has been copied. Use it wherever you want.",
-    "table_head_transaction": "Transactions",
+    "table_head_transaction": "Bills",
     "table_head_send": "Transfer",
     "table_head_change": "Convert",
     "table_head_exchange": "Exchange",
