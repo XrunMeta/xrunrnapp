@@ -20,7 +20,6 @@ import {useNavigation} from '@react-navigation/native';
 import CustomMultipleChecbox from '../../components/CustomCheckbox/CustomMultipleCheckbox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
-  URL_API,
   getLanguage2,
   getFontFam,
   fontSize,
