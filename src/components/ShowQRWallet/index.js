@@ -15,14 +15,7 @@ import Share from 'react-native-share';
 import RNFetchBlob from 'rn-fetch-blob';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import crashlytics from '@react-native-firebase/crashlytics';
-import {
-  URL_API,
-  URL_API_NODEJS,
-  authcode,
-  fontSize,
-  gatewayNodeJS,
-  getFontFam,
-} from '../../../utils';
+import {fontSize, gatewayNodeJS, getFontFam} from '../../../utils';
 import QRCode from 'react-native-qrcode-svg';
 import RNFS from 'react-native-fs';
 
