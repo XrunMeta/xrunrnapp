@@ -239,7 +239,7 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
               fontSize: fontSize('body'),
               color: 'black',
             }}>
-            {userDetails && userDetails.firstname
+            {userDetails && !isLoading
               ? `${userDetails.firstname}${userDetails.lastname}`
               : 'Loading...'}
           </Text>
