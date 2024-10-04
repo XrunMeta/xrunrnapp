@@ -81,6 +81,7 @@ const InfoScreen = () => {
         const bodyRecommend = {
           member: userData?.member,
         };
+
         const resultRecommend = await gatewayNodeJS(
           'app7420-03',
           'POST',
@@ -197,11 +198,9 @@ ${storeapp}`,
 
   const onRecommend = async () => {
     // Check is Member has recommended
-    if (isRecommend === 'ok') {
-      navigation.navigate('Recommend');
-    } else if (result.data[0].data === 'over') {
-      setModalVisible(true);
-    }
+    isRecommend === 'ok'
+      ? navigation.navigate('Recommend')
+      : setModalVisible(true);
   };
 
   const onCustomerService = () => {
