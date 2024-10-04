@@ -267,7 +267,7 @@ ${storeapp}`,
               fontSize: fontSize('body'),
               color: 'black',
             }}>
-            {userDetails && userDetails.firstname
+            {userDetails && !isLoading
               ? `${userDetails.firstname}${userDetails.lastname}`
               : 'Loading...'}
           </Text>
