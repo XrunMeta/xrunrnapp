@@ -24,6 +24,7 @@ const SignInScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(true);
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const navigation = useNavigation();
 
@@ -44,6 +45,7 @@ const SignInScreen = () => {
         lang.screen_signin.alert ? lang.screen_signin.alert.emptyPassword : '',
       );
     } else {
+      setIsDisabled(true);
       try {
         const response = await fetch(
           `${URL_API}&act=login-01&tp=4&email=${email}&pin=${password}`,
@@ -58,12 +60,14 @@ const SignInScreen = () => {
 
           setEmail('');
           setPassword('');
+          setIsDisabled(false);
         } else {
           await AsyncStorage.setItem('userEmail', email);
           await AsyncStorage.setItem('userData', JSON.stringify(data));
 
           console.log({data});
           login();
+          setIsDisabled(false);
 
           navigation.reset({
             index: 0,
@@ -224,9 +228,16 @@ const SignInScreen = () => {
           </Pressable>
         </View>
 
-        <TouchableOpacity onPress={onSignIn} style={styles.buttonSignIn}>
+        <TouchableOpacity
+          onPress={onSignIn}
+          style={styles.buttonSignIn}
+          disabled={isDisabled}>
           <Image
-            source={require('../../../assets/images/icon_next.png')}
+            source={
+              isDisabled
+                ? require('../../../assets/images/icon_nextDisable.png')
+                : require('../../../assets/images/icon_next.png')
+            }
             resizeMode="contain"
             style={styles.buttonSignInImage}
           />
@@ -274,7 +285,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   emailAuth: {
-    fontFamily: getFontFam() + 'Medium',
+    fontFamily: getFontFam() + 'Bold',
     fontSize: fontSize('body'),
     color: '#343a59',
   },
