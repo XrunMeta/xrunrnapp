@@ -128,6 +128,7 @@ const AdvertiseScreen = () => {
         );
         crashlytics().recordError(new Error(err));
         crashlytics().log(err);
+        navigation.replace('Home');
       }
     };
 
@@ -163,6 +164,7 @@ const AdvertiseScreen = () => {
       console.error('Error fetching ads data:', err);
       crashlytics().recordError(new Error(err));
       crashlytics().log(err);
+      navigation.replace('Home');
     }
   };
 
@@ -305,6 +307,7 @@ const AdvertiseScreen = () => {
               console.error('Error delete all chat:', err);
               crashlytics().recordError(new Error(err));
               crashlytics().log(err);
+              navigation.replace('Home');
             }
           },
         },
@@ -368,6 +371,7 @@ const AdvertiseScreen = () => {
       console.error('Error delete Selected Ads:', err);
       crashlytics().recordError(new Error(err));
       crashlytics().log(err);
+      navigation.replace('Home');
     }
   };
 
@@ -479,7 +483,7 @@ const AdvertiseScreen = () => {
               ? lang.screen_advertise.total
               : 'Total'}{' '}
             <Text style={{color: 'orange'}}>{storageAds.length}</Text>
-            XRUNs.
+            XRUN.
           </Text>
           <TouchableOpacity
             onPress={() => setFilterModalVisible(true)}
