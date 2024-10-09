@@ -61,6 +61,7 @@ const WalletScreen = ({navigation, route}) => {
         console.error('Error in fetchData:', err);
         crashlytics().recordError(new Error(err));
         crashlytics().log(err);
+        navigation.replace('Home');
       }
     };
 
@@ -76,6 +77,7 @@ const WalletScreen = ({navigation, route}) => {
         Alert.alert('', `Failed get member from async storage`);
         crashlytics().recordError(new Error(err));
         crashlytics().log(err);
+        navigation.replace('Home');
       }
     };
 
@@ -128,6 +130,7 @@ const WalletScreen = ({navigation, route}) => {
       setIsLoading(false);
       crashlytics().recordError(new Error(err));
       crashlytics().log(err);
+      navigation.replace('Home');
     }
   };
 
