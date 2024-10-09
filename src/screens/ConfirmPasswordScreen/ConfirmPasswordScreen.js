@@ -20,6 +20,7 @@ const ConfirmPassword = () => {
   const [lang, setLang] = useState({});
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const navigation = useNavigation();
 
@@ -36,6 +37,7 @@ const ConfirmPassword = () => {
           : '-',
       );
     } else {
+      setIsDisabled(true);
       try {
         const response = await fetch(
           // `${URL_API}&act=login-checker&email=${email}&pin=${password}`,
@@ -43,8 +45,12 @@ const ConfirmPassword = () => {
         );
         const data = await response.json();
 
+        console.log(data.data[0]);
+
         if (data.data[0].count == 1) {
-          navigation.replace('ModifInfo');
+          // navigation.replace('ModifInfo');
+          navigation.replace('ModifAuth');
+          setIsDisabled(false);
         } else {
           Alert.alert(
             'Error',
@@ -54,6 +60,7 @@ const ConfirmPassword = () => {
               ? lang.screen_confirm_password.condition.wrong
               : '-',
           );
+          setIsDisabled(false);
         }
       } catch (error) {
         crashlytics().recordError(new Error(error));
@@ -67,12 +74,12 @@ const ConfirmPassword = () => {
             ? lang.screen_confirm_password.condition.errorServer
             : '-',
         );
+        setIsDisabled(false);
       }
     }
   };
 
   const onBack = () => {
-    // navigation.navigate('First');
     navigation.goBack();
   };
 
@@ -150,9 +157,16 @@ const ConfirmPassword = () => {
 
       <View style={[styles.bottomSection]}>
         <View style={styles.additionalLogin}></View>
-        <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
+        <Pressable
+          onPress={onSignIn}
+          style={styles.buttonSignIn}
+          disabled={isDisabled}>
           <Image
-            source={require('../../../assets/images/icon_next.png')}
+            source={
+              isDisabled
+                ? require('../../../assets/images/icon_nextDisable.png')
+                : require('../../../assets/images/icon_next.png')
+            }
             resizeMode="contain"
             style={styles.buttonSignInImage}
           />
