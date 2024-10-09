@@ -30,8 +30,8 @@ const renderTabBar = props => (
       backgroundColor: 'white',
       height: 55,
       elevation: 0,
-      borderBottomColor: '#bbb',
-      borderBottomWidth: 0.5,
+      // borderBottomColor: '#bbb',
+      // borderBottomWidth: 0.5,
     }}
     renderLabel={({route, focused}) => (
       <Text
@@ -41,7 +41,7 @@ const renderTabBar = props => (
           fontFamily: getFontFam() + 'Regular',
           fontSize: fontSize('body'),
           maxWidth: 80,
-          borderBottomColor: 'yellow',
+          // borderBottomColor: 'yellow',
         }}>
         {route.title}
       </Text>
@@ -987,8 +987,8 @@ const TableWalletCard = ({
                 style={{
                   backgroundColor: 'white',
                   elevation: 0,
-                  borderBottomColor: '#bbb',
-                  borderBottomWidth: 0.5,
+                  // borderBottomColor: '#bbb',
+                  // borderBottomWidth: 0.5,
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                   width: '100%',
@@ -1204,8 +1204,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     gap: 10,
-    borderBottomColor: '#bbb',
-    borderBottomWidth: 0.55,
+    // borderBottomColor: '#bbb',
+    // borderBottomWidth: 0.55,
     paddingBottom: 10,
     paddingTop: 20,
   },
@@ -1243,14 +1243,14 @@ const styles = StyleSheet.create({
     color: '#ccc',
     textAlign: 'center',
     paddingTop: 20,
-    borderBottomColor: '#bbb',
-    borderBottomWidth: 0.55,
+    // borderBottomColor: '#bbb',
+    // borderBottomWidth: 0.55,
     paddingBottom: 10,
     fontSize: fontSize('body'),
   },
   btnSeeMore: {
-    borderWidth: 1,
-    borderColor: '#555',
+    // borderWidth: 1,
+    // borderColor: '#555',
     padding: 8,
     borderRadius: 99,
   },
