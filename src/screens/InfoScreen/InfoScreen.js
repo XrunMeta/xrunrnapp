@@ -177,6 +177,7 @@ ${storeapp}`,
       Alert.alert(error.message);
       crashlytics().recordError(new Error(error));
       crashlytics().log(error);
+      navigation.replace('Home');
     }
   };
 

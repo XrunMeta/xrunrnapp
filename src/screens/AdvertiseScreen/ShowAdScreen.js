@@ -225,6 +225,7 @@ const ShowAdScreen = ({route}) => {
         crashlytics().recordError(new Error(err));
         crashlytics().log(err);
         console.error('Error fetching language data:', err);
+        navigation.replace('Home');
       }
     };
 

@@ -18,6 +18,7 @@ import crashlytics from '@react-native-firebase/crashlytics';
 import {fontSize, gatewayNodeJS, getFontFam} from '../../../utils';
 import QRCode from 'react-native-qrcode-svg';
 import RNFS from 'react-native-fs';
+import {useNavigation} from '@react-navigation/native';
 
 const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
   const [downloadDisable, setDownloadDisable] = useState(true);
@@ -26,6 +27,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
   const [QRImage, setQRImage] = useState(null);
   // Animated notification in QR
   const [fadeAnim] = useState(new Animated.Value(0));
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,6 +46,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
         console.error('Error fetching QR code data:', error);
         crashlytics().recordError(new Error(error));
         crashlytics().log(error);
+        navigation.replace('Home');
       }
     };
 
@@ -104,6 +107,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
     } catch (error) {
       setShareDisable(false);
       console.log('Sharing QR Code:', error.message);
+      navigation.replace('Home');
     }
   };
 
@@ -209,6 +213,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
         setDownloadDisable(false);
       } catch (error) {
         setDownloadDisable(false);
+        navigation.replace('Home');
         console.log('Failed saved QR Image on ios:', error.message);
       }
     }
@@ -229,6 +234,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
       crashlytics().log(err);
       console.error('Error request app4000-tokener:', err);
       Alert.alert('Error request app4000-tokener:', err);
+      navigation.replace('Home');
     }
   };
 
@@ -247,6 +253,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
       crashlytics().log(err);
       console.error('Error request app4000-passwd:', err);
       Alert.alert('Error request app4000-passwd:', err);
+      navigation.replace('Home');
     }
   };
 
