@@ -49,6 +49,7 @@ const Change = ({navigation, route}) => {
         console.error('Error in fetchData:', err);
         crashlytics().recordError(new Error(err));
         crashlytics().log(err);
+        navigation.replace('Home');
       }
     };
 
@@ -64,6 +65,7 @@ const Change = ({navigation, route}) => {
         console.error('Failed to get userData from AsyncStorage:', error);
         crashlytics().recordError(new Error(error));
         crashlytics().log(error);
+        navigation.replace('Home');
       }
     };
 
@@ -92,6 +94,7 @@ const Change = ({navigation, route}) => {
         console.log(`Error get balance: ${err}`);
         crashlytics().recordError(new Error(err));
         crashlytics().log(err);
+        navigation.replace('Home');
       }
     };
 
@@ -194,6 +197,7 @@ const Change = ({navigation, route}) => {
         console.error('Error conversion request:', err);
         crashlytics().recordError(new Error(err));
         crashlytics().log(err);
+        navigation.replace('Home');
       }
     }
   };

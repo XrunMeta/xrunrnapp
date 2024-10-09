@@ -136,6 +136,7 @@ const SendWalletScreen = ({navigation, route}) => {
         console.error('Error in fetchData:', err);
         crashlytics().recordError(new Error(err));
         crashlytics().log(err);
+        navigation.replace('Home');
       }
     };
 
@@ -151,6 +152,7 @@ const SendWalletScreen = ({navigation, route}) => {
         console.error('Failed to get userData from AsyncStorage:', err);
         crashlytics().recordError(new Error(error));
         crashlytics().log(error);
+        navigation.replace('Home');
       }
     };
 
@@ -203,7 +205,7 @@ const SendWalletScreen = ({navigation, route}) => {
       Alert.alert(lang.global_error.network_busy);
       setIsLoading(false);
       gasEstimateNetworkBusy();
-
+      navigation.replace('Home');
       console.log(`Error gas tracker: ${error}`);
     }
   };
@@ -233,8 +235,8 @@ const SendWalletScreen = ({navigation, route}) => {
         if (!totalGasCostFromAPI || !gasEstimateFromAPI || !gasPriceFromAPI) {
           setIsLoading(false);
           Alert.alert(lang.global_error.network_busy);
-
           gasEstimateNetworkBusy();
+          navigation.replace('Home');
         }
 
         setGasEstimate(gasEstimateFromAPI);
@@ -265,8 +267,8 @@ const SendWalletScreen = ({navigation, route}) => {
       Alert.alert(lang.global_error.network_busy);
       setIsLoading(false);
       gasEstimateNetworkBusy();
-
       console.log(`Error gas estimated: ${error}`);
+      navigation.replace('Home');
     }
   };
 
@@ -371,6 +373,7 @@ const SendWalletScreen = ({navigation, route}) => {
       console.log('Error get data listCrypto: ', error);
       crashlytics().recordError(new Error(error));
       crashlytics().log(error);
+      navigation.replace('Home');
     }
   };
 
@@ -398,6 +401,7 @@ const SendWalletScreen = ({navigation, route}) => {
         console.log(`Error get data balance: ${error}`);
         crashlytics().recordError(new Error(error));
         crashlytics().log(error);
+        navigation.replace('Home');
       }
     } catch (error) {
       setIsLoading(false);
@@ -405,6 +409,7 @@ const SendWalletScreen = ({navigation, route}) => {
       console.log(`Error get data balance: ${error}`);
       crashlytics().recordError(new Error(error));
       crashlytics().log(error);
+      navigation.replace('Home');
     }
   };
 
@@ -502,6 +507,7 @@ const SendWalletScreen = ({navigation, route}) => {
                 ? lang.global_error.error
                 : '',
             );
+            navigation.replace('Home');
           });
       } else {
         const granted = await PermissionsAndroid.request(
@@ -550,6 +556,7 @@ const SendWalletScreen = ({navigation, route}) => {
       setIsLoading(false);
       crashlytics().recordError(new Error(error));
       crashlytics().log(error);
+      navigation.replace('Home');
     }
   };
 
@@ -568,6 +575,7 @@ const SendWalletScreen = ({navigation, route}) => {
       gasEstimateNetworkBusy();
       crashlytics().recordError(new Error(error));
       crashlytics().log(error);
+      navigation.replace('Home');
     }
   };
 
@@ -603,6 +611,7 @@ const SendWalletScreen = ({navigation, route}) => {
           Alert.alert(lang.global_error.network_busy);
           console.log('Transfer failed postTransfer');
           gasEstimateNetworkBusy();
+          navigation.replace('Home');
         }
       } else {
         Alert.alert(lang.global_error.network_busy);
@@ -610,6 +619,7 @@ const SendWalletScreen = ({navigation, route}) => {
         gasEstimateNetworkBusy();
         crashlytics().recordError(new Error(error));
         crashlytics().log(error);
+        navigation.replace('Home');
       }
     } catch (error) {
       Alert.alert(lang.global_error.network_busy);
@@ -617,6 +627,7 @@ const SendWalletScreen = ({navigation, route}) => {
       gasEstimateNetworkBusy();
       crashlytics().recordError(new Error(error));
       crashlytics().log(error);
+      navigation.replace('Home');
     }
   };
 

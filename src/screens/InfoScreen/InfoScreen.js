@@ -139,6 +139,7 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapp`,
       Alert.alert(error.message);
       crashlytics().recordError(new Error(error));
       crashlytics().log(error);
+      navigation.replace('Home');
     }
   };
 
