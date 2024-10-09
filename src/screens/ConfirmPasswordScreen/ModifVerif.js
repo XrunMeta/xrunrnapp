@@ -39,6 +39,7 @@ const ModifVerif = () => {
   const [modalVisible, setModalVisible] = useState(false);
   let ScreenHeight = Dimensions.get('window').height;
   const [lang, setLang] = useState({});
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const emailAuth = async () => {
     try {
@@ -86,6 +87,7 @@ const ModifVerif = () => {
   };
 
   const onSignIn = async () => {
+    setIsDisabled(true);
     const getAuthCode = verificationCode.join('');
 
     // Check Email & Auth Code Relational
@@ -111,35 +113,22 @@ const ModifVerif = () => {
           );
 
           if (responseLoginData.data === 'false') {
-            navigation.replace('SignUp');
-          } else {
-            const userData = {
-              ages: responseLoginData.ages,
-              country: responseLoginData.country,
-              email: responseLoginData.email,
-              extrastr: responseLoginData.extrastr,
-              firstname: responseLoginData.firstname,
-              gender: responseLoginData.gender,
-              lastname: responseLoginData.lastname,
-              member: responseLoginData.member,
-              mobilecode: responseLoginData.mobilecode,
-            };
-
-            await AsyncStorage.setItem('userEmail', dataEmail);
-            await AsyncStorage.setItem('userData', JSON.stringify(userData));
-            console.log({userData});
-            login();
             navigation.reset({
               index: 0,
               routes: [{name: 'Home'}],
             });
+          } else {
+            setIsDisabled(false);
+            navigation.replace('ModifInfo');
           }
         } catch (error) {
+          setIsDisabled(false);
           // Handle network errors or other exceptions
           console.error('Error during Check Login Email & Pin:', error);
         }
       }
     } catch (error) {
+      setIsDisabled(false);
       // Handle network errors or other exceptions
       console.error('Error during Check Auth Code:', error);
     }
@@ -264,7 +253,7 @@ const ModifVerif = () => {
                     : ''
                 }
               />
-              <CustomButton
+              {/* <CustomButton
                 text={
                   lang &&
                   lang.screen_emailVerification &&
@@ -274,7 +263,7 @@ const ModifVerif = () => {
                 }
                 onPress={onLoginPassword}
                 type="SECONDARY"
-              />
+              /> */}
             </View>
           </View>
         </TouchableWithoutFeedback>
@@ -331,18 +320,26 @@ const ModifVerif = () => {
             <View style={styles.additionalLogin}>
               <Countdown />
             </View>
-            {isCodeComplete ? (
-              <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
+            {isCodeComplete == false ? (
+              <Pressable onPress={onSignInDisabled} style={styles.buttonSignIn}>
                 <Image
-                  source={require('../../../assets/images/icon_next.png')}
+                  source={require('../../../assets/images/icon_nextDisable.png')}
+                  resizeMode="contain"
+                  style={styles.buttonSignInImage}
+                />
+              </Pressable>
+            ) : isDisabled ? (
+              <Pressable onPress={onSignInDisabled} style={styles.buttonSignIn}>
+                <Image
+                  source={require('../../../assets/images/icon_nextDisable.png')}
                   resizeMode="contain"
                   style={styles.buttonSignInImage}
                 />
               </Pressable>
             ) : (
-              <Pressable onPress={onSignInDisabled} style={styles.buttonSignIn}>
+              <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
                 <Image
-                  source={require('../../../assets/images/icon_nextDisable.png')}
+                  source={require('../../../assets/images/icon_next.png')}
                   resizeMode="contain"
                   style={styles.buttonSignInImage}
                 />
