@@ -49,7 +49,9 @@ const ConfirmPassword = () => {
 
         if (data.data[0].count == 1) {
           // navigation.replace('ModifInfo');
-          navigation.replace('ModifAuth');
+          navigation.navigate('ModifAuth', {
+            existEmail: email,
+          });
           setIsDisabled(false);
         } else {
           Alert.alert(

@@ -56,6 +56,8 @@ import SuccessCloseMembership from '../screens/SettingScreen/SuccessCloseMembers
 import Exchange from '../screens/ExchangeWalletScreen';
 import SplashScreen from '../screens/SplashScreen/SplashScreen';
 import IOSWallet from '../screens/WalletScreen/IOSWallet';
+import ModifAuth from '../screens/ConfirmPasswordScreen/ModifAuth';
+import ModifVerif from '../screens/ConfirmPasswordScreen/ModifVerif';
 
 export default Router = () => {
   const Stack = createNativeStackNavigator();
@@ -119,6 +121,8 @@ export default Router = () => {
         <Stack.Screen name="SignPassword" component={SignPasswordScreen} />
         <Stack.Screen name="PasswordMissed" component={PasswordMissedScreen} />
         <Stack.Screen name="SignupByEmail" component={SignUpByEmailScreen} />
+        <Stack.Screen name="ModifAuth" component={ModifAuth} />
+        <Stack.Screen name="ModifVerif" component={ModifVerif} />
         <Stack.Screen
           name="SignupCreatePassword"
           component={SignUpCreatePassword}
