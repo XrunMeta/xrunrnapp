@@ -116,6 +116,7 @@
   },
 
   "screen_emailAuth": {
+    "label": "이메일 인증",
     "email": {
       "label": "이메일 입력",
       "placeholder": "xrun@xrun.run"

@@ -116,6 +116,7 @@
   },
 
   "screen_emailAuth": {
+    "label": "Email Authentication",
     "email": {
       "label": "Enter your Email",
       "placeholder": "xrun@xrun.run"
