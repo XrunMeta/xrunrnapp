@@ -182,7 +182,7 @@ ${storeapp}`,
   };
 
   const onModify = () => {
-    navigation.navigate('ConfirmPassword');
+    navigation.navigate('EmailVerifForModif', {existEmail: userDetails.email});
   };
 
   const onSetting = () => {

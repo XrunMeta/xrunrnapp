@@ -116,6 +116,7 @@
   },
 
   "screen_emailAuth": {
+    "label": "Autentikasi Email",
     "email": {
       "label": "Masukan Email anda",
       "placeholder": "xrun@xrun.run"
