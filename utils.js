@@ -1,4 +1,5 @@
 import {Alert, Platform} from 'react-native';
+import CryptoJS from 'crypto-js';
 import crashlytics from '@react-native-firebase/crashlytics';
 // import messaging from '@react-native-firebase/messaging';
 import * as RNLocalize from 'react-native-localize';
@@ -290,4 +291,8 @@ export const gatewayNodeJS = async (route, method = 'GET', body = {}) => {
     crashlytics().recordError(new Error(error));
     crashlytics().log(error);
   }
+};
+
+export const sha256Encrypt = async text => {
+  return CryptoJS.SHA256(text).toString(CryptoJS.enc.Hex);
 };
