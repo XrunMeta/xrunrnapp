@@ -508,7 +508,10 @@
     "failed_alert": "失败",
     "failed_download_qrcode_alert": "无法下载二维码",
     "see_more": "看更多",
-    "able_transfer": "Able Tran."
+    "able_transfer": "可转移",
+    "retry_load_wallet": "数据尚未加载，请重试",
+    "go_home": "转至主页",
+    "wallet_error": "稍后再试，服务器错误"
   },
   "screen_send": {
     "send_amount_label": "发送金额",

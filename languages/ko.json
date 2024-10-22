@@ -508,7 +508,10 @@
     "failed_alert": "실패",
     "failed_download_qrcode_alert": "QR 코드 다운로드 실패",
     "see_more": "더보기",
-    "able_transfer": "출금가능"
+    "able_transfer": "출금가능",
+    "retry_load_wallet": "데이터가 로드되지 않았습니다. 다시 시도해 주세요.",
+    "go_home": "홈으로 이동",
+    "wallet_error": "나중에 다시 시도하세요, 서버 오류"
   },
   "screen_send": {
     "send_amount_label": "보낼 금액",

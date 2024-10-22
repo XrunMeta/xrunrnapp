@@ -510,7 +510,10 @@
     "failed_alert": "Failed",
     "failed_download_qrcode_alert": "Failed to download qr code",
     "see_more": "See More",
-    "able_transfer": "Able Transfer"
+    "able_transfer": "Able Transfer",
+    "retry_load_wallet": "Data has not been loaded, please try again",
+    "go_home": "Go to Home",
+    "wallet_error": "Try later, server error"
   },
   "screen_send": {
     "send_amount_label": "Amount to send",
