@@ -116,6 +116,7 @@
   },
 
   "screen_emailAuth": {
+    "label": "邮箱认证",
     "email": {
       "label": "输入您的电子邮件",
       "placeholder": "xrun@xrun.run"

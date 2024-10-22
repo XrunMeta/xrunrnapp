@@ -81,6 +81,7 @@ const InfoScreen = () => {
         const bodyRecommend = {
           member: userData?.member,
         };
+
         const resultRecommend = await gatewayNodeJS(
           'app7420-03',
           'POST',
@@ -176,11 +177,12 @@ ${storeapp}`,
       Alert.alert(error.message);
       crashlytics().recordError(new Error(error));
       crashlytics().log(error);
+      navigation.replace('Home');
     }
   };
 
   const onModify = () => {
-    navigation.navigate('ConfirmPassword');
+    navigation.navigate('EmailVerifForModif', {existEmail: userDetails.email});
   };
 
   const onSetting = () => {
@@ -197,11 +199,9 @@ ${storeapp}`,
 
   const onRecommend = async () => {
     // Check is Member has recommended
-    if (isRecommend === 'ok') {
-      navigation.navigate('Recommend');
-    } else if (result.data[0].data === 'over') {
-      setModalVisible(true);
-    }
+    isRecommend === 'ok'
+      ? navigation.navigate('Recommend')
+      : setModalVisible(true);
   };
 
   const onCustomerService = () => {
@@ -267,7 +267,7 @@ ${storeapp}`,
               fontSize: fontSize('body'),
               color: 'black',
             }}>
-            {userDetails && userDetails.firstname
+            {userDetails && !isLoading
               ? `${userDetails.firstname}${userDetails.lastname}`
               : 'Loading...'}
           </Text>

@@ -55,6 +55,7 @@ const Change = ({navigation, route}) => {
         console.error('Error in fetchData:', err);
         crashlytics().recordError(new Error(err));
         crashlytics().log(err);
+        navigation.replace('Home');
       }
     };
 
@@ -205,6 +206,7 @@ const Change = ({navigation, route}) => {
         console.error('Error conversion request:', err);
         crashlytics().recordError(new Error(err));
         crashlytics().log(err);
+        navigation.replace('Home');
       }
     }
   };
