@@ -7,6 +7,7 @@ import {
   Image,
   Dimensions,
   Alert,
+  SafeAreaView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput';
@@ -154,7 +155,7 @@ const EmailVerifForModifScreen = () => {
   }, []);
 
   return (
-    <View style={[styles.root, {height: ScreenHeight}]}>
+	<SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
       <View style={{flexDirection: 'row', position: 'relative'}}>
         <View style={{position: 'absolute', zIndex: 1}}>
           <ButtonBack onClick={onBack} />
@@ -213,7 +214,7 @@ const EmailVerifForModifScreen = () => {
           />
         </Pressable>
       </View>
-    </View>
+	</SafeAreaView>
   );
 };
 

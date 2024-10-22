@@ -12,6 +12,7 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   Keyboard,
+  SafeAreaView,
 } from 'react-native';
 import React, {useState, useRef, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
@@ -214,7 +215,7 @@ const EmailCodeForModif = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={[styles.root, {height: ScreenHeight}]}>
+        <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
           <View style={{flexDirection: 'row', position: 'relative'}}>
             <View style={{position: 'absolute', zIndex: 1}}>
               <ButtonBack onClick={onBack} />
@@ -310,7 +311,7 @@ const EmailCodeForModif = () => {
 
           {/* Slider Modal */}
           <SliderModal visible={modalVisible} onClose={toggleModal} />
-        </View>
+        </SafeAreaView>
       </ScrollView>
     </TouchableWithoutFeedback>
   );
