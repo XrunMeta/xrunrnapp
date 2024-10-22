@@ -84,6 +84,7 @@ const EmailVerifForModifScreen = () => {
       if (result !== null) {
         if (result?.data[0]?.status == true) {
           setIsSubmitDisable(false);
+          setEmail('');
 
           console.log(result?.data[0]?.status);
 

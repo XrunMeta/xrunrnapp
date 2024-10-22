@@ -24,13 +24,11 @@ import {
   fontSize,
   authcode,
 } from '../../../utils';
-import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // ########## Main Function ##########
 const EmailCodeForModif = () => {
   const route = useRoute();
-  const {login} = useAuth();
   const {dataEmail} = route.params;
   const [verificationCode, setVerificationCode] = useState([
     '',
@@ -45,6 +43,7 @@ const EmailCodeForModif = () => {
   const [modalVisible, setModalVisible] = useState(false);
   let ScreenHeight = Dimensions.get('window').height;
   const [lang, setLang] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const emailAuth = async () => {
     try {
@@ -89,16 +88,13 @@ const EmailCodeForModif = () => {
   }, []);
 
   const onBack = () => {
-    navigation.navigate('First');
-  };
-
-  const onLoginPassword = () => {
-    navigation.replace('SignPassword', {
-      mobile: mobile,
-    });
+    navigation.replace('InfoHome');
   };
 
   const onSignIn = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     const getAuthCode = verificationCode.join('');
 
     // Check Email & Auth Code Relational
@@ -118,61 +114,16 @@ const EmailCodeForModif = () => {
       const responseAuthData = await responseAuth.json();
       console.log(JSON.stringify(responseAuthData));
 
-      if (responseAuthData.status !== 'success') {
-        Alert.alert('Failed', lang.screen_emailVerification.notif.wrongCode);
+      if (responseAuthData.status == 'success') {
+        navigation.replace('ModifInfo');
       } else {
-        try {
-          const responseLogin = await fetch(
-            `${URL_API_NODEJS}/login-04-email`,
-            {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${authcode}`,
-              },
-              body: JSON.stringify({
-                email: dataEmail,
-              }),
-            },
-          );
-          const responseLoginData = await responseLogin.json();
-
-          console.log(
-            'RespAPI login-04-email -> ' + JSON.stringify(responseLoginData),
-          );
-
-          if (responseLoginData.status !== 'success') {
-            navigation.replace('SignUp');
-          } else {
-            const userData = {
-              ages: responseLoginData?.data[0]?.ages,
-              country: responseLoginData?.data[0]?.country,
-              email: responseLoginData?.data[0]?.email,
-              extrastr: responseLoginData?.data[0]?.extrastr,
-              firstname: responseLoginData?.data[0]?.firstname,
-              gender: responseLoginData?.data[0]?.gender,
-              lastname: responseLoginData?.data[0]?.lastname,
-              member: responseLoginData?.data[0]?.member,
-              mobilecode: responseLoginData?.data[0]?.mobilecode,
-            };
-
-            await AsyncStorage.setItem('userEmail', dataEmail);
-            await AsyncStorage.setItem('userData', JSON.stringify(userData));
-            console.log({userData});
-            login();
-            navigation.reset({
-              index: 0,
-              routes: [{name: 'Home'}],
-            });
-          }
-        } catch (error) {
-          // Handle network errors or other exceptions
-          console.error('Error during Check Login Email & Pin:', error);
-        }
+        Alert.alert('Failed', lang.screen_emailVerification.notif.wrongCode);
       }
     } catch (error) {
       // Handle network errors or other exceptions
       console.error('Error during Check Auth Code:', error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -295,17 +246,6 @@ const EmailCodeForModif = () => {
                     : ''
                 }
               />
-              <CustomButton
-                text={
-                  lang &&
-                  lang.screen_emailVerification &&
-                  lang.screen_emailVerification.timer
-                    ? lang.screen_emailVerification.timer.loginPassword
-                    : ''
-                }
-                onPress={onLoginPassword}
-                type="SECONDARY"
-              />
             </View>
           </View>
         </TouchableWithoutFeedback>
@@ -362,7 +302,7 @@ const EmailCodeForModif = () => {
             <View style={styles.additionalLogin}>
               <Countdown />
             </View>
-            {isCodeComplete ? (
+            {isCodeComplete && !isSubmitting ? (
               <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
                 <Image
                   source={require('../../../assets/images/icon_next.png')}
@@ -371,7 +311,7 @@ const EmailCodeForModif = () => {
                 />
               </Pressable>
             ) : (
-              <Pressable onPress={onSignInDisabled} style={styles.buttonSignIn}>
+              <Pressable disabled style={styles.buttonSignIn}>
                 <Image
                   source={require('../../../assets/images/icon_nextDisable.png')}
                   resizeMode="contain"
