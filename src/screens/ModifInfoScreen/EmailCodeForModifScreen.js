@@ -25,6 +25,7 @@ import {
   authcode,
 } from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Countdown from './Countdown';
 
 // ########## Main Function ##########
 const EmailCodeForModif = () => {
@@ -44,6 +45,7 @@ const EmailCodeForModif = () => {
   let ScreenHeight = Dimensions.get('window').height;
   const [lang, setLang] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [restartCountdown, setRestartCountdown] = useState(0);
 
   const emailAuth = async () => {
     try {
@@ -127,10 +129,6 @@ const EmailCodeForModif = () => {
     }
   };
 
-  const onSignInDisabled = () => {
-    Alert.alert('Warning', lang.screen_emailVerification.notif.emptyCode);
-  };
-
   const onProblem = () => {
     setModalVisible(!modalVisible);
   };
@@ -142,6 +140,7 @@ const EmailCodeForModif = () => {
   // Send Code Auth Again
   const sendCodeAgain = () => {
     emailAuth();
+    setRestartCountdown(prev => prev + 100);
     setModalVisible(!modalVisible);
   };
 
@@ -172,50 +171,9 @@ const EmailCodeForModif = () => {
 
   const isCodeComplete = verificationCode.every(code => code !== '');
 
-  // ########## Countdown ##########
-  const Countdown = () => {
-    const [seconds, setSeconds] = useState(599); // Duration
-
-    useEffect(() => {
-      const timer = setInterval(() => {
-        if (seconds > 0) {
-          setSeconds(seconds - 1);
-        }
-      }, 1000);
-
-      return () => clearInterval(timer);
-    }, [seconds]);
-
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-
-    const formattedMinutes = minutes.toString().padStart(2, '0');
-    const formattedSeconds = remainingSeconds.toString().padStart(2, '0');
-
-    return (
-      <View style={styles.container}>
-        {seconds > 0 ? (
-          <Text style={styles.disableText}>
-            {lang &&
-            lang.screen_emailVerification &&
-            lang.screen_emailVerification.timer
-              ? lang.screen_emailVerification.timer.on
-              : ''}{' '}
-            {formattedMinutes}:{formattedSeconds}
-          </Text>
-        ) : (
-          <Pressable onPress={onProblem} style={styles.resetPassword}>
-            <Text style={styles.emailAuth}>
-              {lang &&
-              lang.screen_emailVerification &&
-              lang.screen_emailVerification.timer
-                ? lang.screen_emailVerification.timer.off
-                : ''}
-            </Text>
-          </Pressable>
-        )}
-      </View>
-    );
+  // Function untuk handle ketika countdown selesai
+  const handleCountdownFinish = () => {
+    console.log('Countdown selesai');
   };
 
   // ########## Help Modal ##########
@@ -300,7 +258,12 @@ const EmailCodeForModif = () => {
           {/* Bottom Section*/}
           <View style={[styles.bottomSection]}>
             <View style={styles.additionalLogin}>
-              <Countdown />
+              <Countdown
+                onFinish={handleCountdownFinish}
+                lang={lang}
+                onProblem={onProblem}
+                restart={restartCountdown}
+              />
             </View>
             {isCodeComplete && !isSubmitting ? (
               <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
