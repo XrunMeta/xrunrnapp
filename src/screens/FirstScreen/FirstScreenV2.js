@@ -357,7 +357,7 @@ const FirstScreenV2 = ({navigation}) => {
         </View>
 
         {/* Popup check the app using latest version or not */}
-        {isPopupUpdateVersionShow && (
+        {isPopupUpdateVersionShow && Platform.OS !== "ios" && (
           <Modal
             transparent={true}
             animationType="slide"
