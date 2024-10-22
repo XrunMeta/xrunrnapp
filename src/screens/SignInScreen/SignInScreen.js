@@ -21,6 +21,7 @@ import {
   getFontFam,
   fontSize,
   authcode,
+  sha256Encrypt,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
@@ -30,25 +31,33 @@ const SignInScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(true);
+  const [isDisable, setIsDisable] = useState(false);
 
   const navigation = useNavigation();
 
   const onSignIn = async () => {
+    setIsDisable(true);
     if (email.trim() === '') {
       Alert.alert(
         'Error',
         lang.screen_signin.alert ? lang.screen_signin.alert.emptyEmail : '',
       );
+
+      setIsDisable(false);
     } else if (!isValidEmail(email)) {
       Alert.alert(
         'Error',
         lang.screen_signin.alert ? lang.screen_signin.alert.invalidEmail : '',
       );
+
+      setIsDisable(false);
     } else if (password.trim() === '') {
       Alert.alert(
         'Error',
         lang.screen_signin.alert ? lang.screen_signin.alert.emptyPassword : '',
       );
+
+      setIsDisable(false);
     } else {
       try {
         const response = await fetch(`${URL_API_NODEJS}/login-01`, {
@@ -75,16 +84,58 @@ const SignInScreen = () => {
           setEmail('');
           setPassword('');
         } else {
-          await AsyncStorage.setItem('userEmail', email);
-          await AsyncStorage.setItem('userData', JSON.stringify(data.data[0]));
-
           console.log('data login -> ', data?.data[0]);
-          login();
+          const encryptedSession = await sha256Encrypt(data?.data[0].extrastr);
 
-          navigation.reset({
-            index: 0,
-            routes: [{name: 'Home'}],
-          });
+          console.log({asli: data?.data[0]?.extrastr, ubah: encryptedSession});
+
+          try {
+            const ssidwReq = await fetch(`${URL_API_NODEJS}/saveSsidw`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${authcode}`,
+              },
+              body: JSON.stringify({
+                member: data?.data[0]?.member,
+                ssidw: encryptedSession,
+              }),
+            });
+
+            const ssidwRes = await ssidwReq.json();
+
+            if (ssidwRes?.data[0]?.affectedRows == 1) {
+              await AsyncStorage.setItem('userEmail', email);
+              await AsyncStorage.setItem(
+                'userData',
+                JSON.stringify(data.data[0]),
+              );
+              login();
+
+              navigation.reset({
+                index: 0,
+                routes: [{name: 'Home'}],
+              });
+            } else {
+              Alert.alert(
+                lang ? lang.screen_signin.alert.fail : '',
+                lang ? lang.screen_signin.failedLogin : '',
+              );
+
+              setEmail('');
+              setPassword('');
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            Alert.alert(
+              lang ? lang.screen_signin.alert.error : '',
+              lang ? lang.screen_signin.errorLogin : '',
+            );
+            setEmail('');
+            setPassword('');
+            crashlytics().recordError(new Error(error));
+            crashlytics().log(error);
+          }
         }
       } catch (error) {
         console.error('Error:', error);
@@ -96,6 +147,10 @@ const SignInScreen = () => {
         setPassword('');
         crashlytics().recordError(new Error(error));
         crashlytics().log(error);
+      } finally {
+        setIsDisable(false);
+        setEmail('');
+        setPassword('');
       }
     }
   };
@@ -240,9 +295,16 @@ const SignInScreen = () => {
           </Pressable>
         </View>
 
-        <TouchableOpacity onPress={onSignIn} style={styles.buttonSignIn}>
+        <TouchableOpacity
+          onPress={onSignIn}
+          disabled={isDisable}
+          style={styles.buttonSignIn}>
           <Image
-            source={require('../../../assets/images/icon_next.png')}
+            source={
+              isDisable
+                ? require('../../../assets/images/icon_nextDisable.png')
+                : require('../../../assets/images/icon_next.png')
+            }
             resizeMode="contain"
             style={styles.buttonSignInImage}
           />
