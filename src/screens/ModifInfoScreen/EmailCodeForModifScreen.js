@@ -215,7 +215,31 @@ const EmailCodeForModif = () => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={[styles.root, {height: ScreenHeight}]}>
-          <ButtonBack onClick={onBack} />
+          <View style={{flexDirection: 'row', position: 'relative'}}>
+            <View style={{position: 'absolute', zIndex: 1}}>
+              <ButtonBack onClick={onBack} />
+            </View>
+            <View
+              style={{
+                width: '100%',
+                paddingHorizontal: 20,
+                alignItems: 'center',
+                justifyContent: 'center',
+                display: 'flex',
+                paddingVertical: 18,
+              }}>
+              <Text
+                style={{
+                  fontFamily: getFontFam() + 'Bold',
+                  fontSize: fontSize('title'),
+                  color: '#343a59',
+                }}>
+                {lang && lang.screen_appInfo
+                  ? lang.screen_emailAuth?.label
+                  : ''}
+              </Text>
+            </View>
+          </View>
 
           {/* Text Section */}
           <View style={styles.textWrapper}>
