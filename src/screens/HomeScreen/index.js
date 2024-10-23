@@ -27,6 +27,7 @@ import {
   getFontFam,
   fontSize,
   authcode,
+  sha256Encrypt,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
@@ -39,6 +40,8 @@ export default function Home({route}) {
   const isFocused = useIsFocused();
   const [countAds, setCountAds] = useState(0);
   const [showWallet, setShowWallet] = useState(false);
+  const [ssidw, setSsidw] = useState('none');
+  const [member, setMember] = useState('none');
 
   const navigation = useNavigation();
 
@@ -100,6 +103,11 @@ export default function Home({route}) {
         const userData = await AsyncStorage.getItem('userData');
         const responseUserData = JSON.parse(userData);
 
+        const encryptedSession = await sha256Encrypt(
+          responseUserData?.extrastr,
+        );
+        setSsidw(encryptedSession);
+        setMember(responseUserData?.member);
         const countResponse = await fetch(
           `${URL_API_NODEJS}/app5010-01-counter`,
           {
@@ -195,7 +203,9 @@ export default function Home({route}) {
           if (Platform.OS === 'android') {
             navigation.dispatch(CommonActions.navigate('WalletHome'));
           } else if (Platform.OS === 'ios' && showWallet) {
-            Linking.openURL('https://www.xrun.run/walletsite/');
+            Linking.openURL(
+              'https://www.xrun.run/react/login?numses=' + ssidw + '!' + member,
+            );
           } else if (!showWallet) {
             Linking.openURL('https://www.xrun.run/');
           } else {
