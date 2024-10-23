@@ -48,6 +48,10 @@ const WalletScreen = ({navigation, route}) => {
 
   const [statusOtherChain, setStatusOtherChain] = useState('off');
 
+  // Popup retry calling API data wallet
+  const [isPopupRetry, setIsPopupRetry] = useState(false);
+  const [countRetryData, setCountRetryData] = useState(0);
+
   useEffect(() => {
     // Get Language Data
     const fetchData = async () => {
@@ -56,6 +60,7 @@ const WalletScreen = ({navigation, route}) => {
         const screenLang = await getLanguage2(currentLanguage);
 
         // Set your language state
+        console.log(screenLang.screen_wallet.retry_load_wallet);
         setLang(screenLang);
       } catch (err) {
         console.error('Error in fetchData:', err);
@@ -134,24 +139,32 @@ const WalletScreen = ({navigation, route}) => {
     }
   };
 
+  // Get status other chain, if off just show ETH network, if on show ALL network
+  const requestStatusOtherChain = async member => {
+    const body = {
+      member,
+    };
+
+    const result = await gatewayNodeJS('showOtherChains', 'POST', body);
+    const status = result.data[0].status;
+    setStatusOtherChain(status.toLowerCase());
+  };
+
   useEffect(() => {
     getUserData();
 
-    // Get status other chain, if off just show ETH network, if on show ALL network
     if (member) {
-      const statusOtherChain = async () => {
-        const body = {
-          member,
-        };
-
-        const result = await gatewayNodeJS('showOtherChains', 'POST', body);
-        const status = result.data[0].status;
-        setStatusOtherChain(status.toLowerCase());
-      };
-
-      statusOtherChain();
+      requestStatusOtherChain(member);
     }
   }, [member]);
+
+  useEffect(() => {
+    if (cardsData) {
+      setIsPopupRetry(false);
+    } else {
+      setIsPopupRetry(true);
+    }
+  }, [cardsData]);
 
   useEffect(() => {
     // Get data current currency/wallet
@@ -398,6 +411,15 @@ const WalletScreen = ({navigation, route}) => {
     navigation.navigate('Home');
   };
 
+  const reloadDataWallet = () => {
+    setCountRetryData(prev => prev + 1);
+    setIsLoading(true);
+    setIsPopupRetry(false);
+
+    getUserData();
+    requestStatusOtherChain(member);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       {/* Loading */}
@@ -491,6 +513,60 @@ const WalletScreen = ({navigation, route}) => {
           setIsShowQRCodeWallet={setIsShowQRCodeWallet}
           lang={lang}
         />
+      )}
+
+      {/* Popup retry calling data the wallet */}
+      {isPopupRetry && lang && (
+        <View style={styles.popupRetry}>
+          <View style={styles.wrapper}>
+            <Text style={styles.textRetry}>
+              {countRetryData >= 3
+                ? lang.screen_wallet.wallet_error
+                  ? lang.screen_wallet.wallet_error
+                  : ''
+                : lang.screen_wallet.retry_load_wallet
+                ? lang.screen_wallet.retry_load_wallet
+                : ''}
+            </Text>
+            {countRetryData >= 3 ? (
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={{
+                  marginTop: 24,
+                  alignItems: 'center',
+                }}
+                onPress={() => navigation.replace('Home')}>
+                <Text
+                  style={{
+                    color: '#2563eb',
+                    textDecorationLine: 'underline',
+                    fontFamily: getFontFam() + 'Regular',
+                    fontSize: fontSize('note'),
+                  }}>
+                  {lang.screen_wallet.go_home}
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                onPress={reloadDataWallet}
+                activeOpacity={0.5}
+                style={{
+                  marginTop: 24,
+                  alignItems: 'center',
+                }}>
+                <Image
+                  source={require('../../../assets/images/reload.png')}
+                  width={24}
+                  height={24}
+                  style={{
+                    height: 24,
+                    width: 24,
+                  }}
+                />
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
       )}
     </SafeAreaView>
   );
@@ -637,5 +713,32 @@ const styles = StyleSheet.create({
     zIndex: 999,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  popupRetry: {
+    position: 'absolute',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 2,
+    paddingHorizontal: 28,
+  },
+  wrapper: {
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    borderBottomLeftRadius: 6,
+    borderBottomRightRadius: 6,
+    width: '100%',
+    padding: 14,
+  },
+  textRetry: {
+    textAlign: 'center',
+    color: '#000',
+    fontFamily: getFontFam() + 'Regular',
+    fontSize: fontSize('body'),
   },
 });

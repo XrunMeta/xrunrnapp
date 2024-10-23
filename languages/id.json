@@ -509,7 +509,10 @@
     "failed_alert": "Gagal",
     "failed_download_qrcode_alert": "Gagal untuk mengunduh qr code",
     "see_more": "Lihat Lainnya",
-    "able_transfer": "Able Tran."
+    "able_transfer": "Able Tran.",
+    "retry_load_wallet": "Data belum dimuat, silakan coba lagi",
+    "go_home": "Kembali ke Beranda",
+    "wallet_error": "Coba lagi nanti, server sedang bermasalah"
   },
   "screen_send": {
     "send_amount_label": "Amount",
