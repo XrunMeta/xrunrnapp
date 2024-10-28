@@ -467,6 +467,31 @@ function ARScreen() {
             />
             <View
               style={{
+                flexDirection: 'row',
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                alignItems: 'center',
+                marginRight: 10,
+                marginTop: 5,
+              }}>
+              <Image
+                source={require('../../../assets/images/icon_diamond_white.png')}
+                style={{height: 13, tintColor: '#ffdc04'}}
+                resizeMode="contain"
+              />
+              <Text
+                style={{
+                  fontFamily: getFontFam() + 'Medium',
+                  fontSize: fontSize('body'),
+                  color: 'white',
+                  marginTop: -2,
+                }}>
+                Jackpot 10,000 XRUN
+              </Text>
+            </View>
+            <View
+              style={{
                 position: 'absolute',
                 // backgroundColor: '#001a477a',
                 top: 125,
@@ -705,50 +730,6 @@ function ARScreen() {
                         ? lang.screen_map.section_card_shadow.and + ' '
                         : ''}
                     </Text>
-                  </View>
-                  <View
-                    style={{
-                      flex: 1,
-                      alignItems: 'flex-end',
-                      marginBottom: -38,
-                    }}>
-                    <Text
-                      style={{
-                        fontFamily: getFontFam() + 'Medium',
-                        fontSize: fontSize('body'),
-                        color: 'white',
-                        marginTop: -2,
-                      }}>
-                      {lang &&
-                      lang.screen_map &&
-                      lang.screen_map.section_card_shadow
-                        ? lang.screen_map.section_card_shadow.event
-                        : ''}
-                    </Text>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                      }}>
-                      <Image
-                        source={require('../../../assets/images/icon_diamond_white.png')}
-                        style={{height: 13, tintColor: '#ffdc04'}}
-                        resizeMode="contain"
-                      />
-                      <Text
-                        style={{
-                          fontFamily: getFontFam() + 'Bold',
-                          fontSize: fontSize('body'),
-                          color: '#ffdc04',
-                          marginTop: -4,
-                        }}>
-                        {lang &&
-                        lang.screen_map &&
-                        lang.screen_map.section_card_shadow
-                          ? lang.screen_map.section_card_shadow.diamond + ' '
-                          : ''}
-                        {bigCoin}
-                      </Text>
-                    </View>
                   </View>
                 </LinearGradient>
               </View>
