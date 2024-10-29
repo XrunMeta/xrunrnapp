@@ -15,9 +15,10 @@ import Share from 'react-native-share';
 import RNFetchBlob from 'rn-fetch-blob';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import crashlytics from '@react-native-firebase/crashlytics';
-import {URL_API, fontSize, getFontFam} from '../../../utils';
+import {fontSize, gatewayNodeJS, getFontFam} from '../../../utils';
 import QRCode from 'react-native-qrcode-svg';
 import RNFS from 'react-native-fs';
+import {useNavigation} from '@react-navigation/native';
 
 const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
   const [downloadDisable, setDownloadDisable] = useState(true);
@@ -26,6 +27,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
   const [QRImage, setQRImage] = useState(null);
   // Animated notification in QR
   const [fadeAnim] = useState(new Animated.Value(0));
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,6 +46,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
         console.error('Error fetching QR code data:', error);
         crashlytics().recordError(new Error(error));
         crashlytics().log(error);
+        navigation.replace('Home');
       }
     };
 
@@ -104,6 +107,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
     } catch (error) {
       setShareDisable(false);
       console.log('Sharing QR Code:', error.message);
+      navigation.replace('Home');
     }
   };
 
@@ -209,6 +213,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
         setDownloadDisable(false);
       } catch (error) {
         setDownloadDisable(false);
+        navigation.replace('Home');
         console.log('Failed saved QR Image on ios:', error.message);
       }
     }
@@ -216,39 +221,39 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
 
   const tokener = async () => {
     try {
-      const requestTokener = await fetch(
-        `${URL_API}&act=app4000-tokener&address=${cardDataQR.address}`,
-        {
-          method: 'POST',
-        },
-      );
-      const response = await requestTokener.text();
-      console.log(`Response app4000-tokener: ${response}`);
-      await saveTxtFile(response);
+      const body = {
+        address: cardDataQR.address,
+      };
+
+      const result = await gatewayNodeJS('app4000-tokener', 'POST', body);
+      const value = result.data[0].value;
+      console.log(`Response app4000-tokener: ${value}`);
+      await saveTxtFile(value);
     } catch (err) {
       crashlytics().recordError(new Error(err));
       crashlytics().log(err);
       console.error('Error request app4000-tokener:', err);
       Alert.alert('Error request app4000-tokener:', err);
+      navigation.replace('Home');
     }
   };
 
   const passwd = async () => {
     try {
-      const requestPasswd = await fetch(
-        `${URL_API}&act=app4000-passwd&address=${cardDataQR.address}`,
-        {
-          method: 'POST',
-        },
-      );
-      const response = await requestPasswd.text();
-      console.log(`Response app4000-passwd: ${response}`);
-      await saveTxtFile(response, true);
+      const body = {
+        address: cardDataQR.address,
+      };
+
+      const result = await gatewayNodeJS('app4000-passwd', 'POST', body);
+      const value = result.data[0].value;
+      console.log(`Response app4000-tokener: ${value}`);
+      await saveTxtFile(value, true);
     } catch (err) {
       crashlytics().recordError(new Error(err));
       crashlytics().log(err);
       console.error('Error request app4000-passwd:', err);
       Alert.alert('Error request app4000-passwd:', err);
+      navigation.replace('Home');
     }
   };
 

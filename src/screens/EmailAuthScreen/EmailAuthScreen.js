@@ -14,7 +14,7 @@ import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2} from '../../../utils';
+import {URL_API_NODEJS, getLanguage2, authcode} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const EmailAuthScreen = () => {
@@ -53,19 +53,23 @@ const EmailAuthScreen = () => {
       Alert.alert('Error', lang.screen_emailAuth.alert.invalidEmail);
     } else {
       try {
-        const apiUrl = `${URL_API}&act=login-02-email&email=${email}`;
-        let responseReceived = false; // Flag Response Receiver
-
         const waitForResponse = async () => {
           try {
-            const response = await fetch(apiUrl);
+            const response = await fetch(`${URL_API_NODEJS}/check-02-email`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${authcode}`,
+              },
+              body: JSON.stringify({
+                email,
+              }),
+            });
             const responseData = await response.json();
             console.log(
-              'RespAPI login-02-email -> ' + JSON.stringify(responseData),
+              'RespAPI check-02-email -> ' + JSON.stringify(responseData),
             );
 
-            // Update Flag to true
-            responseReceived = true;
             return responseData;
           } catch (error) {
             setIsLoading(true);
@@ -85,14 +89,13 @@ const EmailAuthScreen = () => {
         ]);
 
         if (result !== null) {
-          console.log('Result.data -> ' + result.data);
-          if (result.data === 'true') {
+          if (result?.data[0]?.status == true) {
             setIsLoading(false);
 
             navigation.navigate('EmailVerifLogin', {
               dataEmail: email,
             });
-          } else if (result.data === 'error') {
+          } else if (result?.data[0]?.status == false) {
             Alert.alert('Error', lang.screen_emailAuth.alert.errorServer, [
               {
                 text: 'OK',

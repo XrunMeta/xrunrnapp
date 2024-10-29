@@ -12,7 +12,12 @@ import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  gatewayNodeJS,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const CloseConfirmPassword = () => {
@@ -34,13 +39,19 @@ const CloseConfirmPassword = () => {
       );
     } else {
       try {
-        const response = await fetch(
-          `${URL_API}&act=app8080-01&pin=${password}&reasonNum=${reasonNum}&reason=${reason}&member=${userData.member}`,
-        );
-        const data = await response.json();
+        const body = {
+          pin: password,
+          reason,
+          reasonNum,
+          member: userData.member,
+        };
 
-        console.log('Response Apu -> ' + JSON.stringify(data));
-        if (data.data[0].count == 1) {
+        const result = await gatewayNodeJS('app8080-01', 'POST', body);
+        console.log(result);
+        const count = result.data[0].count;
+
+        console.log('Response Apu -> ' + JSON.stringify(result));
+        if (count == 1) {
           navigation.replace('SuccessCloseMembership');
         } else {
           Alert.alert(

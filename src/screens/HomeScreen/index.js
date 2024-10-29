@@ -21,11 +21,13 @@ import {
 } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
-  URL_API,
+  URL_API_NODEJS,
   getFCMToken,
   getLanguage2,
   getFontFam,
   fontSize,
+  authcode,
+  sha256Encrypt,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
@@ -37,7 +39,9 @@ export default function Home({route}) {
   const [activeTab, setActiveTab] = useState('Map');
   const isFocused = useIsFocused();
   const [countAds, setCountAds] = useState(0);
-  const [showWallet, setShowWallet] = useState(false)
+  const [showWallet, setShowWallet] = useState(false);
+  const [ssidw, setSsidw] = useState('none');
+  const [member, setMember] = useState('none');
 
   const navigation = useNavigation();
 
@@ -48,30 +52,29 @@ export default function Home({route}) {
   useEffect(() => {
     const getShowWalletStatus = async () => {
       try {
-        const response = await fetch(
-          `${URL_API}&act=ap1000-i01`,
-        );
+        const response = await fetch(`${URL_API_NODEJS}/ap1000-i01`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authcode}`,
+          },
+        });
         const data = await response.json();
 
-        console.log("Bahlul : " + data.result)
-
-        if (data.result == 1 && Platform.OS === 'ios') {
+        if (data.data.result == 1 && Platform.OS === 'ios') {
           setShowWallet(true);
         } else if (Platform.OS === 'android') {
-          setShowWallet(true)
-        } 
+          setShowWallet(true);
+        }
       } catch (error) {
-        console.error(
-          'Error get show wallet status: ',
-          err,
-        );
+        console.error('Error get show wallet status: ', err);
         crashlytics().recordError(new Error(error));
         crashlytics().log(error);
       }
     };
 
-    getShowWalletStatus() // Get Show Wallet Status
-  }, [])
+    getShowWalletStatus(); // Get Show Wallet Status
+  }, []);
 
   useEffect(() => {
     if (sendActiveTab) {
@@ -100,8 +103,23 @@ export default function Home({route}) {
         const userData = await AsyncStorage.getItem('userData');
         const responseUserData = JSON.parse(userData);
 
+        const encryptedSession = await sha256Encrypt(
+          responseUserData?.extrastr,
+        );
+        setSsidw(encryptedSession);
+        setMember(responseUserData?.member);
         const countResponse = await fetch(
-          `${URL_API}&act=app5010-01-counter&member=${responseUserData.member}`,
+          `${URL_API_NODEJS}/app5010-01-counter`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${authcode}`,
+            },
+            body: JSON.stringify({
+              member: responseUserData?.member,
+            }),
+          },
         );
         const dataCount = await countResponse.json();
         setCountAds(dataCount.data[0].count);
@@ -116,9 +134,17 @@ export default function Home({route}) {
             console.log(`FCMToken: ${fcmToken}`);
             const member = JSON.parse(userData).member;
 
-            fetch(
-              `${URL_API}&act=login-pushkeyreg&member=${member}&pushkey=${fcmToken}`,
-            )
+            fetch(`${URL_API_NODEJS}/login-pushkeyreg`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${authcode}`,
+              },
+              body: JSON.stringify({
+                pushkey: fcmToken,
+                member,
+              }),
+            })
               .then(response => response)
               .then(() => console.log('Success save pushkey to database'))
               .catch(err => {
@@ -168,61 +194,61 @@ export default function Home({route}) {
     return () => backHandler.remove();
   }, [isFocused]);
 
-	const renderTabButton = (tabName, icon, text, onPress) => (
-	<TouchableOpacity
-	  style={[
-		styles.buttonTabItem,
-	  ]}
-	  onPress={() => {
-		console.log('Pergi ke ' + tabName);
-		if (tabName === 'Wallet') {
-		  if (Platform.OS === 'android') {
-			navigation.dispatch(CommonActions.navigate('WalletHome'));
-		  } else if (Platform.OS === 'ios' && showWallet) {
-			Linking.openURL('https://www.xrun.run/walletsite/');
-		  } else if (!showWallet) {
-			Linking.openURL('https://www.xrun.run/');
-		  } else {
-			onPress();
-		  }
-		} else {
-		  onPress();
-		}
-	  }}>
-	  <Image
-		source={icon}
-		resizeMode="contain"
-		style={{
-		  width: 25,
-		  height: 25,
-		}}
-	  />
-	  {tabName === 'Advertise' && countAds > 0 && (
-		<View
-		  style={{
-			backgroundColor: tabName === 'Advertise' ? 'green' : 'pink',
-			width: 30,
-			height: 30,
-			borderRadius: 20,
-			alignItems: 'center',
-			justifyContent: 'center',
-			position: 'absolute',
-			top: -12,
-			right: 8,
-		  }}>
-		  <Text
-			style={{
-			  fontFamily: getFontFam() + 'Light',
-			  fontSize: fontSize('note'),
-			  color: 'white',
-			}}>
-			{countAds > 100 ? countAds : '99+'}
-		  </Text>
-		</View>
-	  )}
-  
-	  <Text style={styles.tabText}>{text}</Text>
-	</TouchableOpacity>
+  const renderTabButton = (tabName, icon, text, onPress) => (
+    <TouchableOpacity
+      style={[styles.buttonTabItem]}
+      onPress={() => {
+        console.log('Pergi ke ' + tabName);
+        if (tabName === 'Wallet') {
+          if (Platform.OS === 'android') {
+            navigation.dispatch(CommonActions.navigate('WalletHome'));
+          } else if (Platform.OS === 'ios' && showWallet) {
+            Linking.openURL(
+              'https://www.xrun.run/react/login?numses=' + ssidw + '!' + member,
+            );
+          } else if (!showWallet) {
+            Linking.openURL('https://www.xrun.run/');
+          } else {
+            onPress();
+          }
+        } else {
+          onPress();
+        }
+      }}>
+      <Image
+        source={icon}
+        resizeMode="contain"
+        style={{
+          width: 25,
+          height: 25,
+        }}
+      />
+      {tabName === 'Advertise' && countAds > 0 && (
+        <View
+          style={{
+            backgroundColor: tabName === 'Advertise' ? 'green' : 'pink',
+            width: 30,
+            height: 30,
+            borderRadius: 20,
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'absolute',
+            top: -12,
+            right: 8,
+          }}>
+          <Text
+            style={{
+              fontFamily: getFontFam() + 'Light',
+              fontSize: fontSize('note'),
+              color: 'white',
+            }}>
+            {countAds > 100 ? countAds : '99+'}
+          </Text>
+        </View>
+      )}
+
+      <Text style={styles.tabText}>{text}</Text>
+    </TouchableOpacity>
   );
 
   if (isLoggedIn == undefined) {
@@ -237,24 +263,24 @@ export default function Home({route}) {
 
           {/* Bottom Tab Navigator */}
           <View style={styles.bottomTabContainer}>
-			{renderTabButton(
-				'Wallet',
-				showWallet
-					? require('../../../assets/images/icon_wallet.png')
-					: require('../../../assets/images/icon_web.png'),
-				showWallet
-					? lang && lang.screen_bottomTab && lang.screen_bottomTab.wallet
-					? lang.screen_bottomTab.wallet.title
-					: 'Wallet'
-					: 'Site',
-				() => {
-					if (showWallet) {
-						Linking.openURL('https://www.xrun.run/walletsite');
-					} else {
-						Linking.openURL('https://www.xrun.run/');
-					}
-				},
-			)}
+            {renderTabButton(
+              'Wallet',
+              showWallet
+                ? require('../../../assets/images/icon_wallet.png')
+                : require('../../../assets/images/icon_web.png'),
+              showWallet
+                ? lang && lang.screen_bottomTab && lang.screen_bottomTab.wallet
+                  ? lang.screen_bottomTab.wallet.title
+                  : 'Wallet'
+                : 'Site',
+              () => {
+                if (showWallet) {
+                  Linking.openURL('https://www.xrun.run/walletsite');
+                } else {
+                  Linking.openURL('https://www.xrun.run/');
+                }
+              },
+            )}
             {renderTabButton(
               'Advertise',
               require('../../../assets/images/icon_advertisement.png'),

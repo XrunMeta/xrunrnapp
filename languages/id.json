@@ -40,7 +40,7 @@
       "placeholder": "Kata sandi"
     },
     "authcode": {
-      "label": "Coba",
+      "label": "Jika Anda lupa kata sandi, Anda dapat sing-in menggunakan kode verifikasi email Anda.",
       "link": "Email Autentikasi"
     },
     "validator": "Email anda tidak valid",
@@ -116,6 +116,7 @@
   },
 
   "screen_emailAuth": {
+    "label": "Autentikasi Email",
     "email": {
       "label": "Masukan Email anda",
       "placeholder": "xrun@xrun.run"
@@ -508,7 +509,10 @@
     "failed_alert": "Gagal",
     "failed_download_qrcode_alert": "Gagal untuk mengunduh qr code",
     "see_more": "Lihat Lainnya",
-    "able_transfer": "Able Tran."
+    "able_transfer": "Able Tran.",
+    "retry_load_wallet": "Data belum dimuat, silakan coba lagi",
+    "go_home": "Kembali ke Beranda",
+    "wallet_error": "Coba lagi nanti, server sedang bermasalah"
   },
   "screen_send": {
     "send_amount_label": "Amount",
