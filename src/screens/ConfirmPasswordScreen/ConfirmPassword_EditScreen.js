@@ -13,8 +13,13 @@ import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
-// import crashlytics from '@react-native-firebase/crashlytics';
+import {
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  gatewayNodeJS,
+} from '../../../utils';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const ConfirmPasswordEdit = () => {
   const [lang, setLang] = useState({});
@@ -30,12 +35,15 @@ const ConfirmPasswordEdit = () => {
       Alert.alert('Error', lang.screen_confirm_password.condition.empty);
     } else {
       try {
-        const response = await fetch(
-          `${URL_API}&act=login-checker&email=${email}&pin=${password}`,
-        );
-        const data = await response.text();
+        const body = {
+          email,
+          pin: password,
+        };
 
-        if (data === 'OK') {
+        const result = await gatewayNodeJS('login-checker', 'POST', body);
+        const value = result.data[0].value;
+
+        if (value == 'OK') {
           navigation.replace('EditPassword');
         } else {
           Alert.alert('Error', lang.screen_confirm_password.condition.wrong);

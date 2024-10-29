@@ -15,7 +15,14 @@ import ButtonBack from '../../components/ButtonBack/';
 import {useNavigation} from '@react-navigation/native';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  URL_API_NODEJS,
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  authcode,
+  sha256Encrypt,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const SignInScreen = () => {
@@ -24,33 +31,51 @@ const SignInScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(true);
+  const [isDisable, setIsDisable] = useState(false);
 
   const navigation = useNavigation();
 
   const onSignIn = async () => {
+    setIsDisable(true);
     if (email.trim() === '') {
       Alert.alert(
         'Error',
         lang.screen_signin.alert ? lang.screen_signin.alert.emptyEmail : '',
       );
+
+      setIsDisable(false);
     } else if (!isValidEmail(email)) {
       Alert.alert(
         'Error',
         lang.screen_signin.alert ? lang.screen_signin.alert.invalidEmail : '',
       );
+
+      setIsDisable(false);
     } else if (password.trim() === '') {
       Alert.alert(
         'Error',
         lang.screen_signin.alert ? lang.screen_signin.alert.emptyPassword : '',
       );
+
+      setIsDisable(false);
     } else {
       try {
-        const response = await fetch(
-          `${URL_API}&act=login-01&tp=4&email=${email}&pin=${password}`,
-        );
+        const response = await fetch(`${URL_API_NODEJS}/login-01`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authcode}`,
+          },
+          body: JSON.stringify({
+            type: 4,
+            email,
+            pin: password,
+          }),
+        });
+
         const data = await response.json();
 
-        if (data.data === 'false') {
+        if (data.status !== 'success') {
           Alert.alert(
             lang ? lang.screen_signin.alert.fail : '',
             lang ? lang.screen_signin.failedLogin : '',
@@ -59,16 +84,58 @@ const SignInScreen = () => {
           setEmail('');
           setPassword('');
         } else {
-          await AsyncStorage.setItem('userEmail', email);
-          await AsyncStorage.setItem('userData', JSON.stringify(data));
+          console.log('data login -> ', data?.data[0]);
+          const encryptedSession = await sha256Encrypt(data?.data[0].extrastr);
 
-          console.log({data});
-          login();
+          console.log({asli: data?.data[0]?.extrastr, ubah: encryptedSession});
 
-          navigation.reset({
-            index: 0,
-            routes: [{name: 'Home'}],
-          });
+          try {
+            const ssidwReq = await fetch(`${URL_API_NODEJS}/saveSsidw`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${authcode}`,
+              },
+              body: JSON.stringify({
+                member: data?.data[0]?.member,
+                ssidw: encryptedSession,
+              }),
+            });
+
+            const ssidwRes = await ssidwReq.json();
+
+            if (ssidwRes?.data[0]?.affectedRows == 1) {
+              await AsyncStorage.setItem('userEmail', email);
+              await AsyncStorage.setItem(
+                'userData',
+                JSON.stringify(data.data[0]),
+              );
+              login();
+
+              navigation.reset({
+                index: 0,
+                routes: [{name: 'Home'}],
+              });
+            } else {
+              Alert.alert(
+                lang ? lang.screen_signin.alert.fail : '',
+                lang ? lang.screen_signin.failedLogin : '',
+              );
+
+              setEmail('');
+              setPassword('');
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            Alert.alert(
+              lang ? lang.screen_signin.alert.error : '',
+              lang ? lang.screen_signin.errorLogin : '',
+            );
+            setEmail('');
+            setPassword('');
+            crashlytics().recordError(new Error(error));
+            crashlytics().log(error);
+          }
         }
       } catch (error) {
         console.error('Error:', error);
@@ -80,6 +147,10 @@ const SignInScreen = () => {
         setPassword('');
         crashlytics().recordError(new Error(error));
         crashlytics().log(error);
+      } finally {
+        setIsDisable(false);
+        setEmail('');
+        setPassword('');
       }
     }
   };
@@ -210,11 +281,11 @@ const SignInScreen = () => {
 
       <View style={[styles.bottomSection]}>
         <View style={styles.additionalLogin}>
-          {/* <Text style={styles.normalText}>
+          <Text style={styles.normalText}>
             {lang && lang.screen_signin && lang.screen_signin.authcode
               ? lang.screen_signin.authcode.label + ' '
               : ''}
-          </Text> */}
+          </Text>
           <Pressable onPress={onSMSAuth} style={styles.resetPassword}>
             <Text style={styles.emailAuth}>
               {lang && lang.screen_signin && lang.screen_signin.authcode
@@ -224,9 +295,16 @@ const SignInScreen = () => {
           </Pressable>
         </View>
 
-        <TouchableOpacity onPress={onSignIn} style={styles.buttonSignIn}>
+        <TouchableOpacity
+          onPress={onSignIn}
+          disabled={isDisable}
+          style={styles.buttonSignIn}>
           <Image
-            source={require('../../../assets/images/icon_next.png')}
+            source={
+              isDisable
+                ? require('../../../assets/images/icon_nextDisable.png')
+                : require('../../../assets/images/icon_next.png')
+            }
             resizeMode="contain"
             style={styles.buttonSignInImage}
           />
@@ -264,13 +342,14 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   additionalLogin: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    marginTop: -56,
   },
   normalText: {
     fontFamily: getFontFam() + 'Regular',
     fontSize: fontSize('body'),
     color: '#343a59',
+    maxWidth: 240,
+    marginBottom: 8,
   },
   emailAuth: {
     fontFamily: getFontFam() + 'Medium',

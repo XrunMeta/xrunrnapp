@@ -31,6 +31,7 @@ const FirstScreenV2 = ({navigation}) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPopupUpdateVersionShow, setIsPopupUpdateVersionShow] =
     useState(false);
+  const [currLanguage, setCurrLanguage] = useState('id');
 
   useEffect(() => {
     crashlytics().log('App mounted Lagi');
@@ -39,11 +40,10 @@ const FirstScreenV2 = ({navigation}) => {
     const checkLatestVersion = async () => {
       const isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
 
-	  const provider = Platform.OS === 'ios' ? 'appStore' : 'playStore';
+      const provider = Platform.OS === 'ios' ? 'appStore' : 'playStore';
 
       // Using this package for check version: https://github.com/kimxogus/react-native-version-check
-      VersionCheck.getLatestVersion({provider})
-	  	.then(latestVersion => {
+      VersionCheck.getLatestVersion({provider}).then(latestVersion => {
         const currentVersion = VersionCheck.getCurrentVersion();
         console.log(
           `Current version app: ${currentVersion} || ${provider} version app: ${latestVersion}`,
@@ -164,6 +164,7 @@ const FirstScreenV2 = ({navigation}) => {
   useEffect(() => {
     const deviceLanguage = RNLocalize.getLocales()[0].languageCode;
     setCurrentLanguage(deviceLanguage);
+    setCurrLanguage(deviceLanguage);
     let langData;
 
     switch (deviceLanguage) {
@@ -306,7 +307,11 @@ const FirstScreenV2 = ({navigation}) => {
             <Text
               style={styles.link}
               onPress={() => {
-                Linking.openURL('https://app.xrun.run/7011.html');
+                Linking.openURL(
+                  currLanguage === 'id'
+                    ? 'https://app.xrun.run/7011.html'
+                    : `https://app.xrun.run/7011-${currLanguage}.html`,
+                );
               }}>
               {lang && lang.screen_first && lang.screen_first.terms
                 ? lang.screen_first.terms
@@ -319,7 +324,11 @@ const FirstScreenV2 = ({navigation}) => {
             <Text
               style={styles.link}
               onPress={() => {
-                Linking.openURL('https://app.xrun.run/7013.html');
+                Linking.openURL(
+                  currLanguage === 'id'
+                    ? 'https://app.xrun.run/7013.html'
+                    : `https://app.xrun.run/7013-${currLanguage}.html`,
+                );
               }}>
               {lang && lang.screen_first && lang.screen_first.privacy
                 ? lang.screen_first.privacy
@@ -331,7 +340,11 @@ const FirstScreenV2 = ({navigation}) => {
             <Text
               style={styles.link}
               onPress={() => {
-                Linking.openURL('https://app.xrun.run/7012.html');
+                Linking.openURL(
+                  currLanguage === 'id'
+                    ? 'https://app.xrun.run/7012.html'
+                    : `https://app.xrun.run/7012-${currLanguage}.html`,
+                );
               }}>
               {lang && lang.screen_first && lang.screen_first.information
                 ? lang.screen_first.information

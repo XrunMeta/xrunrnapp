@@ -40,7 +40,7 @@
       "placeholder": "Password"
     },
     "authcode": {
-      "label": "Try",
+      "label": "If you have forgotten your password, you can sign-in using your email verification code.",
       "link": "Email Authcode"
     },
     "validator": "Your Email is not Valid",
@@ -116,6 +116,7 @@
   },
 
   "screen_emailAuth": {
+    "label": "Email Authentication",
     "email": {
       "label": "Enter your Email",
       "placeholder": "xrun@xrun.run"
@@ -484,7 +485,7 @@
     "copy_qrcode_show": "The wallet address has been copied.",
     "download_qrcode_show": "Image is saved successfully. Please check the gallery.\n\nPlease check the download folder for the key file. \n\nIf the key file is requested more than once, the file will be damaged (non-recoverable).",
     "copy_qrcode": "The wallet address has been copied. Use it wherever you want.",
-    "table_head_transaction": "Transactions",
+    "table_head_transaction": "History",
     "table_head_send": "Transfer",
     "table_head_change": "Convert",
     "table_head_exchange": "Exchange",
@@ -509,7 +510,10 @@
     "failed_alert": "Failed",
     "failed_download_qrcode_alert": "Failed to download qr code",
     "see_more": "See More",
-    "able_transfer": "Able Transfer"
+    "able_transfer": "Able Transfer",
+    "retry_load_wallet": "Data has not been loaded, please try again",
+    "go_home": "Go to Home",
+    "wallet_error": "Try later, server error"
   },
   "screen_send": {
     "send_amount_label": "Amount to send",

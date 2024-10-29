@@ -15,7 +15,14 @@ import {
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  gatewayNodeJS,
+  URL_API_NODEJS,
+  authcode,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const RandomRecommendScreen = () => {
@@ -51,16 +58,16 @@ const RandomRecommendScreen = () => {
 
     const fetchRecommendations = async () => {
       try {
-        const response = await fetch(`${URL_API}&act=app7420-01`);
-        const data = await response.json();
+        const result = await gatewayNodeJS('app7420-01');
+        const data = result.data;
 
-        if (data && data.data.length > 0) {
+        if (result.status === 'success' && data.length > 0) {
           const initialCheckedState = {};
-          data.data.forEach(item => {
+          data.forEach(item => {
             initialCheckedState[item.email] = false;
           });
 
-          setRecommendations(data.data);
+          setRecommendations(data);
           setCheckedRecommendations(initialCheckedState);
         }
       } catch (error) {
@@ -85,17 +92,28 @@ const RandomRecommendScreen = () => {
     } else {
       const registRecommend = async () => {
         try {
-          const response = await fetch(
-            `${URL_API}&act=app7420-02&posed=${checkedID}&member=${userData.member}`,
-          );
-          const data = await response.json();
+          const body = {
+            posed: checkedID,
+            member: userData.member,
+          };
+
+          const result = await gatewayNodeJS('app7420-02', 'POST', body);
+          const data = result.data[0].data;
 
           // Save/Update recommend
-          await fetch(
-            `${URL_API}&act=saveRecommend&member=${userData.member}&recommand=${checkedID}`,
-          );
+          await fetch(`${URL_API_NODEJS}/saveRecommend`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${authcode}`,
+            },
+            body: JSON.stringify({
+              member: userData.member,
+              recommand: checkedID,
+            }),
+          });
 
-          if (data.data === 'ok') {
+          if (data === 'ok') {
             Alert.alert(
               lang && lang.alert ? lang.alert.title.success : '',
               lang &&

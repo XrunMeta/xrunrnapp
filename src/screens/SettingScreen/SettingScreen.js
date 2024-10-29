@@ -13,7 +13,13 @@ import ButtonList from '../../components/ButtonList/ButtonList';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
-import {getLanguage2, getFontFam, fontSize, URL_API} from '../../../utils';
+import {
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  URL_API,
+  gatewayNodeJS,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const SettingScreen = () => {
@@ -52,12 +58,14 @@ const SettingScreen = () => {
   useEffect(() => {
     if (member) {
       const statusOtherChain = async () => {
-        const request = await fetch(
-          `${URL_API}&act=showOtherChains&member=${member}`,
-        );
-        const response = await request.json();
-        const status = response.status;
+        const body = {
+          member,
+        };
+
+        const result = await gatewayNodeJS('showOtherChains', 'POST', body);
+        const status = result.data[0].status;
         console.log(`Status show other chains: ${status}`);
+
         setStatusOtherChain(status.toLowerCase());
         setIsStatusOtherChains(status.toLowerCase() === 'on' ? true : false);
         setIsLoading(false);
@@ -118,16 +126,20 @@ const SettingScreen = () => {
 
     // Save status show other chain
     const saveStatusOtherChain = async () => {
-      const request = await fetch(
-        `${URL_API}&act=saveStatusShowOtherChains&member=${member}&status=${
-          isStatusOtherChains ? 'off' : 'on'
-        }`,
+      console.log('sip');
+      const body = {
+        member,
+        status: isStatusOtherChains ? 'off' : 'on',
+      };
+
+      const result = await gatewayNodeJS(
+        'saveStatusShowOtherChains',
+        'POST',
+        body,
       );
-      const response = await request.json();
+      const status = result.data[0].status;
 
-      const status = response.status;
-
-      console.log(response.message);
+      console.log(status);
 
       if (status === 'success') {
         setIsLoading(false);

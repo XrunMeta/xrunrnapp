@@ -13,7 +13,12 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInput from '../../components/CustomInput';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  gatewayNodeJS,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const RegistRecommendScreen = () => {
@@ -59,9 +64,13 @@ const RegistRecommendScreen = () => {
     } else {
       const registRecommend = async () => {
         try {
-          const apiUrl = `${URL_API}&act=app7410-01&member=${userData.member}&email=${recID}`;
-          const response = await fetch(apiUrl);
-          const data = await response.json();
+          const body = {
+            member: userData.member,
+            email: recID,
+          };
+
+          const result = await gatewayNodeJS('app7410-01', 'POST', body);
+          const data = result.data[0].data;
 
           if (data.data === 'no id') {
             Alert.alert(

@@ -11,7 +11,13 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInput from '../../components/CustomInput';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  URL_API_NODEJS,
+  authcode,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const EditPassword = () => {
@@ -27,12 +33,13 @@ const EditPassword = () => {
     } else {
       const savePassword = async () => {
         try {
-          const apiUrl = `${URL_API}&act=app7163-01&member=${userData.member}&pin=${password}`;
+          const apiUrl = `${URL_API_NODEJS}/app7163-01`;
 
           const response = await fetch(apiUrl, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
+              Authorization: `Bearer ${authcode}`,
             },
             body: JSON.stringify({
               member: userData.member,

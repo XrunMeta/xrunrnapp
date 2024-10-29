@@ -19,7 +19,14 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import CustomMultipleChecbox from '../../components/CustomCheckbox/CustomMultipleCheckbox';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  gatewayNodeJS,
+  URL_API_NODEJS,
+  authcode,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const ModifInfoScreen = ({route}) => {
@@ -55,6 +62,10 @@ const ModifInfoScreen = ({route}) => {
   const onBack = () => {
     navigation.replace('InfoHome');
   };
+
+  useEffect(() => {
+    console.log(flag, countryCode);
+  }, [flag, countryCode]);
 
   const ageSelector = getAge => {
     if (getAge == 0) {
@@ -107,14 +118,16 @@ const ModifInfoScreen = ({route}) => {
         const astorUserData = await AsyncStorage.getItem('userData');
         const astorJsonData = JSON.parse(astorUserData);
         setAstorUserData(astorJsonData);
+        console.log(astorUserData);
 
         // Get User Information
-        const userResponse = await fetch(
-          // `${URL_API}&act=app7000-01&member=${astorJsonData.member}`,
-          `${URL_API}&act=app7110-01&member=${astorJsonData.member}`,
-        );
-        const userJsonData = await userResponse.json();
-        const userData = userJsonData.data[0];
+        const body = {
+          member: astorJsonData.member,
+        };
+
+        const result = await gatewayNodeJS('app7110-01', 'POST', body);
+        const userData = result.data[0];
+
         setUserData(userData);
 
         // Lastname
@@ -156,16 +169,14 @@ const ModifInfoScreen = ({route}) => {
         setTempRegion(regionData);
 
         // Get Data Country
-        const countriesResponse = await fetch(`${URL_API}&act=countries`);
-        const countriesData = await countriesResponse.json();
-        setCountryData(countriesData);
+        const resultCountry = await gatewayNodeJS('countries');
+        setCountryData(resultCountry.data);
 
         // Get Region Data as Selected Country
-        const regionsResponse = await fetch(
-          `${URL_API}&act=app7190-01&country=${userData.country}`,
-        );
-        const regionsData = await regionsResponse.json();
-        setRegionData(regionsData.data);
+        const resultRegion = await gatewayNodeJS('app7190-01', 'POST', {
+          country: userData.country,
+        });
+        setRegionData(resultRegion.data);
 
         // Remove Loading
         setIsLoading(false);
@@ -214,17 +225,21 @@ const ModifInfoScreen = ({route}) => {
     bodyData,
   ) => {
     try {
-      const apiUrl = `${URL_API}&act=${act}&member=${memberId}&${additionalKey}=${additionalValue}`;
-
-      const response = await fetch(apiUrl, {
+      const body = {
+        member: memberId,
+        [additionalKey]: additionalValue,
+        ...bodyData,
+      };
+      const request = await fetch(`${URL_API_NODEJS}/${act}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${authcode}`,
         },
-        body: JSON.stringify(bodyData),
+        body: JSON.stringify(body),
       });
 
-      if (!response.ok) {
+      if (!request.ok) {
         throw new Error('Gagal menyimpan perubahan.');
       }
 
@@ -244,30 +259,30 @@ const ModifInfoScreen = ({route}) => {
     setAreaModalVisible(true);
   };
 
-  const onSelectCountry = selectedCountry => {
-    setTempCountry({
-      cDesc: selectedCountry.country,
-      cCode: selectedCountry.callnumber,
-    });
-
-    setTempRegion({
-      rDesc: 'Please Select',
-      rCode: 0,
-    });
-
-    fetch(`${URL_API}&act=app7190-01&country=${selectedCountry.callnumber}`)
-      .then(response => response.json())
-      .then(data => {
-        setRegionData(data.data);
-      })
-      .catch(error => {
-        console.error('Error fetching areas:', error);
-        crashlytics().recordError(new Error(error));
-        crashlytics().log(error);
+  const onSelectCountry = async selectedCountry => {
+    try {
+      setTempCountry({
+        cDesc: selectedCountry.country,
+        cCode: selectedCountry.callnumber,
       });
 
-    // Setelah mengirim data, Anda bisa menutup modal
-    setCountryModalVisible(false);
+      setTempRegion({
+        rDesc: 'Please Select',
+        rCode: 0,
+      });
+
+      const resultSelectedCountry = await gatewayNodeJS('app7190-01', 'POST', {
+        country: selectedCountry.callnumber,
+      });
+      setRegionData(resultSelectedCountry.data);
+
+      // Setelah mengirim data, Anda bisa menutup modal
+      setCountryModalVisible(false);
+    } catch (error) {
+      console.error('Error fetching areas:', error);
+      crashlytics().recordError(new Error(error));
+      crashlytics().log(error);
+    }
   };
 
   // On Select Area / Region
@@ -872,21 +887,24 @@ const ModifInfoScreen = ({route}) => {
 
                     const saveChangeArea = async () => {
                       try {
-                        const apiUrl = `${URL_API}&act=app7190-02&member=${astorUserData.member}&country=${tempCountry.cCode}&region=${tempRegion.rCode}`;
-
+                        const apiUrl = `${URL_API_NODEJS}/app7190-02`;
                         const response = await fetch(apiUrl, {
                           method: 'POST',
                           headers: {
                             'Content-Type': 'application/json',
+                            Authorization: `Bearer ${authcode}`,
                           },
                           body: JSON.stringify({
+                            member: astorUserData.member,
                             country: tempCountry.cCode,
                             region: tempRegion.rCode,
                           }),
                         });
 
                         if (!response.ok) {
-                          throw new Error('Gagal menyimpan perubahan.');
+                          throw new Error(
+                            'Gagal menyimpan perubahan save area.',
+                          );
                         }
 
                         console.log(

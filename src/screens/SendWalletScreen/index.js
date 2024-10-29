@@ -24,6 +24,7 @@ import {
   getFontFam,
   fontSize,
   refreshBalances,
+  gatewayNodeJS,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {
@@ -136,6 +137,7 @@ const SendWalletScreen = ({navigation, route}) => {
         console.error('Error in fetchData:', err);
         crashlytics().recordError(new Error(err));
         crashlytics().log(err);
+        navigation.replace('Home');
       }
     };
 
@@ -151,6 +153,7 @@ const SendWalletScreen = ({navigation, route}) => {
         console.error('Failed to get userData from AsyncStorage:', err);
         crashlytics().recordError(new Error(error));
         crashlytics().log(error);
+        navigation.replace('Home');
       }
     };
 
@@ -203,7 +206,7 @@ const SendWalletScreen = ({navigation, route}) => {
       Alert.alert(lang.global_error.network_busy);
       setIsLoading(false);
       gasEstimateNetworkBusy();
-
+      navigation.replace('Home');
       console.log(`Error gas tracker: ${error}`);
     }
   };
@@ -215,15 +218,21 @@ const SendWalletScreen = ({navigation, route}) => {
         `Gas estimated network ${network} | chainId: ${chainId} | token: ${token}`,
       );
       const priorityGasTracker = await gasTracker(chainId);
-      // Request for get gas estimated to gateway.php
-      const request = await fetch(
-        `${URL_API}&act=gasEstimated&from=${dataWallet.address}&to=${address}&amount=${amount}&token=${token}&network=${network}&chainId=${chainId}&priorityGasTracker=${priorityGasTracker}`,
-      );
-      const responses = await request.json();
-      const results = responses['data'];
+
+      const body = {
+        from: dataWallet.address,
+        to: address,
+        amount,
+        token,
+        network,
+        chainId,
+        priorityGasTracker,
+      };
+
+      const result = await gatewayNodeJS('gasEstimated', 'POST', body);
+      const results = result.data;
 
       // If data array not empty from response API
-
       if (results.length > 0) {
         const gasEstimateFromAPI = results[0]['gasLimit'];
         const gasPriceFromAPI = results[0]['gasPrice'];
@@ -233,7 +242,7 @@ const SendWalletScreen = ({navigation, route}) => {
         if (!totalGasCostFromAPI || !gasEstimateFromAPI || !gasPriceFromAPI) {
           setIsLoading(false);
           Alert.alert(lang.global_error.network_busy);
-
+          navigation.replace('Home');
           gasEstimateNetworkBusy();
         }
 
@@ -252,12 +261,11 @@ const SendWalletScreen = ({navigation, route}) => {
           setIsInitialCallGasEstimated(true);
         }
       } else {
-        const messageResponse = responses['message'];
+        const messageResponse = result['message'];
 
         if (messageResponse === 'insufficient funds') {
           Alert.alert(lang.screen_send.note_insufficient_balance_total);
         }
-
         setIsLoading(false);
         gasEstimateNetworkBusy();
       }
@@ -265,7 +273,7 @@ const SendWalletScreen = ({navigation, route}) => {
       Alert.alert(lang.global_error.network_busy);
       setIsLoading(false);
       gasEstimateNetworkBusy();
-
+      navigation.replace('Home');
       console.log(`Error gas estimated: ${error}`);
     }
   };
@@ -361,30 +369,34 @@ const SendWalletScreen = ({navigation, route}) => {
   // Get list stock exchange
   const stockExchange = async () => {
     try {
-      const response = await fetch(`${URL_API}&act=ap4300-cointrace`);
-      const result = await response.json();
-      setCointrace(result.data);
-      return result.data;
+      const result = await gatewayNodeJS('ap4300-cointrace');
+      const data = result.data;
+      setCointrace(data);
+      return data;
     } catch (error) {
       setIsLoading(false);
       Alert.alert('Error get data listCrypto: ', error);
       console.log('Error get data listCrypto: ', error);
       crashlytics().recordError(new Error(error));
       crashlytics().log(error);
+      navigation.replace('Home');
     }
   };
 
   // Get balance
   const getBalance = async () => {
     try {
-      const request = await fetch(
-        `${URL_API}&act=app4300-temp-amount&member=${dataMember.member}&currency=${dataWallet.currency}`,
-      );
-      const response = await request.json();
-      const result = response.data;
-      if (result.length > 0) {
-        setBalance(parseFloat(result[0].Wamount));
-        setLimitTransfer(result[0].limittransfer);
+      const body = {
+        member: dataMember.member,
+        currency: dataWallet.currency,
+      };
+
+      const result = await gatewayNodeJS('app4300-temp-amount', 'POST', body);
+      const results = result.data;
+
+      if (results.length > 0) {
+        setBalance(parseFloat(results[0].Wamount));
+        setLimitTransfer(results[0].limittransfer);
 
         const listStockExchange = await stockExchange();
         setCointrace(listStockExchange);
@@ -398,6 +410,7 @@ const SendWalletScreen = ({navigation, route}) => {
         console.log(`Error get data balance: ${error}`);
         crashlytics().recordError(new Error(error));
         crashlytics().log(error);
+        navigation.replace('Home');
       }
     } catch (error) {
       setIsLoading(false);
@@ -405,6 +418,7 @@ const SendWalletScreen = ({navigation, route}) => {
       console.log(`Error get data balance: ${error}`);
       crashlytics().recordError(new Error(error));
       crashlytics().log(error);
+      navigation.replace('Home');
     }
   };
 
@@ -502,6 +516,7 @@ const SendWalletScreen = ({navigation, route}) => {
                 ? lang.global_error.error
                 : '',
             );
+            navigation.replace('Home');
           });
       } else {
         const granted = await PermissionsAndroid.request(
@@ -537,30 +552,42 @@ const SendWalletScreen = ({navigation, route}) => {
   // Checking limit transfer
   const getLimitTransfer = async () => {
     try {
-      const request = await fetch(
-        `${URL_API}&act=ap4300-getLimitTransfer&member=${dataMember.member}&currency=${currency}&amountrq=${amount}`,
-      );
-      const response = await request.json();
+      const body = {
+        member: dataMember.member,
+        currency,
+        amountrq: amount,
+      };
 
-      const avaliable = response.avaliable;
-      return avaliable;
+      const result = await gatewayNodeJS(
+        'ap4300-getLimitTransfer',
+        'POST',
+        body,
+      );
+      const available = result.data[0].available;
+      return available;
     } catch (error) {
       Alert.alert('Check limit transfer failed');
       console.log(`Check limit transfer failed: ${error}`);
       setIsLoading(false);
       crashlytics().recordError(new Error(error));
       crashlytics().log(error);
+      navigation.replace('Home');
     }
   };
 
   // Transfer by stock exchange
   const transferByStockExchange = async () => {
     try {
-      const request = await fetch(
-        `${URL_API}&act=ap4300-03&member=${dataMember.member}&addrto=${address}&currency=${currency}&amount=${amount}&coinmarket=${selectedExchange}`,
-      );
-      const response = await request.json();
-      const data = response.data;
+      const body = {
+        member: dataMember.member,
+        addrto: address,
+        currency,
+        amount,
+        coinmarket: selectedExchange,
+      };
+
+      const result = await gatewayNodeJS('ap4300-03', 'POST', body);
+      const data = result.data[0].data;
       return data;
     } catch (error) {
       Alert.alert(lang.global_error.network_busy);
@@ -568,6 +595,7 @@ const SendWalletScreen = ({navigation, route}) => {
       gasEstimateNetworkBusy();
       crashlytics().recordError(new Error(error));
       crashlytics().log(error);
+      navigation.replace('Home');
     }
   };
 
@@ -577,12 +605,30 @@ const SendWalletScreen = ({navigation, route}) => {
       const dataStockExchange = await transferByStockExchange();
 
       if (dataStockExchange) {
-        const request = await fetch(
-          `${URL_API}&act=postTransferNew&to=${address}&amount=${amount}&token=${token}&member=${dataMember.member}&gasEstimate=${gasEstimate}&gasPrice=${gasPrice}&network=${network}&chainId=${chainId}`,
-        );
-        const response = await request.json();
+        const body = {
+          to: address,
+          amount,
+          token,
+          member: dataMember.member,
+          gasEstimate,
+          gasPrice,
+          network,
+          chainId,
+        };
 
-        const {status, hash} = response;
+        const result = await gatewayNodeJS('postTransferNew', 'POST', body);
+        const status = result.status;
+        const hash = result.data[0].rtn.hash;
+
+        if (!hash || hash === 'undefined') {
+          Alert.alert(lang.screen_signup.validator.errorServer);
+          gasEstimateNetworkBusy();
+          setIsLoading(false);
+          console.log('Transfer failed postTransfer');
+          navigation.replace('Home');
+          return;
+        }
+
         console.log(
           `Transfer complete.... Token: ${token} | Status: ${status} | Hash: ${hash} | act=postTransferNew`,
         );
@@ -603,20 +649,26 @@ const SendWalletScreen = ({navigation, route}) => {
           Alert.alert(lang.global_error.network_busy);
           console.log('Transfer failed postTransfer');
           gasEstimateNetworkBusy();
+          setIsLoading(false);
+          navigation.replace('Home');
         }
       } else {
         Alert.alert(lang.global_error.network_busy);
         console.log(`Transfer failed ap4300-03: ${error}`);
         gasEstimateNetworkBusy();
+        setIsLoading(false);
         crashlytics().recordError(new Error(error));
         crashlytics().log(error);
+        navigation.replace('Home');
       }
     } catch (error) {
       Alert.alert(lang.global_error.network_busy);
       console.log(`Transfer failed postTransfer: ${error}`);
       gasEstimateNetworkBusy();
+      setIsLoading(false);
       crashlytics().recordError(new Error(error));
       crashlytics().log(error);
+      navigation.replace('Home');
     }
   };
 

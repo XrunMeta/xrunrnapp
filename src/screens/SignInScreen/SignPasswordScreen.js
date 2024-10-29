@@ -14,7 +14,13 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  URL_API_NODEJS,
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  authcode,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const SignPasswordScreen = () => {
@@ -40,9 +46,16 @@ const SignPasswordScreen = () => {
           const userDataObject = JSON.parse(getUserData);
 
           // Get User Detail Information
-          const userResponse = await fetch(
-            `${URL_API}&act=app7000-01&member=${userDataObject.member}`,
-          );
+          const userResponse = await fetch(`${URL_API_NODEJS}/app7000-01`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${authcode}`,
+            },
+            body: JSON.stringify({
+              member: userDataObject?.member,
+            }),
+          });
           const userJsonData = await userResponse.json();
           const completeUserData = userJsonData.data[0];
 
@@ -68,14 +81,23 @@ const SignPasswordScreen = () => {
       Alert.alert('Warning', lang.screen_loginWithPassword.notif.emptyPassword);
     } else {
       try {
-        const response = await fetch(
-          `${URL_API}&act=login-01&mobile=${userData.mobile}&tp=3&pin=${password}`,
-        );
+        const response = await fetch(`${URL_API_NODEJS}/login-01`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authcode}`,
+          },
+          body: JSON.stringify({
+            type: 3,
+            pin: password,
+            mobile: userData?.mobile,
+          }),
+        });
         const data = await response.json();
 
         console.log('Response Login API -> ' + JSON.stringify(data));
 
-        if (data.data === 'false') {
+        if (data.status !== 'success') {
           Alert.alert('Failed', lang.screen_loginWithPassword.notif.wrong);
           setPassword('');
         } else {

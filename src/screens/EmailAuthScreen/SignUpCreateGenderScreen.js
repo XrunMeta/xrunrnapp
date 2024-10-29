@@ -2,7 +2,6 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   Pressable,
   Image,
   Dimensions,
@@ -12,7 +11,13 @@ import React, {useState, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  URL_API_NODEJS,
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  authcode,
+} from '../../../utils';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import CustomMultipleChecbox from '../../components/CustomCheckbox/CustomMultipleCheckbox';
 import crashlytics from '@react-native-firebase/crashlytics';
@@ -57,7 +62,7 @@ const SignUpCreateGender = () => {
     const genderCode = gender == 0 ? 2110 : 2111;
 
     const joinAPI =
-      `${URL_API}&act=login-06-joinAndAccount` +
+      `${URL_API_NODEJS}&act=login-06-joinAndAccount` +
       `&email=${email}` +
       `&pin=${pin}` +
       `&firstname=${firstname}` +
@@ -74,12 +79,35 @@ const SignUpCreateGender = () => {
     console.log('API Join -> ' + joinAPI);
 
     try {
-      const response = await fetch(joinAPI);
+      const response = await fetch(
+        `${URL_API_NODEJS}/login-06-joinAndAccount`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authcode}`,
+          },
+          body: JSON.stringify({
+            email,
+            pin,
+            firstname,
+            lastname,
+            gender: genderCode,
+            mobile,
+            mobilecode,
+            countrycode,
+            country: mobilecode,
+            region: 2,
+            age: 2210,
+            recommand: 0,
+          }),
+        },
+      );
       const responseData = await response.json();
 
       console.log('Join SignUp Response -> ', responseData);
 
-      if (responseData.data === 'ok') {
+      if (responseData?.data[0]?.text == 'ok') {
         await AsyncStorage.setItem('userEmail', email);
         login();
         navigation.replace('SuccessJoin', {

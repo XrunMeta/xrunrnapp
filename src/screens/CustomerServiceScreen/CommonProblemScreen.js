@@ -11,7 +11,13 @@ import {
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  URL_API_NODEJS,
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  authcode,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const CommonProblemScreen = () => {
@@ -44,7 +50,13 @@ const CommonProblemScreen = () => {
 
     const fetchCommonProblem = async () => {
       try {
-        const response = await fetch(`${URL_API}&act=app7310-01`);
+        const response = await fetch(`${URL_API_NODEJS}/app7310-01`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authcode}`,
+          },
+        });
         const data = await response.json();
 
         if (data && data.data.length > 0) {

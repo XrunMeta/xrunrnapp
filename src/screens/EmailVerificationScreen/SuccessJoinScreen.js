@@ -6,9 +6,15 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {getLanguage2, URL_API, getFontFam, fontSize} from '../../../utils';
+import {
+  getLanguage2,
+  URL_API_NODEJS,
+  getFontFam,
+  fontSize,
+  authcode,
+} from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import crashlytics from '@react-native-firebase/crashlytics';
@@ -31,15 +37,26 @@ const SuccessJoinScreen = () => {
 
         setLang(screenLang);
 
-        const response = await fetch(
-          `${URL_API}&act=login-01&tp=4&email=${email}&pin=${pin}`,
-        );
+        const response = await fetch(`${URL_API_NODEJS}/login-01`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authcode}`,
+          },
+          body: JSON.stringify({
+            type: 4,
+            email,
+            pin,
+          }),
+        });
         const data = await response.json();
 
         await AsyncStorage.setItem('userEmail', email);
-        await AsyncStorage.setItem('userData', JSON.stringify(data));
+        await AsyncStorage.setItem('userData', JSON.stringify(data?.data[0]));
         login();
-        console.log('Signin abis signup bisa boy -> ' + JSON.stringify(data));
+        console.log(
+          'Signin abis signup bisa boy -> ' + JSON.stringify(data?.data[0]),
+        );
       } catch (err) {
         console.error('Error retrieving Signin:', err);
         crashlytics().recordError(new Error(err));

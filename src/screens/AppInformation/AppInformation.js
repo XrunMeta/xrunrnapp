@@ -3,7 +3,13 @@ import React, {useEffect, useState} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  URL_API_NODEJS,
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  authcode,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import VersionCheck from 'react-native-version-check';
 
@@ -16,13 +22,20 @@ const AppInformation = () => {
     const fetchData = async () => {
       try {
         const currentVersion = VersionCheck.getCurrentVersion();
-        const response = await fetch(`${URL_API}&act=version`);
+        const response = await fetch(`${URL_API_NODEJS}/version`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authcode}`,
+          },
+        });
+
         const data = await response.json();
 
         if (data) {
           setVersion({
             version: currentVersion,
-            url: data.url,
+            url: data.data[0].url,
           });
         }
       } catch (err) {

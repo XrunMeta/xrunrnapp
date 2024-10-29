@@ -11,6 +11,7 @@ import {
   Modal,
   SafeAreaView,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -18,7 +19,13 @@ import ButtonList from '../../components/ButtonList/ButtonList';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  URL_API,
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  gatewayNodeJS,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const InfoScreen = () => {
@@ -27,6 +34,7 @@ const InfoScreen = () => {
   const [userDetails, setUserDetails] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
   const [refEmail, setRefEmail] = useState('');
+  const [isRecommend, setIsRecommend] = useState(false);
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -45,11 +53,14 @@ const InfoScreen = () => {
         const AsyncUserData = await AsyncStorage.getItem('userData');
         const data = JSON.parse(AsyncUserData);
 
-        const userResponse = await fetch(
-          `${URL_API}&act=app7110-01&member=${data.member}`,
-        );
-        const userJsonData = await userResponse.json();
-        const userData = userJsonData.data[0];
+        console.log({data});
+
+        const body = {
+          member: data?.member,
+        };
+
+        const result = await gatewayNodeJS('app7110-01', 'POST', body);
+        const userData = result.data[0];
 
         console.log('Info Screen -> ' + JSON.stringify(userData));
         setIsLoading(false);
@@ -66,6 +77,28 @@ const InfoScreen = () => {
           region: userData.region,
           ages: userData.ages,
         });
+
+        const bodyRecommend = {
+          member: userData?.member,
+        };
+
+        const resultRecommend = await gatewayNodeJS(
+          'app7420-03',
+          'POST',
+          bodyRecommend,
+        );
+        console.log('Recommend status -> ', resultRecommend?.data[0]);
+
+        setRefEmail(
+          resultRecommend?.data[0]?.email
+            ? resultRecommend?.data[0]?.email
+            : '',
+        );
+        setIsRecommend(
+          resultRecommend?.data[0]?.data
+            ? resultRecommend?.data[0]?.data
+            : false,
+        );
       } catch (err) {
         console.error('Error fetching user data: ', err);
         crashlytics().recordError(new Error(err));
@@ -115,12 +148,17 @@ const InfoScreen = () => {
 
   const onShare = async () => {
     try {
+      const storeapp =
+        Platform.OS === 'ios'
+          ? 'https://apps.apple.com/id/app/xrun-go/id6502924173'
+          : 'https://play.google.com/store/apps/details?id=run.xrun.xrunapp';
+
       const result = await Share.share({
         message: `
 Let's join XRUN!!!
 Referral me!
 Email : ${userDetails.email}
-https://play.google.com/store/apps/details?id=run.xrun.xrunapps`,
+${storeapp}`,
       });
 
       if (result.action === Share.sharedAction) {
@@ -139,11 +177,12 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapps`,
       Alert.alert(error.message);
       crashlytics().recordError(new Error(error));
       crashlytics().log(error);
+      navigation.replace('Home');
     }
   };
 
   const onModify = () => {
-    navigation.navigate('ConfirmPassword');
+    navigation.navigate('EmailVerifForModif', {existEmail: userDetails.email});
   };
 
   const onSetting = () => {
@@ -160,20 +199,9 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapps`,
 
   const onRecommend = async () => {
     // Check is Member has recommended
-    const response = await fetch(
-      `${URL_API}&act=app7420-03&member=${userDetails.member}`,
-    );
-    const data = await response.json();
-
-    console.log(data);
-
-    setRefEmail(data.email);
-
-    if (data.data === 'ok') {
-      navigation.navigate('Recommend');
-    } else if (data.data === 'over') {
-      setModalVisible(true);
-    }
+    isRecommend === 'ok'
+      ? navigation.navigate('Recommend')
+      : setModalVisible(true);
   };
 
   const onCustomerService = () => {
@@ -239,7 +267,7 @@ https://play.google.com/store/apps/details?id=run.xrun.xrunapps`,
               fontSize: fontSize('body'),
               color: 'black',
             }}>
-            {userDetails && userDetails.firstname
+            {userDetails && !isLoading
               ? `${userDetails.firstname}${userDetails.lastname}`
               : 'Loading...'}
           </Text>

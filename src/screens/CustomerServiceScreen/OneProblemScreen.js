@@ -11,7 +11,13 @@ import {
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  URL_API_NODEJS,
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  authcode,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const OneProblemScreen = () => {
@@ -33,9 +39,16 @@ const OneProblemScreen = () => {
         const astorJsonData = JSON.parse(astorUserData);
 
         // Get List of 1:1 Inquiry
-        const response = await fetch(
-          `${URL_API}&act=app7330-01&member=${astorJsonData.member}`,
-        );
+        const response = await fetch(`${URL_API_NODEJS}/app7330-01`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authcode}`,
+          },
+          body: JSON.stringify({
+            member: astorJsonData?.member,
+          }),
+        });
         const data = await response.json();
         setRecommendations(data.data);
       } catch (err) {

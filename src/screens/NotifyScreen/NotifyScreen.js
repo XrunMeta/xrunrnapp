@@ -16,7 +16,13 @@ import {
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API, getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  URL_API_NODEJS,
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  authcode,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const NotifyScreen = () => {
@@ -43,15 +49,18 @@ const NotifyScreen = () => {
         const getData = JSON.parse(userData);
         setUserData(getData);
 
-        const response = await fetch(
-          `${URL_API}&act=ap6000-01&member=${getData.member}&start=0`,
-        );
+        const response = await fetch(`${URL_API_NODEJS}/ap6000-01`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authcode}`,
+          },
+          body: JSON.stringify({
+            member: getData?.member,
+            start: 0,
+          }),
+        });
         const data = await response.json();
-
-        console.log(
-          'Bgst -> ' +
-            `${URL_API}&act=ap6000-01&member=${getData.member}&start=0`,
-        );
 
         if (data && data.data.length > 0) {
           const reversedNotify = data.data.reverse();
@@ -126,12 +135,22 @@ const NotifyScreen = () => {
       );
     } else {
       try {
-        const response = await fetch(
-          `${URL_API}&act=ap6000-02&member=${userData.member}&title=${text}`,
-        );
+        const response = await fetch(`${URL_API_NODEJS}/ap6000-02`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authcode}`,
+          },
+          body: JSON.stringify({
+            member: userData?.member,
+            title: text,
+          }),
+        });
         const data = await response.json();
 
-        if (data.data[0].count == 1) {
+        console.log(data.data[0].affectedRows);
+
+        if (data.data[0].affectedRows == 1) {
           refreshChatView();
         }
       } catch (error) {
@@ -145,9 +164,17 @@ const NotifyScreen = () => {
   // Fungsi untuk memperbarui tampilan chat
   const refreshChatView = async () => {
     try {
-      const response = await fetch(
-        `${URL_API}&act=ap6000-01&member=${userData.member}&start=0`,
-      );
+      const response = await fetch(`${URL_API_NODEJS}/ap6000-01`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authcode}`,
+        },
+        body: JSON.stringify({
+          member: userData?.member,
+          start: 0,
+        }),
+      });
       const data = await response.json();
 
       if (data && data.data.length > 0) {
@@ -164,23 +191,31 @@ const NotifyScreen = () => {
   // Delete Chat
   const deleteChat = async data => {
     try {
-      const response = await fetch(
-        `${URL_API}&act=ap6000-03&member=${userData.member}&board=${data.board}`,
-      );
+      const response = await fetch(`${URL_API_NODEJS}/ap6000-03`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authcode}`,
+        },
+        body: JSON.stringify({
+          member: userData?.member,
+          board: data?.board,
+        }),
+      });
       const jsonData = await response.json();
 
-      console.log(jsonData);
+      // Remove clicked Chat
+      setNotify(prevNotify =>
+        prevNotify.filter(item => item.board !== data.board),
+      );
 
       if (jsonData.data[0].count == 1) {
-        // Remove clicked Chat
-        setNotify(prevNotify =>
-          prevNotify.filter(item => item.board !== data.board),
-        );
+        console.log('Berhasil apus coy -> ' + data.board);
       } else {
-        console.log('GHagal coy -> ' + data.board);
+        console.log('Gagal apus coy -> ' + data.board);
       }
     } catch (error) {
-      console.error('Error sending chat:', error);
+      console.error('Error deleted chat:', error);
       crashlytics().recordError(new Error(error));
       crashlytics().log(error);
     }
@@ -204,7 +239,17 @@ const NotifyScreen = () => {
               setIsDelete(false);
 
               const response = await fetch(
-                `${URL_API}&act=ap6000-04delete&member=${userData.member}`,
+                `${URL_API_NODEJS}/ap6000-04delete`,
+                {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${authcode}`,
+                  },
+                  body: JSON.stringify({
+                    member: userData?.member,
+                  }),
+                },
               );
               const jsonData = await response.json();
 
