@@ -550,7 +550,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+<<<<<<< HEAD
 				MARKETING_VERSION = 2.0.7;
+=======
+				MARKETING_VERSION = 2.0.8;
+>>>>>>> ios
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -589,7 +593,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+<<<<<<< HEAD
 				MARKETING_VERSION = 2.0.7;
+=======
+				MARKETING_VERSION = 2.0.8;
+>>>>>>> ios
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
