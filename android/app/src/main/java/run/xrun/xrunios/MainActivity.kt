@@ -1,4 +1,4 @@
-package run.xrun.xrunapp
+package run.xrun.xrunapps
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
