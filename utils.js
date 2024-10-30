@@ -31,7 +31,6 @@ export const listTransactionsHistory = async (
     return result.data;
   } catch (err) {
     console.log(`Failed get ${nameList}: ${err}`);
-    Alert.alert('', `Failed get ${nameList}`);
     crashlytics().recordError(new Error(err));
     crashlytics().log(err);
   }
