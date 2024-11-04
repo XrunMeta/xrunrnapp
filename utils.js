@@ -286,7 +286,7 @@ export const gatewayNodeJS = async (route, method = 'GET', body = {}) => {
     return response;
   } catch (error) {
     console.log(`Error gateway NodeJS: ${error}`);
-    Alert.alert('Failed get gateway NodeJS');
+    Alert.alert(lang.global_error.network_busy);
     crashlytics().recordError(new Error(error));
     crashlytics().log(error);
   }
