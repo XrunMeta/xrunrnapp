@@ -36,8 +36,6 @@ const ChooseRegionScreen = ({route}) => {
   } = route.params || {};
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => console.log(flag), [flag]);
-
   const onBack = (code, flag, cCountryCode, cCountry) => {
     if (screenName) {
       navigation.navigate('PhoneLogin', {
@@ -103,7 +101,6 @@ const ChooseRegionScreen = ({route}) => {
 
   // ########## Choose Region
   const chooseRegion = item => {
-    console.log(JSON.stringify(item));
     if (screenName) {
       navigation.navigate('PhoneLogin', {
         code: item.code,
@@ -229,8 +226,8 @@ const ChooseRegionScreen = ({route}) => {
                 key={item.code + '-' + item.subcode}
                 text={'+' + item.callnumber + ') ' + item.country}
                 image={
-                  {uri: `https://app.xrun.run/flags/${item.lcode}.png`}
-                    ? {uri: `https://app.xrun.run/flags/${item.lcode}.png`}
+                  {uri: `${item.lcode}`}
+                    ? {uri: `${item.lcode}`}
                     : require('../../../assets/images/icon_none.png')
                 }
                 onPress={() => chooseRegion(item)}

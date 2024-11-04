@@ -111,7 +111,8 @@
       "emptyArea": "Area must be filled",
       "invalidRecommend": "Please verify the recommended email",
       "errorServer": "There is a server communication error. Please try again...",
-      "invalidPhone": "Please verify your phone number first"
+      "invalidPhone": "Please verify your phone number first",
+      "areaNotFound": "Area not found"
     }
   },
 
