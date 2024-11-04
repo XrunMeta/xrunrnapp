@@ -19,7 +19,6 @@ import ButtonBack from '../../components/ButtonBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInputWallet from '../../components/CustomInputWallet';
 import {
-  URL_API,
   getLanguage2,
   getFontFam,
   fontSize,
