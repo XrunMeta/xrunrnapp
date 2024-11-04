@@ -26,6 +26,7 @@ const EmailAuthScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
   let ScreenHeight = Dimensions.get('window').height;
   const navigation = useNavigation();
+  const [isDisable, setIsDisable] = useState(false);
 
   useEffect(() => {
     // Get Language Data
@@ -53,6 +54,7 @@ const EmailAuthScreen = () => {
       Alert.alert('Error', lang.screen_emailAuth.alert.invalidEmail);
     } else {
       try {
+        setIsDisable(true);
         const waitForResponse = async () => {
           try {
             const response = await fetch(`${URL_API_NODEJS}/check-02-email`, {
@@ -125,6 +127,9 @@ const EmailAuthScreen = () => {
         crashlytics().log(error);
         console.error('Error during API request:', error);
         Alert.alert('Error', lang.screen_emailAuth.alert.errorServer);
+      } finally {
+        setIsDisable(false);
+        setEmail('');
       }
     }
   };
@@ -177,9 +182,16 @@ const EmailAuthScreen = () => {
         )}
 
         <View style={[styles.bottomSection]}>
-          <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
+          <Pressable
+            onPress={onSignIn}
+            style={styles.buttonSignIn}
+            disabled={isDisable}>
             <Image
-              source={require('../../../assets/images/icon_next.png')}
+              source={
+                isDisable
+                  ? require('../../../assets/images/icon_nextDisable.png')
+                  : require('../../../assets/images/icon_next.png')
+              }
               resizeMode="contain"
               style={styles.buttonSignInImage}
             />
