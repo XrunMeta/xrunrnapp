@@ -111,7 +111,8 @@
       "emptyArea": "必须填写地区",
       "invalidRecommend": "请验证推荐邮箱",
       "errorServer": "服务器通信出现错误。请重试...",
-      "invalidPhone": "请先验证您的电话号码"
+      "invalidPhone": "请先验证您的电话号码",
+      "areaNotFound": "未找到区域"
     }
   },
 

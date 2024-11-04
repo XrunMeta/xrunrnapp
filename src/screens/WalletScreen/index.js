@@ -79,7 +79,6 @@ const WalletScreen = ({navigation, route}) => {
         setMember(member);
       } catch (err) {
         console.log(`Failed get member from async storage: ${err}`);
-        Alert.alert('', `Failed get member from async storage`);
         crashlytics().recordError(new Error(err));
         crashlytics().log(err);
         navigation.replace('Home');

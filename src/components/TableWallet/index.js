@@ -604,7 +604,6 @@ const TableWalletCard = ({
       }
     } catch (err) {
       console.log(`Failed get transaction: ${err}`);
-      Alert.alert('', `Failed get transaction`);
       crashlytics().recordError(new Error(err));
       crashlytics().log(err);
     }
@@ -718,7 +717,6 @@ const TableWalletCard = ({
 
       setTotalHistoryLength(totalHistory.length);
     } catch (error) {
-      Alert.alert('', 'Failed get default list transactions history');
       console.log(`Failed get default list transactions history: ${error}`);
       crashlytics().recordError(new Error(error));
       crashlytics().log(error);
@@ -807,12 +805,10 @@ const TableWalletCard = ({
 
           default:
             console.log(`Failed get transaction ${key}`);
-            Alert.alert(`Failed get list transactions ${key}`);
             break;
         }
       } catch (error) {
         console.log(`Failed get transaction ${key}: ${error}`);
-        Alert.alert('', `Failed get transaction ${key}`);
         crashlytics().recordError(new Error(error));
         crashlytics().log(error);
       }

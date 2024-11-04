@@ -54,8 +54,6 @@ const SignUpScreen = ({route}) => {
 
   const navigation = useNavigation();
 
-  useEffect(() => console.log(flag), []);
-
   useEffect(() => {
     // Reset region dan isSelected when countryCode change
     setRegion('');
@@ -221,7 +219,7 @@ const SignUpScreen = ({route}) => {
       .then(jsonData => {
         var jsonToArr = Object.values(jsonData);
         var arrResult = jsonToArr.flat();
-        setAreaData(arrResult);
+        setAreaData(jsonData.data);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
@@ -422,7 +420,7 @@ const SignUpScreen = ({route}) => {
                           uri: 'https://app.xrun.run/flags/kr.png',
                         }
                       : {
-                          uri: `https://app.xrun.run/flags/${flag}.png`,
+                          uri: `${flag}`,
                         }
                   }
                 />
@@ -520,20 +518,41 @@ const SignUpScreen = ({route}) => {
                 if (item.isPlaceholder) {
                   return null; // Don't render anything for placeholder item
                 }
+
+                if (item === 'failed') {
+                  return (
+                    <View
+                      style={{
+                        ...styles.dropdownItemStyle,
+                      }}>
+                      <Text
+                        style={{
+                          ...styles.dropdownItemTxtStyle,
+                          opacity: 0.5,
+                          textAlign: 'center',
+                        }}>
+                        {lang.screen_signup.validator.areaNotFound}
+                      </Text>
+                    </View>
+                  );
+                }
+
                 return (
-                  <View
-                    style={{
-                      ...styles.dropdownItemStyle,
-                      ...(isSelected && {backgroundColor: '#bae6fd'}),
-                    }}>
-                    <Text style={styles.dropdownItemTxtStyle}>
-                      {item.description}
-                    </Text>
-                  </View>
+                  item.description != undefined && (
+                    <View
+                      style={{
+                        ...styles.dropdownItemStyle,
+                        ...(isSelected && {backgroundColor: '#bae6fd'}),
+                      }}>
+                      <Text style={styles.dropdownItemTxtStyle}>
+                        {item.description}
+                      </Text>
+                    </View>
+                  )
                 );
               }}
               showsVerticalScrollIndicator={false}
-              dropdownStyle={styles.dropdownMenuStyle}
+              dropdownStyle={styles.dropdownMenuStyle(areaData[0])}
               disabled={areaData.length === 0}
               disableAutoScroll={true}
             />
@@ -798,11 +817,11 @@ const styles = StyleSheet.create({
     fontSize: fontSize('body'),
     color: '#343a59',
   },
-  dropdownMenuStyle: {
+  dropdownMenuStyle: areaData => ({
     backgroundColor: '#E9ECEF',
     borderRadius: 8,
-    height: 300,
-  },
+    height: areaData !== 'failed' && 300,
+  }),
   dropdownItemStyle: {
     width: '100%',
     flexDirection: 'row',
