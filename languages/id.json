@@ -111,7 +111,8 @@
       "emptyArea": "Daerah harus diisi",
       "invalidRecommend": "Harap verifikasi email yang direkomendasikan",
       "errorServer": "Ada kesalahan komunikasi dengan server. Silakan coba lagi...",
-      "invalidPhone": "Silakan verifikasi nomor telepon Anda terlebih dahulu"
+      "invalidPhone": "Silakan verifikasi nomor telepon Anda terlebih dahulu",
+      "areaNotFound": "Daerah tidak ditemukan"
     }
   },
 
