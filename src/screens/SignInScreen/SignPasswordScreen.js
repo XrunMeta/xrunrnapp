@@ -28,6 +28,7 @@ const SignPasswordScreen = () => {
   const {login} = useAuth();
   const [password, setPassword] = useState('');
   const [userData, setUserData] = useState([]);
+  const [isDisable, setIsDisable] = useState(false);
 
   const navigation = useNavigation();
   let ScreenHeight = Dimensions.get('window').height;
@@ -81,6 +82,8 @@ const SignPasswordScreen = () => {
       Alert.alert('Warning', lang.screen_loginWithPassword.notif.emptyPassword);
     } else {
       try {
+        setIsDisable(true);
+
         const response = await fetch(`${URL_API_NODEJS}/login-01`, {
           method: 'POST',
           headers: {
@@ -114,6 +117,8 @@ const SignPasswordScreen = () => {
         Alert.alert('Error', lang.screen_loginWithPassword.notif.errorServer);
         crashlytics().recordError(new Error(error));
         crashlytics().log(error);
+      } finally {
+        setIsDisable(false);
       }
     }
   };
@@ -224,9 +229,16 @@ const SignPasswordScreen = () => {
               </Text>
             </View>
           </View>
-          <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
+          <Pressable
+            onPress={onSignIn}
+            style={styles.buttonSignIn}
+            disabled={isDisable}>
             <Image
-              source={require('../../../assets/images/icon_next.png')}
+              source={
+                isDisable
+                  ? require('../../../assets/images/icon_nextDisable.png')
+                  : require('../../../assets/images/icon_next.png')
+              }
               resizeMode="contain"
               style={styles.buttonSignInImage}
             />
