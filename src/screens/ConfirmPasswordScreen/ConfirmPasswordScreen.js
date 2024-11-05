@@ -14,7 +14,6 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
-  URL_API,
   getLanguage2,
   getFontFam,
   fontSize,
@@ -26,6 +25,7 @@ const ConfirmPassword = () => {
   const [lang, setLang] = useState({});
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isDisable, setIsDisable] = useState(false);
 
   const navigation = useNavigation();
 
@@ -43,6 +43,8 @@ const ConfirmPassword = () => {
       );
     } else {
       try {
+        setIsDisable(true);
+
         const body = {
           email,
           pin: password,
@@ -73,6 +75,8 @@ const ConfirmPassword = () => {
             ? lang.screen_confirm_password.condition.errorServer
             : '-',
         );
+      } finally {
+        setIsDisable(false);
       }
     }
   };
@@ -156,9 +160,16 @@ const ConfirmPassword = () => {
 
       <View style={[styles.bottomSection]}>
         <View style={styles.additionalLogin}></View>
-        <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
+        <Pressable
+          onPress={onSignIn}
+          style={styles.buttonSignIn}
+          disabled={isDisable}>
           <Image
-            source={require('../../../assets/images/icon_next.png')}
+            source={
+              isDisable
+                ? require('../../../assets/images/icon_nextDisable.png')
+                : require('../../../assets/images/icon_next.png')
+            }
             resizeMode="contain"
             style={styles.buttonSignInImage}
           />

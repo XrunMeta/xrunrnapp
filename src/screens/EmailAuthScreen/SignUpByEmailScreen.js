@@ -22,6 +22,7 @@ const SignUpByEmailScreen = () => {
   const [isEmailValid, setIsEmailValid] = useState(true);
   const route = useRoute();
   const {mobile, mobilecode, countrycode} = route.params;
+  const [isDisable, setIsDisable] = useState(false);
 
   const navigation = useNavigation();
 
@@ -34,6 +35,8 @@ const SignUpByEmailScreen = () => {
       Alert.alert('Error', lang.screen_notExist.field_email.invalidEmail);
     } else {
       try {
+        setIsDisable(true);
+
         const apiUrl = await fetch(`${URL_API_NODEJS}/login-checker-email`, {
           method: 'POST',
           headers: {
@@ -75,6 +78,8 @@ const SignUpByEmailScreen = () => {
         Alert.alert('Error', lang.screen_notExist.field_email.errorServer);
         crashlytics().recordError(new Error(error));
         crashlytics().log(error);
+      } finally {
+        setIsDisable(false);
       }
     }
   };
@@ -152,9 +157,16 @@ const SignUpByEmailScreen = () => {
       )}
 
       <View style={[styles.bottomSection]}>
-        <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
+        <Pressable
+          onPress={onSignIn}
+          style={styles.buttonSignIn}
+          disabled={isDisable}>
           <Image
-            source={require('../../../assets/images/icon_next.png')}
+            source={
+              isDisable
+                ? require('../../../assets/images/icon_nextDisable.png')
+                : require('../../../assets/images/icon_next.png')
+            }
             resizeMode="contain"
             style={styles.buttonSignInImage}
           />
