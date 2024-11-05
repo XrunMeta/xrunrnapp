@@ -39,6 +39,7 @@ const PhoneVerificationScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
   let ScreenHeight = Dimensions.get('window').height;
   const [lang, setLang] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const phoneAuth = async () => {
     try {
@@ -99,6 +100,9 @@ const PhoneVerificationScreen = () => {
   };
 
   const onSignIn = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     const getAuthCode = verificationCode.join('');
 
     // Check Email & Auth Code Relational
@@ -196,6 +200,8 @@ const PhoneVerificationScreen = () => {
       console.error('Error during Check Auth Code:', error);
       crashlytics().recordError(new Error(error));
       crashlytics().log(error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -374,7 +380,7 @@ const PhoneVerificationScreen = () => {
           <View style={styles.additionalLogin}>
             <Countdown />
           </View>
-          {isCodeComplete ? (
+          {isCodeComplete && !isSubmitting ? (
             <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
               <Image
                 source={require('../../../assets/images/icon_next.png')}
@@ -383,7 +389,7 @@ const PhoneVerificationScreen = () => {
               />
             </Pressable>
           ) : (
-            <Pressable onPress={onSignInDisabled} style={styles.buttonSignIn}>
+            <Pressable disabled style={styles.buttonSignIn}>
               <Image
                 source={require('../../../assets/images/icon_nextDisable.png')}
                 resizeMode="contain"

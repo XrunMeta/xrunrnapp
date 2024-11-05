@@ -28,6 +28,7 @@ const PhoneLoginScreen = ({route}) => {
     country,
     mobile,
   } = route.params || {};
+  const [isDisable, setIsDisable] = useState(false);
 
   const navigation = useNavigation();
 
@@ -161,9 +162,16 @@ const PhoneLoginScreen = ({route}) => {
         {/* Bottom Section */}
         <View style={[styles.bottomSection]}>
           <View style={styles.additionalLogin}></View>
-          <Pressable onPress={onJoin} style={styles.buttonSignUp}>
+          <Pressable
+            onPress={onJoin}
+            style={styles.buttonSignUp}
+            disabled={isDisable}>
             <Image
-              source={require('../../../assets/images/icon_next.png')}
+              source={
+                isDisable
+                  ? require('../../../assets/images/icon_nextDisable.png')
+                  : require('../../../assets/images/icon_next.png')
+              }
               resizeMode="contain"
               style={styles.buttonSignUpImage}
             />
