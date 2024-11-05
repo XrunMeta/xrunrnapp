@@ -26,6 +26,7 @@ const CloseMembershipScreen = () => {
   const [checkedID, setCheckedID] = useState(null);
   const [reason, setReason] = useState('');
   const [loading, setLoading] = useState(true);
+  const [isDisable, setIsDisable] = useState(false);
 
   useEffect(() => {
     // Get Language Data
@@ -334,9 +335,16 @@ const CloseMembershipScreen = () => {
 
           <View style={[styles.bottomSection]}>
             <View style={styles.additionalLogin}></View>
-            <Pressable onPress={onSaveChange} style={styles.buttonSignIn}>
+            <Pressable
+              onPress={onSaveChange}
+              style={styles.buttonSignIn}
+              disabled={isDisable}>
               <Image
-                source={require('../../../assets/images/icon_next.png')}
+                source={
+                  isDisable
+                    ? require('../../../assets/images/icon_nextDisable.png')
+                    : require('../../../assets/images/icon_next.png')
+                }
                 resizeMode="contain"
                 style={styles.buttonSignInImage}
               />
