@@ -21,6 +21,7 @@ const SignUpCreateName = () => {
   const [name, setName] = useState('');
   const [lastname, setLastname] = useState('');
   const {mobile, mobilecode, countrycode, email, pin} = route.params;
+  const [isDisable, setIsDisable] = useState(false);
 
   const navigation = useNavigation();
   let ScreenHeight = Dimensions.get('window').height;
@@ -155,9 +156,16 @@ const SignUpCreateName = () => {
       </View>
 
       <View style={[styles.bottomSection]}>
-        <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
+        <Pressable
+          onPress={onSignIn}
+          style={styles.buttonSignIn}
+          disabled={isDisable}>
           <Image
-            source={require('../../../assets/images/icon_next.png')}
+            source={
+              isDisable
+                ? require('../../../assets/images/icon_nextDisable.png')
+                : require('../../../assets/images/icon_next.png')
+            }
             resizeMode="contain"
             style={styles.buttonSignInImage}
           />
