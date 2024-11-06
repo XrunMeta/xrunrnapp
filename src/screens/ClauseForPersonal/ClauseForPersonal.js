@@ -26,11 +26,10 @@ const ClauseForPersonal = () => {
         const language = RNLocalize.getLocales()[0].languageCode;
         if (language) {
           let apiUrl = `app7010-01`;
-          if (language === 'id') {
-            apiUrl += '-id';
-          } else if (language === 'ko') {
-            apiUrl += '-kr';
-          }
+          if (language === 'id') apiUrl += '-id';
+          if (language === 'ko') apiUrl += '-kr';
+          if (language === 'en') apiUrl += '-en';
+          if (language === 'zh') apiUrl += '-zh';
 
           console.log('Bgst -> ' + language + ' -> ' + apiUrl);
 
@@ -42,8 +41,9 @@ const ClauseForPersonal = () => {
             },
           });
           const result = await response.json();
+          console.log(result);
           if (result) {
-            const firstElement = result.data[1].c;
+            const firstElement = result?.data[1]?.c;
             setText(firstElement);
           }
         }
