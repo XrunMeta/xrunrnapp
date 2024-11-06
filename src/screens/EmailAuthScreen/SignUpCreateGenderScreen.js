@@ -29,6 +29,7 @@ const SignUpCreateGender = () => {
   const {mobile, mobilecode, countrycode, email, pin, firstname, lastname} =
     route.params;
   const {login} = useAuth();
+  const [isDisable, setIsDisable] = useState(false);
 
   const navigation = useNavigation();
   let ScreenHeight = Dimensions.get('window').height;
@@ -79,6 +80,8 @@ const SignUpCreateGender = () => {
     console.log('API Join -> ' + joinAPI);
 
     try {
+      setIsDisable(true);
+
       const response = await fetch(
         `${URL_API_NODEJS}/login-06-joinAndAccount`,
         {
@@ -137,6 +140,8 @@ const SignUpCreateGender = () => {
       Alert.alert('Error', lang.screen_notExist.field_gender.errorServer);
       crashlytics().recordError(new Error(error));
       crashlytics().log(error);
+    } finally {
+      setIsDisable(false);
     }
   };
 
@@ -190,9 +195,16 @@ const SignUpCreateGender = () => {
       </View>
 
       <View style={[styles.bottomSection]}>
-        <Pressable onPress={onSignUp} style={styles.buttonSignIn}>
+        <Pressable
+          onPress={onSignUp}
+          style={styles.buttonSignIn}
+          disabled={isDisable}>
           <Image
-            source={require('../../../assets/images/icon_next.png')}
+            source={
+              isDisable
+                ? require('../../../assets/images/icon_nextDisable.png')
+                : require('../../../assets/images/icon_next.png')
+            }
             resizeMode="contain"
             style={styles.buttonSignInImage}
           />

@@ -18,6 +18,7 @@ const TemplateScreen = ({title, content, onBack, onSave}) => {
   const [lang, setLang] = useState({});
   const navigation = useNavigation();
   let ScreenHeight = Dimensions.get('window').height;
+  const [isDisable, setIsDisable] = useState(false);
 
   const onSaveChange = async () => {};
 
@@ -76,9 +77,16 @@ const TemplateScreen = ({title, content, onBack, onSave}) => {
 
       <View style={[styles.bottomSection]}>
         <View style={styles.additionalLogin}></View>
-        <Pressable onPress={onSaveChange} style={styles.buttonSignIn}>
+        <Pressable
+          onPress={onSaveChange}
+          style={styles.buttonSignIn}
+          disabled={isDisable}>
           <Image
-            source={require('../../../assets/images/icon_next.png')}
+            source={
+              isDisable
+                ? require('../../../assets/images/icon_nextDisable.png')
+                : require('../../../assets/images/icon_next.png')
+            }
             resizeMode="contain"
             style={styles.buttonSignInImage}
           />

@@ -352,7 +352,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   emailAuth: {
-    fontFamily: getFontFam() + 'Medium',
+    fontFamily: getFontFam() + 'Bold',
     fontSize: fontSize('body'),
     color: '#343a59',
   },

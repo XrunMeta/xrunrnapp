@@ -26,6 +26,7 @@ const CloseConfirmPassword = () => {
   const [lang, setLang] = useState({});
   const [userData, setUserData] = useState('');
   const [password, setPassword] = useState('');
+  const [isDisable, setIsDisable] = useState(false);
 
   const navigation = useNavigation();
 
@@ -39,6 +40,8 @@ const CloseConfirmPassword = () => {
       );
     } else {
       try {
+        setIsDisable(true);
+
         const body = {
           pin: password,
           reason,
@@ -66,14 +69,17 @@ const CloseConfirmPassword = () => {
       } catch (error) {
         console.error('Error:', error);
         Alert.alert('Error', 'An error occurred while logging in');
+      } finally {
+        setIsDisable(false);
+
+        console.log(`
+          app8080-01 Data => 
+            pin       : ${password}
+            reasonNum : ${reasonNum} -> ${typeof userData.member}
+            reason    : ${reason}
+            member    : ${userData.member} -> ${typeof userData.member}
+        `);
       }
-      console.log(`
-        app8080-01 Data => 
-          pin       : ${password}
-          reasonNum : ${reasonNum} -> ${typeof userData.member}
-          reason    : ${reason}
-          member    : ${userData.member} -> ${typeof userData.member}
-      `);
     }
   };
 
@@ -161,9 +167,16 @@ const CloseConfirmPassword = () => {
 
       <View style={[styles.bottomSection]}>
         <View style={styles.additionalLogin}></View>
-        <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
+        <Pressable
+          onPress={onSignIn}
+          style={styles.buttonSignIn}
+          disabled={isDisable}>
           <Image
-            source={require('../../../assets/images/icon_next.png')}
+            source={
+              isDisable
+                ? require('../../../assets/images/icon_nextDisable.png')
+                : require('../../../assets/images/icon_next.png')
+            }
             resizeMode="contain"
             style={styles.buttonSignInImage}
           />
