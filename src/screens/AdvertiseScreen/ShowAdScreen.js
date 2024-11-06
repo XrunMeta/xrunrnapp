@@ -266,7 +266,7 @@ const ShowAdScreen = ({route}) => {
           }
 
           setModalVisible(true);
-          setModalTextOK(lang.screen_showad.textOK);
+          setModalTextOK(lang?.screen_showad?.textOK);
         } catch (err) {
           crashlytics().recordError(new Error(err));
           crashlytics().log(err);
