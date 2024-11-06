@@ -22,6 +22,7 @@ const SignUpCreatePassword = () => {
   const [isPasswordValid, setPasswordValid] = useState(true);
   const route = useRoute();
   const {mobile, mobilecode, countrycode, email} = route.params;
+  const [isDisable, setIsDisable] = useState(false);
 
   const navigation = useNavigation();
   let ScreenHeight = Dimensions.get('window').height;
@@ -122,9 +123,16 @@ const SignUpCreatePassword = () => {
       </Text>
 
       <View style={[styles.bottomSection]}>
-        <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
+        <Pressable
+          onPress={onSignIn}
+          style={styles.buttonSignIn}
+          disabled={isDisable}>
           <Image
-            source={require('../../../assets/images/icon_next.png')}
+            source={
+              isDisable
+                ? require('../../../assets/images/icon_nextDisable.png')
+                : require('../../../assets/images/icon_next.png')
+            }
             resizeMode="contain"
             style={styles.buttonSignInImage}
           />

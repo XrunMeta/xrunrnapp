@@ -21,6 +21,7 @@ const PasswordMissedScreen = () => {
   const [email, setEmail] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(true);
   const navigation = useNavigation();
+  const [isDisable, setIsDisable] = useState(false);
 
   let ScreenHeight = Dimensions.get('window').height;
 
@@ -31,6 +32,8 @@ const PasswordMissedScreen = () => {
       Alert.alert('Error', lang.screen_passwordMissed.notif.invalidEmail);
     } else {
       try {
+        setIsDisable(true);
+
         const apiUrl = 'https://app.xrun.run/phpmail/sendmail.php';
         const requestOptions = {
           method: 'POST',
@@ -71,6 +74,8 @@ const PasswordMissedScreen = () => {
         Alert.alert('Error', lang.screen_passwordMissed.notif.errorServer);
         crashlytics().recordError(new Error(error));
         crashlytics().log(error);
+      } finally {
+        setIsDisable(false);
       }
     }
   };
@@ -150,9 +155,16 @@ const PasswordMissedScreen = () => {
         )}
 
         <View style={[styles.bottomSection]}>
-          <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
+          <Pressable
+            onPress={onSignIn}
+            style={styles.buttonSignIn}
+            disabled={isDisable}>
             <Image
-              source={require('../../../assets/images/icon_next.png')}
+              source={
+                isDisable
+                  ? require('../../../assets/images/icon_nextDisable.png')
+                  : require('../../../assets/images/icon_next.png')
+              }
               resizeMode="contain"
               style={styles.buttonSignInImage}
             />

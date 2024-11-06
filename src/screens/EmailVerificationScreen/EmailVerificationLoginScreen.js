@@ -45,6 +45,7 @@ const EmailVerificationLoginScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
   let ScreenHeight = Dimensions.get('window').height;
   const [lang, setLang] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const emailAuth = async () => {
     try {
@@ -99,6 +100,9 @@ const EmailVerificationLoginScreen = () => {
   };
 
   const onSignIn = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     const getAuthCode = verificationCode.join('');
 
     // Check Email & Auth Code Relational
@@ -173,6 +177,8 @@ const EmailVerificationLoginScreen = () => {
     } catch (error) {
       // Handle network errors or other exceptions
       console.error('Error during Check Auth Code:', error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -362,7 +368,7 @@ const EmailVerificationLoginScreen = () => {
             <View style={styles.additionalLogin}>
               <Countdown />
             </View>
-            {isCodeComplete ? (
+            {isCodeComplete && !isSubmitting ? (
               <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
                 <Image
                   source={require('../../../assets/images/icon_next.png')}
@@ -371,7 +377,7 @@ const EmailVerificationLoginScreen = () => {
                 />
               </Pressable>
             ) : (
-              <Pressable onPress={onSignInDisabled} style={styles.buttonSignIn}>
+              <Pressable disabled style={styles.buttonSignIn}>
                 <Image
                   source={require('../../../assets/images/icon_nextDisable.png')}
                   resizeMode="contain"

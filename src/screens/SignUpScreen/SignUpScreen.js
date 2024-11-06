@@ -47,14 +47,13 @@ const SignUpScreen = ({route}) => {
   const [authShow, setAuthShow] = useState(false);
   const [verifyLoading, setVerifyLoading] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
+  const [isDisable, setIsDisable] = useState(false);
 
   // Dropdown region
   const [isSelected, setIsSelected] = useState(false);
   const [resetKey, setResetKey] = useState(0);
 
   const navigation = useNavigation();
-
-  useEffect(() => console.log(flag), []);
 
   useEffect(() => {
     // Reset region dan isSelected when countryCode change
@@ -65,39 +64,25 @@ const SignUpScreen = ({route}) => {
   }, [countryCode]);
 
   const onSignUp = async () => {
-    if (name.trim() === '') {
-      Alert.alert('Error', lang.screen_signup.validator.emptyName);
-    } else if (email.trim() === '') {
-      Alert.alert('Error', lang.screen_signup.validator.emptyEmail);
-    } else if (!isValidEmail(email)) {
-      Alert.alert('Error', lang.screen_signup.validator.invalidEmail);
-    } else if (password.trim() === '') {
-      Alert.alert('Error', lang.screen_signup.validator.emptyPassword);
-    } else if (phoneNumber.trim() === '') {
-      Alert.alert('Error', lang.screen_signup.validator.emptyPhone);
-    } else if (regionID == 0) {
-      Alert.alert('Error', lang.screen_signup.validator.emptyArea);
-    } else {
-      // Check the email
-      const requestCheckEmail = await fetch(
-        `${URL_API_NODEJS}/login-checker-email`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${authcode}`,
-          },
-          body: JSON.stringify({
-            email,
-          }),
-        },
-      );
-      const responseCheckEmail = await requestCheckEmail.json();
+    try {
+      setIsDisable(true);
 
-      if (responseCheckEmail?.data[0]?.value == 'OK') {
-        // Check for the referral email
-        const requestReferralEmail = await fetch(
-          `${URL_API_NODEJS}/ap1810-i01`,
+      if (name.trim() === '') {
+        Alert.alert('Error', lang.screen_signup.validator.emptyName);
+      } else if (email.trim() === '') {
+        Alert.alert('Error', lang.screen_signup.validator.emptyEmail);
+      } else if (!isValidEmail(email)) {
+        Alert.alert('Error', lang.screen_signup.validator.invalidEmail);
+      } else if (password.trim() === '') {
+        Alert.alert('Error', lang.screen_signup.validator.emptyPassword);
+      } else if (phoneNumber.trim() === '') {
+        Alert.alert('Error', lang.screen_signup.validator.emptyPhone);
+      } else if (regionID == 0) {
+        Alert.alert('Error', lang.screen_signup.validator.emptyArea);
+      } else {
+        // Check the email
+        const requestCheckEmail = await fetch(
+          `${URL_API_NODEJS}/login-checker-email`,
           {
             method: 'POST',
             headers: {
@@ -105,42 +90,69 @@ const SignUpScreen = ({route}) => {
               Authorization: `Bearer ${authcode}`,
             },
             body: JSON.stringify({
-              email: refferalEmail,
+              email,
             }),
           },
         );
-        const responseReferralEmail = await requestReferralEmail.json();
+        const responseCheckEmail = await requestCheckEmail.json();
 
-        if (responseReferralEmail?.data[0]?.result == true) {
-          const referralMember =
-            refferalEmail === '' ? 0 : responseReferralEmail?.data[0]?.member;
-
-          navigation.navigate('EmailVerif', {
-            dataUser: {
-              name,
-              email,
-              phoneNumber,
-              region: regionID,
-              age,
-              refferalEmail,
-              pin: password,
-              gender,
-              mobileCode: countryCode,
-              countryCode: code,
-              recommand: referralMember,
+        if (responseCheckEmail?.data[0]?.value == 'OK') {
+          // Check for the referral email
+          const requestReferralEmail = await fetch(
+            `${URL_API_NODEJS}/ap1810-i01`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${authcode}`,
+              },
+              body: JSON.stringify({
+                email: refferalEmail,
+              }),
             },
-          });
-        } else if (responseCheckEmail?.data[0]?.result == false) {
-          setRefferalEmail('');
-          Alert.alert('Failed', lang.screen_signup.validator.invalidRecommend);
+          );
+          const responseReferralEmail = await requestReferralEmail.json();
+
+          if (responseReferralEmail?.data[0]?.result == true) {
+            const referralMember =
+              refferalEmail === '' ? 0 : responseReferralEmail?.data[0]?.member;
+
+            navigation.navigate('EmailVerif', {
+              dataUser: {
+                name,
+                email,
+                phoneNumber,
+                region: regionID,
+                age,
+                refferalEmail,
+                pin: password,
+                gender,
+                mobileCode: countryCode,
+                countryCode: code,
+                recommand: referralMember,
+              },
+            });
+          } else if (responseCheckEmail?.data[0]?.result == false) {
+            setRefferalEmail('');
+            Alert.alert(
+              'Failed',
+              lang.screen_signup.validator.invalidRecommend,
+            );
+          } else {
+            Alert.alert('Error', lang.screen_signup.validator.errorServer);
+          }
+        } else if (responseCheckEmail?.data[0]?.value == 'NO') {
+          Alert.alert('Failed', lang.screen_signup.validator.duplicatedEmail);
         } else {
           Alert.alert('Error', lang.screen_signup.validator.errorServer);
         }
-      } else if (responseCheckEmail?.data[0]?.value == 'NO') {
-        Alert.alert('Failed', lang.screen_signup.validator.duplicatedEmail);
-      } else {
-        Alert.alert('Error', lang.screen_signup.validator.errorServer);
       }
+    } catch (err) {
+      console.error('Error retrieving selfCoordinate from AsyncStorage:', err);
+      crashlytics().recordError(new Error(err));
+      crashlytics().log(err);
+    } finally {
+      setIsDisable(false);
     }
   };
 
@@ -221,7 +233,7 @@ const SignUpScreen = ({route}) => {
       .then(jsonData => {
         var jsonToArr = Object.values(jsonData);
         var arrResult = jsonToArr.flat();
-        setAreaData(arrResult);
+        setAreaData(jsonData.data);
       })
       .catch(error => {
         console.error('Error fetching data:', error);
@@ -422,7 +434,7 @@ const SignUpScreen = ({route}) => {
                           uri: 'https://app.xrun.run/flags/kr.png',
                         }
                       : {
-                          uri: `https://app.xrun.run/flags/${flag}.png`,
+                          uri: `${flag}`,
                         }
                   }
                 />
@@ -520,20 +532,41 @@ const SignUpScreen = ({route}) => {
                 if (item.isPlaceholder) {
                   return null; // Don't render anything for placeholder item
                 }
+
+                if (item === 'failed') {
+                  return (
+                    <View
+                      style={{
+                        ...styles.dropdownItemStyle,
+                      }}>
+                      <Text
+                        style={{
+                          ...styles.dropdownItemTxtStyle,
+                          opacity: 0.5,
+                          textAlign: 'center',
+                        }}>
+                        {lang.screen_signup.validator.areaNotFound}
+                      </Text>
+                    </View>
+                  );
+                }
+
                 return (
-                  <View
-                    style={{
-                      ...styles.dropdownItemStyle,
-                      ...(isSelected && {backgroundColor: '#bae6fd'}),
-                    }}>
-                    <Text style={styles.dropdownItemTxtStyle}>
-                      {item.description}
-                    </Text>
-                  </View>
+                  item.description != undefined && (
+                    <View
+                      style={{
+                        ...styles.dropdownItemStyle,
+                        ...(isSelected && {backgroundColor: '#bae6fd'}),
+                      }}>
+                      <Text style={styles.dropdownItemTxtStyle}>
+                        {item.description}
+                      </Text>
+                    </View>
+                  )
                 );
               }}
               showsVerticalScrollIndicator={false}
-              dropdownStyle={styles.dropdownMenuStyle}
+              dropdownStyle={styles.dropdownMenuStyle(areaData[0])}
               disabled={areaData.length === 0}
               disableAutoScroll={true}
             />
@@ -611,9 +644,16 @@ const SignUpScreen = ({route}) => {
                   : ''}
               </Text>
             </View>
-            <Pressable onPress={onSignUp} style={styles.buttonSignUp}>
+            <Pressable
+              onPress={onSignUp}
+              style={styles.buttonSignUp}
+              disabled={isDisable}>
               <Image
-                source={require('../../../assets/images/icon_next.png')}
+                source={
+                  isDisable
+                    ? require('../../../assets/images/icon_nextDisable.png')
+                    : require('../../../assets/images/icon_next.png')
+                }
                 resizeMode="contain"
                 style={styles.buttonSignUpImage}
               />
@@ -798,11 +838,11 @@ const styles = StyleSheet.create({
     fontSize: fontSize('body'),
     color: '#343a59',
   },
-  dropdownMenuStyle: {
+  dropdownMenuStyle: areaData => ({
     backgroundColor: '#E9ECEF',
     borderRadius: 8,
-    height: 300,
-  },
+    height: areaData !== 'failed' && 300,
+  }),
   dropdownItemStyle: {
     width: '100%',
     flexDirection: 'row',

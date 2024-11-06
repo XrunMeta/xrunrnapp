@@ -31,7 +31,6 @@ export const listTransactionsHistory = async (
     return result.data;
   } catch (err) {
     console.log(`Failed get ${nameList}: ${err}`);
-    Alert.alert('', `Failed get ${nameList}`);
     crashlytics().recordError(new Error(err));
     crashlytics().log(err);
   }
@@ -287,7 +286,7 @@ export const gatewayNodeJS = async (route, method = 'GET', body = {}) => {
     return response;
   } catch (error) {
     console.log(`Error gateway NodeJS: ${error}`);
-    Alert.alert('Failed get gateway NodeJS');
+    Alert.alert(lang.global_error.network_busy);
     crashlytics().recordError(new Error(error));
     crashlytics().log(error);
   }
