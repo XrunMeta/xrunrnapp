@@ -29,6 +29,8 @@ const ServiceClause = () => {
         let apiUrl = `app7010-01`;
         if (language === 'id') apiUrl += '-id';
         if (language === 'ko') apiUrl += '-kr';
+        if (language === 'en') apiUrl += '-en';
+        if (language === 'zh') apiUrl += '-zh';
 
         const response = await fetch(`${URL_API_NODEJS}/${apiUrl}`, {
           method: 'GET',
