@@ -16,17 +16,17 @@ import ButtonBack from '../../components/ButtonBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInputWallet from '../../components/CustomInputWallet';
 import {
-  URL_API,
   getLanguage2,
   getFontFam,
   fontSize,
   gatewayNodeJS,
+  BottomComponentFixer,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const Change = ({navigation, route}) => {
   const [lang, setLang] = useState('');
-  const [iconNextIsDisabled, setIconNextIsDisabled] = useState(true);
+  const [iconNextIsDisabled, setIconNextIsDisabled] = useState(false);
   const [amount, setAmount] = useState('');
   const [address, setAddress] = useState('CONVERT');
   const {currency} = route.params;
@@ -112,17 +112,17 @@ const Change = ({navigation, route}) => {
     getBalance();
   }, [dataMember]);
 
-  useEffect(() => {
-    if (amount === '' || amount === '-' || parseFloat(amount) > balance) {
-      setIconNextIsDisabled(true);
-    } else if (amount == 0 || amount < 0) {
-      setIconNextIsDisabled(true);
-      // } else if (address === '' || address.length < 40) {
-      //   setIconNextIsDisabled(true);
-    } else {
-      setIconNextIsDisabled(false);
-    }
-  }, [amount, address]);
+  // useEffect(() => {
+  //   if (amount === '' || amount === '-' || parseFloat(amount) > balance) {
+  //     setIconNextIsDisabled(true);
+  //   } else if (amount == 0 || amount < 0) {
+  //     setIconNextIsDisabled(true);
+  //     // } else if (address === '' || address.length < 40) {
+  //     //   setIconNextIsDisabled(true);
+  //   } else {
+  //     setIconNextIsDisabled(false);
+  //   }
+  // }, [amount, address]);
 
   const onBack = () => {
     navigation.navigate('WalletHome');
@@ -153,6 +153,7 @@ const Change = ({navigation, route}) => {
           : '',
       );
     } else {
+      setIconNextIsDisabled(true);
       setPopupConversion(true);
       setConversionRequest(parseFloat(amount).toFixed(9));
       Keyboard.dismiss();
@@ -161,6 +162,7 @@ const Change = ({navigation, route}) => {
 
   const cancelConversion = () => {
     setPopupConversion(false);
+    setIconNextIsDisabled(false);
   };
 
   const confirmConversion = async () => {
@@ -274,26 +276,24 @@ const Change = ({navigation, route}) => {
             </View>
           </View>
         </View>
-      </ScrollView>
 
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{flex: 1}}>
-        <TouchableOpacity
-          onPress={onSend}
-          style={styles.button}
-          activeOpacity={0.6}>
-          <Image
-            source={
-              iconNextIsDisabled
-                ? require('../../../assets/images/ico-btn-passive.png')
-                : require('../../../assets/images/ico-btn-active.png')
-            }
-            resizeMode="contain"
-            style={styles.buttonImage}
-          />
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
+        <BottomComponentFixer count={5} />
+
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <TouchableOpacity onPress={onSend} style={styles.button}>
+            <Image
+              source={
+                iconNextIsDisabled
+                  ? require('../../../assets/images/ico-btn-passive.png')
+                  : require('../../../assets/images/ico-btn-active.png')
+              }
+              resizeMode="contain"
+              style={styles.buttonImage}
+            />
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+      </ScrollView>
 
       {popupConversion && (
         <View style={styles.popupConversion}>
@@ -395,13 +395,9 @@ const styles = StyleSheet.create({
   button: {
     flexDirection: 'row',
     marginLeft: 'auto',
-    marginRight: 24,
+    marginRight: 28,
     marginTop: 30,
     marginBottom: 10,
-    justifyContent: 'flex-end',
-    position: 'absolute',
-    bottom: 10,
-    right: 0,
   },
   buttonImage: {
     height: 80,
