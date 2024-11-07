@@ -306,8 +306,15 @@ const NotifyScreen = () => {
           <TouchableOpacity
             style={{
               position: 'absolute',
-              right: 0,
-              padding: 15,
+              right: 10,
+              backgroundColor: 'white',
+              height: 35,
+              width: 35,
+              padding: 8,
+              borderRadius: 25,
+              marginLeft: 5,
+              borderWidth: 1,
+              borderColor: '#ebebeb',
             }}
             onPress={() => {
               if (isDelete) {
@@ -316,21 +323,19 @@ const NotifyScreen = () => {
                 return setIsDelete(true);
               }
             }}>
-            <Text
+            <Image
+              source={require('../../../assets/images/icon_delete.png')}
               style={{
-                color: '#ffdc04',
-                fontFamily: getFontFam() + 'Medium',
-                fontSize: fontSize('subtitle'),
-              }}>
-              {isDelete
-                ? lang && lang.screen_notify && lang.screen_notify.deletAll
-                  ? lang.screen_notify.deletAll
-                  : 'DELETE ALL'
-                : lang && lang.screen_notify && lang.screen_notify.delete
-                ? lang.screen_notify.delete
-                : 'DELETE'}
-            </Text>
+                height: 18,
+                width: 18,
+                resizeMode: 'contain',
+              }}
+            />
           </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              deleteChat(item);
+            }}></TouchableOpacity>
         </View>
       </View>
 
