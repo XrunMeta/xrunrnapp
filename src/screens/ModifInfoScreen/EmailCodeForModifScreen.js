@@ -307,6 +307,21 @@ const EmailCodeForModif = () => {
                 />
               </Pressable>
             )}
+
+            <Pressable
+              onPress={onSignIn}
+              style={styles.buttonSignIn}
+              disabled={isSubmitting}>
+              <Image
+                source={
+                  isSubmitting
+                    ? require('../../../assets/images/icon_nextDisable.png')
+                    : require('../../../assets/images/icon_next.png')
+                }
+                resizeMode="contain"
+                style={styles.buttonSignInImage}
+              />
+            </Pressable>
           </View>
 
           {/* Slider Modal */}
