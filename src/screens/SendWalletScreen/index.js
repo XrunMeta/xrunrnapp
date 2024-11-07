@@ -57,7 +57,7 @@ const SendWalletScreen = ({navigation, route}) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isPopupSend, setIsPopupSend] = useState(false);
   const [isPopupSendConfirmation, setIsPopupSendConfirmation] = useState(false);
-  const [isIconNextDisabled, setIsIconNextDisabled] = useState(true);
+  const [isIconNextDisabled, setIsIconNextDisabled] = useState(false);
 
   // Animated notification in QR
   const [fadeAnim] = useState(new Animated.Value(0));
@@ -456,17 +456,17 @@ const SendWalletScreen = ({navigation, route}) => {
     return () => backHandler.remove();
   }, [isVisibleReadQR]);
 
-  useEffect(() => {
-    if (amount === '' || amount > balance) {
-      setIsIconNextDisabled(true);
-    } else if (amount == 0) {
-      setIsIconNextDisabled(true);
-    } else if (address === '' || address.length < 40) {
-      setIsIconNextDisabled(true);
-    } else {
-      setIsIconNextDisabled(false);
-    }
-  }, [amount, address]);
+  // useEffect(() => {
+  //   if (amount === '' || amount > balance) {
+  //     setIsIconNextDisabled(true);
+  //   } else if (amount == 0) {
+  //     setIsIconNextDisabled(true);
+  //   } else if (address === '' || address.length < 40) {
+  //     setIsIconNextDisabled(true);
+  //   } else {
+  //     setIsIconNextDisabled(false);
+  //   }
+  // }, [amount, address]);
 
   const onBack = () => {
     navigation.navigate('WalletHome');
@@ -820,10 +820,10 @@ const SendWalletScreen = ({navigation, route}) => {
           </Text>
         </View>
       </View>
-      <ScrollView overScrollMode="never">
-        <View style={{backgroundColor: '#fff'}}>
+      <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
+        <View style={{flex: 1}}>
           <View style={styles.partTop}>
-            <Text style={styles.currencyName}>{dataWallet.symbol}</Text>
+            {/* <Text style={styles.currencyName}>{dataWallet.symbol}</Text> */}
             <View style={styles.partScanQR}>
               <Text style={styles.balance}>
                 Balance: {balance}
@@ -877,17 +877,16 @@ const SendWalletScreen = ({navigation, route}) => {
       </ScrollView>
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{flex: 1}}>
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <TouchableOpacity
           onPress={onSend}
           style={styles.button}
-          activeOpacity={0.6}>
+          disabled={isIconNextDisabled}>
           <Image
             source={
               isIconNextDisabled
-                ? require('../../../assets/images/ico-btn-passive.png')
-                : require('../../../assets/images/ico-btn-active.png')
+                ? require('../../../assets/images/icon_nextDisable.png')
+                : require('../../../assets/images/icon_next.png')
             }
             resizeMode="contain"
             style={styles.buttonImage}
@@ -1166,7 +1165,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 28,
     paddingVertical: 18,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     alignItems: 'center',
   },
   currencyName: {
@@ -1188,7 +1187,7 @@ const styles = StyleSheet.create({
   button: {
     flexDirection: 'row',
     marginLeft: 'auto',
-    marginRight: 24,
+    marginRight: 28,
     marginTop: 30,
     marginBottom: 10,
     justifyContent: 'flex-end',

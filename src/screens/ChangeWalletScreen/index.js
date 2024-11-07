@@ -243,7 +243,7 @@ const Change = ({navigation, route}) => {
       <ScrollView overScrollMode="never">
         <View style={{backgroundColor: '#fff'}}>
           <View style={styles.partTop}>
-            <Text style={styles.currencyName}>-</Text>
+            {/* <Text style={styles.currencyName}>-</Text> */}
             <View style={styles.partScanQR}>
               <Text style={styles.balance}>
                 {lang && lang ? lang.screen_conversion.acquired_coin : ''}:{' '}
@@ -375,7 +375,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 28,
     paddingVertical: 18,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     alignItems: 'center',
   },
   currencyName: {
