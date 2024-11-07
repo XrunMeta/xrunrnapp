@@ -9,6 +9,7 @@ import {
   Image,
   Dimensions,
   SafeAreaView,
+  KeyboardAvoidingView,
 } from 'react-native';
 import ButtonBack from '../ButtonBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -91,58 +92,62 @@ const CustomInputEdit = ({
         transparent={true}
         visible={isModalVisible}
         onRequestClose={closeModal}>
-        <SafeAreaView style={styles.modalContainer}>
-          <View
-            style={[
-              {alignItems: 'center', flex: 1, backgroundColor: 'white'},
-              {height: ScreenHeight},
-            ]}>
-            {/* Title */}
-            <View style={{flexDirection: 'row'}}>
-              <View style={{position: 'absolute', zIndex: 1}}>
-                <ButtonBack onClick={closeModal} />
+        <KeyboardAvoidingView
+          style={[styles.modalContainer, {height: ScreenHeight}]}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <SafeAreaView style={styles.modalContainer}>
+            <View
+              style={[
+                {alignItems: 'center', flex: 1, backgroundColor: 'white'},
+                {height: ScreenHeight},
+              ]}>
+              {/* Title */}
+              <View style={{flexDirection: 'row'}}>
+                <View style={{position: 'absolute', zIndex: 1}}>
+                  <ButtonBack onClick={closeModal} />
+                </View>
+                <View
+                  style={{
+                    paddingVertical: 9,
+                    alignItems: 'center',
+                    backgroundColor: 'white',
+                    justifyContent: 'center',
+                    flex: 1,
+                    elevation: 5,
+                    zIndex: 0,
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: fontSize('title'),
+                      fontFamily: getFontFam() + 'Bold',
+                      color: '#051C60',
+                      margin: 10,
+                    }}>
+                    {lang && lang.screen_modify_information
+                      ? lang.screen_modify_information.modify
+                      : 'Modify'}{' '}
+                    {title}
+                  </Text>
+                </View>
               </View>
+
+              {/* Content Here */}
               <View
                 style={{
-                  paddingVertical: 9,
-                  alignItems: 'center',
-                  backgroundColor: 'white',
-                  justifyContent: 'center',
+                  flexDirection: 'row',
                   flex: 1,
-                  elevation: 5,
-                  zIndex: 0,
                 }}>
-                <Text
-                  style={{
-                    fontSize: fontSize('title'),
-                    fontFamily: getFontFam() + 'Bold',
-                    color: '#051C60',
-                    margin: 10,
-                  }}>
-                  {lang && lang.screen_modify_information
-                    ? lang.screen_modify_information.modify
-                    : 'Modify'}{' '}
-                  {title}
-                </Text>
+                {content}
               </View>
             </View>
-
-            {/* Content Here */}
-            <View
-              style={{
-                flexDirection: 'row',
-                flex: 1,
-              }}>
-              {content}
-            </View>
-
+            <View style={{flex: 1}}></View>
             <View
               style={{
                 padding: 5,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
-                flex: 1,
                 width: '100%',
+                backgroundColor: 'yellow',
               }}>
               <View
                 style={{
@@ -170,8 +175,8 @@ const CustomInputEdit = ({
                 />
               </Pressable>
             </View>
-          </View>
-        </SafeAreaView>
+          </SafeAreaView>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );
