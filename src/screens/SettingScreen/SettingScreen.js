@@ -217,26 +217,26 @@ const SettingScreen = () => {
             }}>
             {lang && lang ? lang.screen_setting.category.account.cat : ''}
           </Text>
-          <ButtonList
+          {/* <ButtonList
             label={
               lang && lang ? lang.screen_setting.category.account.logout : ''
             }
             onPress={onLogout}
-          />
+          /> */}
           <ButtonList
             label={
               lang && lang ? lang.screen_setting.category.account.close : ''
             }
             onPress={onClose}
           />
-          <ButtonList
+          {/* <ButtonList
             label={lang && lang ? lang.screen_setting.other_chain.info : ''}
             isHaveSubText
             isStatusOtherChains={isStatusOtherChains}
             statusOtherChains={statusOtherChain}
             changeStatusOtherChains={changeStatusOtherChains}
             onPress={changeStatusOtherChains}
-          />
+          /> */}
         </ScrollView>
       </View>
     </SafeAreaView>
