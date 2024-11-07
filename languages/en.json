@@ -366,8 +366,8 @@
     },
     "gender": {
       "label": "Gender",
-      "opt1": "Boy/Men",
-      "opt2": "Girl/Women"
+      "opt1": "Men",
+      "opt2": "Women"
     },
     "area": {
       "label": "Area",
