@@ -60,7 +60,6 @@ const WalletScreen = ({navigation, route}) => {
         const screenLang = await getLanguage2(currentLanguage);
 
         // Set your language state
-        console.log(screenLang.screen_wallet.retry_load_wallet);
         setLang(screenLang);
       } catch (err) {
         console.error('Error in fetchData:', err);
