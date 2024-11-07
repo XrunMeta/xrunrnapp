@@ -90,8 +90,8 @@ const ShowAdScreen = ({route}) => {
 
     try {
       const ad = InterstitialAd.createForAdRequest(
-        // TestIds.INTERSTITIAL,
-        admobAdUnit,
+        TestIds.INTERSTITIAL,
+        // admobAdUnit,
       );
 
       ad.addAdEventListener(AdEventType.LOADED, () => {
@@ -275,6 +275,8 @@ const ShowAdScreen = ({route}) => {
       };
 
       coinAcquiring();
+    } else {
+      console.log('Ad not completed yet');
     }
   }, [adCompleted, navigation]);
 
