@@ -13,7 +13,12 @@ import {
 } from 'react-native';
 import ButtonBack from '../ButtonBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  BottomComponentFixer,
+} from '../../../utils';
 
 const CustomInputEdit = ({
   title,
@@ -95,7 +100,8 @@ const CustomInputEdit = ({
         <KeyboardAvoidingView
           style={[styles.modalContainer, {height: ScreenHeight}]}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-          <SafeAreaView style={styles.modalContainer}>
+          <SafeAreaView
+            style={[styles.modalContainer, {backgroundColor: 'pink'}]}>
             <View
               style={[
                 {alignItems: 'center', flex: 1, backgroundColor: 'white'},
@@ -135,45 +141,45 @@ const CustomInputEdit = ({
               <View
                 style={{
                   flexDirection: 'row',
-                  flex: 1,
                 }}>
                 {content}
               </View>
-            </View>
-            <View style={{flex: 1}}></View>
-            <View
-              style={{
-                padding: 5,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                width: '100%',
-                backgroundColor: 'yellow',
-              }}>
+
+              <BottomComponentFixer count={4} />
+
               <View
                 style={{
+                  padding: 5,
                   flexDirection: 'row',
-                  alignSelf: 'flex-end',
-                  alignItems: 'center',
-                  height: 100,
-                  flex: 1,
-                }}></View>
-              <Pressable
-                onPress={saveChanges}
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  alignSelf: 'flex-end',
-                  flexDirection: 'column-reverse',
-                  height: 100,
-                  justifyContent: 'center',
-                  marginRight: 10,
+                  justifyContent: 'space-between',
+                  width: '100%',
                 }}>
-                <Image
-                  source={require('../../../assets/images/icon_check.png')}
-                  resizeMode="contain"
-                  style={{height: 80, width: 80}}
-                />
-              </Pressable>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignSelf: 'flex-end',
+                    alignItems: 'center',
+                    height: 100,
+                    flex: 1,
+                  }}></View>
+                <Pressable
+                  onPress={saveChanges}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    alignSelf: 'flex-end',
+                    flexDirection: 'column-reverse',
+                    height: 100,
+                    justifyContent: 'center',
+                    marginRight: 10,
+                  }}>
+                  <Image
+                    source={require('../../../assets/images/icon_check.png')}
+                    resizeMode="contain"
+                    style={{height: 80, width: 80}}
+                  />
+                </Pressable>
+              </View>
             </View>
           </SafeAreaView>
         </KeyboardAvoidingView>
