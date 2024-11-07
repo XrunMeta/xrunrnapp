@@ -10,6 +10,8 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput';
@@ -158,73 +160,77 @@ const EmailVerifForModifScreen = () => {
   }, []);
 
   return (
-    <KeyboardAvoidingView
-      style={{flex: 1}}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}>
-      <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
-        <View style={{flexDirection: 'row', position: 'relative'}}>
-          <View style={{position: 'absolute', zIndex: 1}}>
-            <ButtonBack onClick={onBack} />
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <KeyboardAvoidingView
+        style={{flex: 1}}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}>
+        <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
+          <View style={{flexDirection: 'row', position: 'relative'}}>
+            <View style={{position: 'absolute', zIndex: 1}}>
+              <ButtonBack onClick={onBack} />
+            </View>
+            <View style={styles.titleWrapper}>
+              <Text style={styles.title}>
+                {lang && lang.screen_appInfo
+                  ? lang.screen_emailAuth?.label
+                  : ''}
+              </Text>
+            </View>
           </View>
-          <View style={styles.titleWrapper}>
-            <Text style={styles.title}>
-              {lang && lang.screen_appInfo ? lang.screen_emailAuth?.label : ''}
+
+          <CustomInput
+            label={
+              lang && lang.screen_notExist && lang.screen_notExist.field_email
+                ? lang.screen_notExist.field_email.label
+                : ''
+            }
+            placeholder={
+              lang && lang.screen_notExist && lang.screen_notExist.field_email
+                ? lang.screen_notExist.field_email.placeholder
+                : ''
+            }
+            value={email}
+            setValue={onEmailChange}
+            isPassword={false}
+          />
+          {isEmailValid ? null : (
+            <Text
+              style={{
+                alignSelf: 'flex-start',
+                marginLeft: 25,
+                color: 'red',
+              }}>
+              {lang &&
+              lang.screen_notExist &&
+              lang.screen_notExist.screen_emailAuth &&
+              lang.screen_notExist.screen_emailAuth.alert
+                ? lang.screen_notExist.screen_emailAuth.alert.invalidEmail
+                : ''}
             </Text>
+          )}
+
+          <BottomComponentFixer count={3} />
+
+          <View style={[styles.bottomSection]}>
+            <Pressable
+              onPress={onSignIn}
+              style={styles.buttonSignIn}
+              disabled={isSubmitDisable}>
+              <Image
+                source={
+                  isSubmitDisable
+                    ? require('../../../assets/images/icon_nextDisable.png')
+                    : require('../../../assets/images/icon_next.png')
+                }
+                resizeMode="contain"
+                style={styles.buttonSignInImage}
+              />
+            </Pressable>
           </View>
-        </View>
-
-        <CustomInput
-          label={
-            lang && lang.screen_notExist && lang.screen_notExist.field_email
-              ? lang.screen_notExist.field_email.label
-              : ''
-          }
-          placeholder={
-            lang && lang.screen_notExist && lang.screen_notExist.field_email
-              ? lang.screen_notExist.field_email.placeholder
-              : ''
-          }
-          value={email}
-          setValue={onEmailChange}
-          isPassword={false}
-        />
-        {isEmailValid ? null : (
-          <Text
-            style={{
-              alignSelf: 'flex-start',
-              marginLeft: 25,
-              color: 'red',
-            }}>
-            {lang &&
-            lang.screen_notExist &&
-            lang.screen_notExist.screen_emailAuth &&
-            lang.screen_notExist.screen_emailAuth.alert
-              ? lang.screen_notExist.screen_emailAuth.alert.invalidEmail
-              : ''}
-          </Text>
-        )}
-
-        <BottomComponentFixer count={3} />
-
-        <View style={[styles.bottomSection]}>
-          <Pressable
-            onPress={onSignIn}
-            style={styles.buttonSignIn}
-            disabled={isSubmitDisable}>
-            <Image
-              source={
-                isSubmitDisable
-                  ? require('../../../assets/images/icon_nextDisable.png')
-                  : require('../../../assets/images/icon_next.png')
-              }
-              resizeMode="contain"
-              style={styles.buttonSignInImage}
-            />
-          </Pressable>
-        </View>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+        </SafeAreaView>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 };
 
