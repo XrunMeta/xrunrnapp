@@ -45,7 +45,7 @@ const EmailCodeForModif = () => {
   const [modalVisible, setModalVisible] = useState(false);
   let ScreenHeight = Dimensions.get('window').height;
   const [lang, setLang] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDisable, setIsDisable] = useState(false);
   const [restartCountdown, setRestartCountdown] = useState(0);
 
   const emailAuth = async () => {
@@ -95,9 +95,15 @@ const EmailCodeForModif = () => {
   };
 
   const onSignIn = async () => {
-    if (isSubmitting) return;
-    setIsSubmitting(true);
+    if (isDisable) return;
 
+    // Cek jika semua kode sudah diisi
+    if (!isCodeComplete) {
+      Alert.alert('Failed', lang.screen_emailVerification.notif.wrongCode);
+      return;
+    }
+
+    setIsDisable(true);
     const getAuthCode = verificationCode.join('');
 
     // Check Email & Auth Code Relational
@@ -126,7 +132,7 @@ const EmailCodeForModif = () => {
       // Handle network errors or other exceptions
       console.error('Error during Check Auth Code:', error);
     } finally {
-      setIsSubmitting(false);
+      setIsDisable(false);
     }
   };
 
@@ -290,31 +296,13 @@ const EmailCodeForModif = () => {
                 restart={restartCountdown}
               />
             </View>
-            {isCodeComplete && !isSubmitting ? (
-              <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
-                <Image
-                  source={require('../../../assets/images/icon_next.png')}
-                  resizeMode="contain"
-                  style={styles.buttonSignInImage}
-                />
-              </Pressable>
-            ) : (
-              <Pressable disabled style={styles.buttonSignIn}>
-                <Image
-                  source={require('../../../assets/images/icon_nextDisable.png')}
-                  resizeMode="contain"
-                  style={styles.buttonSignInImage}
-                />
-              </Pressable>
-            )}
-
             <Pressable
               onPress={onSignIn}
               style={styles.buttonSignIn}
-              disabled={isSubmitting}>
+              disabled={isDisable}>
               <Image
                 source={
-                  isSubmitting
+                  isDisable
                     ? require('../../../assets/images/icon_nextDisable.png')
                     : require('../../../assets/images/icon_next.png')
                 }
