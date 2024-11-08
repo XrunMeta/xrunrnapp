@@ -125,7 +125,8 @@
     "alert": {
       "emptyEmail": "Please insert your email",
       "invalidEmail": "Your email is not valid",
-      "errorServer": "There is a server communication error. Please try again..."
+      "errorServer": "There is a server communication error. Please try again...",
+      "notExist": "Your email is not exist"
     }
   },
 
