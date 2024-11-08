@@ -589,7 +589,7 @@
   },
 
   "screen_advertise": {
-    "title": "Advertising Storage",
+    "title": "Ad Storage",
     "delete": "DELETE",
     "all": " ALL",
     "deleteAll": "DELETE ALL",
