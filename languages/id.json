@@ -125,7 +125,8 @@
     "alert": {
       "emptyEmail": "Tolong isi email anda",
       "invalidEmail": "Email anda tidak valid",
-      "errorServer": "Terjadi kesalahan komunikasi server. Harap coba lagi..."
+      "errorServer": "Terjadi kesalahan komunikasi server. Harap coba lagi...",
+      "notExist": "Email anda belum terdaftar"
     }
   },
 
