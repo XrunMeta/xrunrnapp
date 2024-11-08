@@ -124,14 +124,20 @@ const ChooseRegionScreen = ({route}) => {
 
   return (
     <View style={[styles.root]}>
-      <ButtonBack onClick={() => onBack(code, flag, countryCode, country)} />
+      <View style={{flexDirection: 'row', position: 'relative'}}>
+        <View style={{position: 'absolute', zIndex: 1}}>
+          <ButtonBack
+            onClick={() => onBack(code, flag, countryCode, country)}
+          />
+        </View>
 
-      <View style={styles.titleWrapper}>
-        <Text style={styles.title}>
-          {lang && lang.screen_country && lang.screen_country.title
-            ? lang.screen_country.title
-            : ''}
-        </Text>
+        <View style={styles.titleWrapper}>
+          <Text style={styles.title}>
+            {lang && lang.screen_country && lang.screen_country.title
+              ? lang.screen_country.title
+              : ''}
+          </Text>
+        </View>
       </View>
 
       {/* Selected Region */}
@@ -246,7 +252,7 @@ const styles = StyleSheet.create({
   },
   titleWrapper: {
     width: '100%',
-    paddingHorizontal: 20,
+    marginTop: 20,
     marginBottom: -20,
     alignItems: 'center',
   },

@@ -327,15 +327,19 @@ const SignUpScreen = ({route}) => {
     <SafeAreaView>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={[styles.root]}>
-          <ButtonBack onClick={onBack} />
+          <View style={{flexDirection: 'row', position: 'relative'}}>
+            <View style={{position: 'absolute', zIndex: 1}}>
+              <ButtonBack onClick={onBack} />
+            </View>
 
-          {/*  Title */}
-          <View style={styles.titleWrapper}>
-            <Text style={styles.title}>
-              {lang && lang.screen_signup && lang.screen_signup.title
-                ? lang.screen_signup.title
-                : ''}
-            </Text>
+            {/*  Title */}
+            <View style={styles.titleWrapper}>
+              <Text style={styles.title}>
+                {lang && lang.screen_signup && lang.screen_signup.title
+                  ? lang.screen_signup.title
+                  : ''}
+              </Text>
+            </View>
           </View>
 
           {/*  Field - Name */}
@@ -755,8 +759,7 @@ const styles = StyleSheet.create({
   },
   titleWrapper: {
     width: '100%',
-    paddingHorizontal: 20,
-    marginBottom: -20,
+    marginTop: 20,
     alignItems: 'center',
   },
   title: {
