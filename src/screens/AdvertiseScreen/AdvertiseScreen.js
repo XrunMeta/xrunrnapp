@@ -489,7 +489,7 @@ const AdvertiseScreen = () => {
             onPress={() => setFilterModalVisible(true)}
             style={{
               backgroundColor: 'white',
-              paddingVertical: 5,
+              paddingVertical: 10,
               paddingHorizontal: 10,
               borderRadius: 5,
               elevation: 1,
@@ -581,7 +581,7 @@ const AdvertiseScreen = () => {
               style={{
                 flex: 1,
                 position: 'absolute',
-                top: 0,
+                top: 10,
                 left: 0,
                 right: 0,
                 bottom: 0,
@@ -610,7 +610,7 @@ const AdvertiseScreen = () => {
                     )
                   }
                   style={{
-                    paddingVertical: 5,
+                    paddingVertical: 10,
                     paddingHorizontal: 10,
                     borderBottomColor: '#acb5bb',
                     borderBottomWidth: 1,
@@ -636,7 +636,7 @@ const AdvertiseScreen = () => {
                     )
                   }
                   style={{
-                    paddingVertical: 5,
+                    paddingVertical: 10,
                     paddingHorizontal: 10,
                     borderBottomColor: '#acb5bb',
                     borderBottomWidth: 1,
@@ -662,7 +662,7 @@ const AdvertiseScreen = () => {
                     )
                   }
                   style={{
-                    paddingVertical: 5,
+                    paddingVertical: 10,
                     paddingHorizontal: 10,
                     borderBottomColor: '#acb5bb',
                   }}>
@@ -737,10 +737,10 @@ const AdvertiseScreen = () => {
           {route.key === 'first'
             ? lang && lang.screen_advertise && lang.screen_advertise.tab1
               ? lang.screen_advertise.tab1
-              : 'An Advertisement in Storage'
+              : 'Storage'
             : lang && lang.screen_advertise && lang.screen_advertise.tab2
             ? lang.screen_advertise.tab2
-            : 'Mission Completed Advertisement'}
+            : 'Completed'}
         </Text>
       )}
     />
@@ -788,8 +788,15 @@ const AdvertiseScreen = () => {
             <TouchableOpacity
               style={{
                 position: 'absolute',
-                right: 0,
-                padding: 15,
+                right: 10,
+                backgroundColor: 'white',
+                height: 35,
+                width: 35,
+                padding: 8,
+                borderRadius: 25,
+                marginLeft: 5,
+                borderWidth: 1,
+                borderColor: '#ebebeb',
               }}
               onPress={() => {
                 if (isDelete) {
@@ -798,25 +805,14 @@ const AdvertiseScreen = () => {
                   return setIsDelete(true);
                 }
               }}>
-              <Text
+              <Image
+                source={require('../../../assets/images/icon_delete.png')}
                 style={{
-                  // color: '#ffdc04',
-                  color: 'orange',
-                  fontFamily: getFontFam() + 'Medium',
-                  fontSize: fontSize('body'),
-                }}>
-                {isDelete
-                  ? lang &&
-                    lang.screen_advertise &&
-                    lang.screen_advertise.deleteAll
-                    ? lang.screen_advertise.deleteAll
-                    : ''
-                  : lang &&
-                    lang.screen_advertise &&
-                    lang.screen_advertise.delete
-                  ? lang.screen_advertise.delete
-                  : ''}
-              </Text>
+                  height: 18,
+                  width: 18,
+                  resizeMode: 'contain',
+                }}
+              />
             </TouchableOpacity>
           ) : (
             ''
@@ -864,7 +860,6 @@ const styles = StyleSheet.create({
     fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
-    marginLeft: -10,
   },
   normalText: {
     color: 'black',
