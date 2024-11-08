@@ -112,17 +112,17 @@ const Change = ({navigation, route}) => {
     getBalance();
   }, [dataMember]);
 
-  // useEffect(() => {
-  //   if (amount === '' || amount === '-' || parseFloat(amount) > balance) {
-  //     setIconNextIsDisabled(true);
-  //   } else if (amount == 0 || amount < 0) {
-  //     setIconNextIsDisabled(true);
-  //     // } else if (address === '' || address.length < 40) {
-  //     //   setIconNextIsDisabled(true);
-  //   } else {
-  //     setIconNextIsDisabled(false);
-  //   }
-  // }, [amount, address]);
+  useEffect(() => {
+    if (amount === '' || amount === '-' || parseFloat(amount) > balance) {
+      setIconNextIsDisabled(true);
+    } else if (amount == 0 || amount < 0) {
+      setIconNextIsDisabled(true);
+      // } else if (address === '' || address.length < 40) {
+      //   setIconNextIsDisabled(true);
+    } else {
+      setIconNextIsDisabled(false);
+    }
+  }, [amount, address]);
 
   const onBack = () => {
     navigation.navigate('WalletHome');
@@ -153,7 +153,7 @@ const Change = ({navigation, route}) => {
           : '',
       );
     } else {
-      setIconNextIsDisabled(true);
+      setIconNextIsDisabled(false);
       setPopupConversion(true);
       setConversionRequest(parseFloat(amount).toFixed(9));
       Keyboard.dismiss();
@@ -162,7 +162,6 @@ const Change = ({navigation, route}) => {
 
   const cancelConversion = () => {
     setPopupConversion(false);
-    setIconNextIsDisabled(false);
   };
 
   const confirmConversion = async () => {
@@ -398,6 +397,7 @@ const styles = StyleSheet.create({
     marginRight: 28,
     marginTop: 30,
     marginBottom: 10,
+    justifyContent: 'flex-end',
   },
   buttonImage: {
     height: 80,

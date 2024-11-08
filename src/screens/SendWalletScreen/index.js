@@ -60,7 +60,7 @@ const SendWalletScreen = ({navigation, route}) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isPopupSend, setIsPopupSend] = useState(false);
   const [isPopupSendConfirmation, setIsPopupSendConfirmation] = useState(false);
-  const [isIconNextDisabled, setIsIconNextDisabled] = useState(false);
+  const [isIconNextDisabled, setIsIconNextDisabled] = useState(true);
 
   // Animated notification in QR
   const [fadeAnim] = useState(new Animated.Value(0));
@@ -177,6 +177,7 @@ const SendWalletScreen = ({navigation, route}) => {
 
           if (newCount === 30) {
             console.log('Disable button confirm');
+            console.log(newCount);
             setIsDisableButtonConfirm(true);
             setIsTextBlinking(true);
             getEstimatedGas();
@@ -348,7 +349,6 @@ const SendWalletScreen = ({navigation, route}) => {
     setIsTextBlinking(false);
 
     setIsInsufficientBalance(false);
-    setIsIconNextDisabled(false);
   };
 
   // If gas estimate API network busy
@@ -460,17 +460,17 @@ const SendWalletScreen = ({navigation, route}) => {
     return () => backHandler.remove();
   }, [isVisibleReadQR]);
 
-  // useEffect(() => {
-  //   if (amount === '' || amount > balance) {
-  //     setIsIconNextDisabled(true);
-  //   } else if (amount == 0) {
-  //     setIsIconNextDisabled(true);
-  //   } else if (address === '' || address.length < 40) {
-  //     setIsIconNextDisabled(true);
-  //   } else {
-  //     setIsIconNextDisabled(false);
-  //   }
-  // }, [amount, address]);
+  useEffect(() => {
+    if (amount === '' || amount > balance) {
+      setIsIconNextDisabled(true);
+    } else if (amount == 0) {
+      setIsIconNextDisabled(true);
+    } else if (address === '' || address.length < 40) {
+      setIsIconNextDisabled(true);
+    } else {
+      setIsIconNextDisabled(false);
+    }
+  }, [amount, address]);
 
   const onBack = () => {
     navigation.navigate('WalletHome');
@@ -724,7 +724,6 @@ const SendWalletScreen = ({navigation, route}) => {
       ]);
     } else {
       setIsLoading(true);
-      setIsIconNextDisabled(true);
 
       const statusLimitTransfer = await getLimitTransfer();
       // Check the limit transfer available
@@ -884,10 +883,7 @@ const SendWalletScreen = ({navigation, route}) => {
 
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-            <TouchableOpacity
-              onPress={onSend}
-              style={styles.button}
-              disabled={isIconNextDisabled}>
+            <TouchableOpacity onPress={onSend} style={styles.button}>
               <Image
                 source={
                   isIconNextDisabled
