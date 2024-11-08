@@ -198,19 +198,23 @@ const SignInScreen = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView style={styles.root}>
-        <ButtonBack onClick={onBack} />
+        <View style={{flexDirection: 'row', position: 'relative'}}>
+          <View style={{position: 'absolute', zIndex: 1}}>
+            <ButtonBack onClick={onBack} />
+          </View>
 
-        <View style={styles.titleWrapper}>
-          <Text style={styles.title}>
-            {lang && lang.screen_signin && lang.screen_signin.title
-              ? lang.screen_signin.title
-              : ''}
-          </Text>
-          <Text style={styles.subTitle}>
-            {lang && lang.screen_signin && lang.screen_signin.subTitle
-              ? lang.screen_signin.subTitle
-              : ''}
-          </Text>
+          <View style={styles.titleWrapper}>
+            <Text style={styles.title}>
+              {lang && lang.screen_signin && lang.screen_signin.title
+                ? lang.screen_signin.title
+                : ''}
+            </Text>
+            <Text style={styles.subTitle}>
+              {lang && lang.screen_signin && lang.screen_signin.subTitle
+                ? lang.screen_signin.subTitle
+                : ''}
+            </Text>
+          </View>
         </View>
 
         <CustomInput
@@ -326,6 +330,7 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 20,
     alignItems: 'center',
+    marginTop: 20,
   },
   title: {
     fontFamily: getFontFam() + 'Bold',
