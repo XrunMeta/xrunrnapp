@@ -24,6 +24,7 @@ const CustomInputEdit = ({
   title,
   label,
   value,
+  tempValue,
   content,
   isDisable,
   onSaveChange,
@@ -154,6 +155,10 @@ const CustomInputEdit = ({
                   justifyContent: 'space-between',
                   width: '100%',
                 }}>
+                <Text>
+                  {value} - {tempValue} ={' '}
+                  {value == tempValue ? 'true' : 'false'}
+                </Text>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -172,9 +177,14 @@ const CustomInputEdit = ({
                     height: 100,
                     justifyContent: 'center',
                     marginRight: 10,
-                  }}>
+                  }}
+                  disabled={value == tempValue ? true : false}>
                   <Image
-                    source={require('../../../assets/images/icon_check.png')}
+                    source={
+                      value == tempValue
+                        ? require('../../../assets/images/icon_nextDisable.png')
+                        : require('../../../assets/images/icon_next.png')
+                    }
                     resizeMode="contain"
                     style={{height: 80, width: 80}}
                   />

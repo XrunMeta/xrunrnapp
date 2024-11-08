@@ -190,6 +190,7 @@ const ModifInfoScreen = ({route}) => {
 
     fetchData(); // Get Data from API
     fetchLangData(); // Get Language
+    console.log('bgsttttttttttttttttttttttttttttt');
   }, []);
 
   // Format Date
@@ -359,9 +360,12 @@ const ModifInfoScreen = ({route}) => {
                     : ''
                 }
                 value={lastName}
+                tempValue={tempLastName}
                 setValue={setLastName}
                 onSaveChange={() => {
                   setLastName(tempLastName);
+                  setTempLastName(tempLastName);
+                  console.log('bebegug -> ' + tempLastName);
                   saveChangesToAPI(
                     'app7120-01',
                     astorUserData.member,
@@ -446,6 +450,7 @@ const ModifInfoScreen = ({route}) => {
                     : ''
                 }
                 value={name}
+                tempValue={tempName}
                 setValue={setName}
                 onSaveChange={() => {
                   setName(tempName);
@@ -533,6 +538,7 @@ const ModifInfoScreen = ({route}) => {
                     : ''
                 }
                 value={userData.email}
+                tempValue={userData.email}
                 isDisable={true}
                 content={
                   <View
@@ -710,6 +716,7 @@ const ModifInfoScreen = ({route}) => {
                     : ''
                 }
                 value={age == null ? '-' : age + 's'}
+                tempValue={tempAge}
                 setValue={setAge}
                 onSaveChange={() => {
                   saveChangesToAPI(
@@ -787,6 +794,7 @@ const ModifInfoScreen = ({route}) => {
                     : ''
                 }
                 setValue={setGender}
+                tempValue={tempGender}
                 onSaveChange={() => {
                   saveChangesToAPI(
                     'app7180-01',
@@ -863,6 +871,7 @@ const ModifInfoScreen = ({route}) => {
                     : country.cDesc + (region.rDesc ? ', ' + region.rDesc : '')
                 }
                 setValue={setRegion.rDesc}
+                tempValue={tempRegion}
                 onSaveChange={() => {
                   if (tempRegion.rCode === 0) {
                     Alert.alert(

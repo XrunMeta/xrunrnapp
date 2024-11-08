@@ -45,7 +45,7 @@ const EmailCodeForModif = () => {
   const [modalVisible, setModalVisible] = useState(false);
   let ScreenHeight = Dimensions.get('window').height;
   const [lang, setLang] = useState({});
-  const [isDisable, setIsDisable] = useState(false);
+  const [isDisable, setIsDisable] = useState(true);
   const [restartCountdown, setRestartCountdown] = useState(0);
 
   const emailAuth = async () => {
@@ -89,6 +89,11 @@ const EmailCodeForModif = () => {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const mergeCode = verificationCode.join('');
+    setIsDisable(mergeCode == '' ? true : false);
+  }, [verificationCode]);
 
   const onBack = () => {
     navigation.replace('InfoHome');

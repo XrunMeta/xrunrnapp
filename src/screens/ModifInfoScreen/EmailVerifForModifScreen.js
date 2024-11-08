@@ -34,7 +34,7 @@ const EmailVerifForModifScreen = () => {
   const [isEmailValid, setIsEmailValid] = useState(true);
   const route = useRoute();
   const {existEmail} = route.params;
-  const [isSubmitDisable, setIsSubmitDisable] = useState(false);
+  const [isSubmitDisable, setIsSubmitDisable] = useState(true);
 
   const navigation = useNavigation();
 
@@ -128,6 +128,10 @@ const EmailVerifForModifScreen = () => {
     const pattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     return pattern.test(email);
   };
+
+  useEffect(() => {
+    setIsSubmitDisable(email == '' ? true : false);
+  }, [email]);
 
   onEmailChange = text => {
     setEmail(text);
