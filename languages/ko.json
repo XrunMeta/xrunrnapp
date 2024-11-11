@@ -605,7 +605,8 @@
     "pending": "코인 획득 대기 중",
     "tab1": "보관된 광고",
     "tab2": "완료된 광고",
-    "total": "합계"
+    "total": "합계",
+    "title_floating_popup": "저장 메뉴 선택"
   },
 
   "permissions_alert": {
