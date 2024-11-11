@@ -55,6 +55,7 @@ import SplashScreen from '../screens/SplashScreen/SplashScreen';
 import IOSWallet from '../screens/WalletScreen/IOSWallet';
 import EmailVerifForModifScreen from '../screens/ModifInfoScreen/EmailVerifForModifScreen';
 import EmailCodeForModif from '../screens/ModifInfoScreen/EmailCodeForModifScreen';
+import EmailCodeForModifNumberScreen from '../screens/ModifInfoScreen/EmailCodeForModifNumberScreen';
 
 export default Router = () => {
   const Stack = createNativeStackNavigator();
@@ -114,6 +115,10 @@ export default Router = () => {
         <Stack.Screen
           name="EmailVerifForModif"
           component={EmailVerifForModifScreen}
+        />
+        <Stack.Screen
+          name="EmailCodeForModifNumber"
+          component={EmailCodeForModifNumberScreen}
         />
         <Stack.Screen name="EmailCodeForModif" component={EmailCodeForModif} />
         <Stack.Screen name="EditPassword" component={EditPassword} />
