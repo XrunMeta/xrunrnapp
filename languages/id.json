@@ -340,6 +340,17 @@
     }
   },
 
+  "screen_modify_phone": {
+    "title": "Modifikasi Telepon",
+    "label": "Nomor Telepon Baru",
+    "placeholder": "Silakan masukkan nomor telepon baru Anda",
+    "condition": {
+      "empty": "Silakan isi nomor telepon baru Anda",
+      "errorServer": "Ada kesalahan komunikasi server. Silakan coba lagi...",
+      "failed": "Tidak ada perubahan pada nomor telepon Anda"
+    }
+  },
+
   "screen_modify_information": {
     "title": "Ubah Informasi",
     "lastname": {
