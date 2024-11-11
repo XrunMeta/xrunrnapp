@@ -339,6 +339,17 @@
     }
   },
 
+  "screen_modify_phone": {
+    "title": "手机修改",
+    "label": "新电话号码",
+    "placeholder": "请输入您的新电话号码",
+    "condition": {
+      "empty": "请填写您的新电话号码",
+      "errorServer": "服务器通讯错误，请重试...",
+      "failed": "您的电话号码没有变化"
+    }
+  },
+
   "screen_modify_information": {
     "title": "修改信息",
     "lastname": {

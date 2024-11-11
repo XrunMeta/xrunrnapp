@@ -339,6 +339,17 @@
     }
   },
 
+  "screen_modify_phone": {
+    "title": "전화 수정",
+    "label": "새 전화번호",
+    "placeholder": "새 전화번호를 입력하세요",
+    "condition": {
+      "empty": "새 전화번호를 입력하세요",
+      "errorServer": "서버 통신 오류가 있습니다. 다시 시도하십시오...",
+      "failed": "전화번호에는 변경된 사항이 없습니다."
+    }
+  },
+
   "screen_modify_information": {
     "title": "정보 수정",
     "lastname": {
