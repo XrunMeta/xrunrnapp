@@ -24,6 +24,7 @@ import {
   fontSize,
   authcode,
   sha256Encrypt,
+  BottomComponentFixer,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
@@ -264,27 +265,7 @@ const SignInScreen = () => {
           isPassword={true}
         />
 
-        {/* Start - Ngakalin biar tombol nya gak keatas ketika keyboard muncul */}
-        <View style={{opacity: 0, pointerEvents: 'none'}}>
-          <CustomInput
-            label={
-              lang && lang.screen_signin && lang.screen_signin.password
-                ? lang.screen_signin.password.label
-                : ''
-            }
-            placeholder={
-              lang && lang.screen_signin && lang.screen_signin.password
-                ? lang.screen_signin.password.placeholder
-                : ''
-            }
-            value={password}
-            setValue={setPassword}
-            secureTextEntry
-            isPassword={true}
-          />
-        </View>
-        <View style={{flex: 1}}></View>
-        {/* End - Ngakalin biar tombol nya gak keatas ketika keyboard muncul */}
+        <BottomComponentFixer count={2} />
 
         <View style={[styles.bottomSection]}>
           <View style={styles.additionalLogin}>
@@ -304,11 +285,11 @@ const SignInScreen = () => {
 
           <TouchableOpacity
             onPress={onSignIn}
-            disabled={isDisable}
+            disabled={!isDisable && email == '' && password == ''}
             style={styles.buttonSignIn}>
             <Image
               source={
-                isDisable
+                !isDisable && email == '' && password == ''
                   ? require('../../../assets/images/icon_nextDisable.png')
                   : require('../../../assets/images/icon_next.png')
               }

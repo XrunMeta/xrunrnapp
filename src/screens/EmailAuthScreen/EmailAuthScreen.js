@@ -229,10 +229,10 @@ const EmailAuthScreen = () => {
             <Pressable
               onPress={onSignIn}
               style={styles.buttonSignIn}
-              disabled={isDisable}>
+              disabled={!isDisable && email == ''}>
               <Image
                 source={
-                  isDisable
+                  !isDisable && email == ''
                     ? require('../../../assets/images/icon_nextDisable.png')
                     : require('../../../assets/images/icon_next.png')
                 }
