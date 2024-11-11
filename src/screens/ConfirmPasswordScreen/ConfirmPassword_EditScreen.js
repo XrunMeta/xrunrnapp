@@ -7,6 +7,8 @@ import {
   Dimensions,
   Alert,
   SafeAreaView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput';
@@ -18,6 +20,7 @@ import {
   getFontFam,
   fontSize,
   gatewayNodeJS,
+  BottomComponentFixer,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
@@ -92,71 +95,75 @@ const ConfirmPasswordEdit = () => {
   }, []);
 
   return (
-    <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
-      {/* Title */}
-      <View style={{flexDirection: 'row'}}>
-        <View style={{position: 'absolute', zIndex: 1}}>
-          <ButtonBack onClick={onBack} />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
+        {/* Title */}
+        <View style={{flexDirection: 'row'}}>
+          <View style={{position: 'absolute', zIndex: 1}}>
+            <ButtonBack onClick={onBack} />
+          </View>
+          <View style={styles.titleWrapper}>
+            <Text style={styles.title}>
+              {lang && lang.screen_confirm_password
+                ? lang.screen_confirm_password.title
+                : ''}
+            </Text>
+          </View>
         </View>
-        <View style={styles.titleWrapper}>
-          <Text style={styles.title}>
-            {lang && lang.screen_confirm_password
-              ? lang.screen_confirm_password.title
+
+        <CustomInput
+          label={
+            lang && lang.screen_confirm_password
+              ? lang.screen_confirm_password.label
+              : ''
+          }
+          placeholder={
+            lang && lang.screen_confirm_password
+              ? lang.screen_confirm_password.placeholder
+              : ''
+          }
+          value={password}
+          setValue={setPassword}
+          secureTextEntry
+          isPassword={true}
+        />
+        <View
+          style={{
+            width: '100%',
+            paddingHorizontal: 25,
+            marginTop: 5,
+          }}>
+          <Text style={styles.subTitle}>
+            *
+            {lang &&
+            lang.screen_confirm_password &&
+            lang.screen_confirm_password.note
+              ? lang.screen_confirm_password.note.alt1
               : ''}
           </Text>
         </View>
-      </View>
 
-      <CustomInput
-        label={
-          lang && lang.screen_confirm_password
-            ? lang.screen_confirm_password.label
-            : ''
-        }
-        placeholder={
-          lang && lang.screen_confirm_password
-            ? lang.screen_confirm_password.placeholder
-            : ''
-        }
-        value={password}
-        setValue={setPassword}
-        secureTextEntry
-        isPassword={true}
-      />
-      <View
-        style={{
-          width: '100%',
-          paddingHorizontal: 25,
-          marginTop: 5,
-        }}>
-        <Text style={styles.subTitle}>
-          *
-          {lang &&
-          lang.screen_confirm_password &&
-          lang.screen_confirm_password.note
-            ? lang.screen_confirm_password.note.alt1
-            : ''}
-        </Text>
-      </View>
+        <BottomComponentFixer count={3} />
 
-      <View style={[styles.bottomSection]}>
-        <View style={styles.additionalLogin}></View>
-        <Pressable
-          onPress={onSignIn}
-          style={styles.buttonSignIn}
-          disabled={isDisable}>
-          <Image
-            source={
-              isDisable
-                ? require('../../../assets/images/icon_nextDisable.png')
-                : require('../../../assets/images/icon_next.png')
-            }
-            resizeMode="contain"
-            style={styles.buttonSignInImage}
-          />
-        </Pressable>
-      </View>
-    </SafeAreaView>
+        <View style={[styles.bottomSection]}>
+          <View style={styles.additionalLogin}></View>
+          <Pressable
+            onPress={onSignIn}
+            style={styles.buttonSignIn}
+            disabled={!isDisable && password == ''}>
+            <Image
+              source={
+                !isDisable && password == ''
+                  ? require('../../../assets/images/icon_nextDisable.png')
+                  : require('../../../assets/images/icon_next.png')
+              }
+              resizeMode="contain"
+              style={styles.buttonSignInImage}
+            />
+          </Pressable>
+        </View>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
