@@ -66,8 +66,7 @@ const ConfirmPasswordEdit = () => {
   };
 
   const onBack = () => {
-    // navigation.navigate('First');
-    navigation.goBack();
+    navigation.replace('ModifInfo');
   };
 
   useEffect(() => {
