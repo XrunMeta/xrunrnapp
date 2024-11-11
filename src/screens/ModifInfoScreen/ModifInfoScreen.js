@@ -987,7 +987,12 @@ const ModifInfoScreen = ({route}) => {
                     : country.cDesc + (region.rDesc ? ', ' + region.rDesc : '')
                 }
                 setValue={setRegion.rDesc}
-                tempValue={tempRegion}
+                tempValue={
+                  tempCountry.cDesc == null
+                    ? '-'
+                    : tempCountry.cDesc +
+                      (tempRegion.rDesc ? ', ' + tempRegion.rDesc : '')
+                }
                 onSaveChange={() => {
                   if (tempRegion.rCode === 0) {
                     Alert.alert(
