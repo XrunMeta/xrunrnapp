@@ -147,7 +147,6 @@ const CustomInputEdit = ({
                 }}>
                 {content}
               </View>
-
               <BottomComponentFixer count={3} />
 
               <View
