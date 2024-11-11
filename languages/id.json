@@ -606,7 +606,8 @@
     "pending": "Menunggu pengambilan koin",
     "tab1": "Penyimpanan Iklan",
     "tab2": "Misi Iklan Selesai",
-    "total": "Total"
+    "total": "Total",
+    "title_floating_popup": "Pilih Menu Penyimpanan"
   },
 
   "permissions_alert": {
