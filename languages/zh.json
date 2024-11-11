@@ -617,7 +617,8 @@
     "pending": "等待金币获取",
     "tab1": "存储中的广告",
     "tab2": "任务完成广告",
-    "total": "总"
+    "total": "总",
+    "title_floating_popup": "选择存储菜单"
   },
 
   "permissions_alert": {
