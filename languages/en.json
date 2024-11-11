@@ -340,6 +340,17 @@
     }
   },
 
+  "screen_modify_phone": {
+    "title": "Phone Modify",
+    "label": "New Phone Number",
+    "placeholder": "Please enter your new phone number",
+    "condition": {
+      "empty": "Please fill your new phone number",
+      "errorServer": "There is a server communication error. Please try again...",
+      "failed": "There is no change with your phone number"
+    }
+  },
+
   "screen_modify_information": {
     "loader": "Loading...",
     "title": "Modify Information",

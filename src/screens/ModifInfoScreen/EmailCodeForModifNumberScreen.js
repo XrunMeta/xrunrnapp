@@ -31,7 +31,7 @@ import Countdown from './Countdown';
 // ########## Main Function ##########
 const EmailCodeForModifNumberScreen = () => {
   const route = useRoute();
-  const {dataEmail} = route.params;
+  const {dataEmail, member, countryCode} = route.params;
   const [verificationCode, setVerificationCode] = useState([
     '',
     '',
@@ -130,7 +130,7 @@ const EmailCodeForModifNumberScreen = () => {
       console.log(JSON.stringify(responseAuthData));
 
       if (responseAuthData.status == 'success') {
-        navigation.replace('ModifInfo');
+        navigation.replace('PhoneModif', {member: member, countryCode});
       } else {
         Alert.alert('Failed', lang.screen_emailVerification.notif.wrongCode);
       }
