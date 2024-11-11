@@ -810,7 +810,7 @@ const ModifInfoScreen = ({route}) => {
                     : ''
                 }
                 value={age == null ? '-' : age + 's'}
-                tempValue={tempAge}
+                tempValue={tempAge == null ? '-' : tempAge + 's'}
                 setValue={setAge}
                 onSaveChange={() => {
                   saveChangesToAPI(
@@ -893,7 +893,19 @@ const ModifInfoScreen = ({route}) => {
                     : ''
                 }
                 setValue={setGender}
-                tempValue={tempGender}
+                tempValue={
+                  tempGender == 2110
+                    ? lang &&
+                      lang.screen_modify_information &&
+                      lang.screen_modify_information.gender
+                      ? lang.screen_modify_information.gender.opt1
+                      : ''
+                    : lang &&
+                      lang.screen_modify_information &&
+                      lang.screen_modify_information.gender
+                    ? lang.screen_modify_information.gender.opt2
+                    : ''
+                }
                 onSaveChange={() => {
                   saveChangesToAPI(
                     'app7180-01',
