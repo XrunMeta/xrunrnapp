@@ -210,6 +210,70 @@ const ModifInfoScreen = ({route}) => {
     navigation.navigate('ConfirmPasswordEdit');
   };
 
+  const onChangeNumber = async () => {
+    const waitForResponse = async () => {
+      try {
+        const response = await fetch(`${URL_API_NODEJS}/check-02-email`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authcode}`,
+          },
+          body: JSON.stringify({
+            email: userData?.email,
+          }),
+        });
+        const responseData = await response.json();
+        console.log(
+          'RespAPI check-02-email -> ' + JSON.stringify(responseData),
+        );
+
+        return responseData;
+      } catch (error) {
+        crashlytics().recordError(new Error(error));
+        crashlytics().log(error);
+
+        return {
+          data: 'error',
+          value: lang.screen_emailAuth.alert.errorServer,
+        };
+      }
+    };
+
+    const result = await Promise.race([
+      waitForResponse(),
+      new Promise(resolve => setTimeout(() => resolve(null), 5000)),
+    ]);
+
+    if (result !== null) {
+      if (result?.data[0]?.status == true) {
+        navigation.navigate('EmailCodeForModifNumber', {
+          dataEmail: userData?.email,
+        });
+      } else if (result?.data[0]?.status == false) {
+        Alert.alert('Error', lang.screen_emailAuth.alert.errorServer, [
+          {
+            text: 'OK',
+            onPress: () => {
+              navigation.replace('First');
+            },
+          },
+        ]);
+      } else {
+        Alert.alert('Error', lang.screen_emailAuth.alert.invalidEmail);
+      }
+    } else {
+      Alert.alert('Error', lang.screen_emailAuth.alert.errorServer, [
+        {
+          text: 'OK',
+          onPress: () => {
+            navigation.replace('First'); // Ganti 'First' dengan nama layar pertama yang sesuai
+          },
+        },
+      ]);
+    }
+  };
+
   const justGetNumber = str => {
     // Menggunakan ekspresi reguler untuk menghapus karakter selain angka
     const angkaPolos = str.replace(/\D/g, '');
@@ -605,12 +669,12 @@ const ModifInfoScreen = ({route}) => {
                   style={{
                     width: '100%',
                     flexDirection: 'row',
-                    backgroundColor: '#e5e5e56e',
+                    // backgroundColor: '#e5e5e56e',
                     height: 40,
                     marginTop: 5,
                   }}>
                   <Pressable
-                    style={{flexDirection: 'row', marginBottom: -5}}
+                    style={{flexDirection: 'row', marginBottom: -10}}
                     disabled={true}>
                     <Image
                       resizeMode="contain"
@@ -642,12 +706,29 @@ const ModifInfoScreen = ({route}) => {
                       +{countryCode == undefined ? '62' : countryCode}
                     </Text>
                   </Pressable>
-                  <TextInput
-                    keyboardType="numeric"
-                    style={styles.input}
-                    value={userData.mobile}
-                    editable={false}
-                  />
+                  <TouchableOpacity onPress={onChangeNumber} style={{flex: 1}}>
+                    <View
+                      style={[
+                        {
+                          height: 40,
+                          borderBottomColor: '#cccccc',
+                          borderBottomWidth: 1,
+                          justifyContent: 'center',
+                        },
+                      ]}>
+                      <Text
+                        style={{
+                          fontFamily: getFontFam() + 'Medium',
+                          fontSize: fontSize('body'),
+                          color: '#343a59',
+                          paddingRight: 30,
+                          paddingLeft: -10,
+                          paddingTop: 4,
+                        }}>
+                        {userData.mobile}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
                 </View>
               </View>
 
