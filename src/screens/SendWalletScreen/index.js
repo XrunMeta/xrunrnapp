@@ -61,6 +61,8 @@ const SendWalletScreen = ({navigation, route}) => {
   const [isPopupSend, setIsPopupSend] = useState(false);
   const [isPopupSendConfirmation, setIsPopupSendConfirmation] = useState(false);
   const [isIconNextDisabled, setIsIconNextDisabled] = useState(true);
+  const [iconNextIsDisabledButton, setIconNextIsDisabledButton] =
+    useState(false);
 
   // Animated notification in QR
   const [fadeAnim] = useState(new Animated.Value(0));
@@ -349,6 +351,9 @@ const SendWalletScreen = ({navigation, route}) => {
     setIsTextBlinking(false);
 
     setIsInsufficientBalance(false);
+
+    setIsIconNextDisabled(false);
+    setIconNextIsDisabledButton(false);
   };
 
   // If gas estimate API network busy
@@ -367,6 +372,8 @@ const SendWalletScreen = ({navigation, route}) => {
     setIsTextBlinking(false);
 
     setIsInsufficientBalance(false);
+
+    setIsIconNextDisabled(false);
   };
 
   // Get list stock exchange
@@ -648,6 +655,8 @@ const SendWalletScreen = ({navigation, route}) => {
             txid: hash,
             symbol: dataWallet.symbol,
           });
+          setIsIconNextDisabled(false);
+          setIconNextIsDisabledButton(false);
         } else {
           Alert.alert(lang.global_error.network_busy);
           console.log('Transfer failed postTransfer');
@@ -724,6 +733,8 @@ const SendWalletScreen = ({navigation, route}) => {
       ]);
     } else {
       setIsLoading(true);
+      setIsIconNextDisabled(true);
+      setIconNextIsDisabledButton(true);
 
       const statusLimitTransfer = await getLimitTransfer();
       // Check the limit transfer available
@@ -761,7 +772,6 @@ const SendWalletScreen = ({navigation, route}) => {
     else {
       setIsDisableButtonConfirm(true);
       setIsPopupSendConfirmation(true);
-      setIsIconNextDisabled(false);
 
       const total = parseFloat(totalGasCost) + parseFloat(amount);
       setTotalTransfer(total);
@@ -883,7 +893,10 @@ const SendWalletScreen = ({navigation, route}) => {
 
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-            <TouchableOpacity onPress={onSend} style={styles.button}>
+            <TouchableOpacity
+              onPress={onSend}
+              style={styles.button}
+              disabled={iconNextIsDisabledButton}>
               <Image
                 source={
                   isIconNextDisabled

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import {
   View,
   Text,
@@ -27,6 +27,7 @@ import {
   authcode,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
+import RadioGroup from 'react-native-radio-buttons-group';
 
 const AdvertiseScreen = () => {
   const [lang, setLang] = useState({});
@@ -52,6 +53,90 @@ const AdvertiseScreen = () => {
   const [checkedRecommendations, setCheckedRecommendations] = useState({});
   const [isDelete, setIsDelete] = useState(false);
   const [selectedAds, setSelectedAds] = useState([]);
+  const [isShowPopupFloating, setIsShowPopupFloating] = useState(false);
+
+  // Select floating radio button
+  const radioButtons = useMemo(
+    () => [
+      {
+        id: '1',
+        label:
+          lang && lang.screen_advertise && lang.screen_advertise.newest
+            ? lang.screen_advertise.newest
+            : '',
+        value: 0,
+        db: 'datetime',
+        borderColor: '#009484',
+        color: '#009484',
+        labelStyle: {
+          color: 'black',
+          fontFamily: getFontFam() + 'Regular',
+          fontSize: fontSize('subtitle'),
+          width: 200,
+        },
+        onPress: () =>
+          selectFilter(
+            lang && lang.screen_advertise && lang.screen_advertise.newest
+              ? lang.screen_advertise.newest
+              : 'Newest',
+            0,
+            'datetime',
+          ),
+      },
+      {
+        id: '2',
+        label:
+          lang && lang.screen_advertise && lang.screen_advertise.deadline
+            ? lang.screen_advertise.deadline
+            : '',
+        value: 1,
+        db: 'dateleft',
+        borderColor: '#009484',
+        color: '#009484',
+        labelStyle: {
+          color: 'black',
+          fontFamily: getFontFam() + 'Regular',
+          fontSize: fontSize('subtitle'),
+          width: 200,
+        },
+        onPress: () =>
+          selectFilter(
+            lang && lang.screen_advertise && lang.screen_advertise.deadline
+              ? lang.screen_advertise.deadline
+              : 'Deadline',
+            1,
+            'dateleft',
+          ),
+      },
+      {
+        id: '3',
+        label:
+          lang && lang.screen_advertise && lang.screen_advertise.order
+            ? lang.screen_advertise.order
+            : '',
+        value: 2,
+        db: 'amount',
+        borderColor: '#009484',
+        color: '#009484',
+        labelStyle: {
+          color: 'black',
+          fontFamily: getFontFam() + 'Regular',
+          fontSize: fontSize('subtitle'),
+          width: 200,
+        },
+        onPress: () =>
+          selectFilter(
+            lang && lang.screen_advertise && lang.screen_advertise.order
+              ? lang.screen_advertise.order
+              : 'Coin Order',
+            2,
+            'amount',
+          ),
+      },
+    ],
+    [lang],
+  );
+  const [selectedId, setSelectedId] = useState('1');
 
   // Back
   const handleBack = () => {
@@ -176,6 +261,7 @@ const AdvertiseScreen = () => {
     });
 
     setFilterModalVisible(false);
+    setIsShowPopupFloating(false);
     setCheckedRecommendations({});
     setSelectedAds([]);
 
@@ -277,6 +363,7 @@ const AdvertiseScreen = () => {
                   // Exit from Delete Mode and back to normal mode
                   setIsDelete(false);
                   setFilterModalVisible(false);
+                  setIsShowPopupFloating(false);
                   setCheckedRecommendations({});
                   setSelectedAds([]);
                   fetchAdsData('datetime', userData.member);
@@ -343,6 +430,7 @@ const AdvertiseScreen = () => {
           // Exit from Delete Mode and back to normal mode
           setIsDelete(false);
           setFilterModalVisible(false);
+          setIsShowPopupFloating(false);
           setCheckedRecommendations({});
           setSelectedAds([]);
           fetchAdsData('datetime', userData.member);
@@ -486,7 +574,8 @@ const AdvertiseScreen = () => {
             XRUN.
           </Text>
           <TouchableOpacity
-            onPress={() => setFilterModalVisible(true)}
+            // onPress={() => setFilterModalVisible(true)}
+            onPress={() => setIsShowPopupFloating(true)}
             style={{
               backgroundColor: 'white',
               paddingVertical: 10,
@@ -505,7 +594,7 @@ const AdvertiseScreen = () => {
               }}>
               {selectedFilter.desc}
             </Text>
-            <Image
+            {/* <Image
               source={require('../../../assets/images/icon_dropdown.png')}
               style={{
                 tintColor: '#acb5bb',
@@ -513,7 +602,7 @@ const AdvertiseScreen = () => {
                 width: 10,
                 marginLeft: 10,
               }}
-            />
+            /> */}
           </TouchableOpacity>
         </View>
 
@@ -820,6 +909,35 @@ const AdvertiseScreen = () => {
         </View>
       </View>
 
+      {/* Popup Floating */}
+      {isShowPopupFloating && (
+        <View style={styles.popupFloating}>
+          <TouchableOpacity
+            style={styles.fullScreenOverlay}
+            onPress={() => setIsShowPopupFloating(false)}
+            activeOpacity={1}
+          />
+          <View style={styles.subPopupFloating}>
+            <Text style={styles.titleRadioButton}>
+              {lang &&
+              lang.screen_advertise &&
+              lang.screen_advertise.title_floating_popup
+                ? lang.screen_advertise.title_floating_popup
+                : ''}
+            </Text>
+            <RadioGroup
+              radioButtons={radioButtons}
+              onPress={setSelectedId}
+              selectedId={selectedId}
+              containerStyle={{
+                alignItems: 'flex-start',
+                rowGap: 10,
+              }}
+            />
+          </View>
+        </View>
+      )}
+
       <View
         style={{
           flex: 1,
@@ -945,6 +1063,39 @@ const styles = StyleSheet.create({
     fontSize: fontSize('note'),
     marginTop: -2,
     fontWeight: 'bold',
+  },
+  popupFloating: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    zIndex: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  fullScreenOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1,
+  },
+  subPopupFloating: {
+    backgroundColor: '#fff',
+    padding: 16,
+    width: 320,
+    overflow: 'hidden',
+    zIndex: 2,
+  },
+  titleRadioButton: {
+    fontFamily: getFontFam() + 'Medium',
+    fontSize: fontSize('subtitle'),
+    marginBottom: 16,
+    color: 'black',
+    marginLeft: 10,
   },
 });
 

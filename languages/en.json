@@ -618,7 +618,8 @@
     "pending": "Waiting for coin Acquisition",
     "tab1": "Storage",
     "tab2": "Completed",
-    "total": "Total"
+    "total": "Total",
+    "title_floating_popup": "Select Storage Menu"
   },
 
   "permissions_alert": {

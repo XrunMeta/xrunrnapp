@@ -26,7 +26,9 @@ import crashlytics from '@react-native-firebase/crashlytics';
 
 const Change = ({navigation, route}) => {
   const [lang, setLang] = useState('');
-  const [iconNextIsDisabled, setIconNextIsDisabled] = useState(false);
+  const [iconNextIsDisabled, setIconNextIsDisabled] = useState(true);
+  const [iconNextIsDisabledButton, setIconNextIsDisabledButton] =
+    useState(false);
   const [amount, setAmount] = useState('');
   const [address, setAddress] = useState('CONVERT');
   const {currency} = route.params;
@@ -153,7 +155,8 @@ const Change = ({navigation, route}) => {
           : '',
       );
     } else {
-      setIconNextIsDisabled(false);
+      setIconNextIsDisabledButton(true);
+      setIconNextIsDisabled(true);
       setPopupConversion(true);
       setConversionRequest(parseFloat(amount).toFixed(9));
       Keyboard.dismiss();
@@ -162,6 +165,8 @@ const Change = ({navigation, route}) => {
 
   const cancelConversion = () => {
     setPopupConversion(false);
+    setIconNextIsDisabledButton(false);
+    setIconNextIsDisabled(false);
   };
 
   const confirmConversion = async () => {
@@ -197,6 +202,9 @@ const Change = ({navigation, route}) => {
           originamount: amount,
           left: 0,
         });
+
+        setIconNextIsDisabledButton(false);
+        setIconNextIsDisabled(false);
       } catch (err) {
         Alert.alert(
           '',
@@ -280,7 +288,10 @@ const Change = ({navigation, route}) => {
 
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-          <TouchableOpacity onPress={onSend} style={styles.button}>
+          <TouchableOpacity
+            onPress={onSend}
+            style={styles.button}
+            disabled={iconNextIsDisabledButton}>
             <Image
               source={
                 iconNextIsDisabled
