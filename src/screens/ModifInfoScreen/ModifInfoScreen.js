@@ -249,6 +249,8 @@ const ModifInfoScreen = ({route}) => {
       if (result?.data[0]?.status == true) {
         navigation.navigate('EmailCodeForModifNumber', {
           dataEmail: userData?.email,
+          member: astorUserData?.member,
+          countryCode: countryCode == undefined ? '62' : countryCode,
         });
       } else if (result?.data[0]?.status == false) {
         Alert.alert('Error', lang.screen_emailAuth.alert.errorServer, [
@@ -431,7 +433,6 @@ const ModifInfoScreen = ({route}) => {
                 onSaveChange={() => {
                   setLastName(tempLastName);
                   setTempLastName(tempLastName);
-                  console.log('bebegug -> ' + tempLastName);
                   saveChangesToAPI(
                     'app7120-01',
                     astorUserData.member,
