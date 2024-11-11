@@ -29,6 +29,7 @@ const CustomInputEdit = ({
   isDisable,
   onSaveChange,
   onBack,
+  onModalOpen,
 }) => {
   const [isModalVisible, setModalVisible] = useState(false);
   let ScreenHeight = Dimensions.get('window').height;
@@ -54,6 +55,7 @@ const CustomInputEdit = ({
 
   const openModal = () => {
     setModalVisible(true);
+    if (onModalOpen) onModalOpen();
   };
 
   const closeModal = () => {
@@ -155,10 +157,6 @@ const CustomInputEdit = ({
                   justifyContent: 'space-between',
                   width: '100%',
                 }}>
-                <Text>
-                  {value} - {tempValue} ={' '}
-                  {value == tempValue ? 'true' : 'false'}
-                </Text>
                 <View
                   style={{
                     flexDirection: 'row',

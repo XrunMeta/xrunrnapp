@@ -57,6 +57,8 @@ const ModifInfoScreen = ({route}) => {
   const [tempCountry, setTempCountry] = useState({});
   const [countryData, setCountryData] = useState([]);
 
+  const [modalOpened, setModalOpened] = useState(false);
+
   const navigation = useNavigation();
 
   const onBack = () => {
@@ -191,7 +193,7 @@ const ModifInfoScreen = ({route}) => {
     fetchData(); // Get Data from API
     fetchLangData(); // Get Language
     console.log('bgsttttttttttttttttttttttttttttt');
-  }, []);
+  }, [modalOpened]);
 
   // Format Date
   const formatDate = dateTimeString => {
@@ -375,10 +377,15 @@ const ModifInfoScreen = ({route}) => {
                       firstname: tempLastName,
                     },
                   );
+                  setModalOpened(false);
 
                   return 1;
                 }}
-                onBack={() => setTempLastName(lastName)}
+                onBack={() => {
+                  setTempLastName(lastName);
+                  setModalOpened(false);
+                }}
+                onModalOpen={() => setModalOpened(true)}
                 content={
                   <View
                     style={{
@@ -463,10 +470,15 @@ const ModifInfoScreen = ({route}) => {
                       lastname: tempName,
                     },
                   );
+                  setModalOpened(false);
 
                   return 1;
                 }}
-                onBack={() => setTempName(name)}
+                onBack={() => {
+                  setTempName(name);
+                  setModalOpened(false);
+                }}
+                onModalOpen={() => setModalOpened(true)}
                 content={
                   <View
                     style={{
@@ -729,10 +741,15 @@ const ModifInfoScreen = ({route}) => {
                     },
                   );
                   setAge(tempAge);
+                  setModalOpened(false);
 
                   return 1;
                 }}
-                onBack={() => setTempAge(age)}
+                onBack={() => {
+                  setTempAge(age);
+                  setModalOpened(false);
+                }}
+                onModalOpen={() => setModalOpened(true)}
                 content={
                   <View style={[styles.formGroup, {zIndex: -1}]}>
                     <Text style={styles.label}>
@@ -806,10 +823,15 @@ const ModifInfoScreen = ({route}) => {
                     },
                   );
                   setGender(tempGender);
+                  setModalOpened(false);
 
                   return 1;
                 }}
-                onBack={() => setTempGender(gender)}
+                onBack={() => {
+                  setTempGender(gender);
+                  setModalOpened(false);
+                }}
+                onModalOpen={() => setModalOpened(true)}
                 content={
                   <View style={[styles.formGroup, {zIndex: -1}]}>
                     <Text style={styles.label}>
@@ -930,12 +952,13 @@ const ModifInfoScreen = ({route}) => {
                     };
 
                     saveChangeArea();
+                    setModalOpened(false);
 
                     return 1;
                   }
                 }}
                 onBack={() => {
-                  setTempLastName(lastName);
+                  // setTempLastName(lastName);
                   setTempCountry({
                     cDesc: country.cDesc,
                     cCode: country.cCode,
@@ -945,7 +968,9 @@ const ModifInfoScreen = ({route}) => {
                     rDesc: region.rDesc,
                     rCode: region.rCode,
                   });
+                  setModalOpened(false);
                 }}
+                onModalOpen={() => setModalOpened(true)}
                 content={
                   <View style={{flex: 1}}>
                     <View
