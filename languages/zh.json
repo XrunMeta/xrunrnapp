@@ -125,7 +125,8 @@
     "alert": {
       "emptyEmail": "请插入您的电子邮件",
       "invalidEmail": "您的电子邮件无效",
-      "errorServer": "存在服务器通信错误。请再试一次..."
+      "errorServer": "存在服务器通信错误。请再试一次...",
+      "notExist": "您的电子邮件不存在"
     }
   },
 
@@ -338,6 +339,17 @@
     }
   },
 
+  "screen_modify_phone": {
+    "title": "手机修改",
+    "label": "新电话号码",
+    "placeholder": "请输入您的新电话号码",
+    "condition": {
+      "empty": "请填写您的新电话号码",
+      "errorServer": "服务器通讯错误，请重试...",
+      "failed": "您的电话号码没有变化"
+    }
+  },
+
   "screen_modify_information": {
     "title": "修改信息",
     "lastname": {
@@ -364,8 +376,8 @@
     },
     "gender": {
       "label": "性别",
-      "opt1": "男孩/男人",
-      "opt2": "女孩/女人"
+      "opt1": "男人",
+      "opt2": "女人"
     },
     "area": {
       "label": "地区",
@@ -605,7 +617,8 @@
     "pending": "等待金币获取",
     "tab1": "存储中的广告",
     "tab2": "任务完成广告",
-    "total": "总"
+    "total": "总",
+    "title_floating_popup": "选择存储菜单"
   },
 
   "permissions_alert": {

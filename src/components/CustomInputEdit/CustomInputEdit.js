@@ -9,19 +9,27 @@ import {
   Image,
   Dimensions,
   SafeAreaView,
+  KeyboardAvoidingView,
 } from 'react-native';
 import ButtonBack from '../ButtonBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  BottomComponentFixer,
+} from '../../../utils';
 
 const CustomInputEdit = ({
   title,
   label,
   value,
+  tempValue,
   content,
   isDisable,
   onSaveChange,
   onBack,
+  onModalOpen,
 }) => {
   const [isModalVisible, setModalVisible] = useState(false);
   let ScreenHeight = Dimensions.get('window').height;
@@ -47,6 +55,7 @@ const CustomInputEdit = ({
 
   const openModal = () => {
     setModalVisible(true);
+    if (onModalOpen) onModalOpen();
   };
 
   const closeModal = () => {
@@ -91,87 +100,96 @@ const CustomInputEdit = ({
         transparent={true}
         visible={isModalVisible}
         onRequestClose={closeModal}>
-        <SafeAreaView style={styles.modalContainer}>
-          <View
-            style={[
-              {alignItems: 'center', flex: 1, backgroundColor: 'white'},
-              {height: ScreenHeight},
-            ]}>
-            {/* Title */}
-            <View style={{flexDirection: 'row'}}>
-              <View style={{position: 'absolute', zIndex: 1}}>
-                <ButtonBack onClick={closeModal} />
-              </View>
-              <View
-                style={{
-                  paddingVertical: 9,
-                  alignItems: 'center',
-                  backgroundColor: 'white',
-                  justifyContent: 'center',
-                  flex: 1,
-                  elevation: 5,
-                  zIndex: 0,
-                }}>
-                <Text
+        <KeyboardAvoidingView
+          style={[styles.modalContainer, {height: ScreenHeight}]}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <SafeAreaView
+            style={[styles.modalContainer, {backgroundColor: 'pink'}]}>
+            <View
+              style={[
+                {alignItems: 'center', flex: 1, backgroundColor: 'white'},
+                {height: ScreenHeight},
+              ]}>
+              {/* Title */}
+              <View style={{flexDirection: 'row'}}>
+                <View style={{position: 'absolute', zIndex: 1}}>
+                  <ButtonBack onClick={closeModal} />
+                </View>
+                <View
                   style={{
-                    fontSize: fontSize('title'),
-                    fontFamily: getFontFam() + 'Bold',
-                    color: '#051C60',
-                    margin: 10,
+                    paddingVertical: 9,
+                    alignItems: 'center',
+                    backgroundColor: 'white',
+                    justifyContent: 'center',
+                    flex: 1,
+                    elevation: 5,
+                    zIndex: 0,
                   }}>
-                  {lang && lang.screen_modify_information
-                    ? lang.screen_modify_information.modify
-                    : 'Modify'}{' '}
-                  {title}
-                </Text>
+                  <Text
+                    style={{
+                      fontSize: fontSize('title'),
+                      fontFamily: getFontFam() + 'Bold',
+                      color: '#051C60',
+                      margin: 10,
+                    }}>
+                    {lang && lang.screen_modify_information
+                      ? lang.screen_modify_information.modify
+                      : 'Modify'}{' '}
+                    {title}
+                  </Text>
+                </View>
               </View>
-            </View>
 
-            {/* Content Here */}
-            <View
-              style={{
-                flexDirection: 'row',
-                flex: 1,
-              }}>
-              {content}
-            </View>
-
-            <View
-              style={{
-                padding: 5,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                flex: 1,
-                width: '100%',
-              }}>
+              {/* Content Here */}
               <View
                 style={{
                   flexDirection: 'row',
-                  alignSelf: 'flex-end',
-                  alignItems: 'center',
-                  height: 100,
-                  flex: 1,
-                }}></View>
-              <Pressable
-                onPress={saveChanges}
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  alignSelf: 'flex-end',
-                  flexDirection: 'column-reverse',
-                  height: 100,
-                  justifyContent: 'center',
-                  marginRight: 10,
                 }}>
-                <Image
-                  source={require('../../../assets/images/icon_check.png')}
-                  resizeMode="contain"
-                  style={{height: 80, width: 80}}
-                />
-              </Pressable>
+                {content}
+              </View>
+              <BottomComponentFixer count={3} />
+
+              <View
+                style={{
+                  padding: 5,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignSelf: 'flex-end',
+                    alignItems: 'center',
+                    height: 100,
+                    flex: 1,
+                  }}></View>
+                <Pressable
+                  onPress={saveChanges}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    alignSelf: 'flex-end',
+                    flexDirection: 'column-reverse',
+                    height: 100,
+                    justifyContent: 'center',
+                    marginRight: 10,
+                  }}
+                  disabled={value == tempValue ? true : false}>
+                  <Image
+                    source={
+                      value == tempValue
+                        ? require('../../../assets/images/icon_nextDisable.png')
+                        : require('../../../assets/images/icon_next.png')
+                    }
+                    resizeMode="contain"
+                    style={{height: 80, width: 80}}
+                  />
+                </Pressable>
+              </View>
             </View>
-          </View>
-        </SafeAreaView>
+          </SafeAreaView>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );

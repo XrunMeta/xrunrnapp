@@ -13,6 +13,8 @@ import {
   ScrollView,
   SafeAreaView,
   Platform,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import React, {useState, useEffect, useRef} from 'react';
 import ButtonBack from '../../components/ButtonBack';
@@ -24,6 +26,7 @@ import {
   fontSize,
   refreshBalances,
   gatewayNodeJS,
+  BottomComponentFixer,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {
@@ -58,6 +61,8 @@ const SendWalletScreen = ({navigation, route}) => {
   const [isPopupSend, setIsPopupSend] = useState(false);
   const [isPopupSendConfirmation, setIsPopupSendConfirmation] = useState(false);
   const [isIconNextDisabled, setIsIconNextDisabled] = useState(true);
+  const [iconNextIsDisabledButton, setIconNextIsDisabledButton] =
+    useState(false);
 
   // Animated notification in QR
   const [fadeAnim] = useState(new Animated.Value(0));
@@ -174,6 +179,7 @@ const SendWalletScreen = ({navigation, route}) => {
 
           if (newCount === 30) {
             console.log('Disable button confirm');
+            console.log(newCount);
             setIsDisableButtonConfirm(true);
             setIsTextBlinking(true);
             getEstimatedGas();
@@ -345,6 +351,9 @@ const SendWalletScreen = ({navigation, route}) => {
     setIsTextBlinking(false);
 
     setIsInsufficientBalance(false);
+
+    setIsIconNextDisabled(false);
+    setIconNextIsDisabledButton(false);
   };
 
   // If gas estimate API network busy
@@ -363,6 +372,8 @@ const SendWalletScreen = ({navigation, route}) => {
     setIsTextBlinking(false);
 
     setIsInsufficientBalance(false);
+
+    setIsIconNextDisabled(false);
   };
 
   // Get list stock exchange
@@ -644,6 +655,8 @@ const SendWalletScreen = ({navigation, route}) => {
             txid: hash,
             symbol: dataWallet.symbol,
           });
+          setIsIconNextDisabled(false);
+          setIconNextIsDisabledButton(false);
         } else {
           Alert.alert(lang.global_error.network_busy);
           console.log('Transfer failed postTransfer');
@@ -720,6 +733,8 @@ const SendWalletScreen = ({navigation, route}) => {
       ]);
     } else {
       setIsLoading(true);
+      setIsIconNextDisabled(true);
+      setIconNextIsDisabledButton(true);
 
       const statusLimitTransfer = await getLimitTransfer();
       // Check the limit transfer available
@@ -794,36 +809,36 @@ const SendWalletScreen = ({navigation, route}) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Loading */}
-      {isLoading && (
-        <View style={styles.loading}>
-          <ActivityIndicator size={'large'} color={'#fff'} />
-          <Text
-            style={{
-              color: '#fff',
-              fontFamily: getFontFam() + 'Regular',
-              fontSize: fontSize('body'),
-              marginTop: 10,
-            }}>
-            Loading...
-          </Text>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={styles.container}>
+        {/* Loading */}
+        {isLoading && (
+          <View style={styles.loading}>
+            <ActivityIndicator size={'large'} color={'#fff'} />
+            <Text
+              style={{
+                color: '#fff',
+                fontFamily: getFontFam() + 'Regular',
+                fontSize: fontSize('body'),
+                marginTop: 10,
+              }}>
+              Loading...
+            </Text>
+          </View>
+        )}
+        <View style={{flexDirection: 'row'}}>
+          <View style={{position: 'absolute', zIndex: 1}}>
+            <ButtonBack onClick={onBack} />
+          </View>
+          <View style={styles.titleWrapper}>
+            <Text style={styles.title}>
+              {lang && lang ? lang.screen_wallet.table_head_send : ''}
+            </Text>
+          </View>
         </View>
-      )}
-      <View style={{flexDirection: 'row'}}>
-        <View style={{position: 'absolute', zIndex: 1}}>
-          <ButtonBack onClick={onBack} />
-        </View>
-        <View style={styles.titleWrapper}>
-          <Text style={styles.title}>
-            {lang && lang ? lang.screen_wallet.table_head_send : ''}
-          </Text>
-        </View>
-      </View>
-      <ScrollView overScrollMode="never">
-        <View style={{backgroundColor: '#fff'}}>
+        <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
           <View style={styles.partTop}>
-            <Text style={styles.currencyName}>{dataWallet.symbol}</Text>
+            {/* <Text style={styles.currencyName}>{dataWallet.symbol}</Text> */}
             <View style={styles.partScanQR}>
               <Text style={styles.balance}>
                 Balance: {balance}
@@ -873,270 +888,279 @@ const SendWalletScreen = ({navigation, route}) => {
               }`}
             />
           </View>
-        </View>
-      </ScrollView>
 
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{flex: 1}}>
-        <TouchableOpacity
-          onPress={onSend}
-          style={styles.button}
-          activeOpacity={0.6}>
-          <Image
-            source={
-              isIconNextDisabled
-                ? require('../../../assets/images/ico-btn-passive.png')
-                : require('../../../assets/images/ico-btn-active.png')
-            }
-            resizeMode="contain"
-            style={styles.buttonImage}
-          />
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
+          <BottomComponentFixer count={3} />
 
-      {/* Scan QR code */}
-      {isVisibleReadQR && (
-        <View
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+            <TouchableOpacity
+              onPress={onSend}
+              style={styles.button}
+              disabled={iconNextIsDisabledButton}>
+              <Image
+                source={
+                  isIconNextDisabled
+                    ? require('../../../assets/images/icon_nextDisable.png')
+                    : require('../../../assets/images/icon_next.png')
+                }
+                resizeMode="contain"
+                style={styles.buttonImage}
+              />
+            </TouchableOpacity>
+          </KeyboardAvoidingView>
+        </ScrollView>
+
+        {/* Scan QR code */}
+        {isVisibleReadQR && (
+          <View
+            style={{
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              right: 0,
+              left: 0,
+              zIndex: 20,
+            }}>
+            <BarcodeScanner
+              shouldScan={true}
+              onBarcodesDetected={handleQRCodeRead}
+              scanBarcode={true}
+              showFrame={true}>
+              <BarcodeMask
+                width={280}
+                height={280}
+                showAnimatedLine={true}
+                outerMaskOpacity={1}
+                edgeHeight={48}
+                edgeWidth={48}
+                animatedLineColor={'#FFFFFF'}
+                animatedLineHeight={3}
+                backgroundColor={'rgba(3, 3, 3, 0.3)'}
+                animatedLineWidth={204}
+                lineAnimationDuration={2000}
+              />
+            </BarcodeScanner>
+          </View>
+        )}
+        <Animated.View
           style={{
+            alignItems: 'center',
             position: 'absolute',
-            top: 0,
-            bottom: 0,
+            bottom: 40,
             right: 0,
             left: 0,
-            zIndex: 20,
+            zIndex: zIndexAnim,
+            opacity: fadeAnim,
           }}>
-          <BarcodeScanner
-            shouldScan={true}
-            onBarcodesDetected={handleQRCodeRead}
-            scanBarcode={true}
-            showFrame={true}>
-            <BarcodeMask
-              width={280}
-              height={280}
-              showAnimatedLine={true}
-              outerMaskOpacity={1}
-              edgeHeight={48}
-              edgeWidth={48}
-              animatedLineColor={'#FFFFFF'}
-              animatedLineHeight={3}
-              backgroundColor={'rgba(3, 3, 3, 0.3)'}
-              animatedLineWidth={204}
-              lineAnimationDuration={2000}
+          <View
+            style={{
+              backgroundColor: 'rgb(65, 65, 65)',
+              paddingHorizontal: 20,
+              paddingVertical: 10,
+              borderRadius: 24,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 10,
+              maxWidth: 300,
+            }}>
+            <Image
+              source={require('../../../assets/images/xrun_round.png')}
+              style={{width: 28, height: 28}}
             />
-          </BarcodeScanner>
-        </View>
-      )}
-      <Animated.View
-        style={{
-          alignItems: 'center',
-          position: 'absolute',
-          bottom: 40,
-          right: 0,
-          left: 0,
-          zIndex: zIndexAnim,
-          opacity: fadeAnim,
-        }}>
-        <View
-          style={{
-            backgroundColor: 'rgb(65, 65, 65)',
-            paddingHorizontal: 20,
-            paddingVertical: 10,
-            borderRadius: 24,
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 10,
-            maxWidth: 300,
-          }}>
-          <Image
-            source={require('../../../assets/images/xrun_round.png')}
-            style={{width: 28, height: 28}}
-          />
-          <Text style={styles.notificationTextInQR}>Scanned: {address}</Text>
-        </View>
-      </Animated.View>
-      {isPopupSend && (
-        <View style={styles.popupConversion}>
-          <View style={styles.wrapperConversion}>
-            <View style={styles.wrapperPartTop}>
-              <Text style={styles.textChange}>
-                {lang && lang ? lang.screen_notify.send : ''}{' '}
-              </Text>
-              <Text style={styles.textCheckInformation}>
-                {lang && lang
-                  ? lang.screen_conversion.check_conversion_desc
-                  : ''}
-              </Text>
-            </View>
-            <View style={styles.contentConversion}>
-              {isPopupSendConfirmation ? (
-                <>
-                  {/* With total transfer */}
-                  <View style={styles.wrapperTextConversion}>
-                    <Text style={styles.textPartLeft}>
-                      {' '}
-                      {lang && lang ? lang.screen_setting.close.desc.clo2 : ''}
-                    </Text>
-                    <Text style={styles.textPartRight}>
-                      {amount}
-                      {dataWallet.symbol}
-                    </Text>
-                  </View>
-                  <View style={styles.wrapperTextConversion}>
-                    <Text style={styles.textPartLeft}>
-                      {lang && lang
-                        ? lang.screen_complete_send.wallet_address
-                        : ''}
-                    </Text>
-                    <Text style={[styles.textPartRight, {maxWidth: 180}]}>
-                      {address}
-                    </Text>
-                  </View>
-                  <View>
+            <Text style={styles.notificationTextInQR}>Scanned: {address}</Text>
+          </View>
+        </Animated.View>
+        {isPopupSend && (
+          <View style={styles.popupConversion}>
+            <View style={styles.wrapperConversion}>
+              <View style={styles.wrapperPartTop}>
+                <Text style={styles.textChange}>
+                  {lang && lang ? lang.screen_notify.send : ''}{' '}
+                </Text>
+                <Text style={styles.textCheckInformation}>
+                  {lang && lang
+                    ? lang.screen_conversion.check_conversion_desc
+                    : ''}
+                </Text>
+              </View>
+              <View style={styles.contentConversion}>
+                {isPopupSendConfirmation ? (
+                  <>
+                    {/* With total transfer */}
                     <View style={styles.wrapperTextConversion}>
                       <Text style={styles.textPartLeft}>
-                        {lang && lang ? lang.screen_send.estimated_gas_fee : ''}
+                        {' '}
+                        {lang && lang
+                          ? lang.screen_setting.close.desc.clo2
+                          : ''}
+                      </Text>
+                      <Text style={styles.textPartRight}>
+                        {amount}
+                        {dataWallet.symbol}
+                      </Text>
+                    </View>
+                    <View style={styles.wrapperTextConversion}>
+                      <Text style={styles.textPartLeft}>
+                        {lang && lang
+                          ? lang.screen_complete_send.wallet_address
+                          : ''}
+                      </Text>
+                      <Text style={[styles.textPartRight, {maxWidth: 180}]}>
+                        {address}
+                      </Text>
+                    </View>
+                    <View>
+                      <View style={styles.wrapperTextConversion}>
+                        <Text style={styles.textPartLeft}>
+                          {lang && lang
+                            ? lang.screen_send.estimated_gas_fee
+                            : ''}
+                        </Text>
+                        <Animated.Text
+                          style={{
+                            opacity: fadeAnimEstimatedGas,
+                          }}>
+                          <Text style={styles.textPartRight}>
+                            {totalGasCost === '???'
+                              ? totalGasCost
+                              : `${parseFloat(totalGasCost)
+                                  .toString()
+                                  .substring(0, 12)}${network}`}
+                          </Text>
+                        </Animated.Text>
+                      </View>
+                    </View>
+                    <View style={styles.wrapperTextConversion}>
+                      <Text style={styles.textPartLeft}>
+                        {' '}
+                        {lang && lang ? lang.screen_advertise.total : ''}
                       </Text>
                       <Animated.Text
                         style={{
                           opacity: fadeAnimEstimatedGas,
                         }}>
                         <Text style={styles.textPartRight}>
-                          {totalGasCost === '???'
-                            ? totalGasCost
-                            : `${parseFloat(totalGasCost)
-                                .toString()
-                                .substring(0, 12)}${network}`}
+                          {totalTransfer.toString().substring(0, 12)}
+                          {network}
                         </Text>
                       </Animated.Text>
                     </View>
-                  </View>
-                  <View style={styles.wrapperTextConversion}>
-                    <Text style={styles.textPartLeft}>
-                      {' '}
-                      {lang && lang ? lang.screen_advertise.total : ''}
-                    </Text>
-                    <Animated.Text
-                      style={{
-                        opacity: fadeAnimEstimatedGas,
-                      }}>
-                      <Text style={styles.textPartRight}>
-                        {totalTransfer.toString().substring(0, 12)}
-                        {network}
+                    {isInsufficientBalance && (
+                      <View style={styles.wrapperTextConversion}>
+                        <Text style={[styles.textPartLeft, {color: 'red'}]}>
+                          {lang && lang
+                            ? lang.screen_send.note_insufficient_balance.note1
+                            : ''}
+                          <Text style={{textTransform: 'capitalize'}}>
+                            {' '}
+                            {network === 'ETH'
+                              ? 'ethereum'
+                              : dataWallet.displaystr}{' '}
+                          </Text>
+                          {lang && lang
+                            ? lang.screen_send.note_insufficient_balance.note2
+                            : ''}
+                        </Text>
+                      </View>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {/* Without total transfer */}
+                    <View style={styles.wrapperTextConversion}>
+                      <Text style={styles.textPartLeft}>
+                        {lang && lang
+                          ? lang.screen_setting.close.desc.clo2
+                          : ''}
                       </Text>
-                    </Animated.Text>
-                  </View>
-                  {isInsufficientBalance && (
+                      <Text style={styles.textPartRight}>
+                        {amount}
+                        {dataWallet.symbol}
+                      </Text>
+                    </View>
+                    <View style={styles.wrapperTextConversion}>
+                      <Text style={styles.textPartLeft}>
+                        {lang && lang
+                          ? lang.screen_complete_send.wallet_address
+                          : ''}
+                      </Text>
+                      <Text style={[styles.textPartRight, {maxWidth: 180}]}>
+                        {address}
+                      </Text>
+                    </View>
+                    <View>
+                      <View style={styles.wrapperTextConversion}>
+                        <Text style={styles.textPartLeft}>
+                          {lang && lang
+                            ? lang.screen_send.estimated_gas_fee
+                            : ''}
+                        </Text>
+                        <Animated.Text
+                          style={{
+                            opacity: fadeAnimEstimatedGas,
+                          }}>
+                          <Text style={styles.textPartRight}>
+                            {totalGasCost === '???'
+                              ? totalGasCost
+                              : `${parseFloat(totalGasCost)
+                                  .toString()
+                                  .substring(0, 12)}${network}`}
+                          </Text>
+                        </Animated.Text>
+                      </View>
+                    </View>
                     <View style={styles.wrapperTextConversion}>
                       <Text style={[styles.textPartLeft, {color: 'red'}]}>
-                        {lang && lang
-                          ? lang.screen_send.note_insufficient_balance.note1
-                          : ''}
-                        <Text style={{textTransform: 'capitalize'}}>
+                        {lang && lang ? lang.screen_send.notes.note1 : ''}
+                        <Text style={{textTransform: 'lowercase'}}>
                           {' '}
                           {network === 'ETH'
                             ? 'ethereum'
                             : dataWallet.displaystr}{' '}
                         </Text>
-                        {lang && lang
-                          ? lang.screen_send.note_insufficient_balance.note2
-                          : ''}
+                        {lang && lang ? lang.screen_send.notes.note2 : ''}
                       </Text>
                     </View>
-                  )}
-                </>
-              ) : (
-                <>
-                  {/* Without total transfer */}
-                  <View style={styles.wrapperTextConversion}>
-                    <Text style={styles.textPartLeft}>
-                      {lang && lang ? lang.screen_setting.close.desc.clo2 : ''}
-                    </Text>
-                    <Text style={styles.textPartRight}>
-                      {amount}
-                      {dataWallet.symbol}
-                    </Text>
-                  </View>
-                  <View style={styles.wrapperTextConversion}>
-                    <Text style={styles.textPartLeft}>
-                      {lang && lang
-                        ? lang.screen_complete_send.wallet_address
-                        : ''}
-                    </Text>
-                    <Text style={[styles.textPartRight, {maxWidth: 180}]}>
-                      {address}
-                    </Text>
-                  </View>
-                  <View>
-                    <View style={styles.wrapperTextConversion}>
-                      <Text style={styles.textPartLeft}>
-                        {lang && lang ? lang.screen_send.estimated_gas_fee : ''}
-                      </Text>
-                      <Animated.Text
-                        style={{
-                          opacity: fadeAnimEstimatedGas,
-                        }}>
-                        <Text style={styles.textPartRight}>
-                          {totalGasCost === '???'
-                            ? totalGasCost
-                            : `${parseFloat(totalGasCost)
-                                .toString()
-                                .substring(0, 12)}${network}`}
-                        </Text>
-                      </Animated.Text>
-                    </View>
-                  </View>
-                  <View style={styles.wrapperTextConversion}>
-                    <Text style={[styles.textPartLeft, {color: 'red'}]}>
-                      {lang && lang ? lang.screen_send.notes.note1 : ''}
-                      <Text style={{textTransform: 'lowercase'}}>
-                        {' '}
-                        {network === 'ETH'
-                          ? 'ethereum'
-                          : dataWallet.displaystr}{' '}
-                      </Text>
-                      {lang && lang ? lang.screen_send.notes.note2 : ''}
-                    </Text>
-                  </View>
-                </>
-              )}
-            </View>
-            <View style={styles.wrapperButton}>
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={styles.buttonConfirm}
-                onPress={cancelGasEstimated}>
-                <Text style={styles.textButtonConfirm}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={[
-                  styles.buttonConfirm,
-                  {
-                    backgroundColor: `${
-                      isDisableButtonConfirm ? '#ccc' : '#343c5a'
-                    }`,
-                    flex: 1.5,
-                  },
-                ]}
-                disabled={isDisableButtonConfirm}
-                onPress={onConfirmSend}>
-                <Text style={[styles.textButtonConfirm, {color: '#fff'}]}>
-                  {isPopupSendConfirmation
-                    ? lang && lang
-                      ? lang.screen_send.confirm
-                      : ''
-                    : lang && lang
-                    ? lang.screen_send.next
-                    : ''}
-                </Text>
-              </TouchableOpacity>
+                  </>
+                )}
+              </View>
+              <View style={styles.wrapperButton}>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  style={styles.buttonConfirm}
+                  onPress={cancelGasEstimated}>
+                  <Text style={styles.textButtonConfirm}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  style={[
+                    styles.buttonConfirm,
+                    {
+                      backgroundColor: `${
+                        isDisableButtonConfirm ? '#ccc' : '#343c5a'
+                      }`,
+                      flex: 1.5,
+                    },
+                  ]}
+                  disabled={isDisableButtonConfirm}
+                  onPress={onConfirmSend}>
+                  <Text style={[styles.textButtonConfirm, {color: '#fff'}]}>
+                    {isPopupSendConfirmation
+                      ? lang && lang
+                        ? lang.screen_send.confirm
+                        : ''
+                      : lang && lang
+                      ? lang.screen_send.next
+                      : ''}
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      )}
-    </SafeAreaView>
+        )}
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -1166,7 +1190,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 28,
     paddingVertical: 18,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     alignItems: 'center',
   },
   currencyName: {
@@ -1181,20 +1205,17 @@ const styles = StyleSheet.create({
   },
   partBottom: {
     paddingHorizontal: 28,
-    paddingTop: 24,
+    paddingTop: 40,
     paddingBottom: 24,
     gap: 30,
   },
   button: {
     flexDirection: 'row',
     marginLeft: 'auto',
-    marginRight: 24,
+    marginRight: 28,
     marginTop: 30,
     marginBottom: 10,
     justifyContent: 'flex-end',
-    position: 'absolute',
-    bottom: 10,
-    right: 0,
   },
   buttonImage: {
     height: 80,

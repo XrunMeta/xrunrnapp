@@ -125,7 +125,8 @@
     "alert": {
       "emptyEmail": "Tolong isi email anda",
       "invalidEmail": "Email anda tidak valid",
-      "errorServer": "Terjadi kesalahan komunikasi server. Harap coba lagi..."
+      "errorServer": "Terjadi kesalahan komunikasi server. Harap coba lagi...",
+      "notExist": "Email anda belum terdaftar"
     }
   },
 
@@ -336,6 +337,17 @@
       "empty": "Silakan isi kata sandi Anda",
       "wrong": "Kata sandi Anda tidak cocok",
       "errorServer": "Ada kesalahan komunikasi server. Silakan coba lagi..."
+    }
+  },
+
+  "screen_modify_phone": {
+    "title": "Modifikasi Telepon",
+    "label": "Nomor Telepon Baru",
+    "placeholder": "Silakan masukkan nomor telepon baru Anda",
+    "condition": {
+      "empty": "Silakan isi nomor telepon baru Anda",
+      "errorServer": "Ada kesalahan komunikasi server. Silakan coba lagi...",
+      "failed": "Tidak ada perubahan pada nomor telepon Anda"
     }
   },
 
@@ -605,7 +617,8 @@
     "pending": "Menunggu pengambilan koin",
     "tab1": "Penyimpanan Iklan",
     "tab2": "Misi Iklan Selesai",
-    "total": "Total"
+    "total": "Total",
+    "title_floating_popup": "Pilih Menu Penyimpanan"
   },
 
   "permissions_alert": {

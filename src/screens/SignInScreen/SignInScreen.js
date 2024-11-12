@@ -8,6 +8,8 @@ import {
   Alert,
   SafeAreaView,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput/';
@@ -22,6 +24,7 @@ import {
   fontSize,
   authcode,
   sha256Encrypt,
+  BottomComponentFixer,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
@@ -194,71 +197,57 @@ const SignInScreen = () => {
   }, []);
 
   return (
-    <SafeAreaView style={styles.root}>
-      <ButtonBack onClick={onBack} />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={styles.root}>
+        <View style={{flexDirection: 'row', position: 'relative'}}>
+          <View style={{position: 'absolute', zIndex: 1}}>
+            <ButtonBack onClick={onBack} />
+          </View>
 
-      <View style={styles.titleWrapper}>
-        <Text style={styles.title}>
-          {lang && lang.screen_signin && lang.screen_signin.title
-            ? lang.screen_signin.title
-            : ''}
-        </Text>
-        <Text style={styles.subTitle}>
-          {lang && lang.screen_signin && lang.screen_signin.subTitle
-            ? lang.screen_signin.subTitle
-            : ''}
-        </Text>
-      </View>
+          <View style={styles.titleWrapper}>
+            <Text style={styles.title}>
+              {lang && lang.screen_signin && lang.screen_signin.title
+                ? lang.screen_signin.title
+                : ''}
+            </Text>
+            <Text style={styles.subTitle}>
+              {lang && lang.screen_signin && lang.screen_signin.subTitle
+                ? lang.screen_signin.subTitle
+                : ''}
+            </Text>
+          </View>
+        </View>
 
-      <CustomInput
-        label={
-          lang && lang.screen_signin && lang.screen_signin.email
-            ? lang.screen_signin.email.label
-            : ''
-        }
-        placeholder={
-          lang && lang.screen_signin && lang.screen_signin.email
-            ? lang.screen_signin.email.placeholder
-            : ''
-        }
-        value={email}
-        setValue={onEmailChange}
-        isPassword={false}
-      />
-      {isEmailValid ? null : (
-        <Text
-          style={{
-            alignSelf: 'flex-start',
-            marginLeft: 25,
-            color: 'red',
-            fontFamily: getFontFam() + 'Regular',
-            fontSize: fontSize('body'),
-          }}>
-          {lang && lang.screen_signin && lang.screen_signin.validator
-            ? lang.screen_signin.validator
-            : ''}
-        </Text>
-      )}
+        <CustomInput
+          label={
+            lang && lang.screen_signin && lang.screen_signin.email
+              ? lang.screen_signin.email.label
+              : ''
+          }
+          placeholder={
+            lang && lang.screen_signin && lang.screen_signin.email
+              ? lang.screen_signin.email.placeholder
+              : ''
+          }
+          value={email}
+          setValue={onEmailChange}
+          isPassword={false}
+        />
+        {isEmailValid ? null : (
+          <Text
+            style={{
+              alignSelf: 'flex-start',
+              marginLeft: 25,
+              color: 'red',
+              fontFamily: getFontFam() + 'Regular',
+              fontSize: fontSize('body'),
+            }}>
+            {lang && lang.screen_signin && lang.screen_signin.validator
+              ? lang.screen_signin.validator
+              : ''}
+          </Text>
+        )}
 
-      <CustomInput
-        label={
-          lang && lang.screen_signin && lang.screen_signin.password
-            ? lang.screen_signin.password.label
-            : ''
-        }
-        placeholder={
-          lang && lang.screen_signin && lang.screen_signin.password
-            ? lang.screen_signin.password.placeholder
-            : ''
-        }
-        value={password}
-        setValue={setPassword}
-        secureTextEntry
-        isPassword={true}
-      />
-
-      {/* Start - Ngakalin biar tombol nya gak keatas ketika keyboard muncul */}
-      <View style={{opacity: 0, pointerEvents: 'none'}}>
         <CustomInput
           label={
             lang && lang.screen_signin && lang.screen_signin.password
@@ -275,42 +264,42 @@ const SignInScreen = () => {
           secureTextEntry
           isPassword={true}
         />
-      </View>
-      <View style={{flex: 1}}></View>
-      {/* End - Ngakalin biar tombol nya gak keatas ketika keyboard muncul */}
 
-      <View style={[styles.bottomSection]}>
-        <View style={styles.additionalLogin}>
-          <Text style={styles.normalText}>
-            {lang && lang.screen_signin && lang.screen_signin.authcode
-              ? lang.screen_signin.authcode.label + ' '
-              : ''}
-          </Text>
-          <Pressable onPress={onSMSAuth} style={styles.resetPassword}>
-            <Text style={styles.emailAuth}>
+        <BottomComponentFixer count={2} />
+
+        <View style={[styles.bottomSection]}>
+          <View style={styles.additionalLogin}>
+            <Text style={styles.normalText}>
               {lang && lang.screen_signin && lang.screen_signin.authcode
-                ? lang.screen_signin.authcode.link
+                ? lang.screen_signin.authcode.label + ' '
                 : ''}
             </Text>
-          </Pressable>
-        </View>
+            <Pressable onPress={onSMSAuth} style={styles.resetPassword}>
+              <Text style={styles.emailAuth}>
+                {lang && lang.screen_signin && lang.screen_signin.authcode
+                  ? lang.screen_signin.authcode.link
+                  : ''}
+              </Text>
+            </Pressable>
+          </View>
 
-        <TouchableOpacity
-          onPress={onSignIn}
-          disabled={isDisable}
-          style={styles.buttonSignIn}>
-          <Image
-            source={
-              isDisable
-                ? require('../../../assets/images/icon_nextDisable.png')
-                : require('../../../assets/images/icon_next.png')
-            }
-            resizeMode="contain"
-            style={styles.buttonSignInImage}
-          />
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+          <TouchableOpacity
+            onPress={onSignIn}
+            disabled={!isDisable && email == '' && password == ''}
+            style={styles.buttonSignIn}>
+            <Image
+              source={
+                !isDisable && email == '' && password == ''
+                  ? require('../../../assets/images/icon_nextDisable.png')
+                  : require('../../../assets/images/icon_next.png')
+              }
+              resizeMode="contain"
+              style={styles.buttonSignInImage}
+            />
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -322,6 +311,7 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 20,
     alignItems: 'center',
+    marginTop: 20,
   },
   title: {
     fontFamily: getFontFam() + 'Bold',

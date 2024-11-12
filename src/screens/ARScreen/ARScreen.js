@@ -473,7 +473,7 @@ function ARScreen() {
                 right: 0,
                 alignItems: 'center',
                 marginRight: 10,
-                marginTop: 5,
+                marginTop: 10,
               }}>
               <Image
                 source={require('../../../assets/images/icon_diamond_white.png')}
@@ -482,8 +482,8 @@ function ARScreen() {
               />
               <Text
                 style={{
-                  fontFamily: getFontFam() + 'Medium',
-                  fontSize: fontSize('body'),
+                  fontFamily: getFontFam() + 'Bold',
+                  fontSize: fontSize('note'),
                   color: 'white',
                   marginTop: -2,
                 }}>
@@ -613,12 +613,13 @@ function ARScreen() {
                             justifyContent: 'center',
                           }}>
                           <Image
-                            source={{
-                              uri: `data:image/jpeg;base64,${item.adthumbnail2.replace(
-                                /(\r\n|\n|\r)/gm,
-                                '',
-                              )}`,
-                            }}
+                            // source={{
+                            //   uri: `data:image/jpeg;base64,${item.adthumbnail2.replace(
+                            //     /(\r\n|\n|\r)/gm,
+                            //     '',
+                            //   )}`,
+                            // }}
+                            source={require('./../../../assets/images/icon_xrun_white.png')}
                             style={{
                               height: 45,
                               width: 45,

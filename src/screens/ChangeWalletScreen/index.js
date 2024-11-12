@@ -16,17 +16,19 @@ import ButtonBack from '../../components/ButtonBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomInputWallet from '../../components/CustomInputWallet';
 import {
-  URL_API,
   getLanguage2,
   getFontFam,
   fontSize,
   gatewayNodeJS,
+  BottomComponentFixer,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const Change = ({navigation, route}) => {
   const [lang, setLang] = useState('');
   const [iconNextIsDisabled, setIconNextIsDisabled] = useState(true);
+  const [iconNextIsDisabledButton, setIconNextIsDisabledButton] =
+    useState(false);
   const [amount, setAmount] = useState('');
   const [address, setAddress] = useState('CONVERT');
   const {currency} = route.params;
@@ -153,6 +155,8 @@ const Change = ({navigation, route}) => {
           : '',
       );
     } else {
+      setIconNextIsDisabledButton(true);
+      setIconNextIsDisabled(true);
       setPopupConversion(true);
       setConversionRequest(parseFloat(amount).toFixed(9));
       Keyboard.dismiss();
@@ -161,6 +165,8 @@ const Change = ({navigation, route}) => {
 
   const cancelConversion = () => {
     setPopupConversion(false);
+    setIconNextIsDisabledButton(false);
+    setIconNextIsDisabled(false);
   };
 
   const confirmConversion = async () => {
@@ -196,6 +202,9 @@ const Change = ({navigation, route}) => {
           originamount: amount,
           left: 0,
         });
+
+        setIconNextIsDisabledButton(false);
+        setIconNextIsDisabled(false);
       } catch (err) {
         Alert.alert(
           '',
@@ -243,7 +252,7 @@ const Change = ({navigation, route}) => {
       <ScrollView overScrollMode="never">
         <View style={{backgroundColor: '#fff'}}>
           <View style={styles.partTop}>
-            <Text style={styles.currencyName}>-</Text>
+            {/* <Text style={styles.currencyName}>-</Text> */}
             <View style={styles.partScanQR}>
               <Text style={styles.balance}>
                 {lang && lang ? lang.screen_conversion.acquired_coin : ''}:{' '}
@@ -274,26 +283,27 @@ const Change = ({navigation, route}) => {
             </View>
           </View>
         </View>
-      </ScrollView>
 
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{flex: 1}}>
-        <TouchableOpacity
-          onPress={onSend}
-          style={styles.button}
-          activeOpacity={0.6}>
-          <Image
-            source={
-              iconNextIsDisabled
-                ? require('../../../assets/images/ico-btn-passive.png')
-                : require('../../../assets/images/ico-btn-active.png')
-            }
-            resizeMode="contain"
-            style={styles.buttonImage}
-          />
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
+        <BottomComponentFixer count={5} />
+
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <TouchableOpacity
+            onPress={onSend}
+            style={styles.button}
+            disabled={iconNextIsDisabledButton}>
+            <Image
+              source={
+                iconNextIsDisabled
+                  ? require('../../../assets/images/ico-btn-passive.png')
+                  : require('../../../assets/images/ico-btn-active.png')
+              }
+              resizeMode="contain"
+              style={styles.buttonImage}
+            />
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
+      </ScrollView>
 
       {popupConversion && (
         <View style={styles.popupConversion}>
@@ -375,7 +385,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 28,
     paddingVertical: 18,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     alignItems: 'center',
   },
   currencyName: {
@@ -395,13 +405,10 @@ const styles = StyleSheet.create({
   button: {
     flexDirection: 'row',
     marginLeft: 'auto',
-    marginRight: 24,
+    marginRight: 28,
     marginTop: 30,
     marginBottom: 10,
     justifyContent: 'flex-end',
-    position: 'absolute',
-    bottom: 10,
-    right: 0,
   },
   buttonImage: {
     height: 80,

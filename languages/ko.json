@@ -125,7 +125,8 @@
     "alert": {
       "emptyEmail": "이메일을 입력하세요",
       "invalidEmail": "이메일이 유효하지 않습니다",
-      "errorServer": "서버 통신 오류가 발생했습니다. 다시 시도하세요..."
+      "errorServer": "서버 통신 오류가 발생했습니다. 다시 시도하세요...",
+      "notExist": "귀하의 이메일이 존재하지 않습니다"
     }
   },
 
@@ -338,6 +339,17 @@
     }
   },
 
+  "screen_modify_phone": {
+    "title": "전화 수정",
+    "label": "새 전화번호",
+    "placeholder": "새 전화번호를 입력하세요",
+    "condition": {
+      "empty": "새 전화번호를 입력하세요",
+      "errorServer": "서버 통신 오류가 있습니다. 다시 시도하십시오...",
+      "failed": "전화번호에는 변경된 사항이 없습니다."
+    }
+  },
+
   "screen_modify_information": {
     "title": "정보 수정",
     "lastname": {
@@ -364,8 +376,8 @@
     },
     "gender": {
       "label": "성별",
-      "opt1": "남자/남성",
-      "opt2": "여자/여성"
+      "opt1": "남자",
+      "opt2": "여자"
     },
     "area": {
       "label": "지역",
@@ -604,7 +616,8 @@
     "pending": "코인 획득 대기 중",
     "tab1": "보관된 광고",
     "tab2": "완료된 광고",
-    "total": "합계"
+    "total": "합계",
+    "title_floating_popup": "저장 메뉴 선택"
   },
 
   "permissions_alert": {

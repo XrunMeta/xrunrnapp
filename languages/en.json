@@ -125,7 +125,8 @@
     "alert": {
       "emptyEmail": "Please insert your email",
       "invalidEmail": "Your email is not valid",
-      "errorServer": "There is a server communication error. Please try again..."
+      "errorServer": "There is a server communication error. Please try again...",
+      "notExist": "Your email is not exist"
     }
   },
 
@@ -339,6 +340,17 @@
     }
   },
 
+  "screen_modify_phone": {
+    "title": "Phone Modify",
+    "label": "New Phone Number",
+    "placeholder": "Please enter your new phone number",
+    "condition": {
+      "empty": "Please fill your new phone number",
+      "errorServer": "There is a server communication error. Please try again...",
+      "failed": "There is no change with your phone number"
+    }
+  },
+
   "screen_modify_information": {
     "loader": "Loading...",
     "title": "Modify Information",
@@ -366,8 +378,8 @@
     },
     "gender": {
       "label": "Gender",
-      "opt1": "Boy/Men",
-      "opt2": "Girl/Women"
+      "opt1": "Man",
+      "opt2": "Woman"
     },
     "area": {
       "label": "Area",
@@ -491,10 +503,10 @@
     "table_head_change": "Convert",
     "table_head_exchange": "Exchange",
     "table_days": "DAYS",
-    "total_history": "Total History",
-    "transfer_history": "Transfer History",
-    "received_details": "Received Details",
-    "transition_history": "Transition History",
+    "total_history": "Total",
+    "transfer_history": "Transfer",
+    "received_details": "Received",
+    "transition_history": "Transition",
     "history_action3651": "Withdrawal details",
     "history_action3304": "Completed",
     "history_action3305": "Transfer",
@@ -589,7 +601,7 @@
   },
 
   "screen_advertise": {
-    "title": "Advertising Storage",
+    "title": "Ad Storage",
     "delete": "DELETE",
     "all": " ALL",
     "deleteAll": "DELETE ALL",
@@ -604,9 +616,10 @@
     "order": "Coin order",
     "completed": "Coin acquisition completed",
     "pending": "Waiting for coin Acquisition",
-    "tab1": "An Advertisement in Storage",
-    "tab2": "Mission Completed Advertisement",
-    "total": "Total"
+    "tab1": "Storage",
+    "tab2": "Completed",
+    "total": "Total",
+    "title_floating_popup": "Select Storage Menu"
   },
 
   "permissions_alert": {
