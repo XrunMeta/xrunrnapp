@@ -104,7 +104,7 @@ const CustomInputEdit = ({
           style={[styles.modalContainer, {height: ScreenHeight}]}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           <SafeAreaView
-            style={[styles.modalContainer, {backgroundColor: 'pink'}]}>
+            style={styles.modalContainer}>
             <View
               style={[
                 {alignItems: 'center', flex: 1, backgroundColor: 'white'},
