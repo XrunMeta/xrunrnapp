@@ -26,9 +26,7 @@ import crashlytics from '@react-native-firebase/crashlytics';
 
 const Change = ({navigation, route}) => {
   const [lang, setLang] = useState('');
-  const [iconNextIsDisabled, setIconNextIsDisabled] = useState(true);
-  const [iconNextIsDisabledButton, setIconNextIsDisabledButton] =
-    useState(false);
+  const [isIconNextDisabled, setIsIconNextDisabled] = useState(true);
   const [amount, setAmount] = useState('');
   const [address, setAddress] = useState('CONVERT');
   const {currency} = route.params;
@@ -115,14 +113,10 @@ const Change = ({navigation, route}) => {
   }, [dataMember]);
 
   useEffect(() => {
-    if (amount === '' || amount === '-' || parseFloat(amount) > balance) {
-      setIconNextIsDisabled(true);
-    } else if (amount == 0 || amount < 0) {
-      setIconNextIsDisabled(true);
-      // } else if (address === '' || address.length < 40) {
-      //   setIconNextIsDisabled(true);
+    if (amount) {
+      setIsIconNextDisabled(false);
     } else {
-      setIconNextIsDisabled(false);
+      setIsIconNextDisabled(true);
     }
   }, [amount, address]);
 
@@ -155,8 +149,6 @@ const Change = ({navigation, route}) => {
           : '',
       );
     } else {
-      setIconNextIsDisabledButton(true);
-      setIconNextIsDisabled(true);
       setPopupConversion(true);
       setConversionRequest(parseFloat(amount).toFixed(9));
       Keyboard.dismiss();
@@ -165,8 +157,7 @@ const Change = ({navigation, route}) => {
 
   const cancelConversion = () => {
     setPopupConversion(false);
-    setIconNextIsDisabledButton(false);
-    setIconNextIsDisabled(false);
+    setIsIconNextDisabled(false);
   };
 
   const confirmConversion = async () => {
@@ -203,8 +194,7 @@ const Change = ({navigation, route}) => {
           left: 0,
         });
 
-        setIconNextIsDisabledButton(false);
-        setIconNextIsDisabled(false);
+        setIsIconNextDisabled(false);
       } catch (err) {
         Alert.alert(
           '',
@@ -291,10 +281,10 @@ const Change = ({navigation, route}) => {
           <TouchableOpacity
             onPress={onSend}
             style={styles.button}
-            disabled={iconNextIsDisabledButton}>
+            disabled={isIconNextDisabled}>
             <Image
               source={
-                iconNextIsDisabled
+                isIconNextDisabled
                   ? require('../../../assets/images/ico-btn-passive.png')
                   : require('../../../assets/images/ico-btn-active.png')
               }
