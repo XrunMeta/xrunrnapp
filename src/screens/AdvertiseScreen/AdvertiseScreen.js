@@ -13,6 +13,7 @@ import {
   Pressable,
   Alert,
   SafeAreaView,
+  ScrollView,
 } from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
@@ -917,7 +918,7 @@ const AdvertiseScreen = () => {
             onPress={() => setIsShowPopupFloating(false)}
             activeOpacity={1}
           />
-          <View style={styles.subPopupFloating}>
+          <ScrollView style={styles.subPopupFloating}>
             <Text style={styles.titleRadioButton}>
               {lang &&
               lang.screen_advertise &&
@@ -925,6 +926,7 @@ const AdvertiseScreen = () => {
                 ? lang.screen_advertise.title_floating_popup
                 : ''}
             </Text>
+
             <RadioGroup
               radioButtons={radioButtons}
               onPress={setSelectedId}
@@ -934,7 +936,7 @@ const AdvertiseScreen = () => {
                 rowGap: 10,
               }}
             />
-          </View>
+          </ScrollView>
         </View>
       )}
 
@@ -1085,10 +1087,12 @@ const styles = StyleSheet.create({
   },
   subPopupFloating: {
     backgroundColor: '#fff',
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingTop: 16,
     width: 320,
     overflow: 'hidden',
     zIndex: 2,
+    maxHeight: 200,
   },
   titleRadioButton: {
     fontFamily: getFontFam() + 'Medium',
