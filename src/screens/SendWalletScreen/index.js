@@ -61,8 +61,6 @@ const SendWalletScreen = ({navigation, route}) => {
   const [isPopupSend, setIsPopupSend] = useState(false);
   const [isPopupSendConfirmation, setIsPopupSendConfirmation] = useState(false);
   const [isIconNextDisabled, setIsIconNextDisabled] = useState(true);
-  const [iconNextIsDisabledButton, setIconNextIsDisabledButton] =
-    useState(false);
 
   // Animated notification in QR
   const [fadeAnim] = useState(new Animated.Value(0));
@@ -353,7 +351,6 @@ const SendWalletScreen = ({navigation, route}) => {
     setIsInsufficientBalance(false);
 
     setIsIconNextDisabled(false);
-    setIconNextIsDisabledButton(false);
   };
 
   // If gas estimate API network busy
@@ -468,14 +465,10 @@ const SendWalletScreen = ({navigation, route}) => {
   }, [isVisibleReadQR]);
 
   useEffect(() => {
-    if (amount === '' || amount > balance) {
-      setIsIconNextDisabled(true);
-    } else if (amount == 0) {
-      setIsIconNextDisabled(true);
-    } else if (address === '' || address.length < 40) {
-      setIsIconNextDisabled(true);
-    } else {
+    if (amount || address) {
       setIsIconNextDisabled(false);
+    } else {
+      setIsIconNextDisabled(true);
     }
   }, [amount, address]);
 
@@ -656,7 +649,6 @@ const SendWalletScreen = ({navigation, route}) => {
             symbol: dataWallet.symbol,
           });
           setIsIconNextDisabled(false);
-          setIconNextIsDisabledButton(false);
         } else {
           Alert.alert(lang.global_error.network_busy);
           console.log('Transfer failed postTransfer');
@@ -733,8 +725,6 @@ const SendWalletScreen = ({navigation, route}) => {
       ]);
     } else {
       setIsLoading(true);
-      setIsIconNextDisabled(true);
-      setIconNextIsDisabledButton(true);
 
       const statusLimitTransfer = await getLimitTransfer();
       // Check the limit transfer available
@@ -896,7 +886,7 @@ const SendWalletScreen = ({navigation, route}) => {
             <TouchableOpacity
               onPress={onSend}
               style={styles.button}
-              disabled={iconNextIsDisabledButton}>
+              disabled={isIconNextDisabled}>
               <Image
                 source={
                   isIconNextDisabled
