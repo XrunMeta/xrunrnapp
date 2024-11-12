@@ -112,8 +112,10 @@
       "invalidRecommend": "Please verify the recommended email",
       "errorServer": "There is a server communication error. Please try again...",
       "invalidPhone": "Please verify your phone number first",
-      "areaNotFound": "Area not found"
-    }
+      "areaNotFound": "Area not found",
+      "regionNotFound": "Region not found"
+    },
+    "title_floating_popup": "Select Region"
   },
 
   "screen_emailAuth": {
@@ -386,7 +388,9 @@
       "placeholder": "Your Area",
       "empty": "Please select a region",
       "label_country": "Nationality / Country",
-      "label_area": "Area"
+      "label_area": "Area",
+      "title_floating_popup": "Select Country",
+      "title_floating_popup2": "Select Area"
     },
     "modal": {
       "empty": "Data is empty"

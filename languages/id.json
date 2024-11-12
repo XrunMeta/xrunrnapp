@@ -112,8 +112,10 @@
       "invalidRecommend": "Harap verifikasi email yang direkomendasikan",
       "errorServer": "Ada kesalahan komunikasi dengan server. Silakan coba lagi...",
       "invalidPhone": "Silakan verifikasi nomor telepon Anda terlebih dahulu",
-      "areaNotFound": "Daerah tidak ditemukan"
-    }
+      "areaNotFound": "Daerah tidak ditemukan",
+      "regionNotFound": "Wilayah tidak ditemukan"
+    },
+    "title_floating_popup": "Pilih Wilayah"
   },
 
   "screen_emailAuth": {
@@ -385,7 +387,9 @@
       "placeholder": "Wilayah Anda",
       "empty": "Silakan pilih wilayah",
       "label_country": "Kebangsaan / Negara",
-      "label_area": "Wilayah"
+      "label_area": "Wilayah",
+      "title_floating_popup": "Pilih Negara",
+      "title_floating_popup2": "Pilih Area"
     },
     "modal": {
       "empty": "Data kosong"

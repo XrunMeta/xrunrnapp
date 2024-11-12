@@ -112,8 +112,10 @@
       "invalidRecommend": "请验证推荐邮箱",
       "errorServer": "服务器通信出现错误。请重试...",
       "invalidPhone": "请先验证您的电话号码",
-      "areaNotFound": "未找到区域"
-    }
+      "areaNotFound": "未找到区域",
+      "regionNotFound": "未找到地区"
+    },
+    "title_floating_popup": "选择地区"
   },
 
   "screen_emailAuth": {
@@ -384,7 +386,9 @@
       "placeholder": "您的地区",
       "empty": "请选择一个地区",
       "label_country": "国籍/国家",
-      "label_area": "地区"
+      "label_area": "地区",
+      "title_floating_popup": "选择国家",
+      "title_floating_popup2": "选择地区"
     },
     "modal": {
       "empty": "数据为空"
