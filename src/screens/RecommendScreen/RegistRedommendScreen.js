@@ -8,6 +8,8 @@ import {
   Dimensions,
   Alert,
   SafeAreaView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
@@ -27,6 +29,7 @@ const RegistRecommendScreen = () => {
   const [recID, setRecID] = useState('');
   let ScreenHeight = Dimensions.get('window').height;
   const [userData, setUserData] = useState({});
+  const [isDisable, setIsDisable] = useState(false)
 
   useEffect(() => {
     // Get Language
@@ -64,6 +67,7 @@ const RegistRecommendScreen = () => {
     } else {
       const registRecommend = async () => {
         try {
+		  setIsDisable(true)
           const body = {
             member: userData.member,
             email: recID,
@@ -110,7 +114,9 @@ const RegistRecommendScreen = () => {
           console.error('Terjadi kesalahan:', error.message);
           crashlytics().recordError(new Error(error));
           crashlytics().log(error);
-        }
+        } finally {
+		  setIsDisable(false)
+		}
       };
 
       registRecommend();
@@ -122,6 +128,7 @@ const RegistRecommendScreen = () => {
   };
 
   return (
+	<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
       {/* Title */}
       <View style={{flexDirection: 'row'}}>
@@ -152,15 +159,23 @@ const RegistRecommendScreen = () => {
 
       <View style={[styles.bottomSection]}>
         <View style={styles.additionalLogin}></View>
-        <Pressable onPress={onSaveChange} style={styles.buttonSignIn}>
-          <Image
-            source={require('../../../assets/images/icon_check.png')}
-            resizeMode="contain"
-            style={styles.buttonSignInImage}
-          />
-        </Pressable>
+		<Pressable
+            onPress={onSaveChange}
+            style={styles.buttonSignIn}
+            disabled={!isDisable && recID == ""}>
+            <Image
+              source={
+                !isDisable && recID == ""
+                  ? require('../../../assets/images/icon_nextDisable.png')
+                  : require('../../../assets/images/icon_next.png')
+              }
+              resizeMode="contain"
+              style={styles.buttonSignInImage}
+            />
+          </Pressable>
       </View>
     </SafeAreaView>
+	</TouchableWithoutFeedback>
   );
 };
 
