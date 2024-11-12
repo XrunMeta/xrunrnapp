@@ -326,7 +326,7 @@ export default function MapParent() {
                 style={{
                   flex: 1,
                   alignItems: 'flex-end',
-                  marginBottom: -38,
+                  marginBottom: -41,
                 }}>
                 <Text
                   style={{
@@ -334,6 +334,8 @@ export default function MapParent() {
                     fontSize: fontSize('note'),
                     color: 'white',
                     marginBottom: 2,
+                    opacity: 0,
+                    pointerEvents: 'none',
                   }}>
                   {lang &&
                   lang.screen_map &&
@@ -347,22 +349,20 @@ export default function MapParent() {
                   }}>
                   <Image
                     source={require('../../../assets/images/icon_diamond_white.png')}
-                    style={{height: 13, tintColor: '#ffdc04'}}
+                    style={{
+                      height: 13,
+                      tintColor: '#ffdc04',
+                    }}
                     resizeMode="contain"
                   />
                   <Text
                     style={{
                       fontFamily: getFontFam() + 'Bold',
                       fontSize: fontSize('note'),
-                      color: '#ffdc04',
+                      color: 'white',
                       marginTop: -4,
                     }}>
-                    {lang &&
-                    lang.screen_map &&
-                    lang.screen_map.section_card_shadow
-                      ? lang.screen_map.section_card_shadow.diamond + ' '
-                      : ''}
-                    {bigCoin}
+                    Jackpot 10,000 XRUN
                   </Text>
                 </View>
               </View>

@@ -8,13 +8,22 @@ import {
   Alert,
   ActivityIndicator,
   SafeAreaView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {URL_API_NODEJS, getLanguage2, authcode} from '../../../utils';
+import {
+  URL_API_NODEJS,
+  getLanguage2,
+  authcode,
+  BottomComponentFixer,
+  fontSize,
+  getFontFam,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const EmailAuthScreen = () => {
@@ -57,7 +66,7 @@ const EmailAuthScreen = () => {
         setIsDisable(true);
         const waitForResponse = async () => {
           try {
-            const response = await fetch(`${URL_API_NODEJS}/check-02-email`, {
+            const reqExisting = await fetch(`${URL_API_NODEJS}/ap1810-i01`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -67,12 +76,33 @@ const EmailAuthScreen = () => {
                 email,
               }),
             });
-            const responseData = await response.json();
-            console.log(
-              'RespAPI check-02-email -> ' + JSON.stringify(responseData),
-            );
+            const resExsiting = await reqExisting.json();
+            console.log('is email exist? -> ' + JSON.stringify(resExsiting));
 
-            return responseData;
+            if (resExsiting?.data[0]?.result) {
+              const response = await fetch(`${URL_API_NODEJS}/check-02-email`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${authcode}`,
+                },
+                body: JSON.stringify({
+                  email,
+                }),
+              });
+              const responseData = await response.json();
+              console.log(
+                'RespAPI check-02-email -> ' + JSON.stringify(responseData),
+              );
+
+              return responseData;
+            } else {
+              console.log(resExsiting?.data[0]?.result);
+              return {
+                data: 'error',
+                value: lang.screen_emailAuth.alert.notExist,
+              };
+            }
           } catch (error) {
             setIsLoading(true);
             crashlytics().recordError(new Error(error));
@@ -149,68 +179,83 @@ const EmailAuthScreen = () => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <View style={[styles.root, {height: ScreenHeight}]}>
-        <ButtonBack onClick={onBack} />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={{flex: 1}}>
+        <View style={[styles.root, {height: ScreenHeight}]}>
+          <View style={{flexDirection: 'row'}}>
+            <View style={{position: 'absolute', zIndex: 1}}>
+              <ButtonBack onClick={onBack} />
+            </View>
+            <View style={styles.titleWrapper}>
+              <Text style={styles.title}>
+                {lang && lang.screen_signin && lang.screen_signin.authcode
+                  ? lang.screen_signin.authcode.link
+                  : ''}
+              </Text>
+            </View>
+          </View>
 
-        <CustomInput
-          label={
-            lang && lang.screen_emailAuth && lang.screen_emailAuth.email
-              ? lang.screen_emailAuth.email.label
-              : ''
-          }
-          placeholder={
-            lang && lang.screen_emailAuth && lang.screen_emailAuth.email
-              ? lang.screen_emailAuth.email.placeholder
-              : ''
-          }
-          value={email}
-          setValue={onEmailChange}
-          isPassword={false}
-        />
-        {isEmailValid ? null : (
-          <Text
+          <CustomInput
+            label={
+              lang && lang.screen_emailAuth && lang.screen_emailAuth.email
+                ? lang.screen_emailAuth.email.label
+                : ''
+            }
+            placeholder={
+              lang && lang.screen_emailAuth && lang.screen_emailAuth.email
+                ? lang.screen_emailAuth.email.placeholder
+                : ''
+            }
+            value={email}
+            setValue={onEmailChange}
+            isPassword={false}
+          />
+          {isEmailValid ? null : (
+            <Text
+              style={{
+                alignSelf: 'flex-start',
+                marginLeft: 25,
+                color: 'red',
+              }}>
+              {lang && lang.screen_emailAuth && lang.screen_emailAuth.alert
+                ? lang.screen_emailAuth.alert.invalidEmail
+                : ''}
+            </Text>
+          )}
+
+          <BottomComponentFixer count={3} />
+
+          <View style={[styles.bottomSection]}>
+            <Pressable
+              onPress={onSignIn}
+              style={styles.buttonSignIn}
+              disabled={!isDisable && email == ''}>
+              <Image
+                source={
+                  !isDisable && email == ''
+                    ? require('../../../assets/images/icon_nextDisable.png')
+                    : require('../../../assets/images/icon_next.png')
+                }
+                resizeMode="contain"
+                style={styles.buttonSignInImage}
+              />
+            </Pressable>
+          </View>
+        </View>
+        {isLoading && (
+          <View
             style={{
-              alignSelf: 'flex-start',
-              marginLeft: 25,
-              color: 'red',
+              ...StyleSheet.absoluteFill,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              zIndex: 1,
             }}>
-            {lang && lang.screen_emailAuth && lang.screen_emailAuth.alert
-              ? lang.screen_emailAuth.alert.invalidEmail
-              : ''}
-          </Text>
+            <ActivityIndicator size="large" color="#343a59" />
+          </View>
         )}
-
-        <View style={[styles.bottomSection]}>
-          <Pressable
-            onPress={onSignIn}
-            style={styles.buttonSignIn}
-            disabled={isDisable}>
-            <Image
-              source={
-                isDisable
-                  ? require('../../../assets/images/icon_nextDisable.png')
-                  : require('../../../assets/images/icon_next.png')
-              }
-              resizeMode="contain"
-              style={styles.buttonSignInImage}
-            />
-          </Pressable>
-        </View>
-      </View>
-      {isLoading && (
-        <View
-          style={{
-            ...StyleSheet.absoluteFill,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            zIndex: 1,
-          }}>
-          <ActivityIndicator size="large" color="#343a59" />
-        </View>
-      )}
-    </SafeAreaView>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -238,6 +283,21 @@ const styles = StyleSheet.create({
   buttonSignInImage: {
     height: 80,
     width: 80,
+  },
+  titleWrapper: {
+    paddingVertical: 9,
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    flex: 1,
+    elevation: 5,
+    zIndex: 0,
+  },
+  title: {
+    fontSize: fontSize('title'),
+    fontFamily: getFontFam() + 'Bold',
+    color: '#051C60',
+    margin: 10,
   },
 });
 

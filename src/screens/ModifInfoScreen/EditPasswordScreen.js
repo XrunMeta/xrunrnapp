@@ -6,6 +6,10 @@ import {
   Pressable,
   Image,
   Dimensions,
+  SafeAreaView,
+  Touchable,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
@@ -17,6 +21,7 @@ import {
   fontSize,
   URL_API_NODEJS,
   authcode,
+  BottomComponentFixer,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
@@ -26,13 +31,15 @@ const EditPassword = () => {
   const [password, setPassword] = useState('');
   let ScreenHeight = Dimensions.get('window').height;
   const [userData, setUserData] = useState({});
+  const [isDisable, setIsDisable] = useState(false);
 
   const onSaveChange = () => {
-    if (password == '') {
-      alert(lang ? lang.screen_modify_password.condition.empty : '');
-    } else {
-      const savePassword = async () => {
-        try {
+    try {
+      setIsDisable(true);
+      if (password == '') {
+        alert(lang ? lang.screen_modify_password.condition.empty : '');
+      } else {
+        const savePassword = async () => {
           const apiUrl = `${URL_API_NODEJS}/app7163-01`;
 
           const response = await fetch(apiUrl, {
@@ -54,20 +61,23 @@ const EditPassword = () => {
           }
 
           console.log(`Password Baru : ${password}`);
-          navigation.goBack();
-        } catch (error) {
-          crashlytics().recordError(new Error(error));
-          crashlytics().log(error);
-          console.error('Terjadi kesalahan:', error.message);
-        }
-      };
+          navigation.replace('ModifInfo');
+        };
 
-      savePassword();
+        savePassword();
+      }
+    } catch (error) {
+      crashlytics().recordError(new Error(error));
+      crashlytics().log(error);
+      console.error('Terjadi kesalahan:', error.message);
+    } finally {
+      setIsDisable(false);
+      setPassword('');
     }
   };
 
   const handleBack = () => {
-    navigation.goBack();
+    navigation.replace('ModifInfo');
   };
 
   useEffect(() => {
@@ -96,49 +106,60 @@ const EditPassword = () => {
   }, []);
 
   return (
-    <View style={[styles.root, {height: ScreenHeight}]}>
-      {/* Title */}
-      <View style={{flexDirection: 'row'}}>
-        <View style={{position: 'absolute', zIndex: 1}}>
-          <ButtonBack onClick={handleBack} />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
+        {/* Title */}
+        <View style={{flexDirection: 'row'}}>
+          <View style={{position: 'absolute', zIndex: 1}}>
+            <ButtonBack onClick={handleBack} />
+          </View>
+          <View style={styles.titleWrapper}>
+            <Text style={styles.title}>
+              {lang && lang.screen_modify_password
+                ? lang.screen_modify_password.title
+                : ''}
+            </Text>
+          </View>
         </View>
-        <View style={styles.titleWrapper}>
-          <Text style={styles.title}>
-            {lang && lang.screen_modify_password
-              ? lang.screen_modify_password.title
-              : ''}
-          </Text>
+
+        <CustomInput
+          label={
+            lang && lang.screen_modify_password
+              ? lang.screen_modify_password.label
+              : ''
+          }
+          placeholder={
+            lang && lang.screen_modify_password
+              ? lang.screen_modify_password.placeholder
+              : ''
+          }
+          value={password}
+          setValue={setPassword}
+          secureTextEntry
+          isPassword={true}
+        />
+
+        <BottomComponentFixer count={5} />
+
+        <View style={[styles.bottomSection]}>
+          <View style={styles.additionalLogin}></View>
+          <Pressable
+            onPress={onSaveChange}
+            style={styles.buttonSignIn}
+            disabled={!isDisable && password == ''}>
+            <Image
+              source={
+                !isDisable && password == ''
+                  ? require('../../../assets/images/icon_nextDisable.png')
+                  : require('../../../assets/images/icon_next.png')
+              }
+              resizeMode="contain"
+              style={styles.buttonSignInImage}
+            />
+          </Pressable>
         </View>
-      </View>
-
-      <CustomInput
-        label={
-          lang && lang.screen_modify_password
-            ? lang.screen_modify_password.label
-            : ''
-        }
-        placeholder={
-          lang && lang.screen_modify_password
-            ? lang.screen_modify_password.placeholder
-            : ''
-        }
-        value={password}
-        setValue={setPassword}
-        secureTextEntry
-        isPassword={true}
-      />
-
-      <View style={[styles.bottomSection]}>
-        <View style={styles.additionalLogin}></View>
-        <Pressable onPress={onSaveChange} style={styles.buttonSignIn}>
-          <Image
-            source={require('../../../assets/images/icon_check.png')}
-            resizeMode="contain"
-            style={styles.buttonSignInImage}
-          />
-        </Pressable>
-      </View>
-    </View>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 

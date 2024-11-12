@@ -29,9 +29,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Countdown from './Countdown';
 
 // ########## Main Function ##########
-const EmailCodeForModif = () => {
+const EmailCodeForModifNumberScreen = () => {
   const route = useRoute();
-  const {dataEmail} = route.params;
+  const {dataEmail, member, countryCode} = route.params;
   const [verificationCode, setVerificationCode] = useState([
     '',
     '',
@@ -67,6 +67,7 @@ const EmailCodeForModif = () => {
         Alert.alert('Failed', 'Please enter your email');
       } else {
         console.log('Kode dikirim boy');
+        console.log({responseData});
       }
     } catch (error) {
       // Handle network errors or other exceptions
@@ -96,7 +97,7 @@ const EmailCodeForModif = () => {
   }, [verificationCode]);
 
   const onBack = () => {
-    navigation.replace('InfoHome');
+    navigation.replace('ModifInfo');
   };
 
   const onSignIn = async () => {
@@ -129,7 +130,7 @@ const EmailCodeForModif = () => {
       console.log(JSON.stringify(responseAuthData));
 
       if (responseAuthData.status == 'success') {
-        navigation.replace('ModifInfo');
+        navigation.replace('PhoneModif', {member: member, countryCode});
       } else {
         Alert.alert('Failed', lang.screen_emailVerification.notif.wrongCode);
       }
@@ -426,4 +427,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EmailCodeForModif;
+export default EmailCodeForModifNumberScreen;
