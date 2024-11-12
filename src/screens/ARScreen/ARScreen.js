@@ -644,7 +644,14 @@ function ARScreen() {
                             }}>
                             {item.distance}M
                           </Text>
-                          {console.log('Rotasi Coin -> ' + item.rotation)}
+                          <Text
+                            style={{
+                              fontFamily: getFontFam() + 'Semibold',
+                              fontSize: fontSize('body'),
+                              color: 'red',
+                            }}>
+                            {item.coin}
+                          </Text>
                         </TouchableOpacity>
                       </View>
                     </ImageBackground>
