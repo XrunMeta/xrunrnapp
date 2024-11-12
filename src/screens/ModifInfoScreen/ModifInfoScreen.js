@@ -13,7 +13,7 @@ import {
   FlatList,
   SafeAreaView,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import CustomInputEdit from '../../components/CustomInputEdit/CustomInputEdit';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
@@ -28,6 +28,7 @@ import {
   authcode,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
+import RadioGroup from 'react-native-radio-buttons-group';
 
 const ModifInfoScreen = ({route}) => {
   const [lang, setLang] = useState({});
@@ -61,13 +62,77 @@ const ModifInfoScreen = ({route}) => {
 
   const navigation = useNavigation();
 
+  // Select floating radio button - Region
+  const radioButtons = useMemo(
+    () =>
+      countryData.map(item => ({
+        id: item.country,
+        label: `+${item.callnumber} ${item.country}`,
+        value: item.country,
+        borderColor: '#009484',
+        color: '#009484',
+        labelStyle: {
+          color: 'black',
+          fontFamily: getFontFam() + 'Regular',
+          fontSize: fontSize('subtitle'),
+          width: 200,
+        },
+        onPress: () => {
+          setCountryModalVisible(false);
+          onSelectCountry(item);
+        },
+      })),
+    [countryData],
+  );
+  const [selectedId, setSelectedId] = useState(null);
+
+  // Set default country
+  useEffect(() => {
+    if (countryData.length > 0 && tempCountry) {
+      const countryName = countryData.find(
+        item => item.callnumber == tempCountry.cCode,
+      ).country;
+      setSelectedId(countryName);
+    }
+  }, [countryData, tempCountry]);
+
+  // Select floating radio button - Area
+  const radioButtonsArea = useMemo(
+    () =>
+      regionData.map(item => ({
+        id: item.subcode,
+        label: item.description,
+        value: item.description,
+        borderColor: '#009484',
+        color: '#009484',
+        labelStyle: {
+          color: 'black',
+          fontFamily: getFontFam() + 'Regular',
+          fontSize: fontSize('subtitle'),
+          width: 200,
+        },
+        onPress: () => {
+          setAreaModalVisible(false);
+          onSelectArea(item);
+        },
+      })),
+    [regionData],
+  );
+  const [selectedIdArea, setSelectedIdArea] = useState(null);
+
+  // Set default area
+  useEffect(() => {
+    if (regionData.length > 0) {
+      const regionSubcode = regionData.find(
+        item => item.description == tempRegion.rDesc,
+      ).subcode;
+      setSelectedIdArea(regionSubcode);
+    }
+  }, [regionData]);
+
   const onBack = () => {
     navigation.replace('InfoHome');
   };
-
-  useEffect(() => {
-    console.log(flag, countryCode);
-  }, [flag, countryCode]);
 
   const ageSelector = getAge => {
     if (getAge == 0) {
@@ -1116,6 +1181,7 @@ const ModifInfoScreen = ({route}) => {
                         </View>
                       </TouchableOpacity>
                     </View>
+
                     <View
                       style={{
                         width: '100%',
@@ -1171,53 +1237,34 @@ const ModifInfoScreen = ({route}) => {
                       onRequestClose={() => {
                         setModalCountryVisible(false);
                       }}>
-                      <View style={styles.modalContainer}>
-                        <View style={styles.modalContent}>
-                          <FlatList
-                            data={countryData}
-                            keyExtractor={item => item.code}
-                            ListEmptyComponent={() => (
-                              <View style={{marginVertical: 20}}>
-                                <Text
-                                  style={[
-                                    styles.normalText,
-                                    {textAlign: 'center'},
-                                  ]}>
-                                  {lang &&
-                                  lang.screen_modify_information &&
-                                  lang.screen_modify_information.modal
-                                    ? lang.screen_modify_information.modal.empty
-                                    : ''}
-                                </Text>
-                              </View>
-                            )}
-                            renderItem={({item}) => (
-                              <TouchableOpacity
-                                style={styles.modalItem}
-                                onPress={() => onSelectCountry(item)}>
-                                <Text
-                                  style={[
-                                    styles.modalItemText,
-                                    {marginRight: 10},
-                                  ]}>
-                                  +{item.callnumber}
-                                </Text>
-                                <Text style={styles.modalItemText}>
-                                  {item.country}
-                                </Text>
-                              </TouchableOpacity>
-                            )}
+                      <View style={styles.popupFloating}>
+                        <TouchableOpacity
+                          style={styles.fullScreenOverlay}
+                          activeOpacity={1}
+                          onPress={() => setCountryModalVisible(false)}
+                        />
+                        <ScrollView style={styles.subPopupFloating}>
+                          <Text style={styles.titleRadioButton}>
+                            {lang &&
+                            lang.screen_modify_information.area &&
+                            lang.screen_modify_information.area
+                              .title_floating_popup
+                              ? lang.screen_modify_information.area
+                                  .title_floating_popup
+                              : ''}
+                          </Text>
+
+                          <RadioGroup
+                            radioButtons={radioButtons}
+                            onPress={setSelectedId}
+                            selectedId={selectedId}
+                            containerStyle={{
+                              alignItems: 'flex-start',
+                              rowGap: 10,
+                              marginBottom: 30,
+                            }}
                           />
-                          <TouchableOpacity
-                            style={styles.closeButton}
-                            onPress={() => setCountryModalVisible(false)}>
-                            <Text style={styles.closeButtonText}>
-                              {lang && lang.screen_modify_information
-                                ? lang.screen_modify_information.close
-                                : ''}
-                            </Text>
-                          </TouchableOpacity>
-                        </View>
+                        </ScrollView>
                       </View>
                     </Modal>
 
@@ -1229,46 +1276,34 @@ const ModifInfoScreen = ({route}) => {
                       onRequestClose={() => {
                         setModalAreaVisible(false);
                       }}>
-                      <View style={styles.modalContainer}>
-                        <View style={styles.modalContent}>
-                          <FlatList
-                            data={regionData}
-                            keyExtractor={item => item.subcode}
-                            ListEmptyComponent={() => (
-                              <View style={{marginVertical: 20}}>
-                                <Text
-                                  style={[
-                                    styles.normalText,
-                                    {textAlign: 'center'},
-                                  ]}>
-                                  {lang &&
-                                  lang.screen_modify_information &&
-                                  lang.screen_modify_information.modal
-                                    ? lang.screen_modify_information.modal.empty
-                                    : ''}
-                                </Text>
-                              </View>
-                            )}
-                            renderItem={({item}) => (
-                              <TouchableOpacity
-                                style={styles.modalItem}
-                                onPress={() => onSelectArea(item)}>
-                                <Text style={styles.modalItemText}>
-                                  {item.description}
-                                </Text>
-                              </TouchableOpacity>
-                            )}
+                      <View style={styles.popupFloating}>
+                        <TouchableOpacity
+                          style={styles.fullScreenOverlay}
+                          activeOpacity={1}
+                          onPress={() => setAreaModalVisible(false)}
+                        />
+                        <ScrollView style={styles.subPopupFloating}>
+                          <Text style={styles.titleRadioButton}>
+                            {lang &&
+                            lang.screen_modify_information.area &&
+                            lang.screen_modify_information.area
+                              .title_floating_popup2
+                              ? lang.screen_modify_information.area
+                                  .title_floating_popup2
+                              : ''}
+                          </Text>
+
+                          <RadioGroup
+                            radioButtons={radioButtonsArea}
+                            onPress={setSelectedIdArea}
+                            selectedId={selectedIdArea}
+                            containerStyle={{
+                              alignItems: 'flex-start',
+                              rowGap: 10,
+                              marginBottom: 30,
+                            }}
                           />
-                          <TouchableOpacity
-                            style={styles.closeButton}
-                            onPress={() => setAreaModalVisible(false)}>
-                            <Text style={styles.closeButtonText}>
-                              {lang && lang.screen_modify_information
-                                ? lang.screen_modify_information.close
-                                : ''}
-                            </Text>
-                          </TouchableOpacity>
-                        </View>
+                        </ScrollView>
                       </View>
                     </Modal>
                   </View>
@@ -1378,6 +1413,41 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: fontSize('body'),
     fontFamily: getFontFam() + 'Regular',
+  },
+  popupFloating: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    zIndex: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  fullScreenOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1,
+  },
+  subPopupFloating: {
+    backgroundColor: '#fff',
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    width: 320,
+    overflow: 'hidden',
+    zIndex: 2,
+    maxHeight: 500,
+  },
+  titleRadioButton: {
+    fontFamily: getFontFam() + 'Medium',
+    fontSize: fontSize('subtitle'),
+    marginBottom: 16,
+    color: 'black',
+    marginLeft: 10,
   },
 });
 
