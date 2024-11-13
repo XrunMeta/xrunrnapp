@@ -330,8 +330,6 @@ const EmailVerificationLoginScreen = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={[styles.root, {height: ScreenHeight}]}>
             <ButtonBack onClick={onBack} />
 
             {/* Text Section */}
@@ -398,8 +396,6 @@ const EmailVerificationLoginScreen = () => {
 
             {/* Slider Modal */}
             <SliderModal visible={modalVisible} onClose={toggleModal} />
-          </View>
-        </ScrollView>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
