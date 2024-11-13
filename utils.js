@@ -336,25 +336,25 @@ export const saveLogsDB = async (
         logcode,
         member,
         title,
-        contents,
+        contents: `[${Platform.OS}] ` + contents,
       }),
     });
     const data = await request.json();
 
     if (data?.data[0]?.affectedRows == 1) {
       console.log(
-        `DB Logs saved -> ${logcode} - ${member} - ${title} - ${contents}`,
+        `DB Logs saved -> ${logcode} - ${member} - ${title} - [${Platform.OS}] ${contents}`,
       );
       return true;
     } else {
       console.log(
-        `DB Logs failed saved -> ${logcode} - ${member} - ${title} - ${contents}`,
+        `DB Logs failed saved -> ${logcode} - ${member} - ${title} - [${Platform.OS}] ${contents}`,
       );
       return false;
     }
   } catch (error) {
     console.log(
-      `DB Logs error saved -> ${logcode} - ${member} - ${title} - ${contents} - ${err}`,
+      `DB Logs error saved -> ${logcode} - ${member} - ${title} - [${Platform.OS}] ${contents} - ${err}`,
     );
     crashlytics().recordError(new Error(error));
     crashlytics().log(error);
