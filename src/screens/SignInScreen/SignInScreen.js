@@ -25,6 +25,7 @@ import {
   authcode,
   sha256Encrypt,
   BottomComponentFixer,
+  saveLogsDB,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
@@ -63,6 +64,13 @@ const SignInScreen = () => {
       setIsDisable(false);
     } else {
       try {
+        saveLogsDB(
+          '5000012',
+          0,
+          `${email} - Clicked Sign-in Button`,
+          'Clicked Sign-in Button (user typed email and password)',
+        );
+
         const response = await fetch(`${URL_API_NODEJS}/login-01`, {
           method: 'POST',
           headers: {
@@ -86,6 +94,13 @@ const SignInScreen = () => {
 
           setEmail('');
           setPassword('');
+
+          saveLogsDB(
+            '5000013',
+            0,
+            `${email} - User Failed Sign-In`,
+            'User Failed Sign-In',
+          );
         } else {
           console.log('data login -> ', data?.data[0]);
           const encryptedSession = await sha256Encrypt(data?.data[0].extrastr);
@@ -194,6 +209,12 @@ const SignInScreen = () => {
     };
 
     fetchData();
+    saveLogsDB(
+      '5000011',
+      0,
+      'User open signin screen',
+      'User open signin screen',
+    );
   }, []);
 
   return (

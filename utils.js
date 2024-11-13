@@ -318,3 +318,45 @@ export const BottomComponentFixer = ({count}) => {
     </>
   );
 };
+
+export const saveLogsDB = async (
+  logcode,
+  member,
+  title = null,
+  contents = null,
+) => {
+  try {
+    const request = await fetch(`${URL_API_NODEJS}/addLogs`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authcode}`,
+      },
+      body: JSON.stringify({
+        logcode,
+        member,
+        title,
+        contents,
+      }),
+    });
+    const data = await request.json();
+
+    if (data?.data[0]?.affectedRows == 1) {
+      console.log(
+        `DB Logs saved -> ${logcode} - ${member} - ${title} - ${contents}`,
+      );
+      return true;
+    } else {
+      console.log(
+        `DB Logs failed saved -> ${logcode} - ${member} - ${title} - ${contents}`,
+      );
+      return false;
+    }
+  } catch (error) {
+    console.log(
+      `DB Logs error saved -> ${logcode} - ${member} - ${title} - ${contents} - ${err}`,
+    );
+    crashlytics().recordError(new Error(error));
+    crashlytics().log(error);
+  }
+};
