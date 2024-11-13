@@ -10,7 +10,6 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Modal,
-  FlatList,
   SafeAreaView,
 } from 'react-native';
 import React, {useState, useEffect, useMemo} from 'react';
@@ -100,7 +99,7 @@ const ModifInfoScreen = ({route}) => {
   const radioButtonsArea = useMemo(
     () =>
       regionData.map(item => ({
-        id: item.subcode,
+        id: item.description,
         label: item.description,
         value: item.description,
         borderColor: '#009484',
@@ -122,11 +121,16 @@ const ModifInfoScreen = ({route}) => {
 
   // Set default area
   useEffect(() => {
+    setSelectedIdArea(null);
+
     if (regionData.length > 0) {
-      const regionSubcode = regionData.find(
+      const regionSpecificData = regionData.find(
         item => item.description == tempRegion.rDesc,
-      ).subcode;
-      setSelectedIdArea(regionSubcode);
+      );
+
+      if (regionSpecificData) {
+        setSelectedIdArea(regionSpecificData.description);
+      }
     }
   }, [regionData]);
 
@@ -1293,16 +1297,22 @@ const ModifInfoScreen = ({route}) => {
                               : ''}
                           </Text>
 
-                          <RadioGroup
-                            radioButtons={radioButtonsArea}
-                            onPress={setSelectedIdArea}
-                            selectedId={selectedIdArea}
-                            containerStyle={{
-                              alignItems: 'flex-start',
-                              rowGap: 10,
-                              marginBottom: 30,
-                            }}
-                          />
+                          {regionData.length > 0 ? (
+                            <RadioGroup
+                              radioButtons={radioButtonsArea}
+                              onPress={setSelectedIdArea}
+                              selectedId={selectedIdArea}
+                              containerStyle={{
+                                alignItems: 'flex-start',
+                                rowGap: 10,
+                                marginBottom: 30,
+                              }}
+                            />
+                          ) : (
+                            <Text style={styles.regionTextNotFound}>
+                              {lang.screen_signup.validator.regionNotFound}
+                            </Text>
+                          )}
                         </ScrollView>
                       </View>
                     </Modal>
@@ -1448,6 +1458,14 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     color: 'black',
     marginLeft: 10,
+  },
+  regionTextNotFound: {
+    fontFamily: getFontFam() + 'Regular',
+    fontSize: fontSize('body'),
+    color: 'black',
+    opacity: 0.5,
+    textAlign: 'center',
+    marginTop: 10,
   },
 });
 
