@@ -23,6 +23,7 @@ import {
   getFontFam,
   fontSize,
   authcode,
+  saveLogsDB,
 } from '../../../utils';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -107,6 +108,12 @@ const EmailVerificationLoginScreen = () => {
 
     // Check Email & Auth Code Relational
     try {
+      saveLogsDB(
+        '5000022',
+        0,
+        `${dataEmail} - User entered email auth code and clicked Sign-in button`,
+        `${dataEmail} - ${getAuthCode} - User entered this auth code and clicked Sign-in button`,
+      );
       const responseAuth = await fetch(`${URL_API_NODEJS}/login-03-email`, {
         method: 'POST',
         headers: {

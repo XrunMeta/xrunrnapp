@@ -18,7 +18,7 @@ import React, {useState, useEffect} from 'react';
 import * as RNLocalize from 'react-native-localize';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
-import {fontSize, getFontFam} from '../../../utils';
+import {fontSize, getFontFam, saveLogsDB} from '../../../utils';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import crashlytics from '@react-native-firebase/crashlytics';
 import VersionCheck from 'react-native-version-check';
@@ -60,6 +60,12 @@ const FirstScreenV2 = ({navigation}) => {
     };
 
     checkLatestVersion();
+    saveLogsDB(
+      '5000010',
+      0,
+      'User open app',
+      'User open app and see first screen',
+    );
   }, []);
 
   // Get Map Initial Geolocation
@@ -357,7 +363,7 @@ const FirstScreenV2 = ({navigation}) => {
         </View>
 
         {/* Popup check the app using latest version or not */}
-        {isPopupUpdateVersionShow && Platform.OS !== "ios" && (
+        {isPopupUpdateVersionShow && Platform.OS !== 'ios' && (
           <Modal
             transparent={true}
             animationType="slide"

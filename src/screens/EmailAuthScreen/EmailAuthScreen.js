@@ -23,6 +23,7 @@ import {
   BottomComponentFixer,
   fontSize,
   getFontFam,
+  saveLogsDB,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
@@ -64,6 +65,14 @@ const EmailAuthScreen = () => {
     } else {
       try {
         setIsDisable(true);
+
+        saveLogsDB(
+          '5000021',
+          0,
+          `${email} - Tried Email Sign-in and Clicked send authcode`,
+          `User tried Email Sign-in and Clicked send authcode`,
+        );
+
         const waitForResponse = async () => {
           try {
             const reqExisting = await fetch(`${URL_API_NODEJS}/ap1810-i01`, {
