@@ -628,5 +628,11 @@
   "permissions_alert": {
     "title_camera_permission": "Izin Kamera",
     "desc_camera_permission": "Perlu akses kamera untuk memindai Gambar Kode QR"
+  },
+
+  "screen_keyDownload": {
+    "title": "Unduh Kunci",
+    "desc": "Mengunduh dompet memungkinkan Anda menyimpan kunci pribadi dompet Anda. Untuk melindungi aset Anda, jangan pernah melakukan tugas berisiko seperti berbagi, mentransfer, atau menyimpan ke perangkat terbuka setelah mengunduh.\nJika terjadi pelanggaran, siapa pun yang memegang kunci ini akan memiliki akses penuh ke aset Anda.\nJangan pernah membagikan kunci pribadi Anda\nDisarankan untuk mengelolanya di tempat yang aman, offline jika memungkinkan.\nSetelah kunci Anda bocor, Anda mungkin kehilangan semua aset yang Anda simpan",
+    "verify": "Saya telah membaca dan memahami semua hal di atas"
   }
 }

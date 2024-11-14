@@ -121,7 +121,8 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
           PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
         );
         console.log(granted);
-        downloadFile();
+        // downloadFile();
+        navigation.replace('KeyDownload');
       } catch (err) {
         // To handle permission related exception
         console.log('++++' + err);

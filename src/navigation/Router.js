@@ -57,6 +57,7 @@ import EmailVerifForModifScreen from '../screens/ModifInfoScreen/EmailVerifForMo
 import EmailCodeForModif from '../screens/ModifInfoScreen/EmailCodeForModifScreen';
 import EmailCodeForModifNumberScreen from '../screens/ModifInfoScreen/EmailCodeForModifNumberScreen';
 import PhoneModifScreen from '../screens/ModifInfoScreen/PhoneModifScreen';
+import KeyDownloadScreen from '../components/ShowQRWallet/KeyDownloadScreen';
 
 export default Router = () => {
   const Stack = createNativeStackNavigator();
@@ -126,6 +127,7 @@ export default Router = () => {
         <Stack.Screen name="EditPassword" component={EditPassword} />
         <Stack.Screen name="ModifInfo" component={ModifInfoScreen} />
         <Stack.Screen name="Recommend" component={RecommendScreen} />
+        <Stack.Screen name="KeyDownload" component={KeyDownloadScreen} />
         <Stack.Screen
           name="RegistRecommend"
           component={RegistRecommendScreen}
