@@ -58,6 +58,8 @@ import EmailCodeForModif from '../screens/ModifInfoScreen/EmailCodeForModifScree
 import EmailCodeForModifNumberScreen from '../screens/ModifInfoScreen/EmailCodeForModifNumberScreen';
 import PhoneModifScreen from '../screens/ModifInfoScreen/PhoneModifScreen';
 import KeyDownload from '../screens/KeyDownloadScreen';
+import KeyDownloadAuthScreen from '../screens/KeyDownloadScreen/KeyDownloadAuthScreen';
+import KeyShowDownload from '../screens/KeyDownloadScreen/KeyShowDownload';
 
 export default Router = () => {
   const Stack = createNativeStackNavigator();
@@ -165,6 +167,11 @@ export default Router = () => {
           component={CompleteConversion}
         />
         <Stack.Screen name="KeyDownload" component={KeyDownload} />
+        <Stack.Screen
+          name="KeyDownloadAuth"
+          component={KeyDownloadAuthScreen}
+        />
+        <Stack.Screen name="KeyShowDownload" component={KeyShowDownload} />
       </Stack.Navigator>
     </View>
   );

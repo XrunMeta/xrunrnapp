@@ -8,27 +8,42 @@ import {
   ScrollView,
   Pressable,
   Image,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import ButtonBack from '../../components/ButtonBack';
-import {getFontFam, fontSize, getLanguage2} from '../../../utils';
+import {
+  getFontFam,
+  fontSize,
+  getLanguage2,
+  URL_API_NODEJS,
+  authcode,
+} from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import crashlytics from '@react-native-firebase/crashlytics';
+import {useNavigation} from '@react-navigation/native';
 
-const KeyDownload = ({navigation, route}) => {
+const KeyDownload = () => {
   const [lang, setLang] = useState('');
+  const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [isDisable, setIsDisable] = useState(false);
+  const navigation = useNavigation();
 
   useEffect(() => {
     // Get Language Data
     const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+        const userData = await AsyncStorage.getItem('userData');
+
         const screenLang = await getLanguage2(currentLanguage);
+        const getUserData = JSON.parse(userData);
 
         // Set your language state
         setLang(screenLang);
+        setUserData(getUserData);
       } catch (err) {
         console.error('Error in fetchData:', err);
         crashlytics().recordError(new Error(err));
@@ -41,12 +56,53 @@ const KeyDownload = ({navigation, route}) => {
   }, []);
 
   const onBack = () => {
-    navigation.navigate('WalletHome');
+    navigation.replace('WalletHome');
   };
 
   const checkBoxToggle = () => {
     setIsChecked(!isChecked);
     console.log(!isChecked);
+  };
+
+  const onSubmit = async () => {
+    try {
+      setIsDisable(true);
+      setIsChecked(!isChecked);
+
+      const request = await fetch(`${URL_API_NODEJS}/check-02-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authcode}`,
+        },
+        body: JSON.stringify({
+          email: userData?.email,
+        }),
+      });
+      const response = await request.json();
+      console.log('Email authcode sended ' + JSON.stringify(response));
+
+      if (response?.data[0]?.status == true) {
+        // navigation.replace('KeyDownloadAuth', {
+        //   dataEmail: userData?.email,
+        //   member: userData?.member,
+        // });
+        navigation.replace('KeyShowDownload');
+      } else {
+        Alert.alert(
+          'Failed',
+          'Failed submit download key agreement, try again later',
+        );
+      }
+    } catch (error) {
+      Alert.alert('', 'Error submit download key agreement');
+      console.error('Error submit download key agreement:', error);
+      crashlytics().recordError(new Error(error));
+      crashlytics().log(error);
+      navigation.replace('Home');
+    } finally {
+      setIsDisable(false);
+    }
   };
 
   return (
@@ -122,7 +178,7 @@ const KeyDownload = ({navigation, route}) => {
           </Text>
         </TouchableOpacity>
         <Pressable
-          onPress={checkBoxToggle}
+          onPress={onSubmit}
           style={{
             flexDirection: 'row',
             alignItems: 'center',
@@ -131,10 +187,10 @@ const KeyDownload = ({navigation, route}) => {
             height: 100,
             justifyContent: 'center',
           }}
-          disabled={!isChecked}>
+          disabled={!isChecked && !isDisable}>
           <Image
             source={
-              !isChecked
+              !isChecked && !isDisable
                 ? require('../../../assets/images/icon_nextDisable.png')
                 : require('../../../assets/images/icon_next.png')
             }
