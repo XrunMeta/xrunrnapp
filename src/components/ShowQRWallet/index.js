@@ -346,6 +346,14 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
             </TouchableOpacity>
           </View>
         </View>
+
+        {/* Key download */}
+        <TouchableOpacity
+          style={styles.wrapperKeyDownload}
+          activeOpacity={0.7}
+          onPress={() => navigation.navigate('KeyDownload')}>
+          <Text style={styles.textKeyDownload}>Key Download</Text>
+        </TouchableOpacity>
       </View>
 
       <Animated.View
@@ -486,5 +494,22 @@ const styles = StyleSheet.create({
     fontFamily: getFontFam() + 'Regular',
     margin: 0,
     maxWidth: 240,
+  },
+  wrapperKeyDownload: {
+    marginBottom: 28,
+    marginTop: 4,
+    textAlign: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#333',
+    paddingVertical: 8,
+    paddingHorizontal: 28,
+    borderRadius: 6,
+    alignSelf: 'center',
+  },
+  textKeyDownload: {
+    textAlign: 'center',
+    fontFamily: getFontFam() + 'Medium',
+    fontSize: fontSize('body'),
+    color: '#fff',
   },
 });
