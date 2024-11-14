@@ -83,11 +83,10 @@ const KeyDownload = () => {
       console.log('Email authcode sended ' + JSON.stringify(response));
 
       if (response?.data[0]?.status == true) {
-        // navigation.replace('KeyDownloadAuth', {
-        //   dataEmail: userData?.email,
-        //   member: userData?.member,
-        // });
-        navigation.replace('KeyShowDownload');
+        navigation.replace('KeyDownloadAuth', {
+          dataEmail: userData?.email,
+          member: userData?.member,
+        });
       } else {
         Alert.alert(
           'Failed',
