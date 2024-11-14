@@ -336,7 +336,8 @@ export const saveLogsDB = async (
         logcode,
         member,
         title,
-        contents: `[${Platform.OS}] ` + contents,
+        contents,
+        os: Platform.OS == 'android' ? 3112 : 3113,
       }),
     });
     const data = await request.json();
