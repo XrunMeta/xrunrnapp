@@ -49,13 +49,13 @@ const FirstScreenV2 = ({navigation}) => {
           `Current version app: ${currentVersion} || ${provider} version app: ${latestVersion}`,
         );
 
-        if (currentVersion < latestVersion) {
-          // setIsPopupUpdateVersionShow(true);
-        } else {
-          if (isLoggedIn) {
-            navigation.reset({routes: [{name: 'Home'}]});
-          }
+        // if (currentVersion < latestVersion) {
+        //   // setIsPopupUpdateVersionShow(true);
+        // } else {
+        if (isLoggedIn) {
+          navigation.reset({routes: [{name: 'Home'}]});
         }
+        // }
       });
     };
 
