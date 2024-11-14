@@ -13,7 +13,7 @@ import Geolocation from 'react-native-geolocation-service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {fetchMarkerData} from './APIGetMarker';
 import RNFetchBlob from 'rn-fetch-blob';
-import {fontSize, getFontFam} from '../../../utils';
+import {fontSize, getFontFam, saveLogsDB} from '../../../utils';
 const logo_tempMarker = require('../../../assets/images/logo_tempMarker.png');
 
 // ########## Main Component ##########
@@ -408,6 +408,13 @@ const MapComponent = ({
 
               setImagesLoaded(true);
               setLoading(false);
+
+              saveLogsDB(
+                '5000103',
+                getUserData.member,
+                `${getUserData.email} Mainpage Map Load Completed`,
+                `Mainpage Map Load Completed`,
+              );
             })
             .catch(error => {
               console.error('Error while loading images:', error);
