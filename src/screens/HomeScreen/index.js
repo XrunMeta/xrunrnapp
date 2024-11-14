@@ -28,6 +28,7 @@ import {
   fontSize,
   authcode,
   sha256Encrypt,
+  saveLogsDB,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
@@ -102,6 +103,13 @@ export default function Home({route}) {
         const userEmail = await AsyncStorage.getItem('userEmail');
         const userData = await AsyncStorage.getItem('userData');
         const responseUserData = JSON.parse(userData);
+
+        saveLogsDB(
+          '5000100',
+          responseUserData?.member,
+          `${userEmail} - User Entered Mainpage`,
+          `User Entered Mainpage`,
+        );
 
         const encryptedSession = await sha256Encrypt(
           responseUserData?.extrastr,

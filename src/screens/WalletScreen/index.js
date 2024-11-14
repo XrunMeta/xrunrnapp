@@ -23,6 +23,7 @@ import {
   fontSize,
   refreshBalances,
   gatewayNodeJS,
+  saveLogsDB,
 } from '../../../utils';
 import ShowQRWallet from '../../components/ShowQRWallet';
 import crashlytics from '@react-native-firebase/crashlytics';
@@ -76,6 +77,13 @@ const WalletScreen = ({navigation, route}) => {
         const userData = await AsyncStorage.getItem('userData');
         const member = JSON.parse(userData).member;
         setMember(member);
+
+        saveLogsDB(
+          '5000400',
+          member,
+          `${member} Entered Walletpage and yet not page shown`,
+          `Entered Walletpage and yet not page shown`,
+        );
       } catch (err) {
         console.log(`Failed get member from async storage: ${err}`);
         crashlytics().recordError(new Error(err));
@@ -127,6 +135,13 @@ const WalletScreen = ({navigation, route}) => {
         setCardsData(result.data);
         setIsLoading(false);
         console.log('Wallet data has been loaded');
+
+        saveLogsDB(
+          '5000401',
+          member,
+          `${member} See Wallets and completed load`,
+          `User See Wallets and completed load with shown 7 days before`,
+        );
       }
     } catch (err) {
       console.error('Failed to get userData from AsyncStorage:', err);
