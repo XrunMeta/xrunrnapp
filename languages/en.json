@@ -599,6 +599,10 @@
     "title": "Exchange Complete",
     "cancel_exchange": "Cancel"
   },
+  "screen_keydownload": {
+    "keydownload": "KEY Download",
+    "note": "Mengunduh dompet memungkinkan Anda menyimpan kunci pribadi dompet Anda. Untuk melindungi aset Anda, jangan pernah melakukan tugas berisiko seperti berbagi, mentransfer, atau menyimpan ke perangkat terbuka setelah mengunduh. Jika terjadi pelanggaran, siapa pun yang memegang kunci ini akan memiliki akses penuh ke aset Anda. Jangan pernah membagikan kunci pribadi Anda Disarankan untuk mengelolanya di tempat yang aman, offline jika memungkinkan. Setelah kunci Anda bocor, Anda mungkin kehilangan semua aset yang Anda simpan"
+  },
   "global_error": {
     "error": "It's a server problem. Please try in a few minutes.",
     "network_busy": "Network is busy now"
