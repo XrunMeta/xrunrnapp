@@ -121,8 +121,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
           PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
         );
         console.log(granted);
-        // downloadFile();
-        navigation.replace('KeyDownload');
+        downloadFile();
       } catch (err) {
         // To handle permission related exception
         console.log('++++' + err);
@@ -346,6 +345,31 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
               />
             </TouchableOpacity>
           </View>
+
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderWidth: 1,
+              borderColor: '#eee',
+              width: 150,
+              height: 35,
+              borderRadius: 10,
+              backgroundColor: 'black',
+              marginTop: 10,
+            }}
+            onPress={() => navigation.replace('KeyDownload')}
+            disabled={downloadDisable ? true : false}>
+            <Text
+              style={{
+                fontFamily: getFontFam() + 'Regular',
+                fontSize: fontSize('body'),
+                color: '#fff',
+              }}>
+              Key Download
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -449,6 +473,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderBottomLeftRadius: 6,
     borderBottomRightRadius: 6,
+    alignItems: 'center',
   },
   wrapperImageQRCode: {
     alignItems: 'center',
