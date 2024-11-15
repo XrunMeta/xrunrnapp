@@ -158,7 +158,7 @@ const KeyShowDownload = () => {
               justifyContent: 'flex-end',
               gap: 10,
             }}>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               activeOpacity={0.7}
               style={styles.wrapperActionIconQR}
               onPress={checkPermissionAndDownload}>
@@ -166,7 +166,7 @@ const KeyShowDownload = () => {
                 source={require('../../../assets/images/download-2-line.png')}
                 style={[styles.iconAction]}
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity
               activeOpacity={0.7}
               style={styles.wrapperActionIconQR}
