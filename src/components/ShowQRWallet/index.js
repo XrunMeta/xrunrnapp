@@ -298,7 +298,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
               style={styles.imageCurrencyQR}
             />
           </View>
-          <Text style={styles.titleQR}>{cardDataQR.currencyname}</Text>
+          <Text style={styles.titleQR}>{cardDataQR.symbol}</Text>
           <View style={styles.wrapperCopiedHashQR}>
             <Text style={styles.showQRHash}>
               {cardDataQR.address.substring(0, 20) + '...'}
