@@ -50,7 +50,7 @@ const FirstScreenV2 = ({navigation}) => {
         );
 
         // if (currentVersion < latestVersion) {
-        //   // setIsPopupUpdateVersionShow(true);
+        //   setIsPopupUpdateVersionShow(true);
         // } else {
         if (isLoggedIn) {
           navigation.reset({routes: [{name: 'Home'}]});
