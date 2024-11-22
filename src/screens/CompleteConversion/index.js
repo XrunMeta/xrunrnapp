@@ -12,6 +12,7 @@ import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getLanguage2, getFontFam, fontSize} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
+import ButtonComplete from '../../components/ButtonComplete/ButtonComplete';
 
 const CompleteSend = ({navigation, route}) => {
   const [lang, setLang] = useState('');
@@ -206,22 +207,15 @@ const CompleteSend = ({navigation, route}) => {
       </Text>
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={{flex: 1}}>
-        <TouchableOpacity
-          onPress={() => {
+        <ButtonComplete
+          onClick={() => {
             navigation.navigate('WalletHome', {
               completeConversion: 'true',
             });
           }}
-          style={styles.button}
-          activeOpacity={0.6}>
-          <Image
-            source={require('../../../assets/images/icon_check.png')}
-            resizeMode="contain"
-            style={styles.buttonImage}
-          />
-        </TouchableOpacity>
+        />
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -243,20 +237,5 @@ const styles = StyleSheet.create({
     fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
-  },
-  button: {
-    flexDirection: 'row',
-    marginLeft: 'auto',
-    marginRight: 24,
-    marginTop: 30,
-    marginBottom: 10,
-    justifyContent: 'flex-end',
-    position: 'absolute',
-    bottom: 40,
-    right: 0,
-  },
-  buttonImage: {
-    height: 95,
-    width: 95,
   },
 });

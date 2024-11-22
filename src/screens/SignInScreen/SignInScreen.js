@@ -3,11 +3,8 @@ import {
   Text,
   StyleSheet,
   Pressable,
-  Image,
-  Dimensions,
   Alert,
   SafeAreaView,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
@@ -24,10 +21,10 @@ import {
   fontSize,
   authcode,
   sha256Encrypt,
-  BottomComponentFixer,
   saveLogsDB,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
+import ButtonNext from '../../components/ButtonNext/ButtonNext';
 
 const SignInScreen = () => {
   const [lang, setLang] = useState({});
@@ -286,10 +283,10 @@ const SignInScreen = () => {
           isPassword={true}
         />
 
-        <BottomComponentFixer count={2} />
-
-        <View style={[styles.bottomSection]}>
-          <View style={styles.additionalLogin}>
+        <ButtonNext
+          onClick={onSignIn}
+          isDisabled={!isDisable && email == '' && password == ''}>
+          <View>
             <Text style={styles.normalText}>
               {lang && lang.screen_signin && lang.screen_signin.authcode
                 ? lang.screen_signin.authcode.label + ' '
@@ -303,22 +300,7 @@ const SignInScreen = () => {
               </Text>
             </Pressable>
           </View>
-
-          <TouchableOpacity
-            onPress={onSignIn}
-            disabled={!isDisable && email == '' && password == ''}
-            style={styles.buttonSignIn}>
-            <Image
-              source={
-                !isDisable && email == '' && password == ''
-                  ? require('../../../assets/images/icon_nextDisable.png')
-                  : require('../../../assets/images/icon_next.png')
-              }
-              resizeMode="contain"
-              style={styles.buttonSignInImage}
-            />
-          </TouchableOpacity>
-        </View>
+        </ButtonNext>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
@@ -345,16 +327,6 @@ const styles = StyleSheet.create({
     color: '#343a59',
     marginTop: -5,
   },
-  bottomSection: {
-    padding: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
-  additionalLogin: {
-    marginTop: -56,
-  },
   normalText: {
     fontFamily: getFontFam() + 'Regular',
     fontSize: fontSize('body'),
@@ -366,17 +338,6 @@ const styles = StyleSheet.create({
     fontFamily: getFontFam() + 'Bold',
     fontSize: fontSize('body'),
     color: '#343a59',
-  },
-  buttonSignIn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    flexDirection: 'column',
-    justifyContent: 'center',
-  },
-  buttonSignInImage: {
-    height: 80,
-    width: 80,
   },
 });
 

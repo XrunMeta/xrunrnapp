@@ -4,12 +4,12 @@ import {
   View,
   TouchableOpacity,
   ActivityIndicator,
-  Image,
-  KeyboardAvoidingView,
   Alert,
   Keyboard,
   SafeAreaView,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
@@ -20,9 +20,9 @@ import {
   getFontFam,
   fontSize,
   gatewayNodeJS,
-  BottomComponentFixer,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
+import ButtonNext from '../../components/ButtonNext/ButtonNext';
 
 const Change = ({navigation, route}) => {
   const [lang, setLang] = useState('');
@@ -273,27 +273,13 @@ const Change = ({navigation, route}) => {
             </View>
           </View>
         </View>
-
-        <BottomComponentFixer count={5} />
-
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-          <TouchableOpacity
-            onPress={onSend}
-            style={styles.button}
-            disabled={isIconNextDisabled}>
-            <Image
-              source={
-                isIconNextDisabled
-                  ? require('../../../assets/images/ico-btn-passive.png')
-                  : require('../../../assets/images/ico-btn-active.png')
-              }
-              resizeMode="contain"
-              style={styles.buttonImage}
-            />
-          </TouchableOpacity>
-        </KeyboardAvoidingView>
       </ScrollView>
+
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{flex: 1}}>
+        <ButtonNext onClick={onSend} isDisabled={isIconNextDisabled} />
+      </KeyboardAvoidingView>
 
       {popupConversion && (
         <View style={styles.popupConversion}>
@@ -372,7 +358,7 @@ const styles = StyleSheet.create({
   },
   partTop: {
     backgroundColor: '#343c5a',
-    paddingHorizontal: 28,
+    paddingHorizontal: 20,
     paddingVertical: 18,
     flexDirection: 'row',
     justifyContent: 'flex-end',
@@ -389,26 +375,13 @@ const styles = StyleSheet.create({
     fontSize: fontSize('body'),
   },
   partBottom: {
-    paddingHorizontal: 28,
-    paddingVertical: 24,
-  },
-  button: {
-    flexDirection: 'row',
-    marginLeft: 'auto',
-    marginRight: 28,
-    marginTop: 30,
-    marginBottom: 10,
-    justifyContent: 'flex-end',
-  },
-  buttonImage: {
-    height: 80,
-    width: 80,
+    paddingHorizontal: 20,
+    paddingVertical: 34,
   },
   selectNetwork: {
-    fontFamily: getFontFam() + 'Regular',
-    color: '#000',
-    marginTop: 10,
+    fontFamily: getFontFam() + 'Medium',
     fontSize: fontSize('body'),
+    color: '#343a59',
   },
   description: {
     fontFamily: getFontFam() + 'Regular',

@@ -73,7 +73,7 @@ const CustomInput = ({
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    paddingHorizontal: 25,
+    paddingHorizontal: 24,
     marginTop: 30,
   },
   label: {

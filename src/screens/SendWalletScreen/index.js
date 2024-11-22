@@ -4,7 +4,6 @@ import {
   View,
   TouchableOpacity,
   Image,
-  KeyboardAvoidingView,
   Alert,
   PermissionsAndroid,
   Animated,
@@ -15,6 +14,7 @@ import {
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
+  KeyboardAvoidingView,
 } from 'react-native';
 import React, {useState, useEffect, useRef} from 'react';
 import ButtonBack from '../../components/ButtonBack';
@@ -26,7 +26,6 @@ import {
   fontSize,
   refreshBalances,
   gatewayNodeJS,
-  BottomComponentFixer,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {
@@ -38,6 +37,7 @@ import {
 } from 'react-native-permissions';
 import {BarcodeScanner} from 'rn-barcode-zxing';
 import BarcodeMask from 'react-native-barcode-mask';
+import ButtonNext from '../../components/ButtonNext/ButtonNext';
 
 const SendWalletScreen = ({navigation, route}) => {
   const [lang, setLang] = useState('');
@@ -816,6 +816,7 @@ const SendWalletScreen = ({navigation, route}) => {
             </Text>
           </View>
         )}
+
         <View style={{flexDirection: 'row'}}>
           <View style={{position: 'absolute', zIndex: 1}}>
             <ButtonBack onClick={onBack} />
@@ -826,7 +827,9 @@ const SendWalletScreen = ({navigation, route}) => {
             </Text>
           </View>
         </View>
-        <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          style={{flex: 1, paddingBottom: 40}}
+          showsVerticalScrollIndicator={false}>
           <View style={styles.partTop}>
             {/* <Text style={styles.currencyName}>{dataWallet.symbol}</Text> */}
             <View style={styles.partScanQR}>
@@ -878,27 +881,13 @@ const SendWalletScreen = ({navigation, route}) => {
               }`}
             />
           </View>
-
-          <BottomComponentFixer count={3} />
-
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-            <TouchableOpacity
-              onPress={onSend}
-              style={styles.button}
-              disabled={isIconNextDisabled}>
-              <Image
-                source={
-                  isIconNextDisabled
-                    ? require('../../../assets/images/icon_nextDisable.png')
-                    : require('../../../assets/images/icon_next.png')
-                }
-                resizeMode="contain"
-                style={styles.buttonImage}
-              />
-            </TouchableOpacity>
-          </KeyboardAvoidingView>
         </ScrollView>
+
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={{flex: 1}}>
+          <ButtonNext onClick={onSend} isDisabled={isIconNextDisabled} />
+        </KeyboardAvoidingView>
 
         {/* Scan QR code */}
         {isVisibleReadQR && (
@@ -1177,7 +1166,7 @@ const styles = StyleSheet.create({
   },
   partTop: {
     backgroundColor: '#343c5a',
-    paddingHorizontal: 28,
+    paddingHorizontal: 20,
     paddingVertical: 18,
     flexDirection: 'row',
     justifyContent: 'flex-end',
@@ -1194,22 +1183,9 @@ const styles = StyleSheet.create({
     fontSize: fontSize('note'),
   },
   partBottom: {
-    paddingHorizontal: 28,
-    paddingTop: 40,
-    paddingBottom: 24,
+    paddingHorizontal: 20,
+    paddingVertical: 34,
     gap: 30,
-  },
-  button: {
-    flexDirection: 'row',
-    marginLeft: 'auto',
-    marginRight: 28,
-    marginTop: 30,
-    marginBottom: 10,
-    justifyContent: 'flex-end',
-  },
-  buttonImage: {
-    height: 80,
-    width: 80,
   },
   partScanQR: {
     flexDirection: 'row',
