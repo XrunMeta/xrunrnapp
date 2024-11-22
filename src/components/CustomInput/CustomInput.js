@@ -72,12 +72,12 @@ const CustomInput = ({
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    paddingHorizontal: 25,
+    paddingHorizontal: 24,
     marginTop: 30,
   },
   label: {
-    // fontFamily: getFontFam() + 'Medium',
-    // fontSize: fontSize('body'),
+    fontFamily: getFontFam() + 'Medium',
+    fontSize: fontSize('body'),
     marginBottom: -10,
     color: '#343a59',
   },
@@ -85,8 +85,8 @@ const styles = StyleSheet.create({
     height: 40,
     paddingTop: 10,
     paddingBottom: -10,
-    // fontFamily: getFontFam() + 'Medium',
-    // fontSize: fontSize('body'),
+    fontFamily: getFontFam() + 'Medium',
+    fontSize: fontSize('body'),
     color: '#343a59',
     borderBottomColor: '#cccccc',
     borderBottomWidth: 1,
