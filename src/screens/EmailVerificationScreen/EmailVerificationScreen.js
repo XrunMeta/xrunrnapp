@@ -26,6 +26,7 @@ import {
 } from '../../../utils';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ButtonNext from '../../components/ButtonNext/ButtonNext';
 
 // ########## Main Function ##########
 const EmailVerificationScreen = () => {
@@ -46,6 +47,15 @@ const EmailVerificationScreen = () => {
   let ScreenHeight = Dimensions.get('window').height;
   const [lang, setLang] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDisable, setIsDisable] = useState(true);
+
+  useEffect(() => {
+    if (verificationCode.join('').length > 0) {
+      setIsDisable(false);
+    } else {
+      setIsDisable(true);
+    }
+  }, [verificationCode]);
 
   const emailAuth = async () => {
     try {
@@ -204,8 +214,14 @@ const EmailVerificationScreen = () => {
   };
 
   const onSignIn = async () => {
+    if (verificationCode.join('').length < 6) {
+      Alert.alert('Failed', lang.screen_emailVerification.email.label);
+      return;
+    }
+
     if (isSubmitting) return;
     setIsSubmitting(true);
+    setIsDisable(true);
 
     const getAuthCode = verificationCode.join('');
     // Check Email & Auth Code Relational
@@ -233,6 +249,7 @@ const EmailVerificationScreen = () => {
       console.error('Error during Check Auth Code:', error);
     } finally {
       setIsSubmitting(false);
+      setIsDisable(false);
     }
   };
 
@@ -378,7 +395,6 @@ const EmailVerificationScreen = () => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={[styles.root, {height: ScreenHeight}]}>
         <ButtonBack onClick={onBack} />
-
         {/* Text Section */}
         <View style={styles.textWrapper}>
           <Text style={styles.normalText}>
@@ -418,7 +434,13 @@ const EmailVerificationScreen = () => {
         </View>
 
         {/* Bottom Section*/}
-        <View style={[styles.bottomSection]}>
+        <ButtonNext onClick={onSignIn} isDisabled={isDisable}>
+          <View style={styles.additionalLogin}>
+            <Countdown />
+          </View>
+        </ButtonNext>
+
+        {/* <View style={[styles.bottomSection]}>
           <View style={styles.additionalLogin}>
             <Countdown />
           </View>
@@ -439,7 +461,7 @@ const EmailVerificationScreen = () => {
               />
             </Pressable>
           )}
-        </View>
+        </View> */}
 
         {/* Slider Modal */}
         <SliderModal visible={modalVisible} onClose={toggleModal} />
@@ -489,10 +511,7 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   additionalLogin: {
-    flexDirection: 'row',
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-    height: 100,
+    maxWidth: 200,
   },
   emailAuth: {
     fontFamily: getFontFam() + 'Medium',
