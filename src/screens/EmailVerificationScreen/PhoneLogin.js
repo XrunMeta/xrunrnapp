@@ -10,12 +10,19 @@ import {
   ScrollView,
   SafeAreaView,
   Dimensions,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  BottomComponentFixer,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const PhoneLoginScreen = ({route}) => {
@@ -100,85 +107,110 @@ const PhoneLoginScreen = ({route}) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <ScrollView style={[styles.root]}>
-        <ButtonBack onClick={onBack} />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={{flex: 1}}>
+        <ScrollView style={[styles.root]}>
+          <View style={{flexDirection: 'row', position: 'relative'}}>
+            <View style={{position: 'absolute', zIndex: 1}}>
+              <ButtonBack onClick={onBack} />
+            </View>
 
-        {/*  Field - Phone Number */}
-        <View style={styles.formGroup}>
-          <Text style={styles.label}>
-            {lang &&
-            lang.screen_notExist &&
-            lang.screen_notExist.field_phoneNumber
-              ? lang.screen_notExist.field_phoneNumber.label
-              : ''}
-          </Text>
-          <View
-            style={{
-              width: '100%',
-              flexDirection: 'row',
-              marginTop: Platform.OS === 'ios' ? 10 : 0,
-            }}>
-            <Pressable
-              style={{flexDirection: 'row', marginBottom: -10}}
-              onPress={() => chooseRegion(flag, countryCode, country)}>
-              <Image
-                resizeMode="contain"
-                style={{
-                  width: 35,
-                  marginRight: 10,
-                }}
-                source={
-                  flag == undefined
-                    ? {
-                        uri: 'https://app.xrun.run/flags/kr.png',
-                      }
-                    : {
-                        uri: flag,
-                      }
-                }
-              />
+            <View
+              style={{
+                width: '100%',
+                paddingHorizontal: 20,
+                alignItems: 'center',
+                marginTop: 20,
+              }}>
               <Text
                 style={{
-                  fontFamily: getFontFam() + 'Medium',
-                  fontSize: fontSize('body'),
-                  color: '#a8a8a7',
-                  alignSelf: 'center',
-                  paddingRight: 10,
+                  fontFamily: getFontFam() + 'Bold',
+                  fontSize: fontSize('title'),
+                  color: '#343a59',
                 }}>
-                +{countryCode == undefined ? '82' : countryCode}
+                Login by Number
               </Text>
-            </Pressable>
-            <TextInput
-              keyboardType="numeric"
-              style={styles.input}
-              value={phoneNumber}
-              setValue={setPhoneNumber}
-              onChangeText={text => setPhoneNumber(text)}
-            />
+            </View>
           </View>
-        </View>
 
-        {/* Bottom Section */}
-        <View style={[styles.bottomSection]}>
-          <View style={styles.additionalLogin}></View>
-          <Pressable
-            onPress={onJoin}
-            style={styles.buttonSignUp}
-            disabled={isDisable}>
-            <Image
-              source={
-                isDisable
-                  ? require('../../../assets/images/icon_nextDisable.png')
-                  : require('../../../assets/images/icon_next.png')
-              }
-              resizeMode="contain"
-              style={styles.buttonSignUpImage}
-            />
-          </Pressable>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+          {/*  Field - Phone Number */}
+          <View style={styles.formGroup}>
+            <Text style={styles.label}>
+              {lang &&
+              lang.screen_notExist &&
+              lang.screen_notExist.field_phoneNumber
+                ? lang.screen_notExist.field_phoneNumber.label
+                : ''}
+            </Text>
+            <View
+              style={{
+                width: '100%',
+                flexDirection: 'row',
+                marginTop: Platform.OS === 'ios' ? 10 : 0,
+              }}>
+              <Pressable
+                style={{flexDirection: 'row', marginBottom: -10}}
+                onPress={() => chooseRegion(flag, countryCode, country)}>
+                <Image
+                  resizeMode="contain"
+                  style={{
+                    width: 35,
+                    marginRight: 10,
+                  }}
+                  source={
+                    flag == undefined
+                      ? {
+                          uri: 'https://app.xrun.run/flags/kr.png',
+                        }
+                      : {
+                          uri: flag,
+                        }
+                  }
+                />
+                <Text
+                  style={{
+                    fontFamily: getFontFam() + 'Medium',
+                    fontSize: fontSize('body'),
+                    color: '#a8a8a7',
+                    alignSelf: 'center',
+                    paddingRight: 10,
+                  }}>
+                  +{countryCode == undefined ? '82' : countryCode}
+                </Text>
+              </Pressable>
+              <TextInput
+                keyboardType="numeric"
+                style={styles.input}
+                value={phoneNumber}
+                setValue={setPhoneNumber}
+                onChangeText={text => setPhoneNumber(text)}
+              />
+            </View>
+          </View>
+
+          <BottomComponentFixer count={1} />
+
+          {/* Bottom Section */}
+          <View style={[styles.bottomSection]}>
+            <View style={styles.additionalLogin}></View>
+            <Pressable
+              onPress={onJoin}
+              style={styles.buttonSignUp}
+              disabled={!isDisable && phoneNumber == ''}>
+              <Image
+                source={
+                  !isDisable && phoneNumber == ''
+                    ? require('../../../assets/images/icon_nextDisable.png')
+                    : require('../../../assets/images/icon_next.png')
+                }
+                resizeMode="contain"
+                style={styles.buttonSignUpImage}
+              />
+            </Pressable>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
