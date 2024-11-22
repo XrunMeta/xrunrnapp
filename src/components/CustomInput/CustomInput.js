@@ -77,9 +77,8 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   label: {
-    fontFamily: `${
-      Platform.OS === 'android' ? 'Roboto-' : 'AppleSDGothicNeo-'
-    }Medium`,
+    fontFamily:
+      Platform.OS === 'ios' ? 'AppleSDGothicNeo-' : 'Roboto-' + 'Medium',
     fontSize: 16,
     marginBottom: -10,
     color: '#343a59',
@@ -88,9 +87,8 @@ const styles = StyleSheet.create({
     height: 40,
     paddingTop: 10,
     paddingBottom: -10,
-    fontFamily: `${
-      Platform.OS === 'android' ? 'Roboto-' : 'AppleSDGothicNeo-'
-    }Medium`,
+    fontFamily:
+      Platform.OS === 'ios' ? 'AppleSDGothicNeo-' : 'Roboto-' + 'Medium',
     fontSize: 16,
     color: '#343a59',
     borderBottomColor: '#cccccc',
