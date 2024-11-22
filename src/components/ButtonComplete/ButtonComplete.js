@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
+    width: '100%',
     flex: 1,
   },
   buttonImage: {
