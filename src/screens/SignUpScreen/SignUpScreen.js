@@ -11,6 +11,8 @@ import {
   TouchableOpacity,
   Modal,
   ActivityIndicator,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import React, {useState, useEffect, useMemo} from 'react';
 import CustomInput from '../../components/CustomInput';
@@ -27,6 +29,7 @@ import {
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import RadioGroup from 'react-native-radio-buttons-group';
+import ButtonNext from '../../components/ButtonNext/ButtonNext';
 
 const SignUpScreen = ({route}) => {
   const [lang, setLang] = useState({});
@@ -362,354 +365,348 @@ const SignUpScreen = ({route}) => {
 
   return (
     <>
-      <SafeAreaView>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={[styles.root]}>
-            <View style={{flexDirection: 'row', position: 'relative'}}>
-              <View style={{position: 'absolute', zIndex: 1}}>
-                <ButtonBack onClick={onBack} />
-              </View>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <SafeAreaView style={[styles.root]}>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View>
+              <View style={{flexDirection: 'row', position: 'relative'}}>
+                <View style={{position: 'absolute', zIndex: 1}}>
+                  <ButtonBack onClick={onBack} />
+                </View>
 
-              {/*  Title */}
-              <View style={styles.titleWrapper}>
-                <Text style={styles.title}>
-                  {lang && lang.screen_signup && lang.screen_signup.title
-                    ? lang.screen_signup.title
-                    : ''}
-                </Text>
-              </View>
-            </View>
-
-            {/*  Field - Name */}
-            <CustomInput
-              label={
-                lang && lang.screen_signup && lang.screen_signup.name
-                  ? lang.screen_signup.name.label
-                  : ''
-              }
-              placeholder={
-                lang && lang.screen_signup && lang.screen_signup.name
-                  ? lang.screen_signup.name.placeholder
-                  : ''
-              }
-              value={name}
-              setValue={setName}
-              isPassword={false}
-            />
-
-            {/*  Field - Email */}
-            <CustomInput
-              label={
-                lang && lang.screen_signup && lang.screen_signup.email
-                  ? lang.screen_signup.email.label
-                  : ''
-              }
-              placeholder={
-                lang && lang.screen_signup && lang.screen_signup.email
-                  ? lang.screen_signup.email.placeholder
-                  : ''
-              }
-              value={email}
-              setValue={onEmailChange}
-              isPassword={false}
-            />
-            {isEmailValid ? null : (
-              <Text
-                style={{
-                  alignSelf: 'flex-start',
-                  marginLeft: 25,
-                  color: 'red',
-                  fontFamily: getFontFam() + 'Medium',
-                  fontSize: fontSize('body'),
-                }}>
-                {lang && lang.screen_signup && lang.screen_signup.validator
-                  ? lang.screen_signup.validator.invalidEmail
-                  : ''}
-              </Text>
-            )}
-
-            {/*  Field - Password */}
-            <CustomInput
-              label={
-                lang && lang.screen_signup && lang.screen_signup.password
-                  ? lang.screen_signup.password.label
-                  : ''
-              }
-              placeholder={
-                lang && lang.screen_signup && lang.screen_signup.password
-                  ? lang.screen_signup.password.placeholder
-                  : ''
-              }
-              value={password}
-              setValue={setPassword}
-              secureTextEntry
-              isPassword={true}
-            />
-
-            {/*  Field - Phone Number */}
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>
-                {lang && lang.screen_signup && lang.screen_signup.phone_number
-                  ? lang.screen_signup.phone_number.label
-                  : ''}
-              </Text>
-              <View
-                style={{
-                  width: '100%',
-                  flexDirection: 'row',
-                }}>
-                <Pressable
-                  style={{
-                    flexDirection: 'row',
-                    marginBottom: -10,
-                  }}
-                  onPress={() => chooseRegion(flag, countryCode, country)}>
-                  <Image
-                    resizeMode="contain"
-                    style={{
-                      width: 35,
-                      marginRight: 10,
-                    }}
-                    source={
-                      flag == undefined
-                        ? {
-                            uri: 'https://app.xrun.run/flags/kr.png',
-                          }
-                        : {
-                            uri: `${flag}`,
-                          }
-                    }
-                  />
-                  <Text
-                    style={{
-                      fontFamily: getFontFam() + 'Medium',
-                      fontSize: fontSize('body'),
-                      color: '#a8a8a7',
-                      alignSelf: 'center',
-                      paddingRight: 10,
-                    }}>
-                    +{countryCode == undefined ? '82' : countryCode}
-                  </Text>
-                </Pressable>
-                <TextInput
-                  keyboardType="numeric"
-                  style={styles.input}
-                  value={phoneNumber}
-                  setValue={setPhoneNumber}
-                  onChangeText={text => setPhoneNumber(text)}
-                  editable={!authenticated}
-                  onPressIn={() =>
-                    authenticated &&
-                    Alert.alert(
-                      lang &&
-                        lang.screen_signup &&
-                        lang.screen_signup.phone_number
-                        ? lang.screen_signup.phone_number.disabled
-                        : '',
-                      lang &&
-                        lang.screen_signup &&
-                        lang.screen_signup.phone_number
-                        ? lang.screen_signup.phone_number.disabledDesc
-                        : '',
-                    )
-                  }
-                />
-              </View>
-            </View>
-
-            {/*  Field - Region */}
-            <View style={{width: '100%', paddingHorizontal: 25, marginTop: 30}}>
-              <Text style={styles.label}>
-                {lang && lang.screen_signup && lang.screen_signup.area
-                  ? lang.screen_signup.area.label
-                  : ''}
-              </Text>
-
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={[styles.dropdownButtonStyle]}
-                onPress={() => setIsShowPopupFloating(true)}>
-                <Text style={[styles.dropdownButtonTxtStyle]}>
-                  {defaultRegionText}
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            {/*  Field - Gender */}
-            <View style={[styles.formGroup, {zIndex: -1}]}>
-              <Text style={styles.label}>
-                {lang && lang.screen_signup && lang.screen_signup.gender
-                  ? lang.screen_signup.gender.label
-                  : ''}
-              </Text>
-              <CustomMultipleChecbox
-                texts={[
-                  lang && lang.screen_signup && lang.screen_signup.gender
-                    ? lang.screen_signup.gender.male
-                    : '',
-                  lang && lang.screen_signup && lang.screen_signup.gender
-                    ? lang.screen_signup.gender.female
-                    : '',
-                  ,
-                ]}
-                count={2}
-                singleCheck={true}
-                wrapperStyle={styles.horizontalChecbox}
-                defaultCheckedIndices={[0]}
-                onCheckChange={genderSelector}
-              />
-            </View>
-
-            {/*  Field - Age */}
-            <View style={[styles.formGroup, {zIndex: -1}]}>
-              <Text style={styles.label}>
-                {lang && lang.screen_signup && lang.screen_signup.age
-                  ? lang.screen_signup.age.label
-                  : ''}
-              </Text>
-              <CustomMultipleChecbox
-                texts={['10', '20', '30', '40', '50+']}
-                count={5}
-                singleCheck={true}
-                wrapperStyle={styles.horizontalChecbox}
-                defaultCheckedIndices={[0]}
-                onCheckChange={ageSelector}
-              />
-            </View>
-
-            {/* Field - Referral Email */}
-            <CustomInput
-              label={
-                lang && lang.screen_signup && lang.screen_signup.referral
-                  ? lang.screen_signup.referral.label
-                  : ''
-              }
-              placeholder={
-                lang && lang.screen_signup && lang.screen_signup.referral
-                  ? lang.screen_signup.referral.placeholder
-                  : ''
-              }
-              value={refferalEmail}
-              setValue={setRefferalEmail}
-              isPassword={false}
-            />
-
-            {/* Bottom Section */}
-            <View style={[styles.bottomSection]}>
-              <View style={styles.additionalLogin}>
-                <Text style={styles.normalText}>
-                  {lang && lang.screen_signup && lang.screen_signup.add_desc
-                    ? lang.screen_signup.add_desc.ad1
-                    : ''}{' '}
-                  {'\n'}
-                  {lang && lang.screen_signup && lang.screen_signup.add_desc
-                    ? lang.screen_signup.add_desc.ad2
-                    : ''}
-                </Text>
-              </View>
-              <Pressable
-                onPress={onSignUp}
-                style={styles.buttonSignUp}
-                disabled={isDisable}>
-                <Image
-                  source={
-                    isDisable
-                      ? require('../../../assets/images/icon_nextDisable.png')
-                      : require('../../../assets/images/icon_next.png')
-                  }
-                  resizeMode="contain"
-                  style={styles.buttonSignUpImage}
-                />
-              </Pressable>
-            </View>
-          </View>
-        </ScrollView>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={authShow}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-            setAuthShow(!authShow);
-          }}>
-          <View
-            style={{
-              flex: 1,
-              position: 'relative',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-            <TouchableOpacity
-              onPress={() => setAuthShow(!authShow)}
-              style={{
-                backgroundColor: '#0000004d',
-                flex: 1,
-                position: 'absolute',
-                top: 0,
-                bottom: 0,
-                left: 0,
-                right: 0,
-              }}
-            />
-            <View
-              style={{
-                backgroundColor: 'white',
-                borderRadius: 10,
-                padding: 10,
-                width: 150,
-              }}>
-              <Text style={styles.label}>Code</Text>
-
-              <TextInput
-                keyboardType="numeric"
-                style={{
-                  fontFamily: getFontFam() + 'Medium',
-                  fontSize: fontSize('body'),
-                  color: '#343a59',
-                  borderBottomColor: '#cccccc',
-                  borderBottomWidth: 1,
-                  paddingHorizontal: 5,
-                  paddingBottom: -10,
-                }}
-                placeholder="Verification code"
-                value={authCode}
-                setValue={setAuthCode}
-                onChangeText={text => setAuthCode(text)}
-                maxLength={4}
-              />
-
-              <TouchableOpacity
-                style={{
-                  backgroundColor: '#343a59',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  borderRadius: 10,
-                  paddingHorizontal: 15,
-                  paddingVertical: 7,
-                  marginTop: 20,
-                }}
-                onPress={() => onVerify(phoneNumber, authCode)}>
-                {verifyLoading ? (
-                  <ActivityIndicator size="small" color="white" />
-                ) : (
-                  <Text
-                    style={{
-                      fontFamily: getFontFam() + 'Medium',
-                      fontSize: fontSize('note'),
-                      color: 'white',
-                    }}>
-                    {lang &&
-                    lang.screen_signup &&
-                    lang.screen_signup.phone_number
-                      ? lang.screen_signup.phone_number.auth
+                {/*  Title */}
+                <View style={styles.titleWrapper}>
+                  <Text style={styles.title}>
+                    {lang && lang.screen_signup && lang.screen_signup.title
+                      ? lang.screen_signup.title
                       : ''}
                   </Text>
-                )}
-              </TouchableOpacity>
+                </View>
+              </View>
+
+              {/*  Field - Name */}
+              <CustomInput
+                label={
+                  lang && lang.screen_signup && lang.screen_signup.name
+                    ? lang.screen_signup.name.label
+                    : ''
+                }
+                placeholder={
+                  lang && lang.screen_signup && lang.screen_signup.name
+                    ? lang.screen_signup.name.placeholder
+                    : ''
+                }
+                value={name}
+                setValue={setName}
+                isPassword={false}
+              />
+
+              {/*  Field - Email */}
+              <CustomInput
+                label={
+                  lang && lang.screen_signup && lang.screen_signup.email
+                    ? lang.screen_signup.email.label
+                    : ''
+                }
+                placeholder={
+                  lang && lang.screen_signup && lang.screen_signup.email
+                    ? lang.screen_signup.email.placeholder
+                    : ''
+                }
+                value={email}
+                setValue={onEmailChange}
+                isPassword={false}
+              />
+              {isEmailValid ? null : (
+                <Text
+                  style={{
+                    alignSelf: 'flex-start',
+                    marginLeft: 25,
+                    color: 'red',
+                    fontFamily: getFontFam() + 'Medium',
+                    fontSize: fontSize('body'),
+                  }}>
+                  {lang && lang.screen_signup && lang.screen_signup.validator
+                    ? lang.screen_signup.validator.invalidEmail
+                    : ''}
+                </Text>
+              )}
+
+              {/*  Field - Password */}
+              <CustomInput
+                label={
+                  lang && lang.screen_signup && lang.screen_signup.password
+                    ? lang.screen_signup.password.label
+                    : ''
+                }
+                placeholder={
+                  lang && lang.screen_signup && lang.screen_signup.password
+                    ? lang.screen_signup.password.placeholder
+                    : ''
+                }
+                value={password}
+                setValue={setPassword}
+                secureTextEntry
+                isPassword={true}
+              />
+
+              {/*  Field - Phone Number */}
+              <View style={styles.formGroup}>
+                <Text style={styles.label}>
+                  {lang && lang.screen_signup && lang.screen_signup.phone_number
+                    ? lang.screen_signup.phone_number.label
+                    : ''}
+                </Text>
+                <View
+                  style={{
+                    width: '100%',
+                    flexDirection: 'row',
+                  }}>
+                  <Pressable
+                    style={{
+                      flexDirection: 'row',
+                      marginBottom: -10,
+                    }}
+                    onPress={() => chooseRegion(flag, countryCode, country)}>
+                    <Image
+                      resizeMode="contain"
+                      style={{
+                        width: 35,
+                        marginRight: 10,
+                      }}
+                      source={
+                        flag == undefined
+                          ? {
+                              uri: 'https://app.xrun.run/flags/kr.png',
+                            }
+                          : {
+                              uri: `${flag}`,
+                            }
+                      }
+                    />
+                    <Text
+                      style={{
+                        fontFamily: getFontFam() + 'Medium',
+                        fontSize: fontSize('body'),
+                        color: '#a8a8a7',
+                        alignSelf: 'center',
+                        paddingRight: 10,
+                      }}>
+                      +{countryCode == undefined ? '82' : countryCode}
+                    </Text>
+                  </Pressable>
+                  <TextInput
+                    keyboardType="numeric"
+                    style={styles.input}
+                    value={phoneNumber}
+                    setValue={setPhoneNumber}
+                    onChangeText={text => setPhoneNumber(text)}
+                    editable={!authenticated}
+                    onPressIn={() =>
+                      authenticated &&
+                      Alert.alert(
+                        lang &&
+                          lang.screen_signup &&
+                          lang.screen_signup.phone_number
+                          ? lang.screen_signup.phone_number.disabled
+                          : '',
+                        lang &&
+                          lang.screen_signup &&
+                          lang.screen_signup.phone_number
+                          ? lang.screen_signup.phone_number.disabledDesc
+                          : '',
+                      )
+                    }
+                  />
+                </View>
+              </View>
+
+              {/*  Field - Region */}
+              <View
+                style={{width: '100%', paddingHorizontal: 25, marginTop: 30}}>
+                <Text style={styles.label}>
+                  {lang && lang.screen_signup && lang.screen_signup.area
+                    ? lang.screen_signup.area.label
+                    : ''}
+                </Text>
+
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  style={[styles.dropdownButtonStyle]}
+                  onPress={() => setIsShowPopupFloating(true)}>
+                  <Text style={[styles.dropdownButtonTxtStyle]}>
+                    {defaultRegionText}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              {/*  Field - Gender */}
+              <View style={[styles.formGroup, {zIndex: -1}]}>
+                <Text style={styles.label}>
+                  {lang && lang.screen_signup && lang.screen_signup.gender
+                    ? lang.screen_signup.gender.label
+                    : ''}
+                </Text>
+                <CustomMultipleChecbox
+                  texts={[
+                    lang && lang.screen_signup && lang.screen_signup.gender
+                      ? lang.screen_signup.gender.male
+                      : '',
+                    lang && lang.screen_signup && lang.screen_signup.gender
+                      ? lang.screen_signup.gender.female
+                      : '',
+                    ,
+                  ]}
+                  count={2}
+                  singleCheck={true}
+                  wrapperStyle={styles.horizontalChecbox}
+                  defaultCheckedIndices={[0]}
+                  onCheckChange={genderSelector}
+                />
+              </View>
+
+              {/*  Field - Age */}
+              <View
+                style={[
+                  styles.formGroup,
+                  {zIndex: -1, marginTop: 20, marginBottom: -10},
+                ]}>
+                <Text style={styles.label}>
+                  {lang && lang.screen_signup && lang.screen_signup.age
+                    ? lang.screen_signup.age.label
+                    : ''}
+                </Text>
+                <CustomMultipleChecbox
+                  texts={['10', '20', '30', '40', '50+']}
+                  count={5}
+                  singleCheck={true}
+                  wrapperStyle={styles.horizontalChecbox}
+                  defaultCheckedIndices={[0]}
+                  onCheckChange={ageSelector}
+                />
+              </View>
+
+              {/* Field - Referral Email */}
+              <CustomInput
+                label={
+                  lang && lang.screen_signup && lang.screen_signup.referral
+                    ? lang.screen_signup.referral.label
+                    : ''
+                }
+                placeholder={
+                  lang && lang.screen_signup && lang.screen_signup.referral
+                    ? lang.screen_signup.referral.placeholder
+                    : ''
+                }
+                value={refferalEmail}
+                setValue={setRefferalEmail}
+                isPassword={false}
+              />
             </View>
-          </View>
-        </Modal>
-      </SafeAreaView>
+          </ScrollView>
+
+          {/* Bottom Section */}
+          <ButtonNext onClick={onSignUp} isDisabled={isDisable}>
+            <View style={styles.additionalLogin}>
+              <Text style={styles.normalText}>
+                {lang && lang.screen_signup && lang.screen_signup.add_desc
+                  ? lang.screen_signup.add_desc.ad1
+                  : ''}{' '}
+                {'\n'}
+                {lang && lang.screen_signup && lang.screen_signup.add_desc
+                  ? lang.screen_signup.add_desc.ad2
+                  : ''}
+              </Text>
+            </View>
+          </ButtonNext>
+
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={authShow}
+            onRequestClose={() => {
+              Alert.alert('Modal has been closed.');
+              setAuthShow(!authShow);
+            }}>
+            <View
+              style={{
+                flex: 1,
+                position: 'relative',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <TouchableOpacity
+                onPress={() => setAuthShow(!authShow)}
+                style={{
+                  backgroundColor: '#0000004d',
+                  flex: 1,
+                  position: 'absolute',
+                  top: 0,
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                }}
+              />
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  borderRadius: 10,
+                  padding: 10,
+                  width: 150,
+                }}>
+                <Text style={styles.label}>Code</Text>
+
+                <TextInput
+                  keyboardType="numeric"
+                  style={{
+                    fontFamily: getFontFam() + 'Medium',
+                    fontSize: fontSize('body'),
+                    color: '#343a59',
+                    borderBottomColor: '#cccccc',
+                    borderBottomWidth: 1,
+                    paddingHorizontal: 5,
+                    paddingBottom: -10,
+                  }}
+                  placeholder="Verification code"
+                  value={authCode}
+                  setValue={setAuthCode}
+                  onChangeText={text => setAuthCode(text)}
+                  maxLength={4}
+                />
+
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: '#343a59',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 10,
+                    paddingHorizontal: 15,
+                    paddingVertical: 7,
+                    marginTop: 20,
+                  }}
+                  onPress={() => onVerify(phoneNumber, authCode)}>
+                  {verifyLoading ? (
+                    <ActivityIndicator size="small" color="white" />
+                  ) : (
+                    <Text
+                      style={{
+                        fontFamily: getFontFam() + 'Medium',
+                        fontSize: fontSize('note'),
+                        color: 'white',
+                      }}>
+                      {lang &&
+                      lang.screen_signup &&
+                      lang.screen_signup.phone_number
+                        ? lang.screen_signup.phone_number.auth
+                        : ''}
+                    </Text>
+                  )}
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
 
       {/* Popup Floating */}
       {isShowPopupFloating && (
@@ -752,7 +749,6 @@ const SignUpScreen = ({route}) => {
 
 const styles = StyleSheet.create({
   root: {
-    alignItems: 'center',
     flex: 1,
   },
   titleWrapper: {
@@ -765,19 +761,6 @@ const styles = StyleSheet.create({
     fontSize: fontSize('title'),
     color: '#343a59',
   },
-  bottomSection: {
-    padding: 20,
-    paddingBottom: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
-  additionalLogin: {
-    flexDirection: 'row',
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-    height: 100,
-  },
   normalText: {
     fontFamily: getFontFam() + 'Regular',
     fontSize: fontSize('body'),
@@ -789,18 +772,6 @@ const styles = StyleSheet.create({
     color: '#343a59',
     marginBottom: -5,
   },
-  buttonSignUp: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    flexDirection: 'column-reverse',
-    height: 100,
-    justifyContent: 'center',
-  },
-  buttonSignUpImage: {
-    height: 80,
-    width: 80,
-  },
   horizontalChecbox: {
     flexDirection: 'row',
     paddingTop: 5,
@@ -808,7 +779,7 @@ const styles = StyleSheet.create({
   },
   formGroup: {
     width: '100%',
-    paddingHorizontal: 25,
+    paddingHorizontal: 24,
     marginTop: 30,
   },
   input: {
