@@ -645,7 +645,7 @@ function ARScreen() {
                               fontFamily: getFontFam() + 'Regular',
                               fontSize: fontSize('body'),
                               color: 'grey',
-                              marginTop: 3,
+                              marginTop: 0,
                             }}>
                             {item.distance}M
                           </Text>
