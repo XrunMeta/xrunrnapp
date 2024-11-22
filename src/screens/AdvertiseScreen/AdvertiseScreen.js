@@ -26,6 +26,7 @@ import {
   getFontFam,
   fontSize,
   authcode,
+  formatISODate,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import RadioGroup from 'react-native-radio-buttons-group';
@@ -188,7 +189,7 @@ const AdvertiseScreen = () => {
             title: ad.title,
             coin: ad.amount + ' ' + ad.symbol,
             extracode: ad.extracode,
-            datetime: ad.datetime,
+            datetime: formatISODate(ad.datetime),
             statusSuccess:
               lang && lang.screen_advertise && lang.screen_advertise.completed
                 ? lang.screen_advertise.completed

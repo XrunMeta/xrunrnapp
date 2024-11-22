@@ -361,3 +361,7 @@ export const saveLogsDB = async (
     crashlytics().log(error);
   }
 };
+
+export const formatISODate = isoDateString => {
+  return isoDateString.replace('T', ' ').split('.')[0];
+};
