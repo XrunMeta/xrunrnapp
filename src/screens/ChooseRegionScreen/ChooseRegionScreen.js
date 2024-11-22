@@ -8,6 +8,9 @@ import {
   TextInput,
   ActivityIndicator,
   Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+  SafeAreaView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
@@ -123,125 +126,134 @@ const ChooseRegionScreen = ({route}) => {
   const [searchText, setSearchText] = useState('');
 
   return (
-    <View style={[styles.root]}>
-      <View style={{flexDirection: 'row', position: 'relative'}}>
-        <View style={{position: 'absolute', zIndex: 1}}>
-          <ButtonBack
-            onClick={() => onBack(code, flag, countryCode, country)}
-          />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={[styles.root]}>
+        <View style={{flexDirection: 'row', position: 'relative'}}>
+          <View style={{position: 'absolute', zIndex: 1}}>
+            <ButtonBack
+              onClick={() => onBack(code, flag, countryCode, country)}
+            />
+          </View>
+
+          <View style={styles.titleWrapper}>
+            <Text style={styles.title}>
+              {lang && lang.screen_country && lang.screen_country.title
+                ? lang.screen_country.title
+                : ''}
+            </Text>
+          </View>
         </View>
 
-        <View style={styles.titleWrapper}>
-          <Text style={styles.title}>
-            {lang && lang.screen_country && lang.screen_country.title
-              ? lang.screen_country.title
+        {/* Selected Region */}
+        <View style={[styles.formGroup, {marginTop: 25}]}>
+          <Text
+            style={[
+              styles.mediumText,
+              {alignSelf: 'flex-start', marginTop: 20},
+            ]}>
+            {lang && lang.screen_country && lang.screen_country.current_country
+              ? lang.screen_country.current_country
               : ''}
           </Text>
-        </View>
-      </View>
-
-      {/* Selected Region */}
-      <View style={[styles.formGroup, {marginTop: 25}]}>
-        <Text
-          style={[styles.mediumText, {alignSelf: 'flex-start', marginTop: 20}]}>
-          {lang && lang.screen_country && lang.screen_country.current_country
-            ? lang.screen_country.current_country
-            : ''}
-        </Text>
-        <View
-          style={{
-            width: '100%',
-            flexDirection: 'row',
-            marginTop: 10,
-          }}>
-          <Image
-            resizeMode="contain"
-            style={{height: 20, width: 45, marginRight: 10}}
-            source={
-              flag == undefined
-                ? {
-                    uri: 'https://app.xrun.run/flags/kr.png',
-                  }
-                : {
-                    uri: flag,
-                  }
-            }
-          />
-          <Text style={styles.mediumText}>
-            {country == undefined ? 'Korea' : country}
-          </Text>
-          <Text style={styles.mediumText}>
-            (+{countryCode == undefined ? '82' : countryCode})
-          </Text>
-        </View>
-      </View>
-
-      {/* Search Box */}
-      <View style={styles.searchBox}>
-        <TextInput
-          placeholder={
-            lang && lang.screen_country && lang.screen_country.placeholder
-              ? lang.screen_country.placeholder
-              : ''
-          }
-          placeholderTextColor="lightgrey"
-          style={[styles.mediumText, {flex: 1}]}
-          value={searchText}
-          onChangeText={text => setSearchText(text)}
-        />
-        <Pressable style={{justifyContent: 'center'}}>
-          <Image
-            source={require('../../../assets/images/icon_search.png')}
-            resizeMode="contain"
-            style={{
-              height: 20,
-            }}
-          />
-        </Pressable>
-      </View>
-
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={{
-          flex: 1,
-          width: '100%',
-          paddingHorizontal: 20,
-          marginVertical: 20,
-        }}>
-        {isLoading ? (
           <View
             style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              flex: 1,
+              width: '100%',
+              flexDirection: 'row',
+              marginTop: 10,
             }}>
-            <ActivityIndicator size="large" color="#343a59" />
-          </View>
-        ) : (
-          data
-            .filter(item => {
-              if (searchText === '') {
-                return true; // Tampilkan semua data jika tidak ada pencarian
+            <Image
+              resizeMode="contain"
+              style={{height: 20, width: 45, marginRight: 10}}
+              source={
+                flag == undefined
+                  ? {
+                      uri: 'https://app.xrun.run/flags/kr.png',
+                    }
+                  : {
+                      uri: flag,
+                    }
               }
-              return item.country
-                .toLowerCase()
-                .includes(searchText.toLowerCase());
-            })
-            .map((item, index) => (
-              <CustomListItem
-                key={item.code + '-' + item.subcode}
-                text={'+' + item.callnumber + ') ' + item.country}
-                image={
-                  {uri: `${item.lcode}`}
-                    ? {uri: `${item.lcode}`}
-                    : require('../../../assets/images/icon_none.png')
+            />
+            <Text style={styles.mediumText}>
+              {country == undefined ? 'Korea' : country}
+            </Text>
+            <Text style={styles.mediumText}>
+              (+{countryCode == undefined ? '82' : countryCode})
+            </Text>
+          </View>
+        </View>
+
+        {/* Search Box */}
+        <View style={styles.searchBox}>
+          <TextInput
+            placeholder={
+              lang && lang.screen_country && lang.screen_country.placeholder
+                ? lang.screen_country.placeholder
+                : ''
+            }
+            placeholderTextColor="lightgrey"
+            style={[styles.mediumText, {flex: 1}]}
+            value={searchText}
+            onChangeText={text => setSearchText(text)}
+          />
+          <Pressable
+            style={{
+              justifyContent: 'center',
+              marginRight: -10,
+            }}>
+            <Image
+              source={require('../../../assets/images/icon_search.png')}
+              resizeMode="contain"
+              style={{
+                height: 20,
+              }}
+            />
+          </Pressable>
+        </View>
+
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={{
+            flex: 1,
+            width: '100%',
+            paddingHorizontal: 20,
+            marginVertical: 20,
+          }}>
+          {isLoading ? (
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                flex: 1,
+              }}>
+              <ActivityIndicator size="large" color="#343a59" />
+            </View>
+          ) : (
+            data
+              .filter(item => {
+                if (searchText === '') {
+                  return true; // Tampilkan semua data jika tidak ada pencarian
                 }
-                onPress={() => chooseRegion(item)}
-              />
-            ))
-        )}
-      </ScrollView>
-    </View>
+                return item.country
+                  .toLowerCase()
+                  .includes(searchText.toLowerCase());
+              })
+              .map((item, index) => (
+                <CustomListItem
+                  key={item.code + '-' + item.subcode}
+                  text={'+' + item.callnumber + ') ' + item.country}
+                  image={
+                    {uri: `${item.lcode}`}
+                      ? {uri: `${item.lcode}`}
+                      : require('../../../assets/images/icon_none.png')
+                  }
+                  onPress={() => chooseRegion(item)}
+                />
+              ))
+          )}
+        </ScrollView>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -308,7 +320,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 10,
     marginHorizontal: 20,
-    paddingVertical: Platform.OS === 'ios' ? 15 : 5,
+    paddingVertical: Platform.OS === 'ios' ? 10 : 0,
     borderRadius: 15,
     shadowColor: '#b8b8b8',
     shadowOffset: {
