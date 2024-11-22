@@ -5,6 +5,7 @@ import {
   Pressable,
   Image,
   Dimensions,
+  KeyboardAvoidingView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -18,6 +19,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import crashlytics from '@react-native-firebase/crashlytics';
+import ButtonComplete from '../../components/ButtonComplete/ButtonComplete';
 
 // ########## Main Function ##########
 const SuccessJoinScreen = () => {
@@ -113,16 +115,11 @@ const SuccessJoinScreen = () => {
       </View>
 
       {/* Bottom Section*/}
-      <View style={[styles.bottomSection]}>
-        <View style={styles.additionalLogin}></View>
-        <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
-          <Image
-            source={require('../../../assets/images/icon_check.png')}
-            resizeMode="contain"
-            style={styles.buttonSignInImage}
-          />
-        </Pressable>
-      </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{flex: 1}}>
+        <ButtonComplete onClick={onSignIn} />
+      </KeyboardAvoidingView>
     </View>
   );
 };
@@ -131,17 +128,6 @@ const styles = StyleSheet.create({
   root: {
     alignItems: 'center',
     flex: 1,
-  },
-  buttonSignIn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    flexDirection: 'column-reverse',
-    justifyContent: 'center',
-  },
-  buttonSignInImage: {
-    height: 80,
-    width: 80,
   },
   normalText: {
     fontFamily: getFontFam() + 'Medium',
