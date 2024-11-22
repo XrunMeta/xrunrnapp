@@ -613,14 +613,14 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   card: {
-    marginHorizontal: 28,
+    marginHorizontal: 20,
     marginTop: 20,
     padding: 20,
     paddingTop: 0,
     borderRadius: 8,
     height: 220,
     zIndex: 5,
-    width: Dimensions.get('window').width - 58,
+    width: Dimensions.get('window').width - 40,
   },
   wrapperPartTop: {
     flexDirection: 'row',
@@ -737,7 +737,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 2,
-    paddingHorizontal: 28,
+    paddingHorizontal: 20,
   },
   wrapper: {
     backgroundColor: '#fff',

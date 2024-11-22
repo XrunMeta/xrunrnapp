@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   useWindowDimensions,
   ActivityIndicator,
-  Alert,
   ScrollView,
   Platform,
   Dimensions,
@@ -30,8 +29,6 @@ const renderTabBar = props => (
       backgroundColor: 'white',
       height: 55,
       elevation: 0,
-      // borderBottomColor: '#bbb',
-      // borderBottomWidth: 0.5,
     }}
     renderLabel={({route, focused}) => (
       <Text

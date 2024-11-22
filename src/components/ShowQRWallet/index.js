@@ -346,7 +346,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             activeOpacity={0.7}
             style={{
               justifyContent: 'center',
@@ -369,7 +369,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
               }}>
               Key Download
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
 

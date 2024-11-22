@@ -31,18 +31,18 @@ const CustomInputWallet = ({
 export default CustomInputWallet;
 const styles = StyleSheet.create({
   label: {
-    color: '#000',
-    fontFamily: getFontFam() + 'Regular',
+    fontFamily: getFontFam() + 'Medium',
     fontSize: fontSize('body'),
+    color: '#343a59',
   },
   input: customFontSize => ({
-    borderBottomWidth: 1,
     marginTop: Platform.OS === 'ios' ? 14 : 0,
     paddingBottom: 10,
     paddingLeft: 10,
     marginTop: Platform.OS === 'ios' ? 14 : 0,
     paddingBottom: 10,
-    borderBottomColor: '#ddd',
+    borderBottomColor: '#cccccc',
+    borderBottomWidth: 1,
     fontFamily: getFontFam() + 'Regular',
     color: '#000',
     fontSize: customFontSize,
