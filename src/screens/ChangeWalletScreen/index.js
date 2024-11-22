@@ -239,7 +239,10 @@ const Change = ({navigation, route}) => {
         </View>
       </View>
 
-      <ScrollView overScrollMode="never">
+      <ScrollView
+        overScrollMode="never"
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{flexGrow: 1}}>
         <View style={{backgroundColor: '#fff'}}>
           <View style={styles.partTop}>
             {/* <Text style={styles.currencyName}>-</Text> */}
@@ -268,18 +271,17 @@ const Change = ({navigation, route}) => {
                 placeholder={
                   lang && lang ? lang.screen_conversion.input_convert : ''
                 }
-                customFontSize={fontSize('subtitle')}
               />
             </View>
           </View>
         </View>
-      </ScrollView>
 
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={{flex: 1}}>
-        <ButtonNext onClick={onSend} isDisabled={isIconNextDisabled} />
-      </KeyboardAvoidingView>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={{flex: 1}}>
+          <ButtonNext onClick={onSend} isDisabled={isIconNextDisabled} />
+        </KeyboardAvoidingView>
+      </ScrollView>
 
       {popupConversion && (
         <View style={styles.popupConversion}>
@@ -436,6 +438,7 @@ const styles = StyleSheet.create({
   },
   wrapperConversion: {
     backgroundColor: '#fff',
+    marginHorizontal: 60,
   },
   wrapperPartTop: {
     flexDirection: 'row',
@@ -476,6 +479,7 @@ const styles = StyleSheet.create({
     color: '#000',
     fontFamily: getFontFam() + 'Regular',
     fontSize: fontSize('body'),
+    maxWidth: 100,
   },
   wrapperButton: {
     flexDirection: 'row',

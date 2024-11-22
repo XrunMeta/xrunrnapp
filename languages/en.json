@@ -580,7 +580,7 @@
     "exchanged": "To be exchanged",
     "exchanged_xrun_desc": "It will be exchanged for an XRUN retention.",
     "input_exchanged": "Please enter the number of coins to be exchanged.",
-    "check_conversion_desc": "Please check the information once more.",
+    "check_conversion_desc": "Please check the information",
     "minimum_exchange": "Minimum exchange amount",
     "input_convert": "Please enter the number of coins to convert."
   },
