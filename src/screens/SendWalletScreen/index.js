@@ -828,8 +828,9 @@ const SendWalletScreen = ({navigation, route}) => {
           </View>
         </View>
         <ScrollView
-          style={{flex: 1, paddingBottom: 40}}
-          showsVerticalScrollIndicator={false}>
+          style={{flex: 1}}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{flexGrow: 1}}>
           <View style={styles.partTop}>
             {/* <Text style={styles.currencyName}>{dataWallet.symbol}</Text> */}
             <View style={styles.partScanQR}>
@@ -881,13 +882,13 @@ const SendWalletScreen = ({navigation, route}) => {
               }`}
             />
           </View>
-        </ScrollView>
 
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          style={{flex: 1}}>
-          <ButtonNext onClick={onSend} isDisabled={isIconNextDisabled} />
-        </KeyboardAvoidingView>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            style={{flex: 1}}>
+            <ButtonNext onClick={onSend} isDisabled={isIconNextDisabled} />
+          </KeyboardAvoidingView>
+        </ScrollView>
 
         {/* Scan QR code */}
         {isVisibleReadQR && (
@@ -1186,6 +1187,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 34,
     gap: 30,
+    backgroundColor: 'white',
   },
   partScanQR: {
     flexDirection: 'row',

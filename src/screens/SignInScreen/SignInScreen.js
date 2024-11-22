@@ -5,8 +5,7 @@ import {
   Pressable,
   Alert,
   SafeAreaView,
-  TouchableWithoutFeedback,
-  Keyboard,
+  ScrollView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput/';
@@ -215,8 +214,11 @@ const SignInScreen = () => {
   }, []);
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <SafeAreaView style={styles.root}>
+    <SafeAreaView style={styles.root}>
+      <ScrollView
+        contentContainerStyle={{flexGrow: 1}}
+        showsVerticalScrollIndicator={false}
+        style={{flex: 1}}>
         <View style={{flexDirection: 'row', position: 'relative'}}>
           <View style={{position: 'absolute', zIndex: 1}}>
             <ButtonBack onClick={onBack} />
@@ -301,8 +303,8 @@ const SignInScreen = () => {
             </Pressable>
           </View>
         </ButtonNext>
-      </SafeAreaView>
-    </TouchableWithoutFeedback>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
