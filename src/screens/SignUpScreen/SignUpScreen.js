@@ -770,7 +770,7 @@ const styles = StyleSheet.create({
     fontFamily: getFontFam() + 'Medium',
     fontSize: fontSize('body'),
     color: '#343a59',
-    marginBottom: -5,
+    // marginBottom: -5,
   },
   horizontalChecbox: {
     flexDirection: 'row',
