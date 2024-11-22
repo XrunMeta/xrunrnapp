@@ -563,7 +563,8 @@
     "copy_txid": "The TXID has been copied. Use it wherever you want.",
     "complete_send": "is complete",
     "wallet_address": "Wallet address",
-    "amount_send": "Transfer amount"
+    "amount_send": "Transfer amount",
+    "delay": "Actual transmission may be delayed depending on network conditions."
   },
   "popup": {
     "notice": "We apologize to user XRUN.\n\nWe will conduct a testing period\nand simultaneous maintenance.\n\nMaintenance includes:\n\n1. Expanding coins throughout Indonesia.\n\n2. To reduce errors during coin capture and ad watching.\n\n3. Free Coins for users who fill in Referral.\n\n*Our testing period will run until the end of August on the 31st, 2022"
