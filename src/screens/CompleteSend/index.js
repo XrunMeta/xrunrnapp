@@ -206,8 +206,11 @@ const CompleteSend = ({navigation, route}) => {
           textAlign: 'center',
           marginTop: 30,
           fontSize: fontSize('body'),
+          paddingHorizontal: 20,
         }}>
-        실제 전송은 네트워크 상황에 따라 지연될 수 있습니다.
+        {lang && lang.screen_complete_send && lang.screen_complete_send.delay
+          ? lang.screen_complete_send.delay
+          : ''}
       </Text>
 
       <KeyboardAvoidingView
