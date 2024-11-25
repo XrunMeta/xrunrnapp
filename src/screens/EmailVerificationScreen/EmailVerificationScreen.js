@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   Platform,
   Keyboard,
+  KeyboardAvoidingView,
 } from 'react-native';
 import React, {useState, useRef, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
@@ -435,16 +436,20 @@ const EmailVerificationScreen = () => {
         </View>
 
         {/* Bottom Section*/}
-        <ButtonNext onClick={onSignIn} isDisabled={isDisable}>
-          <View style={styles.additionalLogin}>
-            <Countdown
-              lang={lang}
-              onProblem={onProblem}
-              seconds={seconds}
-              resetKey={resetKey}
-            />
-          </View>
-        </ButtonNext>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={{flex: 1}}>
+          <ButtonNext onClick={onSignIn} isDisabled={isDisable}>
+            <View style={styles.additionalLogin}>
+              <Countdown
+                lang={lang}
+                onProblem={onProblem}
+                seconds={seconds}
+                resetKey={resetKey}
+              />
+            </View>
+          </ButtonNext>
+        </KeyboardAvoidingView>
 
         {/* Slider Modal */}
         <SliderModal visible={modalVisible} onClose={toggleModal} />
