@@ -7,6 +7,8 @@ import {
   ActivityIndicator,
   SafeAreaView,
   KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput';
@@ -185,64 +187,73 @@ const EmailAuthScreen = () => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <View style={[styles.root, {height: ScreenHeight}]}>
-        <View style={{flexDirection: 'row'}}>
-          <View style={{position: 'absolute', zIndex: 1}}>
-            <ButtonBack onClick={onBack} />
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <SafeAreaView style={{flex: 1}}>
+        <View style={[styles.root, {height: ScreenHeight}]}>
+          <View style={{flexDirection: 'row'}}>
+            <View style={{position: 'absolute', zIndex: 1}}>
+              <ButtonBack onClick={onBack} />
+            </View>
+            <View style={styles.titleWrapper}>
+              <Text style={styles.title}>
+                {lang && lang.screen_signin && lang.screen_signin.authcode
+                  ? lang.screen_signin.authcode.link
+                  : ''}
+              </Text>
+            </View>
           </View>
-          <View style={styles.titleWrapper}>
-            <Text style={styles.title}>
-              {lang && lang.screen_signin && lang.screen_signin.authcode
-                ? lang.screen_signin.authcode.link
+
+          <CustomInput
+            label={
+              lang && lang.screen_emailAuth && lang.screen_emailAuth.email
+                ? lang.screen_emailAuth.email.label
+                : ''
+            }
+            placeholder={
+              lang && lang.screen_emailAuth && lang.screen_emailAuth.email
+                ? lang.screen_emailAuth.email.placeholder
+                : ''
+            }
+            value={email}
+            setValue={onEmailChange}
+            isPassword={false}
+          />
+          {isEmailValid ? null : (
+            <Text
+              style={{
+                alignSelf: 'flex-start',
+                marginLeft: 25,
+                color: 'red',
+              }}>
+              {lang && lang.screen_emailAuth && lang.screen_emailAuth.alert
+                ? lang.screen_emailAuth.alert.invalidEmail
                 : ''}
             </Text>
-          </View>
-        </View>
+          )}
 
-        <CustomInput
-          label={
-            lang && lang.screen_emailAuth && lang.screen_emailAuth.email
-              ? lang.screen_emailAuth.email.label
-              : ''
-          }
-          placeholder={
-            lang && lang.screen_emailAuth && lang.screen_emailAuth.email
-              ? lang.screen_emailAuth.email.placeholder
-              : ''
-          }
-          value={email}
-          setValue={onEmailChange}
-          isPassword={false}
-        />
-        {isEmailValid ? null : (
-          <Text
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            style={{flex: 1}}>
+            <ButtonNext
+              onClick={onSignIn}
+              isDisabled={!isDisable && email == ''}
+            />
+          </KeyboardAvoidingView>
+        </View>
+        {isLoading && (
+          <View
             style={{
-              alignSelf: 'flex-start',
-              marginLeft: 25,
-              color: 'red',
+              ...StyleSheet.absoluteFill,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              zIndex: 1,
             }}>
-            {lang && lang.screen_emailAuth && lang.screen_emailAuth.alert
-              ? lang.screen_emailAuth.alert.invalidEmail
-              : ''}
-          </Text>
+            <ActivityIndicator size="large" color="#343a59" />
+          </View>
         )}
-
-        <ButtonNext onClick={onSignIn} isDisabled={!isDisable && email == ''} />
-      </View>
-      {isLoading && (
-        <View
-          style={{
-            ...StyleSheet.absoluteFill,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            zIndex: 1,
-          }}>
-          <ActivityIndicator size="large" color="#343a59" />
-        </View>
-      )}
-    </SafeAreaView>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
