@@ -7,6 +7,7 @@ import {
   Dimensions,
   Alert,
   ScrollView,
+  SafeAreaView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput';
@@ -138,114 +139,118 @@ const SignPasswordScreen = () => {
   };
 
   return (
-    <ScrollView scrollEnabled={false}>
-      <View style={[styles.root, {height: ScreenHeight}]}>
-        <ButtonBack onClick={onBack} />
+    <SafeAreaView>
+      <ScrollView scrollEnabled={false}>
+        <View style={[styles.root, {height: ScreenHeight}]}>
+          <View style={styles.titleWrapper}>
+            <ButtonBack onClick={onBack} />
 
-        <View style={styles.titleWrapper}>
-          <Text style={styles.title}>
-            {lang &&
-            lang.screen_loginWithPassword &&
-            lang.screen_loginWithPassword.title
-              ? lang.screen_loginWithPassword.title
-              : ''}
-          </Text>
-          <Text style={styles.subTitle}>
-            {lang &&
-            lang.screen_loginWithPassword &&
-            lang.screen_loginWithPassword.title
-              ? lang.screen_loginWithPassword.subtitle
-              : ''}
-          </Text>
-        </View>
-
-        <CustomInput
-          label={
-            lang &&
-            lang.screen_loginWithPassword &&
-            lang.screen_loginWithPassword.input
-              ? lang.screen_loginWithPassword.input.password.label
-              : ''
-          }
-          placeholder={
-            lang &&
-            lang.screen_loginWithPassword &&
-            lang.screen_loginWithPassword.input
-              ? lang.screen_loginWithPassword.input.password.placeholder
-              : ''
-          }
-          value={password}
-          setValue={setPassword}
-          secureTextEntry
-          isPassword={true}
-        />
-
-        <View style={[styles.bottomSection]}>
-          <View
-            style={{
-              flexDirection: 'column',
-              alignSelf: 'flex-end',
-              marginBottom: 10,
-              gap: 5,
-            }}>
-            <View style={styles.additionalLogin}>
-              <Pressable onPress={onPassMiss} style={styles.resetPassword}>
-                <Text style={styles.emailAuth}>
-                  {lang &&
-                  lang.screen_loginWithPassword &&
-                  lang.screen_loginWithPassword.input &&
-                  lang.screen_loginWithPassword.input.missing
-                    ? lang.screen_loginWithPassword.input.missing.btn + ' '
-                    : ''}
-                </Text>
-              </Pressable>
-              <Text style={styles.normalText}>
+            <View style={{alignItems: 'center', marginBottom: -5}}>
+              <Text style={styles.title}>
                 {lang &&
                 lang.screen_loginWithPassword &&
-                lang.screen_loginWithPassword.input &&
-                lang.screen_loginWithPassword.input.missing
-                  ? lang.screen_loginWithPassword.input.missing.text
+                lang.screen_loginWithPassword.title
+                  ? lang.screen_loginWithPassword.title
                   : ''}
               </Text>
-            </View>
-            <View style={styles.additionalLogin}>
-              <Pressable onPress={onNotExist} style={styles.resetPassword}>
-                <Text style={styles.emailAuth}>
-                  {lang &&
-                  lang.screen_loginWithPassword &&
-                  lang.screen_loginWithPassword.input &&
-                  lang.screen_loginWithPassword.input.notExist
-                    ? lang.screen_loginWithPassword.input.notExist.btn + ' '
-                    : ''}
-                </Text>
-              </Pressable>
-              <Text style={styles.normalText}>
+              <Text style={styles.subTitle}>
                 {lang &&
                 lang.screen_loginWithPassword &&
-                lang.screen_loginWithPassword.input &&
-                lang.screen_loginWithPassword.input.notExist
-                  ? lang.screen_loginWithPassword.input.notExist.text
+                lang.screen_loginWithPassword.title
+                  ? lang.screen_loginWithPassword.subtitle
                   : ''}
               </Text>
             </View>
           </View>
-          <Pressable
-            onPress={onSignIn}
-            style={styles.buttonSignIn}
-            disabled={isDisable}>
-            <Image
-              source={
-                isDisable
-                  ? require('../../../assets/images/icon_nextDisable.png')
-                  : require('../../../assets/images/icon_next.png')
-              }
-              resizeMode="contain"
-              style={styles.buttonSignInImage}
-            />
-          </Pressable>
+
+          <CustomInput
+            label={
+              lang &&
+              lang.screen_loginWithPassword &&
+              lang.screen_loginWithPassword.input
+                ? lang.screen_loginWithPassword.input.password.label
+                : ''
+            }
+            placeholder={
+              lang &&
+              lang.screen_loginWithPassword &&
+              lang.screen_loginWithPassword.input
+                ? lang.screen_loginWithPassword.input.password.placeholder
+                : ''
+            }
+            value={password}
+            setValue={setPassword}
+            secureTextEntry
+            isPassword={true}
+          />
+
+          <View style={[styles.bottomSection]}>
+            <View
+              style={{
+                flexDirection: 'column',
+                alignSelf: 'flex-end',
+                marginBottom: 10,
+                gap: 5,
+              }}>
+              <View style={styles.additionalLogin}>
+                <Pressable onPress={onPassMiss} style={styles.resetPassword}>
+                  <Text style={styles.emailAuth}>
+                    {lang &&
+                    lang.screen_loginWithPassword &&
+                    lang.screen_loginWithPassword.input &&
+                    lang.screen_loginWithPassword.input.missing
+                      ? lang.screen_loginWithPassword.input.missing.btn + ' '
+                      : ''}
+                  </Text>
+                </Pressable>
+                <Text style={styles.normalText}>
+                  {lang &&
+                  lang.screen_loginWithPassword &&
+                  lang.screen_loginWithPassword.input &&
+                  lang.screen_loginWithPassword.input.missing
+                    ? lang.screen_loginWithPassword.input.missing.text
+                    : ''}
+                </Text>
+              </View>
+              <View style={styles.additionalLogin}>
+                <Pressable onPress={onNotExist} style={styles.resetPassword}>
+                  <Text style={styles.emailAuth}>
+                    {lang &&
+                    lang.screen_loginWithPassword &&
+                    lang.screen_loginWithPassword.input &&
+                    lang.screen_loginWithPassword.input.notExist
+                      ? lang.screen_loginWithPassword.input.notExist.btn + ' '
+                      : ''}
+                  </Text>
+                </Pressable>
+                <Text style={styles.normalText}>
+                  {lang &&
+                  lang.screen_loginWithPassword &&
+                  lang.screen_loginWithPassword.input &&
+                  lang.screen_loginWithPassword.input.notExist
+                    ? lang.screen_loginWithPassword.input.notExist.text
+                    : ''}
+                </Text>
+              </View>
+            </View>
+            <Pressable
+              onPress={onSignIn}
+              style={styles.buttonSignIn}
+              disabled={!isDisable && password == ''}>
+              <Image
+                source={
+                  !isDisable && password == ''
+                    ? require('../../../assets/images/icon_nextDisable.png')
+                    : require('../../../assets/images/icon_next.png')
+                }
+                resizeMode="contain"
+                style={styles.buttonSignInImage}
+              />
+            </Pressable>
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -257,8 +262,9 @@ const styles = StyleSheet.create({
   },
   titleWrapper: {
     width: '100%',
-    paddingHorizontal: 20,
     alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'row',
   },
   title: {
     fontFamily: getFontFam() + 'Bold',
