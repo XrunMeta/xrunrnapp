@@ -110,6 +110,7 @@ const styles = StyleSheet.create({
     color: '#051C60',
     margin: 10,
     fontFamily: getFontFam() + 'Bold',
+    textAlign: 'center',
   }),
   scrollView: {
     flex: 1,
