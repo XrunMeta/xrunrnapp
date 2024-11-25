@@ -28,6 +28,52 @@ import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonNext from '../../components/ButtonNext/ButtonNext';
 
+// ########## Countdown ##########
+const Countdown = ({lang, seconds, onProblem, resetKey}) => {
+  const [timeLeft, setTimeLeft] = useState(seconds);
+
+  useEffect(() => {
+    setTimeLeft(seconds);
+  }, [seconds, resetKey]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 0) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [resetKey]);
+
+  const minutes = Math.floor(timeLeft / 60);
+  const remainingSeconds = timeLeft % 60;
+
+  const formattedMinutes = minutes.toString().padStart(2, '0');
+  const formattedSeconds = remainingSeconds.toString().padStart(2, '0');
+
+  return (
+    <View style={styles.container}>
+      {timeLeft > 0 ? (
+        <Text style={styles.disableText}>
+          {lang?.screen_emailVerification?.timer?.on || ''} {formattedMinutes}:
+          {formattedSeconds}
+        </Text>
+      ) : (
+        <Pressable onPress={onProblem} style={styles.resetPassword}>
+          <Text style={styles.emailAuth}>
+            {lang?.screen_emailVerification?.timer?.off || ''}
+          </Text>
+        </Pressable>
+      )}
+    </View>
+  );
+};
+
 // ########## Main Function ##########
 const EmailVerificationScreen = () => {
   const route = useRoute();
@@ -48,6 +94,8 @@ const EmailVerificationScreen = () => {
   const [lang, setLang] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDisable, setIsDisable] = useState(true);
+  const [seconds, setSeconds] = useState(599);
+  const [resetKey, setResetKey] = useState(0);
 
   useEffect(() => {
     if (verificationCode.join('').length > 0) {
@@ -58,6 +106,9 @@ const EmailVerificationScreen = () => {
   }, [verificationCode]);
 
   const emailAuth = async () => {
+    setSeconds(599);
+    setResetKey(prev => prev + 1);
+
     try {
       const response = await fetch(`${URL_API_NODEJS}/check-02-email`, {
         method: 'POST',
@@ -69,9 +120,7 @@ const EmailVerificationScreen = () => {
           email: dataUser?.email,
         }),
       });
-      const responseData = await response.json(); // Convert response to JSON
-
-      console.log({responseDataAuth: responseData});
+      const responseData = await response.json();
 
       if (responseData?.data[0]?.status == 'false') {
         Alert.alert('Failed', lang.screen_emailVerification.notif.invalidEmail);
@@ -79,9 +128,14 @@ const EmailVerificationScreen = () => {
         console.log('Kode dikirim boy');
       }
     } catch (error) {
-      // Handle network errors or other exceptions
       console.error('Error during emailAuth:', error);
     }
+  };
+
+  // Send Code Auth Again
+  const sendCodeAgain = () => {
+    emailAuth();
+    setModalVisible(!modalVisible);
   };
 
   useEffect(() => {
@@ -265,12 +319,6 @@ const EmailVerificationScreen = () => {
     setModalVisible(!modalVisible);
   };
 
-  // Send Code Auth Again
-  const sendCodeAgain = () => {
-    emailAuth();
-    setModalVisible(!modalVisible);
-  };
-
   // ########## Input Verification Code ##########
   const inputRefs = useRef([]);
 
@@ -297,53 +345,6 @@ const EmailVerificationScreen = () => {
   };
 
   const isCodeComplete = verificationCode.every(code => code !== '');
-
-  // ########## Countdown ##########
-  const Countdown = () => {
-    const [seconds, setSeconds] = useState(599); // Duration
-    // const [seconds, setSeconds] = useState(5);
-
-    useEffect(() => {
-      const timer = setInterval(() => {
-        if (seconds > 0) {
-          setSeconds(seconds - 1);
-        }
-      }, 1000);
-
-      return () => clearInterval(timer);
-    }, [seconds]);
-
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-
-    const formattedMinutes = minutes.toString().padStart(2, '0');
-    const formattedSeconds = remainingSeconds.toString().padStart(2, '0');
-
-    return (
-      <View style={styles.container}>
-        {seconds > 0 ? (
-          <Text style={styles.disableText}>
-            {lang &&
-            lang.screen_emailVerification &&
-            lang.screen_emailVerification.timer
-              ? lang.screen_emailVerification.timer.on
-              : ''}{' '}
-            {formattedMinutes}:{formattedSeconds}
-          </Text>
-        ) : (
-          <Pressable onPress={onProblem} style={styles.resetPassword}>
-            <Text style={styles.emailAuth}>
-              {lang &&
-              lang.screen_emailVerification &&
-              lang.screen_emailVerification.timer
-                ? lang.screen_emailVerification.timer.off
-                : ''}
-            </Text>
-          </Pressable>
-        )}
-      </View>
-    );
-  };
 
   // ########## Help Modal ##########
   const SliderModal = ({visible, onClose}) => {
@@ -436,32 +437,14 @@ const EmailVerificationScreen = () => {
         {/* Bottom Section*/}
         <ButtonNext onClick={onSignIn} isDisabled={isDisable}>
           <View style={styles.additionalLogin}>
-            <Countdown />
+            <Countdown
+              lang={lang}
+              onProblem={onProblem}
+              seconds={seconds}
+              resetKey={resetKey}
+            />
           </View>
         </ButtonNext>
-
-        {/* <View style={[styles.bottomSection]}>
-          <View style={styles.additionalLogin}>
-            <Countdown />
-          </View>
-          {isCodeComplete && !isSubmitting ? (
-            <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
-              <Image
-                source={require('../../../assets/images/icon_next.png')}
-                resizeMode="contain"
-                style={styles.buttonSignInImage}
-              />
-            </Pressable>
-          ) : (
-            <Pressable disabled style={styles.buttonSignIn}>
-              <Image
-                source={require('../../../assets/images/icon_nextDisable.png')}
-                resizeMode="contain"
-                style={styles.buttonSignInImage}
-              />
-            </Pressable>
-          )}
-        </View> */}
 
         {/* Slider Modal */}
         <SliderModal visible={modalVisible} onClose={toggleModal} />
