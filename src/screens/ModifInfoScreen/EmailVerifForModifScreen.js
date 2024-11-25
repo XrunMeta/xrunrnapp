@@ -2,7 +2,6 @@ import {
   View,
   Text,
   StyleSheet,
-  ScrollView,
   Pressable,
   Image,
   Dimensions,
@@ -24,9 +23,9 @@ import {
   authcode,
   getFontFam,
   fontSize,
-  BottomComponentFixer,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
+import ButtonNext from '../../components/ButtonNext/ButtonNext';
 
 const EmailVerifForModifScreen = () => {
   const [lang, setLang] = useState({});
@@ -214,24 +213,11 @@ const EmailVerifForModifScreen = () => {
             </Text>
           )}
 
-          <BottomComponentFixer count={3} />
-
-          <View style={[styles.bottomSection]}>
-            <Pressable
-              onPress={onSignIn}
-              style={styles.buttonSignIn}
-              disabled={isSubmitDisable}>
-              <Image
-                source={
-                  isSubmitDisable
-                    ? require('../../../assets/images/icon_nextDisable.png')
-                    : require('../../../assets/images/icon_next.png')
-                }
-                resizeMode="contain"
-                style={styles.buttonSignInImage}
-              />
-            </Pressable>
-          </View>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            style={{flex: 1}}>
+            <ButtonNext onClick={onSignIn} isDisabled={isSubmitDisable} />
+          </KeyboardAvoidingView>
         </SafeAreaView>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
@@ -242,25 +228,6 @@ const styles = StyleSheet.create({
   root: {
     alignItems: 'center',
     flex: 1,
-  },
-  bottomSection: {
-    padding: 20,
-    paddingBottom: 5,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    width: '100%',
-  },
-  buttonSignIn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    flexDirection: 'column-reverse',
-    height: 100,
-    justifyContent: 'center',
-  },
-  buttonSignInImage: {
-    height: 80,
-    width: 80,
   },
   titleWrapper: {
     width: '100%',
