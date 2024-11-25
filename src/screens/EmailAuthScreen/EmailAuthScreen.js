@@ -2,14 +2,11 @@ import {
   View,
   Text,
   StyleSheet,
-  Pressable,
-  Image,
   Dimensions,
   Alert,
   ActivityIndicator,
   SafeAreaView,
-  TouchableWithoutFeedback,
-  Keyboard,
+  KeyboardAvoidingView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput';
@@ -20,12 +17,12 @@ import {
   URL_API_NODEJS,
   getLanguage2,
   authcode,
-  BottomComponentFixer,
   fontSize,
   getFontFam,
   saveLogsDB,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
+import ButtonNext from '../../components/ButtonNext/ButtonNext';
 
 const EmailAuthScreen = () => {
   const [lang, setLang] = useState({});
@@ -188,89 +185,69 @@ const EmailAuthScreen = () => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <SafeAreaView style={{flex: 1}}>
-        <View style={[styles.root, {height: ScreenHeight}]}>
-          <View style={{flexDirection: 'row'}}>
-            <View style={{position: 'absolute', zIndex: 1}}>
-              <ButtonBack onClick={onBack} />
-            </View>
-            <View style={styles.titleWrapper}>
-              <Text style={styles.title}>
-                {lang && lang.screen_signin && lang.screen_signin.authcode
-                  ? lang.screen_signin.authcode.link
-                  : ''}
-              </Text>
-            </View>
+    <SafeAreaView style={{flex: 1}}>
+      <View style={[styles.root, {height: ScreenHeight}]}>
+        <View style={{flexDirection: 'row'}}>
+          <View style={{position: 'absolute', zIndex: 1}}>
+            <ButtonBack onClick={onBack} />
           </View>
-
-          <CustomInput
-            label={
-              lang && lang.screen_emailAuth && lang.screen_emailAuth.email
-                ? lang.screen_emailAuth.email.label
-                : ''
-            }
-            placeholder={
-              lang && lang.screen_emailAuth && lang.screen_emailAuth.email
-                ? lang.screen_emailAuth.email.placeholder
-                : ''
-            }
-            value={email}
-            setValue={onEmailChange}
-            isPassword={false}
-          />
-          {isEmailValid ? null : (
-            <Text
-              style={{
-                alignSelf: 'flex-start',
-                marginLeft: 25,
-                color: 'red',
-              }}>
-              {lang && lang.screen_emailAuth && lang.screen_emailAuth.alert
-                ? lang.screen_emailAuth.alert.invalidEmail
+          <View style={styles.titleWrapper}>
+            <Text style={styles.title}>
+              {lang && lang.screen_signin && lang.screen_signin.authcode
+                ? lang.screen_signin.authcode.link
                 : ''}
             </Text>
-          )}
-
-          <BottomComponentFixer count={3} />
-
-          <View style={[styles.bottomSection]}>
-            <Pressable
-              onPress={onSignIn}
-              style={styles.buttonSignIn}
-              disabled={!isDisable && email == ''}>
-              <Image
-                source={
-                  !isDisable && email == ''
-                    ? require('../../../assets/images/icon_nextDisable.png')
-                    : require('../../../assets/images/icon_next.png')
-                }
-                resizeMode="contain"
-                style={styles.buttonSignInImage}
-              />
-            </Pressable>
           </View>
         </View>
-        {isLoading && (
-          <View
+
+        <CustomInput
+          label={
+            lang && lang.screen_emailAuth && lang.screen_emailAuth.email
+              ? lang.screen_emailAuth.email.label
+              : ''
+          }
+          placeholder={
+            lang && lang.screen_emailAuth && lang.screen_emailAuth.email
+              ? lang.screen_emailAuth.email.placeholder
+              : ''
+          }
+          value={email}
+          setValue={onEmailChange}
+          isPassword={false}
+        />
+        {isEmailValid ? null : (
+          <Text
             style={{
-              ...StyleSheet.absoluteFill,
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: 'rgba(0, 0, 0, 0.5)',
-              zIndex: 1,
+              alignSelf: 'flex-start',
+              marginLeft: 25,
+              color: 'red',
             }}>
-            <ActivityIndicator size="large" color="#343a59" />
-          </View>
+            {lang && lang.screen_emailAuth && lang.screen_emailAuth.alert
+              ? lang.screen_emailAuth.alert.invalidEmail
+              : ''}
+          </Text>
         )}
-      </SafeAreaView>
-    </TouchableWithoutFeedback>
+
+        <ButtonNext onClick={onSignIn} isDisabled={!isDisable && email == ''} />
+      </View>
+      {isLoading && (
+        <View
+          style={{
+            ...StyleSheet.absoluteFill,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 1,
+          }}>
+          <ActivityIndicator size="large" color="#343a59" />
+        </View>
+      )}
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   root: {
-    alignItems: 'center',
     flex: 1,
   },
   bottomSection: {
