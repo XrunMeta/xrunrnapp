@@ -3,11 +3,12 @@ import {
   Text,
   StyleSheet,
   Pressable,
-  Image,
-  Dimensions,
   Alert,
   ScrollView,
   SafeAreaView,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput';
@@ -23,6 +24,7 @@ import {
   authcode,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
+import ButtonNext from '../../components/ButtonNext/ButtonNext';
 
 const SignPasswordScreen = () => {
   const [lang, setLang] = useState({});
@@ -32,7 +34,6 @@ const SignPasswordScreen = () => {
   const [isDisable, setIsDisable] = useState(false);
 
   const navigation = useNavigation();
-  let ScreenHeight = Dimensions.get('window').height;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -140,132 +141,122 @@ const SignPasswordScreen = () => {
   };
 
   return (
-    <SafeAreaView>
-      <ScrollView scrollEnabled={false}>
-        <View style={[styles.root, {height: ScreenHeight}]}>
-          <View style={styles.titleWrapper}>
-            <ButtonBack onClick={onBack} />
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <SafeAreaView style={[styles.root]}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{flex: 1}}>
+          <View>
+            <View style={{flexDirection: 'row', position: 'relative'}}>
+              <View style={{position: 'absolute', zIndex: 1}}>
+                <ButtonBack onClick={onBack} />
+              </View>
 
-            <View style={{alignItems: 'center', marginBottom: -5}}>
-              <Text style={styles.title}>
-                {lang &&
-                lang.screen_loginWithPassword &&
-                lang.screen_loginWithPassword.title
-                  ? lang.screen_loginWithPassword.title
-                  : ''}
-              </Text>
-              <Text style={styles.subTitle}>
-                {lang &&
-                lang.screen_loginWithPassword &&
-                lang.screen_loginWithPassword.title
-                  ? lang.screen_loginWithPassword.subtitle
-                  : ''}
-              </Text>
+              <View style={styles.titleWrapper}>
+                <Text style={styles.title}>
+                  {lang &&
+                  lang.screen_loginWithPassword &&
+                  lang.screen_loginWithPassword.title
+                    ? lang.screen_loginWithPassword.title
+                    : ''}
+                </Text>
+                <Text style={styles.subTitle}>
+                  {lang &&
+                  lang.screen_loginWithPassword &&
+                  lang.screen_loginWithPassword.title
+                    ? lang.screen_loginWithPassword.subtitle
+                    : ''}
+                </Text>
+              </View>
             </View>
+
+            <CustomInput
+              label={
+                lang &&
+                lang.screen_loginWithPassword &&
+                lang.screen_loginWithPassword.input
+                  ? lang.screen_loginWithPassword.input.password.label
+                  : ''
+              }
+              placeholder={
+                lang &&
+                lang.screen_loginWithPassword &&
+                lang.screen_loginWithPassword.input
+                  ? lang.screen_loginWithPassword.input.password.placeholder
+                  : ''
+              }
+              value={password}
+              setValue={setPassword}
+              secureTextEntry
+              isPassword={true}
+            />
           </View>
 
-          <CustomInput
-            label={
-              lang &&
-              lang.screen_loginWithPassword &&
-              lang.screen_loginWithPassword.input
-                ? lang.screen_loginWithPassword.input.password.label
-                : ''
-            }
-            placeholder={
-              lang &&
-              lang.screen_loginWithPassword &&
-              lang.screen_loginWithPassword.input
-                ? lang.screen_loginWithPassword.input.password.placeholder
-                : ''
-            }
-            value={password}
-            setValue={setPassword}
-            secureTextEntry
-            isPassword={true}
-          />
-
-          <View style={[styles.bottomSection]}>
-            <View
-              style={{
-                flexDirection: 'column',
-                alignSelf: 'flex-end',
-                marginBottom: 10,
-                gap: 5,
-              }}>
-              <View style={styles.additionalLogin}>
-                <Pressable onPress={onPassMiss} style={styles.resetPassword}>
-                  <Text style={styles.emailAuth}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            style={{flex: 1}}>
+            <ButtonNext
+              onClick={onSignIn}
+              isDisabled={!isDisable && password == ''}>
+              <View style={{maxWidth: 200, flexDirection: 'column', gap: 4}}>
+                <View style={styles.additionalLogin}>
+                  <Pressable onPress={onPassMiss} style={styles.resetPassword}>
+                    <Text style={styles.emailAuth}>
+                      {lang &&
+                      lang.screen_loginWithPassword &&
+                      lang.screen_loginWithPassword.input &&
+                      lang.screen_loginWithPassword.input.missing
+                        ? lang.screen_loginWithPassword.input.missing.btn + ' '
+                        : ''}
+                    </Text>
+                  </Pressable>
+                  <Text style={styles.normalText}>
                     {lang &&
                     lang.screen_loginWithPassword &&
                     lang.screen_loginWithPassword.input &&
                     lang.screen_loginWithPassword.input.missing
-                      ? lang.screen_loginWithPassword.input.missing.btn + ' '
+                      ? lang.screen_loginWithPassword.input.missing.text
                       : ''}
                   </Text>
-                </Pressable>
-                <Text style={styles.normalText}>
-                  {lang &&
-                  lang.screen_loginWithPassword &&
-                  lang.screen_loginWithPassword.input &&
-                  lang.screen_loginWithPassword.input.missing
-                    ? lang.screen_loginWithPassword.input.missing.text
-                    : ''}
-                </Text>
-              </View>
-              <View style={styles.additionalLogin}>
-                <Pressable onPress={onNotExist} style={styles.resetPassword}>
-                  <Text style={styles.emailAuth}>
+                </View>
+                <View style={styles.additionalLogin}>
+                  <Pressable onPress={onNotExist} style={styles.resetPassword}>
+                    <Text style={styles.emailAuth}>
+                      {lang &&
+                      lang.screen_loginWithPassword &&
+                      lang.screen_loginWithPassword.input &&
+                      lang.screen_loginWithPassword.input.notExist
+                        ? lang.screen_loginWithPassword.input.notExist.btn + ' '
+                        : ''}
+                    </Text>
+                  </Pressable>
+                  <Text style={styles.normalText}>
                     {lang &&
                     lang.screen_loginWithPassword &&
                     lang.screen_loginWithPassword.input &&
                     lang.screen_loginWithPassword.input.notExist
-                      ? lang.screen_loginWithPassword.input.notExist.btn + ' '
+                      ? lang.screen_loginWithPassword.input.notExist.text
                       : ''}
                   </Text>
-                </Pressable>
-                <Text style={styles.normalText}>
-                  {lang &&
-                  lang.screen_loginWithPassword &&
-                  lang.screen_loginWithPassword.input &&
-                  lang.screen_loginWithPassword.input.notExist
-                    ? lang.screen_loginWithPassword.input.notExist.text
-                    : ''}
-                </Text>
+                </View>
               </View>
-            </View>
-            <Pressable
-              onPress={onSignIn}
-              style={styles.buttonSignIn}
-              disabled={!isDisable && password == ''}>
-              <Image
-                source={
-                  !isDisable && password == ''
-                    ? require('../../../assets/images/icon_nextDisable.png')
-                    : require('../../../assets/images/icon_next.png')
-                }
-                resizeMode="contain"
-                style={styles.buttonSignInImage}
-              />
-            </Pressable>
-          </View>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+            </ButtonNext>
+          </KeyboardAvoidingView>
+        </ScrollView>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
   root: {
-    alignItems: 'center',
     flex: 1,
-    paddingBottom: 15,
   },
   titleWrapper: {
     width: '100%',
+    paddingHorizontal: 20,
     alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'row',
+    marginTop: 20,
   },
   title: {
     fontFamily: getFontFam() + 'Bold',
@@ -278,14 +269,6 @@ const styles = StyleSheet.create({
     color: '#343a59',
     marginTop: -5,
     textAlign: 'center',
-  },
-  bottomSection: {
-    padding: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flex: 1,
-    width: '100%',
   },
   additionalLogin: {
     flexDirection: 'row',
