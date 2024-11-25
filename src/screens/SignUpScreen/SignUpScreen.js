@@ -11,8 +11,6 @@ import {
   TouchableOpacity,
   Modal,
   ActivityIndicator,
-  TouchableWithoutFeedback,
-  Keyboard,
 } from 'react-native';
 import React, {useState, useEffect, useMemo} from 'react';
 import CustomInput from '../../components/CustomInput';
