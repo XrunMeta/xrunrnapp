@@ -6,6 +6,9 @@ import {
   Alert,
   SafeAreaView,
   ScrollView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput/';
@@ -214,97 +217,103 @@ const SignInScreen = () => {
   }, []);
 
   return (
-    <SafeAreaView style={styles.root}>
-      <ScrollView
-        contentContainerStyle={{flexGrow: 1}}
-        showsVerticalScrollIndicator={false}
-        style={{flex: 1}}>
-        <View style={{flexDirection: 'row', position: 'relative'}}>
-          <View style={{position: 'absolute', zIndex: 1}}>
-            <ButtonBack onClick={onBack} />
-          </View>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <SafeAreaView style={styles.root}>
+        <ScrollView
+          contentContainerStyle={{flexGrow: 1}}
+          showsVerticalScrollIndicator={false}
+          style={{flex: 1}}>
+          <View style={{flexDirection: 'row', position: 'relative'}}>
+            <View style={{position: 'absolute', zIndex: 1}}>
+              <ButtonBack onClick={onBack} />
+            </View>
 
-          <View style={styles.titleWrapper}>
-            <Text style={styles.title}>
-              {lang && lang.screen_signin && lang.screen_signin.title
-                ? lang.screen_signin.title
-                : ''}
-            </Text>
-            <Text style={styles.subTitle}>
-              {lang && lang.screen_signin && lang.screen_signin.subTitle
-                ? lang.screen_signin.subTitle
-                : ''}
-            </Text>
-          </View>
-        </View>
-
-        <CustomInput
-          label={
-            lang && lang.screen_signin && lang.screen_signin.email
-              ? lang.screen_signin.email.label
-              : ''
-          }
-          placeholder={
-            lang && lang.screen_signin && lang.screen_signin.email
-              ? lang.screen_signin.email.placeholder
-              : ''
-          }
-          value={email}
-          setValue={onEmailChange}
-          isPassword={false}
-        />
-        {isEmailValid ? null : (
-          <Text
-            style={{
-              alignSelf: 'flex-start',
-              marginLeft: 25,
-              color: 'red',
-              fontFamily: getFontFam() + 'Regular',
-              fontSize: fontSize('body'),
-            }}>
-            {lang && lang.screen_signin && lang.screen_signin.validator
-              ? lang.screen_signin.validator
-              : ''}
-          </Text>
-        )}
-
-        <CustomInput
-          label={
-            lang && lang.screen_signin && lang.screen_signin.password
-              ? lang.screen_signin.password.label
-              : ''
-          }
-          placeholder={
-            lang && lang.screen_signin && lang.screen_signin.password
-              ? lang.screen_signin.password.placeholder
-              : ''
-          }
-          value={password}
-          setValue={setPassword}
-          secureTextEntry
-          isPassword={true}
-        />
-
-        <ButtonNext
-          onClick={onSignIn}
-          isDisabled={!isDisable && email == '' && password == ''}>
-          <View>
-            <Text style={styles.normalText}>
-              {lang && lang.screen_signin && lang.screen_signin.authcode
-                ? lang.screen_signin.authcode.label + ' '
-                : ''}
-            </Text>
-            <Pressable onPress={onSMSAuth} style={styles.resetPassword}>
-              <Text style={styles.emailAuth}>
-                {lang && lang.screen_signin && lang.screen_signin.authcode
-                  ? lang.screen_signin.authcode.link
+            <View style={styles.titleWrapper}>
+              <Text style={styles.title}>
+                {lang && lang.screen_signin && lang.screen_signin.title
+                  ? lang.screen_signin.title
                   : ''}
               </Text>
-            </Pressable>
+              <Text style={styles.subTitle}>
+                {lang && lang.screen_signin && lang.screen_signin.subTitle
+                  ? lang.screen_signin.subTitle
+                  : ''}
+              </Text>
+            </View>
           </View>
-        </ButtonNext>
-      </ScrollView>
-    </SafeAreaView>
+
+          <CustomInput
+            label={
+              lang && lang.screen_signin && lang.screen_signin.email
+                ? lang.screen_signin.email.label
+                : ''
+            }
+            placeholder={
+              lang && lang.screen_signin && lang.screen_signin.email
+                ? lang.screen_signin.email.placeholder
+                : ''
+            }
+            value={email}
+            setValue={onEmailChange}
+            isPassword={false}
+          />
+          {isEmailValid ? null : (
+            <Text
+              style={{
+                alignSelf: 'flex-start',
+                marginLeft: 25,
+                color: 'red',
+                fontFamily: getFontFam() + 'Regular',
+                fontSize: fontSize('body'),
+              }}>
+              {lang && lang.screen_signin && lang.screen_signin.validator
+                ? lang.screen_signin.validator
+                : ''}
+            </Text>
+          )}
+
+          <CustomInput
+            label={
+              lang && lang.screen_signin && lang.screen_signin.password
+                ? lang.screen_signin.password.label
+                : ''
+            }
+            placeholder={
+              lang && lang.screen_signin && lang.screen_signin.password
+                ? lang.screen_signin.password.placeholder
+                : ''
+            }
+            value={password}
+            setValue={setPassword}
+            secureTextEntry
+            isPassword={true}
+          />
+
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            style={{flex: 1}}>
+            <ButtonNext
+              onClick={onSignIn}
+              isDisabled={!isDisable && email == '' && password == ''}>
+              <View>
+                <Text style={styles.normalText}>
+                  {lang && lang.screen_signin && lang.screen_signin.authcode
+                    ? lang.screen_signin.authcode.label + ' '
+                    : ''}
+                </Text>
+                <Pressable onPress={onSMSAuth} style={styles.resetPassword}>
+                  <Text style={styles.emailAuth}>
+                    {lang && lang.screen_signin && lang.screen_signin.authcode
+                      ? lang.screen_signin.authcode.link
+                      : ''}
+                  </Text>
+                </Pressable>
+              </View>
+            </ButtonNext>
+          </KeyboardAvoidingView>
+        </ScrollView>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
