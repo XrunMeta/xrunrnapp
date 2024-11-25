@@ -3,7 +3,6 @@ import {
   Text,
   TextInput,
   StyleSheet,
-  ScrollView,
   Pressable,
   Image,
   Dimensions,
@@ -27,6 +26,7 @@ import {
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import crashlytics from '@react-native-firebase/crashlytics';
+import ButtonNext from '../../components/ButtonNext/ButtonNext';
 
 // ########## Main Function ##########
 const PhoneVerificationScreen = () => {
@@ -40,6 +40,15 @@ const PhoneVerificationScreen = () => {
   let ScreenHeight = Dimensions.get('window').height;
   const [lang, setLang] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDisable, setIsDisable] = useState(true);
+
+  useEffect(() => {
+    if (verificationCode.join('').length > 0) {
+      setIsDisable(false);
+    } else {
+      setIsDisable(true);
+    }
+  }, [verificationCode]);
 
   const phoneAuth = async () => {
     try {
@@ -50,12 +59,11 @@ const PhoneVerificationScreen = () => {
           Authorization: `Bearer ${authcode}`,
         },
         body: JSON.stringify({
+          country: mobilecode.toString(),
           mobile,
         }),
       });
       const responseData = await response.json(); // Convert response to JSON
-
-      console.log(responseData.data[0]);
 
       if (responseData?.data[0]?.status == true) {
         console.log('Kode dikirim boy');
@@ -100,8 +108,14 @@ const PhoneVerificationScreen = () => {
   };
 
   const onSignIn = async () => {
+    if (verificationCode.join('').length < 4) {
+      Alert.alert('Failed', lang.screen_notExist.field_phoneVerif.verification);
+      return;
+    }
+
     if (isSubmitting) return;
     setIsSubmitting(true);
+    setIsDisable(true);
 
     const getAuthCode = verificationCode.join('');
 
@@ -129,13 +143,6 @@ const PhoneVerificationScreen = () => {
           'Failed',
           lang.screen_notExist.field_phoneVerif.invalidNumber,
         );
-        // navigation.navigate('SignupByEmail', {
-        //   mobile: mobile,
-        //   mobilecode: mobilecode,
-        //   countrycode: countrycode,
-        // });
-
-        navigation.replace('SignIn');
 
         console.log(`
           Data dikirim (Phone Verif) :
@@ -162,7 +169,7 @@ const PhoneVerificationScreen = () => {
           console.log(
             JSON.stringify(responseLoginData) +
               ' -> data:' +
-              responseLoginData?.data[0]?.data,
+              responseLoginData?.data[0],
           );
 
           if (responseLoginData?.status !== 'success') {
@@ -173,7 +180,10 @@ const PhoneVerificationScreen = () => {
               countrycode: countrycode,
             });
           } else {
-            await AsyncStorage.setItem('userEmail', responseLoginData.email);
+            await AsyncStorage.setItem(
+              'userEmail',
+              responseLoginData.data[0].email,
+            );
             // Do Login Auth
             login();
             navigation.reset({
@@ -202,6 +212,7 @@ const PhoneVerificationScreen = () => {
       crashlytics().log(error);
     } finally {
       setIsSubmitting(false);
+      setIsDisable(false);
     }
   };
 
@@ -333,81 +344,62 @@ const PhoneVerificationScreen = () => {
   };
 
   return (
-    <SafeAreaView>
-      <ScrollView style={[styles.root, {height: ScreenHeight}]}>
-        <ButtonBack onClick={onBack} />
+    <SafeAreaView style={styles.root}>
+      <ButtonBack onClick={onBack} />
 
-        {/* Text Section */}
-        <View style={styles.textWrapper}>
-          <Text style={styles.normalText}>
-            {lang &&
-            lang.screen_notExist &&
-            lang.screen_notExist.field_phoneVerif
-              ? lang.screen_notExist.field_phoneVerif.label
-              : ''}
-          </Text>
-          <Text style={styles.boldText}>{mobile}</Text>
+      {/* Text Section */}
+      <View style={styles.textWrapper}>
+        <Text style={styles.normalText}>
+          {lang && lang.screen_notExist && lang.screen_notExist.field_phoneVerif
+            ? lang.screen_notExist.field_phoneVerif.label
+            : ''}
+        </Text>
+        <Text style={styles.boldText}>{mobile}</Text>
+      </View>
+
+      {/* Code Input */}
+      <View style={styles.codeInputContainer}>
+        {verificationCode.map((code, index) => (
+          <TextInput
+            key={index}
+            ref={ref => (inputRefs.current[index] = ref)}
+            style={[
+              styles.codeInput,
+              activeIndex === index && styles.activeInput,
+            ]}
+            placeholder="0"
+            placeholderTextColor="grey"
+            value={code}
+            onChangeText={text => handleInputChange(text, index)}
+            onKeyPress={({nativeEvent}) => {
+              if (nativeEvent.key === 'Backspace') {
+                handleInputDelete(index);
+              }
+            }}
+            onFocus={() => setActiveIndex(index)}
+            keyboardType="numeric"
+            maxLength={1}
+          />
+        ))}
+      </View>
+
+      {/* Bottom Section*/}
+      <ButtonNext onClick={onSignIn} isDisabled={isDisable}>
+        <View style={styles.additionalLogin}>
+          <Countdown />
         </View>
+      </ButtonNext>
 
-        {/* Code Input */}
-        <View style={styles.codeInputContainer}>
-          {verificationCode.map((code, index) => (
-            <TextInput
-              key={index}
-              ref={ref => (inputRefs.current[index] = ref)}
-              style={[
-                styles.codeInput,
-                activeIndex === index && styles.activeInput,
-              ]}
-              placeholder="0"
-              placeholderTextColor="grey"
-              value={code}
-              onChangeText={text => handleInputChange(text, index)}
-              onKeyPress={({nativeEvent}) => {
-                if (nativeEvent.key === 'Backspace') {
-                  handleInputDelete(index);
-                }
-              }}
-              onFocus={() => setActiveIndex(index)}
-              keyboardType="numeric"
-              maxLength={1}
-            />
-          ))}
-        </View>
-
-        {/* Bottom Section*/}
-        <View style={[styles.bottomSection]}>
-          <View style={styles.additionalLogin}>
-            <Countdown />
-          </View>
-          {isCodeComplete && !isSubmitting ? (
-            <Pressable onPress={onSignIn} style={styles.buttonSignIn}>
-              <Image
-                source={require('../../../assets/images/icon_next.png')}
-                resizeMode="contain"
-                style={styles.buttonSignInImage}
-              />
-            </Pressable>
-          ) : (
-            <Pressable disabled style={styles.buttonSignIn}>
-              <Image
-                source={require('../../../assets/images/icon_nextDisable.png')}
-                resizeMode="contain"
-                style={styles.buttonSignInImage}
-              />
-            </Pressable>
-          )}
-        </View>
-
-        {/* Slider Modal */}
-        <SliderModal visible={modalVisible} onClose={toggleModal} />
-      </ScrollView>
+      {/* Slider Modal */}
+      <SliderModal visible={modalVisible} onClose={toggleModal} />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  root: {},
+  root: {
+    flex: 1,
+  },
   buttonSignIn: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -443,10 +435,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   additionalLogin: {
-    flexDirection: 'row',
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-    height: 100,
+    maxWidth: 200,
   },
   emailAuth: {
     fontFamily: getFontFam() + 'Medium',
