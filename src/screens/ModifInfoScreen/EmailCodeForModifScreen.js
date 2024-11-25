@@ -4,7 +4,6 @@ import {
   TextInput,
   StyleSheet,
   ScrollView,
-  Pressable,
   Image,
   Dimensions,
   Alert,
@@ -13,6 +12,7 @@ import {
   TouchableOpacity,
   Keyboard,
   SafeAreaView,
+  KeyboardAvoidingView,
 } from 'react-native';
 import React, {useState, useRef, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
@@ -27,6 +27,7 @@ import {
 } from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Countdown from './Countdown';
+import ButtonNext from '../../components/ButtonNext/ButtonNext';
 
 // ########## Main Function ##########
 const EmailCodeForModif = () => {
@@ -104,7 +105,7 @@ const EmailCodeForModif = () => {
 
     // Cek jika semua kode sudah diisi
     if (!isCodeComplete) {
-      Alert.alert('Failed', lang.screen_emailVerification.notif.wrongCode);
+      Alert.alert('Failed', lang.screen_emailVerification.email.label);
       return;
     }
 
@@ -225,8 +226,10 @@ const EmailCodeForModif = () => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
+      <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{flex: 1}}>
           <View style={{flexDirection: 'row', position: 'relative'}}>
             <View style={{position: 'absolute', zIndex: 1}}>
               <ButtonBack onClick={onBack} />
@@ -292,35 +295,25 @@ const EmailCodeForModif = () => {
           </View>
 
           {/* Bottom Section*/}
-          <View style={[styles.bottomSection]}>
-            <View style={styles.additionalLogin}>
-              <Countdown
-                onFinish={handleCountdownFinish}
-                lang={lang}
-                onProblem={onProblem}
-                restart={restartCountdown}
-              />
-            </View>
-            <Pressable
-              onPress={onSignIn}
-              style={styles.buttonSignIn}
-              disabled={isDisable}>
-              <Image
-                source={
-                  isDisable
-                    ? require('../../../assets/images/icon_nextDisable.png')
-                    : require('../../../assets/images/icon_next.png')
-                }
-                resizeMode="contain"
-                style={styles.buttonSignInImage}
-              />
-            </Pressable>
-          </View>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            style={{flex: 1}}>
+            <ButtonNext onClick={onSignIn} isDisabled={isDisable}>
+              <View style={styles.additionalLogin}>
+                <Countdown
+                  onFinish={handleCountdownFinish}
+                  lang={lang}
+                  onProblem={onProblem}
+                  restart={restartCountdown}
+                />
+              </View>
+            </ButtonNext>
+          </KeyboardAvoidingView>
 
           {/* Slider Modal */}
           <SliderModal visible={modalVisible} onClose={toggleModal} />
-        </SafeAreaView>
-      </ScrollView>
+        </ScrollView>
+      </SafeAreaView>
     </TouchableWithoutFeedback>
   );
 };
@@ -329,18 +322,6 @@ const styles = StyleSheet.create({
   root: {
     alignItems: 'center',
     flex: 1,
-  },
-  buttonSignIn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    flexDirection: 'column-reverse',
-    height: 100,
-    justifyContent: 'center',
-  },
-  buttonSignInImage: {
-    height: 80,
-    width: 80,
   },
   textWrapper: {
     width: '100%',
@@ -365,10 +346,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   additionalLogin: {
-    flexDirection: 'row',
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-    height: 100,
+    maxWidth: 200,
   },
   emailAuth: {
     fontFamily: getFontFam() + 'Medium',
