@@ -141,9 +141,6 @@ const EmailVerificationLoginScreen = () => {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
         const screenLang = await getLanguage2(currentLanguage);
         setLang(screenLang);
-
-        // Start initial countdown when component mounts
-        emailAuth();
       } catch (err) {
         console.error('Error in fetchData:', err);
       }
@@ -351,6 +348,7 @@ const EmailVerificationLoginScreen = () => {
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
         <ButtonBack onClick={onBack} />
+
         {/* Text Section */}
         <View style={styles.textWrapper}>
           <Text style={styles.normalText}>
