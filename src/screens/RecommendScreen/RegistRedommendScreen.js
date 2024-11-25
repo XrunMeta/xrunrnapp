@@ -3,11 +3,10 @@ import {
   View,
   Text,
   StyleSheet,
-  Pressable,
-  Image,
   Dimensions,
   Alert,
   SafeAreaView,
+  KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
@@ -22,6 +21,7 @@ import {
   gatewayNodeJS,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
+import ButtonNext from '../../components/ButtonNext/ButtonNext';
 
 const RegistRecommendScreen = () => {
   const [lang, setLang] = useState({});
@@ -29,7 +29,7 @@ const RegistRecommendScreen = () => {
   const [recID, setRecID] = useState('');
   let ScreenHeight = Dimensions.get('window').height;
   const [userData, setUserData] = useState({});
-  const [isDisable, setIsDisable] = useState(false)
+  const [isDisable, setIsDisable] = useState(false);
 
   useEffect(() => {
     // Get Language
@@ -67,7 +67,7 @@ const RegistRecommendScreen = () => {
     } else {
       const registRecommend = async () => {
         try {
-		  setIsDisable(true)
+          setIsDisable(true);
           const body = {
             member: userData.member,
             email: recID,
@@ -115,8 +115,8 @@ const RegistRecommendScreen = () => {
           crashlytics().recordError(new Error(error));
           crashlytics().log(error);
         } finally {
-		  setIsDisable(false)
-		}
+          setIsDisable(false);
+        }
       };
 
       registRecommend();
@@ -128,54 +128,45 @@ const RegistRecommendScreen = () => {
   };
 
   return (
-	<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-    <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
-      {/* Title */}
-      <View style={{flexDirection: 'row'}}>
-        <View style={{position: 'absolute', zIndex: 1}}>
-          <ButtonBack onClick={handleBack} />
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
+        {/* Title */}
+        <View style={{flexDirection: 'row'}}>
+          <View style={{position: 'absolute', zIndex: 1}}>
+            <ButtonBack onClick={handleBack} />
+          </View>
+          <View style={styles.titleWrapper}>
+            <Text style={styles.title}>
+              {lang && lang.screen_recommend ? lang.screen_recommend.title : ''}
+            </Text>
+          </View>
         </View>
-        <View style={styles.titleWrapper}>
-          <Text style={styles.title}>
-            {lang && lang.screen_recommend ? lang.screen_recommend.title : ''}
-          </Text>
-        </View>
-      </View>
 
-      <CustomInput
-        label={
-          lang && lang.screen_recommend && lang.screen_recommend.add_recommend
-            ? lang.screen_recommend.add_recommend.label
-            : ''
-        }
-        placeholder={
-          lang && lang.screen_recommend && lang.screen_recommend.add_recommend
-            ? lang.screen_recommend.add_recommend.placeholder
-            : ''
-        }
-        value={recID}
-        setValue={setRecID}
-      />
+        <CustomInput
+          label={
+            lang && lang.screen_recommend && lang.screen_recommend.add_recommend
+              ? lang.screen_recommend.add_recommend.label
+              : ''
+          }
+          placeholder={
+            lang && lang.screen_recommend && lang.screen_recommend.add_recommend
+              ? lang.screen_recommend.add_recommend.placeholder
+              : ''
+          }
+          value={recID}
+          setValue={setRecID}
+        />
 
-      <View style={[styles.bottomSection]}>
-        <View style={styles.additionalLogin}></View>
-		<Pressable
-            onPress={onSaveChange}
-            style={styles.buttonSignIn}
-            disabled={!isDisable && recID == ""}>
-            <Image
-              source={
-                !isDisable && recID == ""
-                  ? require('../../../assets/images/icon_nextDisable.png')
-                  : require('../../../assets/images/icon_next.png')
-              }
-              resizeMode="contain"
-              style={styles.buttonSignInImage}
-            />
-          </Pressable>
-      </View>
-    </SafeAreaView>
-	</TouchableWithoutFeedback>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={{flex: 1}}>
+          <ButtonNext
+            onClick={onSaveChange}
+            isDisabled={!isDisable && recID == ''}
+          />
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -199,33 +190,6 @@ const styles = StyleSheet.create({
     fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
-  },
-  bottomSection: {
-    padding: 5,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    flex: 1,
-    width: '100%',
-  },
-  additionalLogin: {
-    flexDirection: 'row',
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-    height: 100,
-    flex: 1,
-  },
-  buttonSignIn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    flexDirection: 'column-reverse',
-    height: 100,
-    justifyContent: 'center',
-    marginRight: 10,
-  },
-  buttonSignInImage: {
-    height: 80,
-    width: 80,
   },
 });
 

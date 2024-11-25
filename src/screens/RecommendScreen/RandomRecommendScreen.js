@@ -3,14 +3,13 @@ import {
   View,
   Text,
   StyleSheet,
-  Pressable,
-  Image,
   Dimensions,
   Alert,
   ScrollView,
   TouchableOpacity,
   SafeAreaView,
   Platform,
+  KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
@@ -26,6 +25,7 @@ import {
   authcode,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
+import ButtonNext from '../../components/ButtonNext/ButtonNext';
 
 const RandomRecommendScreen = () => {
   const [lang, setLang] = useState({});
@@ -35,7 +35,7 @@ const RandomRecommendScreen = () => {
   const [recommendations, setRecommendations] = useState([]);
   const [checkedRecommendations, setCheckedRecommendations] = useState({});
   const [checkedID, setCheckedID] = useState(0);
-  const [isDisable, setisDisable] = useState(false)
+  const [isDisable, setisDisable] = useState(false);
 
   useEffect(() => {
     // Get Language
@@ -95,7 +95,7 @@ const RandomRecommendScreen = () => {
     } else {
       const registRecommend = async () => {
         try {
-		  setisDisable(true)
+          setisDisable(true);
 
           const body = {
             posed: checkedID,
@@ -144,8 +144,8 @@ const RandomRecommendScreen = () => {
           crashlytics().recordError(new Error(error));
           crashlytics().log(error);
         } finally {
-		  setisDisable(false)
-		}
+          setisDisable(false);
+        }
       };
 
       registRecommend();
@@ -185,95 +185,86 @@ const RandomRecommendScreen = () => {
   };
 
   return (
-	<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-    <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
-      {/* Title */}
-      <View style={{flexDirection: 'row'}}>
-        <View style={{position: 'absolute', zIndex: 1}}>
-          <ButtonBack onClick={handleBack} />
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
+        {/* Title */}
+        <View style={{flexDirection: 'row'}}>
+          <View style={{position: 'absolute', zIndex: 1}}>
+            <ButtonBack onClick={handleBack} />
+          </View>
+          <View style={styles.titleWrapper}>
+            <Text style={styles.title}>
+              {lang && lang.screen_recommend && lang.screen_recommend.category
+                ? lang.screen_recommend.category.random
+                : ''}
+            </Text>
+          </View>
         </View>
-        <View style={styles.titleWrapper}>
-          <Text style={styles.title}>
-            {lang && lang.screen_recommend && lang.screen_recommend.category
-              ? lang.screen_recommend.category.random
-              : ''}
-          </Text>
-        </View>
-      </View>
 
-      <View
-        style={{
-          paddingVertical: 10,
-          flex: 1,
-          width: '100%',
-        }}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {recommendations.map(item => (
-            <TouchableOpacity
-              key={item.email}
-              onPress={() => checkBoxToggle(item.email, item.member)}
-              style={{
-                backgroundColor: 'white',
-                paddingHorizontal: 12,
-                marginHorizontal: 8,
-                borderRadius: 10,
-                marginVertical: 4,
-                ...styles.shadow,
-              }}>
-              <View
+        <View
+          style={{
+            paddingVertical: 10,
+            flex: 1,
+            width: '100%',
+          }}>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {recommendations.map(item => (
+              <TouchableOpacity
+                key={item.email}
+                onPress={() => checkBoxToggle(item.email, item.member)}
                 style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  alignSelf: 'flex-start',
-                  marginHorizontal: 5,
+                  backgroundColor: 'white',
+                  paddingHorizontal: 12,
+                  marginHorizontal: 8,
+                  borderRadius: 10,
+                  marginVertical: 4,
+                  ...styles.shadow,
                 }}>
                 <View
-                  style={[
-                    styles.checkbox,
-                    checkedRecommendations[item.email]
-                      ? styles.checkedBox
-                      : styles.uncheckedBox,
-                  ]}>
-                  {checkedRecommendations[item.email] && (
-                    <Text style={styles.checkMark}>✔</Text>
-                  )}
-                </View>
-                <Text
-                  onPress={() => checkBoxToggle(item.email, item.member)}
                   style={{
-                    fontFamily: getFontFam() + 'Regular',
-                    fontSize: fontSize('body'),
-                    color: 'black',
-                    paddingVertical: 18,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    alignSelf: 'flex-start',
+                    marginHorizontal: 5,
                   }}>
-                  {item.email.substring(0, 3) +
-                    '*'.repeat(item.email.length - 3)}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      </View>
+                  <View
+                    style={[
+                      styles.checkbox,
+                      checkedRecommendations[item.email]
+                        ? styles.checkedBox
+                        : styles.uncheckedBox,
+                    ]}>
+                    {checkedRecommendations[item.email] && (
+                      <Text style={styles.checkMark}>✔</Text>
+                    )}
+                  </View>
+                  <Text
+                    onPress={() => checkBoxToggle(item.email, item.member)}
+                    style={{
+                      fontFamily: getFontFam() + 'Regular',
+                      fontSize: fontSize('body'),
+                      color: 'black',
+                      paddingVertical: 18,
+                    }}>
+                    {item.email.substring(0, 3) +
+                      '*'.repeat(item.email.length - 3)}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            ))}
 
-      <View style={[styles.bottomSection]}>
-        <View style={styles.additionalLogin}></View>
-		<Pressable
-            onPress={onSaveChange}
-            style={styles.buttonSignIn}
-            disabled={!isDisable && checkedID == 0}>
-            <Image
-              source={
-                !isDisable && checkedID == 0
-                  ? require('../../../assets/images/icon_nextDisable.png')
-                  : require('../../../assets/images/icon_next.png')
-              }
-              resizeMode="contain"
-              style={styles.buttonSignInImage}
-            />
-          </Pressable>
-      </View>
-    </SafeAreaView>
-	</TouchableWithoutFeedback>
+            <KeyboardAvoidingView
+              behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+              style={{flex: 1}}>
+              <ButtonNext
+                onClick={onSaveChange}
+                isDisabled={!isDisable && checkedID == 0}
+              />
+            </KeyboardAvoidingView>
+          </ScrollView>
+        </View>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
