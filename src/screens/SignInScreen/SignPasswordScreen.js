@@ -129,9 +129,10 @@ const SignPasswordScreen = () => {
   };
 
   const onNotExist = () => {
-    navigation.navigate('PhoneLogin', {
-      mobile: userData.mobile,
-    });
+    // navigation.navigate('PhoneLogin', {
+    //   mobile: userData.mobile,
+    // });
+    navigation.navigate('SignUp');
   };
 
   const onBack = () => {
