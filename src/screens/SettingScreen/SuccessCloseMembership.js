@@ -2,9 +2,11 @@ import {
   View,
   Text,
   StyleSheet,
-  Pressable,
-  Image,
   Dimensions,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
+  SafeAreaView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -12,6 +14,7 @@ import {getLanguage2, getFontFam, fontSize} from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {useAuth} from '../../context/AuthContext/AuthContext';
+import ButtonComplete from '../../components/ButtonComplete/ButtonComplete';
 
 // ########## Main Function ##########
 const SuccessCloseMembership = () => {
@@ -52,53 +55,52 @@ const SuccessCloseMembership = () => {
   };
 
   return (
-    <View style={[styles.root, {height: ScreenHeight}]}>
-      {/* Content Section */}
-      <View
-        style={{
-          flexGrow: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          paddingHorizontal: 20,
-        }}>
-        <Text
-          style={[
-            styles.normalText,
-            {
-              textAlign: 'center',
-              fontFamily: getFontFam() + 'Bold',
-              fontSize: fontSize('subtitle'),
-            },
-          ]}>
-          {lang &&
-          lang.screen_setting &&
-          lang.screen_setting.close &&
-          lang.screen_setting.close.desc
-            ? lang.screen_setting.close.desc.success_title
-            : ''}
-        </Text>
-        <Text style={[styles.normalText, {textAlign: 'center'}]}>
-          {lang &&
-          lang.screen_setting &&
-          lang.screen_setting.close &&
-          lang.screen_setting.close.desc
-            ? lang.screen_setting.close.desc.success_desc
-            : ''}
-        </Text>
-      </View>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
+        <View>
+          {/* Content Section */}
+          <View
+            style={{
+              flexGrow: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingHorizontal: 20,
+            }}>
+            <Text
+              style={[
+                styles.normalText,
+                {
+                  textAlign: 'center',
+                  fontFamily: getFontFam() + 'Bold',
+                  fontSize: fontSize('subtitle'),
+                },
+              ]}>
+              {lang &&
+              lang.screen_setting &&
+              lang.screen_setting.close &&
+              lang.screen_setting.close.desc
+                ? lang.screen_setting.close.desc.success_title
+                : ''}
+            </Text>
+            <Text style={[styles.normalText, {textAlign: 'center'}]}>
+              {lang &&
+              lang.screen_setting &&
+              lang.screen_setting.close &&
+              lang.screen_setting.close.desc
+                ? lang.screen_setting.close.desc.success_desc
+                : ''}
+            </Text>
+          </View>
 
-      {/* Bottom Section*/}
-      <View style={[styles.bottomSection]}>
-        <View style={styles.additionalLogin}></View>
-        <Pressable onPress={onSubmit} style={styles.buttonSignIn}>
-          <Image
-            source={require('../../../assets/images/icon_check.png')}
-            resizeMode="contain"
-            style={styles.buttonSignInImage}
-          />
-        </Pressable>
-      </View>
-    </View>
+          {/* Bottom Section*/}
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            style={{flex: 1}}>
+            <ButtonComplete onClick={onSubmit} />
+          </KeyboardAvoidingView>
+        </View>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -122,6 +124,7 @@ const styles = StyleSheet.create({
     fontFamily: getFontFam() + 'Medium',
     fontSize: fontSize('body'),
     color: '#343a59',
+    marginTop: 10,
   },
   bottomSection: {
     padding: 20,
