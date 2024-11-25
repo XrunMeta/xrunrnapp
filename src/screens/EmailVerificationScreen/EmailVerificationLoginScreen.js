@@ -11,6 +11,8 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   SafeAreaView,
+  KeyboardAvoidingView,
+  Keyboard,
 } from 'react-native';
 import React, {useState, useRef, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
@@ -346,61 +348,67 @@ const EmailVerificationLoginScreen = () => {
   };
 
   return (
-    <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
-      <ButtonBack onClick={onBack} />
-      {/* Text Section */}
-      <View style={styles.textWrapper}>
-        <Text style={styles.normalText}>
-          {lang &&
-          lang.screen_emailVerification &&
-          lang.screen_emailVerification.email
-            ? lang.screen_emailVerification.email.label
-            : ''}
-        </Text>
-        <Text style={styles.boldText}>{dataEmail}</Text>
-      </View>
-
-      {/* Code Input */}
-      <View style={styles.codeInputContainer}>
-        {verificationCode.map((code, index) => (
-          <TextInput
-            key={index}
-            ref={ref => (inputRefs.current[index] = ref)}
-            style={[
-              styles.codeInput,
-              activeIndex === index && styles.activeInput,
-            ]}
-            value={code}
-            placeholder="0"
-            placeholderTextColor="grey"
-            onChangeText={text => handleInputChange(text, index)}
-            onKeyPress={({nativeEvent}) => {
-              if (nativeEvent.key === 'Backspace') {
-                handleInputDelete(index);
-              }
-            }}
-            onFocus={() => setActiveIndex(index)}
-            keyboardType="numeric"
-            maxLength={1}
-          />
-        ))}
-      </View>
-
-      {/* Bottom Section*/}
-      <ButtonNext onClick={onSignIn} isDisabled={isDisable}>
-        <View style={styles.additionalLogin}>
-          <Countdown
-            lang={lang}
-            onProblem={onProblem}
-            seconds={seconds}
-            resetKey={resetKey}
-          />
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
+        <ButtonBack onClick={onBack} />
+        {/* Text Section */}
+        <View style={styles.textWrapper}>
+          <Text style={styles.normalText}>
+            {lang &&
+            lang.screen_emailVerification &&
+            lang.screen_emailVerification.email
+              ? lang.screen_emailVerification.email.label
+              : ''}
+          </Text>
+          <Text style={styles.boldText}>{dataEmail}</Text>
         </View>
-      </ButtonNext>
 
-      {/* Slider Modal */}
-      <SliderModal visible={modalVisible} onClose={toggleModal} />
-    </SafeAreaView>
+        {/* Code Input */}
+        <View style={styles.codeInputContainer}>
+          {verificationCode.map((code, index) => (
+            <TextInput
+              key={index}
+              ref={ref => (inputRefs.current[index] = ref)}
+              style={[
+                styles.codeInput,
+                activeIndex === index && styles.activeInput,
+              ]}
+              value={code}
+              placeholder="0"
+              placeholderTextColor="grey"
+              onChangeText={text => handleInputChange(text, index)}
+              onKeyPress={({nativeEvent}) => {
+                if (nativeEvent.key === 'Backspace') {
+                  handleInputDelete(index);
+                }
+              }}
+              onFocus={() => setActiveIndex(index)}
+              keyboardType="numeric"
+              maxLength={1}
+            />
+          ))}
+        </View>
+
+        {/* Bottom Section*/}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={{flex: 1}}>
+          <ButtonNext onClick={onSignIn} isDisabled={isDisable}>
+            <View style={styles.additionalLogin}>
+              <Countdown
+                lang={lang}
+                onProblem={onProblem}
+                seconds={seconds}
+                resetKey={resetKey}
+              />
+            </View>
+          </ButtonNext>
+        </KeyboardAvoidingView>
+
+        {/* Slider Modal */}
+        <SliderModal visible={modalVisible} onClose={toggleModal} />
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
