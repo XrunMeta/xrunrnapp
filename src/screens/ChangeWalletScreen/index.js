@@ -10,6 +10,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
@@ -211,129 +212,131 @@ const Change = ({navigation, route}) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Loading */}
-      {isLoading && (
-        <View style={styles.loading}>
-          <ActivityIndicator size={'large'} color={'#fff'} />
-          <Text
-            style={{
-              color: '#fff',
-              fontFamily: 'Poppins-Regular',
-              fontSize: fontSize('body'),
-              marginTop: 10,
-            }}>
-            Loading...
-          </Text>
-        </View>
-      )}
-
-      <View style={{flexDirection: 'row'}}>
-        <View style={{position: 'absolute', zIndex: 1}}>
-          <ButtonBack onClick={onBack} />
-        </View>
-        <View style={styles.titleWrapper}>
-          <Text style={styles.title}>
-            {lang && lang ? lang.screen_conversion.title : ''}
-          </Text>
-        </View>
-      </View>
-
-      <ScrollView
-        overScrollMode="never"
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{flexGrow: 1}}>
-        <View style={{backgroundColor: '#fff'}}>
-          <View style={styles.partTop}>
-            {/* <Text style={styles.currencyName}>-</Text> */}
-            <View style={styles.partScanQR}>
-              <Text style={styles.balance}>
-                {lang && lang ? lang.screen_conversion.acquired_coin : ''}:{' '}
-                {balance}XRUN
-              </Text>
-            </View>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <SafeAreaView style={styles.container}>
+        {/* Loading */}
+        {isLoading && (
+          <View style={styles.loading}>
+            <ActivityIndicator size={'large'} color={'#fff'} />
+            <Text
+              style={{
+                color: '#fff',
+                fontFamily: 'Poppins-Regular',
+                fontSize: fontSize('body'),
+                marginTop: 10,
+              }}>
+              Loading...
+            </Text>
           </View>
+        )}
 
-          <View style={styles.partBottom}>
-            <Text style={styles.selectNetwork}>
+        <View style={{flexDirection: 'row'}}>
+          <View style={{position: 'absolute', zIndex: 1}}>
+            <ButtonBack onClick={onBack} />
+          </View>
+          <View style={styles.titleWrapper}>
+            <Text style={styles.title}>
               {lang && lang ? lang.screen_conversion.title : ''}
             </Text>
-            <Text style={styles.description}>
-              {lang && lang ? lang.screen_conversion.desc : ''}
-            </Text>
-
-            <View style={styles.wrapperInput}>
-              <CustomInputWallet
-                value={amount}
-                setValue={setAmount}
-                isNumber
-                labelVisible={false}
-                placeholder={
-                  lang && lang ? lang.screen_conversion.input_convert : ''
-                }
-              />
-            </View>
           </View>
         </View>
 
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          style={{flex: 1}}>
-          <ButtonNext onClick={onSend} isDisabled={isIconNextDisabled} />
-        </KeyboardAvoidingView>
-      </ScrollView>
-
-      {popupConversion && (
-        <View style={styles.popupConversion}>
-          <View style={styles.wrapperConversion}>
-            <View style={styles.wrapperPartTop}>
-              <Text style={styles.textChange}>
-                {lang && lang ? lang.screen_wallet.history_action3306 : ''}{' '}
-              </Text>
-              <Text style={styles.textCheckInformation}>
-                {lang && lang
-                  ? lang.screen_conversion.check_conversion_desc
-                  : ''}
-              </Text>
-            </View>
-            <View style={styles.contentConversion}>
-              <View style={styles.wrapperTextConversion}>
-                <Text style={styles.textPartLeft}>
-                  {lang && lang
-                    ? lang.complete_conversion.conversion_request
-                    : ''}{' '}
-                </Text>
-                <Text style={styles.textPartRight}>
-                  {conversionRequest}
-                  XRUN
+        <ScrollView
+          overScrollMode="never"
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{flexGrow: 1}}>
+          <View style={{backgroundColor: '#fff'}}>
+            <View style={styles.partTop}>
+              {/* <Text style={styles.currencyName}>-</Text> */}
+              <View style={styles.partScanQR}>
+                <Text style={styles.balance}>
+                  {lang && lang ? lang.screen_conversion.acquired_coin : ''}:{' '}
+                  {balance}XRUN
                 </Text>
               </View>
             </View>
-            <View style={styles.wrapperButton}>
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={styles.buttonConfirm}
-                onPress={cancelConversion}>
-                <Text style={styles.textButtonConfirm}>
-                  {lang && lang ? lang.complete_exchange.cancel_exchange : ''}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={[
-                  styles.buttonConfirm,
-                  {backgroundColor: '#343c5a', flex: 1.5},
-                ]}
-                onPress={confirmConversion}>
-                <Text style={[styles.textButtonConfirm, {color: '#fff'}]}>
-                  {lang && lang ? lang.screen_wallet.confirm_alert : ''}
-                </Text>
-              </TouchableOpacity>
+
+            <View style={styles.partBottom}>
+              <Text style={styles.selectNetwork}>
+                {lang && lang ? lang.screen_conversion.title : ''}
+              </Text>
+              <Text style={styles.description}>
+                {lang && lang ? lang.screen_conversion.desc : ''}
+              </Text>
+
+              <View style={styles.wrapperInput}>
+                <CustomInputWallet
+                  value={amount}
+                  setValue={setAmount}
+                  isNumber
+                  labelVisible={false}
+                  placeholder={
+                    lang && lang ? lang.screen_conversion.input_convert : ''
+                  }
+                />
+              </View>
             </View>
           </View>
-        </View>
-      )}
-    </SafeAreaView>
+
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            style={{flex: 1}}>
+            <ButtonNext onClick={onSend} isDisabled={isIconNextDisabled} />
+          </KeyboardAvoidingView>
+        </ScrollView>
+
+        {popupConversion && (
+          <View style={styles.popupConversion}>
+            <View style={styles.wrapperConversion}>
+              <View style={styles.wrapperPartTop}>
+                <Text style={styles.textChange}>
+                  {lang && lang ? lang.screen_wallet.history_action3306 : ''}{' '}
+                </Text>
+                <Text style={styles.textCheckInformation}>
+                  {lang && lang
+                    ? lang.screen_conversion.check_conversion_desc
+                    : ''}
+                </Text>
+              </View>
+              <View style={styles.contentConversion}>
+                <View style={styles.wrapperTextConversion}>
+                  <Text style={styles.textPartLeft}>
+                    {lang && lang
+                      ? lang.complete_conversion.conversion_request
+                      : ''}{' '}
+                  </Text>
+                  <Text style={styles.textPartRight}>
+                    {conversionRequest}
+                    XRUN
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.wrapperButton}>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  style={styles.buttonConfirm}
+                  onPress={cancelConversion}>
+                  <Text style={styles.textButtonConfirm}>
+                    {lang && lang ? lang.complete_exchange.cancel_exchange : ''}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  style={[
+                    styles.buttonConfirm,
+                    {backgroundColor: '#343c5a', flex: 1.5},
+                  ]}
+                  onPress={confirmConversion}>
+                  <Text style={[styles.textButtonConfirm, {color: '#fff'}]}>
+                    {lang && lang ? lang.screen_wallet.confirm_alert : ''}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        )}
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 

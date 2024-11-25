@@ -6,6 +6,8 @@ import {
   KeyboardAvoidingView,
   Alert,
   SafeAreaView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -45,186 +47,188 @@ const CompleteSend = ({navigation, route}) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#f3f4f6'}}>
-      <View style={{flexDirection: 'row'}}>
-        <View style={styles.titleWrapper}>
-          <Text style={styles.title}>
-            {lang &&
-            lang.screen_complete_send &&
-            lang.screen_complete_send.title
-              ? lang.screen_complete_send.title
-              : ''}
-          </Text>
-        </View>
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-          marginTop: 30,
-          marginBottom: 20,
-        }}>
-        <Text
-          style={{
-            fontSize: fontSize('subtitle'),
-            fontFamily: getFontFam() + 'Regular',
-            color: '#e05c2b',
-          }}>
-          {lang && lang.screen_wallet && lang.screen_wallet.table_head_send
-            ? lang.screen_wallet.table_head_send
-            : ''}{' '}
-        </Text>
-        <Text
-          style={{
-            fontSize: fontSize('subtitle'),
-            fontFamily: getFontFam() + 'Regular',
-            color: '#555',
-          }}>
-          {lang &&
-          lang.screen_complete_send &&
-          lang.screen_complete_send.complete_send
-            ? lang.screen_complete_send.complete_send
-            : ''}
-        </Text>
-      </View>
-
-      <View
-        style={{
-          paddingHorizontal: 20,
-          backgroundColor: '#fff',
-          paddingVertical: 10,
-        }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            paddingVertical: 20,
-            borderBottomColor: '#bbb',
-            borderBottomWidth: 0.7,
-          }}>
-          <Text
-            style={{
-              fontFamily: getFontFam() + 'Regular',
-              color: '#555',
-              fontSize: fontSize('body'),
-            }}>
-            {lang &&
-            lang.screen_complete_send &&
-            lang.screen_complete_send.wallet_address
-              ? lang.screen_complete_send.wallet_address
-              : ''}
-          </Text>
-          <Text
-            style={{
-              fontFamily: getFontFam() + 'Regular',
-              color: '#000',
-              fontSize: fontSize('body'),
-              maxWidth: 180,
-            }}>
-            {addrto}
-          </Text>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <SafeAreaView style={{flex: 1, backgroundColor: '#f3f4f6'}}>
+        <View style={{flexDirection: 'row'}}>
+          <View style={styles.titleWrapper}>
+            <Text style={styles.title}>
+              {lang &&
+              lang.screen_complete_send &&
+              lang.screen_complete_send.title
+                ? lang.screen_complete_send.title
+                : ''}
+            </Text>
+          </View>
         </View>
         <View
           style={{
             flexDirection: 'row',
-            justifyContent: 'space-between',
-            paddingVertical: 20,
-            borderBottomColor: '#bbb',
-            borderBottomWidth: 0.7,
+            justifyContent: 'center',
+            marginTop: 30,
+            marginBottom: 20,
           }}>
           <Text
             style={{
+              fontSize: fontSize('subtitle'),
               fontFamily: getFontFam() + 'Regular',
-              fontSize: fontSize('body'),
-              color: '#555',
-            }}>
-            {lang &&
-            lang.screen_complete_send &&
-            lang.screen_complete_send.amount_send
-              ? lang.screen_complete_send.amount_send
-              : ''}
-          </Text>
-          <Text
-            style={{
-              fontFamily: getFontFam() + 'Medium',
               color: '#e05c2b',
-              fontSize: fontSize('body'),
-              maxWidth: 180,
             }}>
-            {amount}
-            {symbol}
+            {lang && lang.screen_wallet && lang.screen_wallet.table_head_send
+              ? lang.screen_wallet.table_head_send
+              : ''}{' '}
           </Text>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            paddingVertical: 20,
-          }}>
           <Text
             style={{
+              fontSize: fontSize('subtitle'),
               fontFamily: getFontFam() + 'Regular',
               color: '#555',
-              fontSize: fontSize('body'),
             }}>
-            TXID
+            {lang &&
+            lang.screen_complete_send &&
+            lang.screen_complete_send.complete_send
+              ? lang.screen_complete_send.complete_send
+              : ''}
           </Text>
-          <View>
+        </View>
+
+        <View
+          style={{
+            paddingHorizontal: 20,
+            backgroundColor: '#fff',
+            paddingVertical: 10,
+          }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              paddingVertical: 20,
+              borderBottomColor: '#bbb',
+              borderBottomWidth: 0.7,
+            }}>
+            <Text
+              style={{
+                fontFamily: getFontFam() + 'Regular',
+                color: '#555',
+                fontSize: fontSize('body'),
+              }}>
+              {lang &&
+              lang.screen_complete_send &&
+              lang.screen_complete_send.wallet_address
+                ? lang.screen_complete_send.wallet_address
+                : ''}
+            </Text>
+            <Text
+              style={{
+                fontFamily: getFontFam() + 'Regular',
+                color: '#000',
+                fontSize: fontSize('body'),
+                maxWidth: 180,
+              }}>
+              {addrto}
+            </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              paddingVertical: 20,
+              borderBottomColor: '#bbb',
+              borderBottomWidth: 0.7,
+            }}>
+            <Text
+              style={{
+                fontFamily: getFontFam() + 'Regular',
+                fontSize: fontSize('body'),
+                color: '#555',
+              }}>
+              {lang &&
+              lang.screen_complete_send &&
+              lang.screen_complete_send.amount_send
+                ? lang.screen_complete_send.amount_send
+                : ''}
+            </Text>
             <Text
               style={{
                 fontFamily: getFontFam() + 'Medium',
                 color: '#e05c2b',
                 fontSize: fontSize('body'),
-                maxWidth: 240,
+                maxWidth: 180,
               }}>
-              {txid}
+              {amount}
+              {symbol}
             </Text>
-            <TouchableOpacity
-              activeOpacity={0.8}
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              paddingVertical: 20,
+            }}>
+            <Text
               style={{
-                marginLeft: 'auto',
-              }}
-              onPress={() => copiedTXID(txid)}>
+                fontFamily: getFontFam() + 'Regular',
+                color: '#555',
+                fontSize: fontSize('body'),
+              }}>
+              TXID
+            </Text>
+            <View>
               <Text
                 style={{
+                  fontFamily: getFontFam() + 'Medium',
+                  color: '#e05c2b',
                   fontSize: fontSize('body'),
-                  color: '#555',
-                  marginTop: 4,
-                  textAlign: 'right',
+                  maxWidth: 240,
                 }}>
-                COPY txid
+                {txid}
               </Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={{
+                  marginLeft: 'auto',
+                }}
+                onPress={() => copiedTXID(txid)}>
+                <Text
+                  style={{
+                    fontSize: fontSize('body'),
+                    color: '#555',
+                    marginTop: 4,
+                    textAlign: 'right',
+                  }}>
+                  COPY txid
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
 
-      <Text
-        style={{
-          fontFamily: getFontFam() + 'Regular',
-          color: '#555',
-          textAlign: 'center',
-          marginTop: 30,
-          fontSize: fontSize('body'),
-          paddingHorizontal: 20,
-        }}>
-        {lang && lang.screen_complete_send && lang.screen_complete_send.delay
-          ? lang.screen_complete_send.delay
-          : ''}
-      </Text>
+        <Text
+          style={{
+            fontFamily: getFontFam() + 'Regular',
+            color: '#555',
+            textAlign: 'center',
+            marginTop: 30,
+            fontSize: fontSize('body'),
+            paddingHorizontal: 20,
+          }}>
+          {lang && lang.screen_complete_send && lang.screen_complete_send.delay
+            ? lang.screen_complete_send.delay
+            : ''}
+        </Text>
 
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={{flex: 1}}>
-        <ButtonComplete
-          onClick={() => {
-            navigation.navigate('WalletHome', {
-              completeSend: 'true',
-            });
-          }}
-        />
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={{flex: 1}}>
+          <ButtonComplete
+            onClick={() => {
+              navigation.navigate('WalletHome', {
+                completeSend: 'true',
+              });
+            }}
+          />
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
