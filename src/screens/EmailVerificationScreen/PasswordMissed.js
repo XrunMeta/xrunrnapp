@@ -3,10 +3,10 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  Pressable,
-  Image,
-  Dimensions,
   Alert,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput';
@@ -15,6 +15,7 @@ import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getLanguage2} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
+import ButtonNext from '../../components/ButtonNext/ButtonNext';
 
 const PasswordMissedScreen = () => {
   const [lang, setLang] = useState({});
@@ -22,8 +23,6 @@ const PasswordMissedScreen = () => {
   const [isEmailValid, setIsEmailValid] = useState(true);
   const navigation = useNavigation();
   const [isDisable, setIsDisable] = useState(false);
-
-  let ScreenHeight = Dimensions.get('window').height;
 
   const onSignIn = async () => {
     if (email.trim() === '') {
@@ -116,89 +115,63 @@ const PasswordMissedScreen = () => {
   }, []);
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <View style={[styles.root, {height: ScreenHeight}]}>
-        <ButtonBack onClick={onBack} />
-
-        <CustomInput
-          label={
-            lang &&
-            lang.screen_passwordMissed &&
-            lang.screen_passwordMissed.email
-              ? lang.screen_passwordMissed.email.label
-              : ''
-          }
-          placeholder={
-            lang &&
-            lang.screen_passwordMissed &&
-            lang.screen_passwordMissed.email
-              ? lang.screen_passwordMissed.email.placeholder
-              : ''
-          }
-          value={email}
-          setValue={onEmailChange}
-          isPassword={false}
-        />
-        {isEmailValid ? null : (
-          <Text
-            style={{
-              alignSelf: 'flex-start',
-              marginLeft: 25,
-              color: 'red',
-            }}>
-            {lang &&
-            lang.screen_passwordMissed &&
-            lang.screen_passwordMissed.notif
-              ? lang.screen_passwordMissed.notif.invalidEmail
-              : ''}
-          </Text>
-        )}
-
-        <View style={[styles.bottomSection]}>
-          <Pressable
-            onPress={onSignIn}
-            style={styles.buttonSignIn}
-            disabled={isDisable}>
-            <Image
-              source={
-                isDisable
-                  ? require('../../../assets/images/icon_nextDisable.png')
-                  : require('../../../assets/images/icon_next.png')
-              }
-              resizeMode="contain"
-              style={styles.buttonSignInImage}
-            />
-          </Pressable>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.root}>
+        <View>
+          <ButtonBack onClick={onBack} />
+          <CustomInput
+            label={
+              lang &&
+              lang.screen_passwordMissed &&
+              lang.screen_passwordMissed.email
+                ? lang.screen_passwordMissed.email.label
+                : ''
+            }
+            placeholder={
+              lang &&
+              lang.screen_passwordMissed &&
+              lang.screen_passwordMissed.email
+                ? lang.screen_passwordMissed.email.placeholder
+                : ''
+            }
+            value={email}
+            setValue={onEmailChange}
+            isPassword={false}
+          />
+          {isEmailValid ? null : (
+            <Text
+              style={{
+                alignSelf: 'flex-start',
+                marginLeft: 25,
+                color: 'red',
+              }}>
+              {lang &&
+              lang.screen_passwordMissed &&
+              lang.screen_passwordMissed.notif
+                ? lang.screen_passwordMissed.notif.invalidEmail
+                : ''}
+            </Text>
+          )}
         </View>
-      </View>
-    </ScrollView>
+
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={{flex: 1}}>
+          <ButtonNext
+            isDisabled={!isDisable && email == ''}
+            onClick={onSignIn}
+          />
+        </KeyboardAvoidingView>
+      </ScrollView>
+    </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
   root: {
-    alignItems: 'center',
     flex: 1,
-  },
-  bottomSection: {
-    padding: 20,
-    paddingBottom: 40,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    flex: 1,
-    width: '100%',
-  },
-  buttonSignIn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    flexDirection: 'column-reverse',
-    height: 100,
-    justifyContent: 'center',
-  },
-  buttonSignInImage: {
-    height: 80,
-    width: 80,
   },
 });
 
