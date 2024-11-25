@@ -283,7 +283,12 @@ export default function Home({route}) {
                 : 'Site',
               () => {
                 if (showWallet) {
-                  Linking.openURL('https://www.xrun.run/walletsite');
+                  Linking.openURL(
+                    'https://www.xrun.run/react/login?numses=' +
+                      ssidw +
+                      '!' +
+                      member,
+                  );
                 } else {
                   Linking.openURL('https://www.xrun.run/');
                 }
