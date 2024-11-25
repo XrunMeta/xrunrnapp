@@ -2,24 +2,26 @@ import {
   View,
   Text,
   StyleSheet,
-  Pressable,
   Image,
   Dimensions,
   KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  SafeAreaView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {
   getLanguage2,
-  URL_API_NODEJS,
   getFontFam,
   fontSize,
+  URL_API_NODEJS,
   authcode,
 } from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useAuth} from '../../context/AuthContext/AuthContext';
 import crashlytics from '@react-native-firebase/crashlytics';
 import ButtonComplete from '../../components/ButtonComplete/ButtonComplete';
+import {useAuth} from '../../context/AuthContext/AuthContext';
 
 // ########## Main Function ##########
 const SuccessJoinScreen = () => {
@@ -77,74 +79,71 @@ const SuccessJoinScreen = () => {
   };
 
   return (
-    <View style={[styles.root, {height: ScreenHeight}]}>
-      {/* Content Section */}
-      <View
-        style={{
-          flexGrow: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: 50,
-        }}>
-        <Image
-          source={require('../../../assets/images/icon_successjoin.png')}
-          resizeMode="contain"
-          style={{
-            height: 200,
-            width: 200,
-          }}
-        />
-        <View style={{alignItems: 'center'}}>
-          <Text style={styles.normalText}>
-            {lang && lang.screen_notExist && lang.screen_notExist.field_join
-              ? lang.screen_notExist.field_join.str1
-              : ''}
-          </Text>
-          <Text style={styles.normalText}>
-            {lang && lang.screen_notExist && lang.screen_notExist.field_join
-              ? lang.screen_notExist.field_join.str2
-              : ''}
-            <Text
-              style={{color: '#da7750', fontFamily: getFontFam() + 'Medium'}}>
-              {lang && lang.screen_notExist && lang.screen_notExist.field_join
-                ? lang.screen_notExist.field_join.str3
-                : ''}
-            </Text>
-          </Text>
-        </View>
-      </View>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <SafeAreaView
+        style={{height: ScreenHeight, flex: 1, alignItems: 'center'}}>
+        <View>
+          {/* Content Section */}
+          <View
+            style={{
+              flexGrow: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: 50,
+            }}>
+            <Image
+              source={require('../../../assets/images/icon_successjoin.png')}
+              resizeMode="contain"
+              style={{
+                height: 200,
+                width: 200,
+              }}
+            />
+            <View style={{alignItems: 'center'}}>
+              <Text style={styles.normalText}>
+                {lang && lang.screen_notExist && lang.screen_notExist.field_join
+                  ? lang.screen_notExist.field_join.str1
+                  : ''}
+              </Text>
+              <Text style={styles.normalText}>
+                {lang && lang.screen_notExist && lang.screen_notExist.field_join
+                  ? lang.screen_notExist.field_join.str2
+                  : ''}
+                <Text
+                  style={{
+                    color: '#da7750',
+                    fontFamily: getFontFam() + 'Medium',
+                  }}>
+                  {lang &&
+                  lang.screen_notExist &&
+                  lang.screen_notExist.field_join
+                    ? lang.screen_notExist.field_join.str3
+                    : ''}
+                </Text>
+              </Text>
+            </View>
+          </View>
 
-      {/* Bottom Section*/}
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={{flex: 1}}>
-        <ButtonComplete onClick={onSignIn} />
-      </KeyboardAvoidingView>
-    </View>
+          {/* Bottom Section*/}
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            style={{flex: 1}}>
+            <ButtonComplete onClick={onSignIn} />
+          </KeyboardAvoidingView>
+        </View>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
   root: {
-    alignItems: 'center',
     flex: 1,
   },
   normalText: {
     fontFamily: getFontFam() + 'Medium',
     fontSize: fontSize('body'),
     color: '#343a59',
-  },
-  bottomSection: {
-    padding: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
-  additionalLogin: {
-    flexDirection: 'row',
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-    height: 100,
   },
 });
 
