@@ -58,6 +58,10 @@
     "errorLogin": "Terjadi error saat mencoba login"
   },
 
+  "screen_signin_by_number": {
+    "title": "Masuk dengan Nomor"
+  },
+
   "screen_signup": {
     "title": "Registrasi",
     "name": {
@@ -200,6 +204,7 @@
     },
     "field_phoneVerif": {
       "label": "Silakan masukkan kode 4 digit yang dikirim selanjutnya",
+      "verification": "Masukkan kode verifikasi 4 digit",
       "on": "Harap kirim kode Anda dalam",
       "off": "Terjadi masalah",
       "sendAgain": "KIRIM ULANG",

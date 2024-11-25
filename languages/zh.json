@@ -58,6 +58,10 @@
     "errorLogin": "登入時發生錯誤"
   },
 
+  "screen_signin_by_number": {
+    "title": "通过号码登录"
+  },
+
   "screen_signup": {
     "title": "注册",
     "name": {
@@ -200,6 +204,7 @@
     },
     "field_phoneVerif": {
       "label": "请输入接收到的下一个4位代码",
+      "verification": "输入4位验证码",
       "on": "请在以下时间内发送您的代码",
       "off": "发生问题",
       "sendAgain": "重新发送",
