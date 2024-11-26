@@ -164,11 +164,11 @@ const EmailVerifForModifScreen = () => {
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
       <KeyboardAvoidingView
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}>
-        <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
           <View style={{flexDirection: 'row', position: 'relative'}}>
             <View style={{position: 'absolute', zIndex: 1}}>
               <ButtonBack onClick={onBack} />
@@ -212,6 +212,7 @@ const EmailVerifForModifScreen = () => {
                 : ''}
             </Text>
           )}
+</KeyboardAvoidingView>
 
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -219,14 +220,12 @@ const EmailVerifForModifScreen = () => {
             <ButtonNext onClick={onSignIn} isDisabled={isSubmitDisable} />
           </KeyboardAvoidingView>
         </SafeAreaView>
-      </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
   root: {
-    alignItems: 'center',
     flex: 1,
   },
   titleWrapper: {
