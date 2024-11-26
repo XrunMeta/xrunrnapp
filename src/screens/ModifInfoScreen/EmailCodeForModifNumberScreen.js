@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   Keyboard,
   SafeAreaView,
+  KeyboardAvoidingView,
 } from 'react-native';
 import React, {useState, useRef, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
@@ -27,6 +28,7 @@ import {
 } from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Countdown from './Countdown';
+import ButtonNext from '../../components/ButtonNext/ButtonNext';
 
 // ########## Main Function ##########
 const EmailCodeForModifNumberScreen = () => {
@@ -101,7 +103,13 @@ const EmailCodeForModifNumberScreen = () => {
   };
 
   const onSignIn = async () => {
+    if (verificationCode.join('').length < 6) {
+      Alert.alert('Failed', lang.screen_emailVerification.email.label);
+      return;
+    }
+
     if (isDisable) return;
+    setIsDisable(true);
 
     // Cek jika semua kode sudah diisi
     if (!isCodeComplete) {
@@ -131,8 +139,10 @@ const EmailCodeForModifNumberScreen = () => {
 
       if (responseAuthData.status == 'success') {
         navigation.replace('PhoneModif', {member: member, countryCode});
+        setIsDisable(false);
       } else {
         Alert.alert('Failed', lang.screen_emailVerification.notif.wrongCode);
+        setIsDisable(false);
       }
     } catch (error) {
       // Handle network errors or other exceptions
@@ -226,8 +236,8 @@ const EmailCodeForModifNumberScreen = () => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
+      <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <View style={{flexDirection: 'row', position: 'relative'}}>
             <View style={{position: 'absolute', zIndex: 1}}>
               <ButtonBack onClick={onBack} />
@@ -292,8 +302,7 @@ const EmailCodeForModifNumberScreen = () => {
             ))}
           </View>
 
-          {/* Bottom Section*/}
-          <View style={[styles.bottomSection]}>
+          {/* <View style={[styles.bottomSection]}>
             <View style={styles.additionalLogin}>
               <Countdown
                 onFinish={handleCountdownFinish}
@@ -316,12 +325,27 @@ const EmailCodeForModifNumberScreen = () => {
                 style={styles.buttonSignInImage}
               />
             </Pressable>
-          </View>
+          </View> */}
 
           {/* Slider Modal */}
           <SliderModal visible={modalVisible} onClose={toggleModal} />
-        </SafeAreaView>
-      </ScrollView>
+        </ScrollView>
+        {/* Bottom Section*/}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={{flex: 1}}>
+          <ButtonNext onClick={onSignIn} isDisabled={isDisable}>
+            <View style={styles.additionalLogin}>
+              <Countdown
+                onFinish={handleCountdownFinish}
+                lang={lang}
+                onProblem={onProblem}
+                restart={restartCountdown}
+              />
+            </View>
+          </ButtonNext>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
     </TouchableWithoutFeedback>
   );
 };
@@ -357,19 +381,8 @@ const styles = StyleSheet.create({
     fontSize: fontSize('subtitle'),
     color: '#343a59',
   },
-  bottomSection: {
-    padding: 20,
-    paddingBottom: 40,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    flex: 1,
-    width: '100%',
-  },
   additionalLogin: {
-    flexDirection: 'row',
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-    height: 100,
+    maxWidth: 200,
   },
   emailAuth: {
     fontFamily: getFontFam() + 'Medium',

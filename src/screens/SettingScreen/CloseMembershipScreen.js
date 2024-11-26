@@ -3,8 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Pressable,
-  Image,
   Dimensions,
   Alert,
   TouchableOpacity,
@@ -18,13 +16,9 @@ import {
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-  getLanguage2,
-  getFontFam,
-  fontSize,
-  BottomComponentFixer,
-} from '../../../utils';
+import {getLanguage2, getFontFam, fontSize} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
+import ButtonNext from '../../components/ButtonNext/ButtonNext';
 
 const CloseMembershipScreen = () => {
   const [lang, setLang] = useState('');
@@ -34,7 +28,8 @@ const CloseMembershipScreen = () => {
   const [checkedID, setCheckedID] = useState(null);
   const [reason, setReason] = useState('');
   const [loading, setLoading] = useState(true);
-  const [isDisable, setIsDisable] = useState(false);
+  const [isDisable, setIsDisable] = useState(true);
+  const [isEditableReason, setIsEditableReason] = useState(false);
 
   useEffect(() => {
     // Get Language Data
@@ -97,281 +92,291 @@ const CloseMembershipScreen = () => {
     updatedCheckedState[reasonNum] = newCheckedState;
     setCheckedRecommendations(updatedCheckedState);
 
+    if (reasonNum === 2) {
+      setIsEditableReason(true);
+
+      if (reason == '' && reasonNum === 2) {
+        setIsDisable(true);
+      } else {
+        setIsDisable(false);
+      }
+    } else {
+      setIsEditableReason(false);
+    }
+
     if (updatedCheckedState[reasonNum] == true) {
       setCheckedID(reasonNum);
+      if (reasonNum != 2) {
+        setIsDisable(false);
+      }
     } else {
       setCheckedID(null);
+      setIsDisable(true);
+      setIsEditableReason(false);
+    }
+  };
+
+  const inputReason = reason => {
+    setReason(reason);
+
+    if (checkedID == 2 && reason != '') {
+      setIsDisable(false);
+    } else {
+      setIsDisable(true);
     }
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{flex: 1}}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
-          {loading ? (
-            <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color="#343a59" />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
+        {loading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#343a59" />
+            <Text
+              style={{
+                color: 'white',
+                fontFamily: getFontFam() + 'Regular',
+                fontSize: fontSize('body'),
+              }}>
+              {lang && lang.screen_map && lang.screen_map.section_marker
+                ? lang.screen_map.section_marker.loader
+                : ''}
+            </Text>
+            {/* Show Loading While Data is Load */}
+          </View>
+        ) : (
+          <View style={{flex: 1, width: '100%'}}>
+            {/* Title */}
+            <View style={{flexDirection: 'row'}}>
+              <View style={{position: 'absolute', zIndex: 1}}>
+                <ButtonBack onClick={handleBack} />
+              </View>
+              <View style={styles.titleWrapper}>
+                <Text style={styles.title}>
+                  {lang && lang.screen_setting
+                    ? lang.screen_setting.close.title
+                    : ''}
+                </Text>
+              </View>
+            </View>
+
+            <View
+              style={{
+                width: '100%',
+                marginTop: 30,
+                paddingHorizontal: 20,
+              }}>
               <Text
                 style={{
-                  color: 'white',
+                  color: 'black',
                   fontFamily: getFontFam() + 'Regular',
-                  fontSize: fontSize('body'),
+                  fontSize: fontSize('subtitle'),
                 }}>
-                {lang && lang.screen_map && lang.screen_map.section_marker
-                  ? lang.screen_map.section_marker.loader
+                {lang && lang.screen_setting
+                  ? lang.screen_setting.close.desc.clo1
                   : ''}
-              </Text>
-              {/* Show Loading While Data is Load */}
-            </View>
-          ) : (
-            <View style={{flex: 1, width: '100%'}}>
-              {/* Title */}
-              <View style={{flexDirection: 'row'}}>
-                <View style={{position: 'absolute', zIndex: 1}}>
-                  <ButtonBack onClick={handleBack} />
-                </View>
-                <View style={styles.titleWrapper}>
-                  <Text style={styles.title}>
-                    {lang && lang.screen_setting
-                      ? lang.screen_setting.close.title
-                      : ''}
-                  </Text>
-                </View>
-              </View>
-
-              <View
-                style={{
-                  width: '100%',
-                  marginTop: 30,
-                  paddingHorizontal: 20,
-                }}>
-                <Text
-                  style={{
-                    color: 'black',
-                    fontFamily: getFontFam() + 'Regular',
-                    fontSize: fontSize('subtitle'),
-                  }}>
-                  {lang && lang.screen_setting
-                    ? lang.screen_setting.close.desc.clo1
-                    : ''}
-                  <Text
-                    style={{
-                      color: '#ffc404',
-                      fontFamily: getFontFam() + 'Medium',
-                    }}>
-                    {lang && lang.screen_setting
-                      ? lang.screen_setting.close.desc.clo2
-                      : ''}
-                  </Text>
-                  {lang && lang.screen_setting
-                    ? lang.screen_setting.close.desc.clo3
-                    : ''}
-                </Text>
-                <Text
-                  style={{
-                    color: 'black',
-                    fontFamily: getFontFam() + 'Regular',
-                    fontSize: fontSize('body'),
-                    marginTop: 20,
-                  }}>
-                  {lang && lang.screen_setting
-                    ? lang.screen_setting.close.desc.clo4
-                    : ''}
-                </Text>
                 <Text
                   style={{
                     color: '#ffc404',
                     fontFamily: getFontFam() + 'Medium',
-                    fontSize: fontSize('body'),
-                    marginTop: -2,
                   }}>
                   {lang && lang.screen_setting
-                    ? lang.screen_setting.close.desc.clo5
+                    ? lang.screen_setting.close.desc.clo2
                     : ''}
                 </Text>
-              </View>
-
-              <View
+                {lang && lang.screen_setting
+                  ? lang.screen_setting.close.desc.clo3
+                  : ''}
+              </Text>
+              <Text
                 style={{
-                  paddingVertical: 10,
-                  width: '100%',
-                  marginTop: 15,
+                  color: 'black',
+                  fontFamily: getFontFam() + 'Regular',
+                  fontSize: fontSize('body'),
+                  marginTop: 20,
                 }}>
-                {/* Service Difficult */}
-                <TouchableOpacity
-                  activeOpacity={1}
-                  key={0}
-                  onPress={() => checkBoxToggle(0)}
-                  style={{
-                    backgroundColor: 'white',
-                    paddingRight: 12,
-                    paddingLeft: 7,
-                    marginHorizontal: 8,
-                    borderRadius: 10,
-                    ...styles.shadow,
-                  }}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      alignSelf: 'flex-start',
-                      marginHorizontal: 5,
-                    }}>
-                    <View
-                      style={[
-                        styles.checkbox,
-                        checkedRecommendations[0]
-                          ? styles.checkedBox
-                          : styles.uncheckedBox,
-                      ]}>
-                      {checkedRecommendations[0] && (
-                        <Text style={styles.checkMark}>✓</Text>
-                      )}
-                    </View>
-                    <Text
-                      style={{
-                        fontFamily: getFontFam() + 'Regular',
-                        fontSize: fontSize('body'),
-                        color: 'black',
-                        paddingVertical: 5,
-                      }}>
-                      {lang && lang.screen_setting
-                        ? lang.screen_setting.close.select.sel1
-                        : ''}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-
-                {/* Function Difficult */}
-                <TouchableOpacity
-                  activeOpacity={1}
-                  key={1}
-                  onPress={() => checkBoxToggle(1)}
-                  style={{
-                    backgroundColor: 'white',
-                    paddingRight: 12,
-                    paddingLeft: 7,
-                    marginHorizontal: 8,
-                    borderRadius: 10,
-                    ...styles.shadow,
-                  }}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      alignSelf: 'flex-start',
-                      marginHorizontal: 5,
-                    }}>
-                    <View
-                      style={[
-                        styles.checkbox,
-                        checkedRecommendations[1]
-                          ? styles.checkedBox
-                          : styles.uncheckedBox,
-                      ]}>
-                      {checkedRecommendations[1] && (
-                        <Text style={styles.checkMark}>✓</Text>
-                      )}
-                    </View>
-                    <Text
-                      style={{
-                        fontFamily: getFontFam() + 'Regular',
-                        fontSize: fontSize('body'),
-                        color: 'black',
-                        paddingVertical: 5,
-                      }}>
-                      {lang && lang.screen_setting
-                        ? lang.screen_setting.close.select.sel2
-                        : ''}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-
-                {/* Etc */}
-                <TouchableOpacity
-                  activeOpacity={1}
-                  key={2}
-                  onPress={() => checkBoxToggle(2)}
-                  style={{
-                    backgroundColor: 'white',
-                    paddingRight: 12,
-                    paddingLeft: 7,
-                    marginHorizontal: 8,
-                    borderRadius: 10,
-                    ...styles.shadow,
-                  }}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      alignSelf: 'flex-start',
-                      marginHorizontal: 5,
-                    }}>
-                    <View
-                      style={[
-                        styles.checkbox,
-                        checkedRecommendations[2]
-                          ? styles.checkedBox
-                          : styles.uncheckedBox,
-                      ]}>
-                      {checkedRecommendations[2] && (
-                        <Text style={styles.checkMark}>✓</Text>
-                      )}
-                    </View>
-                    <Text
-                      style={{
-                        fontFamily: getFontFam() + 'Regular',
-                        fontSize: fontSize('body'),
-                        color: 'black',
-                        paddingVertical: 5,
-                      }}>
-                      {lang && lang.screen_setting
-                        ? lang.screen_setting.close.select.sel3
-                        : ''}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-
-                {/* Close Reason */}
-                <TextInput
-                  value={reason}
-                  onChangeText={setReason}
-                  placeholder={
-                    lang && lang.screen_setting
-                      ? lang.screen_setting.close.reason
-                      : ''
-                  }
-                  placeholderTextColor="#a8a8a7"
-                  style={styles.input}
-                />
-              </View>
-
-              <BottomComponentFixer count={1} />
-
-              <View style={[styles.bottomSection]}>
-                <View style={styles.additionalLogin}></View>
-                <TouchableOpacity
-                  onPress={onSaveChange}
-                  style={styles.buttonSignIn}
-                  disabled={!isDisable && (checkedID == null || reason == '')}>
-                  <Image
-                    source={
-                      !isDisable && (checkedID == null || reason == '')
-                        ? require('../../../assets/images/icon_nextDisable.png')
-                        : require('../../../assets/images/icon_next.png')
-                    }
-                    resizeMode="contain"
-                    style={styles.buttonSignInImage}
-                  />
-                </TouchableOpacity>
-              </View>
+                {lang && lang.screen_setting
+                  ? lang.screen_setting.close.desc.clo4
+                  : ''}
+              </Text>
+              <Text
+                style={{
+                  color: '#ffc404',
+                  fontFamily: getFontFam() + 'Medium',
+                  fontSize: fontSize('body'),
+                  marginTop: -2,
+                }}>
+                {lang && lang.screen_setting
+                  ? lang.screen_setting.close.desc.clo5
+                  : ''}
+              </Text>
             </View>
-          )}
-        </SafeAreaView>
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+
+            <View
+              style={{
+                paddingVertical: 10,
+                width: '100%',
+                marginTop: 15,
+              }}>
+              {/* Service Difficult */}
+              <TouchableOpacity
+                activeOpacity={1}
+                key={0}
+                onPress={() => checkBoxToggle(0)}
+                style={{
+                  backgroundColor: 'white',
+                  paddingRight: 12,
+                  paddingLeft: 7,
+                  marginHorizontal: 8,
+                  borderRadius: 10,
+                  ...styles.shadow,
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    alignSelf: 'flex-start',
+                    marginHorizontal: 5,
+                  }}>
+                  <View
+                    style={[
+                      styles.checkbox,
+                      checkedRecommendations[0]
+                        ? styles.checkedBox
+                        : styles.uncheckedBox,
+                    ]}>
+                    {checkedRecommendations[0] && (
+                      <Text style={styles.checkMark}>✓</Text>
+                    )}
+                  </View>
+                  <Text
+                    style={{
+                      fontFamily: getFontFam() + 'Regular',
+                      fontSize: fontSize('body'),
+                      color: 'black',
+                      paddingVertical: 5,
+                    }}>
+                    {lang && lang.screen_setting
+                      ? lang.screen_setting.close.select.sel1
+                      : ''}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+
+              {/* Function Difficult */}
+              <TouchableOpacity
+                activeOpacity={1}
+                key={1}
+                onPress={() => checkBoxToggle(1)}
+                style={{
+                  backgroundColor: 'white',
+                  paddingRight: 12,
+                  paddingLeft: 7,
+                  marginHorizontal: 8,
+                  borderRadius: 10,
+                  ...styles.shadow,
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    alignSelf: 'flex-start',
+                    marginHorizontal: 5,
+                  }}>
+                  <View
+                    style={[
+                      styles.checkbox,
+                      checkedRecommendations[1]
+                        ? styles.checkedBox
+                        : styles.uncheckedBox,
+                    ]}>
+                    {checkedRecommendations[1] && (
+                      <Text style={styles.checkMark}>✓</Text>
+                    )}
+                  </View>
+                  <Text
+                    style={{
+                      fontFamily: getFontFam() + 'Regular',
+                      fontSize: fontSize('body'),
+                      color: 'black',
+                      paddingVertical: 5,
+                    }}>
+                    {lang && lang.screen_setting
+                      ? lang.screen_setting.close.select.sel2
+                      : ''}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+
+              {/* Etc */}
+              <TouchableOpacity
+                activeOpacity={1}
+                key={2}
+                onPress={() => checkBoxToggle(2)}
+                style={{
+                  backgroundColor: 'white',
+                  paddingRight: 12,
+                  paddingLeft: 7,
+                  marginHorizontal: 8,
+                  borderRadius: 10,
+                  ...styles.shadow,
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    alignSelf: 'flex-start',
+                    marginHorizontal: 5,
+                  }}>
+                  <View
+                    style={[
+                      styles.checkbox,
+                      checkedRecommendations[2]
+                        ? styles.checkedBox
+                        : styles.uncheckedBox,
+                    ]}>
+                    {checkedRecommendations[2] && (
+                      <Text style={styles.checkMark}>✓</Text>
+                    )}
+                  </View>
+                  <Text
+                    style={{
+                      fontFamily: getFontFam() + 'Regular',
+                      fontSize: fontSize('body'),
+                      color: 'black',
+                      paddingVertical: 5,
+                    }}>
+                    {lang && lang.screen_setting
+                      ? lang.screen_setting.close.select.sel3
+                      : ''}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+
+              {/* Close Reason */}
+              <TextInput
+                value={reason}
+                onChangeText={reason => inputReason(reason)}
+                placeholder={
+                  lang && lang.screen_setting
+                    ? lang.screen_setting.close.reason
+                    : ''
+                }
+                placeholderTextColor="#a8a8a7"
+                style={styles.input}
+                editable={isEditableReason}
+              />
+            </View>
+
+            <KeyboardAvoidingView
+              behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+              style={{flex: 1}}>
+              <ButtonNext onClick={onSaveChange} isDisabled={isDisable} />
+            </KeyboardAvoidingView>
+          </View>
+        )}
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -415,29 +420,6 @@ const styles = StyleSheet.create({
     fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
-  },
-  bottomSection: {
-    padding: 5,
-    justifyContent: 'space-between',
-    position: 'relative',
-    bottom: 10,
-    right: 10,
-  },
-  additionalLogin: {
-    flexDirection: 'row',
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-  },
-  buttonSignIn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    flexDirection: 'column',
-    justifyContent: 'center',
-  },
-  buttonSignInImage: {
-    height: 80,
-    width: 80,
   },
   // shadow: {
   //   shadowColor: '#000000',
