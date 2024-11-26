@@ -77,11 +77,11 @@ const styles = StyleSheet.create({
     marginTop: 25,
   },
   label: {
-    fontFamily: getFontFam() + 'Medium',
-    fontSize: fontSize('body'),
-    // fontFamily:
-    //   Platform.OS === 'ios' ? 'AppleSDGothicNeo-' : 'Roboto-' + 'Medium',
-    // fontSize: 16,
+    // fontFamily: getFontFam() + 'Medium',
+    // fontSize: fontSize('body'),
+    fontFamily:
+      Platform.OS === 'ios' ? 'AppleSDGothicNeo-' : 'Roboto-' + 'Medium',
+    fontSize: 12,
     marginBottom: -10,
     color: '#343a59',
   },
@@ -89,11 +89,11 @@ const styles = StyleSheet.create({
     height: 35,
     paddingTop: 10,
     paddingBottom: -10,
-    fontFamily: getFontFam() + 'Medium',
-    fontSize: fontSize('body'),
-    // fontFamily:
-    //   Platform.OS === 'ios' ? 'AppleSDGothicNeo-' : 'Roboto-' + 'Medium',
-    // fontSize: 16,
+    // fontFamily: getFontFam() + 'Medium',
+    // fontSize: fontSize('body'),
+    fontFamily:
+      Platform.OS === 'ios' ? 'AppleSDGothicNeo-' : 'Roboto-' + 'Medium',
+    fontSize: 12,
     color: '#343a59',
     borderBottomColor: '#cccccc',
     borderBottomWidth: 1,
