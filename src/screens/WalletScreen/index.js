@@ -500,7 +500,7 @@ const WalletScreen = ({navigation, route}) => {
       {isShowTextQRCode && (
         <>
           <TouchableOpacity
-            activeOpacity={0.9}
+            activeOpacity={0.5}
             style={styles.showQRButton(positionTextQRCode)}
             onPress={() => {
               setIsShowTextQRCode(false);
