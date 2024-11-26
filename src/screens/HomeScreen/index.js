@@ -29,6 +29,8 @@ import {
   authcode,
   sha256Encrypt,
   saveLogsDB,
+  openWebWithEncryptedData,
+  secretParams,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
@@ -43,6 +45,7 @@ export default function Home({route}) {
   const [showWallet, setShowWallet] = useState(false);
   const [ssidw, setSsidw] = useState('none');
   const [member, setMember] = useState('none');
+  const [ipAddress, setIpAddress] = useState('');
 
   const navigation = useNavigation();
 
@@ -74,6 +77,19 @@ export default function Home({route}) {
       }
     };
 
+    const getIpAddress = async () => {
+      try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        const getIP = data?.ip.replace(/\./g, '') * 2;
+
+        setIpAddress(getIP);
+      } catch (error) {
+        console.error('Error getting IP address:', error);
+      }
+    };
+
+    getIpAddress(); // Get Public Address of User
     getShowWalletStatus(); // Get Show Wallet Status
   }, []);
 
@@ -212,7 +228,10 @@ export default function Home({route}) {
             navigation.dispatch(CommonActions.navigate('WalletHome'));
           } else if (Platform.OS === 'ios' && showWallet) {
             Linking.openURL(
-              'https://www.xrun.run/react/login?numses=' + ssidw + '!' + member,
+              'https://www.xrun.run/react/login?numses=' +
+                ssidw +
+                '!' +
+                ipAddress,
             );
           } else if (!showWallet) {
             Linking.openURL('https://www.xrun.run/');
