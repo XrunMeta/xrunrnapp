@@ -790,7 +790,7 @@ const MapComponent = ({
               borderWidth: 3,
               flexDirection: 'row',
               width: 225,
-              height: 80,
+              height: 70,
               paddingVertical: 5,
               paddingHorizontal: 10,
               borderTopLeftRadius: 50,
@@ -852,7 +852,8 @@ const MapComponent = ({
                   fontSize: fontSize('note'),
                   fontFamily: getFontFam() + 'Medium',
                   color: '#343a59',
-                  marginBottom: 3,
+                  textAlign: 'center',
+                  marginBottom: 2,
                 }}>
                 {updateRange}m
               </Text>
@@ -885,7 +886,6 @@ const MapComponent = ({
                 style={{
                   fontSize: fontSize('subtitle'),
                   fontFamily: getFontFam() + 'Medium',
-                  marginTop: -6,
                   color: 'black',
                 }}>
                 {item.coins} {item.brand}
