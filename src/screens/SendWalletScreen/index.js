@@ -891,9 +891,7 @@ const SendWalletScreen = ({navigation, route}) => {
                 txid: '0928x08291028kosieu920281',
                 symbol: 'ETH',
               });
-            }}>
-            <Text style={{color: 'red'}}>Klik Aku</Text>
-          </TouchableOpacity>
+            }}></TouchableOpacity>
 
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
