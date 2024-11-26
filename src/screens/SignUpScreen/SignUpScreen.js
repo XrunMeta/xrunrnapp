@@ -14,6 +14,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import React, {useState, useEffect, useMemo} from 'react';
 import CustomInput from '../../components/CustomInput';
@@ -368,7 +369,9 @@ const SignUpScreen = ({route}) => {
     <>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <SafeAreaView style={[styles.root]}>
-          <ScrollView showsVerticalScrollIndicator={false}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{flex: Platform.OS === 'ios' ? 1 : 0}}>
             <View>
               <View style={{flexDirection: 'row', position: 'relative'}}>
                 <View style={{position: 'absolute', zIndex: 1}}>

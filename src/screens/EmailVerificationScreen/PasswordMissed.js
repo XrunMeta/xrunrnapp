@@ -7,6 +7,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
+  SafeAreaView
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput';
@@ -116,7 +117,8 @@ const PasswordMissedScreen = () => {
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <ScrollView
+      <SafeAreaView style={styles.root}>
+        <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.root}>
         <View>
@@ -168,6 +170,7 @@ const PasswordMissedScreen = () => {
           />
         </KeyboardAvoidingView>
       </ScrollView>
+      </SafeAreaView>
     </TouchableWithoutFeedback>
   );
 };

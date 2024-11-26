@@ -13,6 +13,7 @@ import {
   Platform,
   Keyboard,
   KeyboardAvoidingView,
+  SafeAreaView
 } from 'react-native';
 import React, {useState, useRef, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
@@ -399,7 +400,8 @@ const EmailVerificationScreen = () => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={[styles.root, {height: ScreenHeight}]}>
+      <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
+      <View>
         <ButtonBack onClick={onBack} />
         {/* Text Section */}
         <View style={styles.textWrapper}>
@@ -438,7 +440,6 @@ const EmailVerificationScreen = () => {
             />
           ))}
         </View>
-
         {/* Bottom Section*/}
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -455,9 +456,11 @@ const EmailVerificationScreen = () => {
           </ButtonNext>
         </KeyboardAvoidingView>
 
+
         {/* Slider Modal */}
         <SliderModal visible={modalVisible} onClose={toggleModal} />
       </View>
+      </SafeAreaView>
     </TouchableWithoutFeedback>
   );
 };
