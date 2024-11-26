@@ -210,7 +210,8 @@
       "sendAgain": "KIRIM ULANG",
       "emptyCode": "Harap lengkapi kode verifikasi",
       "invalidNumber": "Nomor tidak valid",
-      "emptyNumber": "Silakan masukkan nomor Anda"
+      "emptyNumber": "Silakan masukkan nomor Anda",
+      "lengthPhoneNumber": "Tidak boleh kurang dari 8 digit angka"
     },
     "field_email": {
       "label": "Masukkan Email Anda",
