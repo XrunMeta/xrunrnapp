@@ -233,8 +233,10 @@ const FirstScreenV2 = ({navigation}) => {
     Linking.openSettings();
   };
 
-  const openPlaystoreToUpdate = async () => {
-    Linking.openURL(await VersionCheck.getStoreUrl());
+  const doUpdate =  () => {
+	  const storeUrl = Platform.OS === "ios" ? "https://apps.apple.com/kr/app/xrun-go/id6502924173" : "https://play.google.com/store/apps/details?id=run.xrun.xrunapp"
+
+	  Linking.openURL(storeUrl);
   };
 
   return (
@@ -363,7 +365,7 @@ const FirstScreenV2 = ({navigation}) => {
         </View>
 
         {/* Popup check the app using latest version or not */}
-        {isPopupUpdateVersionShow && Platform.OS !== 'ios' && (
+        {isPopupUpdateVersionShow  && (
           <Modal
             transparent={true}
             animationType="slide"
@@ -372,9 +374,7 @@ const FirstScreenV2 = ({navigation}) => {
             <View style={styles.modalContainer}>
               <View style={[styles.modalCard, {paddingVertical: 20}]}>
                 <Text style={styles.modalTitle}>
-                  {lang && lang.screen_first && lang.screen_first.updateVersion
-                    ? lang.screen_first.updateVersion
-                    : ''}
+                  We have new version at {Platform.OS === "ios" ? "Appstore" : "Playstore"}
                 </Text>
                 <View
                   style={{
@@ -384,7 +384,7 @@ const FirstScreenV2 = ({navigation}) => {
                   }}>
                   <TouchableOpacity
                     activeOpacity={0.6}
-                    onPress={openPlaystoreToUpdate}
+                    onPress={doUpdate}
                     style={{
                       marginTop: 24,
                       backgroundColor: '#ffdc04',
