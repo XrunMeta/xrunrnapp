@@ -154,7 +154,8 @@ const EmailVerificationLoginScreen = () => {
   };
 
   const onLoginPassword = () => {
-    navigation.replace('SignPassword');
+    navigation.navigate('SignPassword');
+    toggleModal();
   };
 
   const onSignIn = async () => {

@@ -368,7 +368,7 @@ const SignUpScreen = ({route}) => {
     <>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <SafeAreaView style={[styles.root]}>
-          <ScrollView showsVerticalScrollIndicator={false}>
+          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{flex: 1}}>
             <View>
               <View style={{flexDirection: 'row', position: 'relative'}}>
                 <View style={{position: 'absolute', zIndex: 1}}>
