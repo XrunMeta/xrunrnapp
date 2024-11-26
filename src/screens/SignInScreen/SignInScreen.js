@@ -264,8 +264,9 @@ const SignInScreen = () => {
                 marginLeft: 25,
                 color: 'red',
                 fontFamily: getFontFam() + 'Regular',
-                fontSize: fontSize('body'),
+                fontSize: fontSize('note'),
               }}>
+              *
               {lang && lang.screen_signin && lang.screen_signin.validator
                 ? lang.screen_signin.validator
                 : ''}
@@ -325,7 +326,7 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 20,
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 15,
   },
   title: {
     fontFamily: getFontFam() + 'Bold',

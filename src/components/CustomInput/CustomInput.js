@@ -74,22 +74,26 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     paddingHorizontal: 24,
-    marginTop: 30,
+    marginTop: 25,
   },
   label: {
-    fontFamily:
-      Platform.OS === 'ios' ? 'AppleSDGothicNeo-' : 'Roboto-' + 'Medium',
-    fontSize: 16,
+    fontFamily: getFontFam() + 'Medium',
+    fontSize: fontSize('body'),
+    // fontFamily:
+    //   Platform.OS === 'ios' ? 'AppleSDGothicNeo-' : 'Roboto-' + 'Medium',
+    // fontSize: 16,
     marginBottom: -10,
     color: '#343a59',
   },
   input: {
-    height: 40,
+    height: 35,
     paddingTop: 10,
     paddingBottom: -10,
-    fontFamily:
-      Platform.OS === 'ios' ? 'AppleSDGothicNeo-' : 'Roboto-' + 'Medium',
-    fontSize: 16,
+    fontFamily: getFontFam() + 'Medium',
+    fontSize: fontSize('body'),
+    // fontFamily:
+    //   Platform.OS === 'ios' ? 'AppleSDGothicNeo-' : 'Roboto-' + 'Medium',
+    // fontSize: 16,
     color: '#343a59',
     borderBottomColor: '#cccccc',
     borderBottomWidth: 1,
@@ -98,7 +102,7 @@ const styles = StyleSheet.create({
   },
   toggleButton: {
     position: 'absolute',
-    top: 25,
+    top: 20,
     right: 23,
   },
   toggleButtonImage: {

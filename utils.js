@@ -240,7 +240,7 @@ export const getFontFam = () => {
 
 export const fontSize = type => {
   if (type === 'note') {
-    return Platform.OS === 'android' ? 8 : 14;
+    return Platform.OS === 'android' ? 9 : 14;
   } else if (type === 'body') {
     return Platform.OS === 'android' ? 12 : 16;
   } else if (type === 'subtitle') {
