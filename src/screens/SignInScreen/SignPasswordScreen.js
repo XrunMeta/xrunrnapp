@@ -192,9 +192,7 @@ const SignPasswordScreen = () => {
             />
           </View>
 
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-            style={{flex: 1}}>
+          
             <ButtonNext
               onClick={onSignIn}
               isDisabled={!isDisable && password == ''}>
@@ -241,7 +239,6 @@ const SignPasswordScreen = () => {
                 </View>
               </View>
             </ButtonNext>
-          </KeyboardAvoidingView>
         </ScrollView>
       </SafeAreaView>
     </TouchableWithoutFeedback>

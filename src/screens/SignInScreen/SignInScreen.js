@@ -9,6 +9,8 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
+  Platform,
+  TouchableOpacity,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput/';
@@ -24,9 +26,11 @@ import {
   authcode,
   sha256Encrypt,
   saveLogsDB,
+  BottomComponentFixer,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import ButtonNext from '../../components/ButtonNext/ButtonNext';
+import IOSButtonFixer from '../../components/IOSButtonFixer';
 
 const SignInScreen = () => {
   const [lang, setLang] = useState({});
@@ -294,9 +298,8 @@ const SignInScreen = () => {
             isPassword={true}
           />
 
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-            style={{flex: 1}}>
+    			<IOSButtonFixer count={5} />
+
             <ButtonNext
               onClick={onSignIn}
               isDisabled={!isDisable && email == '' && password == ''}>
@@ -315,7 +318,9 @@ const SignInScreen = () => {
                 </Pressable>
               </View>
             </ButtonNext>
-          </KeyboardAvoidingView>
+		  {/* <TouchableOpacity onPress={onSignIn}>
+			<Text>Bahlul</Text>
+		  </TouchableOpacity> */}
         </ScrollView>
       </SafeAreaView>
     </TouchableWithoutFeedback>

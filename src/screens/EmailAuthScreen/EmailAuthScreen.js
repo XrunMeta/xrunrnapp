@@ -237,14 +237,10 @@ const EmailAuthScreen = () => {
             </Text>
           )}
 
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-            style={{flex: 1}}>
             <ButtonNext
               onClick={onSignIn}
               isDisabled={!isDisable && email == ''}
             />
-          </KeyboardAvoidingView>
         </View>
         {isLoading && (
           <View

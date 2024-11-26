@@ -28,6 +28,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Countdown from './Countdown';
 import ButtonNext from '../../components/ButtonNext/ButtonNext';
+import IOSButtonFixer from '../../components/IOSButtonFixer';
 
 // ########## Main Function ##########
 const EmailCodeForModif = () => {
@@ -294,10 +295,9 @@ const EmailCodeForModif = () => {
             ))}
           </View>
 
+<IOSButtonFixer count={5} />
+
           {/* Bottom Section*/}
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-            style={{flex: 1}}>
             <ButtonNext onClick={onSignIn} isDisabled={isDisable}>
               <View style={styles.additionalLogin}>
                 <Countdown
@@ -308,7 +308,6 @@ const EmailCodeForModif = () => {
                 />
               </View>
             </ButtonNext>
-          </KeyboardAvoidingView>
 
           {/* Slider Modal */}
           <SliderModal visible={modalVisible} onClose={toggleModal} />

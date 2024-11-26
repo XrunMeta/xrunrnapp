@@ -26,6 +26,7 @@ import {
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import ButtonNext from '../../components/ButtonNext/ButtonNext';
+import IOSButtonFixer from '../../components/IOSButtonFixer';
 
 const EmailVerifForModifScreen = () => {
   const [lang, setLang] = useState({});
@@ -214,11 +215,9 @@ const EmailVerifForModifScreen = () => {
           )}
 </KeyboardAvoidingView>
 
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-            style={{flex: 1}}>
+          
+		  <IOSButtonFixer count={5} />
             <ButtonNext onClick={onSignIn} isDisabled={isSubmitDisable} />
-          </KeyboardAvoidingView>
         </SafeAreaView>
     </TouchableWithoutFeedback>
   );

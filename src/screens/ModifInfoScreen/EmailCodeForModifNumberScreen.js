@@ -19,6 +19,7 @@ import React, {useState, useRef, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import CustomButton from '../../components/CustomButton';
+import IOSButtonFixer from '../../components/IOSButtonFixer';
 import {
   URL_API_NODEJS,
   getLanguage2,
@@ -330,10 +331,10 @@ const EmailCodeForModifNumberScreen = () => {
           {/* Slider Modal */}
           <SliderModal visible={modalVisible} onClose={toggleModal} />
         </ScrollView>
+
+<IOSButtonFixer count={5} />
+
         {/* Bottom Section*/}
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          style={{flex: 1}}>
           <ButtonNext onClick={onSignIn} isDisabled={isDisable}>
             <View style={styles.additionalLogin}>
               <Countdown
@@ -344,7 +345,6 @@ const EmailCodeForModifNumberScreen = () => {
               />
             </View>
           </ButtonNext>
-        </KeyboardAvoidingView>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

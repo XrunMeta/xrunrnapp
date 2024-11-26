@@ -22,6 +22,7 @@ import {
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import ButtonNext from '../../components/ButtonNext/ButtonNext';
+import IOSButtonFixer from '../../components/IOSButtonFixer';
 
 const EditPassword = () => {
   const [lang, setLang] = useState({});
@@ -137,14 +138,12 @@ const EditPassword = () => {
           isPassword={true}
         />
 
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          style={{flex: 1}}>
+     <IOSButtonFixer count={5} />
+
           <ButtonNext
             onClick={onSaveChange}
             isDisabled={!isDisable && password == ''}
           />
-        </KeyboardAvoidingView>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
