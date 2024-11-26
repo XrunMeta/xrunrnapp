@@ -35,8 +35,8 @@ const styles = StyleSheet.create({
   container: (type, bgColor, firstScreen) => ({
     width: '100%',
     padding: 15,
-    paddingVertical: firstScreen ? (Platform.OS == 'ios' ? 12 : 8) : 8,
-    marginTop: 15,
+    paddingVertical: firstScreen ? 13 : 8,
+    marginTop: 7,
     alignItems: 'center',
     borderRadius: 35,
     shadowColor: 'black',
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
 
   text: {
     color: '#45494c',
-    fontSize: fontSize('subtitle'),
+    fontSize: fontSize('body'),
     fontFamily: getFontFam() + 'Medium',
   },
 
