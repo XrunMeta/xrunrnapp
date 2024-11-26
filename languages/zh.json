@@ -210,7 +210,8 @@
       "sendAgain": "重新发送",
       "emptyCode": "请完成验证码",
       "invalidNumber": "无效号码",
-      "emptyNumber": "请输入您的号码"
+      "emptyNumber": "请输入您的号码",
+      "lengthPhoneNumber": "不能少于8位数字"
     },
     "field_email": {
       "label": "输入您的电子邮件",
