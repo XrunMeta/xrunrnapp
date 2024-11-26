@@ -371,7 +371,7 @@ const SignUpScreen = ({route}) => {
         <SafeAreaView style={[styles.root]}>
           <ScrollView
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{flex: 1}}>
+            contentContainerStyle={{flex: Platform.OS === 'ios' ? 1 : 0}}>
             <View>
               <View style={{flexDirection: 'row', position: 'relative'}}>
                 <View style={{position: 'absolute', zIndex: 1}}>
