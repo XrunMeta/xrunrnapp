@@ -259,111 +259,118 @@ export default function MapParent() {
               }}>
               <View
                 style={{
-                  marginBottom: -40,
+                  flex: 1,
+                  flexDirection: 'row',
+                  marginBottom: -60,
                 }}>
-                <Text
+                <View
                   style={{
-                    fontFamily: getFontFam() + 'Medium',
-                    fontSize: fontSize('note'),
-                    color: 'white',
+                    marginBottom: 0,
                   }}>
-                  {lang &&
-                  lang.screen_map &&
-                  lang.screen_map.section_card_shadow
-                    ? lang.screen_map.section_card_shadow.radius
-                    : ''}
-                </Text>
-                {markerCount > 0 ? (
                   <Text
                     style={{
                       fontFamily: getFontFam() + 'Medium',
                       fontSize: fontSize('note'),
                       color: 'white',
-                      flexWrap: 'wrap',
                     }}>
-                    {curLang != null && curLang === 'ko'
-                      ? markerCount + ' '
-                      : ''}
                     {lang &&
                     lang.screen_map &&
                     lang.screen_map.section_card_shadow
-                      ? lang.screen_map.section_card_shadow.amount + ' '
+                      ? lang.screen_map.section_card_shadow.radius
                       : ''}
+                  </Text>
+                  {markerCount > 0 ? (
+                    <Text
+                      style={{
+                        fontFamily: getFontFam() + 'Medium',
+                        fontSize: fontSize('note'),
+                        color: 'white',
+                        flexWrap: 'wrap',
+                      }}>
+                      {curLang != null && curLang === 'ko'
+                        ? markerCount + ' '
+                        : ''}
+                      {lang &&
+                      lang.screen_map &&
+                      lang.screen_map.section_card_shadow
+                        ? lang.screen_map.section_card_shadow.amount + ' '
+                        : ''}
+                      <Text
+                        style={{
+                          fontFamily: getFontFam() + 'Bold',
+                        }}>
+                        {curLang != null && curLang === 'ko' ? '' : markerCount}{' '}
+                        XRUN
+                      </Text>
+                      {lang &&
+                      lang.screen_map &&
+                      lang.screen_map.section_card_shadow
+                        ? lang.screen_map.section_card_shadow.and + ' '
+                        : ''}
+                    </Text>
+                  ) : (
+                    <Text
+                      style={{
+                        fontFamily: getFontFam() + 'Medium',
+                        fontSize: fontSize('note'),
+                        color: 'white',
+                        marginBottom: 3,
+                      }}>
+                      {lang &&
+                        lang.screen_map &&
+                        lang.screen_map.section_card_shadow &&
+                        lang.screen_map.section_card_shadow.noCoin + ' '}
+                      {'\n'}
+                      {lang &&
+                        lang.screen_map &&
+                        lang.screen_map.section_card_shadow &&
+                        lang.screen_map.section_card_shadow.noCoin2}
+                    </Text>
+                  )}
+                </View>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: 'flex-end',
+                    marginBottom: 0,
+                  }}>
+                  <Text
+                    style={{
+                      fontFamily: getFontFam() + 'Medium',
+                      fontSize: fontSize('note'),
+                      color: 'white',
+                      opacity: 0,
+                      pointerEvents: 'none',
+                    }}>
+                    {lang &&
+                    lang.screen_map &&
+                    lang.screen_map.section_card_shadow
+                      ? lang.screen_map.section_card_shadow.event
+                      : ''}
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      marginTop: 1,
+                    }}>
+                    <Image
+                      source={require('../../../assets/images/icon_diamond_white.png')}
+                      style={{
+                        height: 13,
+                        tintColor: '#ffdc04',
+                      }}
+                      resizeMode="contain"
+                    />
                     <Text
                       style={{
                         fontFamily: getFontFam() + 'Bold',
+                        fontSize: fontSize('note'),
+                        color: 'white',
+                        marginTop: -2,
                       }}>
-                      {curLang != null && curLang === 'ko' ? '' : markerCount}{' '}
-                      XRUN
+                      Jackpot 10,000 XRUN
                     </Text>
-                    {lang &&
-                    lang.screen_map &&
-                    lang.screen_map.section_card_shadow
-                      ? lang.screen_map.section_card_shadow.and + ' '
-                      : ''}
-                  </Text>
-                ) : (
-                  <Text
-                    style={{
-                      fontFamily: getFontFam() + 'Medium',
-                      fontSize: fontSize('note'),
-                      color: 'white',
-                      marginBottom: 3,
-                    }}>
-                    {lang &&
-                      lang.screen_map &&
-                      lang.screen_map.section_card_shadow &&
-                      lang.screen_map.section_card_shadow.noCoin + ' '}
-                    {'\n'}
-                    {lang &&
-                      lang.screen_map &&
-                      lang.screen_map.section_card_shadow &&
-                      lang.screen_map.section_card_shadow.noCoin2}
-                  </Text>
-                )}
-              </View>
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: 'flex-end',
-                  marginBottom: -41,
-                }}>
-                <Text
-                  style={{
-                    fontFamily: getFontFam() + 'Medium',
-                    fontSize: fontSize('note'),
-                    color: 'white',
-                    marginBottom: 2,
-                    opacity: 0,
-                    pointerEvents: 'none',
-                  }}>
-                  {lang &&
-                  lang.screen_map &&
-                  lang.screen_map.section_card_shadow
-                    ? lang.screen_map.section_card_shadow.event
-                    : ''}
-                </Text>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                  }}>
-                  <Image
-                    source={require('../../../assets/images/icon_diamond_white.png')}
-                    style={{
-                      height: 13,
-                      tintColor: '#ffdc04',
-                    }}
-                    resizeMode="contain"
-                  />
-                  <Text
-                    style={{
-                      fontFamily: getFontFam() + 'Bold',
-                      fontSize: fontSize('note'),
-                      color: 'white',
-                      marginTop: -4,
-                    }}>
-                    Jackpot 10,000 XRUN
-                  </Text>
+                  </View>
                 </View>
               </View>
             </LinearGradient>
@@ -498,7 +505,7 @@ const styles = StyleSheet.create({
   },
   desc: {
     fontFamily: getFontFam() + 'Medium',
-    fontSize: fontSize('note'),
+    fontSize: fontSize('body'),
     color: '#343a59',
   },
   navWrapper: {

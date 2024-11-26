@@ -883,6 +883,16 @@ const SendWalletScreen = ({navigation, route}) => {
             />
           </View>
 
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('CompleteSend', {
+                amount: '0.00000002',
+                addrto: '0x30a9B3fcFCc0aD66B70f2d473b39a35252002d89',
+                txid: '0928x08291028kosieu920281',
+                symbol: 'ETH',
+              });
+            }}></TouchableOpacity>
+
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
             style={{flex: 1}}>
@@ -969,7 +979,7 @@ const SendWalletScreen = ({navigation, route}) => {
                   <>
                     {/* With total transfer */}
                     <View style={styles.wrapperTextConversion}>
-                      <Text style={styles.textPartLeft}>
+                      <Text style={[styles.textPartLeft, {width: 120}]}>
                         {' '}
                         {lang && lang
                           ? lang.screen_setting.close.desc.clo2
@@ -981,7 +991,7 @@ const SendWalletScreen = ({navigation, route}) => {
                       </Text>
                     </View>
                     <View style={styles.wrapperTextConversion}>
-                      <Text style={styles.textPartLeft}>
+                      <Text style={[styles.textPartLeft, {width: 120}]}>
                         {lang && lang
                           ? lang.screen_complete_send.wallet_address
                           : ''}
@@ -992,7 +1002,7 @@ const SendWalletScreen = ({navigation, route}) => {
                     </View>
                     <View>
                       <View style={styles.wrapperTextConversion}>
-                        <Text style={styles.textPartLeft}>
+                        <Text style={[styles.textPartLeft, {width: 120}]}>
                           {lang && lang
                             ? lang.screen_send.estimated_gas_fee
                             : ''}
@@ -1012,7 +1022,7 @@ const SendWalletScreen = ({navigation, route}) => {
                       </View>
                     </View>
                     <View style={styles.wrapperTextConversion}>
-                      <Text style={styles.textPartLeft}>
+                      <Text style={[styles.textPartLeft, {width: 120}]}>
                         {' '}
                         {lang && lang ? lang.screen_advertise.total : ''}
                       </Text>
@@ -1028,7 +1038,11 @@ const SendWalletScreen = ({navigation, route}) => {
                     </View>
                     {isInsufficientBalance && (
                       <View style={styles.wrapperTextConversion}>
-                        <Text style={[styles.textPartLeft, {color: 'red'}]}>
+                        <Text
+                          style={[
+                            styles.textPartLeft,
+                            {color: 'red', marginTop: 20},
+                          ]}>
                           {lang && lang
                             ? lang.screen_send.note_insufficient_balance.note1
                             : ''}
@@ -1049,7 +1063,7 @@ const SendWalletScreen = ({navigation, route}) => {
                   <>
                     {/* Without total transfer */}
                     <View style={styles.wrapperTextConversion}>
-                      <Text style={styles.textPartLeft}>
+                      <Text style={[styles.textPartLeft, {width: 120}]}>
                         {lang && lang
                           ? lang.screen_setting.close.desc.clo2
                           : ''}
@@ -1060,7 +1074,7 @@ const SendWalletScreen = ({navigation, route}) => {
                       </Text>
                     </View>
                     <View style={styles.wrapperTextConversion}>
-                      <Text style={styles.textPartLeft}>
+                      <Text style={[styles.textPartLeft, {width: 120}]}>
                         {lang && lang
                           ? lang.screen_complete_send.wallet_address
                           : ''}
@@ -1071,7 +1085,7 @@ const SendWalletScreen = ({navigation, route}) => {
                     </View>
                     <View>
                       <View style={styles.wrapperTextConversion}>
-                        <Text style={styles.textPartLeft}>
+                        <Text style={[styles.textPartLeft, {width: 120}]}>
                           {lang && lang
                             ? lang.screen_send.estimated_gas_fee
                             : ''}
@@ -1091,7 +1105,11 @@ const SendWalletScreen = ({navigation, route}) => {
                       </View>
                     </View>
                     <View style={styles.wrapperTextConversion}>
-                      <Text style={[styles.textPartLeft, {color: 'red'}]}>
+                      <Text
+                        style={[
+                          styles.textPartLeft,
+                          {color: 'red', marginTop: 20},
+                        ]}>
                         {lang && lang ? lang.screen_send.notes.note1 : ''}
                         <Text style={{textTransform: 'lowercase'}}>
                           {' '}
@@ -1105,6 +1123,7 @@ const SendWalletScreen = ({navigation, route}) => {
                   </>
                 )}
               </View>
+
               <View style={styles.wrapperButton}>
                 <TouchableOpacity
                   activeOpacity={0.7}
@@ -1120,7 +1139,7 @@ const SendWalletScreen = ({navigation, route}) => {
                       backgroundColor: `${
                         isDisableButtonConfirm ? '#ccc' : '#343c5a'
                       }`,
-                      flex: 1.5,
+                      flex: 1,
                     },
                   ]}
                   disabled={isDisableButtonConfirm}
@@ -1254,23 +1273,23 @@ const styles = StyleSheet.create({
   },
   textCheckInformation: {
     fontFamily: 'Poppins-Regular',
-    fontSize: fontSize('note'),
+    fontSize: fontSize('body'),
     color: '#000',
   },
   contentConversion: {
     borderTopColor: '#343c5a',
     borderTopWidth: 2,
     marginHorizontal: 20,
-    paddingVertical: 14,
-    rowGap: 24,
+    paddingVertical: 32,
+    rowGap: 16,
   },
   wrapperTextConversion: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
     gap: 12,
   },
   textPartLeft: {
-    color: '#aaa',
+    color: '#000',
     fontFamily: 'Poppins-Regular',
     fontSize: fontSize('body'),
   },
@@ -1284,7 +1303,7 @@ const styles = StyleSheet.create({
   },
   buttonConfirm: {
     padding: 10,
-    backgroundColor: '#eee',
+    backgroundColor: '#D3D3D3',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -1293,5 +1312,6 @@ const styles = StyleSheet.create({
     color: '#343c5a',
     fontFamily: 'Poppins-Medium',
     textTransform: 'uppercase',
+    fontSize: fontSize('subtitle'),
   },
 });

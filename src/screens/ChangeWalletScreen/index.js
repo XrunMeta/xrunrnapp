@@ -324,7 +324,7 @@ const Change = ({navigation, route}) => {
                   activeOpacity={0.7}
                   style={[
                     styles.buttonConfirm,
-                    {backgroundColor: '#343c5a', flex: 1.5},
+                    {backgroundColor: '#343c5a', flex: 1},
                   ]}
                   onPress={confirmConversion}>
                   <Text style={[styles.textButtonConfirm, {color: '#fff'}]}>
@@ -437,14 +437,16 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
     zIndex: 10,
     justifyContent: 'center',
+    paddingHorizontal: 20,
     alignItems: 'center',
   },
   wrapperConversion: {
     backgroundColor: '#fff',
-    marginHorizontal: 60,
+    marginHorizontal: 40,
+    width: '100%',
   },
   wrapperPartTop: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
     marginHorizontal: 10,
     paddingTop: 14,
@@ -458,7 +460,7 @@ const styles = StyleSheet.create({
   },
   textCheckInformation: {
     fontFamily: getFontFam() + 'Regular',
-    fontSize: fontSize('note'),
+    fontSize: fontSize('body'),
     color: '#000',
   },
   contentConversion: {
@@ -467,14 +469,16 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     paddingVertical: 14,
     rowGap: 28,
+    marginTop: 6,
   },
   wrapperTextConversion: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     gap: 10,
+    paddingVertical: 10,
   },
   textPartLeft: {
-    color: '#aaa',
+    color: '#000',
     fontFamily: getFontFam() + 'Regular',
     fontSize: fontSize('body'),
   },
@@ -482,14 +486,14 @@ const styles = StyleSheet.create({
     color: '#000',
     fontFamily: getFontFam() + 'Regular',
     fontSize: fontSize('body'),
-    maxWidth: 100,
+    maxWidth: 120,
   },
   wrapperButton: {
     flexDirection: 'row',
   },
   buttonConfirm: {
     padding: 10,
-    backgroundColor: '#eee',
+    backgroundColor: '#D3D3D3',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -498,5 +502,6 @@ const styles = StyleSheet.create({
     color: '#343c5a',
     fontFamily: getFontFam() + 'Medium',
     textTransform: 'uppercase',
+    fontSize: fontSize('subtitle'),
   },
 });
