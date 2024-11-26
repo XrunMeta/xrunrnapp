@@ -13,7 +13,7 @@ import CustomInput from '../../components/CustomInput';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {getLanguage2} from '../../../utils';
+import {fontSize, getFontFam, getLanguage2} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import ButtonNext from '../../components/ButtonNext/ButtonNext';
 
@@ -146,7 +146,10 @@ const PasswordMissedScreen = () => {
                 alignSelf: 'flex-start',
                 marginLeft: 25,
                 color: 'red',
+                fontFamily: getFontFam() + 'Regular',
+                fontSize: fontSize('note'),
               }}>
+              *
               {lang &&
               lang.screen_passwordMissed &&
               lang.screen_passwordMissed.notif
