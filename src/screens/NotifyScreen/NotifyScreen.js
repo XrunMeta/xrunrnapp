@@ -273,7 +273,7 @@ const NotifyScreen = () => {
     <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
       {/* Title */}
       <View style={{flexDirection: 'row'}}>
-        <View style={{position: 'absolute', zIndex: 1}}>
+        <View style={{position: 'absolute', zIndex: 1, marginTop: -5}}>
           {isDelete ? (
             <TouchableOpacity
               onPress={() => setIsDelete(false)}
