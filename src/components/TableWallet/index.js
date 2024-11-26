@@ -24,16 +24,16 @@ import crashlytics from '@react-native-firebase/crashlytics';
 const renderTabBar = props => (
   <TabBar
     {...props}
-    indicatorStyle={{backgroundColor: '#383b50'}}
+    indicatorStyle={{backgroundColor: '#707070'}}
     style={{
       backgroundColor: 'white',
-      height: 55,
+      height: 40,
       elevation: 0,
     }}
     renderLabel={({route, focused}) => (
       <Text
         style={{
-          color: focused ? '#383b50' : '#bbb',
+          color: focused ? '#383b50' : '#7D7E83',
           textAlign: 'center',
           fontFamily: getFontFam() + 'Regular',
           fontSize: fontSize('body'),
