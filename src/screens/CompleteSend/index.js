@@ -71,7 +71,7 @@ const CompleteSend = ({navigation, route}) => {
             style={{
               fontSize: fontSize('subtitle'),
               fontFamily: getFontFam() + 'Regular',
-              color: '#e05c2b',
+              color: 'red',
             }}>
             {lang && lang.screen_wallet && lang.screen_wallet.table_head_send
               ? lang.screen_wallet.table_head_send
@@ -150,7 +150,7 @@ const CompleteSend = ({navigation, route}) => {
             <Text
               style={{
                 fontFamily: getFontFam() + 'Medium',
-                color: '#e05c2b',
+                color: 'red',
                 fontSize: fontSize('body'),
                 maxWidth: 180,
               }}>
@@ -176,7 +176,7 @@ const CompleteSend = ({navigation, route}) => {
               <Text
                 style={{
                   fontFamily: getFontFam() + 'Medium',
-                  color: '#e05c2b',
+                  color: 'red',
                   fontSize: fontSize('body'),
                   maxWidth: 240,
                 }}>

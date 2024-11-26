@@ -24,16 +24,16 @@ import crashlytics from '@react-native-firebase/crashlytics';
 const renderTabBar = props => (
   <TabBar
     {...props}
-    indicatorStyle={{backgroundColor: '#383b50'}}
+    indicatorStyle={{backgroundColor: '#707070'}}
     style={{
       backgroundColor: 'white',
-      height: 55,
+      height: 40,
       elevation: 0,
     }}
     renderLabel={({route, focused}) => (
       <Text
         style={{
-          color: focused ? '#383b50' : '#bbb',
+          color: focused ? '#383b50' : '#7D7E83',
           textAlign: 'center',
           fontFamily: getFontFam() + 'Regular',
           fontSize: fontSize('body'),
@@ -1148,7 +1148,6 @@ const styles = StyleSheet.create({
     fontSize: fontSize('subtitle'),
     color: '#000',
     minWidth: 80,
-    textTransform: 'uppercase',
   },
   textHeadDefault: {
     textTransform: 'none',
@@ -1185,7 +1184,7 @@ const styles = StyleSheet.create({
   },
   textDay: {
     fontFamily: getFontFam() + 'Medium',
-    fontSize: fontSize('subtitle'),
+    fontSize: fontSize('body'),
     color: 'black',
     marginBottom: 4,
   },
@@ -1204,7 +1203,7 @@ const styles = StyleSheet.create({
   },
   details: {
     color: 'black',
-    marginBottom: 10,
+    marginBottom: 1,
     fontFamily: getFontFam() + 'Regular',
     fontSize: fontSize('body'),
     maxWidth: 150,
@@ -1218,7 +1217,7 @@ const styles = StyleSheet.create({
   wrapperPrice: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    marginBottom: 10,
+    marginBottom: 1,
   },
   price: {
     fontSize: fontSize('body'),
