@@ -146,11 +146,12 @@ const CustomInputEdit = ({
                 }}>
                 {content}
               </View>
-              <BottomComponentFixer count={3} />
+              <BottomComponentFixer count={5} />
 
               <View
                 style={{
-                  padding: 5,
+                  paddingBottom: 30,
+                  paddingHorizontal: 20,
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                   width: '100%',
