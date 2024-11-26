@@ -233,10 +233,13 @@ const FirstScreenV2 = ({navigation}) => {
     Linking.openSettings();
   };
 
-  const doUpdate =  () => {
-	  const storeUrl = Platform.OS === "ios" ? "https://apps.apple.com/kr/app/xrun-go/id6502924173" : "https://play.google.com/store/apps/details?id=run.xrun.xrunapp"
+  const doUpdate = () => {
+    const storeUrl =
+      Platform.OS === 'ios'
+        ? 'https://apps.apple.com/kr/app/xrun-go/id6502924173'
+        : 'https://play.google.com/store/apps/details?id=run.xrun.xrunapp';
 
-	  Linking.openURL(storeUrl);
+    Linking.openURL(storeUrl);
   };
 
   return (
@@ -270,17 +273,17 @@ const FirstScreenV2 = ({navigation}) => {
             activeDotIndex={activeIndex} // Indeks titik aktif
             containerStyle={{paddingBottom: 0, paddingTop: 15}} // Gaya kontainer pagination
             dotStyle={{
-              width: 10,
-              height: 10,
+              width: 8,
+              height: 8,
               borderRadius: 5,
-              marginHorizontal: -2,
+              marginHorizontal: -20,
               backgroundColor: 'rgba(0, 0, 0, 0.8)',
             }} // Gaya titik pagination yang aktif
             inactiveDotStyle={{
-              width: 8,
-              height: 8,
+              width: 5,
+              height: 5,
               borderRadius: 4,
-              marginHorizontal: -2,
+              marginHorizontal: -20,
               backgroundColor: 'rgba(0, 0, 0, 0.3)',
             }} // Gaya titik pagination yang tidak aktif
             inactiveDotOpacity={0.4} // Opasitas titik pagination yang tidak aktif
@@ -305,6 +308,7 @@ const FirstScreenV2 = ({navigation}) => {
           }
           type="SECONDARY"
           onPress={onJoin}
+          firstScreen
         />
 
         <View style={styles.descWrapper}>
@@ -327,8 +331,7 @@ const FirstScreenV2 = ({navigation}) => {
             </Text>{' '}
             {lang && lang.screen_first && lang.screen_first.tos
               ? lang.screen_first.tos[2]
-              : ''}
-            {'\n'}
+              : ''}{' '}
             <Text
               style={styles.link}
               onPress={() => {
@@ -365,7 +368,7 @@ const FirstScreenV2 = ({navigation}) => {
         </View>
 
         {/* Popup check the app using latest version or not */}
-        {isPopupUpdateVersionShow  && (
+        {isPopupUpdateVersionShow && (
           <Modal
             transparent={true}
             animationType="slide"
@@ -374,7 +377,8 @@ const FirstScreenV2 = ({navigation}) => {
             <View style={styles.modalContainer}>
               <View style={[styles.modalCard, {paddingVertical: 20}]}>
                 <Text style={styles.modalTitle}>
-                  We have new version at {Platform.OS === "ios" ? "Appstore" : "Playstore"}
+                  We have new version at{' '}
+                  {Platform.OS === 'ios' ? 'Appstore' : 'Playstore'}
                 </Text>
                 <View
                   style={{
@@ -488,7 +492,8 @@ const styles = StyleSheet.create({
   titleWrapper: {
     width: '100%',
     alignItems: 'center',
-    marginVertical: 25,
+    marginBottom: 30,
+    marginTop: 10,
   },
   title: {
     fontSize: fontSize('title'),
@@ -497,6 +502,7 @@ const styles = StyleSheet.create({
   },
   sliderWrapper: {
     flex: 1,
+    marginBottom: 8,
   },
   sliderImage: {
     flex: 1,
@@ -510,21 +516,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   sliderDot: {
-    width: 8,
-    height: 8,
+    width: 4,
+    height: 4,
     borderRadius: 4,
     marginHorizontal: 4,
   },
   descWrapper: {
     alignItems: 'center',
     width: '100%',
-    marginTop: 15,
+    marginTop: 35,
+    marginBottom: 20,
   },
   text: {
     fontFamily: getFontFam() + 'Regular',
     textAlign: 'center',
     fontSize: fontSize('body'),
-    lineHeight: 19,
+    lineHeight: 14,
     color: '#343a59',
   },
   link: {
