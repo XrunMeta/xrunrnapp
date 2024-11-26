@@ -79,7 +79,7 @@ const CompleteSend = ({navigation, route}) => {
             style={{
               fontSize: fontSize('subtitle'),
               fontFamily: getFontFam() + 'Regular',
-              color: '#e05c2b',
+              color: 'red',
             }}>
             {lang && lang.screen_wallet && lang.screen_wallet.history_action3306
               ? lang.screen_wallet.history_action3306
@@ -103,9 +103,10 @@ const CompleteSend = ({navigation, route}) => {
           style={{
             paddingHorizontal: 20,
             backgroundColor: '#fff',
-            paddingVertical: 10,
+            paddingTop: 20,
+            paddingBottom: 30,
           }}>
-          <View
+          {/* <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
@@ -134,7 +135,7 @@ const CompleteSend = ({navigation, route}) => {
               }}>
               {symbol}
             </Text>
-          </View>
+          </View> */}
           <View
             style={{
               flexDirection: 'row',
@@ -166,7 +167,7 @@ const CompleteSend = ({navigation, route}) => {
               {originamount}XRUN
             </Text>
           </View>
-          <View
+          {/* <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
@@ -195,7 +196,7 @@ const CompleteSend = ({navigation, route}) => {
                 {estimate}
               </Text>
             </View>
-          </View>
+          </View> */}
         </View>
 
         <Text
