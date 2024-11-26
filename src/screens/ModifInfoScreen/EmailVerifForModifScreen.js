@@ -29,7 +29,7 @@ import ButtonNext from '../../components/ButtonNext/ButtonNext';
 
 const EmailVerifForModifScreen = () => {
   const [lang, setLang] = useState({});
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState('crewjoki01@gmail.com');
   const [isEmailValid, setIsEmailValid] = useState(true);
   const route = useRoute();
   const {existEmail} = route.params;
