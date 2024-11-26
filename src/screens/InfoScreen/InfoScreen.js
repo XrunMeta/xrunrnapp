@@ -237,7 +237,7 @@ ${storeapp}`,
 
       {/* Title */}
       <View style={{flexDirection: 'row'}}>
-        <View style={{position: 'absolute', zIndex: 1}}>
+        <View style={{position: 'absolute', zIndex: 1, marginTop: -5}}>
           <ButtonBack onClick={onBack} />
         </View>
         <View style={styles.titleWrapper}>
