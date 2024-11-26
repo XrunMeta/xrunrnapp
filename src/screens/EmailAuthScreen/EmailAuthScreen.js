@@ -190,11 +190,14 @@ const EmailAuthScreen = () => {
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <SafeAreaView style={{flex: 1}}>
         <View style={[styles.root, {height: ScreenHeight}]}>
-          <View style={{flexDirection: 'row'}}>
-            <View style={{position: 'absolute', zIndex: 1}}>
-              <ButtonBack onClick={onBack} />
-            </View>
-            <View style={styles.titleWrapper}>
+          <View style={styles.titleWrapper}>
+            <ButtonBack onClick={onBack} />
+            <View
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                marginRight: 70,
+              }}>
               <Text style={styles.title}>
                 {lang && lang.screen_signin && lang.screen_signin.authcode
                   ? lang.screen_signin.authcode.link
@@ -224,7 +227,10 @@ const EmailAuthScreen = () => {
                 alignSelf: 'flex-start',
                 marginLeft: 25,
                 color: 'red',
+                fontFamily: getFontFam() + 'Regular',
+                fontSize: fontSize('note'),
               }}>
+              *
               {lang && lang.screen_emailAuth && lang.screen_emailAuth.alert
                 ? lang.screen_emailAuth.alert.invalidEmail
                 : ''}
@@ -282,13 +288,11 @@ const styles = StyleSheet.create({
     width: 80,
   },
   titleWrapper: {
-    paddingVertical: 9,
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-    flex: 1,
+    backgroundColor: 'white',
     elevation: 5,
     zIndex: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   title: {
     fontSize: fontSize('title'),

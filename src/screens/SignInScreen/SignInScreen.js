@@ -223,7 +223,11 @@ const SignInScreen = () => {
           contentContainerStyle={{flexGrow: 1}}
           showsVerticalScrollIndicator={false}
           style={{flex: 1}}>
-          <View style={{flexDirection: 'row', position: 'relative'}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              position: 'relative',
+            }}>
             <View style={{position: 'absolute', zIndex: 1}}>
               <ButtonBack onClick={onBack} />
             </View>
