@@ -336,7 +336,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
             {/* Download */}
             <TouchableOpacity
               activeOpacity={0.7}
-              style={styles.wrapperActionIconQR}
+              style={[styles.wrapperActionIconQR, {display: 'none'}]}
               onPress={checkPermission}
               disabled={downloadDisable ? true : false}>
               <Image
