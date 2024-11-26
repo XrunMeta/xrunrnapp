@@ -2,13 +2,12 @@ import {
   View,
   Text,
   StyleSheet,
-  Pressable,
-  Image,
   Dimensions,
   Alert,
   SafeAreaView,
   TouchableWithoutFeedback,
   Keyboard,
+  KeyboardAvoidingView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput';
@@ -20,9 +19,9 @@ import {
   getFontFam,
   fontSize,
   gatewayNodeJS,
-  BottomComponentFixer,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
+import ButtonNext from '../../components/ButtonNext/ButtonNext';
 
 const ConfirmPasswordEdit = () => {
   const [lang, setLang] = useState({});
@@ -142,25 +141,14 @@ const ConfirmPasswordEdit = () => {
           </Text>
         </View>
 
-        <BottomComponentFixer count={3} />
-
-        <View style={[styles.bottomSection]}>
-          <View style={styles.additionalLogin}></View>
-          <Pressable
-            onPress={onSignIn}
-            style={styles.buttonSignIn}
-            disabled={!isDisable && password == ''}>
-            <Image
-              source={
-                !isDisable && password == ''
-                  ? require('../../../assets/images/icon_nextDisable.png')
-                  : require('../../../assets/images/icon_next.png')
-              }
-              resizeMode="contain"
-              style={styles.buttonSignInImage}
-            />
-          </Pressable>
-        </View>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={{flex: 1}}>
+          <ButtonNext
+            onClick={onSignIn}
+            isDisabled={!isDisable && password == ''}
+          />
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
@@ -192,32 +180,6 @@ const styles = StyleSheet.create({
     fontSize: fontSize('note'),
     color: '#343a59',
     marginTop: -3,
-  },
-  bottomSection: {
-    padding: 20,
-    paddingBottom: 5,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    flex: 1,
-    width: '100%',
-  },
-  additionalLogin: {
-    flexDirection: 'row',
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-    height: 100,
-  },
-  buttonSignIn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    flexDirection: 'column-reverse',
-    height: 100,
-    justifyContent: 'center',
-  },
-  buttonSignInImage: {
-    height: 80,
-    width: 80,
   },
 });
 
