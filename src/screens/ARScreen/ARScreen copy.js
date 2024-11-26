@@ -494,10 +494,14 @@ function ARScreen() {
               style={{
                 position: 'absolute',
                 // backgroundColor: '#001a477a',
-                top: 125,
+                // top: 125,
+                // bottom: 0,
+                // left: 10,
+                // right: -50,
+                top: 0,
                 bottom: 0,
-                left: 10,
-                right: -50,
+                left: 0,
+                right: 0,
               }}>
               {coins.map((item, index) => {
                 const isRandomCoin = filterCoinsRandomMove.includes(index);
@@ -533,7 +537,7 @@ function ARScreen() {
                     key={item.coin}
                     style={[
                       {
-                        position: 'absolute',
+                        position: 'relative',
                         left: isRandomCoin
                           ? randomLefts[index]
                           : selectedCoinIndex !== null &&
@@ -544,11 +548,12 @@ function ARScreen() {
                           ? randomTops[index]
                           : selectedCoinIndex !== null &&
                             filteredCoins[selectedCoinIndex].coin === item.coin
-                          ? WINDOW_HEIGHT / 2 - 270
+                          ? WINDOW_HEIGHT / 2 - 10
                           : moveUncatchTop,
                         zIndex: parseFloat(item.distance) < 30 ? 20 : 1,
                         width: 150,
-                        height: 275,
+                        height: 175,
+                        // backgroundColor: '#767596ab',
                         display:
                           item.rotation >= 0 && item.rotation <= 200
                             ? 'block'
@@ -640,7 +645,7 @@ function ARScreen() {
                               fontFamily: getFontFam() + 'Regular',
                               fontSize: fontSize('body'),
                               color: 'grey',
-                              marginTop: 3,
+                              marginTop: -5,
                             }}>
                             {item.distance}M
                           </Text>
