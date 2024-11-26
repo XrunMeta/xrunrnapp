@@ -29,6 +29,7 @@ import {
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonNext from '../../components/ButtonNext/ButtonNext';
+import IOSButtonFixer from '../../components/IOSButtonFixer';
 
 // ########## Countdown ##########
 const Countdown = ({lang, seconds, onProblem, resetKey}) => {
@@ -441,9 +442,9 @@ const EmailVerificationScreen = () => {
           ))}
         </View>
         {/* Bottom Section*/}
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          style={{flex: 1}}>
+      
+    			<IOSButtonFixer count={5} />
+
           <ButtonNext onClick={onSignIn} isDisabled={isDisable}>
             <View style={styles.additionalLogin}>
               <Countdown
@@ -454,7 +455,6 @@ const EmailVerificationScreen = () => {
               />
             </View>
           </ButtonNext>
-        </KeyboardAvoidingView>
 
 
         {/* Slider Modal */}

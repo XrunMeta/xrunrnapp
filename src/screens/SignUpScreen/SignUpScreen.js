@@ -28,6 +28,7 @@ import {
   getFontFam,
   fontSize,
   authcode,
+  
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import RadioGroup from 'react-native-radio-buttons-group';
@@ -609,9 +610,6 @@ const SignUpScreen = ({route}) => {
             </View>
 
             {/* Bottom Section */}
-            <KeyboardAvoidingView
-              behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-              style={{flex: 1}}>
               <ButtonNext onClick={onSignUp} isDisabled={isDisable}>
                 <View style={styles.additionalLogin}>
                   <Text style={styles.normalText}>
@@ -625,7 +623,6 @@ const SignUpScreen = ({route}) => {
                   </Text>
                 </View>
               </ButtonNext>
-            </KeyboardAvoidingView>
           </ScrollView>
 
           <Modal

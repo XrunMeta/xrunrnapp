@@ -161,14 +161,11 @@ const PasswordMissedScreen = () => {
           )}
         </View>
 
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          style={{flex: 1}}>
+    
           <ButtonNext
             isDisabled={!isDisable && email == ''}
             onClick={onSignIn}
           />
-        </KeyboardAvoidingView>
       </ScrollView>
       </SafeAreaView>
     </TouchableWithoutFeedback>

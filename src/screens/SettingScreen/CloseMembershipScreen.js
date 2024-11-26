@@ -19,6 +19,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {getLanguage2, getFontFam, fontSize} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import ButtonNext from '../../components/ButtonNext/ButtonNext';
+import IOSButtonFixer from '../../components/IOSButtonFixer';
 
 const CloseMembershipScreen = () => {
   const [lang, setLang] = useState('');
@@ -368,11 +369,8 @@ const CloseMembershipScreen = () => {
               />
             </View>
 
-            <KeyboardAvoidingView
-              behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-              style={{flex: 1}}>
+          <IOSButtonFixer count={5} />
               <ButtonNext onClick={onSaveChange} isDisabled={isDisable} />
-            </KeyboardAvoidingView>
           </View>
         )}
       </SafeAreaView>

@@ -389,9 +389,6 @@ const EmailVerificationLoginScreen = () => {
         </View>
 
         {/* Bottom Section*/}
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          style={{flex: 1}}>
           <ButtonNext onClick={onSignIn} isDisabled={isDisable}>
             <View style={styles.additionalLogin}>
               <Countdown
@@ -402,7 +399,6 @@ const EmailVerificationLoginScreen = () => {
               />
             </View>
           </ButtonNext>
-        </KeyboardAvoidingView>
 
         {/* Slider Modal */}
         <SliderModal visible={modalVisible} onClose={toggleModal} />

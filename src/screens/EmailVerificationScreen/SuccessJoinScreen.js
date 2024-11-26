@@ -22,6 +22,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import crashlytics from '@react-native-firebase/crashlytics';
 import ButtonComplete from '../../components/ButtonComplete/ButtonComplete';
 import {useAuth} from '../../context/AuthContext/AuthContext';
+import IOSButtonFixer from '../../components/IOSButtonFixer';
 
 // ########## Main Function ##########
 const SuccessJoinScreen = () => {
@@ -125,11 +126,7 @@ const SuccessJoinScreen = () => {
           </View>
 
           {/* Bottom Section*/}
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-            style={{flex: 1}}>
             <ButtonComplete onClick={onSignIn} />
-          </KeyboardAvoidingView>
         </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>
