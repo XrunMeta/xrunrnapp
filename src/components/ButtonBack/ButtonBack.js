@@ -15,7 +15,7 @@ const ButtonBack = ({onClick}) => {
 const styles = StyleSheet.create({
   btnBack: {
     alignSelf: 'flex-start',
-    paddingVertical: 20,
+    paddingVertical: 15,
     paddingLeft: 14,
     paddingRight: 30,
   },
