@@ -305,7 +305,7 @@ const WalletScreen = ({navigation, route}) => {
               onPress={() => copiedHash(address)}>
               <Image
                 source={require('../../../assets/images/clipboard.png')}
-                style={{width: 18, height: 18}}
+                style={{width: 15, height: 15}}
               />
             </TouchableOpacity>
           </View>
@@ -628,8 +628,8 @@ const styles = StyleSheet.create({
   },
   cardName: {
     color: 'white',
-    fontFamily: getFontFam() + 'Regular',
-    fontSize: fontSize('body'),
+    fontFamily: getFontFam() + 'Bold',
+    fontSize: fontSize('title'),
     paddingTop: 20,
   },
   wrapperShowQR: {
@@ -674,12 +674,11 @@ const styles = StyleSheet.create({
   },
   containerTextWallet: {
     marginTop: 20,
-    gap: 4,
   },
   wrapperTextwallet: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 6,
   },
   textWallet: {
     color: 'white',
@@ -697,6 +696,8 @@ const styles = StyleSheet.create({
     marginTop: 13,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    flex: 1,
+    alignItems: 'flex-end',
   },
   wrapperCopiedHash: currency => ({
     flexDirection: 'row',
