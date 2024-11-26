@@ -210,7 +210,8 @@
       "sendAgain": "다시 보내기",
       "emptyCode": "인증 코드를 완료하세요",
       "invalidNumber": "유효하지 않은 번호",
-      "emptyNumber": "전화 번호를 입력하세요"
+      "emptyNumber": "전화 번호를 입력하세요",
+      "lengthPhoneNumber": "8자리 숫자보다 적을 수 없습니다"
     },
     "field_email": {
       "label": "이메일을 입력하세요",

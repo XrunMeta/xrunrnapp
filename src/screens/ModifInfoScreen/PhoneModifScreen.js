@@ -11,6 +11,7 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
   Keyboard,
+  KeyboardAvoidingView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
@@ -24,12 +25,13 @@ import {
   authcode,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
+import ButtonNext from '../../components/ButtonNext/ButtonNext';
 
 const PhoneModifScreen = ({route}) => {
   const [lang, setLang] = useState({});
   const [phoneNumber, setPhoneNumber] = useState('');
   const {member, countryCode = 82} = route.params || {};
-  const [isDisable, setIsDisable] = useState(false);
+  const [isDisable, setIsDisable] = useState(true);
 
   const navigation = useNavigation();
 
@@ -59,7 +61,7 @@ const PhoneModifScreen = ({route}) => {
     setPhoneNumber(filteredText);
 
     // Validasi minimal digit
-    if (filteredText.length >= 8) {
+    if (filteredText.length > 0) {
       setIsDisable(false); // Tombol aktif jika panjang mencukupi
     } else {
       setIsDisable(true); // Tombol nonaktif jika panjang tidak mencukupi
@@ -70,6 +72,11 @@ const PhoneModifScreen = ({route}) => {
     setIsDisable(true);
     if (phoneNumber.trim() === '') {
       Alert.alert('Error', lang?.screen_modify_phone?.condition?.empty);
+    } else if (phoneNumber.length < 8) {
+      Alert.alert(
+        'Failed',
+        lang?.screen_notExist?.field_phoneVerif?.lengthPhoneNumber,
+      );
     } else {
       console.log(`
       Data dikirim (Phone Login)
@@ -169,24 +176,12 @@ const PhoneModifScreen = ({route}) => {
           </View>
         </View>
 
-        {/* Bottom Section */}
-        <View style={[styles.bottomSection]}>
-          <View style={styles.additionalLogin}></View>
-          <Pressable
-            onPress={onJoin}
-            style={styles.buttonSignUp}
-            disabled={isDisable}>
-            <Image
-              source={
-                isDisable
-                  ? require('../../../assets/images/icon_nextDisable.png')
-                  : require('../../../assets/images/icon_next.png')
-              }
-              resizeMode="contain"
-              style={styles.buttonSignUpImage}
-            />
-          </Pressable>
-        </View>
+        {/* Bottom Section*/}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={{flex: 1}}>
+          <ButtonNext onClick={onJoin} isDisabled={isDisable} />
+        </KeyboardAvoidingView>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
@@ -194,7 +189,7 @@ const PhoneModifScreen = ({route}) => {
 
 const styles = StyleSheet.create({
   root: {
-    flexDirection: 'column',
+    flex: 1,
   },
   bottomSection: {
     padding: 20,

@@ -6,6 +6,10 @@ import {
   Image,
   Dimensions,
   Alert,
+  TouchableWithoutFeedback,
+  Keyboard,
+  SafeAreaView,
+  KeyboardAvoidingView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput';
@@ -19,6 +23,7 @@ import {
   gatewayNodeJS,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
+import ButtonNext from '../../components/ButtonNext/ButtonNext';
 
 const CloseConfirmPassword = () => {
   const route = useRoute();
@@ -26,11 +31,19 @@ const CloseConfirmPassword = () => {
   const [lang, setLang] = useState({});
   const [userData, setUserData] = useState('');
   const [password, setPassword] = useState('');
-  const [isDisable, setIsDisable] = useState(false);
+  const [isDisable, setIsDisable] = useState(true);
 
   const navigation = useNavigation();
 
   let ScreenHeight = Dimensions.get('window').height;
+
+  useEffect(() => {
+    if (password.length > 0) {
+      setIsDisable(false);
+    } else {
+      setIsDisable(true);
+    }
+  }, [password]);
 
   const onSignIn = async () => {
     if (password.trim() === '') {
@@ -115,80 +128,70 @@ const CloseConfirmPassword = () => {
   }, []);
 
   return (
-    <View style={[styles.root, {height: ScreenHeight}]}>
-      {/* Title */}
-      <View style={{flexDirection: 'row'}}>
-        <View style={{position: 'absolute', zIndex: 1}}>
-          <ButtonBack onClick={onBack} />
-        </View>
-        <View style={styles.titleWrapper}>
-          <Text style={styles.title}>
-            {lang && lang.screen_setting && lang.screen_setting.close
-              ? lang.screen_setting.close.del_title
-              : ''}
-          </Text>
-        </View>
-      </View>
-
-      <CustomInput
-        label={
-          lang && lang.screen_signin && lang.screen_signin.password
-            ? lang.screen_signin.password.label
-            : ''
-        }
-        placeholder={
-          lang && lang.screen_signin && lang.screen_signin.password
-            ? lang.screen_signin.password.placeholder
-            : ''
-        }
-        value={password}
-        setValue={setPassword}
-        secureTextEntry
-        isPassword={true}
-      />
-      <View
-        style={{
-          width: '100%',
-          paddingHorizontal: 25,
-          marginTop: 5,
-        }}>
-        <Text style={styles.subTitle}>
-          *
-          {lang && lang.screen_setting && lang.screen_setting.close
-            ? lang.screen_setting.close.del_d1
-            : ''}
-        </Text>
-        <Text style={styles.subTitle}>
-          {lang && lang.screen_setting && lang.screen_setting.close
-            ? '  ' + lang.screen_setting.close.del_d2
-            : ''}
-        </Text>
-      </View>
-
-      <View style={[styles.bottomSection]}>
-        <View style={styles.additionalLogin}></View>
-        <Pressable
-          onPress={onSignIn}
-          style={styles.buttonSignIn}
-          disabled={isDisable}>
-          <Image
-            source={
-              isDisable
-                ? require('../../../assets/images/icon_nextDisable.png')
-                : require('../../../assets/images/icon_next.png')
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
+        <View>
+          {/* Title */}
+          <View style={{flexDirection: 'row'}}>
+            <View style={{position: 'absolute', zIndex: 1}}>
+              <ButtonBack onClick={onBack} />
+            </View>
+            <View style={styles.titleWrapper}>
+              <Text style={styles.title}>
+                {lang && lang.screen_setting && lang.screen_setting.close
+                  ? lang.screen_setting.close.del_title
+                  : ''}
+              </Text>
+            </View>
+          </View>
+          <CustomInput
+            label={
+              lang && lang.screen_signin && lang.screen_signin.password
+                ? lang.screen_signin.password.label
+                : ''
             }
-            resizeMode="contain"
-            style={styles.buttonSignInImage}
+            placeholder={
+              lang && lang.screen_signin && lang.screen_signin.password
+                ? lang.screen_signin.password.placeholder
+                : ''
+            }
+            value={password}
+            setValue={setPassword}
+            secureTextEntry
+            isPassword={true}
           />
-        </Pressable>
-      </View>
-    </View>
+          <View
+            style={{
+              width: '100%',
+              paddingHorizontal: 25,
+              marginTop: 5,
+            }}>
+            <Text style={styles.subTitle}>
+              *
+              {lang && lang.screen_setting && lang.screen_setting.close
+                ? lang.screen_setting.close.del_d1
+                : ''}
+            </Text>
+            <Text style={styles.subTitle}>
+              {lang && lang.screen_setting && lang.screen_setting.close
+                ? '  ' + lang.screen_setting.close.del_d2
+                : ''}
+            </Text>
+          </View>
+        </View>
+
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={{flex: 1}}>
+          <ButtonNext onClick={onSignIn} isDisabled={isDisable} />
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
   root: {
-    alignItems: 'center',
     flex: 1,
     backgroundColor: 'white',
   },

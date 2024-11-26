@@ -232,6 +232,7 @@ const EmailVerificationScreen = () => {
     } catch (error) {
       console.log(`Error during Signup: ${error}`);
       Alert.alert('Error', lang.screen_emailVerification.notif.errorServer);
+      setIsDisable(false);
     }
   };
 
@@ -262,9 +263,11 @@ const EmailVerificationScreen = () => {
         });
       } else {
         Alert.alert('Failed', lang.screen_emailVerification.notif.errorServer);
+        setIsDisable(false);
       }
     } catch (error) {
       console.log(`Error during check login email & pin: ${error}`);
+      setIsDisable(false);
     }
   };
 
@@ -296,15 +299,16 @@ const EmailVerificationScreen = () => {
 
       if (responseAuthData.status !== 'success') {
         Alert.alert('Failed', lang.screen_emailVerification.notif.wrongCode);
+        setIsDisable(false);
       } else {
         addNewMember();
       }
     } catch (error) {
       // Handle network errors or other exceptions
       console.error('Error during Check Auth Code:', error);
+      setIsDisable(false);
     } finally {
       setIsSubmitting(false);
-      setIsDisable(false);
     }
   };
 

@@ -210,7 +210,8 @@
       "sendAgain": "RE-SEND",
       "emptyCode": "Please complete the verification code",
       "invalidNumber": "Invalid Number",
-      "emptyNumber": "Please enter your number"
+      "emptyNumber": "Please enter your number",
+      "lengthPhoneNumber": "Cannot be less than 8 digit number"
     },
     "field_email": {
       "label": "Enter your Email",
