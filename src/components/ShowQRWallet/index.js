@@ -381,7 +381,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
                 height: 35,
                 borderRadius: 10,
                 backgroundColor: 'black',
-                marginTop: 10,
+                marginTop: 20,
               }}
               onPress={() =>
                 navigation.replace('KeyDownload', {
