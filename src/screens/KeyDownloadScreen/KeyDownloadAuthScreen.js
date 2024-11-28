@@ -31,7 +31,7 @@ import Countdown from '../ModifInfoScreen/Countdown';
 // ########## Main Function ##########
 const KeyDownloadAuthScreen = () => {
   const route = useRoute();
-  const {dataEmail, member} = route.params;
+  const {dataEmail, member, address} = route.params;
   const [verificationCode, setVerificationCode] = useState([
     '',
     '',
@@ -130,7 +130,7 @@ const KeyDownloadAuthScreen = () => {
       console.log(JSON.stringify(responseAuthData));
 
       if (responseAuthData.status == 'success') {
-        navigation.replace('KeyShowDownload');
+        navigation.replace('KeyShowDownload', {address});
       } else {
         Alert.alert('Failed', lang.screen_emailVerification.notif.wrongCode);
       }
