@@ -20,18 +20,20 @@ import {
   getLanguage2,
   URL_API_NODEJS,
   authcode,
+  gatewayNodeJS,
 } from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import crashlytics from '@react-native-firebase/crashlytics';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 const KeyShowDownload = () => {
   const [lang, setLang] = useState('');
   const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const route = useRoute();
+  const {address} = route.params || {};
   const navigation = useNavigation();
-  const privateKey =
-    '8c8148ff0219e4c77b2c2f2957f53073464ed14e64ea3792a243304395a534c06d2f51f5255b08088679125f56cdda3a033b4ef9d8dffe2de4427982b1b358543c4168d30878b463415392e24329e35a';
+  const [privateKey, setPrivateKey] = useState('');
 
   useEffect(() => {
     // Get Language Data
@@ -54,6 +56,25 @@ const KeyShowDownload = () => {
       }
     };
 
+    const getPK = async () => {
+      try {
+        const body = {
+          address: address,
+          showPK: 'YES',
+        };
+
+        const response = await gatewayNodeJS('getPK', 'POST', body);
+        console.log({bahlul: response?.data[0]});
+        setPrivateKey(response?.data[0]?.pk);
+      } catch (err) {
+        console.error('Failed to get userData from AsyncStorage:', err);
+        setIsLoading(false);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
+      }
+    };
+
+    getPK();
     fetchData();
   }, []);
 
@@ -149,7 +170,9 @@ const KeyShowDownload = () => {
             borderWidth: 1,
             borderColor: '#cccccc',
           }}>
-          <Text style={[styles.text, {marginBottom: 15}]}>{privateKey}</Text>
+          <Text style={[styles.text, {marginBottom: 15}]}>
+            {privateKey == '' ? 'Loading...' : privateKey}
+          </Text>
           <View
             style={{
               display: 'flex',
