@@ -21,10 +21,12 @@ import {
 } from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import crashlytics from '@react-native-firebase/crashlytics';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import ButtonNext from '../../components/ButtonNext/ButtonNext';
 
 const KeyDownload = () => {
+  const route = useRoute();
+  const {address} = route.params || {};
   const [lang, setLang] = useState('');
   const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -87,6 +89,7 @@ const KeyDownload = () => {
         navigation.replace('KeyDownloadAuth', {
           dataEmail: userData?.email,
           member: userData?.member,
+          address,
         });
       } else {
         Alert.alert(
