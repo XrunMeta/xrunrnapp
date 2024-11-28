@@ -22,6 +22,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {useNavigation} from '@react-navigation/native';
+import ButtonNext from '../../components/ButtonNext/ButtonNext';
 
 const KeyDownload = () => {
   const [lang, setLang] = useState('');
@@ -137,27 +138,18 @@ const KeyDownload = () => {
       </View>
 
       {/* Desc */}
-      <ScrollView style={{paddingHorizontal: 20, paddingVertical: 10, flex: 1}}>
+      <ScrollView style={{padding: 20, flex: 1}}>
         <Text style={styles.text}>
           {lang && lang.screen_keyDownload ? lang.screen_keyDownload.desc : ''}
         </Text>
       </ScrollView>
 
       {/* Verify */}
-      <View
-        style={{
-          paddingHorizontal: 20,
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
+      <ButtonNext onClick={onSubmit} isDisabled={!isChecked && !isDisable}>
         <TouchableOpacity
           style={{
             flexDirection: 'row',
             alignSelf: 'flex-center',
-            marginHorizontal: 5,
-            marginBottom: 10,
             flex: 1,
           }}
           onPress={checkBoxToggle}>
@@ -176,28 +168,7 @@ const KeyDownload = () => {
               : ''}
           </Text>
         </TouchableOpacity>
-        <Pressable
-          onPress={onSubmit}
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            alignSelf: 'flex-end',
-            flexDirection: 'column-reverse',
-            height: 100,
-            justifyContent: 'center',
-          }}
-          disabled={!isChecked && !isDisable}>
-          <Image
-            source={
-              !isChecked && !isDisable
-                ? require('../../../assets/images/icon_nextDisable.png')
-                : require('../../../assets/images/icon_next.png')
-            }
-            resizeMode="contain"
-            style={{height: 80, width: 80}}
-          />
-        </Pressable>
-      </View>
+      </ButtonNext>
     </SafeAreaView>
   );
 };

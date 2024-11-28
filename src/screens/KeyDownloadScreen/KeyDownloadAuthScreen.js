@@ -27,6 +27,7 @@ import {
 } from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Countdown from '../ModifInfoScreen/Countdown';
+import ButtonNext from '../../components/ButtonNext/ButtonNext';
 
 // ########## Main Function ##########
 const KeyDownloadAuthScreen = () => {
@@ -101,6 +102,11 @@ const KeyDownloadAuthScreen = () => {
   };
 
   const onSignIn = async () => {
+    if (verificationCode.join('').length < 6) {
+      Alert.alert('Failed', lang.screen_emailVerification.email.label);
+      return;
+    }
+
     if (isDisable) return;
 
     // Cek jika semua kode sudah diisi
@@ -293,7 +299,18 @@ const KeyDownloadAuthScreen = () => {
           </View>
 
           {/* Bottom Section*/}
-          <View style={[styles.bottomSection]}>
+          <ButtonNext onClick={onSignIn} isDisabled={isDisable}>
+            <View style={styles.additionalLogin}>
+              <Countdown
+                onFinish={handleCountdownFinish}
+                lang={lang}
+                onProblem={onProblem}
+                restart={restartCountdown}
+              />
+            </View>
+          </ButtonNext>
+
+          {/* <View style={[styles.bottomSection]}>
             <View style={styles.additionalLogin}>
               <Countdown
                 onFinish={handleCountdownFinish}
@@ -316,7 +333,7 @@ const KeyDownloadAuthScreen = () => {
                 style={styles.buttonSignInImage}
               />
             </Pressable>
-          </View>
+          </View> */}
 
           {/* Slider Modal */}
           <SliderModal visible={modalVisible} onClose={toggleModal} />
