@@ -8,6 +8,7 @@ import {
   Alert,
   Platform,
   PermissionsAndroid,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -28,6 +29,7 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
 
   // Private Key Check
   const [hasPK, setHasPK] = useState(false);
+  const [isLoadingPK, setIsLoadingPK] = useState(true);
 
   // Animated notification in QR
   const [fadeAnim] = useState(new Animated.Value(0));
@@ -63,9 +65,9 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
 
         const response = await gatewayNodeJS('getPK', 'POST', body);
         setHasPK(response?.data[0]?.status);
+        setIsLoadingPK(false);
       } catch (err) {
         console.error('Failed to get userData from AsyncStorage:', err);
-        setIsLoading(false);
         crashlytics().recordError(new Error(err));
         crashlytics().log(err);
       }
@@ -369,35 +371,47 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
           </View>
 
           {/* Download Private Key */}
-          {hasPK == true && (
-            <TouchableOpacity
-              activeOpacity={0.7}
+          {isLoadingPK ? (
+            <View
               style={{
+                flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center',
-                borderWidth: 1,
-                borderColor: '#eee',
-                width: 150,
-                height: 35,
-                borderRadius: 10,
-                backgroundColor: 'black',
-                marginTop: 20,
-              }}
-              onPress={() =>
-                navigation.replace('KeyDownload', {
-                  address: cardDataQR?.address,
-                })
-              }
-              disabled={downloadDisable ? true : false}>
-              <Text
+                marginTop: 40,
+              }}>
+              <ActivityIndicator size="large" color="#ccc" />
+            </View>
+          ) : (
+            hasPK == true && (
+              <TouchableOpacity
+                activeOpacity={0.7}
                 style={{
-                  fontFamily: getFontFam() + 'Regular',
-                  fontSize: fontSize('body'),
-                  color: '#fff',
-                }}>
-                Key Download
-              </Text>
-            </TouchableOpacity>
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderWidth: 1,
+                  borderColor: '#eee',
+                  width: 150,
+                  height: 35,
+                  borderRadius: 10,
+                  backgroundColor: 'black',
+                  marginTop: 20,
+                }}
+                onPress={() =>
+                  navigation.replace('KeyDownload', {
+                    address: cardDataQR?.address,
+                  })
+                }
+                disabled={downloadDisable ? true : false}>
+                <Text
+                  style={{
+                    fontFamily: getFontFam() + 'Regular',
+                    fontSize: fontSize('body'),
+                    color: '#fff',
+                  }}>
+                  Key Download
+                </Text>
+              </TouchableOpacity>
+            )
           )}
         </View>
       </View>
