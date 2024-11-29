@@ -6,6 +6,12 @@ const getRandomOffset = (value, range = 10) => {
   return value + (Math.random() * (range * 2) - range); // ±20 dari posisi awal
 };
 
+// Object Position Randomize
+const getRandomObjectOffset = (value, range = 100) => {
+  const offset = Math.random() * (range * 2) - range; // Rentang antara -20 hingga +20
+  return value + offset;
+};
+
 const spots = [
   {id: 1, x: 0, y: 0}, // Tengah
   {id: 2, x: -100, y: 50},
@@ -20,14 +26,14 @@ const spots = [
 
 const AnimatedSpot = ({id, clickable}) => {
   const position = useRef(new Animated.ValueXY({x: 0, y: 0})).current;
-  const scaleAnim = useRef(new Animated.Value(0)).current; // Skala awal 0
-  const fadeAnim = useRef(new Animated.Value(0)).current; // Opacity awal 0
+  const scaleAnim = useRef(new Animated.Value(0)).current; // Default scale 0
+  const fadeAnim = useRef(new Animated.Value(0)).current; // Default opacity 0
 
   const startShakeAnimation = () => {
     Animated.sequence([
       Animated.timing(position, {
         toValue: {
-          x: getRandomOffset(spots[id - 1].x), // Tambahkan random offset
+          x: getRandomOffset(spots[id - 1].x), // Add radom offset
           y: getRandomOffset(spots[id - 1].y),
         },
         duration: 150,
@@ -41,20 +47,23 @@ const AnimatedSpot = ({id, clickable}) => {
         duration: 150,
         useNativeDriver: true,
       }),
-    ]).start(() => startShakeAnimation()); // Rekursif memulai lagi shake
+    ]).start(() => startShakeAnimation()); // Recursive to start shake again
   };
 
   useEffect(() => {
-    // Posisi awal secara acak di luar layar
+    // Default position since out of screen
     position.setValue({
       x: Math.random() * 300 - 150,
       y: Math.random() * 300 - 150,
     });
 
-    // Animasi masuk ke posisi
+    // In Animation to position
     Animated.parallel([
       Animated.timing(position, {
-        toValue: {x: spots[id - 1].x, y: spots[id - 1].y},
+        toValue: {
+          x: getRandomObjectOffset(spots[id - 1].x),
+          y: getRandomObjectOffset(spots[id - 1].y),
+        },
         duration: 1000,
         useNativeDriver: true,
       }),
@@ -68,9 +77,9 @@ const AnimatedSpot = ({id, clickable}) => {
         duration: 1000,
         useNativeDriver: true,
       }),
-    ]).start(() => startShakeAnimation()); // Mulai shake setelah masuk
+    ]).start(() => startShakeAnimation()); // Start shake when Object in
 
-    // Menghilangkan objek setelah 5 detik dengan fade out
+    // Remove object after 5s
     setTimeout(() => {
       Animated.timing(fadeAnim, {
         toValue: 0,
@@ -88,12 +97,29 @@ const AnimatedSpot = ({id, clickable}) => {
           backgroundColor: clickable ? 'yellow' : 'white',
           opacity: fadeAnim,
           transform: [
-            {translateX: position.x},
-            {translateY: position.y},
+            // Coin Positioning at Screen (Adjust range at parameter || normal 0-30)
+            {
+              translateX: position.x.interpolate({
+                inputRange: [-200, 200],
+                outputRange: [
+                  -200 + getRandomObjectOffset(0, 30),
+                  200 + getRandomObjectOffset(0, 30),
+                ],
+              }),
+            },
+            {
+              translateY: position.y.interpolate({
+                inputRange: [-200, 200],
+                outputRange: [
+                  -200 + getRandomObjectOffset(0, 30),
+                  200 + getRandomObjectOffset(0, 30),
+                ],
+              }),
+            },
             {
               scale: scaleAnim.interpolate({
                 inputRange: [0, 1],
-                outputRange: [0, 1], // Skala masuk dari kecil ke besar
+                outputRange: [0, 1], // Scale in from small to big
               }),
             },
           ],
@@ -110,7 +136,7 @@ const ARScreen = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setVisible(prev => !prev);
-    }, 6000); // Ulangi setiap 7 detik
+    }, 6000); // Repeat animation
     return () => clearInterval(interval);
   }, []);
 
@@ -130,6 +156,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#ccc',
     justifyContent: 'center',
     alignItems: 'center',
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 150,
+    left: 0,
   },
   spot: {
     width: 50,
