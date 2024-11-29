@@ -1,6 +1,11 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {View, Text, StyleSheet, Animated} from 'react-native';
 
+// Shake Range Effect
+const getRandomOffset = (value, range = 10) => {
+  return value + (Math.random() * (range * 2) - range); // ±20 dari posisi awal
+};
+
 const spots = [
   {id: 1, x: 0, y: 0}, // Tengah
   {id: 2, x: -100, y: 50},
@@ -22,8 +27,8 @@ const AnimatedSpot = ({id, clickable}) => {
     Animated.sequence([
       Animated.timing(position, {
         toValue: {
-          x: spots[id - 1].x + (Math.random() * 10 - 5),
-          y: spots[id - 1].y + (Math.random() * 10 - 5),
+          x: getRandomOffset(spots[id - 1].x), // Tambahkan random offset
+          y: getRandomOffset(spots[id - 1].y),
         },
         duration: 150,
         useNativeDriver: true,
