@@ -3,17 +3,17 @@ import {View, Text, StyleSheet, Animated} from 'react-native';
 
 // Shake Range Effect
 const getRandomOffset = (value, range = 10) => {
-  return value + (Math.random() * (range * 2) - range); // ±20 dari posisi awal
+  return value + (Math.random() * (range * 2) - range); // ±20 from start position
 };
 
 // Object Position Randomize
 const getRandomObjectOffset = (value, range = 100) => {
-  const offset = Math.random() * (range * 2) - range; // Rentang antara -20 hingga +20
+  const offset = Math.random() * (range * 2) - range; // Range between -20 until 20
   return value + offset;
 };
 
 const spots = [
-  {id: 1, x: 0, y: 0}, // Tengah
+  {id: 1, x: 0, y: 0}, // Clickable is center
   {id: 2, x: -100, y: 50},
   {id: 3, x: 100, y: 50},
   {id: 4, x: -50, y: 150},
@@ -81,13 +81,40 @@ const AnimatedSpot = ({id, clickable}) => {
 
     // Remove object after 5s
     setTimeout(() => {
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 500,
-        useNativeDriver: true,
-      }).start();
+      // Animated.timing(position, {
+      //   toValue: {
+      //     x: position.x,
+      //     y: position.y,
+      //   },
+      //   duration: 500,
+      //   useNativeDriver: true,
+      // }).start();
+      startExitAnimation();
     }, 5000);
   }, []);
+
+  const startExitAnimation = () => {
+    Animated.parallel([
+      Animated.timing(position, {
+        toValue: {
+          x: Math.random() * 300 - 150, // Kembali ke posisi acak di luar layar
+          y: Math.random() * 300 - 150,
+        },
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+      Animated.timing(scaleAnim, {
+        toValue: 0, // Skala mengecil ke 0
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+      Animated.timing(fadeAnim, {
+        toValue: 0, // Opacity menjadi 0
+        duration: 1000,
+        useNativeDriver: true,
+      }),
+    ]).start(); // Animasi selesai tanpa loop
+  };
 
   return (
     <Animated.View
