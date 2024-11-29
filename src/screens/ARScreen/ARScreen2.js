@@ -28,9 +28,10 @@ const AnimatedSpot = ({id, clickable}) => {
   const position = useRef(new Animated.ValueXY({x: 0, y: 0})).current;
   const scaleAnim = useRef(new Animated.Value(0)).current; // Default scale 0
   const fadeAnim = useRef(new Animated.Value(0)).current; // Default opacity 0
+  const shakeAnimation = useRef(null);
 
   const startShakeAnimation = () => {
-    Animated.sequence([
+    shakeAnimation.current = Animated.sequence([
       Animated.timing(position, {
         toValue: {
           x: getRandomOffset(spots[id - 1].x), // Add radom offset
@@ -47,7 +48,9 @@ const AnimatedSpot = ({id, clickable}) => {
         duration: 150,
         useNativeDriver: true,
       }),
-    ]).start(() => startShakeAnimation()); // Recursive to start shake again
+    ]);
+
+    shakeAnimation.current.start(() => startShakeAnimation()); // Recursive to start shake
   };
 
   useEffect(() => {
@@ -77,23 +80,35 @@ const AnimatedSpot = ({id, clickable}) => {
         duration: 1000,
         useNativeDriver: true,
       }),
-    ]).start(() => startShakeAnimation()); // Start shake when Object in
+      // ]).start(() => startShakeAnimation()); // Start shake when Object in
 
-    // Remove object after 5s
-    setTimeout(() => {
-      // Animated.timing(position, {
-      //   toValue: {
-      //     x: position.x,
-      //     y: position.y,
-      //   },
-      //   duration: 500,
-      //   useNativeDriver: true,
-      // }).start();
-      startExitAnimation();
-    }, 5000);
+      // // Remove object after 5s
+      // setTimeout(() => {
+      //   // Animated.timing(position, {
+      //   //   toValue: {
+      //   //     x: position.x,
+      //   //     y: position.y,
+      //   //   },
+      //   //   duration: 500,
+      //   //   useNativeDriver: true,
+      //   // }).start();
+      //   startExitAnimation();
+      // }, 5000);
+    ]).start(() => {
+      startShakeAnimation(); // Mulai shake setelah masuk
+
+      // Mulai animasi keluar setelah delay
+      setTimeout(() => {
+        stopShakeAndStartExit(); // Fungsi baru untuk stop shake dan exit
+      }, 4000);
+    });
   }, []);
 
-  const startExitAnimation = () => {
+  const stopShakeAndStartExit = () => {
+    // Stop shake animation
+    shakeAnimation.current && shakeAnimation.current.stop();
+
+    // Exit animation
     Animated.parallel([
       Animated.timing(position, {
         toValue: {

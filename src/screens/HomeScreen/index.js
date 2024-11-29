@@ -12,7 +12,7 @@ import {
   Linking,
 } from 'react-native';
 import {useAuth} from '../../context/AuthContext/AuthContext';
-import ARScreen from '../ARScreen/ARScreen2';
+import ARScreen from '../ARScreen/ARScreen';
 import MapParent from './MapParentScreen';
 import {
   CommonActions,
