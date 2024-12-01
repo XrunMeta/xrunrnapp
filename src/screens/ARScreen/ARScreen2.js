@@ -1,9 +1,14 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, Text, StyleSheet, Animated} from 'react-native';
+import {View, Text, StyleSheet, Animated, Easing} from 'react-native';
+
+// Fungsi khusus untuk objek 1 dengan range kecil
+const getShakeRange = id => {
+  return id === 1 ? 5 : 10; // Range 5 untuk objek 1, 10 untuk lainnya
+};
 
 // Shake Range Effect
-const getRandomOffset = (value, range = 10) => {
-  return value + (Math.random() * (range * 2) - range); // ±20 from start position
+const getRandomOffset = (value, range) => {
+  return value + (Math.random() * (range * 2) - range);
 };
 
 // Object Position Randomize
@@ -18,10 +23,10 @@ const spots = [
   {id: 3, x: 100, y: 50},
   {id: 4, x: -50, y: 150},
   {id: 5, x: 50, y: 150},
-  {id: 6, x: 0, y: -100},
+  {id: 6, x: 0, y: -140},
   {id: 7, x: 100, y: -50},
   {id: 8, x: -100, y: -50},
-  {id: 9, x: 0, y: 200},
+  {id: 9, x: -100, y: 240},
 ];
 
 const AnimatedSpot = ({id, clickable}) => {
@@ -31,13 +36,15 @@ const AnimatedSpot = ({id, clickable}) => {
   const shakeAnimation = useRef(null);
 
   const startShakeAnimation = () => {
+    const shakeRange = getShakeRange(id);
     shakeAnimation.current = Animated.sequence([
       Animated.timing(position, {
         toValue: {
-          x: getRandomOffset(spots[id - 1].x), // Add radom offset
-          y: getRandomOffset(spots[id - 1].y),
+          x: getRandomOffset(spots[id - 1].x, shakeRange), // Add radom offset
+          y: getRandomOffset(spots[id - 1].y, shakeRange),
         },
-        duration: 150,
+        duration: 1000,
+        easing: Easing.inOut(Easing.ease),
         useNativeDriver: true,
       }),
       Animated.timing(position, {
@@ -45,7 +52,8 @@ const AnimatedSpot = ({id, clickable}) => {
           x: spots[id - 1].x,
           y: spots[id - 1].y,
         },
-        duration: 150,
+        duration: 1000,
+        easing: Easing.inOut(Easing.ease),
         useNativeDriver: true,
       }),
     ]);
@@ -73,59 +81,62 @@ const AnimatedSpot = ({id, clickable}) => {
       Animated.timing(scaleAnim, {
         toValue: 1,
         duration: 1000,
+        easing: Easing.inOut(Easing.ease),
         useNativeDriver: true,
       }),
       Animated.timing(fadeAnim, {
         toValue: 1,
         duration: 1000,
+        easing: Easing.inOut(Easing.ease),
         useNativeDriver: true,
       }),
-      // ]).start(() => startShakeAnimation()); // Start shake when Object in
+    ]).start(() => startShakeAnimation()); // Start shake when Object in
 
-      // // Remove object after 5s
-      // setTimeout(() => {
-      //   // Animated.timing(position, {
-      //   //   toValue: {
-      //   //     x: position.x,
-      //   //     y: position.y,
-      //   //   },
-      //   //   duration: 500,
-      //   //   useNativeDriver: true,
-      //   // }).start();
-      //   startExitAnimation();
-      // }, 5000);
-    ]).start(() => {
-      startShakeAnimation(); // Mulai shake setelah masuk
+    // Remove object after 5s
+    setTimeout(() => {
+      // Animated.timing(position, {
+      //   toValue: {
+      //     x: position.x,
+      //     y: position.y,
+      //   },
+      //   duration: 500,
+      //   easing: Easing.inOut(Easing.ease),
+      //   useNativeDriver: true,
+      // }).start();
 
-      // Mulai animasi keluar setelah delay
-      setTimeout(() => {
-        stopShakeAndStartExit(); // Fungsi baru untuk stop shake dan exit
-      }, 4000);
-    });
+      stopShakeAndStartExit();
+    }, 5000);
   }, []);
 
   const stopShakeAndStartExit = () => {
     // Stop shake animation
     shakeAnimation.current && shakeAnimation.current.stop();
 
-    // Exit animation
+    // Tentukan arah lempar secara acak: kiri (-) atau kanan (+)
+    const direction = Math.random() < 0.5 ? -1 : 1;
+
+    // Tentukan posisi akhir lempar, jauh di luar layar
+    const throwDistance = 700 * direction; // 300 unit ke kiri atau kanan
+
+    // Exit animation (lempar keluar)
     Animated.parallel([
       Animated.timing(position, {
         toValue: {
-          x: Math.random() * 300 - 150, // Kembali ke posisi acak di luar layar
-          y: Math.random() * 300 - 150,
+          x: spots[id - 1].x + throwDistance, // Tambahkan jarak lempar
+          y: spots[id - 1].y,
         },
-        duration: 1000,
+        duration: 600,
+        easing: Easing.out(Easing.quad), // Easing lebih halus keluar layar
         useNativeDriver: true,
       }),
       Animated.timing(scaleAnim, {
         toValue: 0, // Skala mengecil ke 0
-        duration: 1000,
+        duration: 600,
         useNativeDriver: true,
       }),
       Animated.timing(fadeAnim, {
         toValue: 0, // Opacity menjadi 0
-        duration: 1000,
+        duration: 200,
         useNativeDriver: true,
       }),
     ]).start(); // Animasi selesai tanpa loop
@@ -144,8 +155,8 @@ const AnimatedSpot = ({id, clickable}) => {
               translateX: position.x.interpolate({
                 inputRange: [-200, 200],
                 outputRange: [
-                  -200 + getRandomObjectOffset(0, 30),
-                  200 + getRandomObjectOffset(0, 30),
+                  -200 + getRandomObjectOffset(0, 5),
+                  200 + getRandomObjectOffset(0, 5),
                 ],
               }),
             },
@@ -153,8 +164,8 @@ const AnimatedSpot = ({id, clickable}) => {
               translateY: position.y.interpolate({
                 inputRange: [-200, 200],
                 outputRange: [
-                  -200 + getRandomObjectOffset(0, 30),
-                  200 + getRandomObjectOffset(0, 30),
+                  -200 + getRandomObjectOffset(0, 5),
+                  200 + getRandomObjectOffset(0, 5),
                 ],
               }),
             },
