@@ -151,7 +151,7 @@ const AnimatedSpot = ({member, coinsData}) => {
     // Remove object after 5s
     setTimeout(() => {
       stopShakeAndStartExit();
-    }, 5000);
+    }, 29000);
   }, []);
 
   const stopShakeAndStartExit = () => {
@@ -430,7 +430,7 @@ const ARScreen = () => {
     const interval = setInterval(() => {
       organizeData();
       setVisible(prev => !prev); // Toggle animasi
-    }, 6000); // Ulangi setiap 6 detik
+    }, 30000); // Ulangi setiap 6 detik
 
     return () => clearInterval(interval); // Bersihkan interval saat unmount
   }, [coinsData, currentIndex]); // Ulangi jika coinsData atau currentIndex berubah
