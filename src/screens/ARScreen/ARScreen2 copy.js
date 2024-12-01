@@ -25,7 +25,6 @@ import {Camera, useCameraDevice} from 'react-native-vision-camera';
 import {PERMISSIONS, request, RESULTS} from 'react-native-permissions';
 import LinearGradient from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
-import CompassHeading from 'react-native-compass-heading';
 
 // Fungsi khusus untuk objek 1 dengan range kecil
 const getShakeRange = id => {
@@ -299,26 +298,6 @@ const ARScreen = () => {
       console.error(error);
     }
   };
-
-  // useEffect(() => {
-  //   // Mulai compass heading
-  //   CompassHeading.start(0.5, ({heading}) => {
-  //     // Tentukan rentang hijau (misalnya: 270° sampai 90°)
-  //     const inGreenZone =
-  //       (heading >= 270 && heading <= 360) || (heading >= 0 && heading <= 90);
-
-  //     if (inGreenZone) {
-  //       setVisible(true); // Tampilkan elemen jika di dalam area hijau
-  //       console.log('Aman -> ' + heading);
-  //     } else {
-  //       setVisible(false); // Sembunyikan elemen jika di luar area hijau
-  //       console.log('Tidak aman -> ' + heading);
-  //     }
-  //   });
-
-  //   // Membersihkan kompas saat komponen unmount
-  //   return () => CompassHeading.stop();
-  // }, []);
 
   useEffect(() => {
     const getUserDataAndLocationAndCoins = async () => {
