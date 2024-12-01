@@ -1,5 +1,15 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, Text, StyleSheet, Animated, Easing} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Animated,
+  Easing,
+  ImageBackground,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
+import {fontSize, getFontFam} from '../../../utils';
 
 // Fungsi khusus untuk objek 1 dengan range kecil
 const getShakeRange = id => {
@@ -34,6 +44,7 @@ const AnimatedSpot = ({id, clickable}) => {
   const scaleAnim = useRef(new Animated.Value(0)).current; // Default scale 0
   const fadeAnim = useRef(new Animated.Value(0)).current; // Default opacity 0
   const shakeAnimation = useRef(null);
+  const blinkAnim = useRef(new Animated.Value(1)).current;
 
   const startShakeAnimation = () => {
     const shakeRange = getShakeRange(id);
@@ -68,6 +79,24 @@ const AnimatedSpot = ({id, clickable}) => {
       y: Math.random() * 300 - 150,
     });
 
+    // Catch Blink Animation
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(blinkAnim, {
+          toValue: 0.3, // Opacity turun ke 0.3
+          duration: 250,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+        Animated.timing(blinkAnim, {
+          toValue: 1, // Opacity naik kembali ke 1
+          duration: 250,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+      ]),
+    ).start();
+
     // In Animation to position
     Animated.parallel([
       Animated.timing(position, {
@@ -94,16 +123,6 @@ const AnimatedSpot = ({id, clickable}) => {
 
     // Remove object after 5s
     setTimeout(() => {
-      // Animated.timing(position, {
-      //   toValue: {
-      //     x: position.x,
-      //     y: position.y,
-      //   },
-      //   duration: 500,
-      //   easing: Easing.inOut(Easing.ease),
-      //   useNativeDriver: true,
-      // }).start();
-
       stopShakeAndStartExit();
     }, 5000);
   }, []);
@@ -179,6 +198,82 @@ const AnimatedSpot = ({id, clickable}) => {
         },
       ]}>
       <Text style={{fontWeight: 'bold'}}>{id}</Text>
+      <ImageBackground
+        source={require('../../../assets/images/image_arcoin_wrapper2.png')}
+        style={{
+          resizeMode: 'contain',
+          height: 165,
+          width: 120,
+          alignItems: 'center',
+          borderRadius: 55,
+        }}>
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            position: 'relative',
+          }}>
+          {/* {parseFloat(item.distance) < 30 && ( */}
+          {parseFloat(10) < 30 && (
+            <>
+              <Animated.Image
+                source={require('../../../assets/images/icon_catch.png')}
+                style={[
+                  {
+                    resizeMode: 'contain',
+                    height: 140,
+                    width: 140,
+                    position: 'absolute',
+                    top: -105,
+                    opacity: blinkAnim,
+                  },
+                ]}
+              />
+            </>
+          )}
+          <TouchableOpacity
+            // onPress={() =>
+            //   clickedCoin(userData.member, item.advertisement, item.coin)
+            // }
+            // disabled={parseFloat(item.distance) < 30 ? false : true}
+            style={{
+              height: 125,
+              width: 125,
+              borderRadius: 100,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Image
+              source={require('./../../../assets/images/icon_xrun_white.png')}
+              style={{
+                height: 45,
+                width: 45,
+              }}
+            />
+            <Text
+              style={{
+                fontFamily: getFontFam() + 'Medium',
+                fontSize: fontSize('subtitle'),
+                color: 'white',
+                marginTop: 5,
+              }}>
+              {/* {item.coins}
+              {item.title} */}
+              10XRUN
+            </Text>
+            <Text
+              style={{
+                fontFamily: getFontFam() + 'Regular',
+                fontSize: fontSize('body'),
+                color: 'grey',
+                marginTop: -5,
+              }}>
+              {/* {item.distance}M */}
+              5M
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ImageBackground>
     </Animated.View>
   );
 };
