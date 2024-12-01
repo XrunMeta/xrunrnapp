@@ -531,7 +531,7 @@ const styles = StyleSheet.create({
     fontFamily: getFontFam() + 'Regular',
     textAlign: 'center',
     fontSize: fontSize('body'),
-    lineHeight: 14,
+    lineHeight: 19,
     color: '#343a59',
   },
   link: {
