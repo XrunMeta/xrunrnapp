@@ -24,6 +24,7 @@ import * as RNLocalize from 'react-native-localize';
 import {Camera, useCameraDevice} from 'react-native-vision-camera';
 import {PERMISSIONS, request, RESULTS} from 'react-native-permissions';
 import LinearGradient from 'react-native-linear-gradient';
+import {useNavigation} from '@react-navigation/native';
 
 // Fungsi khusus untuk objek 1 dengan range kecil
 const getShakeRange = id => {
@@ -54,12 +55,23 @@ const spots = [
 ];
 
 // const AnimatedSpot = ({id, clickable}) => {
-const AnimatedSpot = ({coinsData}) => {
+const AnimatedSpot = ({member, coinsData}) => {
   const position = useRef(new Animated.ValueXY({x: 0, y: 0})).current;
   const scaleAnim = useRef(new Animated.Value(0)).current; // Default scale 0
   const fadeAnim = useRef(new Animated.Value(0)).current; // Default opacity 0
   const blinkAnim = useRef(new Animated.Value(1)).current;
   const shakeAnimation = useRef(null);
+  const navigation = useNavigation();
+
+  const clickedCoin = (memberID = member, advertisement, coin) => {
+    navigation.replace('ShowAd', {
+      screenName: 'Home',
+      member: memberID,
+      advertisement: advertisement,
+      coin: coin,
+      coinScreen: true,
+    });
+  };
 
   const startShakeAnimation = () => {
     const shakeRange = getShakeRange(coinsData.spotID);
@@ -231,9 +243,9 @@ const AnimatedSpot = ({coinsData}) => {
             </>
           )}
           <TouchableOpacity
-            // onPress={() =>
-            //   clickedCoin(userData.member, item.advertisement, item.coin)
-            // }
+            onPress={() =>
+              clickedCoin(member, coinsData.advertisement, coinsData.coin)
+            }
             disabled={parseFloat(coinsData.distance) < 30 ? false : true}
             style={styles.button}>
             <Image
@@ -474,7 +486,11 @@ const ARScreen = () => {
             </View>
             <View style={styles.container}>
               {organizedData.map(spot => (
-                <AnimatedSpot key={spot.spotID} coinsData={spot} />
+                <AnimatedSpot
+                  key={spot.spotID}
+                  member={userData?.member}
+                  coinsData={spot}
+                />
               ))}
             </View>
             <View
