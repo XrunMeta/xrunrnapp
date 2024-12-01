@@ -281,8 +281,9 @@ const ARScreen = () => {
             const userCoordinate = {
               latitude: position.coords.latitude,
               longitude: position.coords.longitude,
+              // latitude: -6.0858965,
+              // longitude: 106.74651,
             };
-
             setUserLocation(userCoordinate);
             console.log(
               `Lat : ${userCoordinate.latitude}, Lng : ${userCoordinate.longitude}`,
@@ -403,7 +404,10 @@ const ARScreen = () => {
 
   return (
     <View style={styles.container}>
-      {visible && organizedData.map(spot => <AnimatedSpot coinsData={spot} />)}
+      {visible &&
+        organizedData.map(spot => (
+          <AnimatedSpot key={spot.spotID} coinsData={spot} />
+        ))}
     </View>
   );
 };
