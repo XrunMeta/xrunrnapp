@@ -464,15 +464,15 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontFamily: getFontFam() + 'Medium',
-    fontSize: fontSize('subtitle'),
+    fontSize: fontSize('body'),
     color: 'white',
-    marginTop: 1,
+    marginTop: 3,
   },
   subtitleText: {
     fontFamily: getFontFam() + 'Regular',
-    fontSize: fontSize('body'),
+    fontSize: fontSize('note'),
     color: 'grey',
-    marginTop: -5,
+    marginTop: -3,
   },
 });
 
