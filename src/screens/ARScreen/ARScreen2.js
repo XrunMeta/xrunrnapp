@@ -37,18 +37,19 @@ const getRandomObjectOffset = (value, range = 100) => {
 };
 
 const spots = [
-  {id: 1, x: 0, y: 0}, // Clickable is center
-  {id: 2, x: -100, y: 50},
-  {id: 3, x: 100, y: 50},
-  {id: 4, x: -50, y: 150},
-  {id: 5, x: 50, y: 150},
-  {id: 6, x: 0, y: -140},
-  {id: 7, x: 100, y: -50},
-  {id: 8, x: -100, y: -50},
-  {id: 9, x: -100, y: 240},
+  {spotID: 1, x: 0, y: 0}, // Clickable is center
+  {spotID: 2, x: -100, y: 50},
+  {spotID: 3, x: 100, y: 50},
+  {spotID: 4, x: -50, y: 150},
+  {spotID: 5, x: 50, y: 150},
+  {spotID: 6, x: 0, y: -140},
+  {spotID: 7, x: 100, y: -50},
+  {spotID: 8, x: -100, y: -50},
+  {spotID: 9, x: -100, y: 240},
 ];
 
-const AnimatedSpot = ({id, clickable}) => {
+// const AnimatedSpot = ({id, clickable}) => {
+const AnimatedSpot = ({coinsData}) => {
   const position = useRef(new Animated.ValueXY({x: 0, y: 0})).current;
   const scaleAnim = useRef(new Animated.Value(0)).current; // Default scale 0
   const fadeAnim = useRef(new Animated.Value(0)).current; // Default opacity 0
@@ -56,12 +57,12 @@ const AnimatedSpot = ({id, clickable}) => {
   const shakeAnimation = useRef(null);
 
   const startShakeAnimation = () => {
-    const shakeRange = getShakeRange(id);
+    const shakeRange = getShakeRange(coinsData.spotID);
     shakeAnimation.current = Animated.sequence([
       Animated.timing(position, {
         toValue: {
-          x: getRandomOffset(spots[id - 1].x, shakeRange), // Add radom offset
-          y: getRandomOffset(spots[id - 1].y, shakeRange),
+          x: getRandomOffset(spots[coinsData.spotID - 1].x, shakeRange), // Add radom offset
+          y: getRandomOffset(spots[coinsData.spotID - 1].y, shakeRange),
         },
         duration: 1000,
         easing: Easing.inOut(Easing.ease),
@@ -69,8 +70,8 @@ const AnimatedSpot = ({id, clickable}) => {
       }),
       Animated.timing(position, {
         toValue: {
-          x: spots[id - 1].x,
-          y: spots[id - 1].y,
+          x: spots[coinsData.spotID - 1].x,
+          y: spots[coinsData.spotID - 1].y,
         },
         duration: 1000,
         easing: Easing.inOut(Easing.ease),
@@ -110,8 +111,8 @@ const AnimatedSpot = ({id, clickable}) => {
     Animated.parallel([
       Animated.timing(position, {
         toValue: {
-          x: getRandomObjectOffset(spots[id - 1].x),
-          y: getRandomObjectOffset(spots[id - 1].y),
+          x: getRandomObjectOffset(spots[coinsData.spotID - 1].x),
+          y: getRandomObjectOffset(spots[coinsData.spotID - 1].y),
         },
         duration: 1000,
         useNativeDriver: true,
@@ -150,8 +151,8 @@ const AnimatedSpot = ({id, clickable}) => {
     Animated.parallel([
       Animated.timing(position, {
         toValue: {
-          x: spots[id - 1].x + throwDistance, // Tambahkan jarak lempar
-          y: spots[id - 1].y,
+          x: spots[coinsData.spotID - 1].x + throwDistance, // Tambahkan jarak lempar
+          y: spots[coinsData.spotID - 1].y,
         },
         duration: 600,
         easing: Easing.out(Easing.quad), // Easing lebih halus keluar layar
@@ -172,6 +173,7 @@ const AnimatedSpot = ({id, clickable}) => {
 
   return (
     <Animated.View
+      key={coinsData.spotID}
       style={[
         styles.spot,
         {
@@ -210,8 +212,7 @@ const AnimatedSpot = ({id, clickable}) => {
         source={require('../../../assets/images/image_arcoin_wrapper2.png')}
         style={styles.imageBackground}>
         <View style={styles.innerContainer}>
-          {/* {parseFloat(item.distance) < 30 && ( */}
-          {parseFloat(40) < 30 && (
+          {parseFloat(coinsData.distance) < 30 && (
             <>
               <Animated.Image
                 source={require('../../../assets/images/icon_catch.png')}
@@ -228,21 +229,17 @@ const AnimatedSpot = ({id, clickable}) => {
             // onPress={() =>
             //   clickedCoin(userData.member, item.advertisement, item.coin)
             // }
-            // disabled={parseFloat(item.distance) < 30 ? false : true}
+            disabled={parseFloat(coinsData.distance) < 30 ? false : true}
             style={styles.button}>
             <Image
               source={require('./../../../assets/images/icon_xrun_white.png')}
               style={styles.icon}
             />
             <Text style={styles.titleText}>
-              {/* {item.coins}
-              {item.title} */}
-              10XRUN
+              {coinsData.coins}
+              {coinsData.title}
             </Text>
-            <Text style={styles.subtitleText}>
-              {/* {item.distance}M */}
-              5M
-            </Text>
+            <Text style={styles.subtitleText}>{coinsData.distance}M</Text>
           </TouchableOpacity>
         </View>
       </ImageBackground>
@@ -384,7 +381,7 @@ const ARScreen = () => {
       }
     }
 
-    console.log({newOrganizedData});
+    console.log('bgstttt -> ' + newOrganizedData.length);
 
     setOrganizedData(newOrganizedData); // Set organized data
   };
@@ -406,10 +403,7 @@ const ARScreen = () => {
 
   return (
     <View style={styles.container}>
-      {visible &&
-        spots.map(spot => (
-          <AnimatedSpot key={spot.id} id={spot.id} clickable={spot.id === 1} />
-        ))}
+      {visible && organizedData.map(spot => <AnimatedSpot coinsData={spot} />)}
     </View>
   );
 };
