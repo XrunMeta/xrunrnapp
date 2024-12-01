@@ -166,7 +166,8 @@ const AnimatedSpot = ({id, clickable}) => {
       style={[
         styles.spot,
         {
-          backgroundColor: clickable ? 'yellow' : 'white',
+          zIndex: parseFloat(10) < 30 ? 20 : 1,
+          // backgroundColor: clickable ? 'yellow' : 'white',
           opacity: fadeAnim,
           transform: [
             // Coin Positioning at Screen (Adjust range at parameter || normal 0-30)
@@ -197,34 +198,18 @@ const AnimatedSpot = ({id, clickable}) => {
           ],
         },
       ]}>
-      <Text style={{fontWeight: 'bold'}}>{id}</Text>
       <ImageBackground
         source={require('../../../assets/images/image_arcoin_wrapper2.png')}
-        style={{
-          resizeMode: 'contain',
-          height: 165,
-          width: 120,
-          alignItems: 'center',
-          borderRadius: 55,
-        }}>
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            position: 'relative',
-          }}>
+        style={styles.imageBackground}>
+        <View style={styles.innerContainer}>
           {/* {parseFloat(item.distance) < 30 && ( */}
-          {parseFloat(10) < 30 && (
+          {parseFloat(40) < 30 && (
             <>
               <Animated.Image
                 source={require('../../../assets/images/icon_catch.png')}
                 style={[
+                  styles.blinkImage,
                   {
-                    resizeMode: 'contain',
-                    height: 140,
-                    width: 140,
-                    position: 'absolute',
-                    top: -105,
                     opacity: blinkAnim,
                   },
                 ]}
@@ -236,38 +221,17 @@ const AnimatedSpot = ({id, clickable}) => {
             //   clickedCoin(userData.member, item.advertisement, item.coin)
             // }
             // disabled={parseFloat(item.distance) < 30 ? false : true}
-            style={{
-              height: 125,
-              width: 125,
-              borderRadius: 100,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
+            style={styles.button}>
             <Image
               source={require('./../../../assets/images/icon_xrun_white.png')}
-              style={{
-                height: 45,
-                width: 45,
-              }}
+              style={styles.icon}
             />
-            <Text
-              style={{
-                fontFamily: getFontFam() + 'Medium',
-                fontSize: fontSize('subtitle'),
-                color: 'white',
-                marginTop: 5,
-              }}>
+            <Text style={styles.titleText}>
               {/* {item.coins}
               {item.title} */}
               10XRUN
             </Text>
-            <Text
-              style={{
-                fontFamily: getFontFam() + 'Regular',
-                fontSize: fontSize('body'),
-                color: 'grey',
-                marginTop: -5,
-              }}>
+            <Text style={styles.subtitleText}>
               {/* {item.distance}M */}
               5M
             </Text>
@@ -311,14 +275,54 @@ const styles = StyleSheet.create({
     left: 0,
   },
   spot: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    borderWidth: 1,
-    borderColor: '#000',
+    width: 150,
+    height: 175,
+    borderRadius: 150,
+  },
+  imageBackground: {
+    resizeMode: 'contain',
+    height: 105,
+    width: 77,
+    alignItems: 'center',
+    borderRadius: 55,
+  },
+  innerContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  blinkImage: {
+    resizeMode: 'contain',
+    height: 100,
+    width: 100,
+    position: 'absolute',
+    top: -80,
+  },
+  button: {
+    height: 77,
+    width: 77,
+    borderRadius: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  icon: {
+    height: 25,
+    width: 25,
+  },
+  titleText: {
+    fontFamily: getFontFam() + 'Medium',
+    fontSize: fontSize('subtitle'),
+    color: 'white',
+    marginTop: 1,
+  },
+  subtitleText: {
+    fontFamily: getFontFam() + 'Regular',
+    fontSize: fontSize('body'),
+    color: 'grey',
+    marginTop: -5,
   },
 });
 
