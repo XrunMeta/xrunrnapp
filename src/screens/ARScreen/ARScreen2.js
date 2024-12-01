@@ -9,7 +9,16 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import {fontSize, getFontFam} from '../../../utils';
+import {
+  fontSize,
+  getFontFam,
+  URL_API_NODEJS,
+  authcode,
+  getLanguage2,
+} from '../../../utils';
+import Geolocation from 'react-native-geolocation-service';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as RNLocalize from 'react-native-localize';
 
 // Fungsi khusus untuk objek 1 dengan range kecil
 const getShakeRange = id => {
@@ -43,8 +52,8 @@ const AnimatedSpot = ({id, clickable}) => {
   const position = useRef(new Animated.ValueXY({x: 0, y: 0})).current;
   const scaleAnim = useRef(new Animated.Value(0)).current; // Default scale 0
   const fadeAnim = useRef(new Animated.Value(0)).current; // Default opacity 0
-  const shakeAnimation = useRef(null);
   const blinkAnim = useRef(new Animated.Value(1)).current;
+  const shakeAnimation = useRef(null);
 
   const startShakeAnimation = () => {
     const shakeRange = getShakeRange(id);
@@ -167,7 +176,6 @@ const AnimatedSpot = ({id, clickable}) => {
         styles.spot,
         {
           zIndex: parseFloat(10) < 30 ? 20 : 1,
-          // backgroundColor: clickable ? 'yellow' : 'white',
           opacity: fadeAnim,
           transform: [
             // Coin Positioning at Screen (Adjust range at parameter || normal 0-30)
@@ -243,14 +251,158 @@ const AnimatedSpot = ({id, clickable}) => {
 };
 
 const ARScreen = () => {
+  const [lang, setLang] = useState({});
+  const [curLang, setCurLang] = useState(null);
   const [visible, setVisible] = useState(true);
+  const [coinsData, setCoinsData] = useState([]);
+  const [organizedData, setOrganizedData] = useState([]);
+  const [userData, setUserData] = useState([]);
+  const [userLocation, setUserLocation] = useState(null);
 
   useEffect(() => {
+    const getUserDataAndLocationAndCoins = async () => {
+      try {
+        // Mengambil data user dari AsyncStorage
+        const storedUserData = await AsyncStorage.getItem('userData');
+        const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+
+        // Set Bahasa
+        const screenLang = await getLanguage2(currentLanguage, 'screen_map');
+        setLang(screenLang);
+
+        const deviceLanguage = RNLocalize.getLocales()[0].languageCode;
+        setCurLang(deviceLanguage);
+
+        const parseUserData = JSON.parse(storedUserData);
+        setUserData(parseUserData);
+
+        console.log({parseUserData});
+
+        // Mengambil lokasi pengguna
+        const watchId = Geolocation.watchPosition(
+          position => {
+            const userCoordinate = {
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            };
+
+            setUserLocation(userCoordinate);
+            console.log(
+              `Lat : ${userCoordinate.latitude}, Lng : ${userCoordinate.longitude}`,
+            );
+
+            // Memanggil API setelah mendapatkan lokasi pengguna
+            const getARCoin = async () => {
+              try {
+                const request = await fetch(`${URL_API_NODEJS}/app2000-01`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${authcode}`,
+                  },
+                  body: JSON.stringify({
+                    member: parseUserData.member, // Gunakan data member yang sudah didapatkan
+                    latitude: userCoordinate.latitude,
+                    longitude: userCoordinate.longitude,
+                    limit: 30,
+                  }),
+                });
+
+                const response = await request.json();
+
+                if (response?.data && response?.data?.length > 0) {
+                  const coinsData = response?.data.map(item => ({
+                    lat: item.lat,
+                    lng: item.lng,
+                    title: item.title,
+                    distance: item.distance,
+                    adthumbnail2: item.adthumbnail2,
+                    adthumbnail: item.adthumbnail,
+                    coins: item.coins,
+                    symbol: item.symbol,
+                    coin: item.coin,
+                    advertisement: item.advertisement,
+                    cointype: item.cointype,
+                    adcolor1: item.adcolor1,
+                    brand: item.brand,
+                    isbigcoin: item.isbigcoin,
+                  }));
+
+                  setCoinsData(coinsData);
+                  console.log('Hasil COIN ada -> ' + coinsData.length);
+                } else {
+                  console.log('Coin dikosongin');
+                  setCoinsData([]);
+                }
+              } catch (error) {
+                console.error('Error calling API:', error);
+              }
+            };
+
+            getARCoin(); // Panggil fungsi getARCoin setelah mendapatkan lokasi pengguna
+          },
+          error => {
+            console.error(error);
+          },
+          {
+            enableHighAccuracy: true,
+            distanceFilter: 10,
+          },
+        );
+
+        return () => {
+          Geolocation.clearWatch(watchId);
+        };
+      } catch (err) {
+        console.error('Error retrieving data or location:', err);
+      }
+    };
+
+    getUserDataAndLocationAndCoins();
+  }, []); // Hanya dijalankan sekali saat komponen pertama kali dirender
+
+  // Fungsi untuk menggabungkan data berdasarkan aturan
+  const organizeData = () => {
+    const newOrganizedData = [];
+    const dataBelow30 = coinsData.filter(item => item.distance < 30);
+    const dataAbove30 = coinsData.filter(item => item.distance >= 30);
+
+    // Isi spot pertama (id: 1) dengan data < 30 jika ada
+    if (dataBelow30.length > 0) {
+      newOrganizedData.push({...spots[0], ...dataBelow30[0]});
+      dataBelow30.shift();
+    } else {
+      newOrganizedData.push({...spots[0], ...dataAbove30[0]});
+      dataAbove30.shift();
+    }
+
+    // Isi spot selanjutnya dengan data >= 30
+    for (let i = 1; i < spots.length; i++) {
+      const dataItem = dataAbove30.shift() || dataBelow30.shift();
+      if (dataItem) {
+        newOrganizedData.push({...spots[i], ...dataItem});
+      }
+    }
+
+    console.log({newOrganizedData});
+
+    setOrganizedData(newOrganizedData); // Set organized data
+  };
+
+  useEffect(() => {
+    // Organize data setelah coinsData diperbarui
+    if (coinsData.length > 0) {
+      organizeData();
+    } else {
+      console.log('bahluuulllllll -> ' + coinsData.length);
+    }
+
     const interval = setInterval(() => {
       setVisible(prev => !prev);
-    }, 6000); // Repeat animation
+    }, 6000); // Repeat animation setiap 6 detik
+
     return () => clearInterval(interval);
-  }, []);
+  }, [coinsData]);
 
   return (
     <View style={styles.container}>
