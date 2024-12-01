@@ -81,7 +81,7 @@ const AnimatedSpot = ({member, coinsData}) => {
           x: getRandomOffset(spots[coinsData.spotID - 1].x, shakeRange), // Add radom offset
           y: getRandomOffset(spots[coinsData.spotID - 1].y, shakeRange),
         },
-        duration: 700,
+        duration: 1100,
         easing: Easing.inOut(Easing.ease),
         useNativeDriver: true,
       }),
@@ -90,7 +90,7 @@ const AnimatedSpot = ({member, coinsData}) => {
           x: spots[coinsData.spotID - 1].x,
           y: spots[coinsData.spotID - 1].y,
         },
-        duration: 700,
+        duration: 1100,
         easing: Easing.inOut(Easing.ease),
         useNativeDriver: true,
       }),
@@ -162,7 +162,7 @@ const AnimatedSpot = ({member, coinsData}) => {
     const direction = Math.random() < 0.5 ? -1 : 1;
 
     // Tentukan posisi akhir lempar, jauh di luar layar
-    const throwDistance = 700 * direction; // 300 unit ke kiri atau kanan
+    const throwDistance = 1100 * direction; // 300 unit ke kiri atau kanan
 
     // Exit animation (lempar keluar)
     Animated.parallel([
