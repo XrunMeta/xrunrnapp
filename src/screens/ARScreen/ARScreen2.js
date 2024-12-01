@@ -28,7 +28,7 @@ import {useNavigation} from '@react-navigation/native';
 
 // Fungsi khusus untuk objek 1 dengan range kecil
 const getShakeRange = id => {
-  return id === 1 ? 5 : 10; // Range 5 untuk objek 1, 10 untuk lainnya
+  return id === 1 ? 5 : 80; // Range 5 untuk objek 1, 10 untuk lainnya
 };
 
 // Shake Range Effect
@@ -81,7 +81,7 @@ const AnimatedSpot = ({member, coinsData}) => {
           x: getRandomOffset(spots[coinsData.spotID - 1].x, shakeRange), // Add radom offset
           y: getRandomOffset(spots[coinsData.spotID - 1].y, shakeRange),
         },
-        duration: 1000,
+        duration: 700,
         easing: Easing.inOut(Easing.ease),
         useNativeDriver: true,
       }),
@@ -90,7 +90,7 @@ const AnimatedSpot = ({member, coinsData}) => {
           x: spots[coinsData.spotID - 1].x,
           y: spots[coinsData.spotID - 1].y,
         },
-        duration: 1000,
+        duration: 700,
         easing: Easing.inOut(Easing.ease),
         useNativeDriver: true,
       }),
@@ -131,18 +131,18 @@ const AnimatedSpot = ({member, coinsData}) => {
           x: getRandomObjectOffset(spots[coinsData.spotID - 1].x),
           y: getRandomObjectOffset(spots[coinsData.spotID - 1].y),
         },
-        duration: 1000,
+        duration: 800,
         useNativeDriver: true,
       }),
       Animated.timing(scaleAnim, {
         toValue: 1,
-        duration: 1000,
+        duration: 800,
         easing: Easing.inOut(Easing.ease),
         useNativeDriver: true,
       }),
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 1000,
+        duration: 800,
         easing: Easing.inOut(Easing.ease),
         useNativeDriver: true,
       }),
@@ -194,7 +194,7 @@ const AnimatedSpot = ({member, coinsData}) => {
       style={[
         styles.spot,
         {
-          zIndex: parseFloat(10) < 30 ? 20 : 1,
+          zIndex: parseFloat(coinsData.distance) < 30 ? 18 : 1,
           opacity: fadeAnim,
           transform: [
             // Coin Positioning at Screen (Adjust range at parameter || normal 0-30)
