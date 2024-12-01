@@ -404,33 +404,6 @@ const ARScreen = () => {
   }, []); // Hanya dijalankan sekali saat komponen pertama kali dirender
 
   // Fungsi untuk menggabungkan data berdasarkan aturan
-  // const organizeData = () => {
-  //   const newOrganizedData = [];
-  //   const dataBelow30 = coinsData.filter(item => item.distance < 30);
-  //   const dataAbove30 = coinsData.filter(item => item.distance >= 30);
-
-  //   // Isi spot pertama (id: 1) dengan data < 30 jika ada
-  //   if (dataBelow30.length > 0) {
-  //     newOrganizedData.push({...spots[0], ...dataBelow30[0]});
-  //     dataBelow30.shift();
-  //   } else {
-  //     newOrganizedData.push({...spots[0], ...dataAbove30[0]});
-  //     dataAbove30.shift();
-  //   }
-
-  //   // Isi spot selanjutnya dengan data >= 30
-  //   for (let i = 1; i < spots.length; i++) {
-  //     const dataItem = dataAbove30.shift() || dataBelow30.shift();
-  //     if (dataItem) {
-  //       newOrganizedData.push({...spots[i], ...dataItem});
-  //     }
-  //   }
-
-  //   console.log('bgstttt -> ' + newOrganizedData.length);
-
-  //   setOrganizedData(newOrganizedData); // Set organized data
-  // };
-
   const organizeData = () => {
     if (coinsData.length === 0) return;
 
@@ -451,21 +424,6 @@ const ARScreen = () => {
 
     setOrganizedData(newOrganizedData); // Set data terorganisir
   };
-
-  // useEffect(() => {
-  //   // Organize data setelah coinsData diperbarui
-  //   if (coinsData.length > 0) {
-  //     organizeData();
-  //   } else {
-  //     console.log('bahluuulllllll -> ' + coinsData.length);
-  //   }
-
-  //   const interval = setInterval(() => {
-  //     setVisible(prev => !prev);
-  //   }, 6000); // Repeat animation setiap 6 detik
-
-  //   return () => clearInterval(interval);
-  // }, [coinsData]);
 
   useEffect(() => {
     // Panggil organizeData setiap interval
@@ -534,7 +492,7 @@ const ARScreen = () => {
                 right: 0,
                 top: 0,
                 left: 0,
-                zIndex: 10,
+                zIndex: 20,
                 pointerEvents: 'none',
               }}>
               {/* XRUN Amount that Shown on Map Screen */}
