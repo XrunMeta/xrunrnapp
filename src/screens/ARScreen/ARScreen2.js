@@ -275,6 +275,8 @@ const ARScreen = () => {
   const [isCameraReady, setCameraReady] = useState(false);
   const [cameraPermission, setCameraPermission] = useState('pending');
   const device = useCameraDevice('back');
+  const chunkSize = 9;
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const getCamPermission = async () => {
     try {
@@ -402,47 +404,78 @@ const ARScreen = () => {
   }, []); // Hanya dijalankan sekali saat komponen pertama kali dirender
 
   // Fungsi untuk menggabungkan data berdasarkan aturan
+  // const organizeData = () => {
+  //   const newOrganizedData = [];
+  //   const dataBelow30 = coinsData.filter(item => item.distance < 30);
+  //   const dataAbove30 = coinsData.filter(item => item.distance >= 30);
+
+  //   // Isi spot pertama (id: 1) dengan data < 30 jika ada
+  //   if (dataBelow30.length > 0) {
+  //     newOrganizedData.push({...spots[0], ...dataBelow30[0]});
+  //     dataBelow30.shift();
+  //   } else {
+  //     newOrganizedData.push({...spots[0], ...dataAbove30[0]});
+  //     dataAbove30.shift();
+  //   }
+
+  //   // Isi spot selanjutnya dengan data >= 30
+  //   for (let i = 1; i < spots.length; i++) {
+  //     const dataItem = dataAbove30.shift() || dataBelow30.shift();
+  //     if (dataItem) {
+  //       newOrganizedData.push({...spots[i], ...dataItem});
+  //     }
+  //   }
+
+  //   console.log('bgstttt -> ' + newOrganizedData.length);
+
+  //   setOrganizedData(newOrganizedData); // Set organized data
+  // };
+
   const organizeData = () => {
-    const newOrganizedData = [];
-    const dataBelow30 = coinsData.filter(item => item.distance < 30);
-    const dataAbove30 = coinsData.filter(item => item.distance >= 30);
+    if (coinsData.length === 0) return;
 
-    // Isi spot pertama (id: 1) dengan data < 30 jika ada
-    if (dataBelow30.length > 0) {
-      newOrganizedData.push({...spots[0], ...dataBelow30[0]});
-      dataBelow30.shift();
+    // Ambil data 9 item berdasarkan currentIndex
+    const nextData = coinsData.slice(currentIndex, currentIndex + chunkSize);
+
+    // Jika kurang dari 9 item (berarti sampai akhir), reset indeks ke awal
+    if (nextData.length < chunkSize) {
+      setCurrentIndex(0);
     } else {
-      newOrganizedData.push({...spots[0], ...dataAbove30[0]});
-      dataAbove30.shift();
+      setCurrentIndex(prevIndex => prevIndex + chunkSize);
     }
 
-    // Isi spot selanjutnya dengan data >= 30
-    for (let i = 1; i < spots.length; i++) {
-      const dataItem = dataAbove30.shift() || dataBelow30.shift();
-      if (dataItem) {
-        newOrganizedData.push({...spots[i], ...dataItem});
-      }
-    }
+    // Gabungkan spot dengan data kelompok yang diambil
+    const newOrganizedData = spots.map((spot, index) => {
+      return nextData[index] ? {...spot, ...nextData[index]} : spot;
+    });
 
-    console.log('bgstttt -> ' + newOrganizedData.length);
-
-    setOrganizedData(newOrganizedData); // Set organized data
+    setOrganizedData(newOrganizedData); // Set data terorganisir
   };
 
+  // useEffect(() => {
+  //   // Organize data setelah coinsData diperbarui
+  //   if (coinsData.length > 0) {
+  //     organizeData();
+  //   } else {
+  //     console.log('bahluuulllllll -> ' + coinsData.length);
+  //   }
+
+  //   const interval = setInterval(() => {
+  //     setVisible(prev => !prev);
+  //   }, 6000); // Repeat animation setiap 6 detik
+
+  //   return () => clearInterval(interval);
+  // }, [coinsData]);
+
   useEffect(() => {
-    // Organize data setelah coinsData diperbarui
-    if (coinsData.length > 0) {
-      organizeData();
-    } else {
-      console.log('bahluuulllllll -> ' + coinsData.length);
-    }
-
+    // Panggil organizeData setiap interval
     const interval = setInterval(() => {
-      setVisible(prev => !prev);
-    }, 6000); // Repeat animation setiap 6 detik
+      organizeData();
+      setVisible(prev => !prev); // Toggle animasi
+    }, 6000); // Ulangi setiap 6 detik
 
-    return () => clearInterval(interval);
-  }, [coinsData]);
+    return () => clearInterval(interval); // Bersihkan interval saat unmount
+  }, [coinsData, currentIndex]); // Ulangi jika coinsData atau currentIndex berubah
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -485,13 +518,14 @@ const ARScreen = () => {
               </Text>
             </View>
             <View style={styles.container}>
-              {organizedData.map(spot => (
-                <AnimatedSpot
-                  key={spot.spotID}
-                  member={userData?.member}
-                  coinsData={spot}
-                />
-              ))}
+              {visible &&
+                organizedData.map(spot => (
+                  <AnimatedSpot
+                    key={spot.spotID}
+                    member={userData?.member}
+                    coinsData={spot}
+                  />
+                ))}
             </View>
             <View
               style={{
