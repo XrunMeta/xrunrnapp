@@ -254,6 +254,14 @@ const ShowAdScreen = ({route}) => {
           crashlytics().recordError(new Error(err));
           crashlytics().log(err);
           console.error('Error in coin acquisition:', err);
+
+          if (coinScreen) {
+            navigation.replace(screenName, {
+              sendActiveTab: 'Camera',
+            });
+          } else {
+            navigation.replace(screenName);
+          }
         }
       };
 
