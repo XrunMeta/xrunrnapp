@@ -8,6 +8,8 @@ import {
   ImageBackground,
   TouchableOpacity,
   Image,
+  SafeAreaView,
+  Platform,
 } from 'react-native';
 import {
   fontSize,
@@ -19,6 +21,9 @@ import {
 import Geolocation from 'react-native-geolocation-service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as RNLocalize from 'react-native-localize';
+import {Camera, useCameraDevice} from 'react-native-vision-camera';
+import {PERMISSIONS, request, RESULTS} from 'react-native-permissions';
+import LinearGradient from 'react-native-linear-gradient';
 
 // Fungsi khusus untuk objek 1 dengan range kecil
 const getShakeRange = id => {
@@ -255,6 +260,30 @@ const ARScreen = () => {
   const [organizedData, setOrganizedData] = useState([]);
   const [userData, setUserData] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
+  const [isCameraReady, setCameraReady] = useState(false);
+  const [cameraPermission, setCameraPermission] = useState('pending');
+  const device = useCameraDevice('back');
+
+  const getCamPermission = async () => {
+    try {
+      let permission;
+      if (Platform.OS === 'android') {
+        permission = PERMISSIONS.ANDROID.CAMERA;
+      } else if (Platform.OS === 'ios') {
+        permission = PERMISSIONS.IOS.CAMERA;
+      }
+      const result = await request(permission);
+      if (result === RESULTS.GRANTED) {
+        console.log('Camera permission granted');
+        setCameraReady(true);
+        setCameraPermission('granted');
+      } else {
+        console.log('Camera permission denied');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     const getUserDataAndLocationAndCoins = async () => {
@@ -279,10 +308,10 @@ const ARScreen = () => {
         const watchId = Geolocation.watchPosition(
           position => {
             const userCoordinate = {
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-              // latitude: -6.0858965,
-              // longitude: 106.74651,
+              // latitude: position.coords.latitude,
+              // longitude: position.coords.longitude,
+              latitude: -6.0858965,
+              longitude: 106.74651,
             };
             setUserLocation(userCoordinate);
             console.log(
@@ -357,6 +386,7 @@ const ARScreen = () => {
     };
 
     getUserDataAndLocationAndCoins();
+    getCamPermission();
   }, []); // Hanya dijalankan sekali saat komponen pertama kali dirender
 
   // Fungsi untuk menggabungkan data berdasarkan aturan
@@ -403,19 +433,216 @@ const ARScreen = () => {
   }, [coinsData]);
 
   return (
-    <View style={styles.container}>
-      {visible &&
-        organizedData.map(spot => (
-          <AnimatedSpot key={spot.spotID} coinsData={spot} />
-        ))}
-    </View>
+    <SafeAreaView style={{flex: 1}}>
+      <View>
+        {cameraPermission === 'granted' && isCameraReady && device && (
+          <>
+            <Camera
+              style={{
+                position: 'relative',
+                width: '100%',
+                height: '100%',
+              }}
+              device={device}
+              isActive={true}
+              lowLightBoost={false}
+            />
+            <View
+              style={{
+                flexDirection: 'row',
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                alignItems: 'center',
+                marginRight: 10,
+                marginTop: 10,
+              }}>
+              <Image
+                source={require('../../../assets/images/icon_diamond_white.png')}
+                style={{height: 13, tintColor: '#ffdc04'}}
+                resizeMode="contain"
+              />
+              <Text
+                style={{
+                  fontFamily: getFontFam() + 'Bold',
+                  fontSize: fontSize('note'),
+                  color: 'white',
+                  marginTop: -2,
+                }}>
+                Jackpot 10,000 XRUN
+              </Text>
+            </View>
+            <View style={styles.container}>
+              {organizedData.map(spot => (
+                <AnimatedSpot key={spot.spotID} coinsData={spot} />
+              ))}
+            </View>
+            <View
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                right: 0,
+                top: 0,
+                left: 0,
+                zIndex: 10,
+                pointerEvents: 'none',
+              }}>
+              {/* XRUN Amount that Shown on Map Screen */}
+              <View
+                style={[
+                  {
+                    position: 'absolute',
+                    pointerEvents: 'none',
+                    bottom: -20,
+                    left: 0,
+                    right: 0,
+                  },
+                ]}>
+                <LinearGradient
+                  colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.8)']}
+                  start={{x: 0, y: 0}} // From Gradien
+                  end={{x: 0, y: 1}} // To Gradien
+                  style={{
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    paddingHorizontal: 20,
+                    flexDirection: 'row',
+                    position: 'absolute',
+                    left: 0,
+                    right: 0,
+                    bottom: 85,
+                    height: 170,
+                    pointerEvents: 'none',
+                  }}>
+                  <View style={{marginBottom: -35}}>
+                    <Text
+                      style={{
+                        fontFamily: getFontFam() + 'Medium',
+                        fontSize: fontSize('note'),
+                        color: 'white',
+                      }}>
+                      {lang &&
+                      lang.screen_map &&
+                      lang.screen_map.section_card_shadow
+                        ? lang.screen_map.section_card_shadow.radius
+                        : ''}
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: getFontFam() + 'Medium',
+                        fontSize: fontSize('body'),
+                        color: 'white',
+                      }}>
+                      {curLang != null && curLang === 'ko'
+                        ? coinsData.length + ' '
+                        : ''}
+                      {lang &&
+                      lang.screen_map &&
+                      lang.screen_map.section_card_shadow
+                        ? lang.screen_map.section_card_shadow.amount + ' '
+                        : ''}
+                      <Text
+                        style={{
+                          fontFamily: getFontFam() + 'Bold',
+                        }}>
+                        {curLang != null && curLang === 'ko'
+                          ? ''
+                          : coinsData.length}{' '}
+                        XRUN
+                      </Text>
+                      {lang &&
+                      lang.screen_map &&
+                      lang.screen_map.section_card_shadow
+                        ? lang.screen_map.section_card_shadow.and + ' '
+                        : ''}
+                    </Text>
+                  </View>
+                </LinearGradient>
+              </View>
+
+              <View
+                style={{
+                  position: 'absolute',
+                  bottom: 74,
+                  left: 0,
+                  right: 0,
+                  zIndex: 1,
+                  pointerEvents: 'none',
+                }}>
+                <View
+                  style={{
+                    backgroundColor: '#adadad',
+                    paddingHorizontal: 20,
+                    paddingVertical: 15,
+                    borderTopStartRadius: 30,
+                    borderTopEndRadius: 30,
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: 35,
+                    zIndex: -2,
+                  }}>
+                  <View
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginTop: -15,
+                      marginBottom: -20,
+                      paddingHorizontal: 90,
+                      paddingBottom: 20,
+                      paddingTop: 15,
+                      zIndex: 1,
+                    }}>
+                    <Image
+                      source={require('../../../assets/images/icon_bottom.png')}
+                      resizeMode="contain"
+                      style={{
+                        width: 20,
+                        tintColor: '#7a7a7a',
+                        transform: [{rotate: '180deg'}],
+                      }}
+                    />
+                  </View>
+                </View>
+              </View>
+            </View>
+          </>
+        )}
+        {cameraPermission === 'denied' && (
+          <View style={styles.permissionDeniedContainer}>
+            <Text style={styles.permissionDeniedText}>
+              Please allow access to the camera to continue.
+            </Text>
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#051C60',
+                paddingHorizontal: 12,
+                paddingVertical: 7,
+                borderRadius: 5,
+                elevation: 3,
+              }}
+              onPress={() => getCamPermission()}>
+              <Text
+                style={{
+                  fontFamily: getFontFam() + 'Medium',
+                  marginBottom: -3,
+                  color: 'white',
+                }}>
+                Allow Camera
+              </Text>
+            </TouchableOpacity>
+            {console.log('Status Kamera -> ' + cameraPermission)}
+          </View>
+        )}
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ccc',
+    // backgroundColor: '#001a477a',
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
