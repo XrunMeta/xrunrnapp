@@ -322,10 +322,10 @@ const ARScreen = () => {
         const watchId = Geolocation.watchPosition(
           position => {
             const userCoordinate = {
-              // latitude: position.coords.latitude,
-              // longitude: position.coords.longitude,
-              latitude: -6.0858965,
-              longitude: 106.74651,
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+              // latitude: -6.0858965,
+              // longitude: 106.74651,
             };
             setUserLocation(userCoordinate);
             console.log(
