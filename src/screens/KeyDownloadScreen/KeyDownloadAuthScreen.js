@@ -27,11 +27,12 @@ import {
 } from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Countdown from '../ModifInfoScreen/Countdown';
+import ButtonNext from '../../components/ButtonNext/ButtonNext';
 
 // ########## Main Function ##########
 const KeyDownloadAuthScreen = () => {
   const route = useRoute();
-  const {dataEmail, member} = route.params;
+  const {dataEmail, member, address} = route.params;
   const [verificationCode, setVerificationCode] = useState([
     '',
     '',
@@ -101,6 +102,11 @@ const KeyDownloadAuthScreen = () => {
   };
 
   const onSignIn = async () => {
+    if (verificationCode.join('').length < 6) {
+      Alert.alert('Failed', lang.screen_emailVerification.email.label);
+      return;
+    }
+
     if (isDisable) return;
 
     // Cek jika semua kode sudah diisi
@@ -130,7 +136,7 @@ const KeyDownloadAuthScreen = () => {
       console.log(JSON.stringify(responseAuthData));
 
       if (responseAuthData.status == 'success') {
-        navigation.replace('KeyShowDownload');
+        navigation.replace('KeyShowDownload', {address});
       } else {
         Alert.alert('Failed', lang.screen_emailVerification.notif.wrongCode);
       }
@@ -293,7 +299,18 @@ const KeyDownloadAuthScreen = () => {
           </View>
 
           {/* Bottom Section*/}
-          <View style={[styles.bottomSection]}>
+          <ButtonNext onClick={onSignIn} isDisabled={isDisable}>
+            <View style={styles.additionalLogin}>
+              <Countdown
+                onFinish={handleCountdownFinish}
+                lang={lang}
+                onProblem={onProblem}
+                restart={restartCountdown}
+              />
+            </View>
+          </ButtonNext>
+
+          {/* <View style={[styles.bottomSection]}>
             <View style={styles.additionalLogin}>
               <Countdown
                 onFinish={handleCountdownFinish}
@@ -316,7 +333,7 @@ const KeyDownloadAuthScreen = () => {
                 style={styles.buttonSignInImage}
               />
             </Pressable>
-          </View>
+          </View> */}
 
           {/* Slider Modal */}
           <SliderModal visible={modalVisible} onClose={toggleModal} />
