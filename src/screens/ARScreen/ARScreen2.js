@@ -25,7 +25,6 @@ import {Camera, useCameraDevice} from 'react-native-vision-camera';
 import {PERMISSIONS, request, RESULTS} from 'react-native-permissions';
 import LinearGradient from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
-import CompassHeading from 'react-native-compass-heading';
 
 // Fungsi khusus untuk objek 1 dengan range kecil
 const getShakeRange = id => {
@@ -48,11 +47,11 @@ const spots = [
   {spotID: 2, x: -100, y: 50},
   {spotID: 3, x: 100, y: 50},
   {spotID: 4, x: -50, y: 150},
-  {spotID: 5, x: 50, y: 150},
-  {spotID: 6, x: 0, y: -140},
-  {spotID: 7, x: 100, y: -50},
-  {spotID: 8, x: -100, y: -50},
-  {spotID: 9, x: -100, y: 240},
+  // {spotID: 5, x: 50, y: 150},
+  // {spotID: 6, x: 0, y: -140},
+  // {spotID: 7, x: 100, y: -50},
+  // {spotID: 8, x: -100, y: -50},
+  // {spotID: 9, x: -100, y: 240},
 ];
 
 // const AnimatedSpot = ({id, clickable}) => {
@@ -276,7 +275,7 @@ const ARScreen = () => {
   const [isCameraReady, setCameraReady] = useState(false);
   const [cameraPermission, setCameraPermission] = useState('pending');
   const device = useCameraDevice('back');
-  const chunkSize = 9;
+  const chunkSize = 4;
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const getCamPermission = async () => {
@@ -299,26 +298,6 @@ const ARScreen = () => {
       console.error(error);
     }
   };
-
-  // useEffect(() => {
-  //   // Mulai compass heading
-  //   CompassHeading.start(0.5, ({heading}) => {
-  //     // Tentukan rentang hijau (misalnya: 270° sampai 90°)
-  //     const inGreenZone =
-  //       (heading >= 270 && heading <= 360) || (heading >= 0 && heading <= 90);
-
-  //     if (inGreenZone) {
-  //       setVisible(true); // Tampilkan elemen jika di dalam area hijau
-  //       console.log('Aman -> ' + heading);
-  //     } else {
-  //       setVisible(false); // Sembunyikan elemen jika di luar area hijau
-  //       console.log('Tidak aman -> ' + heading);
-  //     }
-  //   });
-
-  //   // Membersihkan kompas saat komponen unmount
-  //   return () => CompassHeading.stop();
-  // }, []);
 
   useEffect(() => {
     const getUserDataAndLocationAndCoins = async () => {
