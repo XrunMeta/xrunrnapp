@@ -28,7 +28,6 @@ import {
   getFontFam,
   fontSize,
   authcode,
-  
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import RadioGroup from 'react-native-radio-buttons-group';
@@ -610,19 +609,19 @@ const SignUpScreen = ({route}) => {
             </View>
 
             {/* Bottom Section */}
-              <ButtonNext onClick={onSignUp} isDisabled={isDisable}>
-                <View style={styles.additionalLogin}>
-                  <Text style={styles.normalText}>
-                    {lang && lang.screen_signup && lang.screen_signup.add_desc
-                      ? lang.screen_signup.add_desc.ad1
-                      : ''}{' '}
-                    {'\n'}
-                    {lang && lang.screen_signup && lang.screen_signup.add_desc
-                      ? lang.screen_signup.add_desc.ad2
-                      : ''}
-                  </Text>
-                </View>
-              </ButtonNext>
+            <ButtonNext onClick={onSignUp} isDisabled={isDisable}>
+              <View style={styles.additionalLogin}>
+                <Text style={styles.normalText}>
+                  {lang && lang.screen_signup && lang.screen_signup.add_desc
+                    ? lang.screen_signup.add_desc.ad1
+                    : ''}{' '}
+                  {'\n'}
+                  {lang && lang.screen_signup && lang.screen_signup.add_desc
+                    ? lang.screen_signup.add_desc.ad2
+                    : ''}
+                </Text>
+              </View>
+            </ButtonNext>
           </ScrollView>
 
           <Modal

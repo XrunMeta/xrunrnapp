@@ -197,6 +197,18 @@ function ARScreen() {
         }),
       });
 
+      console.log(
+        'Bahlul' +
+          {
+            member: userID,
+            latitude,
+            longitude,
+            // latitude: -6.125316,
+            // longitude: 106.70025,
+            limit: 120,
+          },
+      );
+
       const responseData = await response.json();
 
       if (responseData.data && responseData.data.length > 0) {
@@ -506,16 +518,6 @@ function ARScreen() {
               }}>
               {coins.map((item, index) => {
                 const isRandomCoin = filterCoinsRandomMove.includes(index);
-                {
-                  /* const moveUncatchLeft =
-                  parseFloat(item.distance) < 30
-                    ? item.position.x
-                    : item.position.x - 200;
-                const moveUncatchTop =
-                  parseFloat(item.distance) < 30
-                    ? item.position.y
-                    : item.position.y - 150; */
-                }
                 const moveUncatchLeft =
                   parseFloat(item.distance) < 30
                     ? item.position.x
@@ -528,10 +530,6 @@ function ARScreen() {
                     : item.position.y > WINDOW_HEIGHT / 2
                     ? WINDOW_HEIGHT - 975 // posisikan lebih ke bawah layar
                     : -50; // posisikan lebih ke atas layar
-
-                {
-                  /* console.log({moveUncatchLeft, moveUncatchTop}); */
-                }
 
                 return (
                   <Animated.View
@@ -564,9 +562,7 @@ function ARScreen() {
                             ? 'block'
                             : 'none',
                       },
-                      // item.transY,
                       bouncingCoinAnimatedStyle,
-                      // bouncingCoinAnimatedStyle(bouncingCoinTranslateY.value),
                     ]}>
                     <ImageBackground
                       source={require('../../../assets/images/image_arcoin_wrapper2.png')}
@@ -619,12 +615,6 @@ function ARScreen() {
                             justifyContent: 'center',
                           }}>
                           <Image
-                            // source={{
-                            //   uri: `data:image/jpeg;base64,${item.adthumbnail2.replace(
-                            //     /(\r\n|\n|\r)/gm,
-                            //     '',
-                            //   )}`,
-                            // }}
                             source={require('./../../../assets/images/icon_xrun_white.png')}
                             style={{
                               height: 45,
