@@ -357,6 +357,7 @@ const ARScreen = () => {
   const chunkSize = 4;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true); // Get Loading Info
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const getCamPermission = async () => {
     try {
@@ -514,6 +515,15 @@ const ARScreen = () => {
   };
 
   useEffect(() => {
+    // Set interval untuk update key state setiap 3 menit
+    const intervalId = setInterval(() => {
+      setRefreshKey(prevKey => prevKey + 1);
+    }, 180000); // 3 menit dalam milidetik
+
+    return () => clearInterval(intervalId); // Bersihkan interval saat unmount
+  }, []);
+
+  useEffect(() => {
     // Panggil organizeData setiap interval
     const interval = setInterval(() => {
       organizeData(coinsData);
@@ -524,7 +534,7 @@ const ARScreen = () => {
   }, [coinsData, currentIndex]); // Ulangi jika coinsData atau currentIndex berubah
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView key={refreshKey} style={{flex: 1}}>
       <View>
         {cameraPermission === 'granted' && isCameraReady && device && (
           <>
