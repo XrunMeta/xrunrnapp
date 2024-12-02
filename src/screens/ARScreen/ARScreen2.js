@@ -10,6 +10,7 @@ import {
   Image,
   SafeAreaView,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import {
   fontSize,
@@ -354,6 +355,9 @@ const ARScreen = () => {
   const device = useCameraDevice('back');
   const chunkSize = 9;
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [loading, setLoading] = useState(true); // Get Loading Info
+
+  console.log('brs');
 
   const getCamPermission = async () => {
     try {
@@ -447,7 +451,7 @@ const ARScreen = () => {
                   }));
 
                   organizeData(coinsData);
-
+                  setLoading(false);
                   setCoinsData(coinsData);
                   console.log('Hasil COIN ada -> ' + coinsData.length);
                 } else {
@@ -555,15 +559,33 @@ const ARScreen = () => {
                 Jackpot 10,000 XRUN
               </Text>
             </View>
-            <View style={styles.container}>
-              {organizedData.map(spot => (
-                <AnimatedSpot
-                  key={spot.spotID}
-                  member={userData?.member}
-                  coinsData={spot}
-                />
-              ))}
-            </View>
+            {loading ? (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#343a59" />
+                <Text
+                  style={{
+                    color: 'white',
+                    fontFamily: getFontFam() + 'Regular',
+                    fontSize: fontSize('body'),
+                  }}>
+                  {lang && lang?.screen_map?.section_marker
+                    ? lang?.screen_map?.section_marker?.loader
+                    : 'Loading...'}
+                </Text>
+                {/* Show Loading While Data is Load */}
+              </View>
+            ) : (
+              <View style={styles.container}>
+                {organizedData.map(spot => (
+                  <AnimatedSpot
+                    key={spot.spotID}
+                    member={userData?.member}
+                    coinsData={spot}
+                  />
+                ))}
+              </View>
+            )}
+
             <View
               style={{
                 position: 'absolute',
@@ -787,6 +809,13 @@ const styles = StyleSheet.create({
     fontSize: fontSize('note'),
     color: 'grey',
     marginTop: -3,
+  },
+  loadingContainer: {
+    ...StyleSheet.absoluteFill,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    zIndex: 1,
   },
 });
 
