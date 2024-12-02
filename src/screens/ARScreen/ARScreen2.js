@@ -124,7 +124,8 @@ const AnimatedSpot = ({member, coinsData}) => {
     const randomBezier =
       bezierCurves[Math.floor(Math.random() * bezierCurves.length)];
     const randomDuration = 700 + Math.random() * 500; // Hasil antara 700 dan 1200
-    const randomDelay = Math.random() * (2000 - 1000) + 1000; // Delay antara 1-2 detik
+    // const randomDelay = Math.random() * (2000 - 1000) + 1000; // Delay antara 1-2 detik
+    const randomDelay = 100; // Delay antara 1-2 detik
     const randomRange = 150 + Math.random() * 150; // Randomize range 200-500px
 
     // Animasi sequence
@@ -206,19 +207,19 @@ const AnimatedSpot = ({member, coinsData}) => {
           x: spots[coinsData.spotID - 1].x + throwDistance, // Gerakan horizontal
           y: spots[coinsData.spotID - 1].y - 200, // Gerakan vertikal (lebih tinggi, membuat lengkungan)
         },
-        duration: 80, // Durasi gerakan
+        duration: 50, // Durasi gerakan
         easing: Easing.circle, // Easing yang menghasilkan gerakan melengkung
         useNativeDriver: true,
       }),
       Animated.timing(scaleAnim, {
         toValue: 1,
-        duration: 500,
+        duration: 300,
         easing: Easing.bezier(0.25, 0.1, 0.25, 1),
         useNativeDriver: true,
       }),
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 500,
+        duration: 300,
         easing: Easing.bezier(0.25, 0.1, 0.25, 1),
         useNativeDriver: true,
       }),
@@ -401,7 +402,7 @@ const ARScreen = () => {
 
         // Mengambil lokasi pengguna
         const watchId = Geolocation.watchPosition(
-          position => {
+          async position => {
             const userCoordinate = {
               latitude: position.coords.latitude,
               longitude: position.coords.longitude,
@@ -413,42 +414,46 @@ const ARScreen = () => {
               `Lat : ${userCoordinate.latitude}, Lng : ${userCoordinate.longitude}`,
             );
 
+            const astorCoinsData = await AsyncStorage.getItem('astorCoinsData');
+            const coinsData = JSON.parse(astorCoinsData);
+
             // Memanggil API setelah mendapatkan lokasi pengguna
             const getARCoin = async () => {
               try {
-                const request = await fetch(`${URL_API_NODEJS}/app2000-01`, {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${authcode}`,
-                  },
-                  body: JSON.stringify({
-                    member: parseUserData.member, // Gunakan data member yang sudah didapatkan
-                    latitude: userCoordinate.latitude,
-                    longitude: userCoordinate.longitude,
-                    limit: 30,
-                  }),
-                });
+                // const request = await fetch(`${URL_API_NODEJS}/app2000-01`, {
+                //   method: 'POST',
+                //   headers: {
+                //     'Content-Type': 'application/json',
+                //     Authorization: `Bearer ${authcode}`,
+                //   },
+                //   body: JSON.stringify({
+                //     member: parseUserData.member, // Gunakan data member yang sudah didapatkan
+                //     latitude: userCoordinate.latitude,
+                //     longitude: userCoordinate.longitude,
+                //     limit: 30,
+                //   }),
+                // });
 
-                const response = await request.json();
+                // const response = await request.json();
 
-                if (response?.data && response?.data?.length > 0) {
-                  const coinsData = response?.data.map(item => ({
-                    lat: item.lat,
-                    lng: item.lng,
-                    title: item.title,
-                    distance: item.distance,
-                    adthumbnail2: item.adthumbnail2,
-                    adthumbnail: item.adthumbnail,
-                    coins: item.coins,
-                    symbol: item.symbol,
-                    coin: item.coin,
-                    advertisement: item.advertisement,
-                    cointype: item.cointype,
-                    adcolor1: item.adcolor1,
-                    brand: item.brand,
-                    isbigcoin: item.isbigcoin,
-                  }));
+                // if (response?.data && response?.data?.length > 0) {
+                if (coinsData.length > 0) {
+                  // const coinsData = response?.data.map(item => ({
+                  //   lat: item.lat,
+                  //   lng: item.lng,
+                  //   title: item.title,
+                  //   distance: item.distance,
+                  //   adthumbnail2: item.adthumbnail2,
+                  //   adthumbnail: item.adthumbnail,
+                  //   coins: item.coins,
+                  //   symbol: item.symbol,
+                  //   coin: item.coin,
+                  //   advertisement: item.advertisement,
+                  //   cointype: item.cointype,
+                  //   adcolor1: item.adcolor1,
+                  //   brand: item.brand,
+                  //   isbigcoin: item.isbigcoin,
+                  // }));
 
                   organizeData(coinsData);
                   setLoading(false);
@@ -514,7 +519,7 @@ const ARScreen = () => {
     const interval = setInterval(() => {
       organizeData(coinsData);
       // setVisible(prev => !prev); // Toggle animasi
-    }, 30500); // Ulangi setiap 6 detik
+    }, 30000); // Ulangi setiap 6 detik
 
     return () => clearInterval(interval); // Bersihkan interval saat unmount
   }, [coinsData, currentIndex]); // Ulangi jika coinsData atau currentIndex berubah
