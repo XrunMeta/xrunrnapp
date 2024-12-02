@@ -28,7 +28,7 @@ import {useNavigation} from '@react-navigation/native';
 
 // Fungsi khusus untuk objek 1 dengan range kecil
 const getShakeRange = id => {
-  return id === 1 ? 5 : 10; // Range 5 untuk objek 1, 10 untuk lainnya
+  return id === 1 ? 30 : 150; // Range 5 untuk objek 1, 10 untuk lainnya
 };
 
 // Shake Range Effect
@@ -47,8 +47,14 @@ const spots = [
   {spotID: 2, x: -100, y: 50},
   {spotID: 3, x: 100, y: 50},
   {spotID: 4, x: -50, y: 150},
+  // {spotID: 5, x: 50, y: 150},
+  // {spotID: 6, x: 0, y: -140},
+  // {spotID: 7, x: 100, y: -50},
+  // {spotID: 8, x: -100, y: -50},
+  // {spotID: 9, x: -100, y: 240},
 ];
 
+// const AnimatedSpot = ({id, clickable}) => {
 const AnimatedSpot = ({member, coinsData}) => {
   const position = useRef(new Animated.ValueXY({x: 0, y: 0})).current;
   const scaleAnim = useRef(new Animated.Value(0)).current; // Default scale 0
@@ -75,7 +81,7 @@ const AnimatedSpot = ({member, coinsData}) => {
           x: getRandomOffset(spots[coinsData.spotID - 1].x, shakeRange), // Add radom offset
           y: getRandomOffset(spots[coinsData.spotID - 1].y, shakeRange),
         },
-        duration: 500,
+        duration: 200,
         easing: Easing.inOut(Easing.ease),
         useNativeDriver: true,
       }),
@@ -84,7 +90,7 @@ const AnimatedSpot = ({member, coinsData}) => {
           x: spots[coinsData.spotID - 1].x,
           y: spots[coinsData.spotID - 1].y,
         },
-        duration: 500,
+        duration: 200,
         easing: Easing.inOut(Easing.ease),
         useNativeDriver: true,
       }),
@@ -118,10 +124,6 @@ const AnimatedSpot = ({member, coinsData}) => {
       ]),
     ).start();
 
-    animateObject(); // Mulai animasi saat komponen dimount
-  }, []);
-
-  const animateObject = () => {
     // In Animation to position
     Animated.parallel([
       Animated.timing(position, {
@@ -129,62 +131,100 @@ const AnimatedSpot = ({member, coinsData}) => {
           x: getRandomObjectOffset(spots[coinsData.spotID - 1].x),
           y: getRandomObjectOffset(spots[coinsData.spotID - 1].y),
         },
-        duration: 1000,
+        duration: 800,
         useNativeDriver: true,
       }),
       Animated.timing(scaleAnim, {
         toValue: 1,
-        duration: 1000,
+        duration: 800,
         easing: Easing.inOut(Easing.ease),
         useNativeDriver: true,
       }),
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 1000,
+        duration: 800,
         easing: Easing.inOut(Easing.ease),
         useNativeDriver: true,
       }),
-    ]).start(() => {
-      startShakeAnimation(); // Start shake when object is in
-      setTimeout(() => {
-        stopShakeAndStartExit();
-      }, 30000); // Wait for 30s before exit animation
+    ]).start(() => startShakeAnimation()); // Start shake when Object in
+
+    // Remove object after 5s
+    setTimeout(() => {
+      stopShakeAndStartExit();
+    }, 30000);
+  }, []);
+
+  const restartAnimation = () => {
+    // Reset position, scale, and opacity
+    position.setValue({
+      x: Math.random() * 300 - 150,
+      y: Math.random() * 300 - 150,
     });
+    scaleAnim.setValue(0);
+    fadeAnim.setValue(0);
+
+    // Mulai animasi kembali setelah jeda 2 detik
+    setTimeout(() => {
+      Animated.parallel([
+        Animated.timing(position, {
+          toValue: {
+            x: getRandomObjectOffset(spots[coinsData.spotID - 1].x),
+            y: getRandomObjectOffset(spots[coinsData.spotID - 1].y),
+          },
+          duration: 800,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scaleAnim, {
+          toValue: 1,
+          duration: 800,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 800,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ]).start(() => startShakeAnimation()); // Mulai animasi shake kembali
+    }, 3000); // Jeda 2 detik sebelum memulai kembali
   };
 
   const stopShakeAndStartExit = () => {
+    // Stop shake animation
     shakeAnimation.current && shakeAnimation.current.stop();
 
+    // Tentukan arah lempar secara acak: kiri (-) atau kanan (+)
     const direction = Math.random() < 0.5 ? -1 : 1;
-    const throwDistance = 700 * direction;
 
-    // Exit animation
+    // Tentukan posisi akhir lempar, jauh di luar layar
+    const throwDistance = 700 * direction; // 300 unit ke kiri atau kanan
+
+    // Exit animation (lempar keluar)
     Animated.parallel([
       Animated.timing(position, {
         toValue: {
-          x: spots[coinsData.spotID - 1].x + throwDistance,
+          x: spots[coinsData.spotID - 1].x + throwDistance, // Tambahkan jarak lempar
           y: spots[coinsData.spotID - 1].y,
         },
         duration: 600,
-        easing: Easing.out(Easing.quad),
+        easing: Easing.out(Easing.quad), // Easing lebih halus keluar layar
         useNativeDriver: true,
       }),
       Animated.timing(scaleAnim, {
-        toValue: 0,
+        toValue: 0, // Skala mengecil ke 0
         duration: 600,
         useNativeDriver: true,
       }),
       Animated.timing(fadeAnim, {
-        toValue: 0,
+        toValue: 0, // Opacity menjadi 0
         duration: 200,
         useNativeDriver: true,
       }),
     ]).start(() => {
-      // Restart the animation sequence after completion
-      setTimeout(() => {
-        animateObject(); // Mulai lagi animasi
-      }, 500); // Delay sebelum restart, opsional
-    });
+      // Panggil restartAnimation setelah animasi keluar selesai
+      restartAnimation();
+    }); // Animasi selesai tanpa loop
   };
 
   return (
@@ -193,7 +233,7 @@ const AnimatedSpot = ({member, coinsData}) => {
       style={[
         styles.spot,
         {
-          zIndex: parseFloat(10) < 30 ? 20 : 1,
+          zIndex: parseFloat(coinsData.distance) < 30 ? 18 : 1,
           opacity: fadeAnim,
           transform: [
             // Coin Positioning at Screen (Adjust range at parameter || normal 0-30)
@@ -274,7 +314,7 @@ const ARScreen = () => {
   const [isCameraReady, setCameraReady] = useState(false);
   const [cameraPermission, setCameraPermission] = useState('pending');
   const device = useCameraDevice('back');
-  const chunkSize = 9;
+  const chunkSize = 4;
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const getCamPermission = async () => {
@@ -298,119 +338,116 @@ const ARScreen = () => {
     }
   };
 
-  useEffect(() => {
-    const getUserDataAndLocationAndCoins = async () => {
-      try {
-        // Mengambil data user dari AsyncStorage
-        const storedUserData = await AsyncStorage.getItem('userData');
-        const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+  const getUserDataAndLocationAndCoins = async () => {
+    try {
+      // Mengambil data user dari AsyncStorage
+      const storedUserData = await AsyncStorage.getItem('userData');
+      const currentLanguage = await AsyncStorage.getItem('currentLanguage');
 
-        // Set Bahasa
-        const screenLang = await getLanguage2(currentLanguage, 'screen_map');
-        setLang(screenLang);
+      // Set Bahasa
+      const screenLang = await getLanguage2(currentLanguage, 'screen_map');
+      setLang(screenLang);
 
-        const deviceLanguage = RNLocalize.getLocales()[0].languageCode;
-        setCurLang(deviceLanguage);
+      const deviceLanguage = RNLocalize.getLocales()[0].languageCode;
+      setCurLang(deviceLanguage);
 
-        const parseUserData = JSON.parse(storedUserData);
-        setUserData(parseUserData);
+      const parseUserData = JSON.parse(storedUserData);
+      setUserData(parseUserData);
 
-        console.log({parseUserData});
+      console.log({parseUserData});
 
-        // Mengambil lokasi pengguna
-        const watchId = Geolocation.watchPosition(
-          position => {
-            const userCoordinate = {
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-              // latitude: -6.0858965,
-              // longitude: 106.74651,
-            };
-            setUserLocation(userCoordinate);
-            console.log(
-              `Lat : ${userCoordinate.latitude}, Lng : ${userCoordinate.longitude}`,
-            );
+      // Mengambil lokasi pengguna
+      const watchId = Geolocation.watchPosition(
+        position => {
+          const userCoordinate = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            // latitude: -6.0858965,
+            // longitude: 106.74651,
+          };
+          setUserLocation(userCoordinate);
+          console.log(
+            `Lat : ${userCoordinate.latitude}, Lng : ${userCoordinate.longitude}`,
+          );
 
-            // Memanggil API setelah mendapatkan lokasi pengguna
-            const getARCoin = async () => {
-              try {
-                const request = await fetch(`${URL_API_NODEJS}/app2000-01`, {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${authcode}`,
-                  },
-                  body: JSON.stringify({
-                    member: parseUserData.member, // Gunakan data member yang sudah didapatkan
-                    latitude: userCoordinate.latitude,
-                    longitude: userCoordinate.longitude,
-                    limit: 30,
-                  }),
-                });
+          // Memanggil API setelah mendapatkan lokasi pengguna
+          const getARCoin = async () => {
+            try {
+              const request = await fetch(`${URL_API_NODEJS}/app2000-01`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${authcode}`,
+                },
+                body: JSON.stringify({
+                  member: parseUserData.member, // Gunakan data member yang sudah didapatkan
+                  latitude: userCoordinate.latitude,
+                  longitude: userCoordinate.longitude,
+                  limit: 30,
+                }),
+              });
 
-                const response = await request.json();
+              const response = await request.json();
 
-                if (response?.data && response?.data?.length > 0) {
-                  const coinsData = response?.data.map(item => ({
-                    lat: item.lat,
-                    lng: item.lng,
-                    title: item.title,
-                    distance: item.distance,
-                    adthumbnail2: item.adthumbnail2,
-                    adthumbnail: item.adthumbnail,
-                    coins: item.coins,
-                    symbol: item.symbol,
-                    coin: item.coin,
-                    advertisement: item.advertisement,
-                    cointype: item.cointype,
-                    adcolor1: item.adcolor1,
-                    brand: item.brand,
-                    isbigcoin: item.isbigcoin,
-                  }));
+              if (response?.data && response?.data?.length > 0) {
+                const coinsData = response?.data.map(item => ({
+                  lat: item.lat,
+                  lng: item.lng,
+                  title: item.title,
+                  distance: item.distance,
+                  adthumbnail2: item.adthumbnail2,
+                  adthumbnail: item.adthumbnail,
+                  coins: item.coins,
+                  symbol: item.symbol,
+                  coin: item.coin,
+                  advertisement: item.advertisement,
+                  cointype: item.cointype,
+                  adcolor1: item.adcolor1,
+                  brand: item.brand,
+                  isbigcoin: item.isbigcoin,
+                }));
 
-                  organizeData(coinsData);
-
-                  setCoinsData(coinsData);
-                  console.log('Hasil COIN ada -> ' + coinsData.length);
-                } else {
-                  console.log('Coin dikosongin');
-                  setCoinsData([]);
-                }
-              } catch (error) {
-                console.error('Error calling API:', error);
+                setCoinsData(coinsData);
+                console.log('Hasil COIN ada -> ' + coinsData.length);
+              } else {
+                console.log('Coin dikosongin');
+                setCoinsData([]);
               }
-            };
+            } catch (error) {
+              console.error('Error calling API:', error);
+            }
+          };
 
-            getARCoin(); // Panggil fungsi getARCoin setelah mendapatkan lokasi pengguna
-          },
-          error => {
-            console.error(error);
-          },
-          {
-            enableHighAccuracy: true,
-            distanceFilter: 10,
-          },
-        );
+          getARCoin(); // Panggil fungsi getARCoin setelah mendapatkan lokasi pengguna
+        },
+        error => {
+          console.error(error);
+        },
+        {
+          enableHighAccuracy: true,
+          distanceFilter: 10,
+        },
+      );
 
-        return () => {
-          Geolocation.clearWatch(watchId);
-        };
-      } catch (err) {
-        console.error('Error retrieving data or location:', err);
-      }
-    };
+      return () => {
+        Geolocation.clearWatch(watchId);
+      };
+    } catch (err) {
+      console.error('Error retrieving data or location:', err);
+    }
+  };
 
+  useEffect(() => {
     getUserDataAndLocationAndCoins();
     getCamPermission();
   }, []); // Hanya dijalankan sekali saat komponen pertama kali dirender
 
   // Fungsi untuk menggabungkan data berdasarkan aturan
-  const organizeData = oCoinData => {
-    // if (coinsData.length === 0) return;
-    if (oCoinData.length === 0) return;
+  const organizeData = () => {
+    if (coinsData.length === 0) return;
 
     // Ambil data 9 item berdasarkan currentIndex
-    const nextData = oCoinData.slice(currentIndex, currentIndex + chunkSize);
+    const nextData = coinsData.slice(currentIndex, currentIndex + chunkSize);
 
     // Jika kurang dari 9 item (berarti sampai akhir), reset indeks ke awal
     if (nextData.length < chunkSize) {
@@ -430,9 +467,10 @@ const ARScreen = () => {
   useEffect(() => {
     // Panggil organizeData setiap interval
     const interval = setInterval(() => {
-      organizeData(coinsData);
+      organizeData();
+      //   // getUserDataAndLocationAndCoins();
       // setVisible(prev => !prev); // Toggle animasi
-    }, 32000); // Ulangi setiap 6 detik
+    }, 500); // Ulangi setiap 6 detik
 
     return () => clearInterval(interval); // Bersihkan interval saat unmount
   }, [coinsData, currentIndex]); // Ulangi jika coinsData atau currentIndex berubah
@@ -478,6 +516,7 @@ const ARScreen = () => {
               </Text>
             </View>
             <View style={styles.container}>
+              {/* {visible && */}
               {organizedData.map(spot => (
                 <AnimatedSpot
                   key={spot.spotID}
