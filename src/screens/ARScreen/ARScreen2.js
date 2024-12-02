@@ -207,19 +207,19 @@ const AnimatedSpot = ({member, coinsData}) => {
           x: spots[coinsData.spotID - 1].x + throwDistance, // Gerakan horizontal
           y: spots[coinsData.spotID - 1].y - 200, // Gerakan vertikal (lebih tinggi, membuat lengkungan)
         },
-        duration: 50, // Durasi gerakan
+        duration: 1, // Durasi gerakan
         easing: Easing.circle, // Easing yang menghasilkan gerakan melengkung
         useNativeDriver: true,
       }),
-      Animated.timing(scaleAnim, {
-        toValue: 1,
-        duration: 300,
-        easing: Easing.bezier(0.25, 0.1, 0.25, 1),
-        useNativeDriver: true,
-      }),
+      // Animated.timing(scaleAnim, {
+      //   toValue: 1,
+      //   duration: 300,
+      //   easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+      //   useNativeDriver: true,
+      // }),
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 300,
+        duration: 200,
         easing: Easing.bezier(0.25, 0.1, 0.25, 1),
         useNativeDriver: true,
       }),
@@ -249,16 +249,16 @@ const AnimatedSpot = ({member, coinsData}) => {
         easing: Easing.bezier(0.25, 0.1, 0.25, 1),
         useNativeDriver: true,
       }),
-      Animated.timing(scaleAnim, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }),
+      // Animated.timing(scaleAnim, {
+      //   toValue: 0,
+      //   duration: 300,
+      //   useNativeDriver: true,
+      // }),
+      // Animated.timing(fadeAnim, {
+      //   toValue: 0,
+      //   duration: 300,
+      //   useNativeDriver: true,
+      // }),
     ]).start(() => {
       // Restart the animation sequence after completion
       setTimeout(() => {
@@ -295,12 +295,12 @@ const AnimatedSpot = ({member, coinsData}) => {
                 ],
               }),
             },
-            {
-              scale: scaleAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0, 1], // Scale in from small to big
-              }),
-            },
+            // {
+            //   scale: scaleAnim.interpolate({
+            //     inputRange: [0, 1],
+            //     outputRange: [0, 1], // Scale in from small to big
+            //   }),
+            // },
           ],
         },
       ]}>
