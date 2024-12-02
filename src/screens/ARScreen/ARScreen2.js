@@ -125,7 +125,7 @@ const AnimatedSpot = ({member, coinsData}) => {
       bezierCurves[Math.floor(Math.random() * bezierCurves.length)];
     const randomDuration = 700 + Math.random() * 500; // Hasil antara 700 dan 1200
     // const randomDelay = Math.random() * (2000 - 1000) + 1000; // Delay antara 1-2 detik
-    const randomDelay = 100; // Delay antara 1-2 detik
+    const randomDelay = 1000; // Delay antara 1-2 detik
     const randomRange = 150 + Math.random() * 150; // Randomize range 200-500px
 
     // Animasi sequence
@@ -140,7 +140,7 @@ const AnimatedSpot = ({member, coinsData}) => {
         },
         // duration: randomDuration, // Durasi pergerakan
         // easing: randomBezier,
-        duration: 500, // Durasi pergerakan
+        duration: 300, // Durasi pergerakan
         easing: bezierCurves[0],
         useNativeDriver: true,
       }),
@@ -156,7 +156,7 @@ const AnimatedSpot = ({member, coinsData}) => {
         },
         // duration: randomDuration,
         // easing: randomBezier,
-        duration: 500,
+        duration: 300,
         easing: bezierCurves[0],
         useNativeDriver: true,
       }),
@@ -460,6 +460,7 @@ const ARScreen = () => {
                 } else {
                   console.log('Coin dikosongin');
                   setCoinsData([]);
+                  setLoading(false);
                 }
               } catch (error) {
                 console.error('Error calling API:', error);
