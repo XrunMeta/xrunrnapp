@@ -580,13 +580,14 @@ const ARScreen = () => {
               </View>
             ) : (
               <View style={styles.container}>
-                {organizedData.map(spot => (
-                  <AnimatedSpot
-                    key={spot.spotID}
-                    member={userData?.member}
-                    coinsData={spot}
-                  />
-                ))}
+                {coinsData.length > 0 &&
+                  organizedData.map(spot => (
+                    <AnimatedSpot
+                      key={spot.spotID}
+                      member={userData?.member}
+                      coinsData={spot}
+                    />
+                  ))}
               </View>
             )}
 
