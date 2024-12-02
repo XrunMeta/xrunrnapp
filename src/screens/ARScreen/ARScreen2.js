@@ -28,7 +28,7 @@ import {useNavigation} from '@react-navigation/native';
 
 // Fungsi khusus untuk objek 1 dengan range kecil
 const getShakeRange = id => {
-  return id === 1 ? 5 : 140; // Range 5 untuk objek 1, 10 untuk lainnya
+  return id === 1 ? 30 : 60; // Range 5 untuk objek 1, 10 untuk lainnya
 };
 
 // Shake Range Effect
@@ -81,7 +81,7 @@ const AnimatedSpot = ({member, coinsData}) => {
           x: getRandomOffset(spots[coinsData.spotID - 1].x, shakeRange), // Add radom offset
           y: getRandomOffset(spots[coinsData.spotID - 1].y, shakeRange),
         },
-        duration: 700,
+        duration: 1100,
         easing: Easing.inOut(Easing.ease),
         useNativeDriver: true,
       }),
@@ -90,7 +90,7 @@ const AnimatedSpot = ({member, coinsData}) => {
           x: spots[coinsData.spotID - 1].x,
           y: spots[coinsData.spotID - 1].y,
         },
-        duration: 700,
+        duration: 1100,
         easing: Easing.inOut(Easing.ease),
         useNativeDriver: true,
       }),
@@ -151,7 +151,7 @@ const AnimatedSpot = ({member, coinsData}) => {
     // Remove object after 5s
     setTimeout(() => {
       stopShakeAndStartExit();
-    }, 15000);
+    }, 30000);
   }, []);
 
   const restartAnimation = () => {
@@ -470,7 +470,7 @@ const ARScreen = () => {
       organizeData();
       //   // getUserDataAndLocationAndCoins();
       // setVisible(prev => !prev); // Toggle animasi
-    }, 6000); // Ulangi setiap 6 detik
+    }, 500); // Ulangi setiap 6 detik
 
     return () => clearInterval(interval); // Bersihkan interval saat unmount
   }, [coinsData, currentIndex]); // Ulangi jika coinsData atau currentIndex berubah
