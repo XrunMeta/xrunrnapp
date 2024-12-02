@@ -354,7 +354,7 @@ const ARScreen = () => {
   const [isCameraReady, setCameraReady] = useState(false);
   const [cameraPermission, setCameraPermission] = useState('pending');
   const device = useCameraDevice('back');
-  const chunkSize = 9;
+  const chunkSize = 4;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true); // Get Loading Info
 
