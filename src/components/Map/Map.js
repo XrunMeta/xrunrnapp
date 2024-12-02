@@ -353,7 +353,7 @@ const MapComponent = ({
                   JSON.stringify(coinsData),
                 );
 
-                console.log('brs-> ' + coinsData.length);
+                console.log('astorCoinsData -> ' + coinsData.length);
               } else {
                 console.log('astorCoinsData dikosongin');
                 await AsyncStorage.setItem('astorCoinsData', []);
