@@ -518,7 +518,7 @@ const ARScreen = () => {
     const interval = setInterval(() => {
       organizeData(coinsData);
       // setVisible(prev => !prev); // Toggle animasi
-    }, 30000); // Ulangi setiap 6 detik
+    }, 32000); // Ulangi setiap 6 detik
 
     return () => clearInterval(interval); // Bersihkan interval saat unmount
   }, [coinsData, currentIndex]); // Ulangi jika coinsData atau currentIndex berubah
