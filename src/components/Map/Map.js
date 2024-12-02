@@ -352,7 +352,7 @@ const MapComponent = ({
                   'astorCoinsData',
                   JSON.stringify(coinsData),
                 );
-                setLoading(false);
+
                 console.log('brs-> ' + coinsData.length);
               } else {
                 console.log('astorCoinsData dikosongin');
@@ -361,6 +361,8 @@ const MapComponent = ({
             } catch (error) {
               console.error('Error calling API:', error);
               await AsyncStorage.setItem('astorCoinsData', []);
+            } finally {
+              setLoading(false);
             }
           };
 
