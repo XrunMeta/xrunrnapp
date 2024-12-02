@@ -358,8 +358,6 @@ const ARScreen = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true); // Get Loading Info
 
-  console.log('brs');
-
   const getCamPermission = async () => {
     try {
       let permission;

@@ -252,7 +252,7 @@ const MapComponent = ({
                   setAdThumbnail(adThumbnails);
 
                   setImagesLoaded(true);
-                  setLoading(false);
+                  // setLoading(false);
                 })
                 .catch(error => {
                   console.error('Error while loading images:', error);
@@ -352,8 +352,8 @@ const MapComponent = ({
                   'astorCoinsData',
                   JSON.stringify(coinsData),
                 );
-
-                console.log('astorCoinsData-> ' + coinsData.length);
+                setLoading(false);
+                console.log('brs-> ' + coinsData.length);
               } else {
                 console.log('astorCoinsData dikosongin');
                 await AsyncStorage.setItem('astorCoinsData', []);
@@ -470,7 +470,7 @@ const MapComponent = ({
               setAdThumbnail(adThumbnails);
 
               setImagesLoaded(true);
-              setLoading(false);
+              // setLoading(false);
 
               saveLogsDB(
                 '5000103',
@@ -560,7 +560,7 @@ const MapComponent = ({
                 setAdThumbnail(adThumbnails);
 
                 setImagesLoaded(true);
-                setLoading(false);
+                // setLoading(false);
                 console.log('resetCoin() has called');
               })
               .catch(error => {
