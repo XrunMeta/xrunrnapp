@@ -471,26 +471,51 @@ const ARScreen = () => {
   }, []); // Hanya dijalankan sekali saat komponen pertama kali dirender
 
   // Fungsi untuk menggabungkan data berdasarkan aturan
+  // const organizeData = oCoinData => {
+  //   if (oCoinData.length === 0) return;
+
+  //   // Ambil data 9 item berdasarkan currentIndex
+  //   const nextData = oCoinData.slice(currentIndex, currentIndex + chunkSize);
+
+  //   console.log('nextData length -> ' + currentIndex + chunkSize);
+
+  //   // Jika kurang dari 9 item (berarti sampai akhir), reset indeks ke awal
+  //   if (nextData.length < chunkSize) {
+  //     setCurrentIndex(0);
+  //   } else {
+  //     setCurrentIndex(prevIndex => prevIndex + chunkSize);
+  //   }
+
+  //   // Gabungkan spot dengan data kelompok yang diambil
+  //   const newOrganizedData = spots.map((spot, index) => {
+  //     return nextData[index] ? {...spot, ...nextData[index]} : spot;
+  //   });
+
+  //   setOrganizedData(newOrganizedData); // Set data terorganisir
+  // };
+
   const organizeData = oCoinData => {
-    // if (coinsData.length === 0) return;
     if (oCoinData.length === 0) return;
 
-    // Ambil data 9 item berdasarkan currentIndex
-    const nextData = oCoinData.slice(currentIndex, currentIndex + chunkSize);
-
-    // Jika kurang dari 9 item (berarti sampai akhir), reset indeks ke awal
-    if (nextData.length < chunkSize) {
-      setCurrentIndex(0);
+    let nextData = [];
+    if (currentIndex + chunkSize > oCoinData.length) {
+      nextData = [
+        ...oCoinData.slice(currentIndex),
+        ...oCoinData.slice(0, (currentIndex + chunkSize) % oCoinData.length),
+      ];
+      setCurrentIndex((currentIndex + chunkSize) % oCoinData.length);
     } else {
-      setCurrentIndex(prevIndex => prevIndex + chunkSize);
+      nextData = oCoinData.slice(currentIndex, currentIndex + chunkSize);
+      setCurrentIndex((currentIndex + chunkSize) % oCoinData.length);
     }
 
-    // Gabungkan spot dengan data kelompok yang diambil
+    console.log('nextData length -> ' + currentIndex + ' | ' + nextData.length);
+
     const newOrganizedData = spots.map((spot, index) => {
       return nextData[index] ? {...spot, ...nextData[index]} : spot;
     });
 
-    setOrganizedData(newOrganizedData); // Set data terorganisir
+    setOrganizedData(newOrganizedData);
   };
 
   useEffect(() => {
