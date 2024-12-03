@@ -106,26 +106,6 @@ const AnimatedSpot = ({member, coinsData}) => {
     // const randomDelay = 1000; // Delay antara 1-2 detik
     const randomRange = 150 + Math.random() * 150; // Randomize range 200-500px
 
-    // Animated.timing(position, {
-    //   toValue: {
-    //     x: position.x._value, // Tetap di posisi awal selama delay
-    //     y: position.y._value,
-    //   },
-    //   duration: 5000, // Ini menjadi delay (animasi diam)
-    //   useNativeDriver: true,
-    // }).start(() => {
-    //   // Setelah delay selesai, jalankan animasi pergerakan
-    //   Animated.timing(position, {
-    //     toValue: {
-    //       x: getRandomOffset(spots[coinsData.spotID - 1].x, 20),
-    //       y: getRandomOffset(spots[coinsData.spotID - 1].y, 200),
-    //     },
-    //     duration: 300,
-    //     easing: bezierCurves[0],
-    //     useNativeDriver: true,
-    //   }).start(() => startShakeAnimation());
-    // });
-
     // Animasi sequence
     shakeAnimation.current = Animated.sequence([
       // Animated.delay(randomDelay), // Delay sebelum animasi dimulai
@@ -398,41 +378,7 @@ const ARScreen = () => {
             // Memanggil API setelah mendapatkan lokasi pengguna
             const getARCoin = async () => {
               try {
-                // const request = await fetch(`${URL_API_NODEJS}/app2000-01`, {
-                //   method: 'POST',
-                //   headers: {
-                //     'Content-Type': 'application/json',
-                //     Authorization: `Bearer ${authcode}`,
-                //   },
-                //   body: JSON.stringify({
-                //     member: parseUserData.member, // Gunakan data member yang sudah didapatkan
-                //     latitude: userCoordinate.latitude,
-                //     longitude: userCoordinate.longitude,
-                //     limit: 30,
-                //   }),
-                // });
-
-                // const response = await request.json();
-
-                // if (response?.data && response?.data?.length > 0) {
                 if (coinsData.length > 0) {
-                  // const coinsData = response?.data.map(item => ({
-                  //   lat: item.lat,
-                  //   lng: item.lng,
-                  //   title: item.title,
-                  //   distance: item.distance,
-                  //   adthumbnail2: item.adthumbnail2,
-                  //   adthumbnail: item.adthumbnail,
-                  //   coins: item.coins,
-                  //   symbol: item.symbol,
-                  //   coin: item.coin,
-                  //   advertisement: item.advertisement,
-                  //   cointype: item.cointype,
-                  //   adcolor1: item.adcolor1,
-                  //   brand: item.brand,
-                  //   isbigcoin: item.isbigcoin,
-                  // }));
-
                   organizeData(coinsData);
                   setLoading(false);
                   setCoinsData(coinsData);
@@ -471,29 +417,6 @@ const ARScreen = () => {
   }, []); // Hanya dijalankan sekali saat komponen pertama kali dirender
 
   // Fungsi untuk menggabungkan data berdasarkan aturan
-  // const organizeData = oCoinData => {
-  //   if (oCoinData.length === 0) return;
-
-  //   // Ambil data 9 item berdasarkan currentIndex
-  //   const nextData = oCoinData.slice(currentIndex, currentIndex + chunkSize);
-
-  //   console.log('nextData length -> ' + currentIndex + chunkSize);
-
-  //   // Jika kurang dari 9 item (berarti sampai akhir), reset indeks ke awal
-  //   if (nextData.length < chunkSize) {
-  //     setCurrentIndex(0);
-  //   } else {
-  //     setCurrentIndex(prevIndex => prevIndex + chunkSize);
-  //   }
-
-  //   // Gabungkan spot dengan data kelompok yang diambil
-  //   const newOrganizedData = spots.map((spot, index) => {
-  //     return nextData[index] ? {...spot, ...nextData[index]} : spot;
-  //   });
-
-  //   setOrganizedData(newOrganizedData); // Set data terorganisir
-  // };
-
   const organizeData = oCoinData => {
     if (oCoinData.length === 0) return;
 
