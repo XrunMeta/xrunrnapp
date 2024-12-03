@@ -68,33 +68,11 @@ const AnimatedSpot = ({member, coinsData}) => {
     });
   };
 
-  // const startShakeAnimation = () => {
-  //   const shakeRange = getShakeRange(coinsData.spotID);
-  //   shakeAnimation.current = Animated.sequence([
-  //     Animated.timing(position, {
-  //       toValue: {
-  //         x: getRandomOffset(spots[coinsData.spotID - 1].x, shakeRange), // Add radom offset
-  //         y: getRandomOffset(spots[coinsData.spotID - 1].y, shakeRange),
-  //       },
-  //       duration: 500,
-  //       easing: Easing.inOut(Easing.ease),
-  //       useNativeDriver: true,
-  //     }),
-  //     Animated.timing(position, {
-  //       toValue: {
-  //         x: spots[coinsData.spotID - 1].x,
-  //         y: spots[coinsData.spotID - 1].y,
-  //       },
-  //       duration: 500,
-  //       easing: Easing.inOut(Easing.ease),
-  //       useNativeDriver: true,
-  //     }),
-  //   ]);
-
-  //   shakeAnimation.current.start(() => startShakeAnimation()); // Recursive to start shake
-  // };
-
   const startShakeAnimation = () => {
+    if (shakeAnimation.current) {
+      shakeAnimation.current.stop(); // Hentikan animasi lama jika ada
+    }
+
     // Ease Beizer Animation
     const bezierCurves = [
       Easing.bezier(0.25, 0.1, 0.25, 1), // Standard smooth ease
@@ -124,38 +102,62 @@ const AnimatedSpot = ({member, coinsData}) => {
     const randomBezier =
       bezierCurves[Math.floor(Math.random() * bezierCurves.length)];
     const randomDuration = 700 + Math.random() * 500; // Hasil antara 700 dan 1200
-    // const randomDelay = Math.random() * (2000 - 1000) + 1000; // Delay antara 1-2 detik
-    const randomDelay = 1000; // Delay antara 1-2 detik
+    const randomDelay = Math.random() * (4000 - 2000) + 2000; // Delay antara 1-2 detik
+    // const randomDelay = 1000; // Delay antara 1-2 detik
     const randomRange = 150 + Math.random() * 150; // Randomize range 200-500px
+
+    // Animated.timing(position, {
+    //   toValue: {
+    //     x: position.x._value, // Tetap di posisi awal selama delay
+    //     y: position.y._value,
+    //   },
+    //   duration: 5000, // Ini menjadi delay (animasi diam)
+    //   useNativeDriver: true,
+    // }).start(() => {
+    //   // Setelah delay selesai, jalankan animasi pergerakan
+    //   Animated.timing(position, {
+    //     toValue: {
+    //       x: getRandomOffset(spots[coinsData.spotID - 1].x, 20),
+    //       y: getRandomOffset(spots[coinsData.spotID - 1].y, 200),
+    //     },
+    //     duration: 300,
+    //     easing: bezierCurves[0],
+    //     useNativeDriver: true,
+    //   }).start(() => startShakeAnimation());
+    // });
 
     // Animasi sequence
     shakeAnimation.current = Animated.sequence([
       // Animated.delay(randomDelay), // Delay sebelum animasi dimulai
 
       // Pindahkan posisi ke acak dengan offset sekitar 200 unit
-      Animated.timing(position, {
-        toValue: {
-          x: getRandomOffset(spots[coinsData.spotID - 1].x, 70), // Offset Horizontal
-          y: getRandomOffset(spots[coinsData.spotID - 1].y, 170), // Offset Vertical
-        },
-        // duration: randomDuration, // Durasi pergerakan
-        // easing: randomBezier,
-        duration: 300, // Durasi pergerakan
-        easing: bezierCurves[0],
-        useNativeDriver: true,
-      }),
+      // Animated.timing(position, {
+      //   toValue: {
+      //     x: getRandomOffset(spots[coinsData.spotID - 1].x, 20), // Offset Horizontal
+      //     y: getRandomOffset(spots[coinsData.spotID - 1].y, 200), // Offset Vertical
+      //   },
+      //   // duration: randomDuration, // Durasi pergerakan
+      //   // easing: randomBezier,
+      //   duration: 300, // Durasi pergerakan
+      //   easing: bezierCurves[0],
+      //   useNativeDriver: true,
+      // }),
 
       // Menahan di posisi baru selama 1-5 detik
-      Animated.delay(Math.random() * (5000 - 1000) + 1000), // Hold selama 1-5 detik
+      // Animated.delay(Math.random() * (3000 - 4000) + 4000), // Hold selama 1-5 detik
+      // Animated.delay(5000), // Hold selama 1-5 detik
 
       // Kembali ke posisi awal dengan animasi
       Animated.timing(position, {
         toValue: {
-          x: spots[coinsData.spotID - 1].x,
-          y: spots[coinsData.spotID - 1].y,
+          // x: spots[coinsData.spotID - 1].x,
+          // y: spots[coinsData.spotID - 1].y,
+          x: getRandomOffset(spots[coinsData.spotID - 1].x, 20), // Offset Horizontal
+          y: getRandomOffset(spots[coinsData.spotID - 1].y, 200),
         },
         // duration: randomDuration,
         // easing: randomBezier,
+        // delay: randomDelay,
         duration: 300,
         easing: bezierCurves[0],
         useNativeDriver: true,
@@ -211,12 +213,6 @@ const AnimatedSpot = ({member, coinsData}) => {
         easing: Easing.circle, // Easing yang menghasilkan gerakan melengkung
         useNativeDriver: true,
       }),
-      // Animated.timing(scaleAnim, {
-      //   toValue: 1,
-      //   duration: 300,
-      //   easing: Easing.bezier(0.25, 0.1, 0.25, 1),
-      //   useNativeDriver: true,
-      // }),
       Animated.timing(fadeAnim, {
         toValue: 1,
         duration: 200,
@@ -245,20 +241,9 @@ const AnimatedSpot = ({member, coinsData}) => {
           y: spots[coinsData.spotID - 1].y,
         },
         duration: 300,
-        // easing: Easing.out(Easing.quad),
         easing: Easing.bezier(0.25, 0.1, 0.25, 1),
         useNativeDriver: true,
       }),
-      // Animated.timing(scaleAnim, {
-      //   toValue: 0,
-      //   duration: 300,
-      //   useNativeDriver: true,
-      // }),
-      // Animated.timing(fadeAnim, {
-      //   toValue: 0,
-      //   duration: 300,
-      //   useNativeDriver: true,
-      // }),
     ]).start(() => {
       // Restart the animation sequence after completion
       setTimeout(() => {
@@ -295,12 +280,6 @@ const AnimatedSpot = ({member, coinsData}) => {
                 ],
               }),
             },
-            // {
-            //   scale: scaleAnim.interpolate({
-            //     inputRange: [0, 1],
-            //     outputRange: [0, 1], // Scale in from small to big
-            //   }),
-            // },
           ],
         },
       ]}>
