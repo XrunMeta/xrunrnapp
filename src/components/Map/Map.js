@@ -13,7 +13,13 @@ import Geolocation from 'react-native-geolocation-service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {fetchMarkerData} from './APIGetMarker';
 import RNFetchBlob from 'rn-fetch-blob';
-import {fontSize, getFontFam, saveLogsDB} from '../../../utils';
+import {
+  fontSize,
+  getFontFam,
+  saveLogsDB,
+  URL_API_NODEJS,
+  authcode,
+} from '../../../utils';
 const logo_tempMarker = require('../../../assets/images/logo_tempMarker.png');
 
 // ########## Main Component ##########
@@ -246,7 +252,7 @@ const MapComponent = ({
                   setAdThumbnail(adThumbnails);
 
                   setImagesLoaded(true);
-                  setLoading(false);
+                  // setLoading(false);
                 })
                 .catch(error => {
                   console.error('Error while loading images:', error);
@@ -304,6 +310,65 @@ const MapComponent = ({
         );
 
         if (data) {
+          // Call AR API
+          const getARCoin = async () => {
+            try {
+              const request = await fetch(`${URL_API_NODEJS}/app2000-01`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${authcode}`,
+                },
+                body: JSON.stringify({
+                  member: getUserData.member, // Gunakan data member yang sudah didapatkan
+                  latitude: coordinate.latitude,
+                  longitude: coordinate.longitude,
+                  limit: 30,
+                }),
+              });
+
+              const response = await request.json();
+
+              if (response?.data && response?.data?.length > 0) {
+                const coinsData = response?.data.map(item => ({
+                  lat: item.lat,
+                  lng: item.lng,
+                  title: item.title,
+                  distance: item.distance,
+                  adthumbnail2: item.adthumbnail2,
+                  adthumbnail: item.adthumbnail,
+                  coins: item.coins,
+                  symbol: item.symbol,
+                  coin: item.coin,
+                  advertisement: item.advertisement,
+                  cointype: item.cointype,
+                  adcolor1: item.adcolor1,
+                  brand: item.brand,
+                  isbigcoin: item.isbigcoin,
+                }));
+
+                // Save to AsyncStorage
+                await AsyncStorage.setItem(
+                  'astorCoinsData',
+                  JSON.stringify(coinsData),
+                );
+
+                console.log('astorCoinsData -> ' + coinsData.length);
+              } else {
+                console.log('astorCoinsData dikosongin');
+                await AsyncStorage.setItem('astorCoinsData', []);
+              }
+            } catch (error) {
+              console.error('Error calling API:', error);
+              await AsyncStorage.setItem('astorCoinsData', []);
+            } finally {
+              setLoading(false);
+            }
+          };
+
+          getARCoin();
+          // ------------------------------ AR Coin ----------
+
           setMarkersData(data.data);
 
           console.log('getFirstCoordinate() dipanggil');
@@ -407,7 +472,7 @@ const MapComponent = ({
               setAdThumbnail(adThumbnails);
 
               setImagesLoaded(true);
-              setLoading(false);
+              // setLoading(false);
 
               saveLogsDB(
                 '5000103',
@@ -497,7 +562,7 @@ const MapComponent = ({
                 setAdThumbnail(adThumbnails);
 
                 setImagesLoaded(true);
-                setLoading(false);
+                // setLoading(false);
                 console.log('resetCoin() has called');
               })
               .catch(error => {
