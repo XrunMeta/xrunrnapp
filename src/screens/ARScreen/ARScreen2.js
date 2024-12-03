@@ -130,7 +130,7 @@ const AnimatedSpot = ({member, coinsData}) => {
 
     // Animasi sequence
     shakeAnimation.current = Animated.sequence([
-      Animated.delay(randomDelay), // Delay sebelum animasi dimulai
+      // Animated.delay(randomDelay), // Delay sebelum animasi dimulai
 
       // Pindahkan posisi ke acak dengan offset sekitar 200 unit
       Animated.timing(position, {
@@ -528,7 +528,7 @@ const ARScreen = () => {
     const interval = setInterval(() => {
       organizeData(coinsData);
       // setVisible(prev => !prev); // Toggle animasi
-    }, 32000); // Ulangi setiap 6 detik
+    }, 30000); // Ulangi setiap 6 detik
 
     return () => clearInterval(interval); // Bersihkan interval saat unmount
   }, [coinsData, currentIndex]); // Ulangi jika coinsData atau currentIndex berubah
