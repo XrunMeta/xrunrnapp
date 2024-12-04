@@ -272,355 +272,358 @@ const NotifyScreen = () => {
   };
 
   return (
-	<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{flex: 1}} >
-    <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
-      {/* Title */}
-      <View style={{flexDirection: 'row'}}>
-        <View style={{position: 'absolute', zIndex: 1}}>
-          {isDelete ? (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : ''}
+      style={{flex: 1}}>
+      <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
+        {/* Title */}
+        <View style={{flexDirection: 'row'}}>
+          <View style={{position: 'absolute', zIndex: 1}}>
+            {isDelete ? (
+              <TouchableOpacity
+                onPress={() => setIsDelete(false)}
+                style={{
+                  alignSelf: 'flex-start',
+                  paddingVertical: 20,
+                  paddingLeft: 25,
+                  paddingRight: 30,
+                  marginTop: 5,
+                }}>
+                <Image
+                  source={require('../../../assets/images/icon_close_2.png')}
+                  resizeMode="contain"
+                  style={{
+                    height: 25,
+                    width: 25,
+                  }}
+                />
+              </TouchableOpacity>
+            ) : (
+              <ButtonBack onClick={handleBack} />
+            )}
+          </View>
+          <View style={styles.titleWrapper}>
+            <Text style={styles.title}>
+              {lang && lang.screen_notify && lang.screen_notify.title
+                ? lang.screen_notify.title
+                : ''}
+            </Text>
             <TouchableOpacity
-              onPress={() => setIsDelete(false)}
               style={{
-                alignSelf: 'flex-start',
-                paddingVertical: 20,
-                paddingLeft: 25,
-                paddingRight: 30,
-                marginTop: 5,
+                position: 'absolute',
+                right: 10,
+                backgroundColor: 'white',
+                height: 35,
+                width: 35,
+                padding: 8,
+                borderRadius: 25,
+                marginLeft: 5,
+                borderWidth: 1,
+                borderColor: '#ebebeb',
+              }}
+              onPress={() => {
+                if (isDelete) {
+                  return deleteAllChat();
+                } else {
+                  return setIsDelete(true);
+                }
               }}>
               <Image
-                source={require('../../../assets/images/icon_close_2.png')}
-                resizeMode="contain"
+                source={require('../../../assets/images/icon_delete.png')}
                 style={{
-                  height: 25,
-                  width: 25,
+                  height: 18,
+                  width: 18,
+                  resizeMode: 'contain',
                 }}
               />
             </TouchableOpacity>
-          ) : (
-            <ButtonBack onClick={handleBack} />
-          )}
-        </View>
-        <View style={styles.titleWrapper}>
-          <Text style={styles.title}>
-            {lang && lang.screen_notify && lang.screen_notify.title
-              ? lang.screen_notify.title
-              : ''}
-          </Text>
-          <TouchableOpacity
-            style={{
-              position: 'absolute',
-              right: 10,
-              backgroundColor: 'white',
-              height: 35,
-              width: 35,
-              padding: 8,
-              borderRadius: 25,
-              marginLeft: 5,
-              borderWidth: 1,
-              borderColor: '#ebebeb',
-            }}
-            onPress={() => {
-              if (isDelete) {
-                return deleteAllChat();
-              } else {
-                return setIsDelete(true);
-              }
-            }}>
-            <Image
-              source={require('../../../assets/images/icon_delete.png')}
-              style={{
-                height: 18,
-                width: 18,
-                resizeMode: 'contain',
-              }}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              deleteChat(item);
-            }}></TouchableOpacity>
-        </View>
-      </View>
-
-      <View
-        style={{
-          paddingVertical: 10,
-          flex: 1,
-          width: '100%',
-        }}>
-        {loading ? (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#343a59" />
-            <Text
-              style={{
-                color: 'grey',
-                fontFamily: getFontFam() + 'Regular',
-                fontSize: fontSize('body'),
-              }}>
-              {lang && lang.screen_notify && lang.screen_notify.loader
-                ? lang.screen_notify.loader
-                : ''}
-            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                deleteChat(item);
+              }}></TouchableOpacity>
           </View>
-        ) : (
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.chatContainer}
-            ref={scrollViewRef}>
-            {notify.map((item, idx) => (
-              <View key={item.board}>
-                {(() => {
-                  var beforeDate =
-                    idx > 0 ? JSON.stringify(notify[idx - 1].datetime) : '';
+        </View>
 
-                  var nowDate = item.datetime;
+        <View
+          style={{
+            paddingVertical: 10,
+            flex: 1,
+            width: '100%',
+          }}>
+          {loading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#343a59" />
+              <Text
+                style={{
+                  color: 'grey',
+                  fontFamily: getFontFam() + 'Regular',
+                  fontSize: fontSize('body'),
+                }}>
+                {lang && lang.screen_notify && lang.screen_notify.loader
+                  ? lang.screen_notify.loader
+                  : ''}
+              </Text>
+            </View>
+          ) : (
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={styles.chatContainer}
+              ref={scrollViewRef}>
+              {notify.map((item, idx) => (
+                <View key={item.board}>
+                  {(() => {
+                    var beforeDate =
+                      idx > 0 ? JSON.stringify(notify[idx - 1].datetime) : '';
 
-                  var inThisDay = `"${nowDate}"` === beforeDate ? true : false;
+                    var nowDate = item.datetime;
 
-                  if (!inThisDay) {
-                    return (
+                    var inThisDay =
+                      `"${nowDate}"` === beforeDate ? true : false;
+
+                    if (!inThisDay) {
+                      return (
+                        <View
+                          style={{
+                            backgroundColor: '#89919d73',
+                            borderRadius: 115,
+                            paddingTop: 3,
+                            paddingBottom: 3,
+                            paddingHorizontal: 8,
+                            marginBottom: 8,
+                            alignItems: 'center',
+                            alignSelf: 'center',
+                          }}>
+                          <Text
+                            style={{
+                              color: 'white',
+                              fontFamily: getFontFam() + 'Regular',
+                              fontSize: fontSize('note'),
+                            }}>
+                            {formatDate(new Date(item.datetime).toISOString())}
+                          </Text>
+                        </View>
+                      );
+                    }
+                  })()}
+
+                  <View
+                    style={[
+                      isMyMessage(item.type)
+                        ? styles.myChatBubble
+                        : styles.otherChatBubble,
+                      {
+                        flexDirection: 'row',
+                      },
+                    ]}>
+                    {item.type == 9303 ? (
+                      ''
+                    ) : (
                       <View
                         style={{
-                          backgroundColor: '#89919d73',
-                          borderRadius: 115,
-                          paddingTop: 3,
-                          paddingBottom: 3,
-                          paddingHorizontal: 8,
-                          marginBottom: 8,
-                          alignItems: 'center',
-                          alignSelf: 'center',
+                          backgroundColor: 'white',
+                          height: 32,
+                          padding: 6,
+                          borderRadius: 25,
+                          marginRight: 5,
+                          borderWidth: 1,
+                          borderColor: '#ebebeb',
                         }}>
-                        <Text
+                        <Image
+                          source={require('../../../assets/images/logo_xrun.png')}
                           style={{
-                            color: 'white',
-                            fontFamily: getFontFam() + 'Regular',
-                            fontSize: fontSize('note'),
-                          }}>
-                          {formatDate(new Date(item.datetime).toISOString())}
-                        </Text>
+                            height: 18,
+                            width: 18,
+                            resizeMode: 'contain',
+                          }}
+                        />
                       </View>
-                    );
-                  }
-                })()}
-
-                <View
-                  style={[
-                    isMyMessage(item.type)
-                      ? styles.myChatBubble
-                      : styles.otherChatBubble,
-                    {
-                      flexDirection: 'row',
-                    },
-                  ]}>
-                  {item.type == 9303 ? (
-                    ''
-                  ) : (
-                    <View
-                      style={{
-                        backgroundColor: 'white',
-                        height: 32,
-                        padding: 6,
-                        borderRadius: 25,
-                        marginRight: 5,
-                        borderWidth: 1,
-                        borderColor: '#ebebeb',
-                      }}>
-                      <Image
-                        source={require('../../../assets/images/logo_xrun.png')}
-                        style={{
-                          height: 18,
-                          width: 18,
-                          resizeMode: 'contain',
-                        }}
-                      />
-                    </View>
-                  )}
-                  <View style={styles.chatBubble}>
-                    {item.image !== null && (
-                      <Image
-                        source={{
-                          uri: `data:image/jpeg;base64,${item.image.replace(
-                            /(\r\n|\n|\r)/gm,
-                            '',
-                          )}`,
-                        }}
-                        style={{
-                          height: 150,
-                          width: 'auto',
-                          marginBottom: 15,
-                          borderRadius: 6,
-                        }}
-                      />
                     )}
-                    <Text style={styles.chatText}>{item.title}</Text>
-                    {item.contents !== null && item.type != 9303 && (
-                      <View>
-                        {item.type == 9301 ? (
-                          <Text
-                            style={[
-                              styles.chatText,
-                              {
-                                color: 'grey',
-                                marginTop: 5,
-                              },
-                            ]}
-                            numberOfLines={3}
-                            ellipsizeMode="tail">
-                            {item.contents}
-                          </Text>
-                        ) : (
-                          <Text
-                            style={[
-                              styles.chatText,
-                              {
-                                color: 'grey',
-                                marginTop: 5,
-                              },
-                            ]}>
-                            {item.contents}
-                          </Text>
-                        )}
-
-                        {item.type == 9302 && (
-                          <View>
+                    <View style={styles.chatBubble}>
+                      {item.image !== null && (
+                        <Image
+                          source={{
+                            uri: `data:image/jpeg;base64,${item.image.replace(
+                              /(\r\n|\n|\r)/gm,
+                              '',
+                            )}`,
+                          }}
+                          style={{
+                            height: 150,
+                            width: 'auto',
+                            marginBottom: 15,
+                            borderRadius: 6,
+                          }}
+                        />
+                      )}
+                      <Text style={styles.chatText}>{item.title}</Text>
+                      {item.contents !== null && item.type != 9303 && (
+                        <View>
+                          {item.type == 9301 ? (
                             <Text
                               style={[
                                 styles.chatText,
                                 {
-                                  marginTop: 20,
+                                  color: 'grey',
+                                  marginTop: 5,
                                 },
-                              ]}>
-                              {item.datebegin} ~
+                              ]}
+                              numberOfLines={3}
+                              ellipsizeMode="tail">
+                              {item.contents}
                             </Text>
+                          ) : (
                             <Text
                               style={[
                                 styles.chatText,
                                 {
-                                  marginTop: -5,
+                                  color: 'grey',
+                                  marginTop: 5,
                                 },
                               ]}>
-                              {item.dateends}
+                              {item.contents}
                             </Text>
-                          </View>
-                        )}
+                          )}
 
-                        {item.guid == '' ||
-                        (item.guid == null && item.type == 9302) ? (
-                          ''
-                        ) : (
-                          <TouchableOpacity
-                            style={{
-                              backgroundColor: '#051C60',
-                              marginTop: 15,
-                              marginBottom: 5,
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              paddingVertical: 10,
-                              borderRadius: 6,
-                            }}
-                            onPress={() => {
-                              const url =
-                                item.type == 9301
-                                  ? `https://app.xrun.run/user/notice.php?id=${item.board}`
-                                  : item.type == 9302
-                                  ? item.guid
-                                  : '';
+                          {item.type == 9302 && (
+                            <View>
+                              <Text
+                                style={[
+                                  styles.chatText,
+                                  {
+                                    marginTop: 20,
+                                  },
+                                ]}>
+                                {item.datebegin} ~
+                              </Text>
+                              <Text
+                                style={[
+                                  styles.chatText,
+                                  {
+                                    marginTop: -5,
+                                  },
+                                ]}>
+                                {item.dateends}
+                              </Text>
+                            </View>
+                          )}
 
-                              Linking.openURL(url).catch(err => {
-                                crashlytics().recordError(new Error(err));
-                                crashlytics().log(err);
-                                console.error('Error opening URL : ', err);
-                              });
-                            }}>
-                            <Text
+                          {item.guid == '' ||
+                          (item.guid == null && item.type == 9302) ? (
+                            ''
+                          ) : (
+                            <TouchableOpacity
                               style={{
-                                fontFamily: getFontFam() + 'Medium',
-                                fontSize: fontSize('body'),
-                                color: 'white',
+                                backgroundColor: '#051C60',
+                                marginTop: 15,
+                                marginBottom: 5,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                paddingVertical: 10,
+                                borderRadius: 6,
+                              }}
+                              onPress={() => {
+                                const url =
+                                  item.type == 9301
+                                    ? `https://app.xrun.run/user/notice.php?id=${item.board}`
+                                    : item.type == 9302
+                                    ? item.guid
+                                    : '';
+
+                                Linking.openURL(url).catch(err => {
+                                  crashlytics().recordError(new Error(err));
+                                  crashlytics().log(err);
+                                  console.error('Error opening URL : ', err);
+                                });
                               }}>
-                              {/* Bilal ganteng :D */}
-                              {item.type == 9301
-                                ? lang &&
-                                  lang.screen_notify &&
-                                  lang.screen_notify.look
-                                  ? lang.screen_notify.look
-                                  : ''
-                                : item.type == 9302
-                                ? lang &&
-                                  lang.screen_notify &&
-                                  lang.screen_notify.visit
-                                  ? lang.screen_notify.visit
-                                  : ''
-                                : ''}
-                            </Text>
-                          </TouchableOpacity>
-                        )}
-                      </View>
-                    )}
+                              <Text
+                                style={{
+                                  fontFamily: getFontFam() + 'Medium',
+                                  fontSize: fontSize('body'),
+                                  color: 'white',
+                                }}>
+                                {/* Bilal ganteng :D */}
+                                {item.type == 9301
+                                  ? lang &&
+                                    lang.screen_notify &&
+                                    lang.screen_notify.look
+                                    ? lang.screen_notify.look
+                                    : ''
+                                  : item.type == 9302
+                                  ? lang &&
+                                    lang.screen_notify &&
+                                    lang.screen_notify.visit
+                                    ? lang.screen_notify.visit
+                                    : ''
+                                  : ''}
+                              </Text>
+                            </TouchableOpacity>
+                          )}
+                        </View>
+                      )}
 
-                    <Text style={styles.timestampText}>{item.time}</Text>
-                  </View>
-                  {item.type == 9303 && isDelete && (
-                    <TouchableOpacity
-                      style={{
-                        backgroundColor: 'white',
-                        height: 32,
-                        padding: 8,
-                        borderRadius: 25,
-                        marginLeft: 5,
-                        borderWidth: 1,
-                        borderColor: '#ebebeb',
-                      }}
-                      onPress={() => {
-                        deleteChat(item);
-                      }}>
-                      <Image
-                        source={require('../../../assets/images/icon_delete.png')}
+                      <Text style={styles.timestampText}>{item.time}</Text>
+                    </View>
+                    {item.type == 9303 && isDelete && (
+                      <TouchableOpacity
                         style={{
-                          height: 15,
-                          width: 15,
-                          resizeMode: 'contain',
+                          backgroundColor: 'white',
+                          height: 32,
+                          padding: 8,
+                          borderRadius: 25,
+                          marginLeft: 5,
+                          borderWidth: 1,
+                          borderColor: '#ebebeb',
                         }}
-                      />
-                    </TouchableOpacity>
-                  )}
+                        onPress={() => {
+                          deleteChat(item);
+                        }}>
+                        <Image
+                          source={require('../../../assets/images/icon_delete.png')}
+                          style={{
+                            height: 15,
+                            width: 15,
+                            resizeMode: 'contain',
+                          }}
+                        />
+                      </TouchableOpacity>
+                    )}
+                  </View>
                 </View>
-              </View>
-            ))}
-          </ScrollView>
-        )}
-      </View>
-
-      {/* Chat Input */}
-      {!isDelete && (
-        <View style={styles.chatInputContainer}>
-          <TextInput
-            style={styles.chatInput}
-            placeholder={
-              lang && lang.screen_notify && lang.screen_notify.placeholder
-                ? lang.screen_notify.placeholder
-                : ''
-            }
-            placeholderTextColor="grey"
-            value={chatText}
-            onChangeText={setChatText}
-            multiline
-          />
-          <TouchableOpacity
-            style={styles.sendButton}
-            onPress={() => {
-              sendChat(chatText);
-            }}>
-            <Text style={styles.sendButtonText}>
-              {lang && lang.screen_notify && lang.screen_notify.send
-                ? lang.screen_notify.send
-                : ''}
-            </Text>
-          </TouchableOpacity>
+              ))}
+            </ScrollView>
+          )}
         </View>
-      )}
-    </SafeAreaView>
-	</KeyboardAvoidingView>
+
+        {/* Chat Input */}
+        {!isDelete && (
+          <View style={styles.chatInputContainer}>
+            <TextInput
+              style={styles.chatInput}
+              placeholder={
+                lang && lang.screen_notify && lang.screen_notify.placeholder
+                  ? lang.screen_notify.placeholder
+                  : ''
+              }
+              placeholderTextColor="grey"
+              value={chatText}
+              onChangeText={setChatText}
+              multiline
+            />
+            <TouchableOpacity
+              style={styles.sendButton}
+              onPress={() => {
+                sendChat(chatText);
+              }}>
+              <Text style={styles.sendButtonText}>
+                {lang && lang.screen_notify && lang.screen_notify.send
+                  ? lang.screen_notify.send
+                  : ''}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
