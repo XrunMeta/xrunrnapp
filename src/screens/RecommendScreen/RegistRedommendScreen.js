@@ -6,7 +6,6 @@ import {
   Dimensions,
   Alert,
   SafeAreaView,
-  KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
@@ -75,9 +74,9 @@ const RegistRecommendScreen = () => {
           };
 
           const result = await gatewayNodeJS('app7410-01', 'POST', body);
-          const data = result.data[0].data;
+          const value = result.data[0].data;
 
-          if (data.data === 'no id') {
+          if (value === 'no id') {
             Alert.alert(
               lang && lang.alert ? lang.alert.title.fail : '',
               lang &&
@@ -88,7 +87,7 @@ const RegistRecommendScreen = () => {
             );
 
             setRecID('');
-          } else if (data.data === 'ok') {
+          } else if (value === 'ok') {
             Alert.alert(
               lang && lang.alert ? lang.alert.title.success : '',
               lang &&
@@ -160,11 +159,10 @@ const RegistRecommendScreen = () => {
 
         <IOSButtonFixer count={5} />
 
-  
-          <ButtonNext
-            onClick={onSaveChange}
-            isDisabled={!isDisable && recID == ''}
-          />
+        <ButtonNext
+          onClick={onSaveChange}
+          isDisabled={!isDisable && recID == ''}
+        />
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
