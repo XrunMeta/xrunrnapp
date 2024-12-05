@@ -21,7 +21,7 @@ import QRCode from 'react-native-qrcode-svg';
 import RNFS from 'react-native-fs';
 import {useNavigation} from '@react-navigation/native';
 
-const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
+const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang, member}) => {
   const [downloadDisable, setDownloadDisable] = useState(true);
   const [shareDisable, setShareDisable] = useState(true);
   const refQR = useRef(null);
@@ -60,10 +60,12 @@ const ShowQRWallet = ({cardDataQR, setIsShowQRCodeWallet, lang}) => {
       try {
         const body = {
           address: cardDataQR?.address,
+          // member,
           showPK: 'NO',
         };
 
         const response = await gatewayNodeJS('getPK', 'POST', body);
+        // const response = await gatewayNodeJS('viewWallet', 'POST', body);
         setHasPK(response?.data[0]?.status);
         setIsLoadingPK(false);
       } catch (err) {
