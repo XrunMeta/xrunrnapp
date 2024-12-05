@@ -209,7 +209,7 @@ export default function MapParent() {
               clickedRange={distance => {
                 let fixedDistance;
                 let countDistance = (distance * 1000).toFixed(2);
-                if (countDistance === 'Infinity') {
+                if (countDistance === 'Infinity' || countDistance > 1000) {
                   fixedDistance = 0;
                 } else {
                   fixedDistance = countDistance;
