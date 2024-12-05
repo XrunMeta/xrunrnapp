@@ -771,7 +771,7 @@ const styles = StyleSheet.create({
     color: '#343a59',
   },
   label: {
-    fontFamily: getFontFam() + 'Medium',
+    fontFamily: getFontFam() + 'Regular',
     fontSize: fontSize('body'),
     color: '#343a59',
     // marginBottom: -5,
