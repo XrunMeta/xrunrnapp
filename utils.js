@@ -260,6 +260,18 @@ export const refreshBalances = async member => {
       const result = await gatewayNodeJS('refreshBalances', 'POST', body);
       const count = result.data[0].count;
       console.log(`Result refreshBalances: ${count}`);
+
+      // const request = await fetch(`${URL_API_NODEJS}/refreshBalancesNewRPC`, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     Authorization: `Bearer ${authcode}`,
+      //   },
+      //   body: JSON.stringify({
+      //     member,
+      //   }),
+      // });
+      // const result = await request.json();
     }
   } catch (error) {
     crashlytics().recordError(new Error(error));
@@ -364,4 +376,24 @@ export const saveLogsDB = async (
 
 export const formatISODate = isoDateString => {
   return isoDateString.replace('T', ' ').split('.')[0];
+};
+
+export const decrypt = encrypted => {
+  const key = process.env.KEY;
+  const iv = process.env.IV;
+
+  // Konversi base64 ke WordArray
+  const encryptedWords = CryptoJS.enc.Base64.parse(encrypted);
+
+  const decrypted = CryptoJS.AES.decrypt(
+    {ciphertext: encryptedWords},
+    CryptoJS.enc.Utf8.parse(key),
+    {
+      iv: CryptoJS.enc.Utf8.parse(iv),
+      mode: CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.Pkcs7,
+    },
+  );
+
+  return decrypted.toString(CryptoJS.enc.Utf8);
 };
