@@ -65,6 +65,16 @@ const CloseConfirmPassword = () => {
 
         const result = await gatewayNodeJS('app8080-01', 'POST', body);
         console.log(result);
+
+        if (result.message.includes('Duplicate')) {
+          console.error('Error:', result);
+          Alert.alert(
+            lang.screen_setting.alert.fail,
+            lang.screen_signup.validator.duplicatedEmail,
+          );
+          return;
+        }
+
         const count = result.data[0].count;
 
         console.log('Response Apu -> ' + JSON.stringify(result));
@@ -182,7 +192,7 @@ const CloseConfirmPassword = () => {
         </View>
 
         <IOSButtonFixer count={5} />
-          <ButtonNext onClick={onSignIn} isDisabled={isDisable} />
+        <ButtonNext onClick={onSignIn} isDisabled={isDisable} />
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
