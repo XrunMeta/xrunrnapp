@@ -18,9 +18,8 @@ import {
   getFontFam,
   fontSize,
   getLanguage2,
-  URL_API_NODEJS,
-  authcode,
   gatewayNodeJS,
+  decrypt,
 } from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import crashlytics from '@react-native-firebase/crashlytics';
@@ -31,7 +30,7 @@ const KeyShowDownload = () => {
   const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const route = useRoute();
-  const {address} = route.params || {};
+  const {address, member} = route.params || {};
   const navigation = useNavigation();
   const [privateKey, setPrivateKey] = useState('');
 
@@ -60,12 +59,20 @@ const KeyShowDownload = () => {
       try {
         const body = {
           address: address,
+          // member,
           showPK: 'YES',
         };
 
         const response = await gatewayNodeJS('getPK', 'POST', body);
         console.log({bahlul: response?.data[0]});
         setPrivateKey(response?.data[0]?.pk);
+
+        // const response = await gatewayNodeJS('viewWallet', 'POST', body);
+        // const encryptPrivateKey = response?.data[0]?.result;
+        // const dataEncrypted = decrypt(encryptPrivateKey);
+
+        // const privateKey = JSON.parse(dataEncrypted).pk;
+        // setPrivateKey(privateKey);
       } catch (err) {
         console.error('Failed to get userData from AsyncStorage:', err);
         setIsLoading(false);
