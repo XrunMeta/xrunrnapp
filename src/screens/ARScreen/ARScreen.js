@@ -506,6 +506,7 @@ function ARScreen() {
               style={{
                 position: 'absolute',
                 // backgroundColor: '#001a477a',
+				overflow:"hidden",
                 // top: 125,
                 // bottom: 0,
                 // left: 10,

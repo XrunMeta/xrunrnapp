@@ -12,13 +12,7 @@ import {
   Platform,
   ActivityIndicator,
 } from 'react-native';
-import {
-  fontSize,
-  getFontFam,
-  URL_API_NODEJS,
-  authcode,
-  getLanguage2,
-} from '../../../utils';
+import {fontSize, getFontFam, getLanguage2} from '../../../utils';
 import Geolocation from 'react-native-geolocation-service';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as RNLocalize from 'react-native-localize';
@@ -26,11 +20,6 @@ import {Camera, useCameraDevice} from 'react-native-vision-camera';
 import {PERMISSIONS, request, RESULTS} from 'react-native-permissions';
 import LinearGradient from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
-
-// Fungsi khusus untuk objek 1 dengan range kecil
-const getShakeRange = id => {
-  return id === 1 ? 5 : 10; // Range 5 untuk objek 1, 10 untuk lainnya
-};
 
 // Shake Range Effect
 const getRandomOffset = (value, range) => {
@@ -52,7 +41,6 @@ const spots = [
 
 const AnimatedSpot = ({member, coinsData}) => {
   const position = useRef(new Animated.ValueXY({x: 0, y: 0})).current;
-  const scaleAnim = useRef(new Animated.Value(0)).current; // Default scale 0
   const fadeAnim = useRef(new Animated.Value(0)).current; // Default opacity 0
   const blinkAnim = useRef(new Animated.Value(1)).current;
   const shakeAnimation = useRef(null);
@@ -102,7 +90,7 @@ const AnimatedSpot = ({member, coinsData}) => {
     const randomBezier =
       bezierCurves[Math.floor(Math.random() * bezierCurves.length)];
     const randomDuration = 700 + Math.random() * 500; // Hasil antara 700 dan 1200
-    const randomDelay = Math.random() * (4000 - 2000) + 2000; // Delay antara 1-2 detik
+    const randomDelay = Math.random() * (3000 - 2000) + 2000; // Delay antara 1-2 detik
     // const randomDelay = 1000; // Delay antara 1-2 detik
     const randomRange = 150 + Math.random() * 150; // Randomize range 200-500px
 
@@ -132,7 +120,7 @@ const AnimatedSpot = ({member, coinsData}) => {
         toValue: {
           // x: spots[coinsData.spotID - 1].x,
           // y: spots[coinsData.spotID - 1].y,
-          x: getRandomOffset(spots[coinsData.spotID - 1].x, 20), // Offset Horizontal
+          x: getRandomOffset(spots[coinsData.spotID - 1].x, 70), // Offset Horizontal
           y: getRandomOffset(spots[coinsData.spotID - 1].y, 200),
         },
         // duration: randomDuration,
