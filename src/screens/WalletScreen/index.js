@@ -525,6 +525,7 @@ const WalletScreen = ({navigation, route}) => {
           cardDataQR={cardDataQR}
           setIsShowQRCodeWallet={setIsShowQRCodeWallet}
           lang={lang}
+          member={member}
         />
       )}
 
