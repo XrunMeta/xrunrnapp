@@ -356,11 +356,14 @@ const MapComponent = ({
                 console.log('astorCoinsData -> ' + coinsData.length);
               } else {
                 console.log('astorCoinsData dikosongin');
-                await AsyncStorage.setItem('astorCoinsData', []);
+                await AsyncStorage.setItem(
+                  'astorCoinsData',
+                  JSON.stringify([]),
+                );
               }
             } catch (error) {
               console.error('Error calling API:', error);
-              await AsyncStorage.setItem('astorCoinsData', []);
+              await AsyncStorage.setItem('astorCoinsData', JSON.stringify([]));
             } finally {
               setLoading(false);
             }
