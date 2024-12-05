@@ -126,7 +126,7 @@ const AnimatedSpot = ({member, coinsData}) => {
         // duration: randomDuration,
         // easing: randomBezier,
         // delay: randomDelay,
-        duration: 250,
+        duration: 300,
         easing: bezierCurves[0],
         useNativeDriver: true,
       }),
