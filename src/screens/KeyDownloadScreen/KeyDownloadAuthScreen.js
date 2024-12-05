@@ -136,7 +136,7 @@ const KeyDownloadAuthScreen = () => {
       console.log(JSON.stringify(responseAuthData));
 
       if (responseAuthData.status == 'success') {
-        navigation.replace('KeyShowDownload', {address});
+        navigation.replace('KeyShowDownload', {address, member});
       } else {
         Alert.alert('Failed', lang.screen_emailVerification.notif.wrongCode);
       }
