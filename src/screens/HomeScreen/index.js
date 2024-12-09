@@ -45,6 +45,7 @@ export default function Home({route}) {
   const [showWallet, setShowWallet] = useState(false);
   const [ssidw, setSsidw] = useState('none');
   const [member, setMember] = useState('none');
+  const [extrastr, setExtrastr] = useState('');
   const [ipAddress, setIpAddress] = useState('');
 
   const navigation = useNavigation();
@@ -132,6 +133,7 @@ export default function Home({route}) {
         );
         setSsidw(encryptedSession);
         setMember(responseUserData?.member);
+        setExtrastr(responseUserData?.extrastr);
         const countResponse = await fetch(
           `${URL_API_NODEJS}/app5010-01-counter`,
           {
@@ -218,6 +220,46 @@ export default function Home({route}) {
     return () => backHandler.remove();
   }, [isFocused]);
 
+  const goToWalletsite = async () => {
+    try {
+      const encryptedSession = await sha256Encrypt(extrastr);
+      // console.log({extrastr, encryptedSession});
+
+      const ssidwReq = await fetch(`${URL_API_NODEJS}/saveSsidw`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authcode}`,
+        },
+        body: JSON.stringify({
+          member,
+          ssidw: encryptedSession,
+        }),
+      });
+
+      const ssidwRes = await ssidwReq.json();
+
+      // console.log(
+      //   'https://www.xrun.run/react/login?numses=' + ssidw + '!' + ipAddress,
+      // );
+
+      if (ssidwRes) {
+        Linking.openURL(
+          'https://www.xrun.run/react/login?numses=' + ssidw + '!' + ipAddress,
+        );
+      } else {
+        Linking.openURL(
+          'https://www.xrun.run/react/login?numses=' + ssidw + '!' + ipAddress,
+        );
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      Alert.alert('Failed', 'Server has error');
+      crashlytics().recordError(new Error(error));
+      crashlytics().log(error);
+    }
+  };
+
   const renderTabButton = (tabName, icon, text, onPress) => (
     <TouchableOpacity
       style={[styles.buttonTabItem]}
@@ -226,13 +268,9 @@ export default function Home({route}) {
         if (tabName === 'Wallet') {
           if (Platform.OS === 'android') {
             navigation.dispatch(CommonActions.navigate('WalletHome'));
+            // goToWalletsite();
           } else if (Platform.OS === 'ios' && showWallet) {
-            Linking.openURL(
-              'https://www.xrun.run/react/login?numses=' +
-                ssidw +
-                '!' +
-                ipAddress,
-            );
+            goToWalletsite();
           } else if (!showWallet) {
             Linking.openURL('https://www.xrun.run/');
           } else {

@@ -17,6 +17,7 @@ import {
   fontSize,
   URL_API_NODEJS,
   authcode,
+  sha256Encrypt,
 } from '../../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import crashlytics from '@react-native-firebase/crashlytics';
@@ -56,16 +57,57 @@ const SuccessJoinScreen = () => {
         });
         const data = await response.json();
 
-        await AsyncStorage.setItem('userEmail', email);
-        await AsyncStorage.setItem('userData', JSON.stringify(data?.data[0]));
-        login();
-        console.log(
-          'Signin abis signup bisa boy -> ' + JSON.stringify(data?.data[0]),
-        );
+        try {
+          const encryptedSession = await sha256Encrypt(data?.data[0]?.extrastr);
+          console.log({
+            extrastr: data?.data[0]?.extrastr,
+            encryptedSession,
+          });
+
+          const ssidwReq = await fetch(`${URL_API_NODEJS}/saveSsidw`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${authcode}`,
+            },
+            body: JSON.stringify({
+              member: data?.data[0]?.member,
+              ssidw: encryptedSession,
+            }),
+          });
+
+          const ssidwRes = await ssidwReq.json();
+
+          if (ssidwRes?.data[0]?.affectedRows == 1) {
+            await AsyncStorage.setItem('userEmail', email);
+            await AsyncStorage.setItem(
+              'userData',
+              JSON.stringify(data?.data[0]),
+            );
+            login();
+            console.log(
+              'Signin abis signup bisa boy -> ' + JSON.stringify(data?.data[0]),
+            );
+          } else {
+            Alert.alert(
+              lang ? lang.screen_signin.alert.fail : 'Signin',
+              lang ? lang.screen_signin.failedLogin : 'Please signin again',
+            );
+
+            navigation.replace('SignIn');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          Alert.alert('Failed', 'Server has error');
+          navigation.replace('SignIn');
+          crashlytics().recordError(new Error(error));
+          crashlytics().log(error);
+        }
       } catch (err) {
         console.error('Error retrieving Signin:', err);
         crashlytics().recordError(new Error(err));
         crashlytics().log(err);
+        navigation.replace('SignIn');
       }
     };
 
@@ -126,7 +168,7 @@ const SuccessJoinScreen = () => {
           </View>
 
           {/* Bottom Section*/}
-            <ButtonComplete onClick={onSignIn} />
+          <ButtonComplete onClick={onSignIn} />
         </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>
