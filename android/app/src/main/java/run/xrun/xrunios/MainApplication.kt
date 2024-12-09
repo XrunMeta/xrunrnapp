@@ -1,4 +1,4 @@
-package run.xrun.xrunapp
+package run.xrun.xrunapps
 
 import android.app.Application
 import com.facebook.react.PackageList
