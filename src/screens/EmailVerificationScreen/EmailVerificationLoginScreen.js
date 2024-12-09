@@ -25,6 +25,7 @@ import {
   fontSize,
   authcode,
   saveLogsDB,
+  sha256Encrypt,
 } from '../../../utils';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -231,14 +232,57 @@ const EmailVerificationLoginScreen = () => {
               mobilecode: responseLoginData?.data[0]?.mobilecode,
             };
 
-            await AsyncStorage.setItem('userEmail', dataEmail);
-            await AsyncStorage.setItem('userData', JSON.stringify(userData));
-            console.log({userData});
-            login();
-            navigation.reset({
-              index: 0,
-              routes: [{name: 'Home'}],
-            });
+            try {
+              const encryptedSession = await sha256Encrypt(
+                responseLoginData?.data[0]?.extrastr,
+              );
+              console.log({
+                extrastr: responseLoginData?.data[0]?.extrastr,
+                encryptedSession,
+              });
+
+              const ssidwReq = await fetch(`${URL_API_NODEJS}/saveSsidw`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${authcode}`,
+                },
+                body: JSON.stringify({
+                  member: responseLoginData?.data[0]?.member,
+                  ssidw: encryptedSession,
+                }),
+              });
+
+              const ssidwRes = await ssidwReq.json();
+
+              if (ssidwRes?.data[0]?.affectedRows == 1) {
+                await AsyncStorage.setItem('userEmail', dataEmail);
+                await AsyncStorage.setItem(
+                  'userData',
+                  JSON.stringify(userData),
+                );
+                console.log({userData});
+                login();
+                navigation.reset({
+                  index: 0,
+                  routes: [{name: 'Home'}],
+                });
+              } else {
+                Alert.alert(
+                  lang ? lang.screen_signin.alert.fail : 'Failed',
+                  lang
+                    ? lang.screen_signin.failedLogin
+                    : 'Member has not registered',
+                );
+
+                navigation.replace('SignUp');
+              }
+            } catch (error) {
+              console.error('Error:', error);
+              Alert.alert('Failed', 'Server has error');
+              crashlytics().recordError(new Error(error));
+              crashlytics().log(error);
+            }
           }
         } catch (error) {
           // Handle network errors or other exceptions
@@ -389,16 +433,16 @@ const EmailVerificationLoginScreen = () => {
         </View>
 
         {/* Bottom Section*/}
-          <ButtonNext onClick={onSignIn} isDisabled={isDisable}>
-            <View style={styles.additionalLogin}>
-              <Countdown
-                lang={lang}
-                onProblem={onProblem}
-                seconds={seconds}
-                resetKey={resetKey}
-              />
-            </View>
-          </ButtonNext>
+        <ButtonNext onClick={onSignIn} isDisabled={isDisable}>
+          <View style={styles.additionalLogin}>
+            <Countdown
+              lang={lang}
+              onProblem={onProblem}
+              seconds={seconds}
+              resetKey={resetKey}
+            />
+          </View>
+        </ButtonNext>
 
         {/* Slider Modal */}
         <SliderModal visible={modalVisible} onClose={toggleModal} />

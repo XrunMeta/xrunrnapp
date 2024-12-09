@@ -268,6 +268,7 @@ export default function Home({route}) {
         if (tabName === 'Wallet') {
           if (Platform.OS === 'android') {
             navigation.dispatch(CommonActions.navigate('WalletHome'));
+            // goToWalletsite();
           } else if (Platform.OS === 'ios' && showWallet) {
             goToWalletsite();
           } else if (!showWallet) {
