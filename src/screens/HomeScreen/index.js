@@ -267,8 +267,8 @@ export default function Home({route}) {
         console.log('Pergi ke ' + tabName);
         if (tabName === 'Wallet') {
           if (Platform.OS === 'android') {
-            // navigation.dispatch(CommonActions.navigate('WalletHome'));
-            goToWalletsite();
+            navigation.dispatch(CommonActions.navigate('WalletHome'));
+            // goToWalletsite();
           } else if (Platform.OS === 'ios' && showWallet) {
             goToWalletsite();
           } else if (!showWallet) {
