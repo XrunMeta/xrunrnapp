@@ -10,6 +10,7 @@ import {
   BackHandler,
   Platform,
   Linking,
+  ActivityIndicator,
 } from 'react-native';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import ARScreen from '../ARScreen/ARScreen2';
@@ -47,6 +48,7 @@ export default function Home({route}) {
   const [member, setMember] = useState('none');
   const [extrastr, setExtrastr] = useState('');
   const [ipAddress, setIpAddress] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigation = useNavigation();
 
@@ -221,6 +223,8 @@ export default function Home({route}) {
   }, [isFocused]);
 
   const goToWalletsite = async () => {
+    setIsLoading(true);
+
     try {
       const encryptedSession = await sha256Encrypt(extrastr);
       // console.log({extrastr, encryptedSession});
@@ -257,6 +261,8 @@ export default function Home({route}) {
       Alert.alert('Failed', 'Server has error');
       crashlytics().recordError(new Error(error));
       crashlytics().log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -279,15 +285,22 @@ export default function Home({route}) {
         } else {
           onPress();
         }
-      }}>
-      <Image
-        source={icon}
-        resizeMode="contain"
-        style={{
-          width: 25,
-          height: 25,
-        }}
-      />
+      }}
+      disabled={
+        Platform.OS === 'ios' && tabName === 'Wallet' && showWallet && isLoading
+      }>
+      {isLoading && tabName === 'Wallet' ? (
+        <ActivityIndicator size="small" color="#0000ff" />
+      ) : (
+        <Image
+          source={icon}
+          resizeMode="contain"
+          style={{
+            width: 25,
+            height: 25,
+          }}
+        />
+      )}
       {tabName === 'Advertise' && countAds > 0 && (
         <View
           style={{
