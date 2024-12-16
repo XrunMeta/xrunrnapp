@@ -39,6 +39,8 @@ const EditPassword = () => {
       setIsDisable(true);
       if (password == '') {
         alert(lang ? lang.screen_modify_password.condition.empty : '');
+      } else if (passwordError !== '') {
+        alert(lang ? lang.screen_modify_password.condition.wrong : '');
       } else {
         const savePassword = async () => {
           const apiUrl = `${URL_API_NODEJS}/app7163-01`;
