@@ -29,6 +29,7 @@ import {
   fontSize,
   authcode,
   validatePassword,
+  validateEmail,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import RadioGroup from 'react-native-radio-buttons-group';
@@ -39,6 +40,7 @@ const SignUpScreen = ({route}) => {
   const [currentLang, setCurrentLang] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -111,7 +113,7 @@ const SignUpScreen = ({route}) => {
         Alert.alert('Error', lang.screen_signup.validator.emptyName);
       } else if (email.trim() === '') {
         Alert.alert('Error', lang.screen_signup.validator.emptyEmail);
-      } else if (!isValidEmail(email)) {
+      } else if (emailError !== '') {
         Alert.alert('Error', lang.screen_signup.validator.invalidEmail);
       } else if (password.trim() === '') {
         Alert.alert('Error', lang.screen_signup.validator.emptyPassword);
@@ -422,10 +424,15 @@ const SignUpScreen = ({route}) => {
                     : ''
                 }
                 value={email}
-                setValue={onEmailChange}
+                // setValue={onEmailChange}
+                setValue={value => {
+                  setEmail(value);
+                  const validationMessage = validateEmail(email);
+                  setEmailError(validationMessage);
+                }}
                 isPassword={false}
               />
-              {isEmailValid ? null : (
+              {emailError != '' && (
                 <Text
                   style={{
                     alignSelf: 'flex-start',
@@ -434,9 +441,7 @@ const SignUpScreen = ({route}) => {
                     fontFamily: getFontFam() + 'Medium',
                     fontSize: fontSize('body'),
                   }}>
-                  {lang && lang.screen_signup && lang.screen_signup.validator
-                    ? lang.screen_signup.validator.invalidEmail
-                    : ''}
+                  *{emailError}
                 </Text>
               )}
 

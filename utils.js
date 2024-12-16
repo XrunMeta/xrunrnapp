@@ -640,3 +640,21 @@ export const validatePassword = (
   // If all validations pass
   return '';
 };
+
+export const validateEmail = (email, companyName = 'XRUN') => {
+  // 1. Check for uppercase, lowercase, digit, special character, and length
+  // const passwordPolicy = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  const pattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+  if (!pattern.test(email)) {
+    return 'Your email is not valid';
+  }
+
+  // 2. Prohibit company name or abbreviation
+  if (email.toLowerCase().includes(companyName.toLowerCase())) {
+    return 'Email cannot contain the company name.';
+  }
+
+  // If all validations pass
+  return '';
+};
