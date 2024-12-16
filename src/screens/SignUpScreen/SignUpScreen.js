@@ -28,6 +28,7 @@ import {
   getFontFam,
   fontSize,
   authcode,
+  validatePassword,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import RadioGroup from 'react-native-radio-buttons-group';
@@ -39,6 +40,7 @@ const SignUpScreen = ({route}) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [authCode, setAuthCode] = useState('');
   const [region, setRegion] = useState('');
@@ -449,10 +451,27 @@ const SignUpScreen = ({route}) => {
                     : ''
                 }
                 value={password}
-                setValue={setPassword}
+                // setValue={setPassword}
+                setValue={value => {
+                  setPassword(value);
+                  const validationMessage = validatePassword(email, value);
+                  setPasswordError(validationMessage);
+                }}
                 secureTextEntry
                 isPassword={true}
               />
+              {passwordError != '' && (
+                <Text
+                  style={{
+                    alignSelf: 'flex-start',
+                    marginLeft: 25,
+                    color: 'red',
+                    fontFamily: getFontFam() + 'Medium',
+                    fontSize: fontSize('body'),
+                  }}>
+                  *{passwordError}
+                </Text>
+              )}
 
               {/*  Field - Phone Number */}
               <View style={styles.formGroup}>
