@@ -115,6 +115,8 @@ const SignUpScreen = ({route}) => {
         Alert.alert('Error', lang.screen_signup.validator.invalidEmail);
       } else if (password.trim() === '') {
         Alert.alert('Error', lang.screen_signup.validator.emptyPassword);
+      } else if (passwordError.trim() !== '') {
+        Alert.alert('Error', lang.screen_signup.validator.emptyPassword);
       } else if (phoneNumber.trim() === '') {
         Alert.alert('Error', lang.screen_signup.validator.emptyPhone);
       } else if (regionID == 0) {
