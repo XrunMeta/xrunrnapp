@@ -19,6 +19,7 @@ import {
   fontSize,
   URL_API_NODEJS,
   authcode,
+  validatePassword,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import ButtonNext from '../../components/ButtonNext/ButtonNext';
@@ -28,6 +29,7 @@ const EditPassword = () => {
   const [lang, setLang] = useState({});
   const navigation = useNavigation();
   const [password, setPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   let ScreenHeight = Dimensions.get('window').height;
   const [userData, setUserData] = useState({});
   const [isDisable, setIsDisable] = useState(false);
@@ -90,6 +92,7 @@ const EditPassword = () => {
         // Get User Data from Asyncstorage
         const astorUserData = await AsyncStorage.getItem('userData');
         const astorJsonData = JSON.parse(astorUserData);
+        console.log({astorJsonData});
         setUserData(astorJsonData);
       } catch (err) {
         crashlytics().recordError(new Error(err));
@@ -133,17 +136,34 @@ const EditPassword = () => {
               : ''
           }
           value={password}
-          setValue={setPassword}
+          // setValue={setPassword}
+          setValue={value => {
+            setPassword(value);
+            const validationMessage = validatePassword(userData?.email, value);
+            setPasswordError(validationMessage);
+          }}
           secureTextEntry
           isPassword={true}
         />
+        {passwordError != '' && (
+          <Text
+            style={{
+              alignSelf: 'flex-start',
+              marginLeft: 25,
+              color: 'red',
+              fontFamily: getFontFam() + 'Medium',
+              fontSize: fontSize('body'),
+            }}>
+            *{passwordError}
+          </Text>
+        )}
 
-     <IOSButtonFixer count={5} />
+        <IOSButtonFixer count={5} />
 
-          <ButtonNext
-            onClick={onSaveChange}
-            isDisabled={!isDisable && password == ''}
-          />
+        <ButtonNext
+          onClick={onSaveChange}
+          isDisabled={!isDisable && password == ''}
+        />
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
