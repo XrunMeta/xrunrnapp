@@ -384,12 +384,12 @@ const MapComponent = ({
                 // Save to AsyncStorage
                 await AsyncStorage.setItem(
                   'astorCoinsData',
-                  // JSON.stringify(combinedCoinsData),
-                  JSON.stringify(coinsDataVt),
+                  JSON.stringify(combinedCoinsData),
+                  // JSON.stringify(coinsDataVt),
                 );
 
-                // console.log('astorCoinsData -> ' + combinedCoinsData.length);
-                console.log('astorCoinsData -> ' + coinsDataVt.length);
+                console.log('astorCoinsData -> ' + combinedCoinsData.length);
+                // console.log('astorCoinsData -> ' + coinsDataVt.length);
               } else {
                 console.log('astorCoinsData dikosongin');
                 await AsyncStorage.setItem(

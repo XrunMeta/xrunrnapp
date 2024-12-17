@@ -404,30 +404,104 @@ const ARScreen = () => {
     getCamPermission();
   }, []); // Hanya dijalankan sekali saat komponen pertama kali dirender
 
-  // Fungsi untuk menggabungkan data berdasarkan aturan
+  const duplicateUntilSize = (data, targetSize) => {
+    let result = [];
+    while (result.length < targetSize) {
+      result = [...result, ...data]; // Duplikasi data
+    }
+    return result.slice(0, targetSize); // Potong hingga target size
+  };
+
+  // This is show & shuffle always 4 even oCoin is < chunkSize (Will duplicate)
+  // const organizeData = oCoinData => {
+  //   if (oCoinData.length === 0) return;
+
+  //   let nextData = [];
+  //   let adjustedData = oCoinData;
+
+  //   // Jika data kurang dari chunkSize, duplikat hingga mencapai chunkSize
+  //   if (oCoinData.length < chunkSize) {
+  //     adjustedData = duplicateUntilSize(oCoinData, chunkSize);
+  //   }
+
+  //   if (currentIndex + chunkSize > adjustedData.length) {
+  //     nextData = [
+  //       ...adjustedData.slice(currentIndex),
+  //       ...adjustedData.slice(
+  //         0,
+  //         (currentIndex + chunkSize) % adjustedData.length,
+  //       ),
+  //     ];
+  //     setCurrentIndex((currentIndex + chunkSize) % adjustedData.length);
+  //   } else {
+  //     nextData = adjustedData.slice(currentIndex, currentIndex + chunkSize);
+  //     setCurrentIndex((currentIndex + chunkSize) % adjustedData.length);
+  //   }
+
+  //   console.log('nextData length -> ' + currentIndex + ' | ' + nextData.length);
+
+  //   const newOrganizedData = spots.map((spot, index) => {
+  //     return nextData[index] ? {...spot, ...nextData[index]} : spot;
+  //   });
+
+  //   setOrganizedData(newOrganizedData);
+  // };
+
+  // This is show & shuffle by exact oCoin length data
   const organizeData = oCoinData => {
     if (oCoinData.length === 0) return;
 
     let nextData = [];
-    if (currentIndex + chunkSize > oCoinData.length) {
+    let actualChunkSize = Math.min(chunkSize, oCoinData.length); // Sesuaikan chunkSize dengan jumlah data
+
+    if (currentIndex + actualChunkSize > oCoinData.length) {
       nextData = [
         ...oCoinData.slice(currentIndex),
-        ...oCoinData.slice(0, (currentIndex + chunkSize) % oCoinData.length),
+        ...oCoinData.slice(
+          0,
+          (currentIndex + actualChunkSize) % oCoinData.length,
+        ),
       ];
-      setCurrentIndex((currentIndex + chunkSize) % oCoinData.length);
+      setCurrentIndex((currentIndex + actualChunkSize) % oCoinData.length);
     } else {
-      nextData = oCoinData.slice(currentIndex, currentIndex + chunkSize);
-      setCurrentIndex((currentIndex + chunkSize) % oCoinData.length);
+      nextData = oCoinData.slice(currentIndex, currentIndex + actualChunkSize);
+      setCurrentIndex((currentIndex + actualChunkSize) % oCoinData.length);
     }
 
     console.log('nextData length -> ' + currentIndex + ' | ' + nextData.length);
 
-    const newOrganizedData = spots.map((spot, index) => {
-      return nextData[index] ? {...spot, ...nextData[index]} : spot;
+    // Pastikan hanya menampilkan data sebanyak yang ada di nextData
+    const newOrganizedData = nextData.map((data, index) => {
+      return {...spots[index % spots.length], ...data};
     });
 
     setOrganizedData(newOrganizedData);
   };
+
+  // This is show & shuffle by 4 item
+  // const organizeData = oCoinData => {
+  //   if (oCoinData.length === 0) return;
+
+  //   let nextData = [];
+  //   if (currentIndex + chunkSize > oCoinData.length) {
+  //     nextData = [
+  //       ...oCoinData.slice(currentIndex),
+  //       ...oCoinData.slice(0, (currentIndex + chunkSize) % oCoinData.length),
+  //     ];
+  //     setCurrentIndex((currentIndex + chunkSize) % oCoinData.length);
+  //   } else {
+  //     nextData = oCoinData.slice(currentIndex, currentIndex + chunkSize);
+  //     setCurrentIndex((currentIndex + chunkSize) % oCoinData.length);
+  //   }
+
+  //   console.log('nextData length -> ' + currentIndex + ' | ' + nextData.length);
+
+  //   const newOrganizedData = spots.map((spot, index) => {
+  //     return nextData[index] ? {...spot, ...nextData[index]} : spot;
+  //   });
+
+  //   setOrganizedData(newOrganizedData);
+  // };
 
   useEffect(() => {
     // Set interval untuk update key state setiap 3 menit
