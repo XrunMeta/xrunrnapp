@@ -280,7 +280,7 @@ const AnimatedSpot = ({member, coinsData}) => {
             />
             <Text style={styles.titleText}>
               {coinsData.coins}
-              {coinsData.title}
+              {coinsData.brand}
             </Text>
             <Text style={styles.subtitleText}>{coinsData.distance}M</Text>
           </TouchableOpacity>
