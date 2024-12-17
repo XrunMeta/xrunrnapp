@@ -348,7 +348,7 @@ const MapComponent = ({
                 lat: 0,
                 lng: 0,
                 title: item.title,
-                distance: 0,
+                distance: (Math.random() * (10 - 0.1) + 0.1).toFixed(2),
                 adthumbnail2: item.adthumbnail2,
                 adthumbnail: item.adthumbnail,
                 coins: item.coins,
