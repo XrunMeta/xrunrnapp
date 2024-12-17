@@ -313,6 +313,7 @@ const MapComponent = ({
           // Call AR API
           const getARCoin = async () => {
             try {
+              // Real Coin
               const request = await fetch(`${URL_API_NODEJS}/app2000-01`, {
                 method: 'POST',
                 headers: {
@@ -326,10 +327,41 @@ const MapComponent = ({
                   limit: 30,
                 }),
               });
-
               const response = await request.json();
 
-              if (response?.data && response?.data?.length > 0) {
+              // Virtual Coin
+              const requestVt = await fetch(`${URL_API_NODEJS}/virtualCoin`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${authcode}`,
+                },
+                body: JSON.stringify({
+                  member: getUserData.member, // Gunakan data member yang sudah didapatkan
+                  latitude: coordinate.latitude,
+                  longitude: coordinate.longitude,
+                }),
+              });
+              const responseVt = await requestVt.json();
+
+              const coinsDataVt = responseVt?.data.map(item => ({
+                lat: 0,
+                lng: 0,
+                title: item.title,
+                distance: 0,
+                adthumbnail2: item.adthumbnail2,
+                adthumbnail: item.adthumbnail,
+                coins: item.coins,
+                symbol: item.symbol,
+                coin: item.coin,
+                advertisement: item.advertisement,
+                cointype: item.cointype,
+                adcolor1: item.adcolor1,
+                brand: item.brand,
+                isbigcoin: item.isbigcoin,
+              }));
+
+              if (response?.data && responseVt?.data) {
                 const coinsData = response?.data.map(item => ({
                   lat: item.lat,
                   lng: item.lng,
@@ -347,18 +379,22 @@ const MapComponent = ({
                   isbigcoin: item.isbigcoin,
                 }));
 
+                const combinedCoinsData = [...coinsData, ...coinsDataVt];
+
                 // Save to AsyncStorage
                 await AsyncStorage.setItem(
                   'astorCoinsData',
-                  JSON.stringify(coinsData),
+                  // JSON.stringify(combinedCoinsData),
+                  JSON.stringify(coinsDataVt),
                 );
 
-                console.log('astorCoinsData -> ' + coinsData.length);
+                // console.log('astorCoinsData -> ' + combinedCoinsData.length);
+                console.log('astorCoinsData -> ' + coinsDataVt.length);
               } else {
                 console.log('astorCoinsData dikosongin');
                 await AsyncStorage.setItem(
                   'astorCoinsData',
-                  JSON.stringify([]),
+                  JSON.stringify(coinsDataVt),
                 );
               }
             } catch (error) {
