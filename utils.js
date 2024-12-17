@@ -397,3 +397,264 @@ export const decrypt = encrypted => {
 
   return decrypted.toString(CryptoJS.enc.Utf8);
 };
+
+const blacklistedPassword = [
+  'password',
+  '123456',
+  '123456789',
+  'qwerty',
+  '12345678',
+  '111111',
+  '123123',
+  'abc123',
+  'password1',
+  '12345',
+  '1234567',
+  'letmein',
+  'welcome',
+  'admin',
+  'passw0rd',
+  '1234',
+  '000000',
+  '1q2w3e',
+  '654321',
+  'superman',
+  'sunshine',
+  'monkey',
+  'football',
+  'princess',
+  'charlie',
+  'aa123456',
+  'dragon',
+  'mustang',
+  'baseball',
+  'trustno1',
+  'iloveyou',
+  'login',
+  'flower',
+  'hello',
+  'freedom',
+  'starwars',
+  'whatever',
+  'hottie',
+  'michael',
+  'batman',
+  'ninja',
+  'qazwsx',
+  'qwertyuiop',
+  'p@ssw0rd',
+  '123qwe',
+  'mynoob',
+  'secret',
+  '123abc',
+  'killer',
+  'master',
+  'password123',
+  'zaq12wsx',
+  '555555',
+  '1qaz2wsx',
+  'qwerty123',
+  'asdfgh',
+  'zaq12wsxcde',
+  'google',
+  'loveme',
+  'jordan23',
+  'maggie',
+  'cookie',
+  'shadow',
+  'whatever123',
+  'summer',
+  'super123',
+  'newyork',
+  'samsung',
+  'michelle',
+  'marilyn',
+  'purple',
+  'secure',
+  'trust',
+  'aaron431',
+  'viking',
+  'zxcvbnm',
+  'angel',
+  'cheese',
+  'coffee',
+  'school',
+  'password!',
+  'america',
+  'canada',
+  'batman123',
+  'babygirl',
+  'iloveyou2',
+  '123123123',
+  'computer',
+  'pass123',
+  'golden',
+  'iloveme',
+  'skywalker',
+  'johnny',
+  'harley',
+  'ferrari',
+  'mercedes',
+  'paris',
+  'disney',
+  'red123',
+  'soccer',
+  'heather',
+  'ginger',
+  'peanut',
+  'taylor',
+  'Jakarta',
+  'Seoul',
+  'London',
+  'Bali',
+  'Busan',
+  'Manchester',
+  'Surabaya',
+  'Gyeongju',
+  'Birmingham',
+  'Yogyakarta',
+  'Jeju',
+  'Cardiff',
+  'Bandung',
+  'Incheon',
+  'Brighton',
+  'Liverpool',
+  'Medan',
+  'Daejeon',
+  'KualaLumpur',
+  'Pusan',
+  'Jeonju',
+  'Nottingham',
+  'Kyoto',
+  'Denpasar',
+  'Tokyo',
+  'Merseyside',
+  'Pekanbaru',
+  'Suwon',
+  'Cork',
+  'Stoke-on-Trent',
+  'Jambi',
+  'Daegu',
+  'Semarang',
+  'Gwangju',
+  'Bristol',
+  'Sapporo',
+  'Edinburgh',
+  'Kochi',
+  'Bournemouth',
+  'Fukuoka',
+  'Chungju',
+  'Vancouver',
+  'Halifax',
+  'Cheonan',
+  'Paju',
+  'Sunderland',
+  'Tangerang',
+  'Songdo',
+  'Gifu',
+  'Islington',
+  'Busan',
+  'KualaLumpur',
+  'Kobe',
+  'Seongnam',
+  'Aberdeen',
+  'Osaka',
+  'Tbilisi',
+  'HongKong',
+  'Moscow',
+  'Paris',
+  'LasVegas',
+  'Copenhagen',
+  'Yokohama',
+  'Taichung',
+  'Belfast',
+  'Sydney',
+  'Milan',
+  'Berlin',
+  'Rome',
+  'Barcelona',
+  'Lisbon',
+  'Tokyo',
+  'Shanghai',
+  'LosAngeles',
+  'NewYork',
+  'Sydney',
+  'Toronto',
+  'Dubai',
+  'Bangkok',
+  'HongKong',
+  'KualaLumpur',
+  'Dubai',
+  'Amsterdam',
+  'Moscow',
+  'Chicago',
+  'Montreal',
+  'Geneva',
+  'Zurich',
+  'Vienna',
+  'Prague',
+];
+
+export const validatePassword = (
+  email,
+  password,
+  blacklist = blacklistedPassword,
+  companyName = 'XRUN',
+) => {
+  // 1. Check for uppercase, lowercase, digit, special character, and length
+  const passwordPolicy =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  if (!passwordPolicy.test(password)) {
+    return 'Password must include uppercase, lowercase, number, special character, and be at least 8 characters.';
+  }
+
+  // 2. Prohibit password same as email
+  if (password.toLowerCase() === email.toLowerCase()) {
+    return 'Password cannot be the same as your email.';
+  }
+
+  // 3. Check against blacklist
+  if (
+    blacklist.some(item => password.toLowerCase().includes(item.toLowerCase()))
+  ) {
+    return 'Password contains forbidden words or common patterns.';
+  }
+
+  // 4. Prohibit company name or abbreviation
+  if (password.toLowerCase().includes(companyName.toLowerCase())) {
+    return 'Password cannot contain the company name.';
+  }
+
+  // 6. Prohibit passwords matching common formats
+  const commonPatterns = [
+    /^\d{4}-\d{2}-\d{2}$/, // Dates (YYYY-MM-DD)
+    /^\d{2}\/\d{2}\/\d{4}$/, // Dates (MM/DD/YYYY)
+    /^\d{3}-\d{2}-\d{4}$/, // Social Security Numbers (SSN-like)
+    /^\d{10}$/, // Phone numbers (10 digits)
+    /^[A-Z0-9]{1,7}$/, // License plate numbers
+  ];
+  if (commonPatterns.some(pattern => pattern.test(password))) {
+    return 'Password matches a common format (date, phone number, etc.).';
+  }
+
+  // If all validations pass
+  return '';
+};
+
+export const validateEmail = (email, companyName = 'XRUN') => {
+  // 1. Check for uppercase, lowercase, digit, special character, and length
+  // const passwordPolicy = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  const pattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+  if (!pattern.test(email)) {
+    return 'Your email is not valid';
+  }
+
+  // 2. Prohibit company name or abbreviation
+  if (email.toLowerCase().includes(companyName.toLowerCase())) {
+    return 'Email cannot contain the company name.';
+  }
+
+  // If all validations pass
+  return '';
+};
