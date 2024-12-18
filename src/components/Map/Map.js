@@ -344,22 +344,24 @@ const MapComponent = ({
               });
               const responseVt = await requestVt.json();
 
-              const coinsDataVt = responseVt?.data.map(item => ({
-                lat: 0,
-                lng: 0,
-                title: item.title,
-                distance: (Math.random() * (10 - 0.1) + 0.1).toFixed(2),
-                adthumbnail2: item.adthumbnail2,
-                adthumbnail: item.adthumbnail,
-                coins: item.coins,
-                symbol: item.symbol,
-                coin: item.coin,
-                advertisement: item.advertisement,
-                cointype: item.cointype,
-                adcolor1: item.adcolor1,
-                brand: item.brand,
-                isbigcoin: item.isbigcoin,
-              }));
+              const coinsDataVt = responseVt?.data
+                .slice(0, Math.random() < 0.5 ? 1 : 2)
+                .map(item => ({
+                  lat: 0,
+                  lng: 0,
+                  title: item.title,
+                  distance: (Math.random() * (10 - 0.1) + 0.1).toFixed(2),
+                  adthumbnail2: item.adthumbnail2,
+                  adthumbnail: item.adthumbnail,
+                  coins: item.coins,
+                  symbol: item.symbol,
+                  coin: item.coin,
+                  advertisement: item.advertisement,
+                  cointype: item.cointype,
+                  adcolor1: item.adcolor1,
+                  brand: item.brand,
+                  isbigcoin: item.isbigcoin,
+                }));
 
               if (response?.data && responseVt?.data) {
                 const coinsData = response?.data.map(item => ({
@@ -379,7 +381,7 @@ const MapComponent = ({
                   isbigcoin: item.isbigcoin,
                 }));
 
-                const combinedCoinsData = [...coinsData, ...coinsDataVt];
+                const combinedCoinsData = [...coinsDataVt, ...coinsData];
 
                 // Save to AsyncStorage
                 await AsyncStorage.setItem(
