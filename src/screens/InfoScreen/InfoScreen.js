@@ -151,7 +151,7 @@ const InfoScreen = () => {
       const storeapp =
         Platform.OS === 'ios'
           ? 'https://apps.apple.com/id/app/xrun-go/id6502924173'
-          : 'https://play.google.com/store/apps/details?id=run.xrun.xrunapps';
+          : 'https://play.google.com/store/apps/details?id=run.xrun.xrunapp';
 
       const result = await Share.share({
         message: `
