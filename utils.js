@@ -658,3 +658,18 @@ export const validateEmail = (email, companyName = 'XRUN') => {
   // If all validations pass
   return '';
 };
+
+export const dateFormatter = defaultTime => {
+  // Konversi datetime dari UTC ke waktu lokal
+  const utcDate = new Date(defaultTime); // Pastikan ad.datetime dalam format ISO string
+  const localDate = utcDate.toLocaleString('en-GB', {
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    hour12: false,
+  });
+
+  const [date, time] = localDate.split(', '); // Pisahkan tanggal dan waktu
+  const [day, month, year] = date.split('/'); // Ubah format tanggal dari DD/MM/YYYY ke YYYY-MM-DD
+  const [hours, minutes] = time.split(':'); // Pisahkan jam dan menit, dan hilangkan detik
+
+  return `${year}-${month}-${day}   ${hours}:${minutes}`;
+};
