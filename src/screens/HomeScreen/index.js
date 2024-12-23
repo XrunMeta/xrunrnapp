@@ -276,7 +276,8 @@ export default function Home({route}) {
             navigation.dispatch(CommonActions.navigate('WalletHome'));
             // goToWalletsite();
           } else if (Platform.OS === 'ios' && showWallet) {
-            goToWalletsite();
+            // goToWalletsite();
+			navigation.dispatch(CommonActions.navigate('WalletHome'));
           } else if (!showWallet) {
             Linking.openURL('https://www.xrun.run/');
           } else {
