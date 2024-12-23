@@ -17,6 +17,7 @@ import {
   getFontFam,
   fontSize,
   listTransactionsHistory,
+  dateFormatter,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
@@ -141,6 +142,7 @@ const TotalHistory = ({
         <>
           {totalTransaction.map((item, index) => {
             const {
+              excuteddatetime,
               datetime,
               time,
               amount,
@@ -151,12 +153,14 @@ const TotalHistory = ({
 
             let action = actionFunc(tempAction, lang);
             let extracode = extracodeFunc(tempExtracode, lang);
+            const formattedDate = dateFormatter(excuteddatetime);
 
             return (
               <View key={index} style={styles.wrapperItemTable}>
                 <View>
                   <Text style={styles.details}>{action}</Text>
-                  <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
+                  {/* <Text style={styles.date}>{`${datetime}    ${time}`}</Text> */}
+                  <Text style={styles.date}>{formattedDate}</Text>
                 </View>
                 <View>
                   <View style={styles.wrapperPrice}>
@@ -241,16 +245,25 @@ const TransferHistory = ({
       {totalTransaction.length > 0 ? (
         <>
           {totalTransaction.map((item, index) => {
-            const {datetime, time, amount, symbol, action: tempAction} = item;
+            const {
+              excuteddatetime,
+              datetime,
+              time,
+              amount,
+              symbol,
+              action: tempAction,
+            } = item;
 
             let action = actionFunc(tempAction, lang);
             let extracode;
+            const formattedDate = dateFormatter(excuteddatetime);
 
             return (
               <View style={styles.wrapperItemTable} key={index}>
                 <View>
                   <Text style={styles.details}>{action}</Text>
-                  <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
+                  {/* <Text style={styles.date}>{`${datetime}    ${time}`}</Text> */}
+                  <Text style={styles.date}>{formattedDate}</Text>
                 </View>
                 <View>
                   <View style={styles.wrapperPrice}>
@@ -334,6 +347,7 @@ const ReceivedDetails = ({
         <>
           {totalTransaction.map((item, index) => {
             const {
+              excuteddatetime,
               datetime,
               time,
               amount,
@@ -344,12 +358,14 @@ const ReceivedDetails = ({
 
             let action = actionFunc(tempAction, lang);
             let extracode = extracodeFunc(tempExtracode, lang);
+            const formattedDate = dateFormatter(excuteddatetime);
 
             return (
               <View key={index} style={styles.wrapperItemTable}>
                 <View>
                   <Text style={styles.details}>{action}</Text>
-                  <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
+                  {/* <Text style={styles.date}>{`${datetime}    ${time}`}</Text> */}
+                  <Text style={styles.date}>{formattedDate}</Text>
                 </View>
                 <View>
                   <View style={styles.wrapperPrice}>
@@ -432,16 +448,25 @@ const TransitionHistory = ({
       {totalTransaction.length > 0 ? (
         <>
           {totalTransaction.map((item, index) => {
-            const {datetime, time, amount, symbol, action: tempAction} = item;
+            const {
+              excuteddatetime,
+              datetime,
+              time,
+              amount,
+              symbol,
+              action: tempAction,
+            } = item;
 
             let action = actionFunc(tempAction, lang);
             let extracode;
+            const formattedDate = dateFormatter(excuteddatetime);
 
             return (
               <View style={styles.wrapperItemTable} key={index}>
                 <View>
                   <Text style={styles.details}>{action}</Text>
-                  <Text style={styles.date}>{`${datetime}    ${time}`}</Text>
+                  {/* <Text style={styles.date}>{`${datetime}    ${time}`}</Text> */}
+                  <Text style={styles.date}>{formattedDate}</Text>
                 </View>
                 <View>
                   <View style={styles.wrapperPrice}>
