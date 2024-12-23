@@ -27,6 +27,7 @@ import {
   fontSize,
   authcode,
   formatISODate,
+  dateFormatter,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import RadioGroup from 'react-native-radio-buttons-group';
@@ -185,25 +186,13 @@ const AdvertiseScreen = () => {
 
         if (data && data.data.length > 0) {
           const filteredAds = data.data.map(ad => {
-            // Konversi datetime dari UTC ke waktu lokal
-            const utcDate = new Date(ad.datetime); // Pastikan ad.datetime dalam format ISO string
-            const localDate = utcDate.toLocaleString('en-GB', {
-              timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-              hour12: false,
-            });
-
-            const [date, time] = localDate.split(', '); // Pisahkan tanggal dan waktu
-            const [day, month, year] = date.split('/'); // Ubah format tanggal dari DD/MM/YYYY ke YYYY-MM-DD
-            const [hours, minutes] = time.split(':'); // Pisahkan jam dan menit, dan hilangkan detik
-
-            const localizedDatetime = `${year}-${month}-${day}   ${hours}:${minutes}`;
+            const localizedDatetime = dateFormatter(ad.datetime);
 
             return {
               transaction: ad.transaction,
               title: ad.title,
               coin: ad.amount + ' ' + ad.symbol,
               extracode: ad.extracode,
-              // datetime: formatISODate(ad.datetime),
               datetime: localizedDatetime,
               statusSuccess:
                 lang && lang.screen_advertise && lang.screen_advertise.completed
