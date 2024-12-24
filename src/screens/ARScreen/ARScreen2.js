@@ -54,6 +54,12 @@ const AnimatedSpot = ({member, coinsData}) => {
       coin: coin,
       coinScreen: true,
     });
+
+    console.log({
+      member: memberID,
+      advertisement: advertisement,
+      coin: coin,
+    });
   };
 
   const startShakeAnimation = () => {

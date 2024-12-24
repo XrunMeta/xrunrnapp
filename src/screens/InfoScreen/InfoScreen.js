@@ -410,7 +410,8 @@ ${storeapp}`,
                 styles.modalText,
                 {fontFamily: getFontFam() + 'Medium', marginBottom: 20},
               ]}>
-              {refEmail}
+              {/* {refEmail} */}
+              Deleted Member
             </Text>
             <TouchableOpacity onPress={closeModal} style={styles.modalButton}>
               <Text style={styles.modalButtonText}>OK</Text>
