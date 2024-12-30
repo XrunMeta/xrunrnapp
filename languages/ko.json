@@ -429,13 +429,13 @@
       "placeholder": "추천 ID를 입력하세요.",
       "not_found": "ID를 찾을 수 없습니다. 추천 ID를 다시 입력하세요.",
       "recommended": "추천됨",
-      "already": "이미 추천 이력이 있습니다."
+      "already": "당신의 추천인은 아래와 같습니다."
     },
     "random_recommend": {
       "empty": "ID를 선택하세요."
     },
     "recomByMe": {
-      "empty": "귀하의 이메일은 누구도 추천하지 않았습니다."
+      "empty": "추천인이 없습니다."
     }
   },
 
