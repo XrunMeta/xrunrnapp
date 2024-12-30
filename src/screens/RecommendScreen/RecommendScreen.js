@@ -6,13 +6,19 @@ import {
   SafeAreaView,
   Modal,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import ButtonList from '../../components/ButtonList/ButtonList';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
-import {getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  gatewayNodeJS,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 const RecommendScreen = () => {
@@ -21,6 +27,7 @@ const RecommendScreen = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [refEmail, setRefEmail] = useState('');
   const [isRecommend, setIsRecommend] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   //   Call API
   useEffect(() => {
@@ -41,22 +48,7 @@ const RecommendScreen = () => {
 
         const result = await gatewayNodeJS('app7110-01', 'POST', body);
         const userData = result.data[0];
-
-        console.log('Info Screen -> ' + JSON.stringify(userData));
         setIsLoading(false);
-
-        setUserDetails({
-          email: userData.email,
-          firstname: userData.firstname,
-          member: userData.member,
-          lastname: userData.lastname,
-          gender: userData.gender,
-          extrastr: userData.extrastr,
-          country: userData.country,
-          countrycode: userData.countrycode,
-          region: userData.region,
-          ages: userData.ages,
-        });
 
         const bodyRecommend = {
           member: userData?.member,
@@ -129,6 +121,22 @@ const RecommendScreen = () => {
         </View>
       </View>
 
+      {/* Loading */}
+      {isLoading && (
+        <View style={styles.loading}>
+          <ActivityIndicator size={'large'} color={'#fff'} />
+          <Text
+            style={{
+              color: '#fff',
+              fontFamily: getFontFam() + 'Regular',
+              fontSize: fontSize('body'),
+              marginTop: 10,
+            }}>
+            Loading...
+          </Text>
+        </View>
+      )}
+
       {/* List Button */}
       <View
         style={{
@@ -181,7 +189,8 @@ const RecommendScreen = () => {
                 styles.modalText,
                 {fontFamily: getFontFam() + 'Medium', marginBottom: 20},
               ]}>
-              Deleted Member
+              {refEmail}
+              {/* Deleted Member */}
             </Text>
             <TouchableOpacity onPress={closeModal} style={styles.modalButton}>
               <Text style={styles.modalButtonText}>OK</Text>
@@ -247,5 +256,16 @@ const styles = StyleSheet.create({
     fontSize: fontSize('body'),
     color: '#051C60',
     fontFamily: getFontFam() + 'Bold',
+  },
+  loading: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    zIndex: 999,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

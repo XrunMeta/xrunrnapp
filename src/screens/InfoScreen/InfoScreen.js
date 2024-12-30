@@ -32,10 +32,6 @@ const InfoScreen = () => {
   const [lang, setLang] = useState({});
   const {isLoggedIn, logout} = useAuth();
   const [userDetails, setUserDetails] = useState([]);
-  const [isModalVisible, setModalVisible] = useState(false);
-  const [refEmail, setRefEmail] = useState('');
-  const [isRecommend, setIsRecommend] = useState(false);
-
   const [isLoading, setIsLoading] = useState(true);
 
   let ScreenHeight = Dimensions.get('window').height;
@@ -77,28 +73,6 @@ const InfoScreen = () => {
           region: userData.region,
           ages: userData.ages,
         });
-
-        const bodyRecommend = {
-          member: userData?.member,
-        };
-
-        const resultRecommend = await gatewayNodeJS(
-          'app7420-03',
-          'POST',
-          bodyRecommend,
-        );
-        console.log('Recommend status -> ', resultRecommend?.data[0]);
-
-        setRefEmail(
-          resultRecommend?.data[0]?.email
-            ? resultRecommend?.data[0]?.email
-            : '',
-        );
-        setIsRecommend(
-          resultRecommend?.data[0]?.data
-            ? resultRecommend?.data[0]?.data
-            : false,
-        );
       } catch (err) {
         console.error('Error fetching user data: ', err);
         crashlytics().recordError(new Error(err));
