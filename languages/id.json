@@ -422,7 +422,8 @@
     "title": "Daftar Rekomendasi",
     "category": {
       "regist": "Daftarkan rekomendasi",
-      "random": "Rekomendasi acak"
+      "random": "Rekomendasi acak",
+      "recomByMe": "Yang Merekomendasikan Saya"
     },
     "add_recommend": {
       "label": "ID Rekomendasi",
@@ -433,6 +434,9 @@
     },
     "random_recommend": {
       "empty": "Silakan pilih sebuah ID."
+    },
+    "recomByMe": {
+      "empty": "Email anda belum direkomendasikan oleh siapapun"
     }
   },
 
