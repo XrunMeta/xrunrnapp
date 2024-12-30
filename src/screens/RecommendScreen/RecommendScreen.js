@@ -181,8 +181,10 @@ const RecommendScreen = () => {
         <View style={styles.modal}>
           <View style={styles.modalContent}>
             <Text style={styles.modalText}>
-              {lang && lang.screen_info && lang.screen_info.list
-                ? lang.screen_info.list.already
+              {lang &&
+              lang.screen_recommend &&
+              lang.screen_recommend.add_recommend
+                ? lang.screen_recommend.add_recommend.already
                 : ''}
             </Text>
             <Text
