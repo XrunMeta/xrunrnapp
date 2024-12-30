@@ -421,7 +421,8 @@
     "title": "注册推荐人",
     "category": {
       "regist": "注册推荐人",
-      "random": "随机推荐"
+      "random": "随机推荐",
+      "recomByMe": "谁推荐我"
     },
     "add_recommend": {
       "label": "推荐人ID",
@@ -432,6 +433,9 @@
     },
     "random_recommend": {
       "empty": "请选择一个ID。"
+    },
+    "recomByMe": {
+      "empty": "您的电子邮件未被任何人推荐"
     }
   },
 

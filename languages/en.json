@@ -437,7 +437,7 @@
       "empty": "Please select an ID."
     },
     "recomByMe": {
-      "empty": "Please select an ID."
+      "empty": "Your email has not been recommended by anyone"
     }
   },
 

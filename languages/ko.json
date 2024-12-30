@@ -421,7 +421,8 @@
     "title": "추천자 등록",
     "category": {
       "regist": "추천자 등록",
-      "random": "랜덤 추천"
+      "random": "랜덤 추천",
+      "recomByMe": "나를 추천하는 사람"
     },
     "add_recommend": {
       "label": "추천 ID",
@@ -432,6 +433,9 @@
     },
     "random_recommend": {
       "empty": "ID를 선택하세요."
+    },
+    "recomByMe": {
+      "empty": "귀하의 이메일은 누구도 추천하지 않았습니다."
     }
   },
 
