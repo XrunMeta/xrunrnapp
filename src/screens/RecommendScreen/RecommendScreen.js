@@ -1,4 +1,12 @@
-import {StyleSheet, Text, View, ScrollView, SafeAreaView} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  SafeAreaView,
+  Modal,
+  TouchableOpacity,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import ButtonList from '../../components/ButtonList/ButtonList';
@@ -10,22 +18,72 @@ import crashlytics from '@react-native-firebase/crashlytics';
 const RecommendScreen = () => {
   const navigation = useNavigation();
   const [lang, setLang] = useState('');
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [refEmail, setRefEmail] = useState('');
+  const [isRecommend, setIsRecommend] = useState(false);
 
   //   Call API
   useEffect(() => {
-    // Get Language
     const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
         const screenLang = await getLanguage2(currentLanguage);
         setLang(screenLang);
+
+        const AsyncUserData = await AsyncStorage.getItem('userData');
+        const data = JSON.parse(AsyncUserData);
+
+        console.log({data});
+
+        const body = {
+          member: data?.member,
+        };
+
+        const result = await gatewayNodeJS('app7110-01', 'POST', body);
+        const userData = result.data[0];
+
+        console.log('Info Screen -> ' + JSON.stringify(userData));
+        setIsLoading(false);
+
+        setUserDetails({
+          email: userData.email,
+          firstname: userData.firstname,
+          member: userData.member,
+          lastname: userData.lastname,
+          gender: userData.gender,
+          extrastr: userData.extrastr,
+          country: userData.country,
+          countrycode: userData.countrycode,
+          region: userData.region,
+          ages: userData.ages,
+        });
+
+        const bodyRecommend = {
+          member: userData?.member,
+        };
+
+        const resultRecommend = await gatewayNodeJS(
+          'app7420-03',
+          'POST',
+          bodyRecommend,
+        );
+        console.log('Recommend status -> ', resultRecommend?.data[0]);
+
+        setRefEmail(
+          resultRecommend?.data[0]?.email
+            ? resultRecommend?.data[0]?.email
+            : '',
+        );
+        setIsRecommend(
+          resultRecommend?.data[0]?.data
+            ? resultRecommend?.data[0]?.data
+            : false,
+        );
       } catch (err) {
+        console.error('Error fetching user data: ', err);
         crashlytics().recordError(new Error(err));
         crashlytics().log(err);
-        console.error(
-          'Error retrieving selfCoordinate from AsyncStorage:',
-          err,
-        );
+        setIsLoading(false);
       }
     };
 
@@ -37,15 +95,24 @@ const RecommendScreen = () => {
   };
 
   const onRegist = () => {
-    navigation.navigate('RegistRecommend');
+    isRecommend === 'ok'
+      ? navigation.navigate('RegistRecommend')
+      : setModalVisible(true);
   };
 
   const onRandom = () => {
-    navigation.navigate('RandomRecommend');
+    isRecommend === 'ok'
+      ? navigation.navigate('RandomRecommend')
+      : setModalVisible(true);
   };
 
   const onRecombyMe = () => {
     navigation.navigate('RecommendByMe');
+  };
+
+  const closeModal = () => {
+    // Fungsi untuk menutup modal
+    setModalVisible(false);
   };
 
   return (
@@ -97,32 +164,31 @@ const RecommendScreen = () => {
       </View>
 
       {/* Modal */}
-      {/* <Modal
-              animationType="slide"
-              transparent={true}
-              visible={isModalVisible}
-              onRequestClose={closeModal}>
-              <View style={styles.modal}>
-                <View style={styles.modalContent}>
-                  <Text style={styles.modalText}>
-                    {lang && lang.screen_info && lang.screen_info.list
-                      ? lang.screen_info.list.already
-                      : ''}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.modalText,
-                      {fontFamily: getFontFam() + 'Medium', marginBottom: 20},
-                    ]}>
-                    {refEmail}
-                    Deleted Member
-                  </Text>
-                  <TouchableOpacity onPress={closeModal} style={styles.modalButton}>
-                    <Text style={styles.modalButtonText}>OK</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </Modal>  */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={closeModal}>
+        <View style={styles.modal}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>
+              {lang && lang.screen_info && lang.screen_info.list
+                ? lang.screen_info.list.already
+                : ''}
+            </Text>
+            <Text
+              style={[
+                styles.modalText,
+                {fontFamily: getFontFam() + 'Medium', marginBottom: 20},
+              ]}>
+              Deleted Member
+            </Text>
+            <TouchableOpacity onPress={closeModal} style={styles.modalButton}>
+              <Text style={styles.modalButtonText}>OK</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -148,5 +214,38 @@ const styles = StyleSheet.create({
     fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
+  },
+  // Modal styles
+  modal: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'flex-start',
+  },
+  modalText: {
+    fontSize: fontSize('body'),
+    textAlign: 'left',
+    color: '#051C60',
+    fontFamily: getFontFam() + 'Regular',
+  },
+  modalButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginBottom: -20,
+    marginRight: -18,
+    alignSelf: 'flex-end',
+  },
+  modalButtonText: {
+    textAlign: 'center',
+    fontSize: fontSize('body'),
+    color: '#051C60',
+    fontFamily: getFontFam() + 'Bold',
   },
 });

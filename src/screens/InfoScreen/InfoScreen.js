@@ -198,10 +198,6 @@ ${storeapp}`,
   };
 
   const onRecommend = async () => {
-    // Check is Member has recommended
-    // isRecommend === 'ok'
-    //   ? navigation.navigate('Recommend')
-    //   : setModalVisible(true);
     navigation.navigate('Recommend');
   };
 
@@ -211,11 +207,6 @@ ${storeapp}`,
 
   const onBack = () => {
     navigation.navigate('Home');
-  };
-
-  const closeModal = () => {
-    // Fungsi untuk menutup modal
-    setModalVisible(false);
   };
 
   return (
@@ -417,40 +408,6 @@ const styles = StyleSheet.create({
     fontFamily: getFontFam() + 'Bold',
     color: '#051C60',
     margin: 10,
-  },
-
-  // Modal styles
-  modal: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
-    alignItems: 'flex-start',
-  },
-  modalText: {
-    fontSize: fontSize('body'),
-    textAlign: 'left',
-    color: '#051C60',
-    fontFamily: getFontFam() + 'Regular',
-  },
-  modalButton: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginBottom: -20,
-    marginRight: -18,
-    alignSelf: 'flex-end',
-  },
-  modalButtonText: {
-    textAlign: 'center',
-    fontSize: fontSize('body'),
-    color: '#051C60',
-    fontFamily: getFontFam() + 'Bold',
   },
   loading: {
     position: 'absolute',

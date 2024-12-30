@@ -431,13 +431,13 @@
       "placeholder": "Please enter your referral ID.",
       "not_found": "ID not found, Please re-enter your referral ID.",
       "recommended": "Recommended",
-      "already": "You already have a referral history."
+      "already": "You have recommander."
     },
     "random_recommend": {
       "empty": "Please select an ID."
     },
     "recomByMe": {
-      "empty": "Your email has not been recommended by anyone"
+      "empty": "You have no recommander."
     }
   },
 
