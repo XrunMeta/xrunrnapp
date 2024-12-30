@@ -62,10 +62,11 @@ const RecommendScreen = () => {
         console.log('Recommend status -> ', resultRecommend?.data[0]);
 
         setRefEmail(
-          resultRecommend?.data[0]?.email
-            ? resultRecommend?.data[0]?.email
-            : '',
+          resultRecommend?.data[0]?.email?.includes('deleted')
+            ? 'Deleted User'
+            : resultRecommend?.data[0]?.email || '',
         );
+
         setIsRecommend(
           resultRecommend?.data[0]?.data
             ? resultRecommend?.data[0]?.data
@@ -190,7 +191,6 @@ const RecommendScreen = () => {
                 {fontFamily: getFontFam() + 'Medium', marginBottom: 20},
               ]}>
               {refEmail}
-              {/* Deleted Member */}
             </Text>
             <TouchableOpacity onPress={closeModal} style={styles.modalButton}>
               <Text style={styles.modalButtonText}>OK</Text>
