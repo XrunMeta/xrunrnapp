@@ -423,7 +423,8 @@
     "title": "Regist Recommender",
     "category": {
       "regist": "Regist recommender",
-      "random": "Random recommend"
+      "random": "Random recommend",
+      "recomByMe": "Recommended by Me"
     },
     "add_recommend": {
       "label": "Referral ID",
@@ -433,6 +434,9 @@
       "already": "You already have a referral history."
     },
     "random_recommend": {
+      "empty": "Please select an ID."
+    },
+    "recomByMe": {
       "empty": "Please select an ID."
     }
   },

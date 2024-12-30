@@ -44,6 +44,10 @@ const RecommendScreen = () => {
     navigation.navigate('RandomRecommend');
   };
 
+  const onRecombyMe = () => {
+    navigation.navigate('RecommendByMe');
+  };
+
   return (
     <SafeAreaView style={styles.root}>
       {/* Title */}
@@ -80,6 +84,14 @@ const RecommendScreen = () => {
                 : ''
             }
             onPress={onRandom}
+          />
+          <ButtonList
+            label={
+              lang && lang.screen_recommend && lang.screen_recommend.category
+                ? lang.screen_recommend.category.recomByMe
+                : ''
+            }
+            onPress={onRecombyMe}
           />
         </ScrollView>
       </View>
