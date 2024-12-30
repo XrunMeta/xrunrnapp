@@ -199,9 +199,10 @@ ${storeapp}`,
 
   const onRecommend = async () => {
     // Check is Member has recommended
-    isRecommend === 'ok'
-      ? navigation.navigate('Recommend')
-      : setModalVisible(true);
+    // isRecommend === 'ok'
+    //   ? navigation.navigate('Recommend')
+    //   : setModalVisible(true);
+    navigation.navigate('Recommend');
   };
 
   const onCustomerService = () => {
@@ -393,7 +394,7 @@ ${storeapp}`,
       </View>
 
       {/* Modal */}
-      <Modal
+      {/* <Modal
         animationType="slide"
         transparent={true}
         visible={isModalVisible}
@@ -410,7 +411,7 @@ ${storeapp}`,
                 styles.modalText,
                 {fontFamily: getFontFam() + 'Medium', marginBottom: 20},
               ]}>
-              {/* {refEmail} */}
+              {refEmail}
               Deleted Member
             </Text>
             <TouchableOpacity onPress={closeModal} style={styles.modalButton}>
@@ -418,7 +419,7 @@ ${storeapp}`,
             </TouchableOpacity>
           </View>
         </View>
-      </Modal>
+      </Modal>  */}
     </SafeAreaView>
   );
 };

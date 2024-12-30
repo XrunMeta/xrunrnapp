@@ -60,6 +60,7 @@ import PhoneModifScreen from '../screens/ModifInfoScreen/PhoneModifScreen';
 import KeyDownload from '../screens/KeyDownloadScreen';
 import KeyDownloadAuthScreen from '../screens/KeyDownloadScreen/KeyDownloadAuthScreen';
 import KeyShowDownload from '../screens/KeyDownloadScreen/KeyShowDownload';
+import RecommendByMeScreen from '../screens/RecommendScreen/RecommendByMeScreen';
 
 export default Router = () => {
   const Stack = createNativeStackNavigator();
@@ -137,6 +138,7 @@ export default Router = () => {
           name="RandomRecommend"
           component={RandomRecommendScreen}
         />
+        <Stack.Screen name="RecommendByMe" component={RecommendByMeScreen} />
         <Stack.Screen
           name="CustomerService"
           component={CustomerServiceScreen}
