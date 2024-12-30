@@ -4,12 +4,11 @@ import {
   Text,
   StyleSheet,
   Dimensions,
-  Alert,
   ScrollView,
   SafeAreaView,
-  Platform,
   TouchableWithoutFeedback,
   Keyboard,
+  ActivityIndicator,
 } from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
@@ -28,10 +27,13 @@ const RecommendByMeScreen = () => {
   let ScreenHeight = Dimensions.get('window').height;
   const [userData, setUserData] = useState({});
   const [recommendations, setRecommendations] = useState([]);
+  const [loading, setLoading] = useState(true); // Tambahkan state loading
 
   useEffect(() => {
     const fetchDataAndRecommendations = async () => {
       try {
+        setLoading(true); // Mulai loading
+
         // Get Language
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
         const screenLang = await getLanguage2(currentLanguage);
@@ -65,6 +67,8 @@ const RecommendByMeScreen = () => {
         console.error('Error during fetching data and recommendations:', error);
         crashlytics().recordError(new Error(error));
         crashlytics().log(error);
+      } finally {
+        setLoading(false); // Selesai loading
       }
     };
 
@@ -98,40 +102,55 @@ const RecommendByMeScreen = () => {
             flex: 1,
             width: '100%',
           }}>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            {recommendations.map(item => (
-              <View
-                key={item.email}
-                style={{
-                  backgroundColor: 'white',
-                  paddingHorizontal: 12,
-                  marginHorizontal: 8,
-                  borderRadius: 10,
-                  marginVertical: 4,
-                  ...styles.shadow,
-                }}>
+          {loading ? ( // Tampilkan loading indicator jika loading
+            <View style={styles.center}>
+              <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+          ) : recommendations.length > 0 ? ( // Jika data ada, tampilkan daftar rekomendasi
+            <ScrollView showsVerticalScrollIndicator={false}>
+              {recommendations.map(item => (
                 <View
+                  key={item.email}
                   style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    alignSelf: 'flex-start',
-                    marginHorizontal: 5,
+                    backgroundColor: 'white',
+                    paddingHorizontal: 12,
+                    marginHorizontal: 8,
+                    borderRadius: 10,
+                    marginVertical: 4,
+                    ...styles.shadow,
                   }}>
-                  <Text
+                  <View
                     style={{
-                      fontFamily: getFontFam() + 'Regular',
-                      fontSize: fontSize('body'),
-                      color: 'black',
-                      paddingVertical: 18,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      alignSelf: 'flex-start',
+                      marginHorizontal: 5,
                     }}>
-                    {/* {item.email.substring(0, 3) +
-                      '*'.repeat(item.email.length - 3)} */}
-                    {item.masked_email}
-                  </Text>
+                    <Text
+                      style={{
+                        fontFamily: getFontFam() + 'Regular',
+                        fontSize: fontSize('body'),
+                        color: 'black',
+                        paddingVertical: 18,
+                      }}>
+                      {item.masked_email}
+                    </Text>
+                  </View>
                 </View>
-              </View>
-            ))}
-          </ScrollView>
+              ))}
+            </ScrollView>
+          ) : (
+            // Jika data kosong, tampilkan teks di tengah layar
+            <View style={styles.center}>
+              <Text style={styles.emptyText}>
+                {lang &&
+                lang.screen_recommend &&
+                lang.screen_recommend.recomByMe
+                  ? lang.screen_recommend.recomByMe.empty
+                  : 'Your email has not been recommended by anyone'}
+              </Text>
+            </View>
+          )}
         </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>
@@ -158,29 +177,6 @@ const styles = StyleSheet.create({
     color: '#051C60',
     margin: 10,
   },
-  bottomSection: {
-    padding: 5,
-    justifyContent: 'space-between',
-    position: 'absolute',
-    bottom: 40,
-    right: 10,
-  },
-  additionalLogin: {
-    flexDirection: 'row',
-    alignSelf: 'flex-end',
-    alignItems: 'center',
-  },
-  buttonSignIn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    flexDirection: 'column-reverse',
-    justifyContent: 'center',
-  },
-  buttonSignInImage: {
-    height: 80,
-    width: 80,
-  },
   shadow: {
     shadowColor: '#000000',
     shadowOffset: {
@@ -191,30 +187,15 @@ const styles = StyleSheet.create({
     shadowRadius: 1.51,
     elevation: 1,
   },
-  checkbox: {
-    width: 20,
-    height: 20,
-    borderWidth: 2,
-    borderRadius: 4,
-    marginRight: 8,
+  center: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: -2,
   },
-  checkedBox: {
-    backgroundColor: '#343a59',
-    borderColor: '#343a59',
-  },
-  uncheckedBox: {
-    backgroundColor: 'transparent',
-    borderColor: '#343a59',
-  },
-  checkMark: {
-    color: 'white',
+  emptyText: {
     fontSize: fontSize('body'),
-    backgroundColor: Platform.OS === 'ios' ? '#fff' : 'transparent',
-    fontWeight: 'bold',
-    marginTop: -1,
+    fontFamily: getFontFam() + 'Regular',
+    color: 'gray',
   },
 });
 

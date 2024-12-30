@@ -392,34 +392,6 @@ ${storeapp}`,
           />
         </ScrollView>
       </View>
-
-      {/* Modal */}
-      {/* <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isModalVisible}
-        onRequestClose={closeModal}>
-        <View style={styles.modal}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalText}>
-              {lang && lang.screen_info && lang.screen_info.list
-                ? lang.screen_info.list.already
-                : ''}
-            </Text>
-            <Text
-              style={[
-                styles.modalText,
-                {fontFamily: getFontFam() + 'Medium', marginBottom: 20},
-              ]}>
-              {refEmail}
-              Deleted Member
-            </Text>
-            <TouchableOpacity onPress={closeModal} style={styles.modalButton}>
-              <Text style={styles.modalButtonText}>OK</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>  */}
     </SafeAreaView>
   );
 };
