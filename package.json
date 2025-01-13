@@ -13,7 +13,6 @@
     "@expo/vector-icons": "^13.0.0",
     "@lowkey/react-native-gif": "^3.1.0",
     "@react-native-async-storage/async-storage": "^1.19.2",
-    "@react-native-camera-roll/camera-roll": "^7.9.0",
     "@react-native-clipboard/clipboard": "^1.12.1",
     "@react-native-firebase/app": "^18.7.3",
     "@react-native-firebase/crashlytics": "^18.7.3",

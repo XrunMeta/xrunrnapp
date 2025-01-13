@@ -37,6 +37,7 @@ const NotifyScreen = () => {
   const [loading, setLoading] = useState(true);
   const [isDelete, setIsDelete] = useState(false);
   const scrollViewRef = useRef();
+  const ws = useRef(null);
 
   useEffect(() => {
     // Get Language
@@ -51,25 +52,47 @@ const NotifyScreen = () => {
         const getData = JSON.parse(userData);
         setUserData(getData);
 
-        const response = await fetch(`${URL_API_NODEJS}/ap6000-01`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${authcode}`,
-          },
-          body: JSON.stringify({
-            member: getData?.member,
-            start: 0,
-          }),
-        });
-        const data = await response.json();
+        // Establish WebSocket Connection
+        ws.current = new WebSocket('ws://10.0.2.2:3006');
 
-        if (data && data.data.length > 0) {
-          const reversedNotify = data.data.reverse();
-          setNotify(reversedNotify);
-        }
+        ws.current.onopen = () => {
+          console.log('WebSocket connected');
 
-        setLoading(false);
+          // Kirim permintaan untuk `ap6000-01`
+          ws.current.send(
+            JSON.stringify({
+              type: 'ap6000-01',
+              payload: {
+                member: getData?.member,
+                start: 0,
+              },
+            }),
+          );
+        };
+
+        ws.current.onmessage = event => {
+          const data = JSON.parse(event.data);
+
+          if (data.type === 'ap6000-01-response') {
+            // Tangani response dari server
+            if (data.data && data.data.length > 0) {
+              const reversedNotify = data.data.reverse();
+              setNotify(reversedNotify);
+            }
+            setLoading(false);
+          } else {
+            console.log('Unhandled WebSocket message:', data);
+          }
+        };
+
+        ws.current.onerror = error => {
+          console.error('WebSocket Error:', error);
+          crashlytics().recordError(new Error(error));
+        };
+
+        ws.current.onclose = () => {
+          console.log('WebSocket disconnected');
+        };
       } catch (err) {
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
