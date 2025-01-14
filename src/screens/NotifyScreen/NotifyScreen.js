@@ -406,13 +406,20 @@ const NotifyScreen = () => {
               {notify.map((item, idx) => (
                 <View key={item.board}>
                   {(() => {
-                    var beforeDate =
-                      idx > 0 ? JSON.stringify(notify[idx - 1].datetime) : '';
+                    const beforeDate =
+                      idx > 0 ? new Date(notify[idx - 1].datetime) : null;
+                    const nowDate = new Date(item.datetime);
 
-                    var nowDate = item.datetime;
+                    let inThisDay = false;
 
-                    var inThisDay =
-                      `"${nowDate}"` === beforeDate ? true : false;
+                    if (beforeDate) {
+                      inThisDay =
+                        beforeDate.getFullYear() === nowDate.getFullYear() &&
+                        beforeDate.getMonth() === nowDate.getMonth() &&
+                        beforeDate.getDate() === nowDate.getDate();
+                    }
+
+                    console.log({nowDate, beforeDate});
 
                     if (!inThisDay) {
                       return (
