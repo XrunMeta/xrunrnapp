@@ -175,23 +175,19 @@ const NotifyScreen = () => {
       );
     } else {
       try {
-        const response = await fetch(`${URL_API_NODEJS}/ap6000-02`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${authcode}`,
-          },
-          body: JSON.stringify({
-            member: userData?.member,
-            title: text,
-          }),
-        });
-        const data = await response.json();
-
-        console.log(data.data[0].affectedRows);
-
-        if (data.data[0].affectedRows == 1) {
-          refreshChatView();
+        // Send message via WebSocket
+        if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+          const message = {
+            type: 'ap6000-02',
+            payload: {
+              member: userData?.member,
+              title: text,
+            },
+          };
+          ws.current.send(JSON.stringify(message));
+          console.log('Chat message sent:', message);
+        } else {
+          console.error('WebSocket is not open');
         }
       } catch (error) {
         console.error('Error sending chat:', error);
