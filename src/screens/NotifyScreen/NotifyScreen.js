@@ -230,31 +230,23 @@ const NotifyScreen = () => {
   // Delete Chat
   const deleteChat = async data => {
     try {
-      const response = await fetch(`${URL_API_NODEJS}/ap6000-03`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${authcode}`,
-        },
-        body: JSON.stringify({
-          member: userData?.member,
-          board: data?.board,
-        }),
-      });
-      const jsonData = await response.json();
-
-      // Remove clicked Chat
-      setNotify(prevNotify =>
-        prevNotify.filter(item => item.board !== data.board),
-      );
-
-      if (jsonData.data[0].count == 1) {
-        console.log('Berhasil apus coy -> ' + data.board);
+      // Delete message via WebSocket
+      if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+        const message = {
+          type: 'ap6000-03',
+          payload: {
+            isBroadcast: false,
+            member: userData?.member,
+            board: data?.board,
+          },
+        };
+        ws.current.send(JSON.stringify(message));
+        console.log('Chat message deleted:', message);
       } else {
-        console.log('Gagal apus coy -> ' + data.board);
+        console.error('WebSocket is not open');
       }
     } catch (error) {
-      console.error('Error deleted chat:', error);
+      console.error('Error deleting chat:', error);
       crashlytics().recordError(new Error(error));
       crashlytics().log(error);
     }
