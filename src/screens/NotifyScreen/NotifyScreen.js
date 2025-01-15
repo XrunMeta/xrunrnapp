@@ -65,6 +65,7 @@ const NotifyScreen = () => {
             JSON.stringify({
               type: 'ap6000-01',
               payload: {
+                isBroadcast: false,
                 member: getData?.member,
                 start: 0,
               },
