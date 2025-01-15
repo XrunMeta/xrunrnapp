@@ -269,24 +269,18 @@ const NotifyScreen = () => {
             onPress: async () => {
               setIsDelete(false);
 
-              const response = await fetch(
-                `${URL_API_NODEJS}/ap6000-04delete`,
-                {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${authcode}`,
-                  },
-                  body: JSON.stringify({
+              // Delete all message via WebSocket
+              if (ws.current && ws.current.readyState === WebSocket.OPEN) {
+                const message = {
+                  type: 'ap6000-04delete',
+                  payload: {
                     member: userData?.member,
-                  }),
-                },
-              );
-              const jsonData = await response.json();
-
-              if (jsonData.data[0].count > 0) {
-                // Remove All Inquiry Chat
-                refreshChatView();
+                  },
+                };
+                ws.current.send(JSON.stringify(message));
+                console.log('All chat message deleted:', message);
+              } else {
+                console.error('WebSocket is not open');
               }
             },
           },
