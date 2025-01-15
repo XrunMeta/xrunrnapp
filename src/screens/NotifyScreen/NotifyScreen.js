@@ -200,33 +200,6 @@ const NotifyScreen = () => {
     }
   };
 
-  // Fungsi untuk memperbarui tampilan chat
-  const refreshChatView = async () => {
-    try {
-      const response = await fetch(`${URL_API_NODEJS}/ap6000-01`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${authcode}`,
-        },
-        body: JSON.stringify({
-          member: userData?.member,
-          start: 0,
-        }),
-      });
-      const data = await response.json();
-
-      if (data && data.data.length > 0) {
-        const reversedNotify = data.data.reverse();
-        setNotify(reversedNotify);
-      }
-    } catch (err) {
-      console.error('Error retrieving chat data:', err);
-      crashlytics().recordError(new Error(err));
-      crashlytics().log(err);
-    }
-  };
-
   // Delete Chat
   const deleteChat = async data => {
     try {
