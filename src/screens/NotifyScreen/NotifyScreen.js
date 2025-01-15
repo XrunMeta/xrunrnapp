@@ -53,7 +53,9 @@ const NotifyScreen = () => {
         setUserData(getData);
 
         // Establish WebSocket Connection
-        ws.current = new WebSocket('ws://10.0.2.2:3006');
+        ws.current = new WebSocket(
+          `ws://10.0.2.2:3006/?clientId=${getData?.member}`,
+        );
 
         ws.current.onopen = () => {
           console.log('WebSocket connected');
@@ -418,8 +420,6 @@ const NotifyScreen = () => {
                         beforeDate.getMonth() === nowDate.getMonth() &&
                         beforeDate.getDate() === nowDate.getDate();
                     }
-
-                    console.log({nowDate, beforeDate});
 
                     if (!inThisDay) {
                       return (
