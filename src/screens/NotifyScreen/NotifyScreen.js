@@ -18,13 +18,7 @@ import {
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-  URL_API_NODEJS,
-  getLanguage2,
-  getFontFam,
-  fontSize,
-  authcode,
-} from '../../../utils';
+import {getLanguage2, getFontFam, fontSize} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import WebSocketInstance from '../../../utils/websocketUtils';
 
@@ -41,6 +35,7 @@ const NotifyScreen = () => {
   const ws = useRef(null);
 
   useEffect(() => {
+    // Realtime chat listener
     WebSocketInstance.addListener('ap6000-01-response', data => {
       if (data.type === 'ap6000-01-response') {
         // Handle response from server
@@ -72,6 +67,7 @@ const NotifyScreen = () => {
         const getData = JSON.parse(userData);
         setUserData(getData);
 
+        // Get chat list
         WebSocketInstance.sendMessage('ap6000-01', {
           member: getData?.member,
           start: 0,
@@ -159,20 +155,11 @@ const NotifyScreen = () => {
     } else {
       try {
         // Send message via WebSocket
-        if (ws.current && ws.current.readyState === WebSocket.OPEN) {
-          const message = {
-            type: 'ap6000-02',
-            payload: {
-              isBroadcast: false,
-              member: userData?.member,
-              title: text,
-            },
-          };
-          ws.current.send(JSON.stringify(message));
-          console.log('Chat message sent:', message);
-        } else {
-          console.error('WebSocket is not open');
-        }
+        WebSocketInstance.sendMessage('ap6000-02', {
+          isBroadcast: false,
+          member: userData?.member,
+          title: text,
+        });
       } catch (error) {
         console.error('Error sending chat:', error);
         crashlytics().recordError(new Error(error));
@@ -185,20 +172,11 @@ const NotifyScreen = () => {
   const deleteChat = async data => {
     try {
       // Delete message via WebSocket
-      if (ws.current && ws.current.readyState === WebSocket.OPEN) {
-        const message = {
-          type: 'ap6000-03',
-          payload: {
-            isBroadcast: false,
-            member: userData?.member,
-            board: data?.board,
-          },
-        };
-        ws.current.send(JSON.stringify(message));
-        console.log('Chat message deleted:', message);
-      } else {
-        console.error('WebSocket is not open');
-      }
+      WebSocketInstance.sendMessage('ap6000-03', {
+        isBroadcast: false,
+        member: userData?.member,
+        board: data?.board,
+      });
     } catch (error) {
       console.error('Error deleting chat:', error);
       crashlytics().recordError(new Error(error));
@@ -224,18 +202,9 @@ const NotifyScreen = () => {
               setIsDelete(false);
 
               // Delete all message via WebSocket
-              if (ws.current && ws.current.readyState === WebSocket.OPEN) {
-                const message = {
-                  type: 'ap6000-04delete',
-                  payload: {
-                    member: userData?.member,
-                  },
-                };
-                ws.current.send(JSON.stringify(message));
-                console.log('All chat message deleted:', message);
-              } else {
-                console.error('WebSocket is not open');
-              }
+              WebSocketInstance.sendMessage('ap6000-04delete', {
+                member: userData?.member,
+              });
             },
           },
         ],
