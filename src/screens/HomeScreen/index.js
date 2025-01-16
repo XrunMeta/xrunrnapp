@@ -34,6 +34,7 @@ import {
   secretParams,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
+import WebSocketInstance from '../../../utils/websocketUtils';
 
 export default function Home({route}) {
   const [lang, setLang] = useState({});
@@ -129,6 +130,10 @@ export default function Home({route}) {
           `${userEmail} - User Entered Mainpage`,
           `User Entered Mainpage`,
         );
+
+        // Connect Websocket
+        await WebSocketInstance.connect(responseUserData?.member);
+        console.log('WebSocket connected');
 
         const encryptedSession = await sha256Encrypt(
           responseUserData?.extrastr,
@@ -277,7 +282,7 @@ export default function Home({route}) {
             // goToWalletsite();
           } else if (Platform.OS === 'ios' && showWallet) {
             // goToWalletsite();
-			navigation.dispatch(CommonActions.navigate('WalletHome'));
+            navigation.dispatch(CommonActions.navigate('WalletHome'));
           } else if (!showWallet) {
             Linking.openURL('https://www.xrun.run/');
           } else {
