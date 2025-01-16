@@ -56,23 +56,35 @@ const WalletScreen = ({navigation, route}) => {
 
   // Realtime Wallet Listener
   useEffect(() => {
+    // Listener 1: Handle wallet data updates
     WebSocketInstance.addListener('app4000-01-rev-01-response', data => {
       if (data.type === 'app4000-01-rev-01-response') {
-        // Handle response from server
         if (data.data) {
-          setCardsData(data.data);
+          setCardsData(data.data); // Update wallet data
         }
         setIsLoading(false);
         console.log('Wallet data has been loaded');
-      } else {
-        console.log('Unhandled WebSocket message');
       }
     });
 
+    // Listener 2: Handle "show other chains" response
+    WebSocketInstance.addListener('showOtherChains-response', data => {
+      if (data.type === 'showOtherChains-response') {
+        if (data.data) {
+          // Update other chains data
+          const status = data.data[0].status;
+          setStatusOtherChain(status.toLowerCase());
+        }
+        console.log('Other chains data has been loaded');
+      }
+    });
+
+    // Cleanup listeners on component unmount
     return () => {
       WebSocketInstance.removeListener('app4000-01-rev-01-response');
+      WebSocketInstance.removeListener('showOtherChains-response');
     };
-  }, []);
+  }, []); // Empty dependency array ensures this runs once on mount
 
   useEffect(() => {
     // Get Language Data
@@ -166,13 +178,9 @@ const WalletScreen = ({navigation, route}) => {
 
   // Get status other chain, if off just show ETH network, if on show ALL network
   const requestStatusOtherChain = async member => {
-    const body = {
+    WebSocketInstance.sendMessage('showOtherChains', {
       member,
-    };
-
-    const result = await gatewayNodeJS('showOtherChains', 'POST', body);
-    const status = result.data[0].status;
-    setStatusOtherChain(status.toLowerCase());
+    });
   };
 
   useEffect(() => {
