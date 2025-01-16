@@ -27,6 +27,7 @@ import {
 } from '../../../utils';
 import ShowQRWallet from '../../components/ShowQRWallet';
 import crashlytics from '@react-native-firebase/crashlytics';
+import WebSocketInstance from '../../../utils/websocketUtils';
 
 const WalletScreen = ({navigation, route}) => {
   const [lang, setLang] = useState('');
@@ -53,6 +54,26 @@ const WalletScreen = ({navigation, route}) => {
   const [isPopupRetry, setIsPopupRetry] = useState(false);
   const [countRetryData, setCountRetryData] = useState(0);
 
+  // Realtime Wallet Listener
+  useEffect(() => {
+    WebSocketInstance.addListener('app4000-01-rev-01-response', data => {
+      if (data.type === 'app4000-01-rev-01-response') {
+        // Handle response from server
+        if (data.data) {
+          setCardsData(data.data);
+        }
+        setIsLoading(false);
+        console.log('Wallet data has been loaded');
+      } else {
+        console.log('Unhandled WebSocket message');
+      }
+    });
+
+    return () => {
+      WebSocketInstance.removeListener('app4000-01-rev-01-response');
+    };
+  }, []);
+
   useEffect(() => {
     // Get Language Data
     const fetchData = async () => {
@@ -69,7 +90,6 @@ const WalletScreen = ({navigation, route}) => {
         navigation.replace('Home');
       }
     };
-
     fetchData();
 
     const getMember = async () => {
@@ -91,7 +111,6 @@ const WalletScreen = ({navigation, route}) => {
         navigation.replace('Home');
       }
     };
-
     getMember();
   }, []);
 
@@ -124,17 +143,10 @@ const WalletScreen = ({navigation, route}) => {
       if (member) {
         // Get data wallet
         console.log('Load data wallet....');
-
-        const body = {
+        WebSocketInstance.sendMessage('app4000-01-rev-01', {
           member,
           daysbefore: 7,
-        };
-
-        const result = await gatewayNodeJS('app4000-01-rev-01', 'POST', body);
-
-        setCardsData(result.data);
-        setIsLoading(false);
-        console.log('Wallet data has been loaded');
+        });
 
         saveLogsDB(
           '5000401',
