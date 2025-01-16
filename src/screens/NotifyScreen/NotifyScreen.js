@@ -32,10 +32,9 @@ const NotifyScreen = () => {
   const [loading, setLoading] = useState(true);
   const [isDelete, setIsDelete] = useState(false);
   const scrollViewRef = useRef();
-  const ws = useRef(null);
 
+  // Realtime chat listener
   useEffect(() => {
-    // Realtime chat listener
     WebSocketInstance.addListener('ap6000-01-response', data => {
       if (data.type === 'ap6000-01-response') {
         // Handle response from server
