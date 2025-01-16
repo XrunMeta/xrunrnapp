@@ -8,9 +8,6 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableOpacity,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import CustomInput from '../../components/CustomInput/';
@@ -26,7 +23,6 @@ import {
   authcode,
   sha256Encrypt,
   saveLogsDB,
-  BottomComponentFixer,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import ButtonNext from '../../components/ButtonNext/ButtonNext';
@@ -298,27 +294,27 @@ const SignInScreen = () => {
             isPassword={true}
           />
 
-    			<IOSButtonFixer count={5} />
+          <IOSButtonFixer count={5} />
 
-            <ButtonNext
-              onClick={onSignIn}
-              isDisabled={!isDisable && email == '' && password == ''}>
-              <View>
-                <Text style={styles.normalText}>
+          <ButtonNext
+            onClick={onSignIn}
+            isDisabled={!isDisable && email == '' && password == ''}>
+            <View>
+              <Text style={styles.normalText}>
+                {lang && lang.screen_signin && lang.screen_signin.authcode
+                  ? lang.screen_signin.authcode.label + ' '
+                  : ''}
+              </Text>
+              <Pressable onPress={onSMSAuth} style={styles.resetPassword}>
+                <Text style={styles.emailAuth}>
                   {lang && lang.screen_signin && lang.screen_signin.authcode
-                    ? lang.screen_signin.authcode.label + ' '
+                    ? lang.screen_signin.authcode.link
                     : ''}
                 </Text>
-                <Pressable onPress={onSMSAuth} style={styles.resetPassword}>
-                  <Text style={styles.emailAuth}>
-                    {lang && lang.screen_signin && lang.screen_signin.authcode
-                      ? lang.screen_signin.authcode.link
-                      : ''}
-                  </Text>
-                </Pressable>
-              </View>
-            </ButtonNext>
-		  {/* <TouchableOpacity onPress={onSignIn}>
+              </Pressable>
+            </View>
+          </ButtonNext>
+          {/* <TouchableOpacity onPress={onSignIn}>
 			<Text>Bahlul</Text>
 		  </TouchableOpacity> */}
         </ScrollView>

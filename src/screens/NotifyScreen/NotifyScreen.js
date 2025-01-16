@@ -26,6 +26,7 @@ import {
   authcode,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
+import WebSocketInstance from '../../../utils/websocketUtils';
 
 const NotifyScreen = () => {
   const [lang, setLang] = useState({});
@@ -40,6 +41,25 @@ const NotifyScreen = () => {
   const ws = useRef(null);
 
   useEffect(() => {
+    WebSocketInstance.addListener('ap6000-01-response', data => {
+      if (data.type === 'ap6000-01-response') {
+        // Handle response from server
+        if (data.data && data.data.length > 0) {
+          const reversedNotify = data.data.reverse();
+          setNotify(reversedNotify);
+        }
+        setLoading(false);
+      } else {
+        console.log('Unhandled WebSocket message');
+      }
+    });
+
+    return () => {
+      WebSocketInstance.removeListener('ap6000-01-response');
+    };
+  }, []);
+
+  useEffect(() => {
     // Get Language
     const fetchData = async () => {
       try {
@@ -52,49 +72,10 @@ const NotifyScreen = () => {
         const getData = JSON.parse(userData);
         setUserData(getData);
 
-        // Establish WebSocket Connection
-        ws.current = new WebSocket(
-          `ws://10.0.2.2:3006/?clientId=${getData?.member}`,
-        );
-
-        ws.current.onopen = () => {
-          console.log('WebSocket connected');
-
-          // Kirim permintaan untuk `ap6000-01`
-          ws.current.send(
-            JSON.stringify({
-              type: 'ap6000-01',
-              payload: {
-                member: getData?.member,
-                start: 0,
-              },
-            }),
-          );
-        };
-
-        ws.current.onmessage = event => {
-          const data = JSON.parse(event.data);
-
-          if (data.type === 'ap6000-01-response') {
-            // Tangani response dari server
-            if (data.data && data.data.length > 0) {
-              const reversedNotify = data.data.reverse();
-              setNotify(reversedNotify);
-            }
-            setLoading(false);
-          } else {
-            console.log('Unhandled WebSocket message:', data);
-          }
-        };
-
-        ws.current.onerror = error => {
-          console.error('WebSocket Error:', error);
-          crashlytics().recordError(new Error(error));
-        };
-
-        ws.current.onclose = () => {
-          console.log('WebSocket disconnected');
-        };
+        WebSocketInstance.sendMessage('ap6000-01', {
+          member: getData?.member,
+          start: 0,
+        });
       } catch (err) {
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
