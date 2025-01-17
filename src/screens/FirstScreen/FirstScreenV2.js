@@ -6,6 +6,8 @@ import {
   Linking,
   Dimensions,
   SafeAreaView,
+  Platform,
+  PermissionsAndroid,
 } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import React, {useState, useEffect} from 'react';
@@ -21,13 +23,42 @@ const FirstScreenV2 = ({navigation}) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [currLanguage, setCurrLanguage] = useState('id');
 
+  // const requestNotificationPermission = async () => {
+  //   if (Platform.OS === 'android' && Platform.Version >= 33) {
+  //     const granted = await PermissionsAndroid.request(
+  //       PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+  //       {
+  //         title: 'Notification Permission',
+  //         message: 'This app needs access to show notifications.',
+  //         buttonNeutral: 'Ask Me Later',
+  //         buttonNegative: 'Cancel',
+  //         buttonPositive: 'OK',
+  //       },
+  //     );
+
+  //     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+  //       console.log('Notification permission granted');
+  //     } else {
+  //       console.log('Notification permission denied');
+  //     }
+  //   }
+  // };
+
   useEffect(() => {
-    saveLogsDB(
-      '5000010',
-      0,
-      'User open app',
-      'User open app and see first screen',
-    );
+    const initializeApp = async () => {
+      // Simpan log pengguna membuka aplikasi
+      saveLogsDB(
+        '5000010',
+        0,
+        'User open app',
+        'User open app and see first screen',
+      );
+
+      // Minta izin notifikasi
+      // await requestNotificationPermission();
+    };
+
+    initializeApp();
   }, []);
 
   const setCurrentLanguage = async language => {

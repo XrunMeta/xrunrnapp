@@ -483,6 +483,7 @@ const WalletScreen = ({navigation, route}) => {
       </View>
 
       <View style={{flex: 1}}>
+        {/* Card */}
         <View style={styles.containerCard}>
           <ScrollView style={{flex: 1}}>
             <View style={styles.containerCard}>
@@ -506,6 +507,7 @@ const WalletScreen = ({navigation, route}) => {
           </ScrollView>
         </View>
 
+        {/* Table */}
         <View style={styles.containerTable}>
           <TableWalletCard
             member={member}
