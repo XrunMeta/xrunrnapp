@@ -822,95 +822,12 @@ const TableWalletCard = ({
         setLastPosition(0);
         setBtnSeeMore(true);
 
-        switch (key) {
-          case 'totalHistory':
-            // Get total history of wallet
-            WebSocketInstance.sendMessage(act[key], {
-              member,
-              currency: currentCurrency,
-              daysbefore: currentDaysTransactional,
-              startwith: 0,
-            });
-
-            // const totalHistory = await listTransactionsHistory(
-            //   key,
-            //   act[key],
-            //   member,
-            //   currentCurrency,
-            //   currentDaysTransactional,
-            // );
-
-            // setTotalHistory(totalHistory);
-            // checkLengthHistoryDataTransaction(totalHistory.length);
-            break;
-
-          case 'transferHistory':
-            // Get withdraw history of wallet
-            WebSocketInstance.sendMessage(act[key], {
-              member,
-              currency: currentCurrency,
-              daysbefore: currentDaysTransactional,
-              startwith: 0,
-            });
-
-            // const transferHistory = await listTransactionsHistory(
-            //   key,
-            //   act[key],
-            //   member,
-            //   currentCurrency,
-            //   currentDaysTransactional,
-            // );
-
-            // setTransferHistory(transferHistory);
-            // checkLengthHistoryDataTransaction(transferHistory.length);
-            break;
-
-          case 'receivedDetails':
-            // Get filtered tx coin paging of wallet
-            WebSocketInstance.sendMessage(act[key], {
-              member,
-              currency: currentCurrency,
-              daysbefore: currentDaysTransactional,
-              startwith: 0,
-            });
-
-            // const receivedDetails = await listTransactionsHistory(
-            //   key,
-            //   act[key],
-            //   member,
-            //   currentCurrency,
-            //   currentDaysTransactional,
-            // );
-
-            // checkLengthHistoryDataTransaction(receivedDetails.length);
-            // setReceivedDetails(receivedDetails);
-            break;
-
-          case 'transitionHistory':
-            // Get converted coin history of wallet
-            WebSocketInstance.sendMessage(act[key], {
-              member,
-              currency: currentCurrency,
-              daysbefore: currentDaysTransactional,
-              startwith: 0,
-            });
-
-            // const transitionHistory = await listTransactionsHistory(
-            //   key,
-            //   act[key],
-            //   member,
-            //   currentCurrency,
-            //   currentDaysTransactional,
-            // );
-
-            // checkLengthHistoryDataTransaction(transitionHistory.length);
-            // setTransitionHistory(transitionHistory);
-            break;
-
-          default:
-            console.log(`Failed get transaction ${key}`);
-            break;
-        }
+        WebSocketInstance.sendMessage(act[key], {
+          member,
+          currency: currentCurrency,
+          daysbefore: currentDaysTransactional,
+          startwith: 0,
+        });
       } catch (error) {
         console.log(`Failed get transaction ${key}: ${error}`);
         crashlytics().recordError(new Error(error));
