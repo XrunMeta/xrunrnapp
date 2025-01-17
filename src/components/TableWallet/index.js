@@ -20,6 +20,7 @@ import {
   dateFormatter,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
+import WebSocketInstance from '../../../utils/websocketUtils';
 
 // Custom TabBar
 const renderTabBar = props => (
@@ -569,6 +570,55 @@ const TableWalletCard = ({
   const [receivedDetails, setReceivedDetails] = useState([]);
   const [transitionHistory, setTransitionHistory] = useState([]);
 
+  const listeners = [
+    {
+      type: 'app4200-05-response',
+      callback: data => {
+        if (data.data) {
+          setTotalHistory(data.data);
+          checkLengthHistoryDataTransaction(data.data.length);
+        }
+      },
+    },
+    {
+      type: 'app4200-06-response',
+      callback: data => {
+        if (data.data) {
+          setTransferHistory(data.data);
+          checkLengthHistoryDataTransaction(data.data.length);
+        }
+      },
+    },
+    {
+      type: 'app4200-01-response',
+      callback: data => {
+        if (data.data) {
+          setReceivedDetails(data.data);
+          checkLengthHistoryDataTransaction(data.data.length);
+        }
+      },
+    },
+    {
+      type: 'app4200-03-response',
+      callback: data => {
+        if (data.data) {
+          setTransitionHistory(data.data);
+          checkLengthHistoryDataTransaction(data.data.length);
+        }
+      },
+    },
+  ];
+
+  useEffect(() => {
+    listeners.forEach(({type, callback}) =>
+      WebSocketInstance.addListener(type, callback),
+    );
+
+    return () => {
+      listeners.forEach(({type}) => WebSocketInstance.removeListener(type));
+    };
+  }, []);
+
   // Update automatic list transaction after transfer/convert
   useEffect(() => {
     if (route.params !== undefined) {
@@ -774,55 +824,87 @@ const TableWalletCard = ({
 
         switch (key) {
           case 'totalHistory':
-            const totalHistory = await listTransactionsHistory(
-              key,
-              act[key],
+            // Get total history of wallet
+            WebSocketInstance.sendMessage(act[key], {
               member,
-              currentCurrency,
-              currentDaysTransactional,
-            );
+              currency: currentCurrency,
+              daysbefore: currentDaysTransactional,
+              startwith: 0,
+            });
 
-            setTotalHistory(totalHistory);
-            checkLengthHistoryDataTransaction(totalHistory.length);
+            // const totalHistory = await listTransactionsHistory(
+            //   key,
+            //   act[key],
+            //   member,
+            //   currentCurrency,
+            //   currentDaysTransactional,
+            // );
+
+            // setTotalHistory(totalHistory);
+            // checkLengthHistoryDataTransaction(totalHistory.length);
             break;
 
           case 'transferHistory':
-            const transferHistory = await listTransactionsHistory(
-              key,
-              act[key],
+            // Get withdraw history of wallet
+            WebSocketInstance.sendMessage(act[key], {
               member,
-              currentCurrency,
-              currentDaysTransactional,
-            );
+              currency: currentCurrency,
+              daysbefore: currentDaysTransactional,
+              startwith: 0,
+            });
 
-            setTransferHistory(transferHistory);
-            checkLengthHistoryDataTransaction(transferHistory.length);
+            // const transferHistory = await listTransactionsHistory(
+            //   key,
+            //   act[key],
+            //   member,
+            //   currentCurrency,
+            //   currentDaysTransactional,
+            // );
+
+            // setTransferHistory(transferHistory);
+            // checkLengthHistoryDataTransaction(transferHistory.length);
             break;
 
           case 'receivedDetails':
-            const receivedDetails = await listTransactionsHistory(
-              key,
-              act[key],
+            // Get filtered tx coin paging of wallet
+            WebSocketInstance.sendMessage(act[key], {
               member,
-              currentCurrency,
-              currentDaysTransactional,
-            );
+              currency: currentCurrency,
+              daysbefore: currentDaysTransactional,
+              startwith: 0,
+            });
 
-            checkLengthHistoryDataTransaction(receivedDetails.length);
-            setReceivedDetails(receivedDetails);
+            // const receivedDetails = await listTransactionsHistory(
+            //   key,
+            //   act[key],
+            //   member,
+            //   currentCurrency,
+            //   currentDaysTransactional,
+            // );
+
+            // checkLengthHistoryDataTransaction(receivedDetails.length);
+            // setReceivedDetails(receivedDetails);
             break;
 
           case 'transitionHistory':
-            const transitionHistory = await listTransactionsHistory(
-              key,
-              act[key],
+            // Get converted coin history of wallet
+            WebSocketInstance.sendMessage(act[key], {
               member,
-              currentCurrency,
-              currentDaysTransactional,
-            );
+              currency: currentCurrency,
+              daysbefore: currentDaysTransactional,
+              startwith: 0,
+            });
 
-            checkLengthHistoryDataTransaction(transitionHistory.length);
-            setTransitionHistory(transitionHistory);
+            // const transitionHistory = await listTransactionsHistory(
+            //   key,
+            //   act[key],
+            //   member,
+            //   currentCurrency,
+            //   currentDaysTransactional,
+            // );
+
+            // checkLengthHistoryDataTransaction(transitionHistory.length);
+            // setTransitionHistory(transitionHistory);
             break;
 
           default:
