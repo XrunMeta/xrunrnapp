@@ -24,6 +24,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import crashlytics from '@react-native-firebase/crashlytics';
 import FastImage from 'react-native-fast-image';
+import WebSocketInstance from '../../../utils/websocketUtils';
 
 const androidAdmobAdUnit = process.env.ADMOB_ADUNIT_ANDROID;
 const iosAdmobAdUnit = process.env.ADMOB_ADUNIT_IOS;
@@ -68,6 +69,7 @@ const ShowAdScreen = ({route}) => {
   const [isAdmobLoading, setIsAdmobLoading] = useState(false);
   const [isIronLoading, setIsIronLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false); // Untuk loading state
   const navigation = useNavigation();
 
   const handleOKPress = () => {
@@ -216,40 +218,49 @@ const ShowAdScreen = ({route}) => {
     initAds();
   }, []);
 
+  // Realtime response listener
   useEffect(() => {
-    if (adCompleted) {
-      const coinAcquiring = async () => {
-        try {
-          const response = await fetch(`${URL_API_NODEJS}/app3100-01`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${authcode}`,
-            },
-            body: JSON.stringify({
-              advertisement,
-              coin,
-              member,
-            }),
-          });
+    if (lang?.screen_showad) {
+      // Pastikan lang sudah dimuat sebelum menambahkan listener
+      WebSocketInstance.addListener('app3100-01-response', data => {
+        if (data.type === 'app3100-01-response') {
+          setIsLoading(false); // Matikan loading animation
 
-          const data = await response.json();
-
-          console.log({data});
+          if (data && parseInt(data.data[0].count) === 1) {
+            setModalText(lang?.screen_showad?.success); // Tampilkan teks sukses
+          } else {
+            setModalText(lang?.screen_showad?.failed); // Tampilkan teks gagal
+          }
 
           console.log(
             'Coin acquisition response:',
             JSON.stringify(data.data[0]),
           );
-
-          if (data && parseInt(data.data[0].count) === 1) {
-            setModalText(lang?.screen_showad?.success);
-          } else {
-            setModalText(lang?.screen_showad?.failed);
-          }
-
           setModalVisible(true);
-          setModalTextOK(lang?.screen_showad?.textOK);
+          setModalTextOK(lang?.screen_showad?.textOK); // Pastikan teks OK ditampilkan
+        } else {
+          console.log('Unhandled WebSocket message');
+        }
+      });
+
+      return () => {
+        WebSocketInstance.removeListener('app3100-01-response');
+      };
+    }
+  }, [lang]); // Tambahkan lang sebagai dependency
+
+  useEffect(() => {
+    if (adCompleted) {
+      const coinAcquiring = async () => {
+        setIsProcessing(true); // Tampilkan animasi loading
+
+        try {
+          // Coin acquiring
+          WebSocketInstance.sendMessage('app3100-01', {
+            advertisement,
+            coin,
+            member,
+          });
         } catch (err) {
           crashlytics().recordError(new Error(err));
           crashlytics().log(err);
@@ -278,13 +289,49 @@ const ShowAdScreen = ({route}) => {
     }
   }, [interstitialAd]);
 
+  // return (
+  //   <View
+  //     style={[
+  //       styles.root,
+  //       {backgroundColor: modalVisible ? '#000000A5' : 'white'},
+  //     ]}>
+  //     {isLoading && (
+  //       <View style={{alignItems: 'center'}}>
+  //         <FastImage
+  //           style={{width: 150, height: 150}}
+  //           source={{
+  //             uri: 'https://www.xrun.run/assets/video/gif_loader.gif',
+  //             priority: FastImage.priority.high,
+  //           }}
+  //         />
+  //         <Text
+  //           style={{
+  //             fontFamily: getFontFam() + 'Regular',
+  //             fontSize: fontSize('body'),
+  //             color: 'grey',
+  //             textAlign: 'center',
+  //           }}>
+  //           Loading
+  //         </Text>
+  //       </View>
+  //     )}
+
+  //     <CustomModal
+  //       visible={modalVisible}
+  //       text={modalText}
+  //       onOK={handleOKPress}
+  //       textOK={modalTextOK}
+  //     />
+  //   </View>
+  // );
+
   return (
     <View
       style={[
         styles.root,
         {backgroundColor: modalVisible ? '#000000A5' : 'white'},
       ]}>
-      {isLoading && (
+      {(isLoading || isProcessing) && ( // Tampilkan animasi loading
         <View style={{alignItems: 'center'}}>
           <FastImage
             style={{width: 150, height: 150}}
