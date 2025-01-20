@@ -577,6 +577,7 @@ const TableWalletCard = ({
         if (data.data) {
           setTotalHistory(data.data);
           checkLengthHistoryDataTransaction(data.data.length);
+          setTotalHistoryLength(data.data.length);
         }
       },
     },
@@ -778,16 +779,15 @@ const TableWalletCard = ({
   // Call API for get total history, only run once
   const defaultListTransactionsHistory = useCallback(async () => {
     try {
-      const totalHistory = await listTransactionsHistory(
-        'totalHistory',
-        act.totalHistory,
+      WebSocketInstance.sendMessage(act.totalHistory, {
         member,
-        currentCurrency,
-        currentDaysTransactional,
-      );
+        currency: currentCurrency,
+        daysbefore: currentDaysTransactional,
+        startwith: 0,
+      });
       console.log('Run defaultListTransactionsHistory() function once');
 
-      setTotalHistoryLength(totalHistory.length);
+      // setTotalHistoryLength(totalHistory.length);
     } catch (error) {
       console.log(`Failed get default list transactions history: ${error}`);
       crashlytics().recordError(new Error(error));
