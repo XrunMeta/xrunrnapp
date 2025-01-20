@@ -22,7 +22,6 @@ import {
   getFontFam,
   fontSize,
   refreshBalances,
-  gatewayNodeJS,
   saveLogsDB,
 } from '../../../utils';
 import ShowQRWallet from '../../components/ShowQRWallet';
