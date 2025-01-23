@@ -49,6 +49,9 @@ const AdvertiseScreen = () => {
     {
       key: 'second',
     },
+    {
+      key: 'third',
+    },
   ]);
   const layout = useWindowDimensions();
   const [selectedFilter, setSelectedFilter] = useState({});
@@ -810,9 +813,42 @@ const AdvertiseScreen = () => {
     </View>
   );
 
+  const itemShop = () => (
+    <View
+      style={{
+        flex: 1,
+      }}>
+      {completedAdsLoading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#343a59" />
+          <Text style={[styles.normalText, {color: 'grey'}]}>
+            {lang && lang.screen_advertise && lang.screen_advertise.loading
+              ? lang.screen_advertise.loading
+              : ''}
+          </Text>
+        </View>
+      ) : completedAds.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>
+            {lang && lang.screen_advertise && lang.screen_advertise.nodata
+              ? lang.screen_advertise.nodata
+              : ''}
+          </Text>
+        </View>
+      ) : (
+        <FlatList
+          data={completedAds}
+          keyExtractor={completedKeyExtractor}
+          renderItem={completedRenderItem}
+        />
+      )}
+    </View>
+  );
+
   const renderScene = SceneMap({
     first: () => storageRoute(isDelete, selectedAds),
     second: completedRoute,
+    third: itemShop,
   });
 
   const renderTabBar = props => (
@@ -834,9 +870,13 @@ const AdvertiseScreen = () => {
             ? lang && lang.screen_advertise && lang.screen_advertise.tab1
               ? lang.screen_advertise.tab1
               : 'Storage'
-            : lang && lang.screen_advertise && lang.screen_advertise.tab2
-            ? lang.screen_advertise.tab2
-            : 'Completed'}
+            : route.key === 'second'
+            ? lang && lang.screen_advertise && lang.screen_advertise.tab2
+              ? lang.screen_advertise.tab2
+              : 'Completed'
+            : route.key === 'third'
+            ? 'Item Shop'
+            : ''}
         </Text>
       )}
     />
