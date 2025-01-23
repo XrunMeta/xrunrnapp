@@ -867,13 +867,9 @@ const AdvertiseScreen = () => {
             textAlign: 'center',
           }}>
           {route.key === 'first'
-            ? lang && lang.screen_advertise && lang.screen_advertise.tab1
-              ? lang.screen_advertise.tab1
-              : 'Storage'
+            ? 'Saved'
             : route.key === 'second'
-            ? lang && lang.screen_advertise && lang.screen_advertise.tab2
-              ? lang.screen_advertise.tab2
-              : 'Completed'
+            ? 'Expired'
             : route.key === 'third'
             ? 'Item Shop'
             : ''}
@@ -915,11 +911,7 @@ const AdvertiseScreen = () => {
           )}
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>
-            {lang && lang.screen_advertise && lang.screen_advertise.title
-              ? lang.screen_advertise.title
-              : ''}
-          </Text>
+          <Text style={styles.title}>Item Shop</Text>
           {index == 0 ? (
             <TouchableOpacity
               style={{
