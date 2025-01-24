@@ -10,6 +10,9 @@ import {
   useWindowDimensions,
   FlatList,
   SafeAreaView,
+  Modal,
+  TouchableWithoutFeedback,
+  ScrollView,
 } from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
@@ -24,7 +27,6 @@ import {
   dateFormatter,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
-import RadioGroup from 'react-native-radio-buttons-group';
 
 const ShopScreen = () => {
   const [lang, setLang] = useState({});
@@ -33,9 +35,12 @@ const ShopScreen = () => {
   const [userData, setUserData] = useState({});
   const [completedAds, setCompletedAds] = useState([]);
   const [completedAdsLoading, setCompletedAdsLoading] = useState(true);
-  const [storageAds, setStorageAds] = useState([]);
-  const [storageAdsLoading, setStorageAdsLoading] = useState(true);
+  const [savedItems, setSavedItems] = useState([]);
+  const [savedItemsLoading, setSavedItemsLoading] = useState(true);
   const [index, setIndex] = useState(0);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const layout = useWindowDimensions();
   const [routes] = useState([
     {
       key: 'first',
@@ -47,9 +52,6 @@ const ShopScreen = () => {
       key: 'third',
     },
   ]);
-  const layout = useWindowDimensions();
-  // Select floating radio button
-  const [selectedId, setSelectedId] = useState('1');
 
   // Back
   const handleBack = () => {
@@ -60,7 +62,6 @@ const ShopScreen = () => {
     // Get Language
     const fetchData = async () => {
       try {
-        console.log('Dapetin API di awal nih bray');
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
         const screenLang = await getLanguage2(currentLanguage);
         setLang(screenLang);
@@ -105,14 +106,30 @@ const ShopScreen = () => {
             };
           });
 
-          setCompletedAds(filteredAds);
+          const items = [
+            {
+              transaction: '1',
+              title: 'Transfer Ticket',
+              price: '$5 / transfer',
+              description:
+                'This is a detailed description of the Transfer Ticket.',
+            },
+            {
+              transaction: '2',
+              title: 'Coin Pumper',
+              price: '$15 / 30days',
+              description: 'This is a detailed description of coin pumper.',
+            },
+          ];
+
+          // setCompletedAds(filteredAds);
+          setCompletedAds(items);
 
           fetchAdsData('datetime', getData.member);
-          // setStorageAds(jsonData.data);
         }
 
         setCompletedAdsLoading(false);
-        setStorageAdsLoading(false);
+        setSavedItemsLoading(false);
       } catch (err) {
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
@@ -128,10 +145,9 @@ const ShopScreen = () => {
   }, []);
 
   const completedKeyExtractor = (item, index) => item.transaction.toString();
-  const storageKeyExtractor = (item, index) => item.transaction.toString();
+  const savedItemsKeyExtractor = (item, index) => item.transaction.toString();
 
   const fetchAdsData = async (orderField, member) => {
-    console.log('Call API nih bray');
     try {
       const response = await fetch(`${URL_API_NODEJS}/app5010-01`, {
         method: 'POST',
@@ -148,10 +164,10 @@ const ShopScreen = () => {
       const data = await response.json();
 
       if (data) {
-        setStorageAds(data.data);
+        setSavedItems(data.data);
       }
 
-      setStorageAdsLoading(false);
+      setSavedItemsLoading(false);
     } catch (err) {
       console.error('Error fetching ads data:', err);
       crashlytics().recordError(new Error(err));
@@ -160,7 +176,7 @@ const ShopScreen = () => {
     }
   };
 
-  const onStorage = (memberID, advertisement, coin) => {
+  const onSavedItems = (memberID, advertisement, coin) => {
     navigation.replace('ShowAd', {
       screenName: 'AdvertiseHome',
       member: memberID,
@@ -170,30 +186,92 @@ const ShopScreen = () => {
     });
   };
 
+  // const completedRenderItem = ({item}) => (
+  //   <View
+  //     style={[styles.list, {display: 'flex', flexDirection: 'row', gap: 10}]}
+  //     key={item.transaction}>
+  //     <View
+  //       style={{
+  //         borderColor: '#d9d9d9',
+  //         borderWidth: 1,
+  //         borderRadius: 5,
+  //         height: 50,
+  //         width: 50,
+  //         alignItems: 'center',
+  //         justifyContent: 'center',
+  //       }}>
+  //       <Image
+  //         source={require('../../../assets/images/logo_xrun.png')}
+  //         resizeMode="contain"
+  //         style={{height: 25}}
+  //       />
+  //     </View>
+  //     <View
+  //       style={{
+  //         flexDirection: 'column',
+  //         justifyContent: 'center',
+  //       }}>
+  //       <Text
+  //         style={[styles.normalText, {color: 'grey'}]}
+  //         ellipsizeMode="tail"
+  //         numberOfLines={1}>
+  //         Transfer Ticket
+  //       </Text>
+  //       <Text style={[styles.normalText, {marginTop: 0, fontWeight: 'bold'}]}>
+  //         $5 / transfer
+  //       </Text>
+  //     </View>
+  //   </View>
+  // );
+
   const completedRenderItem = ({item}) => (
-    <View style={styles.list} key={item.transaction}>
-      <View style={styles.listUpWrapper}>
+    <TouchableOpacity
+      onPress={() => {
+        setSelectedItem(item); // Simpan item yang dipilih
+        setModalVisible(true); // Tampilkan modal
+      }}
+      style={[styles.list, {display: 'flex', flexDirection: 'row', gap: 10}]}
+      key={item.transaction}>
+      <View
+        style={{
+          borderColor: '#d9d9d9',
+          borderWidth: 1,
+          borderRadius: 5,
+          height: 50,
+          width: 50,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Image
+          source={require('../../../assets/images/logo_xrun.png')}
+          resizeMode="contain"
+          style={{height: 25}}
+        />
+      </View>
+      <View
+        style={{
+          flexDirection: 'column',
+          justifyContent: 'center',
+        }}>
         <Text
-          style={[styles.mediumText, {width: 160}]}
+          style={[styles.normalText, {color: 'grey'}]}
           ellipsizeMode="tail"
           numberOfLines={1}>
           {item.title}
         </Text>
-        <Text style={[styles.smallText, {marginTop: -4}]}>
-          {item.extracode === '9416' ? item.statusPending : item.statusSuccess}
+        <Text style={[styles.normalText, {marginTop: 0, fontWeight: 'bold'}]}>
+          $5 / transfer
         </Text>
       </View>
-      <View style={[styles.listUpWrapper, {marginTop: -5, marginBottom: 8}]}>
-        <Text style={[styles.smallText, {marginTop: -1}]}>{item.datetime}</Text>
-        <Text style={styles.mediumText}>{item.coin}</Text>
-      </View>
-    </View>
+    </TouchableOpacity>
   );
 
-  const storageRenderItem = ({item}) => (
+  const savedRenderItem = ({item}) => (
     <TouchableOpacity
-      onPress={() => onStorage(userData.member, item.advertisement, item.coin)}
-      style={styles.storageList}
+      onPress={() =>
+        onSavedItems(userData.member, item.advertisement, item.coin)
+      }
+      style={styles.savedItemsList}
       activeOpacity={0.9}
       key={item.transaction}>
       <View
@@ -257,11 +335,11 @@ const ShopScreen = () => {
     </TouchableOpacity>
   );
 
-  const storageRoute = () => {
+  const savedItemsRoute = () => {
     return (
       <View style={{flex: 1}}>
-        {/* List Storage Ads */}
-        {storageAdsLoading ? (
+        {/* List Saved Items */}
+        {savedItemsLoading ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#343a59" />
             <Text style={[styles.normalText, {color: 'grey'}]}>
@@ -270,7 +348,7 @@ const ShopScreen = () => {
                 : ''}
             </Text>
           </View>
-        ) : storageAds.length === 0 ? (
+        ) : savedItems.length === 0 ? (
           <View style={styles.emptyContainer}>
             <Text style={styles.emptyText}>
               {lang && lang.screen_advertise && lang.screen_advertise.nodata
@@ -281,9 +359,9 @@ const ShopScreen = () => {
         ) : (
           <View>
             <FlatList
-              data={storageAds}
-              keyExtractor={storageKeyExtractor}
-              renderItem={storageRenderItem}
+              data={savedItems}
+              keyExtractor={savedItemsKeyExtractor}
+              renderItem={savedRenderItem}
             />
           </View>
         )}
@@ -356,7 +434,7 @@ const ShopScreen = () => {
   );
 
   const renderScene = SceneMap({
-    first: () => storageRoute(),
+    first: () => savedItemsRoute(),
     second: completedRoute,
     third: itemShop,
   });
@@ -364,8 +442,7 @@ const ShopScreen = () => {
   const renderTabBar = props => (
     <TabBar
       {...props}
-      // indicatorStyle={{backgroundColor: '#051C60', height: 3}}
-      indicatorStyle={{backgroundColor: 'yellow'}}
+      indicatorStyle={{backgroundColor: '#ffdc04', height: '100%'}}
       style={{backgroundColor: 'white', elevation: 0}}
       renderLabel={({route, focused, color}) => (
         <Text
@@ -416,6 +493,50 @@ const ShopScreen = () => {
           />
         </View>
       </View>
+
+      {/* Modal */}
+      <Modal
+        transparent={true}
+        visible={modalVisible}
+        animationType="slide"
+        onRequestClose={() => setModalVisible(false)}>
+        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalContent}>
+                <View
+                  style={{
+                    borderColor: '#d9d9d9',
+                    borderWidth: 1,
+                    borderRadius: 5,
+                    height: 50,
+                    width: 50,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={require('../../../assets/images/logo_xrun.png')}
+                    resizeMode="contain"
+                    style={{height: 25}}
+                  />
+                </View>
+                <View style={{marginTop: 10}}>
+                  <Text style={styles.modalTitle}>{selectedItem?.title}</Text>
+                  <Text style={styles.modalPrice}>{selectedItem?.price}</Text>
+                </View>
+                <ScrollView style={styles.modalDescription}>
+                  <Text>{selectedItem?.description}</Text>
+                </ScrollView>
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={() => setModalVisible(false)}>
+                  <Text style={styles.closeButtonText}>Close</Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -470,10 +591,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
   },
   listUpWrapper: {
-    justifyContent: 'space-between',
-    flexDirection: 'row',
+    flexDirection: 'column',
   },
-  storageList: {
+  savedItemsList: {
     backgroundColor: 'white',
     paddingHorizontal: 20,
     paddingVertical: 15,
@@ -501,64 +621,35 @@ const styles = StyleSheet.create({
     fontFamily: getFontFam() + 'Regular',
     fontSize: fontSize('body'),
   },
-  checkbox: {
-    width: 20,
-    height: 20,
-    borderWidth: 2,
-    borderRadius: 4,
-    marginRight: 8,
-    justifyContent: 'center',
+  modalContent: {
+    width: '80%',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
     alignItems: 'center',
-    marginTop: -2,
   },
-  checkedBox: {
-    backgroundColor: '#343a59',
-    borderColor: '#343a59',
-  },
-  uncheckedBox: {
-    backgroundColor: 'transparent',
-    borderColor: '#343a59',
-  },
-  checkMark: {
-    color: 'white',
-    fontSize: fontSize('note'),
-    marginTop: -2,
+  modalTitle: {
+    fontSize: 18,
     fontWeight: 'bold',
   },
-  popupFloating: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    zIndex: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
+  modalPrice: {
+    fontSize: 16,
+    marginVertical: 5,
+    color: 'grey',
   },
-  fullScreenOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 1,
+  modalDescription: {
+    marginTop: 10,
+    maxHeight: 100,
   },
-  subPopupFloating: {
-    backgroundColor: '#fff',
-    paddingHorizontal: 16,
-    paddingTop: 16,
-    width: 320,
-    overflow: 'hidden',
-    zIndex: 2,
-    maxHeight: 200,
+  closeButton: {
+    marginTop: 15,
+    padding: 10,
+    backgroundColor: '#051C60',
+    borderRadius: 5,
   },
-  titleRadioButton: {
-    fontFamily: getFontFam() + 'Medium',
-    fontSize: fontSize('subtitle'),
-    marginBottom: 16,
-    color: 'black',
-    marginLeft: 10,
+  closeButtonText: {
+    color: 'white',
+    fontSize: 16,
   },
 });
 
