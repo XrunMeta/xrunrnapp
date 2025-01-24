@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useMemo} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -9,24 +9,18 @@ import {
   ActivityIndicator,
   useWindowDimensions,
   FlatList,
-  TouchableWithoutFeedback,
-  Pressable,
-  Alert,
   SafeAreaView,
-  ScrollView,
 } from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
-import jsonData from '../../../testAds';
 import {
   URL_API_NODEJS,
   getLanguage2,
   getFontFam,
   fontSize,
   authcode,
-  formatISODate,
   dateFormatter,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
@@ -54,94 +48,7 @@ const ShopScreen = () => {
     },
   ]);
   const layout = useWindowDimensions();
-  const [selectedFilter, setSelectedFilter] = useState({});
-  const [isFilterModalVisible, setFilterModalVisible] = useState(false);
-  const [checkedRecommendations, setCheckedRecommendations] = useState({});
-  const [isDelete, setIsDelete] = useState(false);
-  const [selectedAds, setSelectedAds] = useState([]);
-  const [isShowPopupFloating, setIsShowPopupFloating] = useState(false);
-
   // Select floating radio button
-  const radioButtons = useMemo(
-    () => [
-      {
-        id: '1',
-        label:
-          lang && lang.screen_advertise && lang.screen_advertise.newest
-            ? lang.screen_advertise.newest
-            : '',
-        value: 0,
-        db: 'datetime',
-        borderColor: '#009484',
-        color: '#009484',
-        labelStyle: {
-          color: 'black',
-          fontFamily: getFontFam() + 'Regular',
-          fontSize: fontSize('subtitle'),
-          width: 200,
-        },
-        onPress: () =>
-          selectFilter(
-            lang && lang.screen_advertise && lang.screen_advertise.newest
-              ? lang.screen_advertise.newest
-              : 'Newest',
-            0,
-            'datetime',
-          ),
-      },
-      {
-        id: '2',
-        label:
-          lang && lang.screen_advertise && lang.screen_advertise.deadline
-            ? lang.screen_advertise.deadline
-            : '',
-        value: 1,
-        db: 'dateleft',
-        borderColor: '#009484',
-        color: '#009484',
-        labelStyle: {
-          color: 'black',
-          fontFamily: getFontFam() + 'Regular',
-          fontSize: fontSize('subtitle'),
-          width: 200,
-        },
-        onPress: () =>
-          selectFilter(
-            lang && lang.screen_advertise && lang.screen_advertise.deadline
-              ? lang.screen_advertise.deadline
-              : 'Deadline',
-            1,
-            'dateleft',
-          ),
-      },
-      {
-        id: '3',
-        label:
-          lang && lang.screen_advertise && lang.screen_advertise.order
-            ? lang.screen_advertise.order
-            : '',
-        value: 2,
-        db: 'amount',
-        borderColor: '#009484',
-        color: '#009484',
-        labelStyle: {
-          color: 'black',
-          fontFamily: getFontFam() + 'Regular',
-          fontSize: fontSize('subtitle'),
-          width: 200,
-        },
-        onPress: () =>
-          selectFilter(
-            lang && lang.screen_advertise && lang.screen_advertise.order
-              ? lang.screen_advertise.order
-              : 'Coin Order',
-            2,
-            'amount',
-          ),
-      },
-    ],
-    [lang],
-  );
   const [selectedId, setSelectedId] = useState('1');
 
   // Back
@@ -157,16 +64,6 @@ const ShopScreen = () => {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
         const screenLang = await getLanguage2(currentLanguage);
         setLang(screenLang);
-        setSelectedFilter({
-          desc:
-            screenLang &&
-            screenLang.screen_advertise &&
-            screenLang.screen_advertise.newest
-              ? screenLang.screen_advertise.newest
-              : 'Newest',
-          value: 0,
-          db: 'datetime',
-        });
 
         // Get User Data
         const userData = await AsyncStorage.getItem('userData');
@@ -263,29 +160,6 @@ const ShopScreen = () => {
     }
   };
 
-  const selectFilter = (desc, value, db) => {
-    setSelectedFilter({
-      desc: desc,
-      value: value,
-      db: db,
-    });
-
-    setFilterModalVisible(false);
-    setIsShowPopupFloating(false);
-    setCheckedRecommendations({});
-    setSelectedAds([]);
-
-    // Memanggil API berdasarkan filter yang dipilih
-    if (value == 0) {
-      fetchAdsData('datetime', userData.member);
-      // setStorageAds(jsonData.data);
-    } else if (value == 1) {
-      fetchAdsData('dateleft', userData.member);
-    } else if (value == 2) {
-      fetchAdsData('amount', userData.member);
-    }
-  };
-
   const onStorage = (memberID, advertisement, coin) => {
     navigation.replace('ShowAd', {
       screenName: 'AdvertiseHome',
@@ -316,170 +190,9 @@ const ShopScreen = () => {
     </View>
   );
 
-  const toggleCheckbox = txid => {
-    const updatedCheckedAds = {...checkedRecommendations};
-    updatedCheckedAds[txid] = !updatedCheckedAds[txid];
-
-    const selectedAdsSet = new Set(selectedAds);
-    if (updatedCheckedAds[txid]) {
-      selectedAdsSet.add(txid);
-    } else {
-      selectedAdsSet.delete(txid);
-    }
-
-    setSelectedAds(Array.from(selectedAdsSet));
-    setCheckedRecommendations(updatedCheckedAds);
-  };
-
-  const deleteAllChat = async () => {
-    Alert.alert(
-      'Warning',
-      lang.screen_advertise.surely,
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-        {
-          text: 'Yes',
-          onPress: async () => {
-            try {
-              const response = await fetch(
-                `${URL_API_NODEJS}/app5010-03-deleteall`,
-                {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${authcode}`,
-                  },
-                  body: JSON.stringify({
-                    member: userData?.member,
-                  }),
-                },
-              );
-
-              const data = await response.json();
-
-              if (data && data.data && data.data.length > 0) {
-                const count = data.data[0].count;
-
-                // Tampilkan alert sesuai dengan nilai count
-                if (count > 0) {
-                  // Sukses, tampilkan alert sukses
-                  Alert.alert('Success', lang.screen_advertise.deleted, [
-                    {text: 'Ok'},
-                  ]);
-
-                  // Exit from Delete Mode and back to normal mode
-                  setIsDelete(false);
-                  setFilterModalVisible(false);
-                  setIsShowPopupFloating(false);
-                  setCheckedRecommendations({});
-                  setSelectedAds([]);
-                  fetchAdsData('datetime', userData.member);
-
-                  setSelectedFilter({
-                    desc:
-                      lang &&
-                      lang.screen_advertise &&
-                      lang.screen_advertise.newest
-                        ? lang.screen_advertise.newest
-                        : 'Newest',
-                    value: 0,
-                    db: 'datetime',
-                  });
-                } else {
-                  // Gagal, tampilkan alert gagal
-                  Alert.alert('Failed', lang.screen_advertise.failedDelete, [
-                    {text: 'Ok'},
-                  ]);
-                }
-              } else {
-                // Tangani kondisi tidak ada data
-                Alert.alert('Failed', lang.screen_advertise.failedDelete, [
-                  {text: 'Ok'},
-                ]);
-              }
-            } catch (err) {
-              console.error('Error delete all chat:', err);
-              crashlytics().recordError(new Error(err));
-              crashlytics().log(err);
-              navigation.replace('Home');
-            }
-          },
-        },
-      ],
-      {cancelable: false},
-    );
-  };
-
-  const deleteSelectedAds = async selectedItems => {
-    console.log('Hapus ID => ' + selectedItems);
-
-    try {
-      const response = await fetch(`${URL_API_NODEJS}/app5010-03-delete`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${authcode}`,
-        },
-        body: JSON.stringify({
-          transaction: selectedItems,
-        }),
-      });
-      const data = await response.json();
-
-      if (data && data.data && data.data.length > 0) {
-        const count = data.data[0].count;
-
-        // Tampilkan alert sesuai dengan nilai count
-        if (count > 0) {
-          // Sukses, tampilkan alert sukses
-          Alert.alert('Success', lang.screen_advertise.deleted, [{text: 'Ok'}]);
-
-          // Exit from Delete Mode and back to normal mode
-          setIsDelete(false);
-          setFilterModalVisible(false);
-          setIsShowPopupFloating(false);
-          setCheckedRecommendations({});
-          setSelectedAds([]);
-          fetchAdsData('datetime', userData.member);
-
-          setSelectedFilter({
-            desc:
-              lang && lang.screen_advertise && lang.screen_advertise.newest
-                ? lang.screen_advertise.newest
-                : 'Newest',
-            value: 0,
-            db: 'datetime',
-          });
-        } else {
-          // Gagal, tampilkan alert gagal
-          Alert.alert('Failed', lang.screen_advertise.failedDelete, [
-            {text: 'Ok'},
-          ]);
-        }
-      } else {
-        // Tangani kondisi tidak ada data
-        Alert.alert('Failed', lang.screen_advertise.failedDelete, [
-          {text: 'Ok'},
-        ]);
-      }
-    } catch (err) {
-      console.error('Error delete Selected Ads:', err);
-      crashlytics().recordError(new Error(err));
-      crashlytics().log(err);
-      navigation.replace('Home');
-    }
-  };
-
   const storageRenderItem = ({item}) => (
     <TouchableOpacity
-      onPress={() =>
-        isDelete
-          ? toggleCheckbox(item.transaction)
-          : onStorage(userData.member, item.advertisement, item.coin)
-      }
+      onPress={() => onStorage(userData.member, item.advertisement, item.coin)}
       style={styles.storageList}
       activeOpacity={0.9}
       key={item.transaction}>
@@ -489,19 +202,6 @@ const ShopScreen = () => {
           gap: 10,
           alignItems: 'center',
         }}>
-        {isDelete && (
-          <View
-            style={[
-              styles.checkbox,
-              checkedRecommendations[item.transaction]
-                ? styles.checkedBox
-                : styles.uncheckedBox,
-            ]}>
-            {checkedRecommendations[item.transaction] && (
-              <Text style={styles.checkMark}>✔</Text>
-            )}
-          </View>
-        )}
         <Image
           source={{
             uri: `data:image/jpeg;base64,${item.symbolimg}`,
@@ -557,65 +257,9 @@ const ShopScreen = () => {
     </TouchableOpacity>
   );
 
-  const storageRoute = (deleteMode, selectedItems) => {
+  const storageRoute = () => {
     return (
       <View style={{flex: 1}}>
-        {/* Tab Info */}
-        <View
-          style={{
-            backgroundColor: '#f4f4f4',
-            flexDirection: 'row',
-            paddingHorizontal: 20,
-            paddingVertical: 10,
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            position: 'relative',
-          }}>
-          <Text
-            style={{
-              color: 'black',
-              fontFamily: getFontFam() + 'Regular',
-              fontSize: fontSize('body'),
-            }}>
-            {lang && lang.screen_advertise && lang.screen_advertise.total
-              ? lang.screen_advertise.total
-              : 'Total'}{' '}
-            <Text style={{color: 'orange'}}>{storageAds.length}</Text>
-            XRUN.
-          </Text>
-          <TouchableOpacity
-            // onPress={() => setFilterModalVisible(true)}
-            onPress={() => setIsShowPopupFloating(true)}
-            style={{
-              backgroundColor: 'white',
-              paddingVertical: 10,
-              paddingHorizontal: 10,
-              borderRadius: 5,
-              elevation: 1,
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <Text
-              style={{
-                color: 'black',
-                fontFamily: getFontFam() + 'Regular',
-                fontSize: fontSize('body'),
-                marginBottom: -2,
-              }}>
-              {selectedFilter.desc}
-            </Text>
-            {/* <Image
-              source={require('../../../assets/images/icon_dropdown.png')}
-              style={{
-                tintColor: '#acb5bb',
-                height: 15,
-                width: 10,
-                marginLeft: 10,
-              }}
-            /> */}
-          </TouchableOpacity>
-        </View>
-
         {/* List Storage Ads */}
         {storageAdsLoading ? (
           <View style={styles.loadingContainer}>
@@ -641,141 +285,7 @@ const ShopScreen = () => {
               keyExtractor={storageKeyExtractor}
               renderItem={storageRenderItem}
             />
-            {deleteMode && (
-              <TouchableOpacity
-                onPress={() => deleteSelectedAds(selectedItems)}
-                style={{
-                  backgroundColor: '#051C60',
-                  paddingVertical: 20,
-                  position: 'absolute',
-                  bottom: 45,
-                  right: 0,
-                  left: 0,
-                }}>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontFamily: getFontFam() + 'Medium',
-                    textAlign: 'center',
-                  }}>
-                  {lang && lang.screen_advertise && lang.screen_advertise.delete
-                    ? lang.screen_advertise.delete
-                    : ''}{' '}
-                  {selectedItems.length > 0 ? `(${selectedItems.length})` : ''}
-                </Text>
-              </TouchableOpacity>
-            )}
           </View>
-        )}
-
-        {isFilterModalVisible && (
-          <TouchableWithoutFeedback
-            onPress={() => {
-              setFilterModalVisible(false);
-            }}
-            style={{
-              flex: 1,
-            }}>
-            <View
-              style={{
-                flex: 1,
-                position: 'absolute',
-                top: 10,
-                left: 0,
-                right: 0,
-                bottom: 0,
-              }}>
-              <View
-                style={{
-                  backgroundColor: 'white',
-                  position: 'absolute',
-                  right: 20,
-                  top: 42,
-                  elevation: 5,
-                  borderRadius: 5,
-                  paddingHorizontal: 10,
-                  paddingVertical: 5,
-                }}>
-                <Pressable
-                  onPress={() =>
-                    selectFilter(
-                      lang &&
-                        lang.screen_advertise &&
-                        lang.screen_advertise.newest
-                        ? lang.screen_advertise.newest
-                        : 'Newest',
-                      0,
-                      'datetime',
-                    )
-                  }
-                  style={{
-                    paddingVertical: 10,
-                    paddingHorizontal: 10,
-                    borderBottomColor: '#acb5bb',
-                    borderBottomWidth: 1,
-                  }}>
-                  <Text style={styles.normalText}>
-                    {lang &&
-                    lang.screen_advertise &&
-                    lang.screen_advertise.newest
-                      ? lang.screen_advertise.newest
-                      : ''}
-                  </Text>
-                </Pressable>
-                <Pressable
-                  onPress={() =>
-                    selectFilter(
-                      lang &&
-                        lang.screen_advertise &&
-                        lang.screen_advertise.deadline
-                        ? lang.screen_advertise.deadline
-                        : 'Deadline',
-                      1,
-                      'dateleft',
-                    )
-                  }
-                  style={{
-                    paddingVertical: 10,
-                    paddingHorizontal: 10,
-                    borderBottomColor: '#acb5bb',
-                    borderBottomWidth: 1,
-                  }}>
-                  <Text style={styles.normalText}>
-                    {lang &&
-                    lang.screen_advertise &&
-                    lang.screen_advertise.deadline
-                      ? lang.screen_advertise.deadline
-                      : ''}
-                  </Text>
-                </Pressable>
-                <Pressable
-                  onPress={() =>
-                    selectFilter(
-                      lang &&
-                        lang.screen_advertise &&
-                        lang.screen_advertise.order
-                        ? lang.screen_advertise.order
-                        : 'Coin Order',
-                      2,
-                      'amount',
-                    )
-                  }
-                  style={{
-                    paddingVertical: 10,
-                    paddingHorizontal: 10,
-                    borderBottomColor: '#acb5bb',
-                  }}>
-                  <Text style={styles.normalText}>
-                    {lang &&
-                    lang.screen_advertise &&
-                    lang.screen_advertise.order
-                      ? lang.screen_advertise.order
-                      : ''}
-                  </Text>
-                </Pressable>
-              </View>
-            </View>
-          </TouchableWithoutFeedback>
         )}
       </View>
     );
@@ -846,7 +356,7 @@ const ShopScreen = () => {
   );
 
   const renderScene = SceneMap({
-    first: () => storageRoute(isDelete, selectedAds),
+    first: () => storageRoute(),
     second: completedRoute,
     third: itemShop,
   });
@@ -854,7 +364,8 @@ const ShopScreen = () => {
   const renderTabBar = props => (
     <TabBar
       {...props}
-      indicatorStyle={{backgroundColor: '#051C60', height: 3}}
+      // indicatorStyle={{backgroundColor: '#051C60', height: 3}}
+      indicatorStyle={{backgroundColor: 'yellow'}}
       style={{backgroundColor: 'white', elevation: 0}}
       renderLabel={({route, focused, color}) => (
         <Text
@@ -883,100 +394,12 @@ const ShopScreen = () => {
       {/* Title */}
       <View style={{flexDirection: 'row', zIndex: 1}}>
         <View style={{position: 'absolute', zIndex: 1}}>
-          {isDelete && index == 0 ? (
-            <TouchableOpacity
-              onPress={() => {
-                setIsDelete(false);
-                setCheckedRecommendations({});
-                setSelectedAds([]);
-              }}
-              style={{
-                alignSelf: 'flex-start',
-                paddingVertical: 20,
-                paddingLeft: 25,
-                paddingRight: 30,
-                marginTop: 4,
-              }}>
-              <Image
-                source={require('../../../assets/images/icon_close_2.png')}
-                resizeMode="contain"
-                style={{
-                  height: 25,
-                  width: 25,
-                }}
-              />
-            </TouchableOpacity>
-          ) : (
-            <ButtonBack onClick={handleBack} />
-          )}
+          <ButtonBack onClick={handleBack} />
         </View>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>Item Shop</Text>
-          {index == 0 ? (
-            <TouchableOpacity
-              style={{
-                position: 'absolute',
-                right: 10,
-                backgroundColor: 'white',
-                height: 35,
-                width: 35,
-                padding: 8,
-                borderRadius: 25,
-                marginLeft: 5,
-                borderWidth: 1,
-                borderColor: '#ebebeb',
-              }}
-              onPress={() => {
-                if (isDelete) {
-                  return deleteAllChat();
-                } else {
-                  return setIsDelete(true);
-                }
-              }}>
-              <Image
-                source={require('../../../assets/images/icon_delete.png')}
-                style={{
-                  height: 18,
-                  width: 18,
-                  resizeMode: 'contain',
-                }}
-              />
-            </TouchableOpacity>
-          ) : (
-            ''
-          )}
         </View>
       </View>
-
-      {/* Popup Floating */}
-      {isShowPopupFloating && (
-        <View style={styles.popupFloating}>
-          <TouchableOpacity
-            style={styles.fullScreenOverlay}
-            onPress={() => setIsShowPopupFloating(false)}
-            activeOpacity={1}
-          />
-          <ScrollView style={styles.subPopupFloating}>
-            <Text style={styles.titleRadioButton}>
-              {lang &&
-              lang.screen_advertise &&
-              lang.screen_advertise.title_floating_popup
-                ? lang.screen_advertise.title_floating_popup
-                : ''}
-            </Text>
-
-            <RadioGroup
-              radioButtons={radioButtons}
-              onPress={setSelectedId}
-              selectedId={selectedId}
-              containerStyle={{
-                alignItems: 'flex-start',
-                rowGap: 10,
-              }}
-            />
-          </ScrollView>
-        </View>
-      )}
 
       <View
         style={{
@@ -993,8 +416,6 @@ const ShopScreen = () => {
           />
         </View>
       </View>
-
-      {/* {isFilterModalVisible && <ListWrapper />} */}
     </SafeAreaView>
   );
 };
