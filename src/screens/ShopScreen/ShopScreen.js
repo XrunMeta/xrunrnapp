@@ -32,7 +32,7 @@ import {
 import crashlytics from '@react-native-firebase/crashlytics';
 import RadioGroup from 'react-native-radio-buttons-group';
 
-const AdvertiseScreen = () => {
+const ShopScreen = () => {
   const [lang, setLang] = useState({});
   const navigation = useNavigation();
   let ScreenHeight = Dimensions.get('window').height;
@@ -146,7 +146,7 @@ const AdvertiseScreen = () => {
 
   // Back
   const handleBack = () => {
-    navigation.goBack();
+    navigation.replace('AdvertiseHome');
   };
 
   useEffect(() => {
@@ -867,13 +867,9 @@ const AdvertiseScreen = () => {
             textAlign: 'center',
           }}>
           {route.key === 'first'
-            ? lang && lang.screen_advertise && lang.screen_advertise.tab1
-              ? lang.screen_advertise.tab1
-              : 'Storage'
+            ? 'Saved'
             : route.key === 'second'
-            ? lang && lang.screen_advertise && lang.screen_advertise.tab2
-              ? lang.screen_advertise.tab2
-              : 'Completed'
+            ? 'Expired'
             : route.key === 'third'
             ? 'Item Shop'
             : ''}
@@ -915,11 +911,7 @@ const AdvertiseScreen = () => {
           )}
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>
-            {lang && lang.screen_advertise && lang.screen_advertise.title
-              ? lang.screen_advertise.title
-              : ''}
-          </Text>
+          <Text style={styles.title}>Item Shop</Text>
           {index == 0 ? (
             <TouchableOpacity
               style={{
@@ -1149,4 +1141,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AdvertiseScreen;
+export default ShopScreen;

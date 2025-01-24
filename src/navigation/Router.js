@@ -61,6 +61,7 @@ import KeyDownload from '../screens/KeyDownloadScreen';
 import KeyDownloadAuthScreen from '../screens/KeyDownloadScreen/KeyDownloadAuthScreen';
 import KeyShowDownload from '../screens/KeyDownloadScreen/KeyShowDownload';
 import RecommendByMeScreen from '../screens/RecommendScreen/RecommendByMeScreen';
+import ShopScreen from '../screens/ShopScreen/ShopScreen';
 
 export default Router = () => {
   const Stack = createNativeStackNavigator();
@@ -150,6 +151,7 @@ export default Router = () => {
         <Stack.Screen name="CloseConfirm" component={CloseConfirmPassword} />
         <Stack.Screen name="NotifyHome" component={NotifyScreen} />
         <Stack.Screen name="AdvertiseHome" component={AdvertiseScreen} />
+        <Stack.Screen name="ShopHome" component={ShopScreen} />
         <Stack.Screen
           name="SuccessCloseMembership"
           component={SuccessCloseMembership}

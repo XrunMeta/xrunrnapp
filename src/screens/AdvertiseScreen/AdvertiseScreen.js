@@ -813,42 +813,10 @@ const AdvertiseScreen = () => {
     </View>
   );
 
-  const itemShop = () => (
-    <View
-      style={{
-        flex: 1,
-      }}>
-      {completedAdsLoading ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#343a59" />
-          <Text style={[styles.normalText, {color: 'grey'}]}>
-            {lang && lang.screen_advertise && lang.screen_advertise.loading
-              ? lang.screen_advertise.loading
-              : ''}
-          </Text>
-        </View>
-      ) : completedAds.length === 0 ? (
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>
-            {lang && lang.screen_advertise && lang.screen_advertise.nodata
-              ? lang.screen_advertise.nodata
-              : ''}
-          </Text>
-        </View>
-      ) : (
-        <FlatList
-          data={completedAds}
-          keyExtractor={completedKeyExtractor}
-          renderItem={completedRenderItem}
-        />
-      )}
-    </View>
-  );
-
   const renderScene = SceneMap({
     first: () => storageRoute(isDelete, selectedAds),
     second: completedRoute,
-    third: itemShop,
+    third: () => null,
   });
 
   const renderTabBar = props => (
@@ -867,9 +835,13 @@ const AdvertiseScreen = () => {
             textAlign: 'center',
           }}>
           {route.key === 'first'
-            ? 'Saved'
+            ? lang && lang.screen_advertise && lang.screen_advertise.tab1
+              ? lang.screen_advertise.tab1
+              : 'Storage'
             : route.key === 'second'
-            ? 'Expired'
+            ? lang && lang.screen_advertise && lang.screen_advertise.tab2
+              ? lang.screen_advertise.tab2
+              : 'Completed'
             : route.key === 'third'
             ? 'Item Shop'
             : ''}
@@ -911,7 +883,11 @@ const AdvertiseScreen = () => {
           )}
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>Item Shop</Text>
+          <Text style={styles.title}>
+            {lang && lang.screen_advertise && lang.screen_advertise.title
+              ? lang.screen_advertise.title
+              : ''}
+          </Text>
           {index == 0 ? (
             <TouchableOpacity
               style={{
@@ -985,11 +961,17 @@ const AdvertiseScreen = () => {
         }}>
         <View style={{backgroundColor: 'white', flex: 1}}>
           <TabView
-            renderTabBar={renderTabBar}
             navigationState={{index, routes}}
             renderScene={renderScene}
-            onIndexChange={setIndex}
+            onIndexChange={newIndex => {
+              if (routes[newIndex].key === 'third') {
+                navigation.replace('ShopHome'); // Arahkan ke layar ShopScreen
+              } else {
+                setIndex(newIndex); // Tetap ubah tab untuk tab lainnya
+              }
+            }}
             initialLayout={{width: layout.width}}
+            renderTabBar={renderTabBar}
           />
         </View>
       </View>
