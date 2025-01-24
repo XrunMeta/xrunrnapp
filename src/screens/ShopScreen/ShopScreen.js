@@ -10,6 +10,9 @@ import {
   useWindowDimensions,
   FlatList,
   SafeAreaView,
+  Modal,
+  TouchableWithoutFeedback,
+  ScrollView,
 } from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
@@ -35,6 +38,8 @@ const ShopScreen = () => {
   const [savedItems, setSavedItems] = useState([]);
   const [savedItemsLoading, setSavedItemsLoading] = useState(true);
   const [index, setIndex] = useState(0);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
   const layout = useWindowDimensions();
   const [routes] = useState([
     {
@@ -101,7 +106,24 @@ const ShopScreen = () => {
             };
           });
 
-          setCompletedAds(filteredAds);
+          const items = [
+            {
+              transaction: '1',
+              title: 'Transfer Ticket',
+              price: '$5 / transfer',
+              description:
+                'This is a detailed description of the Transfer Ticket.',
+            },
+            {
+              transaction: '2',
+              title: 'Coin Pumper',
+              price: '$15 / 30days',
+              description: 'This is a detailed description of coin pumper.',
+            },
+          ];
+
+          // setCompletedAds(filteredAds);
+          setCompletedAds(items);
 
           fetchAdsData('datetime', getData.member);
         }
@@ -164,24 +186,84 @@ const ShopScreen = () => {
     });
   };
 
+  // const completedRenderItem = ({item}) => (
+  //   <View
+  //     style={[styles.list, {display: 'flex', flexDirection: 'row', gap: 10}]}
+  //     key={item.transaction}>
+  //     <View
+  //       style={{
+  //         borderColor: '#d9d9d9',
+  //         borderWidth: 1,
+  //         borderRadius: 5,
+  //         height: 50,
+  //         width: 50,
+  //         alignItems: 'center',
+  //         justifyContent: 'center',
+  //       }}>
+  //       <Image
+  //         source={require('../../../assets/images/logo_xrun.png')}
+  //         resizeMode="contain"
+  //         style={{height: 25}}
+  //       />
+  //     </View>
+  //     <View
+  //       style={{
+  //         flexDirection: 'column',
+  //         justifyContent: 'center',
+  //       }}>
+  //       <Text
+  //         style={[styles.normalText, {color: 'grey'}]}
+  //         ellipsizeMode="tail"
+  //         numberOfLines={1}>
+  //         Transfer Ticket
+  //       </Text>
+  //       <Text style={[styles.normalText, {marginTop: 0, fontWeight: 'bold'}]}>
+  //         $5 / transfer
+  //       </Text>
+  //     </View>
+  //   </View>
+  // );
+
   const completedRenderItem = ({item}) => (
-    <View style={styles.list} key={item.transaction}>
-      <View style={styles.listUpWrapper}>
+    <TouchableOpacity
+      onPress={() => {
+        setSelectedItem(item); // Simpan item yang dipilih
+        setModalVisible(true); // Tampilkan modal
+      }}
+      style={[styles.list, {display: 'flex', flexDirection: 'row', gap: 10}]}
+      key={item.transaction}>
+      <View
+        style={{
+          borderColor: '#d9d9d9',
+          borderWidth: 1,
+          borderRadius: 5,
+          height: 50,
+          width: 50,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Image
+          source={require('../../../assets/images/logo_xrun.png')}
+          resizeMode="contain"
+          style={{height: 25}}
+        />
+      </View>
+      <View
+        style={{
+          flexDirection: 'column',
+          justifyContent: 'center',
+        }}>
         <Text
-          style={[styles.mediumText, {width: 160}]}
+          style={[styles.normalText, {color: 'grey'}]}
           ellipsizeMode="tail"
           numberOfLines={1}>
           {item.title}
         </Text>
-        <Text style={[styles.smallText, {marginTop: -4}]}>
-          {item.extracode === '9416' ? item.statusPending : item.statusSuccess}
+        <Text style={[styles.normalText, {marginTop: 0, fontWeight: 'bold'}]}>
+          $5 / transfer
         </Text>
       </View>
-      <View style={[styles.listUpWrapper, {marginTop: -5, marginBottom: 8}]}>
-        <Text style={[styles.smallText, {marginTop: -1}]}>{item.datetime}</Text>
-        <Text style={styles.mediumText}>{item.coin}</Text>
-      </View>
-    </View>
+    </TouchableOpacity>
   );
 
   const savedRenderItem = ({item}) => (
@@ -360,8 +442,7 @@ const ShopScreen = () => {
   const renderTabBar = props => (
     <TabBar
       {...props}
-      // indicatorStyle={{backgroundColor: '#051C60', height: 3}}
-      indicatorStyle={{backgroundColor: 'yellow'}}
+      indicatorStyle={{backgroundColor: '#ffdc04', height: '100%'}}
       style={{backgroundColor: 'white', elevation: 0}}
       renderLabel={({route, focused, color}) => (
         <Text
@@ -412,6 +493,50 @@ const ShopScreen = () => {
           />
         </View>
       </View>
+
+      {/* Modal */}
+      <Modal
+        transparent={true}
+        visible={modalVisible}
+        animationType="slide"
+        onRequestClose={() => setModalVisible(false)}>
+        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalContent}>
+                <View
+                  style={{
+                    borderColor: '#d9d9d9',
+                    borderWidth: 1,
+                    borderRadius: 5,
+                    height: 50,
+                    width: 50,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <Image
+                    source={require('../../../assets/images/logo_xrun.png')}
+                    resizeMode="contain"
+                    style={{height: 25}}
+                  />
+                </View>
+                <View style={{marginTop: 10}}>
+                  <Text style={styles.modalTitle}>{selectedItem?.title}</Text>
+                  <Text style={styles.modalPrice}>{selectedItem?.price}</Text>
+                </View>
+                <ScrollView style={styles.modalDescription}>
+                  <Text>{selectedItem?.description}</Text>
+                </ScrollView>
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={() => setModalVisible(false)}>
+                  <Text style={styles.closeButtonText}>Close</Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -466,8 +591,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
   },
   listUpWrapper: {
-    justifyContent: 'space-between',
-    flexDirection: 'row',
+    flexDirection: 'column',
   },
   savedItemsList: {
     backgroundColor: 'white',
@@ -497,64 +621,35 @@ const styles = StyleSheet.create({
     fontFamily: getFontFam() + 'Regular',
     fontSize: fontSize('body'),
   },
-  checkbox: {
-    width: 20,
-    height: 20,
-    borderWidth: 2,
-    borderRadius: 4,
-    marginRight: 8,
-    justifyContent: 'center',
+  modalContent: {
+    width: '80%',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
     alignItems: 'center',
-    marginTop: -2,
   },
-  checkedBox: {
-    backgroundColor: '#343a59',
-    borderColor: '#343a59',
-  },
-  uncheckedBox: {
-    backgroundColor: 'transparent',
-    borderColor: '#343a59',
-  },
-  checkMark: {
-    color: 'white',
-    fontSize: fontSize('note'),
-    marginTop: -2,
+  modalTitle: {
+    fontSize: 18,
     fontWeight: 'bold',
   },
-  popupFloating: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    zIndex: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
+  modalPrice: {
+    fontSize: 16,
+    marginVertical: 5,
+    color: 'grey',
   },
-  fullScreenOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 1,
+  modalDescription: {
+    marginTop: 10,
+    maxHeight: 100,
   },
-  subPopupFloating: {
-    backgroundColor: '#fff',
-    paddingHorizontal: 16,
-    paddingTop: 16,
-    width: 320,
-    overflow: 'hidden',
-    zIndex: 2,
-    maxHeight: 200,
+  closeButton: {
+    marginTop: 15,
+    padding: 10,
+    backgroundColor: '#051C60',
+    borderRadius: 5,
   },
-  titleRadioButton: {
-    fontFamily: getFontFam() + 'Medium',
-    fontSize: fontSize('subtitle'),
-    marginBottom: 16,
-    color: 'black',
-    marginLeft: 10,
+  closeButtonText: {
+    color: 'white',
+    fontSize: 16,
   },
 });
 
