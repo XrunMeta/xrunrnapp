@@ -32,8 +32,8 @@ const ShopScreen = () => {
   const [userData, setUserData] = useState({});
   const [completedAds, setCompletedAds] = useState([]);
   const [completedAdsLoading, setCompletedAdsLoading] = useState(true);
-  const [storageAds, setStorageAds] = useState([]);
-  const [storageAdsLoading, setStorageAdsLoading] = useState(true);
+  const [savedItems, setSavedItems] = useState([]);
+  const [savedItemsLoading, setSavedItemsLoading] = useState(true);
   const [index, setIndex] = useState(0);
   const layout = useWindowDimensions();
   const [routes] = useState([
@@ -107,7 +107,7 @@ const ShopScreen = () => {
         }
 
         setCompletedAdsLoading(false);
-        setStorageAdsLoading(false);
+        setSavedItemsLoading(false);
       } catch (err) {
         console.error(
           'Error retrieving selfCoordinate from AsyncStorage:',
@@ -123,7 +123,7 @@ const ShopScreen = () => {
   }, []);
 
   const completedKeyExtractor = (item, index) => item.transaction.toString();
-  const storageKeyExtractor = (item, index) => item.transaction.toString();
+  const savedItemsKeyExtractor = (item, index) => item.transaction.toString();
 
   const fetchAdsData = async (orderField, member) => {
     try {
@@ -142,10 +142,10 @@ const ShopScreen = () => {
       const data = await response.json();
 
       if (data) {
-        setStorageAds(data.data);
+        setSavedItems(data.data);
       }
 
-      setStorageAdsLoading(false);
+      setSavedItemsLoading(false);
     } catch (err) {
       console.error('Error fetching ads data:', err);
       crashlytics().recordError(new Error(err));
@@ -154,7 +154,7 @@ const ShopScreen = () => {
     }
   };
 
-  const onStorage = (memberID, advertisement, coin) => {
+  const onSavedItems = (memberID, advertisement, coin) => {
     navigation.replace('ShowAd', {
       screenName: 'AdvertiseHome',
       member: memberID,
@@ -184,10 +184,12 @@ const ShopScreen = () => {
     </View>
   );
 
-  const storageRenderItem = ({item}) => (
+  const savedRenderItem = ({item}) => (
     <TouchableOpacity
-      onPress={() => onStorage(userData.member, item.advertisement, item.coin)}
-      style={styles.storageList}
+      onPress={() =>
+        onSavedItems(userData.member, item.advertisement, item.coin)
+      }
+      style={styles.savedItemsList}
       activeOpacity={0.9}
       key={item.transaction}>
       <View
@@ -251,11 +253,11 @@ const ShopScreen = () => {
     </TouchableOpacity>
   );
 
-  const storageRoute = () => {
+  const savedItemsRoute = () => {
     return (
       <View style={{flex: 1}}>
-        {/* List Storage Ads */}
-        {storageAdsLoading ? (
+        {/* List Saved Items */}
+        {savedItemsLoading ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#343a59" />
             <Text style={[styles.normalText, {color: 'grey'}]}>
@@ -264,7 +266,7 @@ const ShopScreen = () => {
                 : ''}
             </Text>
           </View>
-        ) : storageAds.length === 0 ? (
+        ) : savedItems.length === 0 ? (
           <View style={styles.emptyContainer}>
             <Text style={styles.emptyText}>
               {lang && lang.screen_advertise && lang.screen_advertise.nodata
@@ -275,9 +277,9 @@ const ShopScreen = () => {
         ) : (
           <View>
             <FlatList
-              data={storageAds}
-              keyExtractor={storageKeyExtractor}
-              renderItem={storageRenderItem}
+              data={savedItems}
+              keyExtractor={savedItemsKeyExtractor}
+              renderItem={savedRenderItem}
             />
           </View>
         )}
@@ -350,7 +352,7 @@ const ShopScreen = () => {
   );
 
   const renderScene = SceneMap({
-    first: () => storageRoute(),
+    first: () => savedItemsRoute(),
     second: completedRoute,
     third: itemShop,
   });
@@ -467,7 +469,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
   },
-  storageList: {
+  savedItemsList: {
     backgroundColor: 'white',
     paddingHorizontal: 20,
     paddingVertical: 15,
