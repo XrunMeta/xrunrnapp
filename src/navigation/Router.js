@@ -62,6 +62,7 @@ import KeyDownloadAuthScreen from '../screens/KeyDownloadScreen/KeyDownloadAuthS
 import KeyShowDownload from '../screens/KeyDownloadScreen/KeyShowDownload';
 import RecommendByMeScreen from '../screens/RecommendScreen/RecommendByMeScreen';
 import ShopScreen from '../screens/ShopScreen/ShopScreen';
+import IndividualAds from '../screens/IndividualAds/IndividualAds';
 
 export default Router = () => {
   const Stack = createNativeStackNavigator();
@@ -176,6 +177,9 @@ export default Router = () => {
           component={KeyDownloadAuthScreen}
         />
         <Stack.Screen name="KeyShowDownload" component={KeyShowDownload} />
+
+        {/* Individual Ads */}
+        <Stack.Screen name="IndAds" component={IndividualAds} />
       </Stack.Navigator>
     </View>
   );

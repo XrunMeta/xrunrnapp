@@ -175,6 +175,10 @@ ${storeapp}`,
     navigation.navigate('Recommend');
   };
 
+  const onIndividualAds = async () => {
+    navigation.navigate('IndAds');
+  };
+
   const onCustomerService = () => {
     navigation.navigate('CustomerService');
   };
@@ -307,6 +311,14 @@ ${storeapp}`,
           flex: 1,
         }}>
         <ScrollView showsVerticalScrollIndicator={false}>
+          <ButtonList
+            label={
+              lang && lang.screen_info && lang.screen_info.list
+                ? lang.screen_info.list.individual_ads
+                : ''
+            }
+            onPress={onIndividualAds}
+          />
           <ButtonList
             label={
               lang && lang.screen_info && lang.screen_info.list
