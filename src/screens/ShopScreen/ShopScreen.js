@@ -16,11 +16,11 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
-import dataShop from './dataShop.json'; // Import data from JSON file
 import {getLanguage2, getFontFam, fontSize} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {itemShopRoutes} from './ItemShop/ItemShopRoutes';
 import {itemShopRenderItems} from './ItemShop/ItemShopRenderItems';
+import dataShop from './ItemShop/dataShop.json';
 
 const ShopScreen = () => {
   const [lang, setLang] = useState({});
@@ -28,7 +28,7 @@ const ShopScreen = () => {
   let ScreenHeight = Dimensions.get('window').height;
   const [index, setIndex] = useState(0);
   const [userData, setUserData] = useState({});
-  const [itemShop, setItemShop] = useState([]);
+  const [itemShopData, setItemShopData] = useState([]);
   const [itemShopLoading, setItemShopLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [agreementModalVisible, setAgreementModalVisible] = useState(false);
@@ -79,7 +79,7 @@ const ShopScreen = () => {
         setUserData(getData);
 
         // Item Shop
-        setItemShop(dataShop);
+        setItemShopData(dataShop);
         setItemShopLoading(false);
       } catch (err) {
         console.error('Error retrieving data from AsyncStorage:', err);
@@ -100,13 +100,13 @@ const ShopScreen = () => {
         lang,
         styles,
         itemShopLoading,
-        itemShop,
+        itemShopData,
         item => item.transaction.toString(),
         ({item, styles, onPress}) =>
           itemShopRenderItems({
-            item,
+            item, // Mengirimkan data item, termasuk 'icon' untuk gambar
             styles,
-            onPress: () => handleItemPress(item), // Custom onPress handler
+            onPress: () => handleItemPress(item),
           }),
       ),
   });
@@ -300,7 +300,7 @@ const ShopScreen = () => {
                 {/* Modal Desc */}
                 <ScrollView style={styles.modalDescription}>
                   <Text style={[styles.normalText, {color: 'grey'}]}>
-                    {itemShop[0]?.description}
+                    {itemShopData[0]?.description}
                   </Text>
                 </ScrollView>
 
