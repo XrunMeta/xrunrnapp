@@ -18,28 +18,47 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
 import {getLanguage2, getFontFam, fontSize} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
-import {itemShopRoutes} from './ItemShop/ItemShopRoutes';
-import {itemShopRenderItems} from './ItemShop/ItemShopRenderItems';
-import dataShop from './ItemShop/dataShop.json';
+
+// Saved Item
 import dataSaved from './ItemSaved/dataSaved.json';
 import {itemSavedRoutes} from './ItemSaved/ItemSavedRoutes';
 import {itemSavedRenderItems} from './ItemSaved/ItemSavedRenderItems';
+
+// Expired Item
+import dataExpired from './ItemExpired/dataExpired.json';
+import {itemExpiredRoutes} from './ItemExpired/ItemExpiredRoutes';
+import {itemExpiredRenderItems} from './ItemExpired/ItemExpiredRenderItems';
+
+// Shop Item
+import dataShop from './ItemShop/dataShop.json';
+import {itemShopRoutes} from './ItemShop/ItemShopRoutes';
+import {itemShopRenderItems} from './ItemShop/ItemShopRenderItems';
 
 const ShopScreen = () => {
   const [lang, setLang] = useState({});
   const navigation = useNavigation();
   let ScreenHeight = Dimensions.get('window').height;
+  const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
   const [userData, setUserData] = useState({});
-  const [itemShopData, setItemShopData] = useState([]);
-  const [itemShopLoading, setItemShopLoading] = useState(true);
+
+  // Item Saved
   const [itemSavedData, setItemSavedData] = useState([]);
   const [itemSavedLoading, setItemSavedLoading] = useState(true);
+
+  // Item Saved
+  const [itemExpiredData, setItemExpiredData] = useState([]);
+  const [itemExpiredLoading, setItemExpiredLoading] = useState(true);
+
+  // Item Shop
+  const [itemShopData, setItemShopData] = useState([]);
+  const [itemShopLoading, setItemShopLoading] = useState(true);
+
+  // Modal
   const [modalVisible, setModalVisible] = useState(false);
   const [agreementModalVisible, setAgreementModalVisible] = useState(false);
   const [isAgreed, setIsAgreed] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const layout = useWindowDimensions();
   const [routes] = useState([
     {key: 'first', title: 'Saved'},
     {key: 'second', title: 'Expired'},
@@ -86,13 +105,17 @@ const ShopScreen = () => {
         const getData = JSON.parse(userData);
         setUserData(getData);
 
-        // Item Shop
-        setItemShopData(dataShop);
-        setItemShopLoading(false);
-
         // Item Saved
         setItemSavedData(dataSaved);
         setItemSavedLoading(false);
+
+        // Item Expired
+        setItemExpiredData(dataExpired);
+        setItemExpiredLoading(false);
+
+        // Item Shop
+        setItemShopData(dataShop);
+        setItemShopLoading(false);
       } catch (err) {
         console.error('Error retrieving data from AsyncStorage:', err);
         crashlytics().recordError(new Error(err));
@@ -116,11 +139,23 @@ const ShopScreen = () => {
           itemSavedRenderItems({
             item,
             styles,
-            // onPress: () => handleItemPress(item),
-            onPress: () => console.log('Hehe'),
+            onPress: () => handleItemPress(item),
           }),
       ),
-    second: () => <Text>Expired Tab</Text>,
+    second: () =>
+      itemExpiredRoutes(
+        lang,
+        styles,
+        itemExpiredLoading,
+        itemExpiredData,
+        item => item.transaction.toString(),
+        ({item, styles, onPress}) =>
+          itemExpiredRenderItems({
+            item,
+            styles,
+            onPress: () => handleItemPress(item),
+          }),
+      ),
     third: () =>
       itemShopRoutes(
         lang,
@@ -417,6 +452,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderBottomColor: '#f4f4f4',
     borderBottomWidth: 2,
+    alignItems: 'center',
   },
   listUpWrapper: {
     flexDirection: 'column',

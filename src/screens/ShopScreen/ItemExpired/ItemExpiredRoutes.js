@@ -1,22 +1,22 @@
 import {ActivityIndicator, FlatList, Text, View} from 'react-native';
 
-export const itemSavedRoutes = (
+export const itemExpiredRoutes = (
   lang,
   styles,
-  itemSavedLoading,
-  itemSavedData,
-  itemSavedKeyExtractor,
+  itemExpiredLoading,
+  itemExpiredData,
+  itemExpiredKeyExtractor,
   renderItemCallback, // Callback render item
 ) => (
   <View style={{flex: 1}}>
-    {itemSavedLoading ? (
+    {itemExpiredLoading ? (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#343a59" />
         <Text style={[styles.normalText, {color: 'grey'}]}>
           {lang?.screen_advertise?.loading || ''}
         </Text>
       </View>
-    ) : itemSavedData.length === 0 ? (
+    ) : itemExpiredData.length === 0 ? (
       <View style={styles.emptyContainer}>
         <Text style={styles.emptyText}>
           {lang?.screen_advertise?.nodata || ''}
@@ -24,8 +24,8 @@ export const itemSavedRoutes = (
       </View>
     ) : (
       <FlatList
-        data={itemSavedData}
-        keyExtractor={itemSavedKeyExtractor}
+        data={itemExpiredData}
+        keyExtractor={itemExpiredKeyExtractor}
         renderItem={({item}) =>
           renderItemCallback({item, styles, onPress: () => console.log(item)})
         } // Kirim parameter ke renderItemCallback

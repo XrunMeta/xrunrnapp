@@ -1,6 +1,6 @@
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 
-export const itemSavedRenderItems = ({
+export const itemExpiredRenderItems = ({
   item, // Data item yang akan dirender
   styles, // Gaya custom yang digunakan
   onPress, // Callback untuk event ketika item ditekan
@@ -41,9 +41,25 @@ export const itemSavedRenderItems = ({
           numberOfLines={1}>
           {item.title}
         </Text>
-        <Text style={[styles.normalText, {marginTop: 0, fontWeight: 'bold'}]}>
-          {item.price}
-        </Text>
+        <View
+          style={{
+            justifyContent: 'flex-end',
+          }}>
+          <Text
+            style={[
+              styles.normalText,
+              {
+                marginTop: 6,
+                marginBottom: -9,
+                fontWeight: 'bold',
+              },
+            ]}>
+            {item.price}
+          </Text>
+          <Text style={[styles.smallText, {marginTop: 0, color: 'grey'}]}>
+            {item.dateends}
+          </Text>
+        </View>
       </View>
     </TouchableOpacity>
   );
