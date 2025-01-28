@@ -637,6 +637,14 @@
     "title_floating_popup": "Select Storage Menu"
   },
 
+  "screen_shop": {
+    "title": "Item Shop",
+    "modal": {
+      "toc_title": "Terms and Conditions",
+      "toc_checkbox": "I agree to the terms and conditions"
+    }
+  },
+
   "permissions_alert": {
     "title_camera_permission": "Permission Camera",
     "desc_camera_permission": "Need camera accsess to scan QR Code Image"

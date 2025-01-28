@@ -46,7 +46,7 @@ const ShopScreen = () => {
   const [itemSavedData, setItemSavedData] = useState([]);
   const [itemSavedLoading, setItemSavedLoading] = useState(true);
 
-  // Item Saved
+  // Item Expired
   const [itemExpiredData, setItemExpiredData] = useState([]);
   const [itemExpiredLoading, setItemExpiredLoading] = useState(true);
 
@@ -201,7 +201,9 @@ const ShopScreen = () => {
           <ButtonBack onClick={handleBack} />
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>Item Shop</Text>
+          <Text style={styles.title}>
+            {lang?.screen_shop?.title ?? 'Item Shop'}
+          </Text>
         </View>
       </View>
 
@@ -354,7 +356,9 @@ const ShopScreen = () => {
                     },
                   ]}>
                   <Text style={[styles.normalText, {fontWeight: 'bold'}]}>
-                    Item Shop - Terms and Conditions
+                    {lang?.screen_shop?.title ?? 'Item Shop'} -{' '}
+                    {lang?.screen_shop?.modal.toc_title ??
+                      'Terms and Conditions'}
                   </Text>
                 </View>
 
@@ -377,7 +381,8 @@ const ShopScreen = () => {
                     {isAgreed && <Text style={styles.checkMark}>✓</Text>}
                   </View>
                   <Text style={[styles.normalText]}>
-                    I agree to the terms and conditions
+                    {lang?.screen_shop?.modal.toc_checkbox ??
+                      'I agree to the terms and conditions'}
                   </Text>
                 </TouchableOpacity>
 
