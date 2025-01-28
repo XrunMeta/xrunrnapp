@@ -660,8 +660,23 @@
   },
 
   "screen_indAds": {
-    "title": "个别广告",
+    "title": "个人广告",
     "manage": "管理",
-    "add_coins": "添加金币"
+    "new_ad": "新广告",
+    "add_coins": "添加硬币",
+    "add_ad": "添加广告",
+    "my_ads_name": "我的广告名称",
+    "ad_type": "广告类型",
+    "ad_owner": "广告所有者（公司名称）",
+    "ad_title": "广告标题",
+    "date_from": "开始日期",
+    "date_ends": "结束日期",
+    "image_file": "图片文件",
+    "select_ad_type": "选择广告类型",
+    "image": "图片",
+    "coupon": "优惠券",
+    "response": "回应",
+    "image_saved": "图片已保存",
+    "location_worldwide": "位置/全球"
   }
 }

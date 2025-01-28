@@ -661,6 +661,21 @@
   "screen_indAds": {
     "title": "개별 광고",
     "manage": "관리",
-    "add_coins": "코인 추가"
+    "new_ad": "새 광고",
+    "add_coins": "코인 추가",
+    "add_ad": "광고 추가",
+    "my_ads_name": "내 광고 이름",
+    "ad_type": "광고 유형",
+    "ad_owner": "광고 소유자 (회사 이름)",
+    "ad_title": "광고 제목",
+    "date_from": "시작 날짜",
+    "date_ends": "종료 날짜",
+    "image_file": "이미지 파일",
+    "select_ad_type": "광고 유형 선택",
+    "image": "이미지",
+    "coupon": "쿠폰",
+    "response": "응답",
+    "image_saved": "이미지가 저장되었습니다",
+    "location_worldwide": "위치/전 세계"
   }
 }

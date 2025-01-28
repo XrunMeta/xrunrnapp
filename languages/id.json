@@ -660,8 +660,23 @@
   },
 
   "screen_indAds": {
-    "title": "Iklan Individual",
+    "title": "Iklan Individu",
     "manage": "Kelola",
-    "add_coins": "Tambah Koin"
+    "new_ad": "Iklan Baru",
+    "add_coins": "Tambah Koin",
+    "add_ad": "Tambahkan Iklan",
+    "my_ads_name": "Nama Iklan Saya",
+    "ad_type": "Jenis Iklan",
+    "ad_owner": "Pemilik Iklan (Nama Perusahaan)",
+    "ad_title": "Judul Iklan",
+    "date_from": "Tanggal Mulai",
+    "date_ends": "Tanggal Berakhir",
+    "image_file": "Berkas Gambar",
+    "select_ad_type": "Pilih Jenis Iklan",
+    "image": "Gambar",
+    "coupon": "Kupon",
+    "response": "Respon",
+    "image_saved": "Gambar disimpan",
+    "location_worldwide": "Lokasi/Seluruh Dunia"
   }
 }
