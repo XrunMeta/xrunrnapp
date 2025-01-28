@@ -59,25 +59,7 @@ const ShopScreen = () => {
   const [agreementModalVisible, setAgreementModalVisible] = useState(false);
   const [isAgreed, setIsAgreed] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  // const [routes] = useState([
-  //   {key: 'first', title: 'Saved'},
-  //   {key: 'second', title: 'Expired'},
-  //   {key: 'third', title: 'Item Shop'},
-  // ]);
-  const [routes] = useState([
-    {
-      key: 'first',
-      title: lang?.screen_shop?.tab_saved ?? 'Savedq',
-    },
-    {
-      key: 'second',
-      title: lang?.screen_shop?.tab_expired ?? 'Expiredq',
-    },
-    {
-      key: 'third',
-      title: lang?.screen_shop?.tab_shop ?? 'Item Shopq',
-    },
-  ]);
+  const [routes, setRoutes] = useState([]);
 
   // Back
   const handleBack = () => {
@@ -140,6 +122,23 @@ const ShopScreen = () => {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    setRoutes([
+      {
+        key: 'first',
+        title: lang?.screen_shop?.tab_saved ?? 'Savedq',
+      },
+      {
+        key: 'second',
+        title: lang?.screen_shop?.tab_expired ?? 'Expiredq',
+      },
+      {
+        key: 'third',
+        title: lang?.screen_shop?.tab_shop ?? 'Item Shopq',
+      },
+    ]);
+  }, [lang]);
 
   const renderScene = SceneMap({
     first: () =>
