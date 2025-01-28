@@ -59,10 +59,24 @@ const ShopScreen = () => {
   const [agreementModalVisible, setAgreementModalVisible] = useState(false);
   const [isAgreed, setIsAgreed] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  // const [routes] = useState([
+  //   {key: 'first', title: 'Saved'},
+  //   {key: 'second', title: 'Expired'},
+  //   {key: 'third', title: 'Item Shop'},
+  // ]);
   const [routes] = useState([
-    {key: 'first', title: 'Saved'},
-    {key: 'second', title: 'Expired'},
-    {key: 'third', title: 'Item Shop'},
+    {
+      key: 'first',
+      title: lang?.screen_shop?.tab_saved ?? 'Savedq',
+    },
+    {
+      key: 'second',
+      title: lang?.screen_shop?.tab_expired ?? 'Expiredq',
+    },
+    {
+      key: 'third',
+      title: lang?.screen_shop?.tab_shop ?? 'Item Shopq',
+    },
   ]);
 
   // Back

@@ -636,6 +636,17 @@
     "title_floating_popup": "Pilih Menu Penyimpanan"
   },
 
+  "screen_shop": {
+    "title": "Toko Item",
+    "modal": {
+      "toc_title": "Syarat dan Ketentuan",
+      "toc_checkbox": "Saya setuju dengan syarat dan ketentuan"
+    },
+    "tab_saved": "Tersimpan",
+    "tab_expired": "Kedaluwarsa",
+    "tab_shop": "Toko Item"
+  },
+
   "permissions_alert": {
     "title_camera_permission": "Izin Kamera",
     "desc_camera_permission": "Perlu akses kamera untuk memindai Gambar Kode QR"

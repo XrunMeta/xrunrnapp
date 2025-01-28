@@ -642,7 +642,10 @@
     "modal": {
       "toc_title": "Terms and Conditions",
       "toc_checkbox": "I agree to the terms and conditions"
-    }
+    },
+    "tab_saved": "Saved",
+    "tab_expired": "Expired",
+    "tab_shop": "Item Shop"
   },
 
   "permissions_alert": {
