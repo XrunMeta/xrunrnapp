@@ -111,14 +111,17 @@ const ShopScreen = () => {
               transaction: '1',
               title: 'Transfer Ticket',
               price: '$5 / transfer',
-              description:
-                'This is a detailed description of the Transfer Ticket.',
+              description: `Lorem ipsum odor amet, consectetuer adipiscing elit. Porttitor cubilia suscipit lacus at enim id varius. Ullamcorper maximus netus primis; ultricies pharetra ac. In auctor lacus vitae dignissim ipsum natoque. Gravida ipsum maximus donec cras tellus efficitur consequat elit. Dictum posuere condimentum; rhoncus ante curae volutpat ullamcorper curabitur. Vestibulum diam sagittis et cras vulputate donec.
+\n\nPlatea sollicitudin turpis; hac ex class penatibus feugiat. Hendrerit quam faucibus urna fusce netus non inceptos porta. Volutpat proin massa penatibus amet, velit sem himenaeos. Sed proin neque id magna ullamcorper sagittis habitasse interdum. Ad lobortis fames est dolor, rutrum porta luctus. Eu erat pharetra nostra sagittis suscipit mus ante eleifend. Elit rutrum blandit conubia eu integer neque. Facilisi neque pretium mollis per eu eget. Mauris finibus sollicitudin senectus phasellus auctor justo lobortis.
+\n\nRisus vitae blandit at convallis varius magnis vehicula. Orci duis risus ligula, mattis odio etiam elit faucibus. Dolor massa suscipit leo vestibulum blandit rutrum posuere. Malesuada luctus nam ultrices est congue ut nec convallis. Habitant fames eu facilisis hendrerit volutpat gravida faucibus. Aptent tempus euismod; inceptos eu curae sagittis sociosqu ipsum. Cras at maecenas dis nam ultrices dictumst nulla per. Aptent eu class fringilla massa rhoncus sapien potenti. Netus risus aliquam facilisis pharetra felis ipsum montes hendrerit.
+\n\nSed pharetra eleifend nibh posuere fringilla. Eleifend pharetra mattis velit; platea phasellus accumsan sem ante. Mus vitae turpis bibendum purus habitant sollicitudin velit ad. Sollicitudin commodo natoque sem diam vel mauris orci porta imperdiet. Luctus morbi facilisi curabitur fames dictum nam convallis ligula nascetur. Porta taciti per pellentesque sodales; nunc ligula facilisi nascetur? Nascetur varius et ornare euismod suscipit.
+\n\nEu placerat bibendum dapibus nulla eu risus est. Magnis maecenas tempor velit auctor vestibulum quis senectus. Consectetur nostra id conubia ullamcorper donec. Aptent libero fermentum vehicula habitasse lectus mus. Quis consectetur sociosqu nec odio mus tortor commodo primis. Suscipit nunc ultrices sagittis quis magna. Fringilla cursus aliquam placerat quisque congue massa.`,
             },
             {
               transaction: '2',
               title: 'Coin Pumper',
               price: '$15 / 30days',
-              description: 'This is a detailed description of coin pumper.',
+              description: `Lorem ipsum odor amet, consectetuer adipiscing elit. Porttitor cubilia suscipit lacus at enim id varius. Ullamcorper maximus netus primis; ultricies pharetra ac. In auctor lacus vitae dignissim ipsum natoque. Gravida ipsum maximus donec cras tellus efficitur consequat elit. Dictum posuere condimentum; rhoncus ante curae volutpat ullamcorper curabitur. Vestibulum diam sagittis et cras vulputate donec.`,
             },
           ];
 
@@ -504,33 +507,65 @@ const ShopScreen = () => {
           <View style={styles.modalOverlay}>
             <TouchableWithoutFeedback>
               <View style={styles.modalContent}>
-                <View
+                {/* Close Button */}
+                <TouchableOpacity
                   style={{
-                    borderColor: '#d9d9d9',
-                    borderWidth: 1,
-                    borderRadius: 5,
-                    height: 50,
-                    width: 50,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
+                    position: 'absolute',
+                    top: 10,
+                    right: 5,
+                  }}
+                  onPress={() => setModalVisible(false)}>
                   <Image
-                    source={require('../../../assets/images/logo_xrun.png')}
+                    source={require('../../../assets/images/icon_close.png')}
                     resizeMode="contain"
-                    style={{height: 25}}
+                    style={{height: 20}}
                   />
+                </TouchableOpacity>
+
+                {/* Modal Header */}
+                <View style={styles.modalItem}>
+                  <View
+                    style={{
+                      borderColor: '#d9d9d9',
+                      borderWidth: 1,
+                      borderRadius: 5,
+                      height: 50,
+                      width: 50,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <Image
+                      source={require('../../../assets/images/logo_xrun.png')}
+                      resizeMode="contain"
+                      style={{height: 25}}
+                    />
+                  </View>
+                  <View style={{justifyContent: 'center'}}>
+                    <Text style={[styles.normalText, {color: 'grey'}]}>
+                      {selectedItem?.title}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.normalText,
+                        {marginTop: 0, fontWeight: 'bold'},
+                      ]}>
+                      {selectedItem?.price}
+                    </Text>
+                  </View>
                 </View>
-                <View style={{marginTop: 10}}>
-                  <Text style={styles.modalTitle}>{selectedItem?.title}</Text>
-                  <Text style={styles.modalPrice}>{selectedItem?.price}</Text>
-                </View>
+
+                {/* Modal Desc */}
                 <ScrollView style={styles.modalDescription}>
                   <Text>{selectedItem?.description}</Text>
                 </ScrollView>
+
+                {/* Modal Buy Button */}
                 <TouchableOpacity
                   style={styles.closeButton}
                   onPress={() => setModalVisible(false)}>
-                  <Text style={styles.closeButtonText}>Close</Text>
+                  <Text style={[styles.normalText, styles.closeButtonText]}>
+                    $5
+                  </Text>
                 </TouchableOpacity>
               </View>
             </TouchableWithoutFeedback>
@@ -621,12 +656,27 @@ const styles = StyleSheet.create({
     fontFamily: getFontFam() + 'Regular',
     fontSize: fontSize('body'),
   },
+  modalOverlay: {
+    backgroundColor: '#000000c9',
+    height: '100%',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   modalContent: {
     width: '80%',
     backgroundColor: 'white',
     borderRadius: 10,
     padding: 20,
     alignItems: 'center',
+    position: 'relative',
+  },
+  modalItem: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
+    alignItems: 'center',
+    gap: 10,
   },
   modalTitle: {
     fontSize: 18,
@@ -639,17 +689,21 @@ const styles = StyleSheet.create({
   },
   modalDescription: {
     marginTop: 10,
-    maxHeight: 100,
+    minHeight: 150,
+    maxHeight: 300,
   },
   closeButton: {
     marginTop: 15,
     padding: 10,
-    backgroundColor: '#051C60',
-    borderRadius: 5,
+    backgroundColor: '#ffdc04',
+    borderRadius: 50,
+    minWidth: 70,
+    alignItems: 'center',
+    alignSelf: 'flex-end',
   },
   closeButtonText: {
-    color: 'white',
-    fontSize: 16,
+    color: 'black',
+    fontWeight: 'bold',
   },
 });
 
