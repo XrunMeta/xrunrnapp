@@ -39,6 +39,8 @@ const ShopScreen = () => {
   const [savedItemsLoading, setSavedItemsLoading] = useState(true);
   const [index, setIndex] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
+  const [agreementModalVisible, setAgreementModalVisible] = useState(false);
+  const [isAgreed, setIsAgreed] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const layout = useWindowDimensions();
   const [routes] = useState([
@@ -469,6 +471,20 @@ const ShopScreen = () => {
     />
   );
 
+  const handleBuyClick = () => {
+    setModalVisible(false); // Sembunyikan modal detail
+    setAgreementModalVisible(true); // Tampilkan modal agreement
+  };
+
+  const handleAgreementBuyClick = () => {
+    if (isAgreed) {
+      // Logic untuk proses pembelian
+      console.log('Item purchased');
+      setAgreementModalVisible(false); // Sembunyikan modal agreement setelah pembelian
+      setIsAgreed(false);
+    }
+  };
+
   return (
     <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
       {/* Title */}
@@ -497,7 +513,7 @@ const ShopScreen = () => {
         </View>
       </View>
 
-      {/* Modal */}
+      {/* Modal Detail */}
       <Modal
         transparent={true}
         visible={modalVisible}
@@ -556,13 +572,98 @@ const ShopScreen = () => {
 
                 {/* Modal Desc */}
                 <ScrollView style={styles.modalDescription}>
-                  <Text>{selectedItem?.description}</Text>
+                  <Text style={[styles.normalText, {color: 'grey'}]}>
+                    {selectedItem?.description}
+                  </Text>
                 </ScrollView>
 
                 {/* Modal Buy Button */}
                 <TouchableOpacity
                   style={styles.closeButton}
-                  onPress={() => setModalVisible(false)}>
+                  onPress={handleBuyClick}>
+                  <Text style={[styles.normalText, styles.closeButtonText]}>
+                    $5
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+
+      {/* Modal Agreement */}
+      <Modal
+        transparent={true}
+        visible={agreementModalVisible}
+        animationType="slide"
+        onRequestClose={() => setAgreementModalVisible(false)}>
+        <TouchableWithoutFeedback
+          onPress={() => setAgreementModalVisible(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalContent}>
+                {/* Close Button */}
+                <TouchableOpacity
+                  style={{
+                    position: 'absolute',
+                    top: 10,
+                    right: 5,
+                  }}
+                  onPress={() => setAgreementModalVisible(false)}>
+                  <Image
+                    source={require('../../../assets/images/icon_close.png')}
+                    resizeMode="contain"
+                    style={{height: 20}}
+                  />
+                </TouchableOpacity>
+
+                {/* Modal Header */}
+                <View
+                  style={[
+                    styles.modalItem,
+                    {
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    },
+                  ]}>
+                  <Text style={[styles.normalText, {fontWeight: 'bold'}]}>
+                    Item Shop - Terms and Conditions
+                  </Text>
+                </View>
+
+                {/* Modal Desc */}
+                <ScrollView style={styles.modalDescription}>
+                  <Text style={[styles.normalText, {color: 'grey'}]}>
+                    {completedAds[0]?.description}
+                  </Text>
+                </ScrollView>
+
+                {/* Agreement Checkbox */}
+                <TouchableOpacity
+                  style={styles.checkboxContainer}
+                  onPress={() => setIsAgreed(!isAgreed)}>
+                  <View
+                    style={[
+                      styles.checkbox,
+                      isAgreed ? styles.checkedBox : styles.uncheckedBox,
+                    ]}>
+                    {isAgreed && <Text style={styles.checkMark}>✓</Text>}
+                  </View>
+                  <Text style={[styles.normalText]}>
+                    I agree to the terms and conditions
+                  </Text>
+                </TouchableOpacity>
+
+                {/* Modal Buy Button */}
+                <TouchableOpacity
+                  style={[
+                    styles.closeButton,
+                    !isAgreed && styles.disabledButton,
+                    ,
+                    {alignSelf: 'center'},
+                  ]}
+                  onPress={handleAgreementBuyClick}
+                  disabled={!isAgreed}>
                   <Text style={[styles.normalText, styles.closeButtonText]}>
                     $5
                   </Text>
@@ -704,6 +805,38 @@ const styles = StyleSheet.create({
   closeButtonText: {
     color: 'black',
     fontWeight: 'bold',
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 15,
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderWidth: 2,
+    borderRadius: 4,
+    marginRight: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: -2,
+  },
+  checkedBox: {
+    backgroundColor: '#343a59',
+    borderColor: '#343a59',
+  },
+  uncheckedBox: {
+    backgroundColor: 'transparent',
+    borderColor: '#343a59',
+  },
+  checkMark: {
+    color: 'white',
+    fontSize: 10,
+    fontWeight: 'bold',
+    marginTop: -1,
+  },
+  disabledButton: {
+    backgroundColor: 'lightgrey',
   },
 });
 
