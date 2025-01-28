@@ -127,15 +127,15 @@ const ShopScreen = () => {
     setRoutes([
       {
         key: 'first',
-        title: lang?.screen_shop?.tab_saved ?? 'Savedq',
+        title: lang?.screen_shop?.tab_saved ?? 'Saved',
       },
       {
         key: 'second',
-        title: lang?.screen_shop?.tab_expired ?? 'Expiredq',
+        title: lang?.screen_shop?.tab_expired ?? 'Expired',
       },
       {
         key: 'third',
-        title: lang?.screen_shop?.tab_shop ?? 'Item Shopq',
+        title: lang?.screen_shop?.tab_shop ?? 'Item Shop',
       },
     ]);
   }, [lang]);
