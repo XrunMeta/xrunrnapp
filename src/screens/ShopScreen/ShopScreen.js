@@ -61,6 +61,7 @@ const ShopScreen = () => {
   };
 
   const handleItemPress = item => {
+    console.log({item});
     setSelectedItem(item); // Simpan item yang dipilih
     setModalVisible(true); // Tampilkan modal
   };
@@ -208,9 +209,9 @@ const ShopScreen = () => {
                       justifyContent: 'center',
                     }}>
                     <Image
-                      source={require('../../../assets/images/logo_xrun.png')}
+                      source={{uri: selectedItem?.icon}}
                       resizeMode="contain"
-                      style={{height: 25}}
+                      style={{height: 25, width: 25}}
                     />
                   </View>
                   <View style={{justifyContent: 'center'}}>
