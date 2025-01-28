@@ -636,6 +636,17 @@
     "title_floating_popup": "选择存储菜单"
   },
 
+  "screen_shop": {
+    "title": "物品商店",
+    "modal": {
+      "toc_title": "条款和条件",
+      "toc_checkbox": "我同意条款和条件"
+    },
+    "tab_saved": "已保存",
+    "tab_expired": "已过期",
+    "tab_shop": "物品商店"
+  },
+
   "permissions_alert": {
     "title_camera_permission": "相机权限",
     "desc_camera_permission": "需要相机权限扫描二维码图像"
