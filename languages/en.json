@@ -652,6 +652,21 @@
   "screen_indAds": {
     "title": "Individual Ads",
     "manage": "Manage",
-    "add_coins": "Add Coins"
+    "new_ad": "New AD",
+    "add_coins": "Add Coins",
+    "add_ad": "Add Ad",
+    "my_ads_name": "My Ads Name",
+    "ad_type": "AD Type",
+    "ad_owner": "AD Owner (company name)",
+    "ad_title": "AD Title",
+    "date_from": "Date From",
+    "date_ends": "Date Ends",
+    "image_file": "Image File",
+    "select_ad_type": "Select AD Type",
+    "image": "Image",
+    "coupon": "Coupon",
+    "response": "Response",
+    "image_saved": "Image saved",
+    "location_worldwide": "Location/Worldwide"
   }
 }
