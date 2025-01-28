@@ -46,11 +46,19 @@ const ShopScreen = () => {
     navigation.replace('AdvertiseHome');
   };
 
+  // Click Item
+  const handleItemPress = item => {
+    setSelectedItem(item); // Simpan item yang dipilih
+    setModalVisible(true); // Tampilkan modal
+  };
+
+  // Click Buy
   const handleBuyClick = () => {
     setModalVisible(false); // Sembunyikan modal detail
     setAgreementModalVisible(true); // Tampilkan modal agreement
   };
 
+  // Click Agreement
   const handleAgreementBuyClick = () => {
     if (isAgreed) {
       // Logic untuk proses pembelian
@@ -58,12 +66,6 @@ const ShopScreen = () => {
       setAgreementModalVisible(false); // Sembunyikan modal agreement setelah pembelian
       setIsAgreed(false);
     }
-  };
-
-  const handleItemPress = item => {
-    console.log({item});
-    setSelectedItem(item); // Simpan item yang dipilih
-    setModalVisible(true); // Tampilkan modal
   };
 
   useEffect(() => {
