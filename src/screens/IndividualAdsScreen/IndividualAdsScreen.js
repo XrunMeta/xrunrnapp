@@ -15,7 +15,7 @@ import {getLanguage2, getFontFam, fontSize} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import ButtonListWithSub from '../../components/ButtonList/ButtonListWithSub';
 
-const IndividualAds = () => {
+const IndividualAdsScreen = () => {
   const [lang, setLang] = useState('');
   const navigation = useNavigation();
   const [member, setMember] = useState(0);
@@ -45,6 +45,10 @@ const IndividualAds = () => {
 
   const onBack = () => {
     navigation.navigate('InfoHome');
+  };
+
+  const onMoveNewIndAdsScreen = () => {
+    navigation.navigate('NewIndAds');
   };
 
   return (
@@ -89,6 +93,7 @@ const IndividualAds = () => {
             fontFamily: getFontFam() + 'Bold',
             fontSize: fontSize('body'),
             flex: 1,
+            marginLeft: 10,
           }}>
           {lang && lang ? lang.screen_indAds.manage : ''}
         </Text>
@@ -107,7 +112,8 @@ const IndividualAds = () => {
       <View
         style={{
           flex: 1,
-          paddingVertical: 10,
+          padding: 10,
+          paddingTop: 0,
         }}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <ButtonListWithSub
@@ -125,7 +131,8 @@ const IndividualAds = () => {
               paddingHorizontal: 12,
               paddingVertical: 6,
               borderRadius: 50,
-            }}>
+            }}
+            onPress={onMoveNewIndAdsScreen}>
             <Text
               style={{
                 color: 'black',
@@ -133,7 +140,7 @@ const IndividualAds = () => {
                 fontSize: fontSize('subtitle'),
                 textAlign: 'center',
               }}>
-              Add ad
+              {lang && lang ? lang.screen_indAds.add_ad : 'Add Ad'}
             </Text>
           </TouchableOpacity>
         </ScrollView>
@@ -142,7 +149,7 @@ const IndividualAds = () => {
   );
 };
 
-export default IndividualAds;
+export default IndividualAdsScreen;
 
 const styles = StyleSheet.create({
   root: {
