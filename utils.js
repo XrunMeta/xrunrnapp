@@ -673,3 +673,13 @@ export const dateFormatter = defaultTime => {
 
   return `${year}-${month}-${day}   ${hours}:${minutes}`;
 };
+
+export const dateIndividualAds = datetime => {
+  const splitDate = datetime.toISOString().split('T')[0];
+  const tempDate = splitDate.split('-');
+  const year = tempDate[0];
+  const month = tempDate[1];
+  const date = tempDate[2];
+  const label = `${year.slice(2)}.${month}.${date}`;
+  return label;
+};

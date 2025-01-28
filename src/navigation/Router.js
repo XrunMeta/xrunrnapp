@@ -62,7 +62,9 @@ import KeyDownloadAuthScreen from '../screens/KeyDownloadScreen/KeyDownloadAuthS
 import KeyShowDownload from '../screens/KeyDownloadScreen/KeyShowDownload';
 import RecommendByMeScreen from '../screens/RecommendScreen/RecommendByMeScreen';
 import ShopScreen from '../screens/ShopScreen/ShopScreen';
-import IndividualAds from '../screens/IndividualAds/IndividualAds';
+import IndividualAdsScreen from '../screens/IndividualAdsScreen/IndividualAdsScreen';
+import FirstNewAdsScreen from '../screens/IndividualAdsScreen/NewAdsScreen/FirstNewAdsScreen';
+import SelectAreaNewAdsScreen from '../screens/IndividualAdsScreen/NewAdsScreen/SelectAreaNewAdsScreen';
 
 export default Router = () => {
   const Stack = createNativeStackNavigator();
@@ -179,7 +181,12 @@ export default Router = () => {
         <Stack.Screen name="KeyShowDownload" component={KeyShowDownload} />
 
         {/* Individual Ads */}
-        <Stack.Screen name="IndAds" component={IndividualAds} />
+        <Stack.Screen name="IndAds" component={IndividualAdsScreen} />
+        <Stack.Screen name="NewIndAds" component={FirstNewAdsScreen} />
+        <Stack.Screen
+          name="SelectAreaIndAds"
+          component={SelectAreaNewAdsScreen}
+        />
       </Stack.Navigator>
     </View>
   );
