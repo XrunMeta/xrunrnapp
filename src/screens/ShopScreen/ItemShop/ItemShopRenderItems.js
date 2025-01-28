@@ -4,7 +4,6 @@ export const itemShopRenderItems = ({
   item, // Data item yang akan dirender
   styles, // Gaya custom yang digunakan
   onPress, // Callback untuk event ketika item ditekan
-  imageSource, // Sumber gambar yang bisa diatur dari parent
 }) => {
   return (
     <TouchableOpacity
@@ -25,10 +24,12 @@ export const itemShopRenderItems = ({
         }}>
         <Image
           source={
-            imageSource || require('../../../../assets/images/logo_xrun.png')
+            item.icon
+              ? {uri: item.icon}
+              : require('../../../../assets/images/logo_xrun.png')
           }
           resizeMode="contain"
-          style={{height: 25}}
+          style={{height: 25, width: 25}}
         />
       </View>
 
