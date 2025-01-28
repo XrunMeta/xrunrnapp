@@ -518,8 +518,15 @@ const ShopScreen = () => {
         transparent={true}
         visible={modalVisible}
         animationType="slide"
-        onRequestClose={() => setModalVisible(false)}>
-        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+        onRequestClose={() => {
+          setModalVisible(false);
+          setIsAgreed(false);
+        }}>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            setModalVisible(false);
+            setIsAgreed(false);
+          }}>
           <View style={styles.modalOverlay}>
             <TouchableWithoutFeedback>
               <View style={styles.modalContent}>
@@ -530,7 +537,10 @@ const ShopScreen = () => {
                     top: 10,
                     right: 5,
                   }}
-                  onPress={() => setModalVisible(false)}>
+                  onPress={() => {
+                    setModalVisible(false);
+                    setIsAgreed(false);
+                  }}>
                   <Image
                     source={require('../../../assets/images/icon_close.png')}
                     resizeMode="contain"
@@ -596,9 +606,15 @@ const ShopScreen = () => {
         transparent={true}
         visible={agreementModalVisible}
         animationType="slide"
-        onRequestClose={() => setAgreementModalVisible(false)}>
+        onRequestClose={() => {
+          setAgreementModalVisible(false);
+          setIsAgreed(false);
+        }}>
         <TouchableWithoutFeedback
-          onPress={() => setAgreementModalVisible(false)}>
+          onPress={() => {
+            setAgreementModalVisible(false);
+            setIsAgreed(false);
+          }}>
           <View style={styles.modalOverlay}>
             <TouchableWithoutFeedback>
               <View style={styles.modalContent}>
@@ -609,7 +625,10 @@ const ShopScreen = () => {
                     top: 10,
                     right: 5,
                   }}
-                  onPress={() => setAgreementModalVisible(false)}>
+                  onPress={() => {
+                    setAgreementModalVisible(false);
+                    setIsAgreed(false);
+                  }}>
                   <Image
                     source={require('../../../assets/images/icon_close.png')}
                     resizeMode="contain"
