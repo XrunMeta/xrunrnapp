@@ -1,6 +1,6 @@
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 
-export const itemShopRenderItems = ({
+export const itemSavedRenderItems = ({
   item, // Data item yang akan dirender
   styles, // Gaya custom yang digunakan
   onPress, // Callback untuk event ketika item ditekan
@@ -10,7 +10,7 @@ export const itemShopRenderItems = ({
       key={item.transaction}
       style={[styles.list, {flexDirection: 'row', gap: 10}]}
       onPress={() => onPress(item)} // Callback saat item ditekan
-    >
+      disabled>
       {/* Image Container */}
       <View
         style={{

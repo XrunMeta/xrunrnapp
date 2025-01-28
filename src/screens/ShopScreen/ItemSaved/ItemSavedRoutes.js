@@ -1,22 +1,22 @@
 import {ActivityIndicator, FlatList, Text, View} from 'react-native';
 
-export const itemShopRoutes = (
+export const itemSavedRoutes = (
   lang,
   styles,
-  itemShopLoading,
-  itemShopData,
-  itemShopKeyExtractor,
+  itemSavedLoading,
+  itemSavedData,
+  itemSavedKeyExtractor,
   renderItemCallback, // Callback render item
 ) => (
   <View style={{flex: 1}}>
-    {itemShopLoading ? (
+    {itemSavedLoading ? (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#343a59" />
         <Text style={[styles.normalText, {color: 'grey'}]}>
           {lang?.screen_advertise?.loading || ''}
         </Text>
       </View>
-    ) : itemShopData.length === 0 ? (
+    ) : itemSavedData.length === 0 ? (
       <View style={styles.emptyContainer}>
         <Text style={styles.emptyText}>
           {lang?.screen_advertise?.nodata || ''}
@@ -24,8 +24,8 @@ export const itemShopRoutes = (
       </View>
     ) : (
       <FlatList
-        data={itemShopData}
-        keyExtractor={itemShopKeyExtractor}
+        data={itemSavedData}
+        keyExtractor={itemSavedKeyExtractor}
         renderItem={({item}) =>
           renderItemCallback({item, styles, onPress: () => console.log(item)})
         } // Kirim parameter ke renderItemCallback

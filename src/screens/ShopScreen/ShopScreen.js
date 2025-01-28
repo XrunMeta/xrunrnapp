@@ -21,6 +21,9 @@ import crashlytics from '@react-native-firebase/crashlytics';
 import {itemShopRoutes} from './ItemShop/ItemShopRoutes';
 import {itemShopRenderItems} from './ItemShop/ItemShopRenderItems';
 import dataShop from './ItemShop/dataShop.json';
+import dataSaved from './ItemSaved/dataSaved.json';
+import {itemSavedRoutes} from './ItemSaved/ItemSavedRoutes';
+import {itemSavedRenderItems} from './ItemSaved/ItemSavedRenderItems';
 
 const ShopScreen = () => {
   const [lang, setLang] = useState({});
@@ -30,6 +33,8 @@ const ShopScreen = () => {
   const [userData, setUserData] = useState({});
   const [itemShopData, setItemShopData] = useState([]);
   const [itemShopLoading, setItemShopLoading] = useState(true);
+  const [itemSavedData, setItemSavedData] = useState([]);
+  const [itemSavedLoading, setItemSavedLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [agreementModalVisible, setAgreementModalVisible] = useState(false);
   const [isAgreed, setIsAgreed] = useState(false);
@@ -84,6 +89,10 @@ const ShopScreen = () => {
         // Item Shop
         setItemShopData(dataShop);
         setItemShopLoading(false);
+
+        // Item Saved
+        setItemSavedData(dataSaved);
+        setItemSavedLoading(false);
       } catch (err) {
         console.error('Error retrieving data from AsyncStorage:', err);
         crashlytics().recordError(new Error(err));
@@ -96,7 +105,21 @@ const ShopScreen = () => {
   }, []);
 
   const renderScene = SceneMap({
-    first: () => <Text>Saved Tab</Text>,
+    first: () =>
+      itemSavedRoutes(
+        lang,
+        styles,
+        itemSavedLoading,
+        itemSavedData,
+        item => item.transaction.toString(),
+        ({item, styles, onPress}) =>
+          itemSavedRenderItems({
+            item,
+            styles,
+            // onPress: () => handleItemPress(item),
+            onPress: () => console.log('Hehe'),
+          }),
+      ),
     second: () => <Text>Expired Tab</Text>,
     third: () =>
       itemShopRoutes(
@@ -107,7 +130,7 @@ const ShopScreen = () => {
         item => item.transaction.toString(),
         ({item, styles, onPress}) =>
           itemShopRenderItems({
-            item, // Mengirimkan data item, termasuk 'icon' untuk gambar
+            item,
             styles,
             onPress: () => handleItemPress(item),
           }),
