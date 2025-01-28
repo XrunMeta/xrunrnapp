@@ -313,6 +313,7 @@
       "cs": "Customer Service",
       "app_info": "App Information",
       "recommend": "Recommend",
+      "individual_ads": "Individual Ads",
       "already": "You already have a referral history."
     },
     "button": {
@@ -657,5 +658,11 @@
     "title": "Key Download",
     "desc": "Downloading a wallet is a way to save your wallet's private key. To protect your assets, never share, transfer, or store them on an open device after downloading.\nIf your key is leaked, anyone who has it will have full access to your assets.\nNever share your private key.\nIt is recommended to keep it in a safe place, preferably offline.\nOnce your key is leaked, you can lose all your stored assets.\n",
     "verify": "I have read and understood all of the above."
+  },
+
+  "screen_indAds": {
+    "title": "Individual Ads",
+    "manage": "Manage",
+    "add_coins": "Add Coins"
   }
 }
