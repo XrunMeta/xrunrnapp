@@ -1,4 +1,11 @@
-import {StyleSheet, Text, View, TouchableOpacity, Switch} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Switch,
+  Image,
+} from 'react-native';
 import React from 'react';
 import {fontSize, getFontFam} from '../../../utils';
 
@@ -7,6 +14,8 @@ const ButtonListWithSub = ({
   onPress,
   textClicks = '',
   textExposes = '',
+  isTextColorGray = false,
+  isDropdown = false,
 }) => {
   return (
     <TouchableOpacity
@@ -25,16 +34,18 @@ const ButtonListWithSub = ({
           alignItems: 'center',
           paddingVertical: 18,
         }}>
-        <Text
-          style={{
-            fontFamily: getFontFam() + 'Regular',
-            fontSize: fontSize('body'),
-            color: 'black',
-            flex: 1,
-          }}>
-          {label}
-        </Text>
-        <View style={{flex: 1}}>
+        {label !== '' && (
+          <Text
+            style={{
+              fontFamily: getFontFam() + 'Regular',
+              fontSize: fontSize('body'),
+              color: isTextColorGray ? 'gray' : 'black',
+              flex: 1,
+            }}>
+            {label}
+          </Text>
+        )}
+        <View style={{flex: isDropdown ? 0 : 1}}>
           {textClicks !== '' && (
             <Text
               style={{
@@ -55,6 +66,17 @@ const ButtonListWithSub = ({
               }}>
               {textExposes} exposes
             </Text>
+          )}
+
+          {isDropdown && (
+            <Image
+              source={require('../../../assets/images/icon_dropdown.png')}
+              style={{
+                tintColor: '#acb5bb',
+                height: 10,
+                width: 20,
+              }}
+            />
           )}
         </View>
       </View>
