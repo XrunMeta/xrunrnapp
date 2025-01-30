@@ -16,6 +16,7 @@ const ButtonListWithSub = ({
   textExposes = '',
   isTextColorGray = false,
   isDropdown = false,
+  isNewScreen = false,
 }) => {
   return (
     <TouchableOpacity
@@ -75,6 +76,7 @@ const ButtonListWithSub = ({
                 tintColor: '#acb5bb',
                 height: 10,
                 width: 20,
+                transform: [{rotate: isNewScreen ? '-90deg' : '0deg'}],
               }}
             />
           )}
