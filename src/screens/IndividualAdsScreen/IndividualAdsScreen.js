@@ -11,7 +11,13 @@ import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
-import {getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {
+  getLanguage2,
+  getFontFam,
+  fontSize,
+  gatewayNodeJS,
+  authcode,
+} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import ButtonListWithSub from '../../components/ButtonList/ButtonListWithSub';
 
@@ -20,6 +26,34 @@ const IndividualAdsScreen = () => {
   const navigation = useNavigation();
   const [member, setMember] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [inAdList, setInAdList] = useState([]);
+
+  const fetchInAdList = async member => {
+    try {
+      const request = await fetch(`http://10.0.2.2:3006/gateway/getInadList`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authcode}`,
+        },
+        body: JSON.stringify({
+          member,
+        }),
+      });
+      const response = await request.json();
+
+      if (response.status === 'success' && response.code === 200) {
+        setInAdList(response.data);
+        setIsLoading(false);
+
+        console.log({inadlist: response.data});
+      } else {
+        console.error('Failed to fetch InAd List:', response.message);
+      }
+    } catch (error) {
+      console.error('Error fetching InAd List:', error);
+    }
+  };
 
   useEffect(() => {
     // Get Language
@@ -32,11 +66,57 @@ const IndividualAdsScreen = () => {
         const userData = await AsyncStorage.getItem('userData');
         const dataMember = JSON.parse(userData);
         setMember(dataMember.member);
-        setIsLoading(false);
+
+        fetchInAdList(dataMember.member);
       } catch (err) {
         crashlytics().recordError(new Error(err));
         crashlytics().log(err);
         console.error('Error fetching user data: ', err);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+        const screenLang = await getLanguage2(currentLanguage);
+        setLang(screenLang);
+
+        const AsyncUserData = await AsyncStorage.getItem('userData');
+        const data = JSON.parse(AsyncUserData);
+
+        console.log({data});
+
+        const body = {
+          member: data?.member,
+        };
+
+        const result = await gatewayNodeJS('app7110-01', 'POST', body);
+        const userData = result.data[0];
+
+        console.log('Info Screen -> ' + JSON.stringify(userData));
+        setIsLoading(false);
+
+        setUserDetails({
+          email: userData.email,
+          firstname: userData.firstname,
+          member: userData.member,
+          lastname: userData.lastname,
+          gender: userData.gender,
+          extrastr: userData.extrastr,
+          country: userData.country,
+          countrycode: userData.countrycode,
+          region: userData.region,
+          ages: userData.ages,
+        });
+      } catch (err) {
+        console.error('Error fetching user data: ', err);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
+        setIsLoading(false);
       }
     };
 
@@ -145,7 +225,37 @@ const IndividualAdsScreen = () => {
               {lang && lang ? lang.screen_indAds.add_ad : 'Add Ad'}
             </Text>
           </TouchableOpacity>
+          {/* <ButtonListWithSub label="My Ads Name 3" textExposes="250/1000" /> */}
+
+          {/* {inAdList.map((item, index) => (
+            <ButtonListWithSub
+              key={item.ind_ad}
+              label={item.label}
+              textClicks={`${item.catch_count}/${item.catch_limit}`}
+              textExposes={`${item.expose_count}/${item.exposed_limit}`}
+            />
+          ))} */}
         </ScrollView>
+        {/* <TouchableOpacity
+          style={{
+            backgroundColor: '#fedc00',
+            marginTop: 48,
+            alignSelf: 'center',
+            paddingHorizontal: 12,
+            paddingVertical: 6,
+            borderRadius: 50,
+          }}
+          onPress={onMoveNewIndAdsScreen}>
+          <Text
+            style={{
+              color: 'black',
+              fontFamily: getFontFam() + 'Medium',
+              fontSize: fontSize('subtitle'),
+              textAlign: 'center',
+            }}>
+            {lang && lang ? lang.screen_indAds.add_ad : 'Add Ad'}
+          </Text>
+        </TouchableOpacity> */}
       </View>
     </SafeAreaView>
   );
