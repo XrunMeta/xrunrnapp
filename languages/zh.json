@@ -677,6 +677,20 @@
     "coupon": "优惠券",
     "response": "回应",
     "image_saved": "图片已保存",
-    "location_worldwide": "位置/全球"
+    "location_worldwide": "位置/全球",
+    "selected_location": "选择的位置",
+    "location": "位置: ",
+    "around": "周围",
+    "expose_area": "曝光区域",
+    "worldwide": "全球",
+    "detail_explain": "详细说明",
+    "expose_settings": "曝光设置",
+    "expose_count": "曝光数量",
+    "reward_coin": "奖励币",
+    "amount_reward_per_catch": "每次捕获的奖励金额",
+    "total_reward": "总奖励",
+    "calculated_value": "计算值",
+    "place_ad": "投放广告",
+    "ads_in_app_price": "应用内广告价格"
   }
 }

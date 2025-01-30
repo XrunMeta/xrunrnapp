@@ -676,6 +676,20 @@
     "coupon": "쿠폰",
     "response": "응답",
     "image_saved": "이미지가 저장되었습니다",
-    "location_worldwide": "위치/전 세계"
+    "location_worldwide": "위치/전 세계",
+    "selected_location": "선택된 위치",
+    "location": "위치: ",
+    "around": "주변",
+    "expose_area": "노출 지역",
+    "worldwide": "전 세계",
+    "detail_explain": "상세 설명",
+    "expose_settings": "노출 설정",
+    "expose_count": "노출 수",
+    "reward_coin": "보상 코인",
+    "amount_reward_per_catch": "포획당 보상 금액",
+    "total_reward": "총 보상",
+    "calculated_value": "계산된 값",
+    "place_ad": "광고 배치",
+    "ads_in_app_price": "앱 내 광고 가격"
   }
 }

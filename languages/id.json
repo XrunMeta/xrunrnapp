@@ -677,6 +677,20 @@
     "coupon": "Kupon",
     "response": "Respon",
     "image_saved": "Gambar disimpan",
-    "location_worldwide": "Lokasi/Seluruh Dunia"
+    "location_worldwide": "Lokasi/Seluruh Dunia",
+    "selected_location": "Lokasi Yang Dipilih",
+    "location": "Lokasi: ",
+    "around": "Sekitar",
+    "expose_area": "Area Terpapar",
+    "worldwide": "Seluruh Dunia",
+    "detail_explain": "Penjelasan Detail",
+    "expose_settings": "Pengaturan Expose",
+    "expose_count": "Jumlah Expose",
+    "reward_coin": "Koin Reward",
+    "amount_reward_per_catch": "Jumlah Reward per Tangkap",
+    "total_reward": "Total Reward",
+    "calculated_value": "Nilai yang Dihitung",
+    "place_ad": "Pasang Iklan",
+    "ads_in_app_price": "Harga iklan dalam aplikasi"
   }
 }
