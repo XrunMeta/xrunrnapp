@@ -76,7 +76,9 @@ const IndividualAdsScreen = () => {
         </View>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>
-            {lang && lang.screen_indAds.title ? lang.screen_indAds.title : ''}
+            {lang && lang.screen_indAds.title
+              ? lang.screen_indAds.title
+              : 'Individual Ads'}
           </Text>
         </View>
       </View>
@@ -95,7 +97,7 @@ const IndividualAdsScreen = () => {
             flex: 1,
             marginLeft: 10,
           }}>
-          {lang && lang ? lang.screen_indAds.manage : ''}
+          {lang && lang ? lang.screen_indAds.manage : 'Manage'}
         </Text>
         <Text
           style={{
@@ -104,7 +106,7 @@ const IndividualAdsScreen = () => {
             fontSize: fontSize('body'),
             flex: 1,
           }}>
-          {lang && lang ? lang.screen_indAds.add_coins : ''}
+          {lang && lang ? lang.screen_indAds.add_coins : 'Add Coins'}
         </Text>
       </View>
 
@@ -136,7 +138,7 @@ const IndividualAdsScreen = () => {
             <Text
               style={{
                 color: 'black',
-                fontFamily: getFontFam() + 'Medium',
+                fontFamily: getFontFam() + 'Bold',
                 fontSize: fontSize('subtitle'),
                 textAlign: 'center',
               }}>
