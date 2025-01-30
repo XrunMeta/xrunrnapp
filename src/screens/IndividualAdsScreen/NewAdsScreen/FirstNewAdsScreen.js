@@ -7,8 +7,9 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Alert,
+  FlatList,
 } from 'react-native';
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../../components/ButtonBack';
@@ -46,7 +47,7 @@ const FirstNewAdsScreen = () => {
     () => [
       {
         id: '1',
-        label: lang && lang ? lang.screen_indAds.image : '',
+        label: lang && lang ? lang.screen_indAds.image : 'Image',
         value: 'image',
         borderColor: '#009484',
         color: '#009484',
@@ -61,7 +62,7 @@ const FirstNewAdsScreen = () => {
       },
       {
         id: '2',
-        label: lang && lang ? lang.screen_indAds.coupon : '',
+        label: lang && lang ? lang.screen_indAds.coupon : 'Coupon',
         value: 'coupon',
         borderColor: '#009484',
         color: '#009484',
@@ -79,7 +80,7 @@ const FirstNewAdsScreen = () => {
       },
       {
         id: '3',
-        label: lang && lang ? lang.screen_indAds.response : '',
+        label: lang && lang ? lang.screen_indAds.response : 'Response',
         value: 'response',
         borderColor: '#009484',
         color: '#009484',
@@ -120,17 +121,18 @@ const FirstNewAdsScreen = () => {
   const [textUploadImage, setTextUploadImage] = useState('Image File');
 
   useEffect(() => {
-    // Get Language
+    let isMounted = true;
+
     const fetchData = async () => {
       try {
         const currentLanguage = await AsyncStorage.getItem('currentLanguage');
         const screenLang = await getLanguage2(currentLanguage);
-        setLang(screenLang);
+        if (isMounted) setLang(screenLang);
 
         const userData = await AsyncStorage.getItem('userData');
         const dataMember = JSON.parse(userData);
-        setMember(dataMember.member);
-        setIsLoading(false);
+        if (isMounted) setMember(dataMember.member);
+        if (isMounted) setIsLoading(false);
       } catch (err) {
         crashlytics().recordError(new Error(err));
         crashlytics().log(err);
@@ -139,6 +141,10 @@ const FirstNewAdsScreen = () => {
     };
 
     fetchData();
+
+    return () => {
+      isMounted = false; // Cleanup
+    };
   }, []);
 
   useEffect(() => {
@@ -186,34 +192,35 @@ const FirstNewAdsScreen = () => {
     setIsShowDatePickerDateEnds(true);
   };
 
-  const onChangeDateFrom = (event, datetime) => {
-    setIsShowDatePickerDateFrom(false);
+  const onChangeDateFrom = useCallback(
+    (event, datetime) => {
+      setIsShowDatePickerDateFrom(false);
 
-    if (event.type === 'set') {
-      const label = dateIndividualAds(datetime);
-      setTextDateFrom({label, date: datetime});
+      if (event.type === 'set') {
+        const label = dateIndividualAds(datetime);
+        setTextDateFrom({label, date: datetime});
 
-      // Update Date Ends minimum date to the next day of Date From
-      const nextDay = new Date(datetime);
-      nextDay.setDate(nextDay.getDate() + 1); // Tambah 1 hari
+        const nextDay = new Date(datetime);
+        nextDay.setDate(nextDay.getDate() + 1);
+        setTextDateEnds({
+          label: lang && lang ? lang.screen_indAds.date_ends : '',
+          date: nextDay,
+        });
+      }
+    },
+    [lang],
+  );
 
-      setTextDateEnds({
-        label: lang && lang ? lang.screen_indAds.date_ends : '',
-        date: nextDay,
-      });
-    }
-  };
-
-  const onChangeDateEnds = (event, datetime) => {
+  const onChangeDateEnds = useCallback((event, datetime) => {
     setIsShowDatePickerDateEnds(false);
 
     if (event.type === 'set') {
       const label = dateIndividualAds(datetime);
       setTextDateEnds({label, date: datetime});
     }
-  };
+  }, []);
 
-  const onUploadImage = () => {
+  const onUploadImage = useCallback(() => {
     const options = {
       mediaType: 'photo',
       includeBase64: true,
@@ -245,7 +252,7 @@ const FirstNewAdsScreen = () => {
         }
       }
     });
-  };
+  }, [lang]);
 
   const requestGalleryPermission = async () => {
     const permission =
@@ -265,6 +272,118 @@ const FirstNewAdsScreen = () => {
   const onMoveSelectAreaAds = () => {
     navigation.navigate('SelectAreaIndAds');
   };
+
+  const formFields = [
+    {
+      group: '',
+      fields: [
+        {
+          type: 'input',
+          placeholder: lang?.screen_indAds?.my_ads_name || 'My Ads Name',
+          value: adsName,
+          setValue: setAdsName,
+        },
+        {
+          type: 'button',
+          label: selectedType.label,
+          isDropdown: true,
+          onPress: showPopupFloating,
+        },
+        {
+          type: 'input',
+          placeholder:
+            lang?.screen_indAds?.ad_owner || 'AD Owner (company name)',
+          value: adOwnerName,
+          setValue: setAdOwnerName,
+        },
+        {
+          type: 'input',
+          placeholder: lang?.screen_indAds?.ad_title || 'AD Title',
+          value: adTitle,
+          setValue: setAdTitle,
+        },
+        {
+          type: 'button',
+          label: textDateFrom.label,
+          onPress: showDatePickerDateFrom,
+        },
+        {
+          type: 'button',
+          label: textDateEnds.label,
+          onPress: showDatePickerDateEnds,
+        },
+        {type: 'button', label: textUploadImage, onPress: onUploadImage},
+        {
+          type: 'button',
+          label:
+            lang?.screen_indAds?.location_worldwide || 'Location/Worldwide',
+          isDropdown: true,
+          isNewScreen: true,
+          onPress: onMoveSelectAreaAds,
+        },
+        {
+          type: 'input',
+          placeholder: lang?.screen_indAds?.detail_explain || 'Detail Explain',
+          value: adsName,
+          setValue: setAdsName,
+        },
+      ],
+    },
+    {
+      group: 'Expose Settings',
+      fields: [
+        {
+          type: 'button',
+          label: lang?.screen_indAds?.expose_count || 'Expose Count',
+          isDropdown: true,
+          onPress: showPopupFloating,
+        },
+        {
+          type: 'button',
+          label: lang?.screen_indAds?.reward_coin || 'Reward Coin',
+          isDropdown: true,
+          onPress: showPopupFloating,
+        },
+        {
+          type: 'input',
+          placeholder:
+            lang?.screen_indAds?.amount_reward_per_catch ||
+            'Amount Reward per Catch',
+          value: adsName,
+          setValue: setAdsName,
+        },
+        {
+          type: 'input',
+          placeholder: lang?.screen_indAds?.total_reward || 'Total Reward',
+          value: adsName,
+          setValue: setAdsName,
+        },
+      ],
+    },
+    {
+      group: 'Calculated Value',
+      fields: [
+        {
+          type: 'input',
+          placeholder:
+            lang?.screen_indAds?.ads_in_app_price || 'AD’s in-app price',
+          value: adsName,
+          setValue: setAdsName,
+          isEditable: false,
+        },
+      ],
+    },
+  ];
+
+  const groupedFields = formFields.reduce((acc, item) => {
+    if (!acc[item.group]) {
+      acc[item.group] = [];
+    }
+    acc[item.group].push(item);
+    return acc;
+  }, {});
+
+  const groupedData = Object.values(groupedFields);
 
   return (
     <SafeAreaView style={styles.root}>
@@ -310,7 +429,7 @@ const FirstNewAdsScreen = () => {
             flex: 1,
             marginLeft: 10,
           }}>
-          {lang && lang ? lang.screen_indAds.new_ad : ''}
+          {lang && lang ? lang.screen_indAds.new_ad : 'New AD'}
         </Text>
       </View>
 
@@ -321,52 +440,78 @@ const FirstNewAdsScreen = () => {
           padding: 10,
           paddingTop: 0,
         }}>
-        <ScrollView
+        <FlatList
+          data={groupedData}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({item}) => (
+            <View style={styles.groupContainer}>
+              {item.map((group, index) => (
+                <View key={index}>
+                  {group.group && (
+                    <Text
+                      style={{
+                        marginHorizontal: 20,
+                        marginTop: 10,
+                        marginBottom: 24,
+                        fontSize: fontSize('body'),
+                        color: 'black',
+                      }}>
+                      {group.group}
+                    </Text>
+                  )}
+                  {group.fields.map((field, index) =>
+                    field.type === 'input' ? (
+                      <InputIndAds
+                        key={index}
+                        placeholder={field.placeholder}
+                        value={field.value}
+                        setValue={field.setValue}
+                        isEditable={field.isEditable}
+                      />
+                    ) : field.type === 'button' ? (
+                      <ButtonListWithSub
+                        key={index}
+                        label={field.label}
+                        isDropdown={field.isDropdown}
+                        isNewScreen={field.isNewScreen}
+                        isTextColorGray
+                        onPress={field.onPress}
+                      />
+                    ) : field.type === 'text' ? (
+                      <Text key={index} style={styles.calculatedValueText}>
+                        {field.label} {field.value}
+                      </Text>
+                    ) : null,
+                  )}
+                </View>
+              ))}
+            </View>
+          )}
+          contentContainerStyle={styles.wrapperListInput}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.wrapperListInput}>
-          <InputIndAds
-            placeholder={lang && lang ? lang.screen_indAds.my_ads_name : ''}
-            value={adsName}
-            setValue={setAdsName}
-          />
-          <ButtonListWithSub
-            label={selectedType.label}
-            isDropdown
-            onPress={showPopupFloating}
-            isTextColorGray
-          />
-          <InputIndAds
-            placeholder={lang && lang ? lang.screen_indAds.ad_owner : ''}
-            value={adOwnerName}
-            setValue={setAdOwnerName}
-          />
-          <InputIndAds
-            placeholder={lang && lang ? lang.screen_indAds.ad_title : ''}
-            value={adTitle}
-            setValue={setAdTitle}
-          />
-          <ButtonListWithSub
-            isTextColorGray
-            label={textDateFrom.label}
-            onPress={showDatePickerDateFrom}
-          />
-          <ButtonListWithSub
-            isTextColorGray
-            label={textDateEnds.label}
-            onPress={showDatePickerDateEnds}
-          />
-          <ButtonListWithSub
-            isTextColorGray
-            label={textUploadImage}
-            onPress={onUploadImage}
-          />
-          <ButtonListWithSub
-            label={lang && lang ? lang.screen_indAds.location_worldwide : ''}
-            isDropdown
-            isTextColorGray
-            onPress={onMoveSelectAreaAds}
-          />
-        </ScrollView>
+          ListFooterComponent={
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#fedc00',
+                marginTop: 48,
+                alignSelf: 'center',
+                paddingHorizontal: 12,
+                paddingVertical: 6,
+                marginBottom: 20,
+                borderRadius: 50,
+              }}>
+              <Text
+                style={{
+                  color: 'black',
+                  fontFamily: getFontFam() + 'Bold',
+                  fontSize: fontSize('subtitle'),
+                  textAlign: 'center',
+                }}>
+                {lang && lang ? lang.screen_indAds.place_ad : 'Place Ad'}
+              </Text>
+            </TouchableOpacity>
+          }
+        />
       </View>
 
       {/* Popup Floating */}
