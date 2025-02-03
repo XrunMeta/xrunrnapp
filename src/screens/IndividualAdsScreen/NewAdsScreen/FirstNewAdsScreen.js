@@ -9,7 +9,7 @@ import {
   Alert,
   FlatList,
 } from 'react-native';
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../../components/ButtonBack';
@@ -22,10 +22,10 @@ import {
 import crashlytics from '@react-native-firebase/crashlytics';
 import ButtonListWithSub from '../../../components/ButtonList/ButtonListWithSub';
 import InputIndAds from '../../../components/CustomInput/InputIndAds';
-import RadioGroup from 'react-native-radio-buttons-group';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
+import RadioGroups from '../../../components/RadioGroups/RadioGroups';
 
 const FirstNewAdsScreen = () => {
   const [lang, setLang] = useState('');
@@ -35,70 +35,35 @@ const FirstNewAdsScreen = () => {
   const [adsName, setAdsName] = useState('');
   const [adOwnerName, setAdOwnerName] = useState('');
   const [adTitle, setAdTitle] = useState('');
+  const [amountRewardPerCatch, setAmountRewardPerCatch] = useState('');
+  const [totalReward, setTotalReward] = useState('');
+  const [detailProduct, setDetailProduct] = useState('');
+  const [calculatedValue, setCalculatedValue] = useState('');
 
   // Popup floating
+  const [currentTypePopupFloating, setCurrentTypePopupFloating] = useState('');
   const [isShowPopupFloating, setIsShowPopupFloating] = useState(false);
-  const [selectedId, setSelectedId] = useState('0');
-  const [selectedType, setSelectedType] = useState({
+
+  //  - AD Type
+  const [selectedIdAdType, setSelectedIdAdType] = useState('0');
+  const [selectedAdType, setSelectedAdType] = useState({
     value: '',
-    label: 'AD Type',
+    label: '',
   });
-  const radioButtons = useMemo(
-    () => [
-      {
-        id: '1',
-        label: lang && lang ? lang.screen_indAds.image : 'Image',
-        value: 'image',
-        borderColor: '#009484',
-        color: '#009484',
-        labelStyle: {
-          color: 'black',
-          fontFamily: getFontFam() + 'Regular',
-          fontSize: fontSize('subtitle'),
-          width: 200,
-        },
-        onPress: () =>
-          setValueAdType('image', lang && lang ? lang.screen_indAds.image : ''),
-      },
-      {
-        id: '2',
-        label: lang && lang ? lang.screen_indAds.coupon : 'Coupon',
-        value: 'coupon',
-        borderColor: '#009484',
-        color: '#009484',
-        labelStyle: {
-          color: 'black',
-          fontFamily: getFontFam() + 'Regular',
-          fontSize: fontSize('subtitle'),
-          width: 200,
-        },
-        onPress: () =>
-          setValueAdType(
-            'coupon',
-            lang && lang ? lang.screen_indAds.coupon : '',
-          ),
-      },
-      {
-        id: '3',
-        label: lang && lang ? lang.screen_indAds.response : 'Response',
-        value: 'response',
-        borderColor: '#009484',
-        color: '#009484',
-        labelStyle: {
-          color: 'black',
-          fontFamily: getFontFam() + 'Regular',
-          fontSize: fontSize('subtitle'),
-          width: 200,
-        },
-        onPress: () =>
-          setValueAdType(
-            'response',
-            lang && lang ? lang.screen_indAds.response : '',
-          ),
-      },
-    ],
-    [lang],
-  );
+
+  //  - Expose Count
+  const [selectedIdExposeCount, setSelectedIdExposeCount] = useState('0');
+  const [selectedExposeCount, setSelectedExposeCount] = useState({
+    value: '',
+    label: '',
+  });
+
+  //  - Reward Coin
+  const [selectedIdRewardCoin, setSelectedIdRewardCoin] = useState('0');
+  const [selectedRewardCoin, setSelectedRewardCoin] = useState({
+    value: '',
+    label: '',
+  });
 
   // Date Picker
   // Date from
@@ -149,11 +114,6 @@ const FirstNewAdsScreen = () => {
 
   useEffect(() => {
     if (lang) {
-      setSelectedType({
-        ...selectedType,
-        label: lang && lang ? lang.screen_indAds.ad_type : '',
-      });
-
       setTextDateFrom({
         ...textDateFrom,
         label: lang && lang ? lang.screen_indAds.date_from : '',
@@ -172,16 +132,9 @@ const FirstNewAdsScreen = () => {
     navigation.navigate('IndAds');
   };
 
-  const showPopupFloating = () => {
+  const showPopupFloating = type => {
+    setCurrentTypePopupFloating(type);
     setIsShowPopupFloating(prevValue => !prevValue);
-  };
-
-  const setValueAdType = (value, label) => {
-    setSelectedType({
-      value,
-      label,
-    });
-    setIsShowPopupFloating(false);
   };
 
   const showDatePickerDateFrom = () => {
@@ -285,9 +238,12 @@ const FirstNewAdsScreen = () => {
         },
         {
           type: 'button',
-          label: selectedType.label,
+          label:
+            lang && lang
+              ? `${lang.screen_indAds.ad_type}${selectedAdType.label}`
+              : 'AD Type',
           isDropdown: true,
-          onPress: showPopupFloating,
+          onPress: () => showPopupFloating('ad_type'),
         },
         {
           type: 'input',
@@ -324,8 +280,8 @@ const FirstNewAdsScreen = () => {
         {
           type: 'input',
           placeholder: lang?.screen_indAds?.detail_explain || 'Detail Explain',
-          value: adsName,
-          setValue: setAdsName,
+          value: detailProduct,
+          setValue: setDetailProduct,
         },
       ],
     },
@@ -334,29 +290,37 @@ const FirstNewAdsScreen = () => {
       fields: [
         {
           type: 'button',
-          label: lang?.screen_indAds?.expose_count || 'Expose Count',
+          label:
+            lang && lang
+              ? `${lang.screen_indAds.expose_count}${selectedExposeCount.label}`
+              : 'Expose Count',
           isDropdown: true,
-          onPress: showPopupFloating,
+          onPress: () => showPopupFloating('expose_count'),
         },
         {
           type: 'button',
-          label: lang?.screen_indAds?.reward_coin || 'Reward Coin',
+          label:
+            lang && lang
+              ? `${lang.screen_indAds.reward_coin}${selectedRewardCoin.label}`
+              : 'Reward Coin',
           isDropdown: true,
-          onPress: showPopupFloating,
+          onPress: () => showPopupFloating('reward_coin'),
         },
         {
           type: 'input',
           placeholder:
             lang?.screen_indAds?.amount_reward_per_catch ||
             'Amount Reward per Catch',
-          value: adsName,
-          setValue: setAdsName,
+          value: amountRewardPerCatch,
+          setValue: setAmountRewardPerCatch,
+          keyboardType: 'numeric',
         },
         {
           type: 'input',
           placeholder: lang?.screen_indAds?.total_reward || 'Total Reward',
-          value: adsName,
-          setValue: setAdsName,
+          value: totalReward,
+          setValue: setTotalReward,
+          keyboardType: 'numeric',
         },
       ],
     },
@@ -367,8 +331,9 @@ const FirstNewAdsScreen = () => {
           type: 'input',
           placeholder:
             lang?.screen_indAds?.ads_in_app_price || 'AD’s in-app price',
-          value: adsName,
-          setValue: setAdsName,
+          value: calculatedValue,
+          setValue: setCalculatedValue,
+          keyboardType: 'numeric',
           isEditable: false,
         },
       ],
@@ -384,6 +349,50 @@ const FirstNewAdsScreen = () => {
   }, {});
 
   const groupedData = Object.values(groupedFields);
+
+  const filterPopupFloatingByType = () => {
+    switch (currentTypePopupFloating) {
+      case 'ad_type':
+        return (
+          <RadioGroups
+            lang={lang}
+            type={currentTypePopupFloating}
+            setSelectedType={setSelectedAdType}
+            setIsShowPopupFloating={setIsShowPopupFloating}
+            selectedId={selectedIdAdType}
+            setSelectedId={setSelectedIdAdType}
+          />
+        );
+        break;
+      case 'expose_count':
+        return (
+          <RadioGroups
+            lang={lang}
+            type={currentTypePopupFloating}
+            setSelectedType={setSelectedExposeCount}
+            setIsShowPopupFloating={setIsShowPopupFloating}
+            selectedId={selectedIdExposeCount}
+            setSelectedId={setSelectedIdExposeCount}
+          />
+        );
+        break;
+      case 'reward_coin':
+        return (
+          <RadioGroups
+            lang={lang}
+            type={currentTypePopupFloating}
+            setSelectedType={setSelectedRewardCoin}
+            setIsShowPopupFloating={setIsShowPopupFloating}
+            selectedId={selectedIdRewardCoin}
+            setSelectedId={setSelectedIdRewardCoin}
+          />
+        );
+        break;
+      default:
+        return <Text>Empty data Floating Point</Text>;
+        break;
+    }
+  };
 
   return (
     <SafeAreaView style={styles.root}>
@@ -467,6 +476,7 @@ const FirstNewAdsScreen = () => {
                         value={field.value}
                         setValue={field.setValue}
                         isEditable={field.isEditable}
+                        keyboardType={field.keyboardType && 'numeric'}
                       />
                     ) : field.type === 'button' ? (
                       <ButtonListWithSub
@@ -491,6 +501,7 @@ const FirstNewAdsScreen = () => {
           showsVerticalScrollIndicator={false}
           ListFooterComponent={
             <TouchableOpacity
+              onPress={() => console.log(selectedAdType.value)}
               style={{
                 backgroundColor: '#fedc00',
                 marginTop: 48,
@@ -523,19 +534,7 @@ const FirstNewAdsScreen = () => {
             activeOpacity={1}
           />
           <ScrollView style={styles.subPopupFloating}>
-            <Text style={styles.titleRadioButton}>
-              {lang && lang ? lang.screen_indAds.select_ad_type : ''}
-            </Text>
-
-            <RadioGroup
-              radioButtons={radioButtons}
-              onPress={setSelectedId}
-              selectedId={selectedId}
-              containerStyle={{
-                alignItems: 'flex-start',
-                rowGap: 10,
-              }}
-            />
+            {filterPopupFloatingByType()}
           </ScrollView>
         </View>
       )}
@@ -631,12 +630,5 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     zIndex: 2,
     maxHeight: 200,
-  },
-  titleRadioButton: {
-    fontFamily: getFontFam() + 'Medium',
-    fontSize: fontSize('subtitle'),
-    marginBottom: 16,
-    color: 'black',
-    marginLeft: 10,
   },
 });
