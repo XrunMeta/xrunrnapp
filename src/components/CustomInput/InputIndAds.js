@@ -2,7 +2,13 @@ import {StyleSheet, TextInput} from 'react-native';
 import React from 'react';
 import {fontSize, getFontFam} from '../../../utils';
 
-const InputIndAds = ({value, setValue, placeholder, isEditable = true}) => {
+const InputIndAds = ({
+  value,
+  setValue,
+  placeholder,
+  isEditable = true,
+  keyboardType = 'default',
+}) => {
   return (
     <TextInput
       style={{
@@ -22,6 +28,7 @@ const InputIndAds = ({value, setValue, placeholder, isEditable = true}) => {
       onChangeText={valueText => {
         setValue(valueText);
       }}
+      keyboardType={keyboardType}
       editable={isEditable}
     />
   );
