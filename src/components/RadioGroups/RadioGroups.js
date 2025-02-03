@@ -1,4 +1,4 @@
-import {useEffect, useMemo} from 'react';
+import {useMemo} from 'react';
 import {StyleSheet, Text} from 'react-native';
 import RadioGroup from 'react-native-radio-buttons-group';
 import {fontSize, getFontFam} from '../../../utils';
