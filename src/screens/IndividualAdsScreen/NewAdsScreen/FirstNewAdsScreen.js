@@ -18,6 +18,7 @@ import {
   getFontFam,
   fontSize,
   dateIndividualAds,
+  checkingConditionsAddNewAds,
 } from '../../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import ButtonListWithSub from '../../../components/ButtonList/ButtonListWithSub';
@@ -32,7 +33,7 @@ const FirstNewAdsScreen = () => {
   const navigation = useNavigation();
   const [member, setMember] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [adsName, setAdsName] = useState('');
+  const [adName, setAdName] = useState('');
   const [adOwnerName, setAdOwnerName] = useState('');
   const [adTitle, setAdTitle] = useState('');
   const [amountRewardPerCatch, setAmountRewardPerCatch] = useState('');
@@ -72,6 +73,7 @@ const FirstNewAdsScreen = () => {
   const [textDateFrom, setTextDateFrom] = useState({
     date: new Date(),
     label: 'Date From',
+    isFill: false,
   });
 
   // Date Ends
@@ -80,10 +82,14 @@ const FirstNewAdsScreen = () => {
   const [textDateEnds, setTextDateEnds] = useState({
     date: new Date(),
     label: 'Date Ends',
+    isFill: false,
   });
 
   // Image File
-  const [textUploadImage, setTextUploadImage] = useState('Image File');
+  const [uploadImage, setUploadImage] = useState({
+    value: '',
+    label: 'Image File (Optional)',
+  });
 
   useEffect(() => {
     let isMounted = true;
@@ -124,7 +130,10 @@ const FirstNewAdsScreen = () => {
         label: lang && lang ? lang.screen_indAds.date_ends : '',
       });
 
-      setTextUploadImage(lang && lang ? lang.screen_indAds.image_file : '');
+      setUploadImage({
+        ...uploadImage,
+        label: lang && lang ? lang.screen_indAds.image_file : '',
+      });
     }
   }, [lang]);
 
@@ -151,13 +160,14 @@ const FirstNewAdsScreen = () => {
 
       if (event.type === 'set') {
         const label = dateIndividualAds(datetime);
-        setTextDateFrom({label, date: datetime});
+        setTextDateFrom({label, date: datetime, isFill: true});
 
         const nextDay = new Date(datetime);
         nextDay.setDate(nextDay.getDate() + 1);
         setTextDateEnds({
           label: lang && lang ? lang.screen_indAds.date_ends : '',
           date: nextDay,
+          isFill: false,
         });
       }
     },
@@ -169,7 +179,7 @@ const FirstNewAdsScreen = () => {
 
     if (event.type === 'set') {
       const label = dateIndividualAds(datetime);
-      setTextDateEnds({label, date: datetime});
+      setTextDateEnds({label, date: datetime, isFill: true});
     }
   }, []);
 
@@ -197,9 +207,10 @@ const FirstNewAdsScreen = () => {
           const image = await fetch(uri);
           const blob = await image.blob();
           console.log('Blob:', blob);
-          setTextUploadImage(
-            lang && lang ? lang.screen_indAds.image_saved : '',
-          );
+          setUploadImage({
+            value: blob,
+            label: lang && lang ? lang.screen_indAds.image_saved : '',
+          });
         } catch (error) {
           console.error('Error converting to Blob:', error);
         }
@@ -233,8 +244,8 @@ const FirstNewAdsScreen = () => {
         {
           type: 'input',
           placeholder: lang?.screen_indAds?.my_ads_name || 'My Ads Name',
-          value: adsName,
-          setValue: setAdsName,
+          value: adName,
+          setValue: setAdName,
         },
         {
           type: 'button',
@@ -268,7 +279,7 @@ const FirstNewAdsScreen = () => {
           label: textDateEnds.label,
           onPress: showDatePickerDateEnds,
         },
-        {type: 'button', label: textUploadImage, onPress: onUploadImage},
+        {type: 'button', label: uploadImage.label, onPress: onUploadImage},
         {
           type: 'button',
           label:
@@ -394,6 +405,28 @@ const FirstNewAdsScreen = () => {
     }
   };
 
+  const onMoveDetailAdsScreen = () => {
+    // const isValid = checkingConditionsAddNewAds(
+    //   lang,
+    //   adName,
+    //   selectedAdType,
+    //   adOwnerName,
+    //   adTitle,
+    //   textDateFrom.isFill,
+    //   textDateEnds.isFill,
+    //   detailProduct,
+    //   selectedExposeCount,
+    //   selectedRewardCoin,
+    //   amountRewardPerCatch,
+    //   totalReward,
+    //   calculatedValue,
+    // );
+
+    // if (isValid) {
+    navigation.navigate('IndAdsDetail');
+    // }
+  };
+
   return (
     <SafeAreaView style={styles.root}>
       {/* Loading */}
@@ -501,7 +534,7 @@ const FirstNewAdsScreen = () => {
           showsVerticalScrollIndicator={false}
           ListFooterComponent={
             <TouchableOpacity
-              onPress={() => console.log(selectedAdType.value)}
+              onPress={onMoveDetailAdsScreen}
               style={{
                 backgroundColor: '#fedc00',
                 marginTop: 48,
