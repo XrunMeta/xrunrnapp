@@ -65,6 +65,7 @@ import ShopScreen from '../screens/ShopScreen/ShopScreen';
 import IndividualAdsScreen from '../screens/IndividualAdsScreen/IndividualAdsScreen';
 import FirstNewAdsScreen from '../screens/IndividualAdsScreen/NewAdsScreen/FirstNewAdsScreen';
 import SelectAreaNewAdsScreen from '../screens/IndividualAdsScreen/NewAdsScreen/SelectAreaNewAdsScreen';
+import AdsDetailScreen from '../screens/IndividualAdsScreen/AdsPurchaseScreen/AdsDetailScreen';
 
 export default Router = () => {
   const Stack = createNativeStackNavigator();
@@ -187,6 +188,7 @@ export default Router = () => {
           name="SelectAreaIndAds"
           component={SelectAreaNewAdsScreen}
         />
+        <Stack.Screen name="IndAdsDetail" component={AdsDetailScreen} />
       </Stack.Navigator>
     </View>
   );
