@@ -671,7 +671,7 @@
     "ad_title": "Judul Iklan",
     "date_from": "Tanggal Mulai",
     "date_ends": "Tanggal Berakhir",
-    "image_file": "Berkas Gambar",
+    "image_file": "Berkas Gambar (Opsional)",
     "image": "Gambar",
     "coupon": "Kupon",
     "response": "Respon",
@@ -690,6 +690,20 @@
     "total_reward": "Total Reward",
     "calculated_value": "Nilai yang Dihitung",
     "place_ad": "Pasang Iklan",
-    "ads_in_app_price": "Harga iklan dalam aplikasi"
+    "ads_in_app_price": "Harga iklan dalam aplikasi",
+    "alert": {
+      "adsName": "Isi nama iklan",
+      "adOwner": "Isi pemilik iklan",
+      "adTitle": "Isi judul iklan",
+      "detailProduct": "Isi detail iklan",
+      "selectedAdType": "Pilih jenis iklan",
+      "selectedExposeCount": "Pilih jumlah tayangan",
+      "selectedRewardCoin": "Pilih koin hadiah",
+      "amountRewardPerCatch": "Masukkan jumlah hadiah per tangkapan",
+      "totalReward": "Masukkan total hadiah",
+      "calculatedValue": "Masukkan nilai yang dihitung",
+      "dateFrom": "Isi tanggal mulai",
+      "dateEnds": "Isi tanggal berakhir"
+    }
   }
 }

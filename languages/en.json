@@ -672,7 +672,7 @@
     "ad_title": "AD Title",
     "date_from": "Date From",
     "date_ends": "Date Ends",
-    "image_file": "Image File",
+    "image_file": "Image File (Optional)",
     "image": "Image",
     "coupon": "Coupon",
     "response": "Response",
@@ -691,6 +691,22 @@
     "total_reward": "Total Reward",
     "calculated_value": "Calculated Value",
     "place_ad": "Place Ad",
-    "ads_in_app_price": "AD's in-app price"
+    "ads_in_app_price": "AD's in-app price",
+    "alert": {
+      "adsName": "Fill ads name input",
+      "adOwner": "Fill ad owner input",
+      "adTitle": "Fill ad title input",
+      "detailProduct": "Fill detail ad",
+      "selectedAdType": "Select an ad type",
+      "selectedExposeCount": "Select expose count",
+      "selectedRewardCoin": "Select reward coin",
+      "amountRewardPerCatch": "Enter reward amount per catch",
+      "totalReward": "Enter total reward amount",
+      "calculatedValue": "Enter calculated value",
+      "dateFrom": "Fill date from",
+      "dateEnds": "Fill date ends"
+    },
+    "ad_detail": "AD's Detail",
+    "terms_of_use": "Terms of Use"
   }
 }
