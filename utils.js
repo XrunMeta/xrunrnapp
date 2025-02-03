@@ -683,3 +683,71 @@ export const dateIndividualAds = datetime => {
   const label = `${year.slice(2)}.${month}.${date}`;
   return label;
 };
+
+export const checkingConditionsAddNewAds = (
+  lang,
+  adName,
+  selectedAdType,
+  adOwnerName,
+  adTitle,
+  dateFrom,
+  dateEnds,
+  detailProduct,
+  selectedExposeCount,
+  selectedRewardCoin,
+  amountRewardPerCatch,
+  totalReward,
+  calculatedValue,
+) => {
+  const validations = [
+    {field: adName, key: 'adsName', fallback: 'Fill ads name input'},
+    {
+      field: selectedAdType.value,
+      key: 'selectedAdType',
+      fallback: 'Select an ad type',
+    },
+    {field: adOwnerName, key: 'adOwner', fallback: 'Fill ad owner input'},
+    {field: adTitle, key: 'adTitle', fallback: 'Fill ad title input'},
+    {field: dateFrom, key: 'dateFrom', fallback: 'Fill date from'},
+    {field: dateEnds, key: 'dateEnds', fallback: 'Fill date ends'},
+    {
+      field: detailProduct,
+      key: 'detailProduct',
+      fallback: 'Fill product details',
+    },
+    {
+      field: selectedExposeCount.value,
+      key: 'selectedExposeCount',
+      fallback: 'Select expose count',
+    },
+    {
+      field: selectedRewardCoin.value,
+      key: 'selectedRewardCoin',
+      fallback: 'Select reward coin',
+    },
+    {
+      field: amountRewardPerCatch,
+      key: 'amountRewardPerCatch',
+      fallback: 'Enter reward amount per catch',
+    },
+    {
+      field: totalReward,
+      key: 'totalReward',
+      fallback: 'Enter total reward amount',
+    },
+    {
+      field: calculatedValue,
+      key: 'calculatedValue',
+      fallback: 'Enter calculated value',
+    },
+  ];
+
+  for (const {field, key, fallback} of validations) {
+    if (!field) {
+      Alert.alert(lang?.screen_indAds?.alert?.[key] || fallback);
+      return false;
+    }
+  }
+
+  return true;
+};
