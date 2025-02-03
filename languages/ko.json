@@ -670,7 +670,7 @@
     "ad_title": "광고 제목",
     "date_from": "시작 날짜",
     "date_ends": "종료 날짜",
-    "image_file": "이미지 파일",
+    "image_file": "이미지 파일 (선택 사항)",
     "image": "이미지",
     "coupon": "쿠폰",
     "response": "응답",
@@ -689,6 +689,20 @@
     "total_reward": "총 보상",
     "calculated_value": "계산된 값",
     "place_ad": "광고 배치",
-    "ads_in_app_price": "앱 내 광고 가격"
+    "ads_in_app_price": "앱 내 광고 가격",
+    "alert": {
+      "adsName": "광고 이름 입력",
+      "adOwner": "광고 소유자 입력",
+      "adTitle": "광고 제목 입력",
+      "detailProduct": "광고 세부 정보 입력",
+      "selectedAdType": "광고 유형 선택",
+      "selectedExposeCount": "노출 횟수 선택",
+      "selectedRewardCoin": "보상 코인 선택",
+      "amountRewardPerCatch": "획득당 보상 금액 입력",
+      "totalReward": "총 보상 금액 입력",
+      "calculatedValue": "계산된 값 입력",
+      "dateFrom": "시작 날짜 입력",
+      "dateEnds": "종료 날짜 입력"
+    }
   }
 }
