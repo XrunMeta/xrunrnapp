@@ -16,7 +16,7 @@ import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
-import {getLanguage2, getFontFam, fontSize} from '../../../utils';
+import {getLanguage2, getFontFam, fontSize, authcode} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 // Saved Item
@@ -88,6 +88,38 @@ const ShopScreen = () => {
     }
   };
 
+  // Fetch Item Shop Data
+  const fetchItemShopData = async () => {
+    try {
+      const request = await fetch(
+        `http://10.0.2.2:3006/gateway/getListItemShop`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authcode}`,
+          },
+        },
+      );
+      const response = await request.json();
+
+      if (response.status === 'success' && response.code === 200) {
+        const shopData = response.data;
+
+        console.log('anjing -> ' + shopData.length);
+        setItemShopData(shopData);
+        setItemShopLoading(false);
+      } else {
+        console.error('Failed to fetch ItemShop List:', response.message);
+      }
+    } catch (err) {
+      console.error('Error fetching user data: ', err);
+      crashlytics().recordError(new Error(err));
+      crashlytics().log(err);
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -110,8 +142,7 @@ const ShopScreen = () => {
         setItemExpiredLoading(false);
 
         // Item Shop
-        setItemShopData(dataShop);
-        setItemShopLoading(false);
+        fetchItemShopData();
       } catch (err) {
         console.error('Error retrieving data from AsyncStorage:', err);
         crashlytics().recordError(new Error(err));
@@ -175,7 +206,7 @@ const ShopScreen = () => {
         styles,
         itemShopLoading,
         itemShopData,
-        item => item.transaction.toString(),
+        item => item.id.toString(),
         ({item, styles, onPress}) =>
           itemShopRenderItems({
             item,
