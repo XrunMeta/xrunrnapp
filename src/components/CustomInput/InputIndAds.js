@@ -21,6 +21,7 @@ const InputIndAds = ({
         fontFamily: getFontFam() + 'Regular',
         fontSize: fontSize('body'),
         color: 'black',
+        minHeight: 50,
       }}
       value={value}
       placeholder={placeholder}
