@@ -5,16 +5,18 @@ import {fontSize, getFontFam} from '../../../utils';
 const LabelWithBoxReadOnly = ({label, value, isTextarea = false}) => {
   return (
     <View>
-      <Text
-        style={{
-          color: 'black',
-          fontFamily: getFontFam() + 'Bold',
-          fontSize: fontSize('body'),
-          flex: 1,
-          marginLeft: 20,
-        }}>
-        {label}
-      </Text>
+      {label && (
+        <Text
+          style={{
+            color: 'black',
+            fontFamily: getFontFam() + 'Bold',
+            fontSize: fontSize('body'),
+            flex: 1,
+            marginLeft: 20,
+          }}>
+          {label}
+        </Text>
+      )}
       <View style={styles.containerBox(isTextarea)}>
         {isTextarea ? (
           <ScrollView
