@@ -14,13 +14,13 @@ const InputIndAds = ({
       style={{
         backgroundColor: 'white',
         paddingHorizontal: 12,
-        marginHorizontal: 8,
         borderRadius: 10,
         marginVertical: 4,
         ...styles.shadow,
         fontFamily: getFontFam() + 'Regular',
         fontSize: fontSize('body'),
         color: 'black',
+        minHeight: 50,
       }}
       value={value}
       placeholder={placeholder}

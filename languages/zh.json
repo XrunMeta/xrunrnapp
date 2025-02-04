@@ -685,12 +685,15 @@
     "detail_explain": "详细说明",
     "expose_settings": "曝光设置",
     "expose_count": "曝光数量",
+    "expose_length": "曝光时长",
     "reward_coin": "奖励币",
     "amount_reward_per_catch": "每次捕获的奖励金额",
+    "reward_amount_per_catch": "每次捕获的奖励金额",
     "total_reward": "总奖励",
     "calculated_value": "计算值",
     "place_ad": "投放广告",
     "ads_in_app_price": "应用内广告价格",
+    "reward_limit": "奖励上限",
     "alert": {
       "adsName": "填写广告名称",
       "adOwner": "填写广告所有者",
@@ -704,6 +707,12 @@
       "calculatedValue": "输入计算值",
       "dateFrom": "填写开始日期",
       "dateEnds": "填写结束日期"
-    }
+    },
+    "ad_detail": "广告详情",
+    "terms_of_use": "使用条款",
+    "value": "价值",
+    "day": "天",
+    "days": "天",
+    "your_ad_starts_soon": "您的广告即将开始。"
   }
 }
