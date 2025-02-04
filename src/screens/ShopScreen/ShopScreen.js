@@ -20,7 +20,6 @@ import {getLanguage2, getFontFam, fontSize, authcode} from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
 // Saved Item
-import dataSaved from './ItemSaved/dataSaved.json';
 import {itemSavedRoutes} from './ItemSaved/ItemSavedRoutes';
 import {itemSavedRenderItems} from './ItemSaved/ItemSavedRenderItems';
 
@@ -30,7 +29,6 @@ import {itemExpiredRoutes} from './ItemExpired/ItemExpiredRoutes';
 import {itemExpiredRenderItems} from './ItemExpired/ItemExpiredRenderItems';
 
 // Shop Item
-import dataShop from './ItemShop/dataShop.json';
 import {itemShopRoutes} from './ItemShop/ItemShopRoutes';
 import {itemShopRenderItems} from './ItemShop/ItemShopRenderItems';
 
@@ -106,11 +104,44 @@ const ShopScreen = () => {
       if (response.status === 'success' && response.code === 200) {
         const shopData = response.data;
 
-        console.log('anjing -> ' + shopData.length);
         setItemShopData(shopData);
         setItemShopLoading(false);
       } else {
         console.error('Failed to fetch ItemShop List:', response.message);
+      }
+    } catch (err) {
+      console.error('Error fetching user data: ', err);
+      crashlytics().recordError(new Error(err));
+      crashlytics().log(err);
+      setIsLoading(false);
+    }
+  };
+
+  // Fetch Item Shop Data Saved
+  const fetchItemShopDataSaved = async member => {
+    try {
+      const request = await fetch(
+        `http://10.0.2.2:3006/gateway/getListItemShopSaved`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authcode}`,
+          },
+          body: JSON.stringify({
+            member,
+          }),
+        },
+      );
+      const response = await request.json();
+
+      if (response.status === 'success' && response.code === 200) {
+        const shopSavedData = response.data;
+
+        setItemSavedData(shopSavedData);
+        setItemSavedLoading(false);
+      } else {
+        console.error('Failed to fetch ItemShopSaved List:', response.message);
       }
     } catch (err) {
       console.error('Error fetching user data: ', err);
@@ -134,8 +165,7 @@ const ShopScreen = () => {
         setUserData(getData);
 
         // Item Saved
-        setItemSavedData(dataSaved);
-        setItemSavedLoading(false);
+        fetchItemShopDataSaved(getData.member);
 
         // Item Expired
         setItemExpiredData(dataExpired);
@@ -178,7 +208,7 @@ const ShopScreen = () => {
         styles,
         itemSavedLoading,
         itemSavedData,
-        item => item.transaction.toString(),
+        item => item.id.toString(),
         ({item, styles, onPress}) =>
           itemSavedRenderItems({
             item,

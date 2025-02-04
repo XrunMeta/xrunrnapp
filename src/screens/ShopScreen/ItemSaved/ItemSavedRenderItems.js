@@ -5,9 +5,24 @@ export const itemSavedRenderItems = ({
   styles, // Gaya custom yang digunakan
   onPress, // Callback untuk event ketika item ditekan
 }) => {
+  const calculateDaysLeft = (createdDate, duration = 30) => {
+    if (!createdDate) return '';
+
+    const created = new Date(createdDate);
+    const now = new Date();
+
+    const expiredDate = new Date(created);
+    expiredDate.setDate(created.getDate() + duration); // Tambah durasi ke tanggal expired
+
+    const diffTime = expiredDate - now;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Selisih hari, dibulatkan ke atas
+
+    return diffDays > 0 ? diffDays : `Expired`;
+  };
+
   return (
     <TouchableOpacity
-      key={item.transaction}
+      key={item.id}
       style={[styles.list, {flexDirection: 'row', gap: 10}]}
       onPress={() => onPress(item)} // Callback saat item ditekan
       disabled>
@@ -24,8 +39,13 @@ export const itemSavedRenderItems = ({
         }}>
         <Image
           source={
-            item.icon
-              ? {uri: item.icon}
+            item.icon_blob
+              ? {
+                  uri: `data:image/png;base64,${item.icon_blob.replace(
+                    /(\r\n|\n|\r)/gm,
+                    '',
+                  )}`,
+                }
               : require('../../../../assets/images/logo_xrun.png')
           }
           resizeMode="contain"
@@ -39,10 +59,11 @@ export const itemSavedRenderItems = ({
           style={[styles.normalText, {color: 'grey'}]}
           ellipsizeMode="tail"
           numberOfLines={1}>
-          {item.title}
+          {item.name}
         </Text>
         <Text style={[styles.normalText, {marginTop: 0, fontWeight: 'bold'}]}>
-          {item.price}
+          {item.type == 10152 ? `${calculateDaysLeft(item.created)} ` : ''}
+          {item.saveddesc}
         </Text>
       </View>
     </TouchableOpacity>
