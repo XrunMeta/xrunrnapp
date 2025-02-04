@@ -24,7 +24,6 @@ const ButtonListWithSub = ({
       style={{
         backgroundColor: 'white',
         paddingHorizontal: 12,
-        marginHorizontal: 8,
         borderRadius: 10,
         marginVertical: 4,
         ...styles.shadow,
@@ -34,7 +33,7 @@ const ButtonListWithSub = ({
         style={{
           flexDirection: 'row',
           alignItems: 'center',
-          paddingVertical: 18,
+          flex: 1,
         }}>
         {label !== '' && (
           <Text

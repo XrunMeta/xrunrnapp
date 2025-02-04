@@ -12,7 +12,7 @@ const LabelWithBoxReadOnly = ({label, value, isTextarea = false}) => {
             fontFamily: getFontFam() + 'Bold',
             fontSize: fontSize('body'),
             flex: 1,
-            marginLeft: 20,
+            marginLeft: 10,
           }}>
           {label}
         </Text>
@@ -39,7 +39,6 @@ const styles = StyleSheet.create({
     minHeight: 50,
     maxHeight: isTextarea && 300,
     padding: 12,
-    marginHorizontal: 8,
     marginVertical: 4,
     backgroundColor: 'white',
     borderRadius: 10,
