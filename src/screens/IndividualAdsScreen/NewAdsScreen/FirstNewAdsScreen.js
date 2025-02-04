@@ -486,7 +486,7 @@ const FirstNewAdsScreen = () => {
           data={groupedData}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item}) => (
-            <View style={styles.groupContainer}>
+            <View>
               {item.map((group, index) => (
                 <View key={index}>
                   {group.group && (
@@ -521,7 +521,7 @@ const FirstNewAdsScreen = () => {
                         onPress={field.onPress}
                       />
                     ) : field.type === 'text' ? (
-                      <Text key={index} style={styles.calculatedValueText}>
+                      <Text key={index}>
                         {field.label} {field.value}
                       </Text>
                     ) : null,
