@@ -1,10 +1,5 @@
 import {Image, Text, TouchableOpacity, View} from 'react-native';
-
-export const itemSavedRenderItems = ({
-  item, // Data item yang akan dirender
-  styles, // Gaya custom yang digunakan
-  onPress, // Callback untuk event ketika item ditekan
-}) => {
+export const itemSavedRenderItems = ({item, styles, onPress}) => {
   const calculateDaysLeft = (createdDate, duration = 30) => {
     if (!createdDate) return '';
 
@@ -20,11 +15,16 @@ export const itemSavedRenderItems = ({
     return diffDays > 0 ? diffDays : `Expired`;
   };
 
+  // Cek apakah item sudah Expired, jika iya maka hentikan render
+  if (calculateDaysLeft(item.created) === 'Expired') {
+    return null; // Tidak menampilkan komponen ini
+  }
+
   return (
     <TouchableOpacity
       key={item.id}
       style={[styles.list, {flexDirection: 'row', gap: 10}]}
-      onPress={() => onPress(item)} // Callback saat item ditekan
+      onPress={() => onPress(item)}
       disabled>
       {/* Image Container */}
       <View
