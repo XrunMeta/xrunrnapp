@@ -481,7 +481,6 @@ const FirstNewAdsScreen = () => {
             fontFamily: getFontFam() + 'Bold',
             fontSize: fontSize('body'),
             flex: 1,
-            marginLeft: 10,
           }}>
           {lang && lang ? lang.screen_indAds.new_ad : 'New AD'}
         </Text>
@@ -491,7 +490,7 @@ const FirstNewAdsScreen = () => {
       <View
         style={{
           flex: 1,
-          padding: 10,
+          paddingHorizontal: 8,
           paddingTop: 0,
         }}>
         <FlatList
@@ -504,7 +503,7 @@ const FirstNewAdsScreen = () => {
                   {group.group && (
                     <Text
                       style={{
-                        marginHorizontal: 20,
+                        marginHorizontal: 10,
                         marginTop: 10,
                         marginBottom: 24,
                         fontSize: fontSize('body'),
