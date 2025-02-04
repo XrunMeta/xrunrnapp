@@ -5,7 +5,6 @@ import {
   ActivityIndicator,
   StyleSheet,
   FlatList,
-  TouchableOpacity,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -14,6 +13,7 @@ import ButtonBack from '../../../components/ButtonBack';
 import {getLanguage2, getFontFam, fontSize} from '../../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import LabelWithBoxReadOnly from '../../../components/LabelWithBoxReadOnly/LabelWithBoxReadOnly';
+import ButtonConfirmAds from '../../../components/ButtonConfirmAds/ButtonConfirmAds';
 
 const AdsDetailScreen = () => {
   const [lang, setLang] = useState('');
@@ -124,6 +124,24 @@ const AdsDetailScreen = () => {
     },
   ];
 
+  const onMoveCompletePurchase = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{name: 'IndAds'}],
+    });
+
+    setTimeout(() => {
+      navigation.navigate('IndAdsCompletePurchase', {
+        adName,
+        calculatedValue,
+        rewardCoin,
+        rewardAmountPerCatch,
+        exposeCount,
+        exposeLength,
+      });
+    }, 100);
+  };
+
   return (
     <SafeAreaView style={styles.root}>
       {/* Loading */}
@@ -174,26 +192,10 @@ const AdsDetailScreen = () => {
           contentContainerStyle={styles.wrapperListInput}
           showsVerticalScrollIndicator={false}
           ListFooterComponent={
-            <TouchableOpacity
-              style={{
-                backgroundColor: '#fedc00',
-                marginTop: 48,
-                alignSelf: 'center',
-                paddingHorizontal: 12,
-                paddingVertical: 6,
-                marginBottom: 20,
-                borderRadius: 50,
-              }}>
-              <Text
-                style={{
-                  color: 'black',
-                  fontFamily: getFontFam() + 'Bold',
-                  fontSize: fontSize('subtitle'),
-                  textAlign: 'center',
-                }}>
-                {lang && lang ? lang.screen_indAds.place_ad : 'Place Ad'}
-              </Text>
-            </TouchableOpacity>
+            <ButtonConfirmAds
+              label={lang && lang ? lang.screen_indAds.place_ad : 'Place Ad'}
+              onPress={onMoveCompletePurchase}
+            />
           }
         />
       </View>

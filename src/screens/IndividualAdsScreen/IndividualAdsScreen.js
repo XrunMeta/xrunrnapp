@@ -20,13 +20,14 @@ import {
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import ButtonListWithSub from '../../components/ButtonList/ButtonListWithSub';
+import ButtonConfirmAds from '../../components/ButtonConfirmAds/ButtonConfirmAds';
 
 const IndividualAdsScreen = () => {
   const [lang, setLang] = useState('');
   const navigation = useNavigation();
   const [member, setMember] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [inAdList, setInAdList] = useState([]);
+  const [inAdListf, setInAdList] = useState([]);
 
   const fetchInAdList = async member => {
     try {
@@ -205,26 +206,11 @@ const IndividualAdsScreen = () => {
           />
           <ButtonListWithSub label="My Ads Name 2" textClicks="10/200" />
           <ButtonListWithSub label="My Ads Name 3" textExposes="250/1000" />
-          <TouchableOpacity
-            style={{
-              backgroundColor: '#fedc00',
-              marginTop: 48,
-              alignSelf: 'center',
-              paddingHorizontal: 12,
-              paddingVertical: 6,
-              borderRadius: 50,
-            }}
-            onPress={onMoveNewIndAdsScreen}>
-            <Text
-              style={{
-                color: 'black',
-                fontFamily: getFontFam() + 'Bold',
-                fontSize: fontSize('subtitle'),
-                textAlign: 'center',
-              }}>
-              {lang && lang ? lang.screen_indAds.add_ad : 'Add Ad'}
-            </Text>
-          </TouchableOpacity>
+          <ButtonConfirmAds
+            onPress={onMoveNewIndAdsScreen}
+            label={lang && lang ? lang.screen_indAds.add_ad : 'Add Ad'}
+          />
+
           {/* <ButtonListWithSub label="My Ads Name 3" textExposes="250/1000" /> */}
 
           {/* {inAdList.map((item, index) => (
