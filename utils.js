@@ -751,3 +751,13 @@ export const checkingConditionsAddNewAds = (
 
   return true;
 };
+
+export const calculateDayDifferenceAds = (startDate, endDate) => {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  const differenceInTime = end - start;
+  const differenceInDays = differenceInTime / (1000 * 60 * 60 * 24);
+
+  return Math.round(differenceInDays);
+};
