@@ -686,12 +686,15 @@
     "detail_explain": "Detail Explain",
     "expose_settings": "Expose Settings",
     "expose_count": "Expose Count",
+    "expose_length": "Expose Length",
     "reward_coin": "Reward Coin",
     "amount_reward_per_catch": "Amount Reward per Catch",
+    "reward_amount_per_catch": "Reward Amount per Catch",
     "total_reward": "Total Reward",
     "calculated_value": "Calculated Value",
     "place_ad": "Place Ad",
     "ads_in_app_price": "AD's in-app price",
+    "reward_limit": "Reward Limit",
     "alert": {
       "adsName": "Fill ads name input",
       "adOwner": "Fill ad owner input",
@@ -707,6 +710,9 @@
       "dateEnds": "Fill date ends"
     },
     "ad_detail": "AD's Detail",
-    "terms_of_use": "Terms of Use"
+    "terms_of_use": "Terms of Use",
+    "value": "Value",
+    "day": "Day",
+    "days": "days"
   }
 }
