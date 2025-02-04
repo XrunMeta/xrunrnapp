@@ -146,7 +146,7 @@ const AdsCompletePurchase = () => {
       <View
         style={{
           flex: 1,
-          marginHorizontal: 10,
+          paddingHorizontal: 8,
           marginTop: 20,
         }}>
         <FlatList
