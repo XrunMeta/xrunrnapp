@@ -2,10 +2,9 @@ import {
   StyleSheet,
   Text,
   View,
-  ScrollView,
   SafeAreaView,
   ActivityIndicator,
-  TouchableOpacity,
+  FlatList,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -176,7 +175,6 @@ const IndividualAdsScreen = () => {
             fontFamily: getFontFam() + 'Bold',
             fontSize: fontSize('body'),
             flex: 1,
-            marginLeft: 10,
           }}>
           {lang && lang ? lang.screen_indAds.manage : 'Manage'}
         </Text>
@@ -186,6 +184,7 @@ const IndividualAdsScreen = () => {
             fontFamily: getFontFam() + 'Regular',
             fontSize: fontSize('body'),
             flex: 1,
+            marginLeft: -10,
           }}>
           {lang && lang ? lang.screen_indAds.add_coins : 'Add Coins'}
         </Text>
@@ -195,25 +194,33 @@ const IndividualAdsScreen = () => {
       <View
         style={{
           flex: 1,
-          padding: 10,
+          paddingHorizontal: 8,
           paddingTop: 0,
         }}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <ButtonListWithSub
-            label="My Ads Name"
-            textClicks="10/200"
-            textExposes="250/1000"
-          />
-          <ButtonListWithSub label="My Ads Name 2" textClicks="10/200" />
-          <ButtonListWithSub label="My Ads Name 3" textExposes="250/1000" />
-          <ButtonConfirmAds
-            onPress={onMoveNewIndAdsScreen}
-            label={lang && lang ? lang.screen_indAds.add_ad : 'Add Ad'}
-          />
+        <FlatList
+          data={inAdListf}
+          keyExtractor={item => item.id}
+          renderItem={({item}) => (
+            <ButtonListWithSub
+              label={item.label}
+              textClicks={`${item.catch_count}/${item.catch_limit}`}
+              textExposes={`${item.expose_count}/${item.exposed_limit}`}
+            />
+          )}
+          ListFooterComponent={
+            <ButtonConfirmAds
+              onPress={onMoveNewIndAdsScreen}
+              label={
+                lang && lang.screen_indAds
+                  ? lang.screen_indAds.add_ad
+                  : 'Add Ad'
+              }
+            />
+          }
+          showsVerticalScrollIndicator={false}
+        />
 
-          {/* <ButtonListWithSub label="My Ads Name 3" textExposes="250/1000" /> */}
-
-          {/* {inAdList.map((item, index) => (
+        {/* {inAdList.map((item, index) => (
             <ButtonListWithSub
               key={item.ind_ad}
               label={item.label}
@@ -221,7 +228,6 @@ const IndividualAdsScreen = () => {
               textExposes={`${item.expose_count}/${item.exposed_limit}`}
             />
           ))} */}
-        </ScrollView>
         {/* <TouchableOpacity
           style={{
             backgroundColor: '#fedc00',
