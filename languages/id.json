@@ -685,12 +685,15 @@
     "detail_explain": "Penjelasan Detail",
     "expose_settings": "Pengaturan Expose",
     "expose_count": "Jumlah Expose",
+    "expose_length": "Durasi Paparan",
     "reward_coin": "Koin Reward",
     "amount_reward_per_catch": "Jumlah Reward per Tangkap",
+    "reward_amount_per_catch": "Jumlah Hadiah per Tangkap",
     "total_reward": "Total Reward",
     "calculated_value": "Nilai yang Dihitung",
     "place_ad": "Pasang Iklan",
     "ads_in_app_price": "Harga iklan dalam aplikasi",
+    "reward_limit": "Batas Hadiah",
     "alert": {
       "adsName": "Isi nama iklan",
       "adOwner": "Isi pemilik iklan",
@@ -704,6 +707,11 @@
       "calculatedValue": "Masukkan nilai yang dihitung",
       "dateFrom": "Isi tanggal mulai",
       "dateEnds": "Isi tanggal berakhir"
-    }
+    },
+    "ad_detail": "Detail Iklan",
+    "terms_of_use": "Syarat dan Ketentuan",
+    "value": "Nilai",
+    "day": "Hari",
+    "days": "hari"
   }
 }
