@@ -24,7 +24,6 @@ import {itemSavedRoutes} from './ItemSaved/ItemSavedRoutes';
 import {itemSavedRenderItems} from './ItemSaved/ItemSavedRenderItems';
 
 // Expired Item
-import dataExpired from './ItemExpired/dataExpired.json';
 import {itemExpiredRoutes} from './ItemExpired/ItemExpiredRoutes';
 import {itemExpiredRenderItems} from './ItemExpired/ItemExpiredRenderItems';
 
@@ -151,6 +150,43 @@ const ShopScreen = () => {
     }
   };
 
+  // Fetch Item Shop Data Expired
+  const fetchItemShopDataExpired = async member => {
+    try {
+      const request = await fetch(
+        `http://10.0.2.2:3006/gateway/getListItemShopExpired`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authcode}`,
+          },
+          body: JSON.stringify({
+            member,
+          }),
+        },
+      );
+      const response = await request.json();
+
+      if (response.status === 'success' && response.code === 200) {
+        const shopExpData = response.data;
+
+        setItemExpiredData(shopExpData);
+        setItemExpiredLoading(false);
+      } else {
+        console.error(
+          'Failed to fetch ItemShopExpired List:',
+          response.message,
+        );
+      }
+    } catch (err) {
+      console.error('Error fetching user data: ', err);
+      crashlytics().recordError(new Error(err));
+      crashlytics().log(err);
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -168,8 +204,7 @@ const ShopScreen = () => {
         fetchItemShopDataSaved(getData.member);
 
         // Item Expired
-        setItemExpiredData(dataExpired);
-        setItemExpiredLoading(false);
+        fetchItemShopDataExpired(getData.member);
 
         // Item Shop
         fetchItemShopData();
@@ -222,7 +257,7 @@ const ShopScreen = () => {
         styles,
         itemExpiredLoading,
         itemExpiredData,
-        item => item.transaction.toString(),
+        item => item.id.toString(),
         ({item, styles, onPress}) =>
           itemExpiredRenderItems({
             item,
