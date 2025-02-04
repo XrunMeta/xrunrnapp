@@ -7,7 +7,7 @@ export const itemShopRenderItems = ({
 }) => {
   return (
     <TouchableOpacity
-      key={item.transaction}
+      key={item.id}
       style={[styles.list, {flexDirection: 'row', gap: 10}]}
       onPress={() => onPress(item)} // Callback saat item ditekan
     >
@@ -24,8 +24,13 @@ export const itemShopRenderItems = ({
         }}>
         <Image
           source={
-            item.icon
-              ? {uri: item.icon}
+            item.icon_blob
+              ? {
+                  uri: `data:image/png;base64,${item.icon_blob.replace(
+                    /(\r\n|\n|\r)/gm,
+                    '',
+                  )}`,
+                }
               : require('../../../../assets/images/logo_xrun.png')
           }
           resizeMode="contain"
@@ -39,10 +44,10 @@ export const itemShopRenderItems = ({
           style={[styles.normalText, {color: 'grey'}]}
           ellipsizeMode="tail"
           numberOfLines={1}>
-          {item.title}
+          {item.name}
         </Text>
         <Text style={[styles.normalText, {marginTop: 0, fontWeight: 'bold'}]}>
-          {item.price}
+          {item.price} / {item.unit}
         </Text>
       </View>
     </TouchableOpacity>
