@@ -28,6 +28,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import RadioGroups from '../../../components/RadioGroups/RadioGroups';
+import ButtonConfirmAds from '../../../components/ButtonConfirmAds/ButtonConfirmAds';
 
 const FirstNewAdsScreen = () => {
   const [lang, setLang] = useState('');
@@ -544,27 +545,10 @@ const FirstNewAdsScreen = () => {
           contentContainerStyle={styles.wrapperListInput}
           showsVerticalScrollIndicator={false}
           ListFooterComponent={
-            <TouchableOpacity
+            <ButtonConfirmAds
               onPress={onMoveDetailAdsScreen}
-              style={{
-                backgroundColor: '#fedc00',
-                marginTop: 48,
-                alignSelf: 'center',
-                paddingHorizontal: 12,
-                paddingVertical: 6,
-                marginBottom: 20,
-                borderRadius: 50,
-              }}>
-              <Text
-                style={{
-                  color: 'black',
-                  fontFamily: getFontFam() + 'Bold',
-                  fontSize: fontSize('subtitle'),
-                  textAlign: 'center',
-                }}>
-                {lang && lang ? lang.screen_indAds.place_ad : 'Place Ad'}
-              </Text>
-            </TouchableOpacity>
+              label={lang && lang ? lang.screen_indAds.place_ad : 'Place Ad'}
+            />
           }
         />
       </View>
