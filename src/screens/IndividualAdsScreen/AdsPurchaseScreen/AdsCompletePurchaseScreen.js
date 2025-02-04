@@ -9,13 +9,12 @@ import {
 import React, {useEffect, useState} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import ButtonBack from '../../../components/ButtonBack';
 import {getLanguage2, getFontFam, fontSize} from '../../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import LabelWithBoxReadOnly from '../../../components/LabelWithBoxReadOnly/LabelWithBoxReadOnly';
 import ButtonConfirmAds from '../../../components/ButtonConfirmAds/ButtonConfirmAds';
 
-const AdsDetailScreen = () => {
+const AdsCompletePurchase = () => {
   const [lang, setLang] = useState('');
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(true);
@@ -51,10 +50,6 @@ const AdsDetailScreen = () => {
       isMounted = false; // Cleanup
     };
   }, []);
-
-  const onMoveFirstNewAdsScreen = () => {
-    navigation.navigate('NewIndAds');
-  };
 
   const mainDetailAd = () => {
     const data = [
@@ -107,14 +102,6 @@ const AdsDetailScreen = () => {
       value: adName,
     },
     {
-      label: lang && lang ? lang.screen_indAds.terms_of_use : 'Terms of Use',
-      value:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.".repeat(
-          10,
-        ),
-      isTextarea: true,
-    },
-    {
       label: '',
       value: mainDetailAd(),
     },
@@ -124,22 +111,8 @@ const AdsDetailScreen = () => {
     },
   ];
 
-  const onMoveCompletePurchase = () => {
-    navigation.reset({
-      index: 0,
-      routes: [{name: 'IndAds'}],
-    });
-
-    setTimeout(() => {
-      navigation.navigate('IndAdsCompletePurchase', {
-        adName,
-        calculatedValue,
-        rewardCoin,
-        rewardAmountPerCatch,
-        exposeCount,
-        exposeLength,
-      });
-    }, 100);
+  const onMoveListAds = () => {
+    navigation.replace('IndAds');
   };
 
   return (
@@ -162,9 +135,6 @@ const AdsDetailScreen = () => {
 
       {/* Title */}
       <View style={{flexDirection: 'row'}}>
-        <View style={{position: 'absolute', zIndex: 1}}>
-          <ButtonBack onClick={onMoveFirstNewAdsScreen} />
-        </View>
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>
             {lang && lang.screen_indAds.title ? lang.screen_indAds.title : ''}
@@ -192,10 +162,13 @@ const AdsDetailScreen = () => {
           contentContainerStyle={styles.wrapperListInput}
           showsVerticalScrollIndicator={false}
           ListFooterComponent={
-            <ButtonConfirmAds
-              label={lang && lang ? lang.screen_indAds.place_ad : 'Place Ad'}
-              onPress={onMoveCompletePurchase}
-            />
+            <>
+              <Text style={styles.ad_starts_soon}>Your ad starts soon.</Text>
+              <ButtonConfirmAds
+                label={lang && lang ? lang.screen_showad.textOK : 'OK'}
+                onPress={onMoveListAds}
+              />
+            </>
           }
         />
       </View>
@@ -203,7 +176,7 @@ const AdsDetailScreen = () => {
   );
 };
 
-export default AdsDetailScreen;
+export default AdsCompletePurchase;
 
 const styles = StyleSheet.create({
   root: {
@@ -239,5 +212,12 @@ const styles = StyleSheet.create({
   wrapperListInput: {
     flexDirection: 'column',
     gap: 12,
+  },
+  ad_starts_soon: {
+    fontSize: fontSize('subtitle'),
+    fontFamily: getFontFam() + 'Bold',
+    marginHorizontal: 12,
+    marginTop: 32,
+    color: '#000',
   },
 });

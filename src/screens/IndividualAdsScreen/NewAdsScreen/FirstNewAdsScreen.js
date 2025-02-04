@@ -19,6 +19,7 @@ import {
   fontSize,
   dateIndividualAds,
   checkingConditionsAddNewAds,
+  calculateDayDifferenceAds,
 } from '../../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import ButtonListWithSub from '../../../components/ButtonList/ButtonListWithSub';
@@ -27,6 +28,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import RadioGroups from '../../../components/RadioGroups/RadioGroups';
+import ButtonConfirmAds from '../../../components/ButtonConfirmAds/ButtonConfirmAds';
 
 const FirstNewAdsScreen = () => {
   const [lang, setLang] = useState('');
@@ -36,10 +38,10 @@ const FirstNewAdsScreen = () => {
   const [adName, setAdName] = useState('');
   const [adOwnerName, setAdOwnerName] = useState('');
   const [adTitle, setAdTitle] = useState('');
-  const [amountRewardPerCatch, setAmountRewardPerCatch] = useState('');
+  const [rewardAmountPerCatch, setRewardAmountPerCatch] = useState('');
   const [totalReward, setTotalReward] = useState('');
   const [detailProduct, setDetailProduct] = useState('');
-  const [calculatedValue, setCalculatedValue] = useState('');
+  const [calculatedValue, setCalculatedValue] = useState('120');
 
   // Popup floating
   const [currentTypePopupFloating, setCurrentTypePopupFloating] = useState('');
@@ -322,8 +324,8 @@ const FirstNewAdsScreen = () => {
           placeholder:
             lang?.screen_indAds?.amount_reward_per_catch ||
             'Amount Reward per Catch',
-          value: amountRewardPerCatch,
-          setValue: setAmountRewardPerCatch,
+          value: rewardAmountPerCatch,
+          setValue: setRewardAmountPerCatch,
           keyboardType: 'numeric',
         },
         {
@@ -342,7 +344,7 @@ const FirstNewAdsScreen = () => {
           type: 'input',
           placeholder:
             lang?.screen_indAds?.ads_in_app_price || 'AD’s in-app price',
-          value: calculatedValue,
+          value: calculatedValue + '$',
           setValue: setCalculatedValue,
           keyboardType: 'numeric',
           isEditable: false,
@@ -417,13 +419,23 @@ const FirstNewAdsScreen = () => {
     //   detailProduct,
     //   selectedExposeCount,
     //   selectedRewardCoin,
-    //   amountRewardPerCatch,
+    //   rewardAmountPerCatch,
     //   totalReward,
     //   calculatedValue,
     // );
 
     // if (isValid) {
-    navigation.navigate('IndAdsDetail');
+    navigation.navigate('IndAdsDetail', {
+      adName,
+      calculatedValue,
+      rewardCoin: selectedRewardCoin.value,
+      rewardAmountPerCatch,
+      exposeCount: selectedExposeCount.value,
+      exposeLength: calculateDayDifferenceAds(
+        textDateFrom.date,
+        textDateEnds.date,
+      ),
+    });
     // }
   };
 
@@ -469,7 +481,6 @@ const FirstNewAdsScreen = () => {
             fontFamily: getFontFam() + 'Bold',
             fontSize: fontSize('body'),
             flex: 1,
-            marginLeft: 10,
           }}>
           {lang && lang ? lang.screen_indAds.new_ad : 'New AD'}
         </Text>
@@ -479,20 +490,20 @@ const FirstNewAdsScreen = () => {
       <View
         style={{
           flex: 1,
-          padding: 10,
+          paddingHorizontal: 8,
           paddingTop: 0,
         }}>
         <FlatList
           data={groupedData}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({item}) => (
-            <View style={styles.groupContainer}>
+            <View>
               {item.map((group, index) => (
                 <View key={index}>
                   {group.group && (
                     <Text
                       style={{
-                        marginHorizontal: 20,
+                        marginHorizontal: 10,
                         marginTop: 10,
                         marginBottom: 24,
                         fontSize: fontSize('body'),
@@ -521,7 +532,7 @@ const FirstNewAdsScreen = () => {
                         onPress={field.onPress}
                       />
                     ) : field.type === 'text' ? (
-                      <Text key={index} style={styles.calculatedValueText}>
+                      <Text key={index}>
                         {field.label} {field.value}
                       </Text>
                     ) : null,
@@ -533,27 +544,10 @@ const FirstNewAdsScreen = () => {
           contentContainerStyle={styles.wrapperListInput}
           showsVerticalScrollIndicator={false}
           ListFooterComponent={
-            <TouchableOpacity
+            <ButtonConfirmAds
               onPress={onMoveDetailAdsScreen}
-              style={{
-                backgroundColor: '#fedc00',
-                marginTop: 48,
-                alignSelf: 'center',
-                paddingHorizontal: 12,
-                paddingVertical: 6,
-                marginBottom: 20,
-                borderRadius: 50,
-              }}>
-              <Text
-                style={{
-                  color: 'black',
-                  fontFamily: getFontFam() + 'Bold',
-                  fontSize: fontSize('subtitle'),
-                  textAlign: 'center',
-                }}>
-                {lang && lang ? lang.screen_indAds.place_ad : 'Place Ad'}
-              </Text>
-            </TouchableOpacity>
+              label={lang && lang ? lang.screen_indAds.place_ad : 'Place Ad'}
+            />
           }
         />
       </View>
