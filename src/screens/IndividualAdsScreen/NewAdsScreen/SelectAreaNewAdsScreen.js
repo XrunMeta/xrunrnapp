@@ -173,7 +173,6 @@ const SelectAreaNewAdsScreen = () => {
             fontFamily: getFontFam() + 'Bold',
             fontSize: fontSize('body'),
             flex: 1,
-            marginLeft: 10,
           }}>
           {lang && lang ? lang.screen_indAds.new_ad : 'New AD'}
         </Text>
