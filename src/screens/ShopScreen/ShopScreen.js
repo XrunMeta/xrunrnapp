@@ -315,21 +315,30 @@ const ShopScreen = () => {
                       justifyContent: 'center',
                     }}>
                     <Image
-                      source={{uri: selectedItem?.icon}}
+                      source={
+                        selectedItem?.icon_blob
+                          ? {
+                              uri: `data:image/png;base64,${selectedItem?.icon_blob.replace(
+                                /(\r\n|\n|\r)/gm,
+                                '',
+                              )}`,
+                            }
+                          : require('../../../assets/images/logo_xrun.png')
+                      }
                       resizeMode="contain"
                       style={{height: 25, width: 25}}
                     />
                   </View>
                   <View style={{justifyContent: 'center'}}>
                     <Text style={[styles.normalText, {color: 'grey'}]}>
-                      {selectedItem?.title}
+                      {selectedItem?.name}
                     </Text>
                     <Text
                       style={[
                         styles.normalText,
                         {marginTop: 0, fontWeight: 'bold'},
                       ]}>
-                      {selectedItem?.price}
+                      ${selectedItem?.price} / {selectedItem?.unit}
                     </Text>
                   </View>
                 </View>
@@ -346,7 +355,7 @@ const ShopScreen = () => {
                   style={styles.closeButton}
                   onPress={handleBuyClick}>
                   <Text style={[styles.normalText, styles.closeButtonText]}>
-                    $5
+                    ${selectedItem?.price}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -410,6 +419,7 @@ const ShopScreen = () => {
                 <ScrollView style={styles.modalDescription}>
                   <Text style={[styles.normalText, {color: 'grey'}]}>
                     {itemShopData[0]?.description}
+                    {selectedItem?.terms[0].termsDetail}
                   </Text>
                 </ScrollView>
 
