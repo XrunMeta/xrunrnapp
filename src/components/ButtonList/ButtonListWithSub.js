@@ -28,6 +28,7 @@ const ButtonListWithSub = ({
         borderRadius: 10,
         marginVertical: 4,
         ...styles.shadow,
+        minHeight: 50,
       }}>
       <View
         style={{
