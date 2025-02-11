@@ -662,6 +662,7 @@
   "screen_indAds": {
     "title": "个人广告",
     "manage": "管理",
+    "manage_ad": "管理广告",
     "new_ad": "新广告",
     "add_coins": "添加硬币",
     "add_ad": "添加广告",

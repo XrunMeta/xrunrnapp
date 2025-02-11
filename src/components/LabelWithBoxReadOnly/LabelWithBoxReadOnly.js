@@ -2,7 +2,12 @@ import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {fontSize, getFontFam} from '../../../utils';
 
-const LabelWithBoxReadOnly = ({label, value, isTextarea = false}) => {
+const LabelWithBoxReadOnly = ({
+  label,
+  value,
+  isTextarea = false,
+  isHaveBackground = false,
+}) => {
   return (
     <View>
       {label && (
@@ -17,7 +22,7 @@ const LabelWithBoxReadOnly = ({label, value, isTextarea = false}) => {
           {label}
         </Text>
       )}
-      <View style={styles.containerBox(isTextarea)}>
+      <View style={styles.containerBox(isTextarea, isHaveBackground)}>
         {isTextarea ? (
           <ScrollView
             contentContainerStyle={styles.scrollContainer}
@@ -35,12 +40,12 @@ const LabelWithBoxReadOnly = ({label, value, isTextarea = false}) => {
 export default LabelWithBoxReadOnly;
 
 const styles = StyleSheet.create({
-  containerBox: isTextarea => ({
+  containerBox: (isTextarea, isHaveBackground) => ({
     minHeight: 50,
     maxHeight: isTextarea && 300,
     padding: 12,
     marginVertical: 4,
-    backgroundColor: 'white',
+    backgroundColor: isHaveBackground && 'white',
     borderRadius: 10,
     shadowColor: '#000000',
     shadowOffset: {width: 0, height: 1},
