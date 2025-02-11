@@ -663,6 +663,7 @@
   "screen_indAds": {
     "title": "Individual Ads",
     "manage": "Manage",
+    "manage_ad": "Manage AD",
     "new_ad": "New AD",
     "add_coins": "Add Coins",
     "add_ad": "Add Ad",
