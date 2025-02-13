@@ -47,7 +47,7 @@ export const itemShopRenderItems = ({
           {item.name}
         </Text>
         <Text style={[styles.normalText, {marginTop: 0, fontWeight: 'bold'}]}>
-          ${item.price} / {item.unit}
+          ${item.price} / {item.unit} / {item.sku}
         </Text>
       </View>
     </TouchableOpacity>

@@ -4,8 +4,10 @@ import {AuthProvider} from './src/context/AuthContext/AuthContext';
 import Router from './src/navigation/Router';
 import {Linking} from 'react-native';
 import {saveLogsDB} from './utils';
+import {withIAPContext} from 'react-native-iap';
 
-export default function App() {
+// export default function App() {
+function App() {
   useEffect(() => {
     const handleDeepLink = event => {
       const url = event.url;
@@ -40,3 +42,5 @@ export default function App() {
     </AuthProvider>
   );
 }
+
+export default withIAPContext(App);

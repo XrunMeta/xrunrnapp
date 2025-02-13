@@ -1,5 +1,6 @@
 package run.xrun.xrunapp
 
+// import com.dooboolab.rniap.RNIapPackage;
 import android.app.Application
 import com.facebook.react.PackageList
 import com.facebook.react.ReactApplication
