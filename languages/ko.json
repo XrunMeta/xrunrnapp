@@ -663,6 +663,7 @@
   "screen_indAds": {
     "title": "개별 광고",
     "manage": "관리",
+    "manage_ad": "광고 관리",
     "new_ad": "새 광고",
     "add_coins": "코인 추가",
     "add_ad": "광고 추가",
