@@ -16,6 +16,7 @@ import {
   fontSize,
   gatewayNodeJS,
   authcode,
+  URL_API_NODEJS,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 import ButtonListWithSub from '../../components/ButtonList/ButtonListWithSub';
@@ -30,7 +31,7 @@ const IndividualAdsScreen = () => {
 
   const fetchInAdList = async member => {
     try {
-      const request = await fetch(`http://10.0.2.2:3006/gateway/getInadList`, {
+      const request = await fetch(`${URL_API_NODEJS}/getInadList`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

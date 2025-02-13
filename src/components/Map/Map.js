@@ -750,7 +750,6 @@ const MapComponent = ({
     const watchId = Geolocation.watchPosition(
       position => {
         handlePinChange(position, pinTarget);
-        console.log('Pindah brooooooooooo');
         // Mengambil koordinat pengguna saat ini
         const userCoordinate = {
           latitude: position.coords.latitude,
@@ -802,7 +801,6 @@ const MapComponent = ({
       mapRef.current.animateToRegion(initialRegion, 1000);
 
       onResetMap();
-      console.log('Map RESETTTTTT');
     }
   }, [shouldResetMap, pin]);
 

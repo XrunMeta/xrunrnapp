@@ -9,7 +9,8 @@ class WebSocketManager {
 
   async connect(clientId) {
     return new Promise((resolve, reject) => {
-      this.ws = new WebSocket(`ws://10.0.2.2:3006/?clientId=${clientId}`);
+      // this.ws = new WebSocket(`ws://10.0.2.2:3006/?clientId=${clientId}`);
+      this.ws = new WebSocket(`ws://18.143.73.35:3006/?clientId=${clientId}`);
 
       this.ws.onopen = () => {
         console.log('WebSocket connected');

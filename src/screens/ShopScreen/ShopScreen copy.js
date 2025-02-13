@@ -11,9 +11,6 @@ import {
   Modal,
   TouchableWithoutFeedback,
   ScrollView,
-  FlatList,
-  Button,
-  Alert,
 } from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
@@ -40,19 +37,6 @@ import {itemExpiredRenderItems} from './ItemExpired/ItemExpiredRenderItems';
 import {itemShopRoutes} from './ItemShop/ItemShopRoutes';
 import {itemShopRenderItems} from './ItemShop/ItemShopRenderItems';
 
-// In-App Purchase
-import {
-  useIAP,
-  purchaseUpdatedListener,
-  purchaseErrorListener,
-  requestPurchase,
-  initConnection,
-  flushFailedPurchasesCachedAsPendingAndroid,
-  getProducts,
-  acknowledgePurchaseAndroid,
-} from 'react-native-iap';
-import FastImage from 'react-native-fast-image';
-
 const ShopScreen = () => {
   const [lang, setLang] = useState({});
   const navigation = useNavigation();
@@ -76,49 +60,9 @@ const ShopScreen = () => {
   // Modal
   const [modalVisible, setModalVisible] = useState(false);
   const [agreementModalVisible, setAgreementModalVisible] = useState(false);
-  const [purchaseModalVisible, setPurchaseModalVisible] = useState(false);
   const [isAgreed, setIsAgreed] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [routes, setRoutes] = useState([]);
-
-  // In-App Purchase
-  const {connected, products} = useIAP();
-  const [connection, setConnection] = useState(false);
-  const itemSkus = [
-    'xrunapp.10151_1.transferticket',
-    'xrunapp.10152_2.coinpumper',
-    'xrunitemtest',
-  ];
-
-  const initializeIAP = async () => {
-    try {
-      await initConnection().then(async value => {
-        setConnection(value);
-        if (Platform.OS === 'android') {
-          await flushFailedPurchasesCachedAsPendingAndroid();
-        }
-      });
-    } catch (error) {
-      console.error('Error initializing IAP: ', error);
-    }
-  };
-
-  const fetchProductsPlaystore = async () => {
-    try {
-      const fetchedProducts = await getProducts({skus: itemSkus});
-      console.log('Fetched products:', fetchedProducts);
-
-      if (fetchedProducts?.length > 0) {
-        // Simpan data produk ke state atau gunakan langsung
-        console.log('Products fetched successfully:', fetchedProducts);
-      } else {
-        console.log('No products found.');
-      }
-    } catch (error) {
-      console.error('Error fetching products:', error);
-      Alert.alert('Error', 'Failed to fetch products');
-    }
-  };
 
   // Back
   const handleBack = () => {
@@ -138,32 +82,12 @@ const ShopScreen = () => {
   };
 
   // Click Agreement
-  const handleAgreementBuyClick = async () => {
-    if (isAgreed && selectedItem) {
-      try {
-        // Pastikan produk sudah di-fetch
-        const products = await getProducts({skus: [selectedItem.sku]});
-        if (products.length === 0) {
-          throw new Error('Product not found. Please fetch products first.');
-        }
-
-        // Lakukan pembelian
-        const purchaseData = await requestPurchase(
-          Platform.select({
-            ios: {sku: selectedItem.sku},
-            android: {skus: [selectedItem.sku]},
-          }),
-        );
-
-        console.log({purchaseData});
-        setPurchaseModalVisible(true);
-      } catch (error) {
-        console.log('Error during purchase:', error);
-        Alert.alert('Error', error.message || 'Purchase failed');
-      } finally {
-        setAgreementModalVisible(false);
-        setIsAgreed(false);
-      }
+  const handleAgreementBuyClick = () => {
+    if (isAgreed) {
+      // Logic untuk proses pembelian
+      console.log('Item purchased');
+      setAgreementModalVisible(false); // Sembunyikan modal agreement setelah pembelian
+      setIsAgreed(false);
     }
   };
 
@@ -289,52 +213,8 @@ const ShopScreen = () => {
       }
     };
 
-    initializeIAP();
     fetchData();
   }, []);
-
-  useEffect(() => {
-    if (connection) {
-      console.log('IAP connected successfully.');
-      fetchProductsPlaystore(); // Fetch produk setelah koneksi berhasil
-    } else {
-      console.log('IAP connection failed.');
-    }
-
-    const purchaseUpdateSubscription = purchaseUpdatedListener(
-      async purchase => {
-        console.log('Purchase Success:', purchase);
-
-        // Acknowledge purchase for Android
-        if (Platform.OS === 'android' && !purchase?.isAcknowledgedAndroid) {
-          if (purchase?.purchaseToken && purchase?.purchaseStateAndroid === 0) {
-            try {
-              await acknowledgePurchaseAndroid(purchase.purchaseToken);
-
-              // Setelah acknowledged, kita harus menyelesaikan transaksi
-              await finishTransaction({purchase, isConsumable: false});
-            } catch (error) {
-              console.error('Error acknowledging purchase: ', error);
-            }
-          } else {
-            console.log(
-              `Purchase token is null or state is not valid for ${purchase.productId}`,
-            );
-          }
-        }
-      },
-    );
-
-    const purchaseErrorSubscription = purchaseErrorListener(error => {
-      console.log('Purchase Error:', error);
-      Alert.alert('Purchase Failed', error.message);
-    });
-
-    return () => {
-      purchaseUpdateSubscription.remove();
-      purchaseErrorSubscription.remove();
-    };
-  }, [connection]);
 
   useEffect(() => {
     setRoutes([
@@ -636,100 +516,6 @@ const ShopScreen = () => {
                     $5
                   </Text>
                 </TouchableOpacity>
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
-
-      {/* Modal After Purchase */}
-      <Modal
-        transparent={true}
-        visible={purchaseModalVisible}
-        animationType="slide"
-        onRequestClose={() => {
-          setPurchaseModalVisible(false);
-        }}>
-        <TouchableWithoutFeedback
-          onPress={() => {
-            setPurchaseModalVisible(false);
-          }}>
-          <View style={styles.modalOverlay}>
-            <TouchableWithoutFeedback>
-              <View style={styles.modalContent}>
-                <Image
-                  source={require('../../../assets/images/icon_success.png')}
-                  resizeMode="contain"
-                  style={{height: 80, width: 80, marginBottom: 20}}
-                />
-
-                {/* Modal Header */}
-                <View
-                  style={[
-                    styles.modalItem,
-                    {
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    },
-                  ]}>
-                  <Text style={[styles.normalText, {fontWeight: 'bold'}]}>
-                    Purchase is success
-                  </Text>
-                </View>
-
-                {/* Modal Desc */}
-                <View
-                  style={{
-                    marginTop: -5,
-                    minHeight: 30,
-                    maxHeight: 50,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                  <Text style={[styles.normalText, {color: 'grey'}]}>
-                    Do you want to continue purchasing?
-                  </Text>
-                </View>
-
-                {/* Modal Button */}
-                <View style={{display: 'flex', flexDirection: 'row', gap: 20}}>
-                  <TouchableOpacity
-                    style={{
-                      flex: 1,
-                      marginTop: 15,
-                      padding: 10,
-                      backgroundColor: 'lightgrey',
-                      borderRadius: 50,
-                      alignItems: 'center',
-                      alignSelf: 'center',
-                    }}
-                    onPress={() => {
-                      setIndex(0);
-                      setPurchaseModalVisible(false);
-                    }}>
-                    <Text style={[styles.normalText, styles.closeButtonText]}>
-                      No
-                    </Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    style={{
-                      flex: 1,
-                      marginTop: 15,
-                      padding: 10,
-                      backgroundColor: '#ffdc04',
-                      borderRadius: 50,
-                      alignItems: 'center',
-                      alignSelf: 'center',
-                    }}
-                    onPress={() => {
-                      setPurchaseModalVisible(false);
-                    }}>
-                    <Text style={[styles.normalText, styles.closeButtonText]}>
-                      Yes
-                    </Text>
-                  </TouchableOpacity>
-                </View>
               </View>
             </TouchableWithoutFeedback>
           </View>

@@ -82,9 +82,10 @@ android {
         applicationId "run.xrun.xrunapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 145
-        versionName "2.5.13"
+        versionCode 154
+        versionName "2.8.17"
         missingDimensionStrategy 'react-native-camera', 'general'
+        missingDimensionStrategy "store", "play"
     }
     signingConfigs {
         debug {
@@ -127,6 +128,20 @@ android {
             }
         }
     }
+
+    // flavorDimensions "appstore"
+
+    // productFlavors {
+    //     googlePlay {
+    //         dimension "appstore"
+    //         missingDimensionStrategy "store", "play"
+    //     }
+
+    //     amazon {
+    //         dimension "appstore"
+    //         missingDimensionStrategy "store", "amazon"
+    //     }
+    // }
 }
 
 dependencies {
@@ -148,7 +163,10 @@ dependencies {
     implementation("com.facebook.react:flipper-integration")
 
     // Playstore in-app purchase 
-    implementation 'com.android.billingclient:billing:4.1.0'
+    // implementation 'com.android.billingclient:billing:4.1.0'
+    implementation 'com.android.billingclient:billing:6.0.1'
+    // implementation 'com.android.billingclient:billing:2.1.0'
+
     
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
@@ -183,6 +201,9 @@ dependencies {
 
     // Image picker
     implementation("androidx.activity:activity:1.9.+")
+
+    // In-App Purchase
+    // implementation project(':react-native-iap')
 
 }
 
