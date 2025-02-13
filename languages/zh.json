@@ -641,7 +641,9 @@
     "title": "物品商店",
     "modal": {
       "toc_title": "条款和条件",
-      "toc_checkbox": "我同意条款和条件"
+      "toc_checkbox": "我同意条款和条件",
+      "pur_success": "购买成功",
+      "pur_desc": "您想继续购买吗？"
     },
     "tab_saved": "已保存",
     "tab_expired": "已过期",
