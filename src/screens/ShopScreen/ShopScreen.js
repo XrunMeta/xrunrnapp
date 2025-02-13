@@ -633,7 +633,7 @@ const ShopScreen = () => {
                   onPress={handleAgreementBuyClick}
                   disabled={!isAgreed}>
                   <Text style={[styles.normalText, styles.closeButtonText]}>
-                    $5
+                    ${selectedItem?.price}
                   </Text>
                 </TouchableOpacity>
               </View>
