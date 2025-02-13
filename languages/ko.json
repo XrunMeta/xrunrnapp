@@ -640,7 +640,9 @@
     "title": "아이템 상점",
     "modal": {
       "toc_title": "약관 및 조건",
-      "toc_checkbox": "약관 및 조건에 동의합니다"
+      "toc_checkbox": "약관 및 조건에 동의합니다",
+      "pur_success": "구매가 성공했습니다",
+      "pur_desc": "계속 구매하시겠습니까?"
     },
     "tab_saved": "저장됨",
     "tab_expired": "만료됨",

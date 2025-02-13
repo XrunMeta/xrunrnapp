@@ -642,7 +642,9 @@
     "title": "Item Shop",
     "modal": {
       "toc_title": "Terms and Conditions",
-      "toc_checkbox": "I agree to the terms and conditions"
+      "toc_checkbox": "I agree to the terms and conditions",
+      "pur_success": "Purchase is success",
+      "pur_desc": "Do you want to continue purchasing?"
     },
     "tab_saved": "Saved",
     "tab_expired": "Expired",

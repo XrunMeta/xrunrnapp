@@ -159,7 +159,7 @@ const ShopScreen = () => {
         setPurchaseModalVisible(true);
       } catch (error) {
         console.log('Error during purchase:', error);
-        Alert.alert('Error', error.message || 'Purchase failed');
+        Alert.alert('Failed', 'Purchase is failed');
       } finally {
         setAgreementModalVisible(false);
         setIsAgreed(false);
@@ -673,7 +673,8 @@ const ShopScreen = () => {
                     },
                   ]}>
                   <Text style={[styles.normalText, {fontWeight: 'bold'}]}>
-                    Purchase is success
+                    {lang?.screen_shop?.modal?.pur_success ??
+                      'Purchase is success'}
                   </Text>
                 </View>
 
@@ -687,7 +688,8 @@ const ShopScreen = () => {
                     justifyContent: 'center',
                   }}>
                   <Text style={[styles.normalText, {color: 'grey'}]}>
-                    Do you want to continue purchasing?
+                    {lang?.screen_shop?.modal?.pur_desc ??
+                      'Do you want to continue purchasing?'}
                   </Text>
                 </View>
 

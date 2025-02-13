@@ -641,7 +641,9 @@
     "title": "Toko Item",
     "modal": {
       "toc_title": "Syarat dan Ketentuan",
-      "toc_checkbox": "Saya setuju dengan syarat dan ketentuan"
+      "toc_checkbox": "Saya setuju dengan syarat dan ketentuan",
+      "pur_success": "Pembelian telah berhasil",
+      "pur_desc": "Apakah anda ingin melanjutkan pembelian?"
     },
     "tab_saved": "Tersimpan",
     "tab_expired": "Kedaluwarsa",
