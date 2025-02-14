@@ -50,6 +50,7 @@ import {
   flushFailedPurchasesCachedAsPendingAndroid,
   getProducts,
   acknowledgePurchaseAndroid,
+  getSubscriptions,
 } from 'react-native-iap';
 import FastImage from 'react-native-fast-image';
 
@@ -84,11 +85,13 @@ const ShopScreen = () => {
   // In-App Purchase
   const {connected, products} = useIAP();
   const [connection, setConnection] = useState(false);
+  const [subscriptionList, setSubscriptionList] = useState([]);
   const itemSkus = [
     'xrunapp.10151_1.transferticket',
     'xrunapp.10152_2.coinpumper',
     'xrunitemtest',
   ];
+  const subscriptionSkus = ['xrunapp.1052_3.freeads'];
 
   const initializeIAP = async () => {
     try {
@@ -117,6 +120,23 @@ const ShopScreen = () => {
     } catch (error) {
       console.error('Error fetching products:', error);
       Alert.alert('Error', 'Failed to fetch products');
+    }
+  };
+
+  const fetchSubscriptionsPlaystore = async () => {
+    try {
+      const fetchedSubs = await getSubscriptions({skus: subscriptionSkus});
+      // console.log('Fetched subscriptions:', fetchedSubs);
+      console.log(JSON.stringify(fetchedSubs, null, 2));
+
+      if (fetchedSubs?.length > 0) {
+        setSubscriptionList(fetchedSubs[0].subscriptionOfferDetails);
+      } else {
+        console.log('No subscriptions found.');
+      }
+    } catch (error) {
+      console.log('Error fetching subscriptions:', error);
+      Alert.alert('Error', 'Failed to fetch subscriptions');
     }
   };
 
@@ -296,7 +316,8 @@ const ShopScreen = () => {
   useEffect(() => {
     if (connection) {
       console.log('IAP connected successfully.');
-      fetchProductsPlaystore(); // Fetch produk setelah koneksi berhasil
+      fetchProductsPlaystore();
+      fetchSubscriptionsPlaystore();
     } else {
       console.log('IAP connection failed.');
     }

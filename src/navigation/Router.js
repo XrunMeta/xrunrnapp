@@ -61,7 +61,7 @@ import KeyDownload from '../screens/KeyDownloadScreen';
 import KeyDownloadAuthScreen from '../screens/KeyDownloadScreen/KeyDownloadAuthScreen';
 import KeyShowDownload from '../screens/KeyDownloadScreen/KeyShowDownload';
 import RecommendByMeScreen from '../screens/RecommendScreen/RecommendByMeScreen';
-import ShopScreen from '../screens/ShopScreen/ShopScreen';
+import ShopScreen from '../screens/ShopScreen/ShopScreenLal';
 import IndividualAdsScreen from '../screens/IndividualAdsScreen/IndividualAdsScreen';
 import FirstNewAdsScreen from '../screens/IndividualAdsScreen/NewAdsScreen/FirstNewAdsScreen';
 import SelectAreaNewAdsScreen from '../screens/IndividualAdsScreen/NewAdsScreen/SelectAreaNewAdsScreen';
