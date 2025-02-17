@@ -73,6 +73,7 @@ const ShopScreen = () => {
   // Item Shop
   const [itemShopData, setItemShopData] = useState([]);
   const [itemShopLoading, setItemShopLoading] = useState(true);
+  const [subsChildData, setSubsChildData] = useState([]);
 
   // Modal
   const [modalVisible, setModalVisible] = useState(false);
@@ -81,7 +82,9 @@ const ShopScreen = () => {
   const [isAgreed, setIsAgreed] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [routes, setRoutes] = useState([]);
-  const [selectedChildSubs, setSelectedChildSubs] = useState(bahlul?.[0]);
+  const [selectedChildSubs, setSelectedChildSubs] = useState(
+    subsChildData?.[0],
+  );
 
   // In-App Purchase
   const {connected, products} = useIAP();
@@ -94,32 +97,6 @@ const ShopScreen = () => {
     'xrunitemtest',
   ];
   const subscriptionSkus = ['xrunapp.1052_3.freeads'];
-  const bahlul = [
-    {
-      subscription: 1,
-      itemID: 43,
-      sku: 'xrunapp.1052_3.freeads',
-      basePlanId: 'xrunapp10523freeads',
-      offerToken:
-        'AWOstcZLs+2WqXN3tlvyWJbTsvOsbu3BmOt/YlQnMEg2bacD+7XLAbLaTiquPGMUS2AYgS8j6y2IslqHAjCipRpTTJQzFoLMjvlEJHpbWw==',
-      recurrenceMode: 3,
-      price: '299000000000',
-      billingPeriod: 'P3D',
-      created: '2025-02-17',
-    },
-    {
-      subscription: 2,
-      itemID: 43,
-      sku: 'xrunapp.1052_3.freeads',
-      basePlanId: 'xrunapp10524freeads',
-      offerToken:
-        'AWOstcZWfo9rUvbYjdelZD2+WrX75y3iCSi7C78a3iHhhPr5B2f4WO2y4ivTrd3P8JuFhvRxHPbu0pCu32rjhCx3fHTv8oa2leouyKRo1Q==',
-      recurrenceMode: 3,
-      price: '399000000000',
-      billingPeriod: 'P4W',
-      created: '2025-02-17',
-    },
-  ];
 
   const initializeIAP = async () => {
     try {
@@ -177,6 +154,7 @@ const ShopScreen = () => {
   const handleItemPress = item => {
     setSelectedItem(item); // Simpan item yang dipilih
     setModalVisible(true); // Tampilkan modal
+    fetchChildOfSubs(item.id, item.sku);
   };
 
   // Click Buy
@@ -270,6 +248,37 @@ const ShopScreen = () => {
       crashlytics().recordError(new Error(err));
       crashlytics().log(err);
       setIsLoading(false);
+    }
+  };
+
+  // Fetch Child of Selected Subscription
+  const fetchChildOfSubs = async (item, sku) => {
+    console.log('Hacim -> ' + item + ' - ' + sku);
+    try {
+      const request = await fetch(`${URL_API_NODEJS}/getChildOfSubs`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authcode}`,
+        },
+        body: JSON.stringify({
+          item,
+          sku,
+        }),
+      });
+      const response = await request.json();
+
+      if (response.status === 'success' && response.code === 200) {
+        const childData = response.data;
+
+        setSubsChildData(childData);
+      } else {
+        console.error('Failed to fetch SubsChild List:', response.message);
+      }
+    } catch (err) {
+      console.error('Error fetching user data: ', err);
+      crashlytics().recordError(new Error(err));
+      crashlytics().log(err);
     }
   };
 
@@ -640,7 +649,7 @@ const ShopScreen = () => {
                           height: 35,
                           color: 'black',
                         }}>
-                        {bahlul.map(item => (
+                        {subsChildData.map(item => (
                           <Picker.Item
                             key={item.subscription}
                             label={`${parseBillingPeriod(
