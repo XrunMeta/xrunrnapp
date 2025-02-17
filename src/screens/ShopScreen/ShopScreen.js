@@ -11,8 +11,6 @@ import {
   Modal,
   TouchableWithoutFeedback,
   ScrollView,
-  FlatList,
-  Button,
   Alert,
 } from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
@@ -25,6 +23,7 @@ import {
   fontSize,
   authcode,
   URL_API_NODEJS,
+  parseBillingPeriod,
 } from '../../../utils';
 import crashlytics from '@react-native-firebase/crashlytics';
 
@@ -51,8 +50,9 @@ import {
   getProducts,
   acknowledgePurchaseAndroid,
   getSubscriptions,
+  requestSubscription,
 } from 'react-native-iap';
-import FastImage from 'react-native-fast-image';
+import {Picker} from '@react-native-picker/picker';
 
 const ShopScreen = () => {
   const [lang, setLang] = useState({});
@@ -81,17 +81,45 @@ const ShopScreen = () => {
   const [isAgreed, setIsAgreed] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [routes, setRoutes] = useState([]);
+  const [selectedChildSubs, setSelectedChildSubs] = useState(bahlul?.[0]);
 
   // In-App Purchase
   const {connected, products} = useIAP();
   const [connection, setConnection] = useState(false);
   const [subscriptionList, setSubscriptionList] = useState([]);
+  const [productList, setProductList] = useState([]);
   const itemSkus = [
     'xrunapp.10151_1.transferticket',
     'xrunapp.10152_2.coinpumper',
     'xrunitemtest',
   ];
   const subscriptionSkus = ['xrunapp.1052_3.freeads'];
+  const bahlul = [
+    {
+      subscription: 1,
+      itemID: 43,
+      sku: 'xrunapp.1052_3.freeads',
+      basePlanId: 'xrunapp10523freeads',
+      offerToken:
+        'AWOstcZLs+2WqXN3tlvyWJbTsvOsbu3BmOt/YlQnMEg2bacD+7XLAbLaTiquPGMUS2AYgS8j6y2IslqHAjCipRpTTJQzFoLMjvlEJHpbWw==',
+      recurrenceMode: 3,
+      price: '299000000000',
+      billingPeriod: 'P3D',
+      created: '2025-02-17',
+    },
+    {
+      subscription: 2,
+      itemID: 43,
+      sku: 'xrunapp.1052_3.freeads',
+      basePlanId: 'xrunapp10524freeads',
+      offerToken:
+        'AWOstcZWfo9rUvbYjdelZD2+WrX75y3iCSi7C78a3iHhhPr5B2f4WO2y4ivTrd3P8JuFhvRxHPbu0pCu32rjhCx3fHTv8oa2leouyKRo1Q==',
+      recurrenceMode: 3,
+      price: '399000000000',
+      billingPeriod: 'P4W',
+      created: '2025-02-17',
+    },
+  ];
 
   const initializeIAP = async () => {
     try {
@@ -109,11 +137,11 @@ const ShopScreen = () => {
   const fetchProductsPlaystore = async () => {
     try {
       const fetchedProducts = await getProducts({skus: itemSkus});
-      console.log('Fetched products:', fetchedProducts);
 
       if (fetchedProducts?.length > 0) {
         // Simpan data produk ke state atau gunakan langsung
-        console.log('Products fetched successfully:', fetchedProducts);
+        setProductList(fetchedProducts);
+        // console.log('Products fetched successfully:', fetchedProducts);
       } else {
         console.log('No products found.');
       }
@@ -127,7 +155,7 @@ const ShopScreen = () => {
     try {
       const fetchedSubs = await getSubscriptions({skus: subscriptionSkus});
       // console.log('Fetched subscriptions:', fetchedSubs);
-      console.log(JSON.stringify(fetchedSubs, null, 2));
+      // console.log(JSON.stringify(fetchedSubs, null, 2));
 
       if (fetchedSubs?.length > 0) {
         setSubscriptionList(fetchedSubs[0].subscriptionOfferDetails);
@@ -161,22 +189,52 @@ const ShopScreen = () => {
   const handleAgreementBuyClick = async () => {
     if (isAgreed && selectedItem) {
       try {
-        // Pastikan produk sudah di-fetch
-        const products = await getProducts({skus: [selectedItem.sku]});
-        if (products.length === 0) {
-          throw new Error('Product not found. Please fetch products first.');
-        }
-
-        // Lakukan pembelian
-        const purchaseData = await requestPurchase(
-          Platform.select({
-            ios: {sku: selectedItem.sku},
-            android: {skus: [selectedItem.sku]},
-          }),
+        const item = itemShopData.find(
+          product => product.sku === selectedItem.sku,
         );
 
-        console.log({purchaseData});
-        setPurchaseModalVisible(true);
+        if (!item) {
+          Alert.alert('Error', 'Item not found');
+          return;
+        }
+
+        // Cek apakah item adalah subscription
+        if (item.type == 10152) {
+          console.log('Anjing -> ' + JSON.stringify(selectedChildSubs));
+          // Pastikan selectedChildSubs sudah dipilih
+          if (!selectedChildSubs) {
+            Alert.alert('Error', 'Please select a subscription plan.');
+            return;
+          }
+
+          // Ambil offerToken dari selectedChildSubs
+          const offerToken = selectedChildSubs.offerToken;
+
+          if (!offerToken) {
+            Alert.alert('Error', 'Offer token is missing.');
+            return;
+          }
+
+          // Request pembelian untuk subscription dengan offerToken
+          const purchaseData = await requestSubscription({
+            sku: selectedItem.sku,
+            subscriptionOffers: [{sku: selectedItem.sku, offerToken}],
+          });
+
+          console.log('Purchase Data:', purchaseData);
+
+          // Tampilkan modal sukses
+          setPurchaseModalVisible(true);
+        } else {
+          // Handle pembelian produk biasa (bukan subscription)
+          const purchaseData = await requestPurchase({
+            skus: [selectedItem.sku],
+          });
+          console.log('Purchase Data:', purchaseData);
+
+          // Tampilkan modal sukses
+          setPurchaseModalVisible(true);
+        }
       } catch (error) {
         console.log('Error during purchase:', error);
         Alert.alert('Failed', 'Purchase is failed');
@@ -554,13 +612,58 @@ const ShopScreen = () => {
                 </ScrollView>
 
                 {/* Modal Buy Button */}
-                <TouchableOpacity
-                  style={styles.closeButton}
-                  onPress={handleBuyClick}>
-                  <Text style={[styles.normalText, styles.closeButtonText]}>
-                    ${selectedItem?.price}
-                  </Text>
-                </TouchableOpacity>
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    gap: 15,
+                    alignItems: 'flex-end',
+                    alignSelf: 'flex-end',
+                  }}>
+                  {selectedItem?.type == 10152 && (
+                    <View
+                      style={{
+                        backgroundColor: '#e5e5e56e',
+                        borderRadius: 50,
+                        overflow: 'hidden',
+                        height: 35,
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignSelf: 'flex-end',
+                      }}>
+                      <Picker
+                        selectedValue={selectedChildSubs}
+                        onValueChange={itemValue =>
+                          setSelectedChildSubs(itemValue)
+                        }
+                        style={{
+                          height: 35,
+                          color: 'black',
+                        }}>
+                        {bahlul.map(item => (
+                          <Picker.Item
+                            key={item.subscription}
+                            label={`${parseBillingPeriod(
+                              item.billingPeriod,
+                            )} - ${item.price}`}
+                            value={item}
+                            style={styles.normalText}
+                          />
+                        ))}
+                      </Picker>
+                    </View>
+                  )}
+
+                  <TouchableOpacity
+                    style={styles.closeButton}
+                    onPress={handleBuyClick}>
+                    <Text style={[styles.normalText, styles.closeButtonText]}>
+                      {selectedItem?.type == 10151
+                        ? `$ ${selectedItem?.price}`
+                        : 'Buy'}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </TouchableWithoutFeedback>
           </View>
@@ -648,7 +751,6 @@ const ShopScreen = () => {
                   style={[
                     styles.closeButton,
                     !isAgreed && styles.disabledButton,
-                    ,
                     {alignSelf: 'center'},
                   ]}
                   onPress={handleAgreementBuyClick}

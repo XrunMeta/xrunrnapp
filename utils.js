@@ -761,3 +761,20 @@ export const calculateDayDifferenceAds = (startDate, endDate) => {
 
   return Math.round(differenceInDays);
 };
+
+export const parseBillingPeriod = period => {
+  const regex = /^P(?:(\d+)Y)?(?:(\d+)M)?(?:(\d+)W)?(?:(\d+)D)?$/;
+  const match = period.match(regex);
+
+  if (!match) return 'Invalid period format';
+
+  const [, years, months, weeks, days] = match;
+
+  const parts = [];
+  if (years) parts.push(`${years} Year${years > 1 ? 's' : ''}`);
+  if (months) parts.push(`${months} Month${months > 1 ? 's' : ''}`);
+  if (weeks) parts.push(`${weeks} Week${weeks > 1 ? 's' : ''}`);
+  if (days) parts.push(`${days} Day${days > 1 ? 's' : ''}`);
+
+  return parts.length > 0 ? parts.join(' ') : 'No duration found';
+};
