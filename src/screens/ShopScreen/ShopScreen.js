@@ -275,7 +275,6 @@ const ShopScreen = () => {
 
         setSubsChildData(childData);
         setSelectedChildSubs(childData[0]);
-        console.log('Anjing -> ' + JSON.stringify(childData[0]));
       } else {
         console.error('Failed to fetch SubsChild List:', response.message);
       }
@@ -815,7 +814,9 @@ const ShopScreen = () => {
                   onPress={handleAgreementBuyClick}
                   disabled={!isAgreed}>
                   <Text style={[styles.normalText, styles.closeButtonText]}>
-                    ${selectedItem?.price}
+                    {selectedItem?.type == 10151
+                      ? `$ ${selectedItem?.price}`
+                      : 'Buy'}
                   </Text>
                 </TouchableOpacity>
               </View>
