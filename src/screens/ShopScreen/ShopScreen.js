@@ -670,9 +670,11 @@ const ShopScreen = () => {
                               {subsChildData.map(item => (
                                 <Picker.Item
                                   key={item.subscription}
-                                  label={`${parseBillingPeriod(
+                                  label={`${
+                                    selectedItem.name
+                                  } - ${parseBillingPeriod(
                                     item.billingPeriod,
-                                  )} - ${item.price}`}
+                                  )}`}
                                   value={item}
                                   style={styles.normalText}
                                 />
