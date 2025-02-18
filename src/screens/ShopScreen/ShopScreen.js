@@ -782,7 +782,9 @@ const ShopScreen = () => {
                 <ScrollView style={styles.modalDescription}>
                   <Text style={[styles.normalText, {color: 'grey'}]}>
                     {itemShopData[0]?.description}
-                    {selectedItem?.terms[0].termsDetail}
+                    {selectedItem?.terms?.[0]?.termsDetail
+                      ? selectedItem.terms[0].termsDetail
+                      : ''}
                   </Text>
                 </ScrollView>
 
