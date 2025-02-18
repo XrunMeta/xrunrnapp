@@ -635,8 +635,8 @@ const ShopScreen = () => {
                     alignItems: 'flex-end',
                     alignSelf: 'flex-end',
                   }}>
-                  {selectedItem?.type == 10152 &&
-                    (childSubsLoading ? (
+                  {selectedItem?.type == 10152 ? (
+                    childSubsLoading ? (
                       <View
                         style={{
                           flex: 1,
@@ -647,48 +647,79 @@ const ShopScreen = () => {
                         <ActivityIndicator size="small" color="#343a59" />
                       </View>
                     ) : (
-                      <View
-                        style={{
-                          backgroundColor: '#e5e5e56e',
-                          borderRadius: 50,
-                          overflow: 'hidden',
-                          height: 35,
-                          flex: 1,
-                          justifyContent: 'center',
-                          alignSelf: 'flex-end',
-                        }}>
-                        <Picker
-                          selectedValue={selectedChildSubs}
-                          onValueChange={itemValue =>
-                            setSelectedChildSubs(itemValue)
-                          }
+                      <>
+                        <View
                           style={{
+                            backgroundColor: '#e5e5e56e',
+                            borderRadius: 50,
+                            overflow: 'hidden',
                             height: 35,
-                            color: 'black',
+                            flex: 1,
+                            justifyContent: 'center',
+                            alignSelf: 'flex-end',
                           }}>
-                          {subsChildData.map(item => (
-                            <Picker.Item
-                              key={item.subscription}
-                              label={`${parseBillingPeriod(
-                                item.billingPeriod,
-                              )} - ${item.price}`}
-                              value={item}
-                              style={styles.normalText}
-                            />
-                          ))}
-                        </Picker>
-                      </View>
-                    ))}
+                          {subsChildData.length > 0 ? (
+                            <Picker
+                              selectedValue={selectedChildSubs}
+                              onValueChange={itemValue =>
+                                setSelectedChildSubs(itemValue)
+                              }
+                              style={{
+                                height: 35,
+                                color: 'black',
+                              }}>
+                              {subsChildData.map(item => (
+                                <Picker.Item
+                                  key={item.subscription}
+                                  label={`${parseBillingPeriod(
+                                    item.billingPeriod,
+                                  )} - ${item.price}`}
+                                  value={item}
+                                  style={styles.normalText}
+                                />
+                              ))}
+                            </Picker>
+                          ) : (
+                            <Text
+                              style={[
+                                styles.normalText,
+                                {textAlign: 'center', color: '#888'},
+                              ]}>
+                              No plans available
+                            </Text>
+                          )}
+                        </View>
 
-                  <TouchableOpacity
-                    style={styles.closeButton}
-                    onPress={handleBuyClick}>
-                    <Text style={[styles.normalText, styles.closeButtonText]}>
-                      {selectedItem?.type == 10151
-                        ? `$ ${selectedItem?.price}`
-                        : 'Buy'}
-                    </Text>
-                  </TouchableOpacity>
+                        <TouchableOpacity
+                          style={[
+                            styles.closeButton,
+                            {
+                              backgroundColor:
+                                subsChildData.length <= 0 ? '#888' : '#ffdc04',
+                            },
+                          ]}
+                          disabled={subsChildData.length <= 0}
+                          onPress={handleBuyClick}>
+                          <Text
+                            style={[styles.normalText, styles.closeButtonText]}>
+                            {selectedItem?.type == 10151
+                              ? `$ ${selectedItem?.price}`
+                              : 'Buy'}
+                          </Text>
+                        </TouchableOpacity>
+                      </>
+                    )
+                  ) : (
+                    <TouchableOpacity
+                      style={styles.closeButton}
+                      onPress={handleBuyClick}>
+                      <Text style={[styles.normalText, styles.closeButtonText]}>
+                        {selectedItem?.type == 10151
+                          ? `$ ${selectedItem?.price}`
+                          : 'Buy'}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
                 </View>
               </View>
             </TouchableWithoutFeedback>
