@@ -613,7 +613,9 @@ const ShopScreen = () => {
                         styles.normalText,
                         {marginTop: 0, fontWeight: 'bold'},
                       ]}>
-                      ${selectedItem?.price} / {selectedItem?.unit}
+                      {selectedItem.type == 10152
+                        ? 'Choose plan'
+                        : `$ ${selectedItem.price} / ${selectedItem.unit}`}
                     </Text>
                   </View>
                 </View>
