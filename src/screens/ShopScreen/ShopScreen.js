@@ -12,6 +12,7 @@ import {
   TouchableWithoutFeedback,
   ScrollView,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import ButtonBack from '../../components/ButtonBack';
 import {useNavigation} from '@react-navigation/native';
@@ -85,6 +86,7 @@ const ShopScreen = () => {
   const [selectedChildSubs, setSelectedChildSubs] = useState(
     subsChildData?.[0],
   );
+  const [childSubsLoading, setChildSubsLoading] = useState(true);
 
   // In-App Purchase
   const {connected, products} = useIAP();
@@ -253,7 +255,9 @@ const ShopScreen = () => {
 
   // Fetch Child of Selected Subscription
   const fetchChildOfSubs = async (item, sku) => {
+    setChildSubsLoading(true);
     console.log('Hacim -> ' + item + ' - ' + sku);
+
     try {
       const request = await fetch(`${URL_API_NODEJS}/getChildOfSubs`, {
         method: 'POST',
@@ -279,6 +283,8 @@ const ShopScreen = () => {
       console.error('Error fetching user data: ', err);
       crashlytics().recordError(new Error(err));
       crashlytics().log(err);
+    } finally {
+      setChildSubsLoading(false);
     }
   };
 
@@ -629,39 +635,50 @@ const ShopScreen = () => {
                     alignItems: 'flex-end',
                     alignSelf: 'flex-end',
                   }}>
-                  {selectedItem?.type == 10152 && (
-                    <View
-                      style={{
-                        backgroundColor: '#e5e5e56e',
-                        borderRadius: 50,
-                        overflow: 'hidden',
-                        height: 35,
-                        flex: 1,
-                        justifyContent: 'center',
-                        alignSelf: 'flex-end',
-                      }}>
-                      <Picker
-                        selectedValue={selectedChildSubs}
-                        onValueChange={itemValue =>
-                          setSelectedChildSubs(itemValue)
-                        }
+                  {selectedItem?.type == 10152 &&
+                    (childSubsLoading ? (
+                      <View
                         style={{
+                          flex: 1,
+                          justifyContent: 'center',
+                          alignItems: 'center',
                           height: 35,
-                          color: 'black',
                         }}>
-                        {subsChildData.map(item => (
-                          <Picker.Item
-                            key={item.subscription}
-                            label={`${parseBillingPeriod(
-                              item.billingPeriod,
-                            )} - ${item.price}`}
-                            value={item}
-                            style={styles.normalText}
-                          />
-                        ))}
-                      </Picker>
-                    </View>
-                  )}
+                        <ActivityIndicator size="small" color="#343a59" />
+                      </View>
+                    ) : (
+                      <View
+                        style={{
+                          backgroundColor: '#e5e5e56e',
+                          borderRadius: 50,
+                          overflow: 'hidden',
+                          height: 35,
+                          flex: 1,
+                          justifyContent: 'center',
+                          alignSelf: 'flex-end',
+                        }}>
+                        <Picker
+                          selectedValue={selectedChildSubs}
+                          onValueChange={itemValue =>
+                            setSelectedChildSubs(itemValue)
+                          }
+                          style={{
+                            height: 35,
+                            color: 'black',
+                          }}>
+                          {subsChildData.map(item => (
+                            <Picker.Item
+                              key={item.subscription}
+                              label={`${parseBillingPeriod(
+                                item.billingPeriod,
+                              )} - ${item.price}`}
+                              value={item}
+                              style={styles.normalText}
+                            />
+                          ))}
+                        </Picker>
+                      </View>
+                    ))}
 
                   <TouchableOpacity
                     style={styles.closeButton}
