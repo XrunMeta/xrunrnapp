@@ -83,9 +83,7 @@ const ShopScreen = () => {
   const [isAgreed, setIsAgreed] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [routes, setRoutes] = useState([]);
-  const [selectedChildSubs, setSelectedChildSubs] = useState(
-    subsChildData?.[0],
-  );
+  const [selectedChildSubs, setSelectedChildSubs] = useState([]);
   const [childSubsLoading, setChildSubsLoading] = useState(true);
 
   // In-App Purchase
@@ -276,6 +274,8 @@ const ShopScreen = () => {
         const childData = response.data;
 
         setSubsChildData(childData);
+        setSelectedChildSubs(childData[0]);
+        console.log('Anjing -> ' + JSON.stringify(childData[0]));
       } else {
         console.error('Failed to fetch SubsChild List:', response.message);
       }
