@@ -82,8 +82,8 @@ android {
         applicationId "run.xrun.xrunapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 156
-        versionName "2.8.19"
+        versionCode 158
+        versionName "2.8.21"
         missingDimensionStrategy 'react-native-camera', 'general'
         missingDimensionStrategy "store", "play"
     }
