@@ -145,6 +145,39 @@ const ShopScreen = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Get Language
+        const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+        const screenLang = await getLanguage2(currentLanguage);
+        setLang(screenLang);
+
+        // Get User Data
+        const userData = await AsyncStorage.getItem('userData');
+        const getData = JSON.parse(userData);
+        setUserData(getData);
+
+        // Item Saved
+        fetchItemShopDataSaved(getData.member);
+
+        // Item Expired
+        fetchItemShopDataExpired(getData.member);
+
+        // Item Shop
+        fetchItemShopData();
+      } catch (err) {
+        console.error('Error retrieving data from AsyncStorage:', err);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
+        navigation.replace('Home');
+      }
+    };
+
+    initializeIAP();
+    fetchData();
+  }, []);
+
   // Back
   const handleBack = () => {
     navigation.replace('AdvertiseHome');
@@ -163,6 +196,35 @@ const ShopScreen = () => {
     setAgreementModalVisible(true); // Tampilkan modal agreement
   };
 
+  const savePurchaseLog = async (status, member) => {
+    console.log('Anjing -> ' + member + ' - ' + status);
+    try {
+      const response = await fetch(`${URL_API_NODEJS}/saveInappPurchaseLog`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authcode}`,
+        },
+        body: JSON.stringify({
+          status,
+          member,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.status === 'success' && result.code === 200) {
+        return result?.data[0]?.affectedRows == 1 ? 'ok' : 'no';
+      } else {
+        console.error('Failed to save purchase log:', result.message);
+      }
+    } catch (error) {
+      console.error('Error saving purchase log:', error);
+      crashlytics().recordError(new Error(error));
+      crashlytics().log(error);
+    }
+  };
+
   // Click Agreement
   const handleAgreementBuyClick = async () => {
     if (isAgreed && selectedItem) {
@@ -178,14 +240,11 @@ const ShopScreen = () => {
 
         // Cek apakah item adalah subscription
         if (item.type == 10152) {
-          console.log('Anjing -> ' + JSON.stringify(selectedChildSubs));
-          // Pastikan selectedChildSubs sudah dipilih
           if (!selectedChildSubs) {
             Alert.alert('Error', 'Please select a subscription plan.');
             return;
           }
 
-          // Ambil offerToken dari selectedChildSubs
           const offerToken = selectedChildSubs.offerToken;
 
           if (!offerToken) {
@@ -199,23 +258,26 @@ const ShopScreen = () => {
             subscriptionOffers: [{sku: selectedItem.sku, offerToken}],
           });
 
-          console.log('Purchase Data:', purchaseData);
+          console.log('Purchase Data Subscription:', purchaseData);
 
           // Tampilkan modal sukses
           setPurchaseModalVisible(true);
+          await savePurchaseLog('10403', userData?.member); // Pending
         } else {
           // Handle pembelian produk biasa (bukan subscription)
           const purchaseData = await requestPurchase({
             skus: [selectedItem.sku],
           });
-          console.log('Purchase Data:', purchaseData);
+          console.log('Purchase Data Item:', purchaseData);
 
           // Tampilkan modal sukses
           setPurchaseModalVisible(true);
+          await savePurchaseLog('10403', userData?.member); // Pending
         }
       } catch (error) {
         console.log('Error during purchase:', error);
         Alert.alert('Failed', 'Purchase is failed');
+        await savePurchaseLog('10402', userData?.member); // Failed
       } finally {
         setAgreementModalVisible(false);
         setIsAgreed(false);
@@ -353,39 +415,6 @@ const ShopScreen = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Get Language
-        const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage2(currentLanguage);
-        setLang(screenLang);
-
-        // Get User Data
-        const userData = await AsyncStorage.getItem('userData');
-        const getData = JSON.parse(userData);
-        setUserData(getData);
-
-        // Item Saved
-        fetchItemShopDataSaved(getData.member);
-
-        // Item Expired
-        fetchItemShopDataExpired(getData.member);
-
-        // Item Shop
-        fetchItemShopData();
-      } catch (err) {
-        console.error('Error retrieving data from AsyncStorage:', err);
-        crashlytics().recordError(new Error(err));
-        crashlytics().log(err);
-        navigation.replace('Home');
-      }
-    };
-
-    initializeIAP();
-    fetchData();
-  }, []);
-
-  useEffect(() => {
     if (connection) {
       console.log('IAP connected successfully.');
       fetchProductsPlaystore();
@@ -398,6 +427,8 @@ const ShopScreen = () => {
       async purchase => {
         console.log('Purchase Success:', purchase);
 
+        await savePurchaseLog('10401', userData?.member); // Success
+
         // Acknowledge purchase for Android
         if (Platform.OS === 'android' && !purchase?.isAcknowledgedAndroid) {
           if (purchase?.purchaseToken && purchase?.purchaseStateAndroid === 0) {
@@ -408,11 +439,13 @@ const ShopScreen = () => {
               await finishTransaction({purchase, isConsumable: false});
             } catch (error) {
               console.error('Error acknowledging purchase: ', error);
+              await savePurchaseLog('10402', userData?.member); // Failed
             }
           } else {
             console.log(
               `Purchase token is null or state is not valid for ${purchase.productId}`,
             );
+            await savePurchaseLog('10402', userData?.member); // Failed
           }
         }
       },
@@ -421,6 +454,7 @@ const ShopScreen = () => {
     const purchaseErrorSubscription = purchaseErrorListener(error => {
       console.log('Purchase Error:', error);
       Alert.alert('Purchase Failed', error.message);
+      savePurchaseLog('10402', userData?.member); // Failed
     });
 
     return () => {
@@ -613,9 +647,9 @@ const ShopScreen = () => {
                         styles.normalText,
                         {marginTop: 0, fontWeight: 'bold'},
                       ]}>
-                      {selectedItem.type == 10152
+                      {selectedItem?.type == 10152
                         ? 'Choose plan'
-                        : `$ ${selectedItem.price} / ${selectedItem.unit}`}
+                        : `$ ${selectedItem?.price} / ${selectedItem?.unit}`}
                     </Text>
                   </View>
                 </View>
