@@ -55,13 +55,14 @@ import {
 } from 'react-native-iap';
 import {Picker} from '@react-native-picker/picker';
 
-const ShopScreen = () => {
+const ShopScreen = ({route}) => {
   const [lang, setLang] = useState({});
   const navigation = useNavigation();
   let ScreenHeight = Dimensions.get('window').height;
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
   const [userData, setUserData] = useState({});
+  const {memberID} = route.params || {};
 
   // Item Saved
   const [itemSavedData, setItemSavedData] = useState([]);
@@ -146,36 +147,52 @@ const ShopScreen = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+    console.log('Hadeh -> ' + memberID);
+    const fetchUserData = async () => {
       try {
-        // Get Language
-        const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage2(currentLanguage);
-        setLang(screenLang);
-
-        // Get User Data
+        // Ambil user data terlebih dahulu
         const userData = await AsyncStorage.getItem('userData');
         const getData = JSON.parse(userData);
         setUserData(getData);
+        console.log('Bajing -> ' + getData.member);
 
-        // Item Saved
-        fetchItemShopDataSaved(getData.member);
-
-        // Item Expired
-        fetchItemShopDataExpired(getData.member);
-
-        // Item Shop
-        fetchItemShopData();
+        // Setelah userData tersimpan di state, jalankan fungsi lain
+        fetchOtherData(getData.member);
       } catch (err) {
-        console.error('Error retrieving data from AsyncStorage:', err);
+        console.error('Error retrieving user data:', err);
         crashlytics().recordError(new Error(err));
         crashlytics().log(err);
         navigation.replace('Home');
       }
     };
 
+    const fetchOtherData = async member => {
+      try {
+        // Get Language
+        const currentLanguage = await AsyncStorage.getItem('currentLanguage');
+        const screenLang = await getLanguage2(currentLanguage);
+        setLang(screenLang);
+
+        // Pastikan member tidak undefined sebelum dipakai
+        if (member) {
+          // Item Saved
+          fetchItemShopDataSaved(member);
+
+          // Item Expired
+          fetchItemShopDataExpired(member);
+
+          // Item Shop
+          fetchItemShopData();
+        }
+      } catch (err) {
+        console.error('Error fetching additional data:', err);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
+      }
+    };
+
     initializeIAP();
-    fetchData();
+    fetchUserData();
   }, []);
 
   // Back
@@ -197,7 +214,7 @@ const ShopScreen = () => {
   };
 
   const savePurchaseLog = async (status, member) => {
-    console.log('Anjing -> ' + member + ' - ' + status);
+    console.log('Anjing -> ' + memberID + ' - ' + status);
     try {
       const response = await fetch(`${URL_API_NODEJS}/saveInappPurchaseLog`, {
         method: 'POST',
@@ -207,13 +224,15 @@ const ShopScreen = () => {
         },
         body: JSON.stringify({
           status,
-          member,
+          member: memberID,
         }),
       });
 
       const result = await response.json();
+      console.log({status, member: memberID});
+      console.log('Bedebah ->', result?.data[0]);
 
-      if (result.status === 'success' && result.code === 200) {
+      if (result.status == 'success' && result.code === 200) {
         return result?.data[0]?.affectedRows == 1 ? 'ok' : 'no';
       } else {
         console.error('Failed to save purchase log:', result.message);
@@ -427,11 +446,11 @@ const ShopScreen = () => {
       async purchase => {
         console.log('Purchase Success:', purchase);
 
-        await savePurchaseLog('10401', userData?.member); // Success
+        await savePurchaseLog('10401', userData?.member); // Success // Undefined disini
 
         // Acknowledge purchase for Android
         if (Platform.OS === 'android' && !purchase?.isAcknowledgedAndroid) {
-          if (purchase?.purchaseToken && purchase?.purchaseStateAndroid === 0) {
+          if (purchase?.purchaseToken && purchase?.purchaseStateAndroid == 0) {
             try {
               await acknowledgePurchaseAndroid(purchase.purchaseToken);
 
@@ -445,7 +464,7 @@ const ShopScreen = () => {
             console.log(
               `Purchase token is null or state is not valid for ${purchase.productId}`,
             );
-            await savePurchaseLog('10402', userData?.member); // Failed
+            await savePurchaseLog('10402', userData?.member); // Failed // Undefined disini
           }
         }
       },
