@@ -213,7 +213,7 @@ const ShopScreen = ({route}) => {
     setAgreementModalVisible(true); // Tampilkan modal agreement
   };
 
-  const savePurchaseLog = async (status, member) => {
+  const savePurchaseLog = async status => {
     console.log('Anjing -> ' + memberID + ' - ' + status);
     try {
       const response = await fetch(`${URL_API_NODEJS}/saveInappPurchaseLog`, {
@@ -229,8 +229,6 @@ const ShopScreen = ({route}) => {
       });
 
       const result = await response.json();
-      console.log({status, member: memberID});
-      console.log('Bedebah ->', result?.data[0]);
 
       if (result.status == 'success' && result.code === 200) {
         return result?.data[0]?.affectedRows == 1 ? 'ok' : 'no';
@@ -257,6 +255,8 @@ const ShopScreen = ({route}) => {
           return;
         }
 
+        await savePurchaseLog('10403'); // Pending
+
         // Cek apakah item adalah subscription
         if (item.type == 10152) {
           if (!selectedChildSubs) {
@@ -268,6 +268,7 @@ const ShopScreen = ({route}) => {
 
           if (!offerToken) {
             Alert.alert('Error', 'Offer token is missing.');
+            await savePurchaseLog('10402'); // Failed karena offerToken tidak ada
             return;
           }
 
@@ -281,7 +282,6 @@ const ShopScreen = ({route}) => {
 
           // Tampilkan modal sukses
           setPurchaseModalVisible(true);
-          await savePurchaseLog('10403', userData?.member); // Pending
         } else {
           // Handle pembelian produk biasa (bukan subscription)
           const purchaseData = await requestPurchase({
@@ -291,12 +291,11 @@ const ShopScreen = ({route}) => {
 
           // Tampilkan modal sukses
           setPurchaseModalVisible(true);
-          await savePurchaseLog('10403', userData?.member); // Pending
         }
       } catch (error) {
         console.log('Error during purchase:', error);
         Alert.alert('Failed', 'Purchase is failed');
-        await savePurchaseLog('10402', userData?.member); // Failed
+        await savePurchaseLog('10402'); // Failed
       } finally {
         setAgreementModalVisible(false);
         setIsAgreed(false);
@@ -446,25 +445,38 @@ const ShopScreen = ({route}) => {
       async purchase => {
         console.log('Purchase Success:', purchase);
 
-        await savePurchaseLog('10401', userData?.member); // Success // Undefined disini
+        await savePurchaseLog('10401'); // Success
 
         // Acknowledge purchase for Android
         if (Platform.OS === 'android' && !purchase?.isAcknowledgedAndroid) {
+          const token = purchase?.purchaseToken;
+
+          // if (token && token.trim() !== '') {
           if (purchase?.purchaseToken && purchase?.purchaseStateAndroid == 0) {
+            console.log('Using purchase token:', token);
+
             try {
-              await acknowledgePurchaseAndroid(purchase.purchaseToken);
+              await acknowledgePurchaseAndroid(token);
+              console.log('Acknowledgement successful');
 
               // Setelah acknowledged, kita harus menyelesaikan transaksi
               await finishTransaction({purchase, isConsumable: false});
-            } catch (error) {
-              console.error('Error acknowledging purchase: ', error);
-              await savePurchaseLog('10402', userData?.member); // Failed
+            } catch (ackError) {
+              console.error('Acknowledgement error:', ackError);
+
+              // Jika gagal, mungkin state belum siap, coba lagi setelah delay
+              setTimeout(async () => {
+                try {
+                  console.log('Retrying acknowledgement...');
+                  await acknowledgePurchaseAndroid(token);
+                  await finishTransaction({purchase, isConsumable: false});
+                } catch (retryError) {
+                  console.error('Retry acknowledgement failed:', retryError);
+                }
+              }, 10000); // Tunggu 10 detik untuk retry
             }
           } else {
-            console.log(
-              `Purchase token is null or state is not valid for ${purchase.productId}`,
-            );
-            await savePurchaseLog('10402', userData?.member); // Failed // Undefined disini
+            console.log(`Purchase token is null ${purchase?.productId}`);
           }
         }
       },
@@ -473,7 +485,7 @@ const ShopScreen = ({route}) => {
     const purchaseErrorSubscription = purchaseErrorListener(error => {
       console.log('Purchase Error:', error);
       Alert.alert('Purchase Failed', error.message);
-      savePurchaseLog('10402', userData?.member); // Failed
+      savePurchaseLog('10402'); // Failed
     });
 
     return () => {
