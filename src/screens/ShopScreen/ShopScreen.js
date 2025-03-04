@@ -76,6 +76,7 @@ const ShopScreen = ({route}) => {
   const [itemShopData, setItemShopData] = useState([]);
   const [itemShopLoading, setItemShopLoading] = useState(true);
   const [subsChildData, setSubsChildData] = useState([]);
+  const [receiptID, setReceiptID] = useState(null);
 
   // Modal
   const [modalVisible, setModalVisible] = useState(false);
@@ -147,7 +148,6 @@ const ShopScreen = ({route}) => {
   };
 
   useEffect(() => {
-    console.log('Hadeh -> ' + memberID);
     const fetchUserData = async () => {
       try {
         // Ambil user data terlebih dahulu
@@ -280,10 +280,8 @@ const ShopScreen = ({route}) => {
       const response = await request.json();
 
       if (response.status === 'success' && response.code === 200) {
-        console.log('Save Receipt -> ' + response?.data[0]?.affectedRows);
-
         if (response?.data[0]?.affectedRows == 1) {
-          await saveProduct(response?.data[0]?.id);
+          setReceiptID(response?.data[0]?.id);
         }
       } else {
         console.error('Failed to save purchase receipt:', response.message);
@@ -295,39 +293,52 @@ const ShopScreen = ({route}) => {
     }
   };
 
-  // Save Product to Storages
-  const saveProduct = async receiptID => {
-    console.log({
-      member: memberID,
-      item: selectedItem?.id,
-      receipt: receiptID,
-    });
-    try {
-      const request = await fetch(`${URL_API_NODEJS}/saveProductToStorage`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${authcode}`,
-        },
-        body: JSON.stringify({
-          member: memberID,
-          item: selectedItem?.id,
-          receipt: receiptID,
-        }),
-      });
+  useEffect(() => {
+    const processReceipt = async () => {
+      if (receiptID != null && selectedItem != null) {
+        const jamal = `Jamal -> ${receiptID}  <->  itemID -> ${selectedItem?.id}`;
+        console.log(jamal);
 
-      const response = await request.json();
-
-      if (response.status === 'success' && response.code === 200) {
-        console.log('Save Product -> ' + response?.data[0]?.affectedRows);
-        return response?.data[0]?.affectedRows == 1 ? 'ok' : 'no';
+        await saveProduct(receiptID, selectedItem?.id);
       } else {
-        console.error('Failed to save product:', response.message);
+        console.log('Jamaludin kopong');
       }
-    } catch (err) {
-      console.error('Error saving product:', err);
-      crashlytics().recordError(new Error(err));
-      crashlytics().log(err);
+    };
+
+    processReceipt();
+  }, [receiptID]);
+
+  // Save Product to Storages
+  const saveProduct = async (receiptID, itemID) => {
+    if (selectedItem) {
+      try {
+        const request = await fetch(`${URL_API_NODEJS}/saveProductToStorage`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authcode}`,
+          },
+          body: JSON.stringify({
+            member: memberID,
+            item: itemID,
+            receipt: receiptID,
+          }),
+        });
+
+        const response = await request.json();
+
+        if (response.status === 'success' && response.code === 200) {
+          console.log('Save Product -> ' + response?.data[0]?.affectedRows);
+          setPurchaseModalVisible(true);
+          return response?.data[0]?.affectedRows == 1 ? 'ok' : 'no';
+        } else {
+          console.error('Failed to save product:', response.message);
+        }
+      } catch (err) {
+        console.error('Error saving product:', err);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
+      }
     }
   };
 
@@ -369,7 +380,7 @@ const ShopScreen = ({route}) => {
 
           console.log('Purchase Data Subscription:', purchaseData);
           // Tampilkan modal sukses
-          setPurchaseModalVisible(true);
+          // setPurchaseModalVisible(true);
         } else {
           // Handle pembelian produk biasa (bukan subscription)
           const purchaseData = await requestPurchase({
