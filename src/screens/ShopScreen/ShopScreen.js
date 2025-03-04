@@ -258,7 +258,7 @@ const ShopScreen = ({route}) => {
         console.error('Failed to save purchase receipt:', response.message);
       }
     } catch (err) {
-      console.error('Error saving purchase receipt: ', err);
+      console.error('Error saving purchase receipt:', err);
       crashlytics().recordError(new Error(err));
       crashlytics().log(err);
     }
