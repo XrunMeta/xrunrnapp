@@ -213,8 +213,58 @@ const ShopScreen = ({route}) => {
     setAgreementModalVisible(true); // Tampilkan modal agreement
   };
 
+  // Save Receive from Purchased Item
+  const savePurchasedReceive = async (purchase, status) => {
+    try {
+      // Pastikan purchase.dataAndroid ada dan dalam format JSON string
+      const purchaseData = purchase?.dataAndroid
+        ? JSON.parse(purchase.dataAndroid)
+        : null;
+
+      if (!purchaseData) {
+        console.error('purchaseData is undefined or not valid JSON!');
+        return;
+      }
+
+      const request = await fetch(`${URL_API_NODEJS}/saveInappReceipt`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authcode}`,
+        },
+        body: JSON.stringify({
+          member: memberID,
+          storage: '0',
+          order_id: purchaseData.orderId,
+          package_name: purchaseData.packageName,
+          product_id: purchaseData.productId,
+          purchase_time: purchaseData.purchaseTime,
+          purchase_state: '' + purchaseData.purchaseState,
+          purchase_token: purchaseData.purchaseToken,
+          auto_renewing: '' + purchaseData?.autoRenewing,
+          is_acknowledged: purchaseData.acknowledged,
+          transaction_id: purchase.transactionId,
+          signature: purchase.signatureAndroid,
+          status, // 11001: Success, 11002: Pending, 11003: Failed
+        }),
+      });
+
+      const response = await request.json();
+
+      if (response.status === 'success' && response.code === 200) {
+        console.log('Save Receipt -> ' + response?.data[0]?.affectedRows);
+        return response?.data[0]?.affectedRows == 1 ? 'ok' : 'no';
+      } else {
+        console.error('Failed to save purchase receipt:', response.message);
+      }
+    } catch (err) {
+      console.error('Error saving purchase receipt: ', err);
+      crashlytics().recordError(new Error(err));
+      crashlytics().log(err);
+    }
+  };
+
   const savePurchaseLog = async status => {
-    console.log('Anjing -> ' + memberID + ' - ' + status);
     try {
       const response = await fetch(`${URL_API_NODEJS}/saveInappPurchaseLog`, {
         method: 'POST',
@@ -279,7 +329,6 @@ const ShopScreen = ({route}) => {
           });
 
           console.log('Purchase Data Subscription:', purchaseData);
-
           // Tampilkan modal sukses
           setPurchaseModalVisible(true);
         } else {
@@ -446,6 +495,7 @@ const ShopScreen = ({route}) => {
         console.log('Purchase Success:', purchase);
 
         await savePurchaseLog('10401'); // Success
+        await savePurchasedReceive(purchase, '11001'); // Success
 
         // Acknowledge purchase for Android
         if (Platform.OS === 'android' && !purchase?.isAcknowledgedAndroid) {
