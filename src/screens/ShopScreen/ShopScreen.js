@@ -77,6 +77,7 @@ const ShopScreen = ({route}) => {
   const [itemShopLoading, setItemShopLoading] = useState(true);
   const [subsChildData, setSubsChildData] = useState([]);
   const [receiptID, setReceiptID] = useState(null);
+  const [isPurchasing, setIsPurchasing] = useState(false);
 
   // Modal
   const [modalVisible, setModalVisible] = useState(false);
@@ -329,6 +330,7 @@ const ShopScreen = ({route}) => {
 
         if (response.status === 'success' && response.code === 200) {
           console.log('Save Product -> ' + response?.data[0]?.affectedRows);
+          setIsPurchasing(false);
           setPurchaseModalVisible(true);
           return response?.data[0]?.affectedRows == 1 ? 'ok' : 'no';
         } else {
@@ -338,6 +340,9 @@ const ShopScreen = ({route}) => {
         console.error('Error saving product:', err);
         crashlytics().recordError(new Error(err));
         crashlytics().log(err);
+        setIsPurchasing(false);
+      } finally {
+        setIsPurchasing(false);
       }
     }
   };
@@ -345,6 +350,7 @@ const ShopScreen = ({route}) => {
   // Click Agreement
   const handleAgreementBuyClick = async () => {
     if (isAgreed && selectedItem) {
+      setIsPurchasing(true);
       try {
         const item = itemShopData.find(
           product => product.sku === selectedItem.sku,
@@ -352,6 +358,7 @@ const ShopScreen = ({route}) => {
 
         if (!item) {
           Alert.alert('Error', 'Item not found');
+          setIsPurchasing(false);
           return;
         }
 
@@ -361,6 +368,7 @@ const ShopScreen = ({route}) => {
         if (item.type == 10152) {
           if (!selectedChildSubs) {
             Alert.alert('Error', 'Please select a subscription plan.');
+            setIsPurchasing(false);
             return;
           }
 
@@ -369,6 +377,7 @@ const ShopScreen = ({route}) => {
           if (!offerToken) {
             Alert.alert('Error', 'Offer token is missing.');
             await savePurchaseLog('10402'); // Failed karena offerToken tidak ada
+            setIsPurchasing(false);
             return;
           }
 
@@ -398,6 +407,7 @@ const ShopScreen = ({route}) => {
       } finally {
         setAgreementModalVisible(false);
         setIsAgreed(false);
+        setIsPurchasing(false);
       }
     }
   };
@@ -678,7 +688,9 @@ const ShopScreen = ({route}) => {
   );
 
   return (
-    <SafeAreaView style={[styles.root, {height: ScreenHeight}]}>
+    <SafeAreaView
+      style={[styles.root, {height: ScreenHeight}]}
+      pointerEvents={isPurchasing ? 'none' : 'auto'}>
       {/* Title */}
       <View style={{flexDirection: 'row', zIndex: 1}}>
         <View style={{position: 'absolute', zIndex: 1}}>
@@ -1089,6 +1101,17 @@ const ShopScreen = ({route}) => {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
+
+      {/* Loading Modal */}
+      <Modal
+        transparent={true}
+        visible={isPurchasing}
+        animationType="fade"
+        onRequestClose={() => {}}>
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color="#343a59" />
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -1254,6 +1277,12 @@ const styles = StyleSheet.create({
   },
   disabledButton: {
     backgroundColor: 'lightgrey',
+  },
+  loadingOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
 });
 
