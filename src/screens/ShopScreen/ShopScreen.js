@@ -213,6 +213,34 @@ const ShopScreen = ({route}) => {
     setAgreementModalVisible(true); // Tampilkan modal agreement
   };
 
+  const savePurchaseLog = async status => {
+    try {
+      const response = await fetch(`${URL_API_NODEJS}/saveInappPurchaseLog`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authcode}`,
+        },
+        body: JSON.stringify({
+          status,
+          member: memberID,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.status == 'success' && result.code === 200) {
+        return result?.data[0]?.affectedRows == 1 ? 'ok' : 'no';
+      } else {
+        console.error('Failed to save purchase log:', result.message);
+      }
+    } catch (error) {
+      console.error('Error saving purchase log:', error);
+      crashlytics().recordError(new Error(error));
+      crashlytics().log(error);
+    }
+  };
+
   // Save Receive from Purchased Item
   const savePurchasedReceive = async (purchase, status) => {
     try {
@@ -253,7 +281,10 @@ const ShopScreen = ({route}) => {
 
       if (response.status === 'success' && response.code === 200) {
         console.log('Save Receipt -> ' + response?.data[0]?.affectedRows);
-        return response?.data[0]?.affectedRows == 1 ? 'ok' : 'no';
+
+        if (response?.data[0]?.affectedRows == 1) {
+          await saveProduct(response?.data[0]?.id);
+        }
       } else {
         console.error('Failed to save purchase receipt:', response.message);
       }
@@ -264,31 +295,39 @@ const ShopScreen = ({route}) => {
     }
   };
 
-  const savePurchaseLog = async status => {
+  // Save Product to Storages
+  const saveProduct = async receiptID => {
+    console.log({
+      member: memberID,
+      item: selectedItem?.id,
+      receipt: receiptID,
+    });
     try {
-      const response = await fetch(`${URL_API_NODEJS}/saveInappPurchaseLog`, {
+      const request = await fetch(`${URL_API_NODEJS}/saveProductToStorage`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${authcode}`,
         },
         body: JSON.stringify({
-          status,
           member: memberID,
+          item: selectedItem?.id,
+          receipt: receiptID,
         }),
       });
 
-      const result = await response.json();
+      const response = await request.json();
 
-      if (result.status == 'success' && result.code === 200) {
-        return result?.data[0]?.affectedRows == 1 ? 'ok' : 'no';
+      if (response.status === 'success' && response.code === 200) {
+        console.log('Save Product -> ' + response?.data[0]?.affectedRows);
+        return response?.data[0]?.affectedRows == 1 ? 'ok' : 'no';
       } else {
-        console.error('Failed to save purchase log:', result.message);
+        console.error('Failed to save product:', response.message);
       }
-    } catch (error) {
-      console.error('Error saving purchase log:', error);
-      crashlytics().recordError(new Error(error));
-      crashlytics().log(error);
+    } catch (err) {
+      console.error('Error saving product:', err);
+      crashlytics().recordError(new Error(err));
+      crashlytics().log(err);
     }
   };
 
