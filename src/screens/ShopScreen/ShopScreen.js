@@ -632,6 +632,7 @@ const ShopScreen = ({route}) => {
         item => item.id.toString(),
         ({item, styles, onPress}) =>
           itemSavedRenderItems({
+            member: memberID,
             item,
             styles,
             onPress: () => handleItemPress(item),
