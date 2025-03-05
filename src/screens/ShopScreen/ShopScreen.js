@@ -414,6 +414,7 @@ const ShopScreen = ({route}) => {
 
   // Fetch Item Shop Data
   const fetchItemShopData = async () => {
+    setItemShopLoading(true);
     try {
       const request = await fetch(`${URL_API_NODEJS}/getListItemShop`, {
         method: 'GET',
@@ -510,6 +511,7 @@ const ShopScreen = ({route}) => {
 
   // Fetch Item Shop Data Expired
   const fetchItemShopDataExpired = async member => {
+    setItemExpiredLoading(true);
     try {
       const request = await fetch(`${URL_API_NODEJS}/getListItemShopExpired`, {
         method: 'POST',
@@ -691,8 +693,11 @@ const ShopScreen = ({route}) => {
 
   useEffect(() => {
     if (index == 0) {
-      console.log('Ada di tab index: ', index);
       fetchItemShopDataSaved(memberID);
+    } else if (index == 1) {
+      fetchItemShopDataExpired(memberID);
+    } else if (index == 2) {
+      fetchItemShopData();
     }
   }, [index]);
 
