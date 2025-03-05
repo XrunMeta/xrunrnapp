@@ -426,7 +426,7 @@ const ShopScreen = ({route}) => {
       const response = await request.json();
 
       if (response.status === 'success' && response.code === 200) {
-        const shopData = response.data;
+        const shopData = response.data.reverse();
 
         setItemShopData(shopData);
         setItemShopLoading(false);
@@ -494,7 +494,7 @@ const ShopScreen = ({route}) => {
       const response = await request.json();
 
       if (response.status === 'success' && response.code === 200) {
-        const shopSavedData = response.data;
+        const shopSavedData = response.data.reverse();
 
         setItemSavedData(shopSavedData);
         setItemSavedLoading(false);
@@ -526,7 +526,7 @@ const ShopScreen = ({route}) => {
       const response = await request.json();
 
       if (response.status === 'success' && response.code === 200) {
-        const shopExpData = response.data;
+        const shopExpData = response.data.reverse();
 
         setItemExpiredData(shopExpData);
         setItemExpiredLoading(false);
