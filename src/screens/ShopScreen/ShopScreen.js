@@ -478,6 +478,7 @@ const ShopScreen = ({route}) => {
 
   // Fetch Item Shop Data Saved
   const fetchItemShopDataSaved = async member => {
+    setItemSavedLoading(true);
     try {
       const request = await fetch(`${URL_API_NODEJS}/getListItemShopSaved`, {
         method: 'POST',
@@ -686,6 +687,13 @@ const ShopScreen = ({route}) => {
       )}
     />
   );
+
+  useEffect(() => {
+    if (index == 0) {
+      console.log('Ada di tab index: ', index);
+      fetchItemShopDataSaved(memberID);
+    }
+  }, [index]);
 
   return (
     <SafeAreaView
