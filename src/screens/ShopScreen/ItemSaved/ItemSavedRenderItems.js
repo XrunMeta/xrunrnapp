@@ -1,23 +1,57 @@
 import {Image, Text, TouchableOpacity, View} from 'react-native';
-export const itemSavedRenderItems = ({item, styles, onPress}) => {
-  const calculateDaysLeft = (createdDate, duration = 30) => {
-    if (!createdDate) return '';
+import crashlytics from '@react-native-firebase/crashlytics';
+import {URL_API_NODEJS, authcode} from '../../../../utils';
 
-    const created = new Date(createdDate);
-    const now = new Date();
+const calculateDaysLeft = (createdDate, duration = 30) => {
+  if (!createdDate) return '';
 
-    const expiredDate = new Date(created);
-    expiredDate.setDate(created.getDate() + duration); // Tambah durasi ke tanggal expired
+  const created = new Date(createdDate);
+  const now = new Date();
 
-    const diffTime = expiredDate - now;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Selisih hari, dibulatkan ke atas
+  const expiredDate = new Date(created);
+  expiredDate.setDate(created.getDate() + duration); // Tambah durasi ke tanggal expired
 
-    return diffDays > 0 ? diffDays : `Expired`;
+  const diffTime = expiredDate - now;
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Selisih hari, dibulatkan ke atas
+
+  return diffDays > 0 ? diffDays : `Expired`;
+};
+
+export const itemSavedRenderItems = ({member, item, styles, onPress}) => {
+  const timeLeft = calculateDaysLeft(item.created);
+
+  // Fungsi untuk menandai item sebagai expired di backend
+  const markAsExpired = async storageID => {
+    try {
+      const request = await fetch(`${URL_API_NODEJS}/useInappStorage`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authcode}`,
+        },
+        body: JSON.stringify({
+          member,
+          storage: storageID,
+        }),
+      });
+      const response = await request.json();
+
+      if (response.status === 'success' && response.code === 200) {
+        console.log('Subscription expired and updated in DB');
+      } else {
+        console.error('Failed to update Subscription in DB:', response.message);
+      }
+    } catch (err) {
+      console.error('Error update Subscription in DB: ', err);
+      crashlytics().recordError(new Error(err));
+      crashlytics().log(err);
+    }
   };
 
-  // Cek apakah item sudah Expired, jika iya maka hentikan render
-  if (calculateDaysLeft(item.created) === 'Expired') {
-    return null; // Tidak menampilkan komponen ini
+  // Cek apakah item sudah expired
+  if (timeLeft === 'Expired') {
+    markAsExpired(item.id); // Panggil tanpa await supaya gak ngerusak render
+    return null; // Jangan render kalau expired
   }
 
   return (
@@ -62,7 +96,7 @@ export const itemSavedRenderItems = ({item, styles, onPress}) => {
           {item.name}
         </Text>
         <Text style={[styles.normalText, {marginTop: 0, fontWeight: 'bold'}]}>
-          {item.type == 10152 ? `${calculateDaysLeft(item.created)} ` : ''}
+          {item.type == 10152 ? `${timeLeft} ` : ''}
           {item.saveddesc}
         </Text>
       </View>
