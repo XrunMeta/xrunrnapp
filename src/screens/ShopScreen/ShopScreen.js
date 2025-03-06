@@ -155,10 +155,8 @@ const ShopScreen = ({route}) => {
         const userData = await AsyncStorage.getItem('userData');
         const getData = JSON.parse(userData);
         setUserData(getData);
-        console.log('Bajing -> ' + getData.member);
 
-        // Setelah userData tersimpan di state, jalankan fungsi lain
-        fetchOtherData(getData.member);
+        fetchOtherData(memberID);
       } catch (err) {
         console.error('Error retrieving user data:', err);
         crashlytics().recordError(new Error(err));
@@ -309,6 +307,10 @@ const ShopScreen = ({route}) => {
     processReceipt();
   }, [receiptID]);
 
+  useEffect(() => {
+    fetchItemShopData();
+  }, [purchaseModalVisible]);
+
   // Save Product to Storages
   const saveProduct = async (receiptID, itemID) => {
     if (selectedItem) {
@@ -417,11 +419,14 @@ const ShopScreen = ({route}) => {
     setItemShopLoading(true);
     try {
       const request = await fetch(`${URL_API_NODEJS}/getListItemShop`, {
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${authcode}`,
         },
+        body: JSON.stringify({
+          member: memberID,
+        }),
       });
       const response = await request.json();
 
