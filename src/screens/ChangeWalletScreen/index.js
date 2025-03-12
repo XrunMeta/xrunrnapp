@@ -11,6 +11,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
+  Modal,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import ButtonBack from '../../components/ButtonBack';
@@ -42,6 +43,10 @@ const Change = ({navigation, route}) => {
   const [estimate, setEstimate] = useState(0);
   const [conversionRequest, setConversionRequest] = useState(0);
   const [isNaNCoverted, setIsNaNConverted] = useState(false);
+
+  // Transfer Ticket Modal
+  const [isTransferTicketModalVisible, setIsTransferTicketModalVisible] =
+    useState(false);
 
   useEffect(() => {
     // Get Language Data
@@ -161,6 +166,16 @@ const Change = ({navigation, route}) => {
     setIsIconNextDisabled(false);
   };
 
+  const closeTransferTicketModal = () => {
+    setIsTransferTicketModalVisible(false);
+    navigation.navigate('WalletHome');
+  };
+
+  const navigateToShop = () => {
+    setIsTransferTicketModalVisible(false);
+    navigation.replace('ShopHome', {memberID: dataMember?.member});
+  };
+
   const confirmConversion = async () => {
     if (isNaNCoverted) {
       Alert.alert('', 'Invalid input amount.');
@@ -184,11 +199,11 @@ const Change = ({navigation, route}) => {
 
           transferTicket =
             ticketResponse.status === 'success' &&
-            ticketResponse.data.find(item => item.item === 1);
+            ticketResponse.data.find(item => item.item == 1);
 
           if (!transferTicket) {
             setIsLoading(false);
-            setShowModal(true);
+            setIsTransferTicketModalVisible(true);
             return;
           }
         }
@@ -200,7 +215,7 @@ const Change = ({navigation, route}) => {
         };
         result = await gatewayNodeJS('app4420-02-conv', 'POST', body);
 
-        if (currency === 16 && transferTicket) {
+        if (currency == 16 && transferTicket) {
           // Gunakan tiket transfer
           const useTicket = await gatewayNodeJS('useInappStorage', 'POST', {
             member: dataMember.member,
@@ -277,7 +292,7 @@ const Change = ({navigation, route}) => {
           </View>
           <View style={styles.titleWrapper}>
             <Text style={styles.title}>
-              {lang && lang ? lang.screen_conversion.title : ''}bahlul
+              {lang && lang ? lang.screen_conversion.title : ''}
             </Text>
           </View>
         </View>
@@ -326,6 +341,7 @@ const Change = ({navigation, route}) => {
           </KeyboardAvoidingView>
         </ScrollView>
 
+        {/* Conversion Confirmation Popup */}
         {popupConversion && (
           <View style={styles.popupConversion}>
             <View style={styles.wrapperConversion}>
@@ -376,12 +392,53 @@ const Change = ({navigation, route}) => {
             </View>
           </View>
         )}
+
+        {/* No Transfer Ticket Modal */}
+        <Modal
+          visible={isTransferTicketModalVisible}
+          transparent={true}
+          animationType="fade"
+          onRequestClose={closeTransferTicketModal}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalTitle}>
+                  {(lang && lang.screen_wallet?.no_ticket_title) ||
+                    'No Transfer Ticket'}
+                </Text>
+              </View>
+              <View style={styles.modalBody}>
+                <Text style={styles.modalText}>
+                  {(lang && lang.screen_wallet?.no_ticket_message) ||
+                    'You do not have a transfer ticket. Please purchase one from the shop before proceeding.'}
+                </Text>
+              </View>
+              <View style={styles.modalFooter}>
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.modalButtonSecondary]}
+                  onPress={closeTransferTicketModal}>
+                  <Text style={styles.modalButtonTextSecondary}>
+                    {(lang && lang.screen_wallet?.close) || 'Close'}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.modalButtonPrimary]}
+                  onPress={navigateToShop}>
+                  <Text style={styles.modalButtonTextPrimary}>
+                    {(lang && lang.screen_wallet?.buy_ticket) || 'Buy Ticket'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
 };
 
 export default Change;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -544,5 +601,78 @@ const styles = StyleSheet.create({
     fontFamily: getFontFam() + 'Medium',
     textTransform: 'uppercase',
     fontSize: fontSize('subtitle'),
+  },
+  // Modal styles
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 8,
+    width: '85%',
+    overflow: 'hidden',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  modalHeader: {
+    padding: 16,
+    backgroundColor: 'white',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  modalTitle: {
+    color: '#343c5a',
+    fontFamily: getFontFam() + 'Bold',
+    fontSize: fontSize('subtitle'),
+    textAlign: 'center',
+  },
+  modalBody: {
+    paddingVertical: 40,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  modalText: {
+    fontFamily: getFontFam() + 'Regular',
+    fontSize: fontSize('body'),
+    color: '#333',
+    textAlign: 'center',
+    lineHeight: 22,
+  },
+  modalFooter: {
+    flexDirection: 'row',
+    borderTopWidth: 1,
+    borderTopColor: '#e0e0e0',
+  },
+  modalButton: {
+    flex: 1,
+    padding: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalButtonPrimary: {
+    backgroundColor: '#343c5a',
+    borderLeftWidth: 1,
+    borderLeftColor: '#e0e0e0',
+  },
+  modalButtonSecondary: {
+    backgroundColor: '#f3f4f6',
+  },
+  modalButtonTextPrimary: {
+    fontFamily: getFontFam() + 'Medium',
+    fontSize: fontSize('body'),
+    color: 'white',
+  },
+  modalButtonTextSecondary: {
+    fontFamily: getFontFam() + 'Medium',
+    fontSize: fontSize('body'),
+    color: '#343c5a',
   },
 });
