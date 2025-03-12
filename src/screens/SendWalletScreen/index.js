@@ -15,6 +15,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
+  Modal,
 } from 'react-native';
 import React, {useState, useEffect, useRef} from 'react';
 import ButtonBack from '../../components/ButtonBack';
@@ -45,6 +46,10 @@ const SendWalletScreen = ({navigation, route}) => {
   const [limitTransfer, setLimitTransfer] = useState(0);
   const [amount, setAmount] = useState('');
   const [address, setAddress] = useState('');
+
+  // Transfer Ticket Modal
+  const [isTransferTicketModalVisible, setIsTransferTicketModalVisible] =
+    useState(false);
 
   const [chainId, setChainId] = useState(1);
   const [currency, setCurrency] = useState('1');
@@ -195,6 +200,16 @@ const SendWalletScreen = ({navigation, route}) => {
       };
     }
   }, [totalGasCost, isInitialCallGasEstimated]);
+
+  const closeTransferTicketModal = () => {
+    setIsTransferTicketModalVisible(false);
+    navigation.replace('WalletHome');
+  };
+
+  const navigateToShop = () => {
+    setIsTransferTicketModalVisible(false);
+    navigation.replace('ShopHome', {memberID: dataMember?.member});
+  };
 
   // Request for get gas tracker to Inufra API
   const gasTracker = async chainId => {
@@ -621,7 +636,8 @@ const SendWalletScreen = ({navigation, route}) => {
           ticketResponse.data.find(item => item.item == 1);
 
         if (!transferTicket) {
-          setShowModal(true);
+          setIsLoading(false);
+          setIsTransferTicketModalVisible(true);
           return;
         }
       }
@@ -863,7 +879,7 @@ const SendWalletScreen = ({navigation, route}) => {
           </View>
           <View style={styles.titleWrapper}>
             <Text style={styles.title}>
-              {lang && lang ? lang.screen_wallet.table_head_send : ''}
+              {lang && lang ? lang.screen_wallet.table_head_send : ''}Bahlul
             </Text>
           </View>
         </View>
@@ -1199,6 +1215,46 @@ const SendWalletScreen = ({navigation, route}) => {
             </View>
           </View>
         )}
+
+        {/* No Transfer Ticket Modal */}
+        <Modal
+          visible={isTransferTicketModalVisible}
+          transparent={true}
+          animationType="fade"
+          onRequestClose={closeTransferTicketModal}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalTitle}>
+                  {(lang && lang.screen_wallet?.no_ticket_title) ||
+                    'No Transfer Ticket'}
+                </Text>
+              </View>
+              <View style={styles.modalBody}>
+                <Text style={styles.modalText}>
+                  {(lang && lang.screen_wallet?.no_ticket_message) ||
+                    'You do not have a transfer ticket. Please purchase one from the shop before proceeding.'}
+                </Text>
+              </View>
+              <View style={styles.modalFooter}>
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.modalButtonSecondary]}
+                  onPress={closeTransferTicketModal}>
+                  <Text style={styles.modalButtonTextSecondary}>
+                    {(lang && lang.screen_wallet?.close) || 'Close'}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.modalButtonPrimary]}
+                  onPress={navigateToShop}>
+                  <Text style={styles.modalButtonTextPrimary}>
+                    {(lang && lang.screen_wallet?.buy_ticket) || 'Buy Ticket'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
@@ -1354,5 +1410,78 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
     textTransform: 'uppercase',
     fontSize: fontSize('subtitle'),
+  },
+  // Modal styles
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 8,
+    width: '85%',
+    overflow: 'hidden',
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  modalHeader: {
+    padding: 16,
+    backgroundColor: 'white',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  modalTitle: {
+    color: '#343c5a',
+    fontFamily: getFontFam() + 'Bold',
+    fontSize: fontSize('subtitle'),
+    textAlign: 'center',
+  },
+  modalBody: {
+    paddingVertical: 40,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  modalText: {
+    fontFamily: getFontFam() + 'Regular',
+    fontSize: fontSize('body'),
+    color: '#333',
+    textAlign: 'center',
+    lineHeight: 22,
+  },
+  modalFooter: {
+    flexDirection: 'row',
+    borderTopWidth: 1,
+    borderTopColor: '#e0e0e0',
+  },
+  modalButton: {
+    flex: 1,
+    padding: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalButtonPrimary: {
+    backgroundColor: '#343c5a',
+    borderLeftWidth: 1,
+    borderLeftColor: '#e0e0e0',
+  },
+  modalButtonSecondary: {
+    backgroundColor: '#f3f4f6',
+  },
+  modalButtonTextPrimary: {
+    fontFamily: getFontFam() + 'Medium',
+    fontSize: fontSize('body'),
+    color: 'white',
+  },
+  modalButtonTextSecondary: {
+    fontFamily: getFontFam() + 'Medium',
+    fontSize: fontSize('body'),
+    color: '#343c5a',
   },
 });

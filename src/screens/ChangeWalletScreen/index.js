@@ -168,7 +168,7 @@ const Change = ({navigation, route}) => {
 
   const closeTransferTicketModal = () => {
     setIsTransferTicketModalVisible(false);
-    navigation.navigate('WalletHome');
+    navigation.replace('WalletHome');
   };
 
   const navigateToShop = () => {
