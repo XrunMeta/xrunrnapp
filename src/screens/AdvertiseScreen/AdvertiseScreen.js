@@ -965,7 +965,6 @@ const AdvertiseScreen = () => {
             renderScene={renderScene}
             onIndexChange={newIndex => {
               if (routes[newIndex].key === 'third') {
-                // navigation.replace('ShopHome'); // Arahkan ke layar ShopScreen
                 navigation.replace('ShopHome', {memberID: userData?.member}); // Arahkan ke layar ShopScreen
               } else {
                 setIndex(newIndex); // Tetap ubah tab untuk tab lainnya

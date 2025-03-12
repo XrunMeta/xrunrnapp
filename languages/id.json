@@ -540,7 +540,11 @@
     "able_transfer": "Able Tran.",
     "retry_load_wallet": "Data belum dimuat, silakan coba lagi",
     "go_home": "Kembali ke Beranda",
-    "wallet_error": "Coba lagi nanti, server sedang bermasalah"
+    "wallet_error": "Coba lagi nanti, terjadi kesalahan server",
+    "no_ticket_title": "Tidak Ada Tiket Transfer",
+    "no_ticket_message": "Anda tidak memiliki tiket transfer. Silakan beli tiket dari toko sebelum melanjutkan.",
+    "close": "Tutup",
+    "buy_ticket": "Beli Tiket"
   },
   "screen_send": {
     "send_amount_label": "Amount",

@@ -539,7 +539,11 @@
     "able_transfer": "출금가능",
     "retry_load_wallet": "데이터가 로드되지 않았습니다. 다시 시도해 주세요.",
     "go_home": "홈으로 이동",
-    "wallet_error": "나중에 다시 시도하세요, 서버 오류"
+    "wallet_error": "나중에 다시 시도하세요, 서버 오류",
+    "no_ticket_title": "전송 티켓 없음",
+    "no_ticket_message": "전송 티켓이 없습니다. 계속하려면 상점에서 티켓을 구매하세요.",
+    "close": "닫기",
+    "buy_ticket": "티켓 구매"
   },
   "screen_send": {
     "send_amount_label": "보낼 금액",
