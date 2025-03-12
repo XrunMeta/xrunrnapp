@@ -541,7 +541,11 @@
     "able_transfer": "Able Transfer",
     "retry_load_wallet": "Data has not been loaded, please try again",
     "go_home": "Go to Home",
-    "wallet_error": "Try later, server error"
+    "wallet_error": "Try later, server error",
+    "no_ticket_title": "No Transfer Ticket",
+    "no_ticket_message": "You do not have a transfer ticket. Please purchase one from the shop before proceeding.",
+    "close": "Close",
+    "buy_ticket": "Buy Ticket"
   },
   "screen_send": {
     "send_amount_label": "Amount to send",

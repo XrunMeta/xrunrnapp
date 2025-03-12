@@ -539,7 +539,11 @@
     "able_transfer": "可转移",
     "retry_load_wallet": "数据尚未加载，请重试",
     "go_home": "转至主页",
-    "wallet_error": "稍后再试，服务器错误"
+    "wallet_error": "稍后重试，服务器错误",
+    "no_ticket_title": "没有转账票",
+    "no_ticket_message": "您没有转账票。请先在商店购买，然后再继续。",
+    "close": "关闭",
+    "buy_ticket": "购买票"
   },
   "screen_send": {
     "send_amount_label": "发送金额",
