@@ -393,7 +393,7 @@ const WalletScreen = ({navigation, route}) => {
       );
     } else {
       // If status other chain == off just show ETH network
-      if (subcurrency == 5000 || subcurrency == 5100) {
+      if (subcurrency == 5000 || subcurrency == 5100 || subcurrency == 5200) {
         return uiCardWallet(
           walletColors,
           displaystr,
