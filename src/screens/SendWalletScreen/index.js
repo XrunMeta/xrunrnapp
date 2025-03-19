@@ -108,18 +108,18 @@ const SendWalletScreen = ({navigation, route}) => {
       const subcurrency = dataWallet.subcurrency;
 
       switch (subcurrency) {
-        case '5000':
-        case '5100':
+        case 5000:
+        case 5100:
           setNetwork('ETH');
           setChainId(1);
           break;
-        case '5200':
-        case '5201':
+        case 5200:
+        case 5201:
           setNetwork('POL');
           setChainId(137);
           setToken('');
           break;
-        case '5300':
+        case 5300:
           setNetwork('BNB');
           setChainId(56);
           setToken('');
