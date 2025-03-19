@@ -185,28 +185,28 @@ const Change = ({navigation, route}) => {
 
       try {
         let result;
-        let transferTicket = null;
+        // let transferTicket = null;
 
-        if (currency == 16) {
-          // Cek tiket transfer
-          const ticketResponse = await gatewayNodeJS(
-            'getDataActiveItem',
-            'POST',
-            {
-              member: dataMember.member,
-            },
-          );
+        // if (currency == 16) {
+        //   // Cek tiket transfer
+        //   const ticketResponse = await gatewayNodeJS(
+        //     'getDataActiveItem',
+        //     'POST',
+        //     {
+        //       member: dataMember.member,
+        //     },
+        //   );
 
-          transferTicket =
-            ticketResponse.status === 'success' &&
-            ticketResponse.data.find(item => item.item == 1);
+        //   transferTicket =
+        //     ticketResponse.status === 'success' &&
+        //     ticketResponse.data.find(item => item.item == 1);
 
-          if (!transferTicket) {
-            setIsLoading(false);
-            setIsTransferTicketModalVisible(true);
-            return;
-          }
-        }
+        //   if (!transferTicket) {
+        //     setIsLoading(false);
+        //     setIsTransferTicketModalVisible(true);
+        //     return;
+        //   }
+        // }
 
         const body = {
           member: dataMember.member,
@@ -215,22 +215,22 @@ const Change = ({navigation, route}) => {
         };
         result = await gatewayNodeJS('app4420-02-conv', 'POST', body);
 
-        if (currency == 16 && transferTicket) {
-          // Gunakan tiket transfer
-          const useTicket = await gatewayNodeJS('useInappStorage', 'POST', {
-            member: dataMember.member,
-            storage: transferTicket.storage,
-          });
+        // if (currency == 16 && transferTicket) {
+        //   // Gunakan tiket transfer
+        //   const useTicket = await gatewayNodeJS('useInappStorage', 'POST', {
+        //     member: dataMember.member,
+        //     storage: transferTicket.storage,
+        //   });
 
-          if (
-            !(
-              useTicket.status === 'success' &&
-              useTicket.data[0].affectedRows > 0
-            )
-          ) {
-            throw new Error('Failed to use transfer ticket');
-          }
-        }
+        //   if (
+        //     !(
+        //       useTicket.status === 'success' &&
+        //       useTicket.data[0].affectedRows > 0
+        //     )
+        //   ) {
+        //     throw new Error('Failed to use transfer ticket');
+        //   }
+        // }
 
         setIsLoading(false);
         setPopupConversion(false);
