@@ -45,9 +45,7 @@ const SendWalletScreen = ({navigation, route}) => {
   const [balance, setBalance] = useState(0);
   const [limitTransfer, setLimitTransfer] = useState(0);
   const [amount, setAmount] = useState('');
-  const [address, setAddress] = useState(
-    '0xd556B48f0675880E4AdbD8CAfD49a895623832fF',
-  );
+  const [address, setAddress] = useState('');
 
   // Transfer Ticket Modal
   const [isTransferTicketModalVisible, setIsTransferTicketModalVisible] =
