@@ -314,9 +314,6 @@ const SignInScreen = () => {
               </Pressable>
             </View>
           </ButtonNext>
-          {/* <TouchableOpacity onPress={onSignIn}>
-			<Text>Bahlul</Text>
-		  </TouchableOpacity> */}
         </ScrollView>
       </SafeAreaView>
     </TouchableWithoutFeedback>
