@@ -45,7 +45,9 @@ const SendWalletScreen = ({navigation, route}) => {
   const [balance, setBalance] = useState(0);
   const [limitTransfer, setLimitTransfer] = useState(0);
   const [amount, setAmount] = useState('');
-  const [address, setAddress] = useState('');
+  const [address, setAddress] = useState(
+    '0xd556B48f0675880E4AdbD8CAfD49a895623832fF',
+  );
 
   // Transfer Ticket Modal
   const [isTransferTicketModalVisible, setIsTransferTicketModalVisible] =
@@ -620,27 +622,23 @@ const SendWalletScreen = ({navigation, route}) => {
   // Post transfer
   const postTransfer = async () => {
     try {
-      // For Polygon
-      if (currency == 16) {
-        // Transfer ticket checker
-        const ticketResponse = await gatewayNodeJS(
-          'getDataActiveItem',
-          'POST',
-          {
-            member: dataMember.member,
-          },
-        );
+      // // For Polygon
+      // if (currency == 16) {
+      // Transfer ticket checker
+      const ticketResponse = await gatewayNodeJS('getDataActiveItem', 'POST', {
+        member: dataMember.member,
+      });
 
-        const transferTicket =
-          ticketResponse.status === 'success' &&
-          ticketResponse.data.find(item => item.item == 1);
+      const transferTicket =
+        ticketResponse.status === 'success' &&
+        ticketResponse.data.find(item => item.item == 1);
 
-        if (!transferTicket) {
-          setIsLoading(false);
-          setIsTransferTicketModalVisible(true);
-          return;
-        }
+      if (!transferTicket) {
+        setIsLoading(false);
+        setIsTransferTicketModalVisible(true);
+        return;
       }
+      // }
 
       const dataStockExchange = await transferByStockExchange();
 
@@ -674,24 +672,24 @@ const SendWalletScreen = ({navigation, route}) => {
         );
 
         if (status === 'success') {
-          if (currency == 16) {
-            const useTicket = await gatewayNodeJS('useInappStorage', 'POST', {
-              member: dataMember.member,
-              storage: transferTicket.storage,
-            });
+          // if (currency == 16) {
+          const useTicket = await gatewayNodeJS('useInappStorage', 'POST', {
+            member: dataMember.member,
+            storage: transferTicket.storage,
+          });
 
-            if (
-              !(
-                useTicket.status === 'success' &&
-                useTicket.data[0].affectedRows > 0
-              )
-            ) {
-              Alert.alert(lang.global_error.network_busy);
-              console.log('Failed to use in-app storage');
-              setIsLoading(false);
-              return;
-            }
+          if (
+            !(
+              useTicket.status === 'success' &&
+              useTicket.data[0].affectedRows > 0
+            )
+          ) {
+            Alert.alert(lang.global_error.network_busy);
+            console.log('Failed to use in-app storage');
+            setIsLoading(false);
+            return;
           }
+          // }
 
           setIsLoading(false);
           setAddress('');
@@ -879,7 +877,7 @@ const SendWalletScreen = ({navigation, route}) => {
           </View>
           <View style={styles.titleWrapper}>
             <Text style={styles.title}>
-              {lang && lang ? lang.screen_wallet.table_head_send : ''}Bahlul
+              {lang && lang ? lang.screen_wallet.table_head_send : ''}
             </Text>
           </View>
         </View>
@@ -1208,7 +1206,6 @@ const SendWalletScreen = ({navigation, route}) => {
                       : lang && lang
                       ? lang.screen_send.next
                       : ''}
-                    Bahlul
                   </Text>
                 </TouchableOpacity>
               </View>
