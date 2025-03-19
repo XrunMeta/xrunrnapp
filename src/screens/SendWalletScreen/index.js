@@ -50,6 +50,7 @@ const SendWalletScreen = ({navigation, route}) => {
   // Transfer Ticket Modal
   const [isTransferTicketModalVisible, setIsTransferTicketModalVisible] =
     useState(false);
+  const [ticketCount, setTicketCount] = useState(0);
 
   const [chainId, setChainId] = useState(1);
   const [currency, setCurrency] = useState('1');
@@ -156,6 +157,20 @@ const SendWalletScreen = ({navigation, route}) => {
         const userData = await AsyncStorage.getItem('userData');
         const dataMember = JSON.parse(userData);
         setDataMember(dataMember);
+
+        const ticketResponse = await gatewayNodeJS(
+          'getDataActiveItem',
+          'POST',
+          {
+            member: dataMember.member,
+          },
+        );
+
+        // Get ticket transfer count
+        const itemCount = ticketResponse.data.filter(
+          item => item.item == 1,
+        ).length;
+        setTicketCount(itemCount);
       } catch (error) {
         console.error('Failed to get userData from AsyncStorage:', err);
         crashlytics().recordError(new Error(error));
@@ -627,6 +642,12 @@ const SendWalletScreen = ({navigation, route}) => {
         member: dataMember.member,
       });
 
+      // Get ticket transfer count
+      const itemCount = ticketResponse.data.filter(
+        item => item.item == 1,
+      ).length;
+      setTicketCount(itemCount);
+
       const transferTicket =
         ticketResponse.status === 'success' &&
         ticketResponse.data.find(item => item.item == 1);
@@ -884,7 +905,10 @@ const SendWalletScreen = ({navigation, route}) => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{flexGrow: 1}}>
           <View style={styles.partTop}>
-            {/* <Text style={styles.currencyName}>{dataWallet.symbol}</Text> */}
+            <View style={{display: 'flex', flexDirection: 'row'}}>
+              <Text style={styles.currencyName}>Transfer ticket : </Text>
+              <Text style={styles.currencyName}>{ticketCount}</Text>
+            </View>
             <View style={styles.partScanQR}>
               <Text style={styles.balance}>
                 Balance: {balance}
@@ -1281,13 +1305,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 18,
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
   currencyName: {
     color: '#fff',
-    fontFamily: getFontFam() + 'Medium',
-    fontSize: fontSize('body'),
+    fontFamily: getFontFam() + 'Regular',
+    fontSize: fontSize('note'),
   },
   balance: {
     color: '#fff',
