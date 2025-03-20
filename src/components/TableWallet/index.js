@@ -165,7 +165,13 @@ const TotalHistory = ({
                 </View>
                 <View>
                   <View style={styles.wrapperPrice}>
-                    <Text style={styles.price}>{amount} </Text>
+                    <Text style={styles.price}>
+                      {Number(amount)
+                        .toFixed(15) // Pastikan format desimal
+                        .replace(/(\.\d*?[1-9])0+$/, '$1') // Hapus nol berlebih
+                        .replace(/\.0$/, '')}{' '}
+                      {/* Hapus titik jika hanya nol */}
+                    </Text>
                     <Text style={styles.price}>{symbol}</Text>
                   </View>
                   <Text style={styles.status}>{extracode}</Text>
