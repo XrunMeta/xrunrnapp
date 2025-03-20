@@ -862,6 +862,22 @@ const SendWalletScreen = ({navigation, route}) => {
     });
   };
 
+  const handleAmountChange = text => {
+    // Ubah koma menjadi titik
+    let sanitizedText = text.replace(/,/g, '.');
+
+    // Hapus semua karakter kecuali angka dan titik
+    sanitizedText = sanitizedText.replace(/[^0-9.]/g, '');
+
+    // Pastikan hanya ada satu titik desimal
+    const parts = sanitizedText.split('.');
+    if (parts.length > 2) {
+      sanitizedText = parts[0] + '.' + parts.slice(1).join(''); // Gabungkan hanya satu titik pertama
+    }
+
+    setAmount(sanitizedText);
+  };
+
   const fadeOut = () => {
     Animated.timing(fadeAnim, {
       toValue: 0,
@@ -930,7 +946,7 @@ const SendWalletScreen = ({navigation, route}) => {
           <View style={styles.partBottom}>
             <CustomInputWallet
               value={amount}
-              setValue={setAmount}
+              setValue={handleAmountChange}
               isNumber
               label={`${
                 lang && lang ? lang.screen_send.send_amount_label : ''
