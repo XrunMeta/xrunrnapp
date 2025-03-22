@@ -635,113 +635,69 @@ const SendWalletScreen = ({navigation, route}) => {
   // Post transfer
   const postTransfer = async () => {
     try {
-      // // Ticket Logic
-      // if (currency == 16) {
-      // Transfer ticket checker
-      // const ticketResponse = await gatewayNodeJS('getDataActiveItem', 'POST', {
-      //   member: dataMember.member,
-      // });
+      const body = {
+        to: address,
+        amount,
+        token,
+        member: dataMember.member,
+        gasEstimate,
+        gasPrice,
+        network,
+        chainId,
+      };
 
-      // // Get ticket transfer count
-      // const itemCount = ticketResponse.data.filter(
-      //   item => item.item == 1,
-      // ).length;
-      // setTicketCount(itemCount);
+      const result = await gatewayNodeJS('postTransferNew', 'POST', body);
+      const status = result.status;
+      const hash = result?.data?.[0]?.rtn?.hash;
 
-      // const transferTicket =
-      //   ticketResponse.status === 'success' &&
-      //   ticketResponse.data.find(item => item.item == 1);
+      if (!hash) {
+        Alert.alert(lang.screen_signup.validator.errorServer);
+        gasEstimateNetworkBusy();
+        setIsLoading(false);
+        console.log('Transfer failed postTransferNew');
+        navigation.replace('Home');
+        return;
+      }
 
-      // if (!transferTicket) {
-      //   setIsLoading(false);
-      //   setIsTransferTicketModalVisible(true);
-      //   return;
-      // }
-      // }
+      console.log(
+        `Transfer complete.... Token: ${token} | Status: ${status} | Hash: ${hash} | act=postTransferNew`,
+      );
 
-      const dataStockExchange = await transferByStockExchange();
-
-      if (dataStockExchange) {
-        const body = {
-          to: address,
-          amount,
-          token,
-          member: dataMember.member,
-          gasEstimate,
-          gasPrice,
-          network,
-          chainId,
-        };
-
-        const result = await gatewayNodeJS('postTransferNew', 'POST', body);
-        const status = result.status;
-        const hash = result.data[0].rtn.hash;
-
-        if (!hash || hash === 'undefined') {
-          Alert.alert(lang.screen_signup.validator.errorServer);
+      if (status === 'success') {
+        // Jika sukses di blockchain, baru simpan ke DB
+        const dataStockExchange = await transferByStockExchange();
+        if (!dataStockExchange) {
+          Alert.alert(lang.global_error.network_busy);
+          console.log(
+            'Transfer failed ap4300-03 after postTransferNew success',
+          );
           gasEstimateNetworkBusy();
           setIsLoading(false);
-          console.log('Transfer failed postTransfer');
           navigation.replace('Home');
           return;
         }
 
-        console.log(
-          `Transfer complete.... Token: ${token} | Status: ${status} | Hash: ${hash} | act=postTransferNew`,
-        );
-
-        if (status === 'success') {
-          // Ticket Logic
-          // if (currency == 16) {
-          // const useTicket = await gatewayNodeJS('useInappStorage', 'POST', {
-          //   member: dataMember.member,
-          //   storage: transferTicket.storage,
-          // });
-
-          // if (
-          //   !(
-          //     useTicket.status === 'success' &&
-          //     useTicket.data[0].affectedRows > 0
-          //   )
-          // ) {
-          //   Alert.alert(lang.global_error.network_busy);
-          //   console.log('Failed to use in-app storage');
-          //   setIsLoading(false);
-          //   return;
-          // }
-          // }
-
-          setIsLoading(false);
-          setAddress('');
-          setAmount('');
-          setSelectedExchange('360001');
-
-          navigation.navigate('CompleteSend', {
-            amount,
-            addrto: address,
-            txid: hash,
-            symbol: dataWallet.symbol,
-          });
-          setIsIconNextDisabled(false);
-        } else {
-          Alert.alert(lang.global_error.network_busy);
-          console.log('Transfer failed postTransfer');
-          gasEstimateNetworkBusy();
-          setIsLoading(false);
-          navigation.replace('Home');
-        }
+        setIsLoading(false);
+        setAddress('');
+        setAmount('');
+        setSelectedExchange('360001');
+        navigation.navigate('CompleteSend', {
+          amount,
+          addrto: address,
+          txid: hash,
+          symbol: dataWallet.symbol,
+        });
+        setIsIconNextDisabled(false);
       } else {
         Alert.alert(lang.global_error.network_busy);
-        console.log(`Transfer failed ap4300-03: ${error}`);
+        console.log('Transfer failed postTransferNew');
         gasEstimateNetworkBusy();
         setIsLoading(false);
-        crashlytics().recordError(new Error(error));
-        crashlytics().log(error);
         navigation.replace('Home');
       }
     } catch (error) {
       Alert.alert(lang.global_error.network_busy);
-      console.log(`Transfer failed postTransfer: ${error}`);
+      console.log(`Transfer failed postTransferNew: ${error}`);
       gasEstimateNetworkBusy();
       setIsLoading(false);
       crashlytics().recordError(new Error(error));
