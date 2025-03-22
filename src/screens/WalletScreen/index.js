@@ -17,13 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ButtonBack from '../../components/ButtonBack';
 import Clipboard from '@react-native-clipboard/clipboard';
 import TableWalletCard from '../../components/TableWallet';
-import {
-  getLanguage2,
-  getFontFam,
-  fontSize,
-  refreshBalances,
-  saveLogsDB,
-} from '../../../utils';
+import {getLanguage2, getFontFam, fontSize, saveLogsDB} from '../../../utils';
 import ShowQRWallet from '../../components/ShowQRWallet';
 import crashlytics from '@react-native-firebase/crashlytics';
 import WebSocketInstance from '../../../utils/websocketUtils';
@@ -211,11 +205,6 @@ const WalletScreen = ({navigation, route}) => {
 
     setDataWallet(filterDataWallet[0]);
   }, [currentCurrency]);
-
-  // Refresh balance / Update amount
-  useEffect(() => {
-    refreshBalances(member);
-  }, [member]);
 
   // Refresh app4000-01-rev-01
   useEffect(() => {
