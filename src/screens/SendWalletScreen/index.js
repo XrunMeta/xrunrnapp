@@ -654,21 +654,19 @@ const SendWalletScreen = ({navigation, route}) => {
   const postTransfer = async () => {
     try {
       const body = {
+        member: dataMember.member,
+        from: dataWallet.address,
         to: address,
         amount,
-        token,
-        member: dataMember.member,
-        gasEstimate,
-        gasPrice,
-        network,
         chainId,
+        currency,
       };
 
       const result = await gatewayNodeJS('postTransferNew', 'POST', body);
       const status = result.status;
-      const hash = result?.data?.[0]?.rtn?.hash;
+      const {txHash, latestBlock} = result.data;
 
-      if (!hash) {
+      if (!txHash && !latestBlock) {
         Alert.alert(lang.screen_signup.validator.errorServer);
         gasEstimateNetworkBusy();
         setIsLoading(false);
@@ -676,10 +674,6 @@ const SendWalletScreen = ({navigation, route}) => {
         navigation.replace('Home');
         return;
       }
-
-      console.log(
-        `Transfer complete.... Token: ${token} | Status: ${status} | Hash: ${hash} | act=postTransferNew`,
-      );
 
       if (status === 'success') {
         // Jika sukses di blockchain, baru simpan ke DB
@@ -699,10 +693,15 @@ const SendWalletScreen = ({navigation, route}) => {
         setAddress('');
         setAmount('');
         setSelectedExchange('360001');
+
+        console.log(
+          `Transfer complete with txHash: ${txHash} and latestBlock: ${latestBlock}`,
+        );
+
         navigation.navigate('CompleteSend', {
           amount,
           addrto: address,
-          txid: hash,
+          txid: txHash,
           symbol: dataWallet.symbol,
         });
         setIsIconNextDisabled(false);
