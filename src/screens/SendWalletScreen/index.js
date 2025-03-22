@@ -902,7 +902,11 @@ const SendWalletScreen = ({navigation, route}) => {
             </View>
             <View style={styles.partScanQR}>
               <Text style={styles.balance}>
-                Balance: {balance}
+                Balance:{' '}
+                {Number(balance)
+                  .toFixed(15)
+                  .replace(/(\.\d*?[1-9])0+$/, '$1')
+                  .replace(/\.0$/, '')}
                 {dataWallet.symbol}
               </Text>
               <TouchableOpacity
