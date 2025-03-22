@@ -96,8 +96,26 @@ const SendWalletScreen = ({navigation, route}) => {
       // Set currency
       setCurrency(dataWallet.currency);
 
-      // Set token xr or et
-      const token = dataWallet.currency == 1 ? 'xr' : 'et';
+      // Set token xr, et or pol
+      let token;
+
+      switch (dataWallet.currency) {
+        // 1 = XRUN(ETH), 18 = XRUN(POL)
+        case 1:
+        case 18:
+          token = 'xr';
+          break;
+        case 2:
+          token = 'et';
+          break;
+        case 16:
+          token = 'pol';
+          break;
+        default:
+          token = 'xr';
+          break;
+      }
+
       setToken(token);
     }
   }, [dataWallet]);
@@ -117,7 +135,6 @@ const SendWalletScreen = ({navigation, route}) => {
         case 5201:
           setNetwork('POL');
           setChainId(137);
-          setToken('');
           break;
         case 5300:
           setNetwork('BNB');
@@ -257,6 +274,7 @@ const SendWalletScreen = ({navigation, route}) => {
         to: address,
         amount,
         token,
+        currency,
         network,
         chainId,
         priorityGasTracker,
@@ -666,6 +684,7 @@ const SendWalletScreen = ({navigation, route}) => {
           to: address,
           amount,
           token,
+          currency,
           member: dataMember.member,
           gasEstimate,
           gasPrice,
