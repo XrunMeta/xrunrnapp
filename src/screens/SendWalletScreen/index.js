@@ -453,20 +453,18 @@ const SendWalletScreen = ({navigation, route}) => {
         setBalance(parseFloat(results[0].Wamount));
         setLimitTransfer(results[0].limittransfer);
 
-        const listStockExchange = await stockExchange();
-        setCointrace(listStockExchange);
-
+        // const listStockExchange = await stockExchange();
+        // setCointrace(listStockExchange);
         setCurrency(dataWallet.currency);
-
-        setIsLoading(false);
       } else {
-        setIsLoading(false);
         Alert.alert('Error get data balance');
         console.log(`Error get data balance: ${error}`);
         crashlytics().recordError(new Error(error));
         crashlytics().log(error);
         navigation.replace('Home');
       }
+
+      setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
       Alert.alert('Error get data balance');
@@ -480,11 +478,13 @@ const SendWalletScreen = ({navigation, route}) => {
   useEffect(() => {
     // Init refresh balance, cointrace, and get balance
     const initFunc = async () => {
-      if (dataWallet && dataMember.member) {
-        // Refresh / update balance
-        await refreshBalances(dataMember.member);
+      if (
+        Object.keys(dataWallet).length > 0 &&
+        Object.keys(dataMember).length > 0
+      ) {
+        const {address, wallet} = dataWallet;
 
-        // Get balance
+        await refreshBalances(address, wallet);
         getBalance();
       }
     };
