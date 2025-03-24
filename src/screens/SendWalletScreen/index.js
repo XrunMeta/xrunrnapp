@@ -849,6 +849,11 @@ const SendWalletScreen = ({navigation, route}) => {
       sanitizedText = parts[0] + '.' + parts.slice(1).join(''); // Gabungkan hanya satu titik pertama
     }
 
+    // Batasi maksimal 18 digit setelah titik desimal
+    if (parts.length === 2 && parts[1].length > 18) {
+      sanitizedText = parts[0] + '.' + parts[1].substring(0, 18);
+    }
+
     setAmount(sanitizedText);
   };
 
