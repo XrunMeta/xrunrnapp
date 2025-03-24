@@ -250,11 +250,12 @@ export const fontSize = type => {
   }
 };
 
-export const refreshBalances = async member => {
+export const refreshBalances = async (address, wallet) => {
   try {
-    if (member) {
+    if (address) {
       const body = {
-        member,
+        from: address,
+        wallet,
       };
 
       const result = await gatewayNodeJS('refreshBalances', 'POST', body);
@@ -276,6 +277,7 @@ export const refreshBalances = async member => {
   } catch (error) {
     crashlytics().recordError(new Error(error));
     crashlytics().log(error);
+    console.log(`Failed refresh balances: ${error}`);
   }
 };
 

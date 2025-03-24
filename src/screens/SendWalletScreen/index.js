@@ -453,20 +453,18 @@ const SendWalletScreen = ({navigation, route}) => {
         setBalance(parseFloat(results[0].Wamount));
         setLimitTransfer(results[0].limittransfer);
 
-        const listStockExchange = await stockExchange();
-        setCointrace(listStockExchange);
-
+        // const listStockExchange = await stockExchange();
+        // setCointrace(listStockExchange);
         setCurrency(dataWallet.currency);
-
-        setIsLoading(false);
       } else {
-        setIsLoading(false);
         Alert.alert('Error get data balance');
         console.log(`Error get data balance: ${error}`);
         crashlytics().recordError(new Error(error));
         crashlytics().log(error);
         navigation.replace('Home');
       }
+
+      setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
       Alert.alert('Error get data balance');
@@ -480,11 +478,13 @@ const SendWalletScreen = ({navigation, route}) => {
   useEffect(() => {
     // Init refresh balance, cointrace, and get balance
     const initFunc = async () => {
-      if (dataWallet && dataMember.member) {
-        // Refresh / update balance
-        await refreshBalances(dataMember.member);
+      if (
+        Object.keys(dataWallet).length > 0 &&
+        Object.keys(dataMember).length > 0
+      ) {
+        const {address, wallet} = dataWallet;
 
-        // Get balance
+        await refreshBalances(address, wallet);
         getBalance();
       }
     };
@@ -654,21 +654,19 @@ const SendWalletScreen = ({navigation, route}) => {
   const postTransfer = async () => {
     try {
       const body = {
+        member: dataMember.member,
+        from: dataWallet.address,
         to: address,
         amount,
-        token,
-        member: dataMember.member,
-        gasEstimate,
-        gasPrice,
-        network,
         chainId,
+        currency,
       };
 
       const result = await gatewayNodeJS('postTransferNew', 'POST', body);
       const status = result.status;
-      const hash = result?.data?.[0]?.rtn?.hash;
+      const {txHash, latestBlock} = result.data;
 
-      if (!hash) {
+      if (!txHash && !latestBlock) {
         Alert.alert(lang.screen_signup.validator.errorServer);
         gasEstimateNetworkBusy();
         setIsLoading(false);
@@ -676,10 +674,6 @@ const SendWalletScreen = ({navigation, route}) => {
         navigation.replace('Home');
         return;
       }
-
-      console.log(
-        `Transfer complete.... Token: ${token} | Status: ${status} | Hash: ${hash} | act=postTransferNew`,
-      );
 
       if (status === 'success') {
         // Jika sukses di blockchain, baru simpan ke DB
@@ -699,10 +693,15 @@ const SendWalletScreen = ({navigation, route}) => {
         setAddress('');
         setAmount('');
         setSelectedExchange('360001');
+
+        console.log(
+          `Transfer complete with txHash: ${txHash} and latestBlock: ${latestBlock}`,
+        );
+
         navigation.navigate('CompleteSend', {
           amount,
           addrto: address,
-          txid: hash,
+          txid: txHash,
           symbol: dataWallet.symbol,
         });
         setIsIconNextDisabled(false);
