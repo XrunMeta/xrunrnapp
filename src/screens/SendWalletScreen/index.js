@@ -653,6 +653,27 @@ const SendWalletScreen = ({navigation, route}) => {
   // Post transfer
   const postTransfer = async () => {
     try {
+      // Transfer ticket checker
+      const ticketResponse = await gatewayNodeJS('getDataActiveItem', 'POST', {
+        member: dataMember.member,
+      });
+
+      // Get ticket transfer count
+      const itemCount = ticketResponse.data.filter(
+        item => item.item == 1,
+      ).length;
+      setTicketCount(itemCount);
+
+      const transferTicket =
+        ticketResponse.status === 'success' &&
+        ticketResponse.data.find(item => item.item == 1);
+
+      if (!transferTicket) {
+        setIsLoading(false);
+        setIsTransferTicketModalVisible(true);
+        return;
+      }
+
       const body = {
         member: dataMember.member,
         from: dataWallet.address,
@@ -686,6 +707,22 @@ const SendWalletScreen = ({navigation, route}) => {
           gasEstimateNetworkBusy();
           setIsLoading(false);
           navigation.replace('Home');
+          return;
+        }
+
+        const useTicket = await gatewayNodeJS('useInappStorage', 'POST', {
+          member: dataMember.member,
+          storage: transferTicket.storage,
+        });
+
+        if (
+          !(
+            useTicket.status === 'success' && useTicket.data[0].affectedRows > 0
+          )
+        ) {
+          Alert.alert(lang.global_error.network_busy);
+          console.log('Failed to use in-app storage');
+          setIsLoading(false);
           return;
         }
 
@@ -901,8 +938,8 @@ const SendWalletScreen = ({navigation, route}) => {
           contentContainerStyle={{flexGrow: 1}}>
           <View style={styles.partTop}>
             <View style={{display: 'flex', flexDirection: 'row'}}>
-              {/* <Text style={styles.currencyName}>Transfer ticket : </Text>
-              <Text style={styles.currencyName}>{ticketCount}</Text> */}
+              <Text style={styles.currencyName}>Transfer ticket : </Text>
+              <Text style={styles.currencyName}>{ticketCount}</Text>
             </View>
             <View style={styles.partScanQR}>
               <Text style={styles.balance}>
