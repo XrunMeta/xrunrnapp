@@ -1,769 +1,460 @@
+import React, {useState, useEffect} from 'react';
 import {
-  StyleSheet,
-  Text,
   View,
-  TouchableOpacity,
-  Image,
-  Alert,
-  ActivityIndicator,
-  ScrollView,
+  Text,
+  StyleSheet,
   SafeAreaView,
-  Platform,
+  TouchableOpacity,
   FlatList,
+  Image,
+  StatusBar,
   Dimensions,
+  Linking,
 } from 'react-native';
-import React, {useState, useEffect, useRef} from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import ButtonBack from '../../components/ButtonBack';
+import {useNavigation} from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
-import TableWalletCard from '../../components/TableWallet';
-import {getLanguage2, getFontFam, fontSize, saveLogsDB} from '../../../utils';
-import ShowQRWallet from '../../components/ShowQRWallet';
-import crashlytics from '@react-native-firebase/crashlytics';
-import WebSocketInstance from '../../../utils/websocketUtils';
 
-const WalletScreen = ({navigation, route}) => {
-  const [lang, setLang] = useState('');
-  const [member, setMember] = useState(0);
-  const [currentCurrency, setCurrentCurrency] = useState('1');
-  const [dataWallet, setDataWallet] = useState({});
-  const [cardsData, setCardsData] = useState([]);
+const screenWidth = Dimensions.get('window').width;
 
+// Dynamic text truncation based on screen width
+let front = 6;
+let back = 4;
+
+if (screenWidth < 350) {
+  front = 6;
+  back = 4;
+} else if (screenWidth < 400) {
+  front = 10;
+  back = 8;
+} else if (screenWidth < 500) {
+  front = 14;
+  back = 12;
+} else {
+  front = 16;
+  back = 14;
+}
+
+// Helper function to shorten address
+const shortenAddress = (address, frontChars, backChars) => {
+  if (!address || address.length < frontChars + backChars + 3) {
+    return address || '-';
+  }
+  return `${address.substring(0, frontChars)}...${address.substring(
+    address.length - backChars,
+  )}`;
+};
+
+// Helper function to format numbers
+const formatCustom = value => {
+  if (!value) return '0';
+  return parseFloat(value).toFixed(4);
+};
+
+const WalletScreen = () => {
+  const navigation = useNavigation();
+
+  // Dummy data
   const [isLoading, setIsLoading] = useState(true);
-  const [positionTextQRCode, setPositionTextQRCode] = useState(0);
+  const [isPopupShow, setIsPopupShow] = useState(false);
+  const [publicAddress, setPublicAddress] = useState(
+    '0x1AB3A2FD697390B269ABCD49CB660C54292C2FCB',
+  );
+  const [cryptoAssets, setCryptoAssets] = useState([]);
 
-  // State show text "QR Code"
-  const [isShowTextQRCode, setIsShowTextQRCode] = useState(false);
-
-  // State for show QR
-  const [isShowQRCodeWallet, setIsShowQRCodeWallet] = useState(false);
-  const [cardDataQR, setCardDataQR] = useState([]);
-
-  const flatlistRef = useRef(null);
-
-  const [statusOtherChain, setStatusOtherChain] = useState('off');
-
-  // Popup retry calling API data wallet
-  const [isPopupRetry, setIsPopupRetry] = useState(false);
-  const [countRetryData, setCountRetryData] = useState(0);
-
-  // Realtime Wallet Listener
-  useEffect(() => {
-    // Listener 1: Handle wallet data updates
-    WebSocketInstance.addListener('app4000-01-rev-01-response', data => {
-      if (data.type === 'app4000-01-rev-01-response') {
-        if (data.data) {
-          setCardsData(data.data); // Update wallet data
-        }
-        setIsLoading(false);
-        console.log('Wallet data has been loaded');
-      }
-    });
-
-    // Listener 2: Handle "show other chains" response
-    WebSocketInstance.addListener('showOtherChains-response', data => {
-      if (data.type === 'showOtherChains-response') {
-        if (data.data) {
-          // Update other chains data
-          const status = data.data[0].status;
-          setStatusOtherChain(status.toLowerCase());
-        }
-        console.log('Other chains data has been loaded');
-      }
-    });
-
-    // Cleanup listeners on component unmount
-    return () => {
-      WebSocketInstance.removeListener('app4000-01-rev-01-response');
-      WebSocketInstance.removeListener('showOtherChains-response');
-    };
-  }, []); // Empty dependency array ensures this runs once on mount
-
-  useEffect(() => {
-    // Get Language Data
-    const fetchData = async () => {
-      try {
-        const currentLanguage = await AsyncStorage.getItem('currentLanguage');
-        const screenLang = await getLanguage2(currentLanguage);
-
-        // Set your language state
-        setLang(screenLang);
-      } catch (err) {
-        console.error('Error in fetchData:', err);
-        crashlytics().recordError(new Error(err));
-        crashlytics().log(err);
-        navigation.replace('Home');
-      }
-    };
-    fetchData();
-
-    const getMember = async () => {
-      try {
-        const userData = await AsyncStorage.getItem('userData');
-        const member = JSON.parse(userData).member;
-        setMember(member);
-
-        saveLogsDB(
-          '5000400',
-          member,
-          `${member} Entered Walletpage and yet not page shown`,
-          `Entered Walletpage and yet not page shown`,
-        );
-      } catch (err) {
-        console.log(`Failed get member from async storage: ${err}`);
-        crashlytics().recordError(new Error(err));
-        crashlytics().log(err);
-        navigation.replace('Home');
-      }
-    };
-    getMember();
-  }, []);
-
-  // Start Flatlist ref for after transfer success automatic move to XRUN card
+  // Simulate loading data
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (flatlistRef.current && cardsData.length > 1 && route.params) {
-        if (
-          route.params.completeSend === 'true' ||
-          route.params.completeConversion === 'true'
-        ) {
-          console.log('Move to XRUN card');
-          flatlistRef.current.scrollToIndex({animated: true, index: 0});
-        }
-      }
-    }, 100); // Delay to ensure FlatList is fully rendered
-    return () => clearTimeout(timer);
-  }, [flatlistRef, cardsData, route]);
-
-  const getItemLayout = (data, index) => ({
-    length: Dimensions.get('window').width,
-    offset: Dimensions.get('window').width * index,
-    index,
-  });
-  // End flatlist ref
-
-  // Get data member and show the card list
-  const getUserData = async () => {
-    try {
-      if (member) {
-        // Get data wallet
-        console.log('Load data wallet....');
-        WebSocketInstance.sendMessage('app4000-01-rev-01', {
-          member,
-          daysbefore: 7,
-        });
-
-        saveLogsDB(
-          '5000401',
-          member,
-          `${member} See Wallets and completed load`,
-          `User See Wallets and completed load with shown 7 days before`,
-        );
-      }
-    } catch (err) {
-      console.error('Failed to get userData from AsyncStorage:', err);
+      // Set dummy crypto assets
+      setCryptoAssets([
+        {
+          id: '1',
+          symbol: 'POL',
+          name: 'Polygon',
+          amount: '0.5432',
+          icon: require('./../../../assets/images/icon_xrun_white.png'),
+        },
+        {
+          id: '2',
+          symbol: 'HNT',
+          name: 'MetaHint',
+          amount: '123.4567',
+          icon: require('./../../../assets/images/icon_xrun_white.png'),
+        },
+      ]);
       setIsLoading(false);
-      crashlytics().recordError(new Error(err));
-      crashlytics().log(err);
-      navigation.replace('Home');
-    }
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleCopyAddress = () => {
+    Clipboard.setString(publicAddress);
+    // Toast message would go here in real app
+    console.log('Address copied to clipboard');
   };
 
-  // Get status other chain, if off just show ETH network, if on show ALL network
-  const requestStatusOtherChain = async member => {
-    WebSocketInstance.sendMessage('showOtherChains', {
-      member,
+  const handleReceive = () => {
+    navigation.navigate('Receive', {
+      publicAddress,
     });
   };
 
-  useEffect(() => {
-    getUserData();
-
-    if (member) {
-      requestStatusOtherChain(member);
-    }
-  }, [member]);
-
-  useEffect(() => {
-    if (cardsData) {
-      setIsPopupRetry(false);
-    } else {
-      setIsPopupRetry(true);
-    }
-  }, [cardsData]);
-
-  useEffect(() => {
-    // Get data current currency/wallet
-    const filterDataWallet = cardsData.filter(wallet => wallet.currency == 1);
-    setDataWallet(filterDataWallet[0]);
-  }, [cardsData]);
-
-  useEffect(() => {
-    const filterDataWallet = cardsData.filter(
-      wallet => wallet.currency == currentCurrency,
-    );
-
-    setDataWallet(filterDataWallet[0]);
-  }, [currentCurrency]);
-
-  // Refresh app4000-01-rev-01
-  useEffect(() => {
-    if (route.params !== undefined) {
-      if (
-        route.params.completeSend === 'true' ||
-        route.params.completeConversion === 'true'
-      ) {
-        setIsLoading(false);
-        setCurrentCurrency('1');
-      }
-    }
-  }, [route]);
-
-  const uiCardWallet = (
-    walletColors,
-    displaystr,
-    Wamount,
-    Eamount,
-    symbol,
-    currency,
-    limitTransfer,
-    amount,
-    countrysymbol,
-    address,
-    symbolimg,
-    subcurrency,
-    item,
-  ) => {
-    return (
-      <View
-        style={[styles.card, {backgroundColor: walletColors[symbol]}]}
-        key={currency}>
-        <View style={styles.wrapperPartTop}>
-          <Text style={styles.cardName}>{displaystr}</Text>
-          <View style={styles.wrapperShowQR}>
-            <TouchableOpacity
-              style={styles.wrapperDots}
-              activeOpacity={0.6}
-              onPress={event => handleShowQR(event, item)}>
-              <View style={styles.dot}></View>
-              <View style={styles.dot}></View>
-              <View style={styles.dot}></View>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={styles.containerTextWallet}>
-          <View style={styles.wrapperTextwallet}>
-            <Text style={styles.textWallet}>
-              {lang.screen_wallet.possess ? lang.screen_wallet.possess : ''}
-            </Text>
-            <Text style={[styles.valueWallet, {marginBottom: 3}]}>
-              {Wamount}
-            </Text>
-            <Text style={styles.textWallet}>{symbol}</Text>
-          </View>
-
-          {currency == 1 && (
-            <View style={styles.wrapperTextwallet}>
-              <Text style={styles.textWallet}>
-                {lang.screen_wallet.able_transfer
-                  ? lang.screen_wallet.able_transfer
-                  : ''}
-              </Text>
-              <Text style={styles.textWallet}>
-                {limitTransfer}
-                {symbol}
-              </Text>
-            </View>
-          )}
-
-          <View
-            style={{
-              opacity: subcurrency != 5000 && subcurrency != 5100 ? 0 : 1,
-              ...styles.wrapperTextwallet,
-            }}>
-            <Text style={styles.textWallet}>
-              {lang.screen_wallet.catch ? lang.screen_wallet.catch : ''}
-            </Text>
-            <Text style={[styles.valueWallet, {marginBottom: 2}]}>
-              {amount}
-            </Text>
-            <Text style={styles.textWallet}>
-              {symbol}{' '}
-              {symbol === 'XRUN'
-                ? `≈${Math.round(
-                    parseFloat(Eamount).toString().substring(0, 9),
-                  )}${countrysymbol}`
-                : ''}
-            </Text>
-          </View>
-        </View>
-
-        <View style={styles.wrapperPartBottom}>
-          <View style={styles.wrapperCopiedHash(currency)}>
-            <View style={styles.wrapperHash}>
-              <Text style={styles.hash}>
-                {address.substring(0, 10) +
-                  '...' +
-                  address.substring(address.length - 10)}
-              </Text>
-            </View>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              onPress={() => copiedHash(address)}>
-              <Image
-                source={require('../../../assets/images/clipboard.png')}
-                style={{width: 15, height: 15}}
-              />
-            </TouchableOpacity>
-          </View>
-
-          <Image
-            width={40}
-            height={40}
-            source={{
-              uri: `data:image/jpeg;base64,${symbolimg}`,
-            }}
-            style={styles.logo(currency)}
-          />
-        </View>
-      </View>
-    );
+  const handleSend = () => {
+    navigation.navigate('Sending', {
+      symbol: 'POL',
+      fromAddress: publicAddress,
+      name: 'Polygon',
+      icon: require('./../../../assets/images/icon_xrun_white.png'),
+      contractAddress: 'dummy-contract-address',
+    });
   };
 
-  const routeComponent = ({item}) => {
-    const {
-      limitTransfer,
-      amount: tempAmount,
-      Wamount: tempWamount,
-      symbol,
-      address,
-      displaystr,
-      symbolimg: tempSymbolimg,
-      currency,
-      Eamount,
-      countrysymbol,
-      subcurrency,
-    } = item;
+  const handlePolygonscan = () => {
+    Linking.openURL(`https://polygonscan.com/address/${publicAddress}`);
+  };
 
-    const Wamount = parseFloat(tempWamount).toFixed(2);
-    const amount = parseFloat(tempAmount).toFixed(2);
-
-    // Hexa colors wallet
-    const walletColors = {
-      XRUN: '#187f9a',
-      ETH: '#a84249',
-      DIGX: '#343b58',
-      RUN: '#DEA936',
-      MEMP: '#4b5068',
-      POL: '#9339D5',
-      Q8p: '#9339D5',
-      BNB: '#f0b90b',
+  const renderCryptoItem = ({item}) => {
+    // Function to determine icon color based on crypto symbol
+    const getIconColor = symbol => {
+      switch (symbol) {
+        case 'ETH':
+          return '#5F59E0';
+        case 'POL':
+          return '#8347E6';
+        case 'HNT':
+          return '#8347E6';
+        default:
+          return '#5F59E0';
+      }
     };
 
-    const symbolimg = tempSymbolimg.replace(/(\r\n|\n|\r)/gm, '');
+    const handlePress = () => {
+      navigation.navigate('DetailToken', {
+        currID: item.id,
+        symbol: item.symbol,
+        name: item.name,
+        icon: item.icon,
+        bgColor: getIconColor(item.symbol),
+      });
+    };
 
-    if (statusOtherChain === 'on') {
-      // If status other chain == on show all networks, like ETH, MATIC, BNB, etc...
-      return uiCardWallet(
-        walletColors,
-        displaystr,
-        Wamount,
-        Eamount,
-        symbol,
-        currency,
-        limitTransfer,
-        amount,
-        countrysymbol,
-        address,
-        symbolimg,
-        subcurrency,
-        item,
-      );
-    } else {
-      // If status other chain == off just show ETH network
-      if (subcurrency == 5000 || subcurrency == 5100 || subcurrency == 5200) {
-        return uiCardWallet(
-          walletColors,
-          displaystr,
-          Wamount,
-          Eamount,
-          symbol,
-          currency,
-          limitTransfer,
-          amount,
-          countrysymbol,
-          address,
-          symbolimg,
-          subcurrency,
-          item,
-        );
-      }
-    }
-  };
-
-  const handleShowQR = (event, cardData) => {
-    setPositionTextQRCode(event.nativeEvent.pageY);
-    setCardDataQR(cardData);
-    setIsShowTextQRCode(true);
-  };
-
-  const hideTextQRCode = () => {
-    setIsShowTextQRCode(false);
-  };
-
-  const copiedHash = hash => {
-    Clipboard.setString(hash);
-
-    Alert.alert(
-      '',
-      lang.screen_wallet.copy_qrcode ? lang.screen_wallet.copy_qrcode : '',
-      [
-        {
-          text: lang.screen_wallet.confirm_alert
-            ? lang.screen_wallet.confirm_alert
-            : '',
-        },
-      ],
+    return (
+      <TouchableOpacity onPress={handlePress}>
+        <View style={styles.cryptoItem}>
+          <View style={styles.cryptoIconContainer}>
+            <View
+              style={[
+                styles.cryptoIcon,
+                {backgroundColor: getIconColor(item.symbol)},
+              ]}>
+              {/* <Image
+                source={item.icon}
+                style={styles.cryptoIconImage}
+                resizeMode="contain"
+              /> */}
+            </View>
+          </View>
+          <View style={styles.cryptoInfo}>
+            <Text style={styles.cryptoSymbol}>{item.symbol}</Text>
+            <Text style={styles.cryptoName}>{item.name}</Text>
+          </View>
+          <Text style={styles.cryptoAmount}>
+            {formatCustom(item.amount)} {item.symbol}
+          </Text>
+        </View>
+      </TouchableOpacity>
     );
-  };
-
-  const onBack = () => {
-    navigation.navigate('Home');
-  };
-
-  const reloadDataWallet = () => {
-    setCountRetryData(prev => prev + 1);
-    setIsLoading(true);
-    setIsPopupRetry(false);
-
-    getUserData();
-    requestStatusOtherChain(member);
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Loading */}
-      {isLoading && (
-        <View style={styles.loading}>
-          <ActivityIndicator size={'large'} color={'#fff'} />
-          <Text
-            style={{
-              color: '#fff',
-              fontFamily: getFontFam() + 'Regular',
-              fontSize: fontSize('body'),
-              marginTop: 10,
-            }}>
-            Loading...
-          </Text>
+      <StatusBar backgroundColor="#FAFAFA" barStyle="dark-content" />
+      {isPopupShow && (
+        <View style={{position: 'absolute', zIndex: 999}}>
+          <Text>Add Token Popup</Text>
         </View>
       )}
 
-      <View style={{flexDirection: 'row'}}>
-        <View style={{position: 'absolute', zIndex: 1}}>
-          <ButtonBack onClick={onBack} />
-        </View>
-        <View style={styles.titleWrapper}>
-          <Text style={styles.title}>
-            {lang && lang.screen_wallet ? lang.screen_wallet.title : ''}
-          </Text>
-        </View>
-      </View>
-
-      <View style={{flex: 1}}>
-        {/* Card */}
-        <View style={styles.containerCard}>
-          <ScrollView style={{flex: 1}}>
-            <View style={styles.containerCard}>
-              <FlatList
-                ref={flatlistRef}
-                data={cardsData}
-                renderItem={routeComponent}
-                getItemLayout={getItemLayout}
-                horizontal
-                pagingEnabled
-                showsHorizontalScrollIndicator={false}
-                onMomentumScrollEnd={event => {
-                  const index = Math.round(
-                    event.nativeEvent.contentOffset.x /
-                      event.nativeEvent.layoutMeasurement.width,
-                  );
-                  setCurrentCurrency(cardsData[index].currency);
-                }}
-              />
-            </View>
-          </ScrollView>
-        </View>
-
-        {/* Table */}
-        <View style={styles.containerTable}>
-          <TableWalletCard
-            member={member}
-            dataWallet={dataWallet}
-            currentCurrency={currentCurrency}
-            lang={lang}
-            route={route}
+      {/* Header Logo */}
+      <View style={styles.header}>
+        <View style={styles.logoContainer}>
+          <Image
+            source={require('./../../../assets/images/icon_xrun_white.png')}
+            style={styles.logo}
           />
         </View>
       </View>
 
-      {isShowTextQRCode && (
-        <>
-          <TouchableOpacity
-            activeOpacity={0.5}
-            style={styles.showQRButton(positionTextQRCode)}
-            onPress={() => {
-              setIsShowTextQRCode(false);
-              setIsShowQRCodeWallet(true);
+      {/* Card Wrapper */}
+      <View style={styles.walletCardContainer}>
+        <View style={styles.walletCard}>
+          {/* Card Content */}
+          <View
+            style={{
+              padding: 16,
+              position: 'relative',
             }}>
-            <Text style={styles.textQRCode}>
-              {lang.screen_wallet.qrcode_show
-                ? lang.screen_wallet.qrcode_show
-                : ''}
-            </Text>
-          </TouchableOpacity>
+            <Image
+              source={require('./../../../assets/images/bg_walletCard.png')}
+              style={{
+                position: 'absolute',
+                right: 0,
+                left: 0,
+                width: 'auto',
+                zIndex: 1,
+                borderRadius: 18,
+              }}
+            />
+            <View
+              style={{
+                zIndex: 1,
+                paddingLeft: 10,
+                gap: 15,
+              }}>
+              <View style={styles.walletAddressContainer}>
+                <Text style={styles.walletLabel}>Wallet Address</Text>
+                <TouchableOpacity
+                  onPress={handleCopyAddress}
+                  style={styles.copyButton}>
+                  <Image
+                    source={require('./../../../assets/images/icon_copy.png')}
+                    style={styles.copyIcon}
+                  />
+                </TouchableOpacity>
+              </View>
+              <Text style={styles.walletAddress}>
+                {shortenAddress(publicAddress, front, back)}
+              </Text>
+            </View>
+          </View>
 
-          <TouchableOpacity
-            onPress={hideTextQRCode}
-            style={styles.backgroundShowQR}></TouchableOpacity>
-        </>
-      )}
-
-      {/* Show/Hide popup QR */}
-      {isShowQRCodeWallet && (
-        <ShowQRWallet
-          cardDataQR={cardDataQR}
-          setIsShowQRCodeWallet={setIsShowQRCodeWallet}
-          lang={lang}
-          member={member}
-        />
-      )}
-
-      {/* Popup retry calling data the wallet */}
-      {isPopupRetry && lang && (
-        <View style={styles.popupRetry}>
-          <View style={styles.wrapper}>
-            <Text style={styles.textRetry}>
-              {countRetryData >= 3
-                ? lang.screen_wallet.wallet_error
-                  ? lang.screen_wallet.wallet_error
-                  : ''
-                : lang.screen_wallet.retry_load_wallet
-                ? lang.screen_wallet.retry_load_wallet
-                : ''}
-            </Text>
-            {countRetryData >= 3 ? (
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={{
-                  marginTop: 24,
-                  alignItems: 'center',
-                }}
-                onPress={() => navigation.replace('Home')}>
-                <Text
-                  style={{
-                    color: '#2563eb',
-                    textDecorationLine: 'underline',
-                    fontFamily: getFontFam() + 'Regular',
-                    fontSize: fontSize('note'),
-                  }}>
-                  {lang.screen_wallet.go_home}
-                </Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                onPress={reloadDataWallet}
-                activeOpacity={0.5}
-                style={{
-                  marginTop: 24,
-                  alignItems: 'center',
-                }}>
+          {/* Card Action */}
+          <View style={styles.actionsContainer}>
+            <TouchableOpacity
+              onPress={handlePolygonscan}
+              style={styles.actionButton}>
+              <View style={styles.actionIconContainer}>
                 <Image
-                  source={require('../../../assets/images/reload.png')}
-                  width={24}
-                  height={24}
-                  style={{
-                    height: 24,
-                    width: 24,
-                  }}
+                  source={require('./../../../assets/images/icon_copy.png')}
+                  style={styles.actionIcon}
                 />
-              </TouchableOpacity>
-            )}
+              </View>
+              <Text style={styles.actionText}>Polygonscan</Text>
+            </TouchableOpacity>
+
+            <View
+              style={{
+                height: 'auto',
+                width: 0.5,
+                borderRadius: 50,
+                backgroundColor: '#D8D8D8',
+              }}
+            />
+
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={handleReceive}>
+              <View style={styles.actionIconContainer}>
+                <Image
+                  source={require('./../../../assets/images/icon_copy.png')}
+                  style={styles.actionIcon}
+                />
+              </View>
+              <Text style={styles.actionText}>Receive</Text>
+            </TouchableOpacity>
+
+            <View
+              style={{
+                height: 'auto',
+                width: 0.4,
+                borderRadius: 50,
+                backgroundColor: '#D8D8D8',
+              }}
+            />
+
+            <TouchableOpacity style={styles.actionButton} onPress={handleSend}>
+              <View style={styles.actionIconContainer}>
+                <Image
+                  source={require('./../../../assets/images/icon_copy.png')}
+                  style={[styles.actionIcon, {marginTop: -3}]}
+                />
+              </View>
+              <Text style={styles.actionText}>Send</Text>
+            </TouchableOpacity>
           </View>
         </View>
-      )}
+      </View>
+
+      <View style={styles.assetsContainer}>
+        <Text style={styles.assetsTitle}>Wallet Assets</Text>
+
+        {isLoading ? (
+          <View style={styles.loadingContainer}>
+            <Text>Loading assets...</Text>
+          </View>
+        ) : (
+          <FlatList
+            data={cryptoAssets}
+            renderItem={renderCryptoItem}
+            keyExtractor={item => item.id}
+            contentContainerStyle={styles.cryptoList}
+          />
+        )}
+      </View>
     </SafeAreaView>
   );
 };
 
-export default WalletScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f3f4f6',
+    backgroundColor: '#FAFAFA',
   },
-  containerCard: {
-    height: 260,
-  },
-  containerTable: {
-    flex: 1,
-  },
-  titleWrapper: {
-    paddingVertical: 9,
-    alignItems: 'center',
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    flex: 1,
-    elevation: 5,
-    zIndex: 0,
-  },
-  title: {
-    fontSize: fontSize('title'),
-    fontFamily: getFontFam() + 'Bold',
-    color: '#051C60',
-    margin: 10,
-  },
-  card: {
-    marginHorizontal: 20,
-    marginTop: 20,
-    padding: 20,
-    paddingTop: 0,
-    borderRadius: 8,
-    height: 220,
-    zIndex: 5,
-    width: Dimensions.get('window').width - 40,
-  },
-  wrapperPartTop: {
+  header: {
+    padding: 16,
+    paddingBottom: 5,
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
   },
-  cardName: {
-    color: 'white',
-    fontFamily: getFontFam() + 'Bold',
-    fontSize: fontSize('title'),
-    paddingTop: 20,
-  },
-  wrapperShowQR: {
-    position: 'relative',
-  },
-  wrapperDots: {
-    flexDirection: 'row',
-    gap: 4,
-    paddingTop: 20,
-  },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 100,
-    backgroundColor: 'white',
-  },
-  showQRButton: positionTextQRCode => ({
-    position: 'absolute',
-    backgroundColor: 'white',
-    width: 180,
-    right: 0,
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    borderRadius: 4,
-    zIndex: 2,
-    top:
-      Platform.OS === 'ios' ? positionTextQRCode + 20 : positionTextQRCode + 30,
-    right: 48,
-  }),
-  backgroundShowQR: {
-    position: 'absolute',
-    zIndex: 1,
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-  textQRCode: {
-    fontFamily: getFontFam(),
-    color: 'black',
-    fontSize: fontSize('subtitle'),
-  },
-  containerTextWallet: {
-    marginTop: 20,
-  },
-  wrapperTextwallet: {
+  logoContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
   },
-  textWallet: {
-    color: 'white',
-    fontFamily: getFontFam() + 'Regular',
-    fontSize: fontSize('body'),
+  logo: {
+    height: 37,
+    width: 111,
+    objectFit: 'contain',
   },
-  valueWallet: {
-    color: 'white',
-    fontFamily:
-      Platform.OS === 'ios' ? 'AppleSDGothicNeo-Bold' : 'Roboto-Medium',
-    fontSize: fontSize('subtitle'),
-    marginHorizontal: -3,
+  walletCardContainer: {
+    paddingHorizontal: 16,
   },
-  wrapperPartBottom: {
-    marginTop: 13,
+  walletCard: {
+    borderRadius: 16,
+    marginBottom: 1,
+  },
+  walletAddressContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    flex: 1,
-    alignItems: 'flex-end',
-  },
-  wrapperCopiedHash: currency => ({
-    flexDirection: 'row',
-    gap: 6,
-    marginTop: currency == 1 ? 0 : 24,
-  }),
-  wrapperHash: {
-    flexDirection: 'row',
-  },
-  hash: {
-    color: 'white',
-    fontFamily: getFontFam() + 'Regular',
-    fontSize: fontSize('body'),
-  },
-  logo: currency => ({
-    height: 40,
-    width: 40,
-    marginTop: currency == 1 ? -12 : 14,
-  }),
-  loading: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    zIndex: 999,
-    justifyContent: 'center',
     alignItems: 'center',
   },
-  popupRetry: {
-    position: 'absolute',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    zIndex: 2,
-    paddingHorizontal: 20,
+  walletLabel: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
   },
-  wrapper: {
+  copyButton: {
+    padding: 4,
+  },
+  copyIcon: {
+    color: '#fff',
+    height: 24,
+    width: 24,
+  },
+  actionIcon: {
+    color: '#fff',
+    height: 28,
+    width: 28,
+  },
+  walletAddress: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '700',
+    marginBottom: 8,
+  },
+  actionsContainer: {
     backgroundColor: '#fff',
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-    borderBottomLeftRadius: 6,
-    borderBottomRightRadius: 6,
-    width: '100%',
-    padding: 14,
+    borderRadius: 12,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 12,
+    marginHorizontal: 25,
+    zIndex: 1,
+
+    shadowColor: '#999',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.29,
+    shadowRadius: 4.65,
+
+    elevation: 7,
   },
-  textRetry: {
-    textAlign: 'center',
-    color: '#000',
-    fontFamily: getFontFam() + 'Regular',
-    fontSize: fontSize('body'),
+  actionButton: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  actionIconContainer: {
+    height: 30,
+    width: 30,
+  },
+  actionText: {
+    fontSize: 12,
+    color: '#333',
+  },
+  assetsContainer: {
+    flex: 1,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 16,
+  },
+  assetsTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    marginBottom: 10,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cryptoList: {
+    paddingBottom: 16,
+  },
+  cryptoItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  cryptoIconContainer: {
+    marginRight: 12,
+  },
+  cryptoIconImage: {
+    width: 24,
+    height: 24,
+  },
+  cryptoIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  iconText: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: '500',
+  },
+  cryptoInfo: {
+    flex: 1,
+  },
+  cryptoSymbol: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#333',
+  },
+  cryptoName: {
+    fontSize: 12,
+    color: '#B8B8B8',
+  },
+  cryptoAmount: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: 'black',
   },
 });
+
+export default WalletScreen;
