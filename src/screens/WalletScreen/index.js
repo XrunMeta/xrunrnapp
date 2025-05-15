@@ -354,7 +354,33 @@ const WalletScreen = () => {
       </View>
 
       <View style={styles.assetsContainer}>
-        <Text style={styles.assetsTitle}>My Balance</Text>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
+          <Text style={styles.assetsTitle}>My Balance</Text>
+          <TouchableOpacity
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+            }}
+            onPress={handleCopyAddress}>
+            <Text
+              style={{
+                color: 'black',
+                fontWeight: '700',
+                fontSize: fontSize('body'),
+              }}>
+              Add token
+            </Text>
+            <Image
+              source={require('./../../../assets/images/icon_star.png')}
+              style={{width: 18, height: 18}}
+            />
+          </TouchableOpacity>
+        </View>
 
         {isLoading ? (
           <View style={styles.loadingContainer}>
