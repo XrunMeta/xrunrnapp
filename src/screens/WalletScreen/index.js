@@ -177,12 +177,7 @@ const WalletScreen = () => {
 
       {/* Header Logo */}
       <View style={styles.header}>
-        <View style={styles.logoContainer}>
-          <Image
-            source={require('./../../../assets/images/icon_xrun_white.png')}
-            style={styles.logo}
-          />
-        </View>
+        <View style={styles.logoContainer}></View>
       </View>
 
       {/* Card Wrapper */}
@@ -235,7 +230,7 @@ const WalletScreen = () => {
               style={styles.actionButton}>
               <View style={styles.actionIconContainer}>
                 <Image
-                  source={require('./../../../assets/images/icon_copy.png')}
+                  source={require('./../../../assets/images/icon_walletscan.png')}
                   style={styles.actionIcon}
                 />
               </View>
@@ -256,7 +251,7 @@ const WalletScreen = () => {
               onPress={handleReceive}>
               <View style={styles.actionIconContainer}>
                 <Image
-                  source={require('./../../../assets/images/icon_copy.png')}
+                  source={require('./../../../assets/images/icon_walletreceive.png')}
                   style={styles.actionIcon}
                 />
               </View>
@@ -275,7 +270,7 @@ const WalletScreen = () => {
             <TouchableOpacity style={styles.actionButton} onPress={handleSend}>
               <View style={styles.actionIconContainer}>
                 <Image
-                  source={require('./../../../assets/images/icon_copy.png')}
+                  source={require('./../../../assets/images/icon_walletsend.png')}
                   style={[styles.actionIcon, {marginTop: -3}]}
                 />
               </View>
