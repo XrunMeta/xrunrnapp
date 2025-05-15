@@ -95,7 +95,6 @@ const WalletScreen = () => {
 
   const handleCopyAddress = () => {
     Clipboard.setString(publicAddress);
-    // Toast message would go here in real app
     console.log('Address copied to clipboard');
   };
 
@@ -145,26 +144,57 @@ const WalletScreen = () => {
     };
 
     return (
-      <TouchableOpacity onPress={handlePress}>
-        <View style={styles.cryptoItem}>
-          <View style={styles.cryptoIconContainer}>
+      <TouchableOpacity
+        onPress={handlePress}
+        style={{
+          backgroundColor: 'white',
+          paddingHorizontal: 12,
+          paddingVertical: 5,
+          marginHorizontal: 8,
+          borderRadius: 15,
+          marginVertical: 6,
+          ...styles.shadow,
+        }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <View
               style={[
                 styles.cryptoIcon,
-                {backgroundColor: getIconColor(item.symbol)},
+                {backgroundColor: getIconColor(item.symbol), marginRight: 12},
               ]}>
-              {/* <Image
+              <Image
                 source={item.icon}
                 style={styles.cryptoIconImage}
                 resizeMode="contain"
-              /> */}
+              />
+            </View>
+
+            <View style={{}}>
+              <Text
+                style={{
+                  fontSize: fontSize('subtitle'),
+                  fontWeight: '500',
+                  color: 'black',
+                }}>
+                {item.symbol}
+              </Text>
+              <Text style={{fontSize: fontSize('body'), color: '#B8B8B8'}}>
+                {item.name}
+              </Text>
             </View>
           </View>
-          <View style={styles.cryptoInfo}>
-            <Text style={styles.cryptoSymbol}>{item.symbol}</Text>
-            <Text style={styles.cryptoName}>{item.name}</Text>
-          </View>
-          <Text style={styles.cryptoAmount}>
+          <Text
+            style={{
+              fontSize: 14,
+              fontWeight: '600',
+              color: 'black',
+              paddingVertical: 18,
+            }}>
             {formatCustom(item.amount)} {item.symbol}
           </Text>
         </View>
@@ -291,7 +321,7 @@ const WalletScreen = () => {
       </View>
 
       <View style={styles.assetsContainer}>
-        <Text style={styles.assetsTitle}>Wallet Assets</Text>
+        <Text style={styles.assetsTitle}>My Balance</Text>
 
         {isLoading ? (
           <View style={styles.loadingContainer}>
@@ -314,6 +344,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FAFAFA',
+  },
+  shadow: {
+    shadowColor: '#00000050',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.16,
+    shadowRadius: 1.51,
+    elevation: 6,
   },
   titleWrapper: {
     paddingVertical: 9,
@@ -411,7 +451,7 @@ const styles = StyleSheet.create({
     width: 30,
   },
   actionText: {
-    fontSize: 12,
+    fontSize: fontSize('body'),
     color: '#333',
   },
   assetsContainer: {
@@ -419,11 +459,13 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 16,
+    marginTop: 10,
   },
   assetsTitle: {
-    fontSize: 18,
+    fontSize: fontSize('subtitle'),
     fontWeight: '700',
     marginBottom: 10,
+    color: 'black',
   },
   loadingContainer: {
     flex: 1,
@@ -437,8 +479,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    backgroundColor: 'white',
   },
   cryptoIconContainer: {
     marginRight: 12,
