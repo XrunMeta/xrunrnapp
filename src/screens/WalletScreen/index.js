@@ -74,17 +74,45 @@ const WalletScreen = () => {
       setCryptoAssets([
         {
           id: '1',
-          symbol: 'POL',
-          name: 'Polygon',
-          amount: '0.5432',
+          symbol: 'XRUN',
+          name: 'XRUN',
+          amount: '3,600',
           icon: require('./../../../assets/images/icon_xrun_white.png'),
         },
         {
           id: '2',
-          symbol: 'HNT',
-          name: 'MetaHint',
-          amount: '123.4567',
-          icon: require('./../../../assets/images/icon_xrun_white.png'),
+          symbol: 'POL',
+          name: 'Polygon',
+          amount: '1,600',
+          icon: require('./../../../assets/images/icon_polygon.png'),
+        },
+        {
+          id: '3',
+          symbol: 'REALVERSE',
+          name: 'RVC',
+          amount: '1,000,000',
+          icon: require('./../../../assets/images/icon_realverse.png'),
+        },
+        {
+          id: '4',
+          symbol: 'NFT #8282',
+          name: 'Round 1',
+          amount: '1',
+          icon: require('./../../../assets/images/icon_nft_black.png'),
+        },
+        {
+          id: '5',
+          symbol: 'NFT #8283',
+          name: 'Round 1',
+          amount: '1',
+          icon: require('./../../../assets/images/icon_nft_black.png'),
+        },
+        {
+          id: '6',
+          symbol: 'AD XRUN',
+          name: 'XRUN',
+          amount: '500',
+          icon: require('./../../../assets/images/icon_ad_xrun.png'),
         },
       ]);
       setIsLoading(false);
@@ -122,12 +150,16 @@ const WalletScreen = () => {
     // Function to determine icon color based on crypto symbol
     const getIconColor = symbol => {
       switch (symbol) {
-        case 'ETH':
-          return '#5F59E0';
+        case 'XRUN':
+          return '#000000'; // atau '#5F59E0' kalau kamu prefer default
         case 'POL':
           return '#8347E6';
-        case 'HNT':
-          return '#8347E6';
+        case 'REALVERSE':
+          return '#E0A15F'; // warna coklat keemasan
+        case 'NFT #8282':
+        case 'NFT #8283':
+        case 'AD XRUN':
+          return '#1C1C1E'; // hitam doff
         default:
           return '#5F59E0';
       }
@@ -195,7 +227,8 @@ const WalletScreen = () => {
               color: 'black',
               paddingVertical: 18,
             }}>
-            {formatCustom(item.amount)} {item.symbol}
+            {/* {formatCustom(item.amount)} {item.symbol} */}
+            {item.amount} {item.symbol}
           </Text>
         </View>
       </TouchableOpacity>
