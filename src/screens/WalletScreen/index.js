@@ -222,7 +222,7 @@ const WalletScreen = () => {
                   onPress={handleCopyAddress}
                   style={styles.copyButton}>
                   <Image
-                    source={require('./../../../assets/images/icon_copy.png')}
+                    source={require('./../../../assets/images/icon_copy_white.png')}
                     style={styles.copyIcon}
                   />
                 </TouchableOpacity>
@@ -380,8 +380,7 @@ const styles = StyleSheet.create({
   },
   walletAddress: {
     color: '#fff',
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: fontSize('body'),
     marginBottom: 8,
   },
   actionsContainer: {
