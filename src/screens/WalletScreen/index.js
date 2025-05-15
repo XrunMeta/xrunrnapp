@@ -207,7 +207,7 @@ const WalletScreen = () => {
                 gap: 15,
               }}>
               <View style={styles.walletAddressContainer}>
-                <Text style={styles.walletLabel}>Wallet Address</Text>
+                <Text style={styles.walletLabel}>My Wallet</Text>
                 <TouchableOpacity
                   onPress={handleCopyAddress}
                   style={styles.copyButton}>
