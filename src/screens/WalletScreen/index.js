@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
+import {fontSize, getFontFam} from '../../../utils';
+import ButtonBack from '../../components/ButtonBack';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -60,6 +62,10 @@ const WalletScreen = () => {
     '0x1AB3A2FD697390B269ABCD49CB660C54292C2FCB',
   );
   const [cryptoAssets, setCryptoAssets] = useState([]);
+
+  const onBack = () => {
+    navigation.navigate('Home');
+  };
 
   // Simulate loading data
   useEffect(() => {
@@ -175,9 +181,13 @@ const WalletScreen = () => {
         </View>
       )}
 
-      {/* Header Logo */}
-      <View style={styles.header}>
-        <View style={styles.logoContainer}></View>
+      <View style={{flexDirection: 'row'}}>
+        <View style={{position: 'absolute', zIndex: 1}}>
+          <ButtonBack onClick={onBack} />
+        </View>
+        <View style={styles.titleWrapper}>
+          <Text style={styles.title}>Wallet</Text>
+        </View>
       </View>
 
       {/* Card Wrapper */}
@@ -271,7 +281,7 @@ const WalletScreen = () => {
               <View style={styles.actionIconContainer}>
                 <Image
                   source={require('./../../../assets/images/icon_walletsend.png')}
-                  style={[styles.actionIcon, {marginTop: -3}]}
+                  style={[styles.actionIcon, {marginTop: -3, marginRight: -3}]}
                 />
               </View>
               <Text style={styles.actionText}>Send</Text>
@@ -305,6 +315,22 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FAFAFA',
   },
+  titleWrapper: {
+    paddingVertical: 9,
+    alignItems: 'center',
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    flex: 1,
+    elevation: 5,
+    zIndex: 0,
+  },
+  title: {
+    fontSize: fontSize('title'),
+    fontFamily: getFontFam() + 'Bold',
+    // color: '#051C60',
+    color: 'black',
+    margin: 10,
+  },
   header: {
     padding: 16,
     paddingBottom: 5,
@@ -323,6 +349,7 @@ const styles = StyleSheet.create({
   },
   walletCardContainer: {
     paddingHorizontal: 16,
+    marginTop: 20,
   },
   walletCard: {
     borderRadius: 16,
