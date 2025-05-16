@@ -146,7 +146,7 @@ const WalletScreen = () => {
             onPress={e => e.stopPropagation()}>
             {/* Header */}
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Add Token</Text>
+              <Text style={[styles.modalTitle, {opacity: 0}]}>Add Token</Text>
               <TouchableOpacity onPress={closeModal}>
                 <Image
                   source={require('./../../../assets/images/icon_close.png')}
