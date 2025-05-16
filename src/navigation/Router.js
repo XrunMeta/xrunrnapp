@@ -68,6 +68,7 @@ import SelectAreaNewAdsScreen from '../screens/IndividualAdsScreen/NewAdsScreen/
 import AdsDetailScreen from '../screens/IndividualAdsScreen/AdsPurchaseScreen/AdsDetailScreen';
 import AdsCompletePurchase from '../screens/IndividualAdsScreen/AdsPurchaseScreen/AdsCompletePurchaseScreen';
 import ManageAdsScreen from '../screens/IndividualAdsScreen/ManageAdsScreen/ManageAdsScreen';
+import WalletDetailScreen from '../screens/WalletScreen/WalletDetail';
 
 export default Router = () => {
   const Stack = createNativeStackNavigator();
@@ -165,6 +166,7 @@ export default Router = () => {
 
         {/* Wallet */}
         <Stack.Screen name="WalletHome" component={WalletScreen} />
+        <Stack.Screen name="WalletDetail" component={WalletDetailScreen} />
         <Stack.Screen name="IOSWallet" component={IOSWallet} />
         <Stack.Screen name="SendWallet" component={SendWalletScreen} />
         <Stack.Screen name="ShowAd" component={ShowAdScreen} />
