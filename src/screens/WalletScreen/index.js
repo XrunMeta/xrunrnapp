@@ -10,6 +10,8 @@ import {
   StatusBar,
   Dimensions,
   Linking,
+  Modal,
+  TextInput,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -46,22 +48,233 @@ const shortenAddress = (address, frontChars, backChars) => {
   )}`;
 };
 
-// Helper function to format numbers
-const formatCustom = value => {
-  if (!value) return '0';
-  return parseFloat(value).toFixed(4);
-};
-
 const WalletScreen = () => {
   const navigation = useNavigation();
 
-  // Dummy data
   const [isLoading, setIsLoading] = useState(true);
   const [isPopupShow, setIsPopupShow] = useState(false);
   const [publicAddress, setPublicAddress] = useState(
     '0x1AB3A2FD697390B269ABCD49CB660C54292C2FCB',
   );
   const [cryptoAssets, setCryptoAssets] = useState([]);
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [activeTab, setActiveTab] = useState('Token'); // 'Token' or 'Contract'
+  const [contractAddress, setContractAddress] = useState('');
+  const [tokenName, setTokenName] = useState('');
+  const [tokenSymbol, setTokenSymbol] = useState('');
+  const [tokenDecimals, setTokenDecimals] = useState('');
+  const [selectedToken, setSelectedToken] = useState(null);
+
+  // Handle star icon click
+  const handleAddToken = () => {
+    setModalVisible(true);
+    resetModalState();
+  };
+
+  // Reset modal state
+  const resetModalState = () => {
+    setActiveTab('Token');
+    setContractAddress('');
+    setTokenName('');
+    setTokenSymbol('');
+    setTokenDecimals('');
+    setSelectedToken(null);
+  };
+
+  // Close modal
+  const closeModal = () => {
+    setModalVisible(false);
+    resetModalState();
+  };
+
+  // Handle token selection
+  const handleTokenSelect = token => {
+    setSelectedToken(token);
+    setActiveTab('Contract');
+  };
+
+  // Handle next button in Token tab
+  const handleTokenNext = () => {
+    if (selectedToken) {
+      setActiveTab('Contract');
+    }
+  };
+
+  // Handle next button in Contract tab
+  const handleContractNext = () => {
+    if (contractAddress) {
+      // Here you would typically validate the contract address
+      // For demo purposes, we'll just show the confirmation
+      setActiveTab('Confirm');
+    }
+  };
+
+  // Handle add token confirmation
+  const handleAddTokenConfirm = () => {
+    // Here you would typically add the token to the wallet
+    console.log('Adding token:', {
+      name: tokenName,
+      symbol: tokenSymbol,
+      decimals: tokenDecimals,
+      contractAddress,
+    });
+    closeModal();
+  };
+
+  // Predefined tokens for Token tab
+  const predefinedTokens = [
+    {symbol: 'POL', name: 'Polygon'},
+    {symbol: 'XRUN', name: 'XRUN'},
+  ];
+
+  // Modal component
+  const AddTokenModal = () => (
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={closeModal}>
+      <TouchableOpacity
+        style={styles.modalOverlay}
+        activeOpacity={1}
+        onPressOut={closeModal}>
+        <View style={styles.modalContainer}>
+          <TouchableOpacity
+            activeOpacity={1}
+            style={styles.modalContent}
+            onPress={e => e.stopPropagation()}>
+            {/* Header */}
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Add Token</Text>
+              <TouchableOpacity onPress={closeModal}>
+                <Image
+                  source={require('./../../../assets/images/icon_close.png')}
+                  style={styles.closeIcon}
+                />
+              </TouchableOpacity>
+            </View>
+
+            {/* Tabs */}
+            <View style={styles.tabContainer}>
+              <TouchableOpacity
+                style={[
+                  styles.tabButton,
+                  activeTab === 'Token' && styles.activeTab,
+                ]}
+                onPress={() => setActiveTab('Token')}>
+                <Text
+                  style={[
+                    styles.tabText,
+                    activeTab === 'Token' && styles.activeTabText,
+                  ]}>
+                  Token
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.tabButton,
+                  activeTab === 'Contract' && styles.activeTab,
+                ]}
+                onPress={() => setActiveTab('Contract')}
+                disabled={!selectedToken && activeTab !== 'Contract'}>
+                <Text
+                  style={[
+                    styles.tabText,
+                    activeTab === 'Contract' && styles.activeTabText,
+                    !selectedToken &&
+                      activeTab !== 'Contract' &&
+                      styles.disabledTab,
+                  ]}>
+                  Contract
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Token Tab Content */}
+            {activeTab === 'Token' && (
+              <View style={styles.tabContent}>
+                {predefinedTokens.map((token, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    style={[
+                      styles.tokenItem,
+                      selectedToken?.symbol === token.symbol &&
+                        styles.selectedToken,
+                    ]}
+                    onPress={() => handleTokenSelect(token)}>
+                    <Text style={styles.tokenSymbol}>{token.symbol}</Text>
+                    <Text style={styles.tokenName}>{token.name}</Text>
+                  </TouchableOpacity>
+                ))}
+                <TouchableOpacity
+                  style={styles.nextButton}
+                  onPress={handleTokenNext}
+                  disabled={!selectedToken}>
+                  <Text style={styles.nextButtonText}>Next</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+
+            {/* Contract Tab Content */}
+            {activeTab === 'Contract' && (
+              <View style={styles.tabContent}>
+                <Text style={styles.inputLabel}>Contract Address</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="0x..."
+                  value={contractAddress}
+                  onChangeText={setContractAddress}
+                  autoCapitalize="none"
+                />
+                <TouchableOpacity
+                  style={styles.nextButton}
+                  onPress={handleContractNext}
+                  disabled={!contractAddress}>
+                  <Text style={styles.nextButtonText}>Next</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+
+            {/* Confirm Tab Content */}
+            {activeTab === 'Confirm' && (
+              <View style={styles.tabContent}>
+                <View style={styles.confirmRow}>
+                  <Text style={styles.confirmLabel}>Token Name</Text>
+                  <Text style={styles.confirmValue}>
+                    {tokenName || selectedToken?.name}
+                  </Text>
+                </View>
+                <View style={styles.confirmRow}>
+                  <Text style={styles.confirmLabel}>Token Symbol</Text>
+                  <Text style={styles.confirmValue}>
+                    {tokenSymbol || selectedToken?.symbol}
+                  </Text>
+                </View>
+                <View style={styles.confirmRow}>
+                  <Text style={styles.confirmLabel}>Decimals</Text>
+                  <Text style={styles.confirmValue}>
+                    {tokenDecimals || '18'}
+                  </Text>
+                </View>
+                <View style={styles.confirmRow}>
+                  <Text style={styles.confirmLabel}>Contract Address</Text>
+                  <Text style={styles.confirmValue}>
+                    {shortenAddress(contractAddress, 6, 4)}
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  style={styles.addButton}
+                  onPress={handleAddTokenConfirm}>
+                  <Text style={styles.addButtonText}>Add token</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </TouchableOpacity>
+        </View>
+      </TouchableOpacity>
+    </Modal>
+  );
 
   const onBack = () => {
     navigation.navigate('Home');
@@ -353,6 +566,7 @@ const WalletScreen = () => {
         </View>
       </View>
 
+      {/* Currency Wrapper */}
       <View style={styles.assetsContainer}>
         <View
           style={{
@@ -366,7 +580,7 @@ const WalletScreen = () => {
               display: 'flex',
               flexDirection: 'row',
             }}
-            onPress={handleCopyAddress}>
+            onPress={handleAddToken}>
             <Text
               style={{
                 color: 'black',
@@ -395,6 +609,8 @@ const WalletScreen = () => {
           />
         )}
       </View>
+
+      <AddTokenModal />
     </SafeAreaView>
   );
 };
@@ -468,12 +684,10 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   copyIcon: {
-    color: '#fff',
     height: 24,
     width: 24,
   },
   actionIcon: {
-    color: '#fff',
     height: 28,
     width: 28,
   },
@@ -575,6 +789,131 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     color: 'black',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    width: '90%',
+    maxWidth: 400,
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 20,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'black',
+  },
+  closeIcon: {
+    width: 24,
+    height: 24,
+  },
+  tabContainer: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E5E5',
+    marginBottom: 20,
+  },
+  tabButton: {
+    paddingBottom: 10,
+    marginRight: 20,
+  },
+  activeTab: {
+    borderBottomWidth: 2,
+    borderBottomColor: '#5F59E0',
+  },
+  tabText: {
+    fontSize: 16,
+    color: '#B8B8B8',
+  },
+  activeTabText: {
+    color: 'black',
+    fontWeight: 'bold',
+  },
+  disabledTab: {
+    opacity: 0.5,
+  },
+  tabContent: {
+    minHeight: 200,
+  },
+  tokenItem: {
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+  },
+  selectedToken: {
+    backgroundColor: '#F5F5FF',
+  },
+  tokenSymbol: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'black',
+  },
+  tokenName: {
+    fontSize: 14,
+    color: '#B8B8B8',
+  },
+  inputLabel: {
+    fontSize: 14,
+    color: '#B8B8B8',
+    marginBottom: 5,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#E5E5E5',
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 20,
+  },
+  nextButton: {
+    backgroundColor: '#5F59E0',
+    borderRadius: 10,
+    padding: 15,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  nextButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  confirmRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+  },
+  confirmLabel: {
+    fontSize: 14,
+    color: '#B8B8B8',
+  },
+  confirmValue: {
+    fontSize: 14,
+    color: 'black',
+    fontWeight: 'bold',
+  },
+  addButton: {
+    backgroundColor: '#5F59E0',
+    borderRadius: 10,
+    padding: 15,
+    alignItems: 'center',
+    marginTop: 30,
+  },
+  addButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
 });
 
