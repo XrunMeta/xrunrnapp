@@ -873,13 +873,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F5FF',
   },
   tokenSymbol: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: fontSize('subtitle'),
     color: 'black',
-  },
-  tokenName: {
-    fontSize: 14,
-    color: '#B8B8B8',
   },
   inputLabel: {
     fontSize: 14,
@@ -894,15 +889,19 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   nextButton: {
-    backgroundColor: '#5F59E0',
-    borderRadius: 10,
+    backgroundColor: '#FFDC04',
+    borderRadius: 50,
     padding: 15,
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 40,
+    width: 150,
+    marginHorizontal: 'auto',
+    alignSelf: 'center',
   },
   nextButtonText: {
-    color: 'white',
+    color: 'black',
     fontWeight: 'bold',
+    fontSize: fontSize('subtitle'),
   },
   confirmRow: {
     flexDirection: 'row',
