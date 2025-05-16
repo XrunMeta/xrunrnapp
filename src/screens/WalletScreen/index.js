@@ -252,6 +252,12 @@ const WalletScreen = () => {
             {activeTab === 'Confirm' && (
               <View style={styles.tabContent}>
                 <View style={styles.confirmRow}>
+                  <Text style={styles.confirmLabel}>Contract Address</Text>
+                  <Text style={styles.confirmValue}>
+                    {shortenAddress(contractAddress, 6, 4)}
+                  </Text>
+                </View>
+                <View style={styles.confirmRow}>
                   <Text style={styles.confirmLabel}>Token Name</Text>
                   <Text style={styles.confirmValue}>
                     {tokenName || selectedToken?.name}
@@ -264,19 +270,14 @@ const WalletScreen = () => {
                   </Text>
                 </View>
                 <View style={styles.confirmRow}>
-                  <Text style={styles.confirmLabel}>Decimals</Text>
+                  <Text style={styles.confirmLabel}>Digits</Text>
                   <Text style={styles.confirmValue}>
                     {tokenDecimals || '18'}
                   </Text>
                 </View>
-                <View style={styles.confirmRow}>
-                  <Text style={styles.confirmLabel}>Contract Address</Text>
-                  <Text style={styles.confirmValue}>
-                    {shortenAddress(contractAddress, 6, 4)}
-                  </Text>
-                </View>
+
                 <TouchableOpacity
-                  style={styles.addButton}
+                  style={styles.nextButton}
                   onPress={handleAddTokenConfirm}>
                   <Text style={styles.addButtonText}>Add token</Text>
                 </TouchableOpacity>
@@ -904,18 +905,16 @@ const styles = StyleSheet.create({
     fontSize: fontSize('subtitle'),
   },
   confirmRow: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'space-between',
     paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
   },
   confirmLabel: {
-    fontSize: 14,
+    fontSize: fontSize('subtitle'),
     color: '#B8B8B8',
   },
   confirmValue: {
-    fontSize: 14,
+    fontSize: fontSize('subtitle'),
     color: 'black',
     fontWeight: 'bold',
   },
@@ -927,7 +926,8 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   addButtonText: {
-    color: 'white',
+    color: 'black',
+    fontSize: fontSize('subtitle'),
     fontWeight: 'bold',
   },
 });
