@@ -231,10 +231,10 @@ const WalletScreen = () => {
             {/* Contract Tab Content */}
             {activeTab === 'Contract' && (
               <View style={styles.tabContent}>
-                <Text style={styles.inputLabel}>Contract Address</Text>
+                {/* <Text style={styles.inputLabel}>Contract Address</Text> */}
                 <TextInput
                   style={styles.input}
-                  placeholder="0x..."
+                  placeholder="Contract Address"
                   value={contractAddress}
                   onChangeText={setContractAddress}
                   autoCapitalize="none"
@@ -882,11 +882,11 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#E5E5E5',
+    borderColor: '#FAFAFA',
     borderRadius: 10,
     padding: 15,
     marginBottom: 20,
+    fontSize: fontSize('subtitle'),
   },
   nextButton: {
     backgroundColor: '#FFDC04',
