@@ -809,7 +809,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
   },
   modalTitle: {
     fontSize: 20,
@@ -822,17 +821,20 @@ const styles = StyleSheet.create({
   },
   tabContainer: {
     flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E5E5',
     marginBottom: 20,
+    width: '100%',
   },
   tabButton: {
-    paddingBottom: 10,
-    marginRight: 20,
+    paddingVertical: 10,
+    flex: 1,
+    borderBottomWidth: 5,
+    borderBottomColor: '#DEDEDE',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   activeTab: {
-    borderBottomWidth: 2,
-    borderBottomColor: '#5F59E0',
+    borderBottomWidth: 5,
+    borderBottomColor: '#FFDC04',
   },
   tabText: {
     fontSize: 16,
