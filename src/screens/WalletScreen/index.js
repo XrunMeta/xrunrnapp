@@ -153,8 +153,24 @@ const WalletScreen = () => {
             style={styles.modalContent}
             onPress={e => e.stopPropagation()}>
             {/* Header */}
-            <View style={styles.modalHeader}>
-              <Text style={[styles.modalTitle, {opacity: 0}]}>Add Token</Text>
+            <View
+              style={[
+                styles.modalHeader,
+                activeTab === 'Confirm' && {
+                  borderBottomWidth: 2,
+                  borderBottomColor: '#DEDEDE',
+                  paddingBottom: 15,
+                },
+              ]}>
+              <Text
+                style={[
+                  styles.modalTitle,
+                  {
+                    opacity: activeTab === 'Confirm' ? 1 : 0,
+                  },
+                ]}>
+                Confirm Token Add
+              </Text>
               <TouchableOpacity onPress={closeModal}>
                 <Image
                   source={require('./../../../assets/images/icon_close.png')}
@@ -164,40 +180,42 @@ const WalletScreen = () => {
             </View>
 
             {/* Tabs */}
-            <View style={styles.tabContainer}>
-              <TouchableOpacity
-                style={[
-                  styles.tabButton,
-                  activeTab === 'Token' && styles.activeTab,
-                ]}
-                onPress={() => setActiveTab('Token')}>
-                <Text
+            {activeTab !== 'Confirm' && (
+              <View style={styles.tabContainer}>
+                <TouchableOpacity
                   style={[
-                    styles.tabText,
-                    activeTab === 'Token' && styles.activeTabText,
-                  ]}>
-                  Token
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  styles.tabButton,
-                  activeTab === 'Contract' && styles.activeTab,
-                ]}
-                onPress={() => setActiveTab('Contract')}
-                disabled={!selectedToken && activeTab !== 'Contract'}>
-                <Text
+                    styles.tabButton,
+                    activeTab === 'Token' && styles.activeTab,
+                  ]}
+                  onPress={() => setActiveTab('Token')}>
+                  <Text
+                    style={[
+                      styles.tabText,
+                      activeTab === 'Token' && styles.activeTabText,
+                    ]}>
+                    Token
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
                   style={[
-                    styles.tabText,
-                    activeTab === 'Contract' && styles.activeTabText,
-                    !selectedToken &&
-                      activeTab !== 'Contract' &&
-                      styles.disabledTab,
-                  ]}>
-                  Contract
-                </Text>
-              </TouchableOpacity>
-            </View>
+                    styles.tabButton,
+                    activeTab === 'Contract' && styles.activeTab,
+                  ]}
+                  onPress={() => setActiveTab('Contract')}
+                  disabled={!selectedToken && activeTab !== 'Contract'}>
+                  <Text
+                    style={[
+                      styles.tabText,
+                      activeTab === 'Contract' && styles.activeTabText,
+                      !selectedToken &&
+                        activeTab !== 'Contract' &&
+                        styles.disabledTab,
+                    ]}>
+                    Contract
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
 
             {/* Token Tab Content */}
             {activeTab === 'Token' && (
@@ -827,6 +845,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: 'black',
+    flex: 1,
+    textAlign: 'center',
   },
   closeIcon: {
     width: 24,
@@ -907,7 +927,7 @@ const styles = StyleSheet.create({
   confirmRow: {
     flexDirection: 'column',
     justifyContent: 'space-between',
-    paddingVertical: 15,
+    marginTop: 15,
   },
   confirmLabel: {
     fontSize: fontSize('subtitle'),
