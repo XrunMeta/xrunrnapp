@@ -124,8 +124,16 @@ const WalletScreen = () => {
 
   // Predefined tokens for Token tab
   const predefinedTokens = [
-    {symbol: 'POL', name: 'Polygon'},
-    {symbol: 'XRUN', name: 'XRUN'},
+    {
+      symbol: 'POL',
+      name: 'Polygon',
+      icon: require('./../../../assets/images/icon_polygon_colored.png'),
+    },
+    {
+      symbol: 'XRUN',
+      name: 'XRUN',
+      icon: require('./../../../assets/images/icon_xrun_white.png'),
+    },
   ];
 
   // Modal component
@@ -203,8 +211,12 @@ const WalletScreen = () => {
                         styles.selectedToken,
                     ]}
                     onPress={() => handleTokenSelect(token)}>
+                    <Image
+                      source={token.icon}
+                      style={styles.cryptoIconImage}
+                      resizeMode="contain"
+                    />
                     <Text style={styles.tokenSymbol}>{token.symbol}</Text>
-                    <Text style={styles.tokenName}>{token.name}</Text>
                   </TouchableOpacity>
                 ))}
                 <TouchableOpacity
@@ -854,6 +866,8 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderBottomWidth: 1,
     borderBottomColor: '#F0F0F0',
+    flexDirection: 'row',
+    gap: 15,
   },
   selectedToken: {
     backgroundColor: '#F5F5FF',
