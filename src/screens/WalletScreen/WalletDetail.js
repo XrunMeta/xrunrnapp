@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
   Text,
@@ -64,11 +64,9 @@ const WalletDetailScreen = () => {
   const {currID, symbol, name, amount, icon, bgColor} = route.params;
 
   const [isLoading, setIsLoading] = useState(true);
-  const [isPopupShow, setIsPopupShow] = useState(false);
   const [publicAddress, setPublicAddress] = useState(
     '0x1AB3A2FD697390B269ABCD49CB660C54292C2FCB',
   );
-  const [cryptoAssets, setCryptoAssets] = useState([]);
 
   // State for filter selections
   const [selectedType, setSelectedType] = useState('All');
@@ -76,12 +74,22 @@ const WalletDetailScreen = () => {
   const [filteredTransactions, setFilteredTransactions] = useState([]);
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [activeTab, setActiveTab] = useState('Token'); // 'Token' or 'Contract'
-  const [contractAddress, setContractAddress] = useState('');
-  const [tokenName, setTokenName] = useState('');
-  const [tokenSymbol, setTokenSymbol] = useState('');
-  const [tokenDecimals, setTokenDecimals] = useState('');
-  const [selectedToken, setSelectedToken] = useState(null);
+
+  const setSelectedTypeStable = useCallback(type => {
+    setSelectedType(type);
+  }, []);
+
+  const setSelectedDaysStable = useCallback(days => {
+    setSelectedDays(days);
+  }, []);
+
+  const onCloseStable = useCallback(() => {
+    setModalVisible(false);
+  }, []);
+
+  const onConfirmStable = useCallback(() => {
+    setModalVisible(false);
+  }, []);
 
   // Fungsi untuk apply filter
   const applyFilters = () => {
@@ -113,228 +121,134 @@ const WalletDetailScreen = () => {
   // Handle star icon click
   const handleAddToken = () => {
     setModalVisible(true);
-    resetModalState();
   };
-
-  // Reset modal state
-  const resetModalState = () => {
-    setActiveTab('Token');
-    setContractAddress('');
-    setTokenName('');
-    setTokenSymbol('');
-    setTokenDecimals('');
-    setSelectedToken(null);
-  };
-
-  // Close modal
-  const closeModal = () => {
-    setModalVisible(false);
-    resetModalState();
-  };
-
-  // Handle token selection
-  const handleTokenSelect = token => {
-    setSelectedToken(token);
-    setActiveTab('Contract');
-  };
-
-  // Handle next button in Token tab
-  const handleTokenNext = () => {
-    if (selectedToken) {
-      setActiveTab('Contract');
-    }
-  };
-
-  // Handle next button in Contract tab
-  const handleContractNext = () => {
-    if (contractAddress) {
-      // Here you would typically validate the contract address
-      // For demo purposes, we'll just show the confirmation
-      setActiveTab('Confirm');
-    }
-  };
-
-  // Handle add token confirmation
-  const handleAddTokenConfirm = () => {
-    // Here you would typically add the token to the wallet
-    console.log('Adding token:', {
-      name: tokenName,
-      symbol: tokenSymbol,
-      decimals: tokenDecimals,
-      contractAddress,
-    });
-    closeModal();
-  };
-
-  // Predefined tokens for Token tab
-  const predefinedTokens = [
-    {
-      symbol: 'POL',
-      name: 'Polygon',
-      icon: require('./../../../assets/images/icon_polygon_colored.png'),
-    },
-    {
-      symbol: 'XRUN',
-      name: 'XRUN',
-      icon: require('./../../../assets/images/icon_xrun_white.png'),
-    },
-  ];
 
   // Modal component
-  const AddTokenModal = ({
-    visible,
-    onClose,
-    selectedType,
-    setSelectedType,
-    selectedDays,
-    setSelectedDays,
-    onConfirm,
-  }) => {
-    // Handle type selection
-    const handleTypeSelect = type => {
-      setSelectedType(type);
-    };
+  const AddTokenModal = React.memo(
+    ({
+      visible,
+      onClose,
+      selectedType,
+      setSelectedType,
+      selectedDays,
+      setSelectedDays,
+      onConfirm,
+    }) => {
+      // Handle type selection
+      const handleTypeSelect = type => {
+        setSelectedType(type);
+      };
 
-    // Handle days selection
-    const handleDaysSelect = days => {
-      setSelectedDays(days);
-    };
+      // Handle days selection
+      const handleDaysSelect = days => {
+        setSelectedDays(days);
+      };
 
-    // Reset filters to default
-    const handleReset = () => {
-      setSelectedType('All');
-      setSelectedDays('7 Days');
-    };
+      // Reset filters to default
+      const handleReset = () => {
+        setSelectedType('All');
+        setSelectedDays('7 Days');
+      };
 
-    // Apply filters and close modal
-    // const handleConfirm = () => {
-    //   // First filter by asset ID
-    //   let filteredTransactions = dummyTransactions.filter(
-    //     txn => txn.assetId === currID,
-    //   );
-
-    //   // Then filter by type if not 'All'
-    //   if (selectedType !== 'All') {
-    //     filteredTransactions = filteredTransactions.filter(
-    //       txn => txn.type === selectedType.toLowerCase(),
-    //     );
-    //   }
-
-    //   // Then filter by date range
-    //   const days = parseInt(selectedDays);
-    //   const cutoffDate = new Date();
-    //   cutoffDate.setDate(cutoffDate.getDate() - days);
-
-    //   filteredTransactions = filteredTransactions.filter(txn => {
-    //     const txnDate = new Date(
-    //       txn.date.replace(/\./g, '-').replace(' ', 'T'),
-    //     );
-    //     return txnDate >= cutoffDate;
-    //   });
-
-    //   // Here you would pass the filteredTransactions back to parent component
-    //   console.log('Filtered transactions:', filteredTransactions);
-    //   closeModal();
-    // };
-
-    return (
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={visible}
-        onRequestClose={onClose}>
-        <TouchableOpacity
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPressOut={onClose}>
-          <View style={styles.modalContainer}>
-            <TouchableOpacity
-              activeOpacity={1}
-              style={styles.modalContent}
-              onPress={e => e.stopPropagation()}>
-              {/* Header */}
-              <View style={styles.modalHeader}>
-                <Text style={styles.modalTitle}>Filter Transactions</Text>
-                <TouchableOpacity onPress={onClose}>
-                  <Image
-                    source={require('./../../../assets/images/icon_close.png')}
-                    style={styles.closeIcon}
-                  />
-                </TouchableOpacity>
-              </View>
-
-              {/* Type Selection Row */}
-              <View style={styles.filterRow}>
-                <Text style={styles.filterLabel}>Type</Text>
-                <View style={styles.buttonGroup}>
-                  {['All', 'Send', 'Receive'].map(type => (
-                    <TouchableOpacity
-                      key={type}
-                      style={[
-                        styles.filterButton,
-                        selectedType === type && styles.selectedFilterButton,
-                      ]}
-                      onPress={() => handleTypeSelect(type)}>
-                      <Text
-                        style={[
-                          styles.filterButtonText,
-                          selectedType === type &&
-                            styles.selectedFilterButtonText,
-                        ]}>
-                        {type}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
+      return (
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={visible}
+          onRequestClose={onClose}>
+          <TouchableOpacity
+            style={styles.modalOverlay}
+            activeOpacity={1}
+            onPressOut={onClose}>
+            <View style={styles.modalContainer}>
+              <TouchableOpacity
+                activeOpacity={1}
+                style={styles.modalContent}
+                onPress={e => e.stopPropagation()}>
+                {/* Header */}
+                <View style={styles.modalHeader}>
+                  <Text style={styles.modalTitle}>Filter Transactions</Text>
+                  <TouchableOpacity onPress={onClose}>
+                    <Image
+                      source={require('./../../../assets/images/icon_close.png')}
+                      style={styles.closeIcon}
+                    />
+                  </TouchableOpacity>
                 </View>
-              </View>
 
-              {/* Days Selection Row */}
-              <View style={styles.filterRow}>
-                <Text style={styles.filterLabel}>History</Text>
-                <View style={styles.buttonGroup}>
-                  {['7 Days', '14 Days', '30 Days'].map(days => (
-                    <TouchableOpacity
-                      key={days}
-                      style={[
-                        styles.filterButton,
-                        selectedDays === days && styles.selectedFilterButton,
-                      ]}
-                      onPress={() => handleDaysSelect(days)}>
-                      <Text
+                {/* Type Selection Row */}
+                <View style={styles.filterRow}>
+                  <Text style={styles.filterLabel}>Type</Text>
+                  <View style={styles.buttonGroup}>
+                    {['All', 'Send', 'Receive'].map(type => (
+                      <TouchableOpacity
+                        key={type}
                         style={[
-                          styles.filterButtonText,
-                          selectedDays === days &&
-                            styles.selectedFilterButtonText,
-                        ]}>
-                        {days}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
+                          styles.filterButton,
+                          selectedType === type && styles.selectedFilterButton,
+                        ]}
+                        onPress={() => handleTypeSelect(type)}>
+                        <Text
+                          style={[
+                            styles.filterButtonText,
+                            selectedType === type &&
+                              styles.selectedFilterButtonText,
+                          ]}>
+                          {type}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
                 </View>
-              </View>
 
-              {/* Divider */}
-              <View style={styles.divider} />
+                {/* Days Selection Row */}
+                <View style={styles.filterRow}>
+                  <Text style={styles.filterLabel}>History</Text>
+                  <View style={styles.buttonGroup}>
+                    {['7 Days', '14 Days', '30 Days'].map(days => (
+                      <TouchableOpacity
+                        key={days}
+                        style={[
+                          styles.filterButton,
+                          selectedDays === days && styles.selectedFilterButton,
+                        ]}
+                        onPress={() => handleDaysSelect(days)}>
+                        <Text
+                          style={[
+                            styles.filterButtonText,
+                            selectedDays === days &&
+                              styles.selectedFilterButtonText,
+                          ]}>
+                          {days}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </View>
 
-              {/* Action Buttons */}
-              <View style={styles.actionButtonsContainer}>
-                <TouchableOpacity
-                  style={styles.resetButton}
-                  onPress={handleReset}>
-                  <Text style={styles.resetButtonText}>Reset</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.confirmButton}
-                  onPress={onConfirm}>
-                  <Text style={styles.confirmButtonText}>Confirm</Text>
-                </TouchableOpacity>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-      </Modal>
-    );
-  };
+                {/* Divider */}
+                <View style={styles.divider} />
+
+                {/* Action Buttons */}
+                <View style={styles.actionButtonsContainer}>
+                  <TouchableOpacity
+                    style={styles.resetButton}
+                    onPress={handleReset}>
+                    <Text style={styles.resetButtonText}>Reset</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.confirmButton}
+                    onPress={onConfirm}>
+                    <Text style={styles.confirmButtonText}>Confirm</Text>
+                  </TouchableOpacity>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </Modal>
+      );
+    },
+  );
 
   const onBack = () => {
     navigation.navigate('WalletHome');
@@ -343,12 +257,6 @@ const WalletDetailScreen = () => {
   // Simulate loading data
   useEffect(() => {
     const timer = setTimeout(() => {
-      const filteredTransactions = dummyTransactions.filter(
-        txn => txn.assetId === currID,
-      );
-
-      setCryptoAssets(filteredTransactions);
-
       setIsLoading(false);
     }, 1000);
 
@@ -481,11 +389,6 @@ const WalletDetailScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="#FAFAFA" barStyle="dark-content" />
-      {isPopupShow && (
-        <View style={{position: 'absolute', zIndex: 999}}>
-          <Text>Add Token Popup</Text>
-        </View>
-      )}
 
       <View style={{flexDirection: 'row'}}>
         <View style={{position: 'absolute', zIndex: 1}}>
@@ -642,12 +545,12 @@ const WalletDetailScreen = () => {
 
       <AddTokenModal
         visible={modalVisible}
-        onClose={() => setModalVisible(false)}
+        onClose={onCloseStable}
         selectedType={selectedType}
-        setSelectedType={setSelectedType}
+        setSelectedType={setSelectedTypeStable}
         selectedDays={selectedDays}
-        setSelectedDays={setSelectedDays}
-        onConfirm={() => setModalVisible(false)}
+        setSelectedDays={setSelectedDaysStable}
+        onConfirm={onConfirmStable}
       />
     </SafeAreaView>
   );
