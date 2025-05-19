@@ -13,7 +13,7 @@ import {
   Modal,
   TextInput,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {fontSize, getFontFam} from '../../../utils';
 import ButtonBack from '../../components/ButtonBack';
@@ -50,6 +50,8 @@ const shortenAddress = (address, frontChars, backChars) => {
 
 const WalletDetailScreen = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const {currID, symbol, name, icon, bgColor} = route.params;
 
   const [isLoading, setIsLoading] = useState(true);
   const [isPopupShow, setIsPopupShow] = useState(false);
@@ -493,7 +495,7 @@ const WalletDetailScreen = () => {
           <ButtonBack onClick={onBack} />
         </View>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>Wallet</Text>
+          <Text style={styles.title}>{name}</Text>
         </View>
       </View>
 

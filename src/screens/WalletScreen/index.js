@@ -410,7 +410,7 @@ const WalletScreen = () => {
     };
 
     const handlePress = () => {
-      navigation.navigate('DetailToken', {
+      navigation.navigate('WalletDetail', {
         currID: item.id,
         symbol: item.symbol,
         name: item.name,
