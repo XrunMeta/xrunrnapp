@@ -17,6 +17,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {fontSize, getFontFam} from '../../../utils';
 import ButtonBack from '../../components/ButtonBack';
+import {dummyTransactions} from './dummyTX';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -316,51 +317,12 @@ const WalletDetailScreen = () => {
   // Simulate loading data
   useEffect(() => {
     const timer = setTimeout(() => {
-      // Set dummy crypto assets
-      setCryptoAssets([
-        {
-          id: '1',
-          symbol: 'XRUN',
-          name: 'XRUN',
-          amount: '3,600',
-          icon: require('./../../../assets/images/icon_xrun_white.png'),
-        },
-        {
-          id: '2',
-          symbol: 'POL',
-          name: 'Polygon',
-          amount: '1,600',
-          icon: require('./../../../assets/images/icon_polygon.png'),
-        },
-        {
-          id: '3',
-          symbol: 'REALVERSE',
-          name: 'RVC',
-          amount: '1,000,000',
-          icon: require('./../../../assets/images/icon_realverse.png'),
-        },
-        {
-          id: '4',
-          symbol: 'NFT #8282',
-          name: 'Round 1',
-          amount: '1',
-          icon: require('./../../../assets/images/icon_nft_black.png'),
-        },
-        {
-          id: '5',
-          symbol: 'NFT #8283',
-          name: 'Round 1',
-          amount: '1',
-          icon: require('./../../../assets/images/icon_nft_black.png'),
-        },
-        {
-          id: '6',
-          symbol: 'AD XRUN',
-          name: 'XRUN',
-          amount: '500',
-          icon: require('./../../../assets/images/icon_ad_xrun.png'),
-        },
-      ]);
+      const filteredTransactions = dummyTransactions.filter(
+        txn => txn.assetId === currID,
+      );
+
+      setCryptoAssets(filteredTransactions);
+
       setIsLoading(false);
     }, 1000);
 
@@ -461,14 +423,19 @@ const WalletDetailScreen = () => {
                 }}>
                 {item.symbol}
               </Text>
-              <Text style={{fontSize: fontSize('body'), color: '#B8B8B8'}}>
-                {item.name}
+              <Text
+                style={{
+                  fontSize: fontSize('body'),
+                  color: '#B8B8B8',
+                  textTransform: 'capitalize',
+                }}>
+                {item.type}
               </Text>
             </View>
           </View>
           <View style={{flexDirection: 'column', alignItems: 'flex-end'}}>
             <Text style={{fontSize: fontSize('body'), color: '#B8B8B8'}}>
-              {item.name}
+              {item.date}
             </Text>
             <Text
               style={{
