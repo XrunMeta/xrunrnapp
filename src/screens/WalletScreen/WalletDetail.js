@@ -51,7 +51,7 @@ const shortenAddress = (address, frontChars, backChars) => {
 const WalletDetailScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const {currID, symbol, name, icon, bgColor} = route.params;
+  const {currID, symbol, name, amount, icon, bgColor} = route.params;
 
   const [isLoading, setIsLoading] = useState(true);
   const [isPopupShow, setIsPopupShow] = useState(false);
@@ -310,7 +310,7 @@ const WalletDetailScreen = () => {
   );
 
   const onBack = () => {
-    navigation.navigate('Home');
+    navigation.navigate('WalletHome');
   };
 
   // Simulate loading data
@@ -523,10 +523,9 @@ const WalletDetailScreen = () => {
               style={{
                 zIndex: 1,
                 paddingLeft: 10,
-                gap: 15,
               }}>
               <View style={styles.walletAddressContainer}>
-                <Text style={styles.walletLabel}>My Wallet</Text>
+                <Text style={styles.walletLabel}>My Balance</Text>
                 <TouchableOpacity
                   onPress={handleCopyAddress}
                   style={styles.copyButton}>
@@ -536,7 +535,15 @@ const WalletDetailScreen = () => {
                   />
                 </TouchableOpacity>
               </View>
-              <Text style={styles.walletAddress}>999999</Text>
+              <Text
+                style={{
+                  color: '#fff',
+                  fontSize: 28,
+                  fontWeight: 'bold',
+                  marginTop: -5,
+                }}>
+                {amount} {symbol}
+              </Text>
               <Text style={styles.walletAddress}>
                 {shortenAddress(publicAddress, front, back)}
               </Text>
@@ -728,7 +735,7 @@ const styles = StyleSheet.create({
   walletAddress: {
     color: '#fff',
     fontSize: fontSize('body'),
-    marginBottom: 8,
+    marginBottom: -10,
   },
   actionsContainer: {
     backgroundColor: '#fff',

@@ -413,6 +413,7 @@ const WalletScreen = () => {
       navigation.navigate('WalletDetail', {
         currID: item.id,
         symbol: item.symbol,
+        amount: item.amount,
         name: item.name,
         icon: item.icon,
         bgColor: getIconColor(item.symbol),
