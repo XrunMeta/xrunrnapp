@@ -427,7 +427,7 @@ const WalletDetailScreen = () => {
         style={{
           backgroundColor: 'white',
           paddingHorizontal: 12,
-          paddingVertical: 5,
+          paddingVertical: 15,
           marginHorizontal: 8,
           borderRadius: 15,
           marginVertical: 6,
@@ -466,16 +466,20 @@ const WalletDetailScreen = () => {
               </Text>
             </View>
           </View>
-          <Text
-            style={{
-              fontSize: 14,
-              fontWeight: '600',
-              color: 'black',
-              paddingVertical: 18,
-            }}>
-            {/* {formatCustom(item.amount)} {item.symbol} */}
-            {item.amount} {item.symbol}
-          </Text>
+          <View style={{flexDirection: 'column', alignItems: 'flex-end'}}>
+            <Text style={{fontSize: fontSize('body'), color: '#B8B8B8'}}>
+              {item.name}
+            </Text>
+            <Text
+              style={{
+                fontSize: 14,
+                fontWeight: '600',
+                color: 'black',
+              }}>
+              {/* {formatCustom(item.amount)} {item.symbol} */}
+              {item.amount} {item.symbol}
+            </Text>
+          </View>
         </View>
       </TouchableOpacity>
     );
@@ -615,24 +619,16 @@ const WalletDetailScreen = () => {
             flexDirection: 'row',
             justifyContent: 'space-between',
           }}>
-          <Text style={styles.assetsTitle}>My Balance</Text>
+          <Text style={styles.assetsTitle}>History</Text>
           <TouchableOpacity
             style={{
               display: 'flex',
               flexDirection: 'row',
             }}
             onPress={handleAddToken}>
-            <Text
-              style={{
-                color: 'black',
-                fontWeight: '700',
-                fontSize: fontSize('body'),
-              }}>
-              Add token
-            </Text>
             <Image
-              source={require('./../../../assets/images/icon_star.png')}
-              style={{width: 18, height: 18}}
+              source={require('./../../../assets/images/icon_setting.png')}
+              style={{width: 24, height: 24}}
             />
           </TouchableOpacity>
         </View>
