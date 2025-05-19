@@ -39,6 +39,15 @@ if (screenWidth < 350) {
   back = 14;
 }
 
+const walletBackgrounds = {
+  1: require('./../../../assets/images/bg_walletCard_xrun.png'),
+  2: require('./../../../assets/images/bg_walletCard_polygon.png'),
+  3: require('./../../../assets/images/bg_walletCard_realverse.png'),
+  4: require('./../../../assets/images/bg_walletCard_nft1.png'),
+  5: require('./../../../assets/images/bg_walletCard_nft2.png'),
+  6: require('./../../../assets/images/bg_walletCard_adxrun.png'),
+};
+
 // Helper function to shorten address
 const shortenAddress = (address, frontChars, backChars) => {
   if (!address || address.length < frontChars + backChars + 3) {
@@ -363,7 +372,7 @@ const WalletDetailScreen = () => {
         case 'POL':
           return '#8347E6';
         case 'REALVERSE':
-          return '#E0A15F'; // warna coklat keemasan
+          return '#000000'; // warna coklat keemasan
         case 'NFT #8282':
         case 'NFT #8283':
         case 'AD XRUN':
@@ -480,7 +489,7 @@ const WalletDetailScreen = () => {
               position: 'relative',
             }}>
             <Image
-              source={require('./../../../assets/images/bg_walletCard.png')}
+              source={walletBackgrounds[currID]}
               style={{
                 position: 'absolute',
                 right: 0,

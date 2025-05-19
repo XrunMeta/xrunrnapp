@@ -399,7 +399,7 @@ const WalletScreen = () => {
         case 'POL':
           return '#8347E6';
         case 'REALVERSE':
-          return '#E0A15F'; // warna coklat keemasan
+          return '#000000'; // warna coklat keemasan
         case 'NFT #8282':
         case 'NFT #8283':
         case 'AD XRUN':
