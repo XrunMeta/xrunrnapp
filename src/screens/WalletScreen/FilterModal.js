@@ -52,7 +52,7 @@ const FilterModal = React.memo(
               onPress={e => e.stopPropagation()}>
               {/* Header */}
               <View style={styles.modalHeader}>
-                <Text style={styles.modalTitle}>Filter Transactions</Text>
+                <Text style={styles.modalTitle}>Filter</Text>
                 <TouchableOpacity onPress={onClose}>
                   <Image
                     source={require('./../../../assets/images/icon_close.png')}
@@ -61,9 +61,11 @@ const FilterModal = React.memo(
                 </TouchableOpacity>
               </View>
 
+              {/* Divider */}
+              <View style={styles.divider} />
+
               {/* Type Selection Row */}
               <View style={styles.filterRow}>
-                <Text style={styles.filterLabel}>Type</Text>
                 <View style={styles.buttonGroup}>
                   {['All', 'Send', 'Receive'].map(type => (
                     <TouchableOpacity
@@ -88,7 +90,6 @@ const FilterModal = React.memo(
 
               {/* Days Selection Row */}
               <View style={styles.filterRow}>
-                <Text style={styles.filterLabel}>History</Text>
                 <View style={styles.buttonGroup}>
                   {['7 Days', '14 Days', '30 Days'].map(days => (
                     <TouchableOpacity
@@ -110,9 +111,6 @@ const FilterModal = React.memo(
                   ))}
                 </View>
               </View>
-
-              {/* Divider */}
-              <View style={styles.divider} />
 
               {/* Action Buttons */}
               <View style={styles.actionButtonsContainer}>
@@ -155,7 +153,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   filterLabel: {
-    fontSize: 16,
+    fontSize: fontSize('title'),
     fontWeight: '600',
     color: '#333',
     marginBottom: 10,
@@ -169,51 +167,52 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     paddingVertical: 12,
     borderRadius: 10,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: 'white',
     alignItems: 'center',
   },
   selectedFilterButton: {
-    backgroundColor: '#5F59E0',
+    backgroundColor: '#F5F5F5',
   },
   filterButtonText: {
-    fontSize: 14,
-    fontWeight: '500',
+    fontSize: fontSize('body'),
     color: '#666',
   },
   selectedFilterButtonText: {
-    color: 'white',
+    color: 'black',
+    fontWeight: 'bold',
   },
   divider: {
-    height: 1,
+    height: 3,
     backgroundColor: '#E5E5E5',
     marginVertical: 20,
   },
   actionButtonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginTop: 20,
   },
   resetButton: {
     flex: 1,
     padding: 15,
-    borderRadius: 10,
+    borderRadius: 50,
     backgroundColor: '#F5F5F5',
     alignItems: 'center',
     marginRight: 10,
   },
   resetButtonText: {
-    color: '#666',
+    color: 'black',
     fontWeight: '600',
   },
   confirmButton: {
     flex: 1,
     padding: 15,
-    borderRadius: 10,
-    backgroundColor: '#5F59E0',
+    borderRadius: 50,
+    backgroundColor: '#FFDC04',
     alignItems: 'center',
     marginLeft: 10,
   },
   confirmButtonText: {
-    color: 'white',
+    color: 'black',
     fontWeight: '600',
   },
   modalHeader: {
@@ -222,7 +221,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalTitle: {
-    fontSize: 20,
+    fontSize: fontSize('title'),
     fontWeight: 'bold',
     color: 'black',
     flex: 1,
@@ -250,7 +249,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#FFDC04',
   },
   tabText: {
-    fontSize: 16,
+    fontSize: fontSize('title'),
     color: '#B8B8B8',
   },
   activeTabText: {
@@ -278,7 +277,7 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   inputLabel: {
-    fontSize: 14,
+    fontSize: fontSize('body'),
     color: '#B8B8B8',
     marginBottom: 5,
   },
