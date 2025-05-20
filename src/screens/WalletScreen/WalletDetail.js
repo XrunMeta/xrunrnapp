@@ -182,12 +182,8 @@ const WalletDetailScreen = () => {
     };
 
     const handlePress = () => {
-      navigation.navigate('DetailToken', {
-        currID: item.id,
-        symbol: item.symbol,
-        name: item.name,
-        icon: item.icon,
-        bgColor: getIconColor(item.symbol),
+      navigation.navigate('TransactionDetail', {
+        hash: 'Bahlul ente',
       });
     };
 

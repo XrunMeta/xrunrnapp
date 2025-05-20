@@ -68,7 +68,7 @@ const TxDetailItem = ({
         {copy && (
           <TouchableOpacity onPress={copyToClipboard} style={styles.iconButton}>
             <Image
-              source={require('../assets/images/icon_copy.png')}
+              source={require('./../../../assets/images/icon_copy.png')}
               style={styles.actionIcon}
             />
           </TouchableOpacity>
@@ -77,7 +77,7 @@ const TxDetailItem = ({
         {link !== '' && (
           <TouchableOpacity onPress={openLink} style={styles.iconButton}>
             <Image
-              source={require('../assets/images/icon_link.png')}
+              source={require('./../../../assets/images/icon_link.png')}
               style={styles.actionIcon}
             />
           </TouchableOpacity>
@@ -86,7 +86,7 @@ const TxDetailItem = ({
         {scan && (
           <TouchableOpacity onPress={handleScan} style={styles.iconButton}>
             <Image
-              source={require('../assets/images/icon_scanner.png')}
+              source={require('./../../../assets/images/icon_scanner.png')}
               style={styles.actionIcon}
             />
           </TouchableOpacity>

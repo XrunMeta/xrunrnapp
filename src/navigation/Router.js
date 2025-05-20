@@ -69,6 +69,7 @@ import AdsDetailScreen from '../screens/IndividualAdsScreen/AdsPurchaseScreen/Ad
 import AdsCompletePurchase from '../screens/IndividualAdsScreen/AdsPurchaseScreen/AdsCompletePurchaseScreen';
 import ManageAdsScreen from '../screens/IndividualAdsScreen/ManageAdsScreen/ManageAdsScreen';
 import WalletDetailScreen from '../screens/WalletScreen/WalletDetail';
+import TransactionDetailScreen from '../screens/WalletScreen/TxDetail';
 
 export default Router = () => {
   const Stack = createNativeStackNavigator();
@@ -184,6 +185,10 @@ export default Router = () => {
           component={KeyDownloadAuthScreen}
         />
         <Stack.Screen name="KeyShowDownload" component={KeyShowDownload} />
+        <Stack.Screen
+          name="TransactionDetail"
+          component={TransactionDetailScreen}
+        />
 
         {/* Individual Ads */}
         <Stack.Screen name="IndAds" component={IndividualAdsScreen} />
