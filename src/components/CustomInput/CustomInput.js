@@ -16,6 +16,7 @@ const CustomInput = ({
   setValue,
   placeholder,
   isPassword = false,
+  style,
 }) => {
   const [secureTextEntry, setSecureTextEntry] = useState(isPassword);
 
@@ -37,7 +38,7 @@ const CustomInput = ({
         onChangeText={setValue}
         placeholder={placeholder}
         placeholderTextColor="#a8a8a7"
-        style={styles.input}
+        style={[styles.input, style]}
         secureTextEntry={secureTextEntry}
       />
       {isPassword && (
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
     // fontSize: fontSize('body'),
     fontFamily:
       Platform.OS === 'ios' ? 'AppleSDGothicNeo-' : 'Roboto-' + 'Medium',
-    fontSize: 12,
+    fontSize: 16,
     marginBottom: -10,
     color: '#343a59',
   },
@@ -93,7 +94,7 @@ const styles = StyleSheet.create({
     // fontSize: fontSize('body'),
     fontFamily:
       Platform.OS === 'ios' ? 'AppleSDGothicNeo-' : 'Roboto-' + 'Medium',
-    fontSize: 12,
+    fontSize: 16,
     color: '#343a59',
     borderBottomColor: '#cccccc',
     borderBottomWidth: 1,

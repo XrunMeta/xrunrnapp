@@ -174,3 +174,8 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Package files (추가)
+package.json
+package-lock.json
+tsconfig.json
