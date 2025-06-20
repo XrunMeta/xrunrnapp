@@ -536,6 +536,8 @@ const WalletDetailScreen = () => {
             renderItem={renderCryptoItem}
             keyExtractor={item => item.id}
             contentContainerStyle={styles.cryptoList}
+            refreshing={isLoading}
+            onRefresh={fetchTransactions}
           />
         )}
       </View>
