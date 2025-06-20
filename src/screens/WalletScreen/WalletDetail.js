@@ -92,6 +92,7 @@ const WalletDetailScreen = () => {
         type: 'app4200-05-response',
         callback: data => {
           if (data.data) {
+            console.log({data: data.data});
             setTransactions(data.data);
             applyFilters(data.data);
             setIsLoading(false);
@@ -142,13 +143,13 @@ const WalletDetailScreen = () => {
   // Initial data fetch
   useEffect(() => {
     fetchTransactions();
-  }, [currID]);
+  }, [currID, selectedDays]);
 
   const fetchTransactions = () => {
     setIsLoading(true);
     try {
       WebSocketInstance.sendMessage(act.totalHistory, {
-        member: 1342, // Replace with actual user ID
+        member: 2855, // Replace with actual user ID
         currency: currID,
         daysbefore: parseInt(selectedDays),
         startwith: 0,
@@ -184,13 +185,17 @@ const WalletDetailScreen = () => {
   }, [transactions]);
 
   // Fungsi untuk apply filter
+  // Fungsi untuk apply filter
   const applyFilters = (txnData = transactions) => {
-    let result = txnData.filter(txn => txn.currency === currID);
+    console.log('Applying filters with data:', txnData);
+    console.log('Current currID:', currID);
+
+    // Jangan filter by currency dulu, karena mungkin currID tidak match
+    let result = [...txnData];
 
     // Filter by type if not 'All'
     if (selectedType !== 'All') {
       result = result.filter(txn => {
-        // Map your action codes to types
         const actionType = getActionType(txn.action);
         return actionType === selectedType.toLowerCase();
       });
@@ -206,16 +211,20 @@ const WalletDetailScreen = () => {
       return txnDate >= cutoffDate;
     });
 
+    console.log('Filtered result:', result);
+
     // Format for UI
     const formatted = result.map(txn => ({
-      id: txn.id || `${txn.excuteddatetime}_${txn.amount}`,
-      symbol: symbol,
+      id: txn.id || `${txn.transaction || txn.excuteddatetime}_${txn.amount}`,
+      symbol: txn.symbol || symbol, // Gunakan symbol dari data atau fallback ke route params
       type: getActionType(txn.action),
       amount: txn.amount,
       date: dateFormatter(txn.excuteddatetime),
+      icon: icon, // Gunakan icon dari route params
       ...txn, // Keep original data for detail view
     }));
 
+    console.log('Final formatted data:', formatted);
     setFilteredTransactions(formatted);
   };
 
@@ -223,7 +232,7 @@ const WalletDetailScreen = () => {
   const getActionType = actionCode => {
     switch (actionCode) {
       case 3304:
-        return 'transfer';
+        return 'earned';
       case 3651:
         return 'deposit';
       case 3305:
