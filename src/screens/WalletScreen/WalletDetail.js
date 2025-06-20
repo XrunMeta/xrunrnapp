@@ -306,15 +306,17 @@ const WalletDetailScreen = () => {
       }
     };
 
-    const handlePress = () => {
+    const handlePress = item => {
       navigation.navigate('TransactionDetail', {
-        hash: 'Bahlul ente',
+        transactionData: item, // Pass full transaction data
+        symbol: symbol,
+        currencyId: currID,
       });
     };
 
     return (
       <TouchableOpacity
-        onPress={handlePress}
+        onPress={() => handlePress(item)}
         style={{
           backgroundColor: 'white',
           paddingHorizontal: 12,
