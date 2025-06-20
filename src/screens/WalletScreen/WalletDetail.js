@@ -226,20 +226,20 @@ const WalletDetailScreen = () => {
   // Helper to map action codes to types
   const getActionType = actionCode => {
     switch (actionCode) {
-      case 3304:
-        return 'earned';
       case 3651:
-        return 'deposit';
+        return 'Withdrawal details'; // history_action3651
+      case 3304:
+        return 'Completed'; // history_action3304
       case 3305:
-        return 'withdrawal';
+        return 'Transfer'; // history_action3305
       case 3306:
-        return 'exchange';
+        return 'Conversion'; // history_action3306
       case 3307:
-        return 'received';
+        return 'Exchange'; // history_action3307
       case 3308:
-        return 'sent';
+        return 'Exchange completed'; // history_action3308
       default:
-        return 'other';
+        return 'Other'; // history_not_found
     }
   };
 
