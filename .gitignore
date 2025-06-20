@@ -176,6 +176,6 @@ dist
 .pnp.*
 
 # Package files (추가)
-package.json
-package-lock.json
-tsconfig.json
+# package.json
+# package-lock.json
+# tsconfig.json
