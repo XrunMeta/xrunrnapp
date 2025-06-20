@@ -316,6 +316,7 @@ const WalletScreen = () => {
 
     const handlePress = () => {
       navigation.navigate('WalletDetail', {
+        member,
         currID: item.id,
         symbol: item.symbol,
         amount: item.amount,

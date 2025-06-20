@@ -63,12 +63,11 @@ const shortenAddress = (address, frontChars, backChars) => {
 const WalletDetailScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const {currID, symbol, amount, name, icon, bgColor, originalData} =
+  const {member, currID, symbol, amount, name, icon, bgColor, originalData} =
     route.params;
 
   const [isLoading, setIsLoading] = useState(true);
   const [transactions, setTransactions] = useState([]);
-  const [member, setMember] = useState(null);
 
   // Filter states
   const [selectedType, setSelectedType] = useState('All');
@@ -83,22 +82,6 @@ const WalletDetailScreen = () => {
     receivedDetails: 'app4200-01',
     transitionHistory: 'app4200-03',
   };
-
-  useEffect(() => {
-    const getMember = async () => {
-      try {
-        const userData = await AsyncStorage.getItem('userData');
-        const memberData = JSON.parse(userData).member;
-        setMember(memberData);
-      } catch (err) {
-        console.log(`Failed get member from async storage: ${err}`);
-        crashlytics().recordError(new Error(err));
-        crashlytics().log(err);
-        navigation.replace('Home');
-      }
-    };
-    getMember();
-  }, []);
 
   // Add WebSocket listeners
   useEffect(() => {
@@ -163,7 +146,7 @@ const WalletDetailScreen = () => {
     setIsLoading(true);
     try {
       WebSocketInstance.sendMessage(act.totalHistory, {
-        member: member,
+        member,
         currency: currID,
         daysbefore: parseInt(selectedDays),
         startwith: 0,
