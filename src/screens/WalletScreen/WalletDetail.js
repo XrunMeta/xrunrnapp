@@ -89,7 +89,6 @@ const WalletDetailScreen = () => {
         type: 'app4200-05-response',
         callback: data => {
           if (data.data) {
-            console.log({data: data.data});
             setTransactions(data.data);
             applyFilters(data.data);
             setIsLoading(false);
@@ -181,7 +180,6 @@ const WalletDetailScreen = () => {
     applyFilters();
   }, [transactions]);
 
-  // Fungsi untuk apply filter
   // Fungsi untuk apply filter
   const applyFilters = (txnData = transactions) => {
     console.log('Applying filters with data:', txnData);
@@ -346,7 +344,7 @@ const WalletDetailScreen = () => {
                 {backgroundColor: getIconColor(item.symbol), marginRight: 12},
               ]}>
               <Image
-                source={item.icon}
+                source={{uri: item.icon}}
                 style={styles.cryptoIconImage}
                 resizeMode="contain"
               />
