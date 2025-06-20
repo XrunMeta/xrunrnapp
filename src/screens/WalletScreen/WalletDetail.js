@@ -19,6 +19,9 @@ import {fontSize, getFontFam} from '../../../utils';
 import ButtonBack from '../../components/ButtonBack';
 import {dummyTransactions} from './dummyTX';
 import FilterModal from './FilterModal';
+import WebSocketInstance from '../../../utils/websocketUtils';
+import crashlytics from '@react-native-firebase/crashlytics';
+import {dateFormatter} from '../../../utils';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -62,19 +65,101 @@ const shortenAddress = (address, frontChars, backChars) => {
 const WalletDetailScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const {currID, symbol, name, amount, icon, bgColor} = route.params;
+  const {currID, symbol, name, amount, icon, bgColor, publicAddress} =
+    route.params;
 
   const [isLoading, setIsLoading] = useState(true);
-  const [publicAddress, setPublicAddress] = useState(
-    '0x1AB3A2FD697390B269ABCD49CB660C54292C2FCB',
-  );
+  const [transactions, setTransactions] = useState([]);
 
-  // State for filter selections
+  // Filter states
   const [selectedType, setSelectedType] = useState('All');
-  const [selectedDays, setSelectedDays] = useState('7 Days');
+  const [selectedDays, setSelectedDays] = useState('7');
   const [filteredTransactions, setFilteredTransactions] = useState([]);
-
   const [modalVisible, setModalVisible] = useState(false);
+
+  // WebSocket actions
+  const act = {
+    totalHistory: 'app4200-05',
+    transferHistory: 'app4200-06',
+    receivedDetails: 'app4200-01',
+    transitionHistory: 'app4200-03',
+  };
+
+  // Add WebSocket listeners
+  useEffect(() => {
+    const listeners = [
+      {
+        type: 'app4200-05-response',
+        callback: data => {
+          if (data.data) {
+            setTransactions(data.data);
+            applyFilters(data.data);
+            setIsLoading(false);
+          }
+        },
+      },
+      {
+        type: 'app4200-06-response',
+        callback: data => {
+          if (data.data) {
+            setTransactions(data.data);
+            applyFilters(data.data);
+            setIsLoading(false);
+          }
+        },
+      },
+      {
+        type: 'app4200-01-response',
+        callback: data => {
+          if (data.data) {
+            setTransactions(data.data);
+            applyFilters(data.data);
+            setIsLoading(false);
+          }
+        },
+      },
+      {
+        type: 'app4200-03-response',
+        callback: data => {
+          if (data.data) {
+            setTransactions(data.data);
+            applyFilters(data.data);
+            setIsLoading(false);
+          }
+        },
+      },
+    ];
+
+    listeners.forEach(({type, callback}) =>
+      WebSocketInstance.addListener(type, callback),
+    );
+
+    return () => {
+      listeners.forEach(({type}) => WebSocketInstance.removeListener(type));
+    };
+  }, []);
+
+  // Initial data fetch
+  useEffect(() => {
+    fetchTransactions();
+  }, [currID]);
+
+  const fetchTransactions = () => {
+    setIsLoading(true);
+    try {
+      WebSocketInstance.sendMessage(act.totalHistory, {
+        member: 1342, // Replace with actual user ID
+        currency: currID,
+        daysbefore: parseInt(selectedDays),
+        startwith: 0,
+      });
+    } catch (error) {
+      console.error('Failed to fetch transactions:', error);
+      crashlytics().recordError(new Error(error));
+      crashlytics().log(error);
+      setIsLoading(false);
+    }
+  };
 
   const setSelectedTypeStable = useCallback(type => {
     setSelectedType(type);
