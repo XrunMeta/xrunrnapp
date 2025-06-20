@@ -12,11 +12,16 @@ import {
   Linking,
   Modal,
   TextInput,
+  ActivityIndicator,
+  Alert,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {fontSize, getFontFam} from '../../../utils';
 import ButtonBack from '../../components/ButtonBack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import WebSocketInstance from '../../../utils/websocketUtils';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -53,18 +58,125 @@ const WalletScreen = () => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [isPopupShow, setIsPopupShow] = useState(false);
-  const [publicAddress, setPublicAddress] = useState(
-    '0x1AB3A2FD697390B269ABCD49CB660C54292C2FCB',
-  );
+  const [publicAddress, setPublicAddress] = useState('');
   const [cryptoAssets, setCryptoAssets] = useState([]);
+  const [member, setMember] = useState(null);
+  const [cardsData, setCardsData] = useState([]);
+  const [statusOtherChain, setStatusOtherChain] = useState('off');
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [activeTab, setActiveTab] = useState('Token'); // 'Token' or 'Contract'
+  const [activeTab, setActiveTab] = useState('Token');
   const [contractAddress, setContractAddress] = useState('');
   const [tokenName, setTokenName] = useState('');
   const [tokenSymbol, setTokenSymbol] = useState('');
   const [tokenDecimals, setTokenDecimals] = useState('');
   const [selectedToken, setSelectedToken] = useState(null);
+
+  // Get member data from AsyncStorage
+  useEffect(() => {
+    const getMember = async () => {
+      try {
+        const userData = await AsyncStorage.getItem('userData');
+        const memberData = JSON.parse(userData).member;
+        setMember(memberData);
+      } catch (err) {
+        console.log(`Failed get member from async storage: ${err}`);
+        crashlytics().recordError(new Error(err));
+        crashlytics().log(err);
+        navigation.replace('Home');
+      }
+    };
+    getMember();
+  }, []);
+
+  // WebSocket listeners for wallet data
+  useEffect(() => {
+    if (!member) return;
+
+    // Listener for wallet data updates
+    const walletDataListener = data => {
+      if (data.type === 'app4000-01-rev-01-response') {
+        if (data.data) {
+          // Sort data with XRUN first, then ETH, RUN, POL, etc.
+          const sortedData = data.data.sort((a, b) => {
+            if (a.currency === 1) return -1; // XRUN first
+            if (b.currency === 1) return 1;
+            if (a.currency === 2) return -1; // ETH second
+            if (b.currency === 2) return 1;
+            if (a.currency === 3) return -1; // RUN third
+            if (b.currency === 3) return 1;
+            if (a.currency === 16) return -1; // POL fourth
+            if (b.currency === 16) return 1;
+            return 0;
+          });
+
+          setCardsData(sortedData);
+
+          // Set public address to XRUN address
+          const xrunWallet = sortedData.find(item => item.currency === 1);
+          if (xrunWallet) {
+            setPublicAddress(xrunWallet.address);
+          }
+
+          // Format data for the UI
+          const formattedAssets = sortedData.map(item => ({
+            id: item.currency.toString(),
+            symbol: item.symbol,
+            name: item.currencyname,
+            amount: parseFloat(item.Wamount).toFixed(6),
+            icon: `data:image/png;base64,${item.symbolimg.replace(
+              /(\r\n|\n|\r)/gm,
+              '',
+            )}`,
+            originalData: item,
+          }));
+
+          setCryptoAssets(formattedAssets);
+          setIsLoading(false);
+        }
+      }
+    };
+
+    // Listener for other chains status
+    const otherChainsListener = data => {
+      if (data.type === 'showOtherChains-response') {
+        if (data.data) {
+          const status = data.data[0].status.toLowerCase();
+          setStatusOtherChain(status);
+        }
+      }
+    };
+
+    WebSocketInstance.addListener(
+      'app4000-01-rev-01-response',
+      walletDataListener,
+    );
+    WebSocketInstance.addListener(
+      'showOtherChains-response',
+      otherChainsListener,
+    );
+
+    // Initial data fetch
+    WebSocketInstance.sendMessage('app4000-01-rev-01', {
+      member,
+      daysbefore: 7,
+    });
+
+    WebSocketInstance.sendMessage('showOtherChains', {
+      member,
+    });
+
+    return () => {
+      WebSocketInstance.removeListener(
+        'app4000-01-rev-01-response',
+        walletDataListener,
+      );
+      WebSocketInstance.removeListener(
+        'showOtherChains-response',
+        otherChainsListener,
+      );
+    };
+  }, [member]);
 
   // Handle star icon click
   const handleAddToken = () => {
@@ -104,15 +216,12 @@ const WalletScreen = () => {
   // Handle next button in Contract tab
   const handleContractNext = () => {
     if (contractAddress) {
-      // Here you would typically validate the contract address
-      // For demo purposes, we'll just show the confirmation
       setActiveTab('Confirm');
     }
   };
 
   // Handle add token confirmation
   const handleAddTokenConfirm = () => {
-    // Here you would typically add the token to the wallet
     console.log('Adding token:', {
       name: tokenName,
       symbol: tokenSymbol,
@@ -135,6 +244,132 @@ const WalletScreen = () => {
       icon: require('./../../../assets/images/icon_xrun_white.png'),
     },
   ];
+
+  const onBack = () => {
+    navigation.navigate('Home');
+  };
+
+  const handleCopyAddress = () => {
+    Clipboard.setString(publicAddress);
+    console.log('Address copied to clipboard');
+  };
+
+  const handleReceive = () => {
+    navigation.navigate('Receive', {
+      publicAddress,
+    });
+  };
+
+  const handleSend = () => {
+    // Find XRUN data to send by default
+    const xrunData = cardsData.find(item => item.currency === 1);
+    if (xrunData) {
+      navigation.navigate('Sending', {
+        symbol: xrunData.symbol,
+        fromAddress: publicAddress,
+        name: xrunData.currencyname,
+        icon: `data:image/png;base64,${xrunData.symbolimg.replace(
+          /(\r\n|\n|\r)/gm,
+          '',
+        )}`,
+        contractAddress: xrunData.address,
+        originalData: xrunData,
+      });
+    }
+  };
+
+  const handlePolygonscan = () => {
+    Linking.openURL(`https://polygonscan.com/address/${publicAddress}`);
+  };
+
+  const renderCryptoItem = ({item}) => {
+    const getIconColor = symbol => {
+      switch (symbol) {
+        case 'XRUN':
+          return '#000000';
+        case 'POL':
+          return '#8347E6';
+        case 'REALVERSE':
+          return '#000000';
+        case 'NFT #8282':
+        case 'NFT #8283':
+        case 'AD XRUN':
+          return '#1C1C1E';
+        default:
+          return '#5F59E0';
+      }
+    };
+
+    const handlePress = () => {
+      navigation.navigate('WalletDetail', {
+        currID: item.id,
+        symbol: item.symbol,
+        amount: item.amount,
+        name: item.name,
+        icon: item.icon,
+        bgColor: getIconColor(item.symbol),
+        originalData: item.originalData,
+      });
+    };
+
+    return (
+      <TouchableOpacity
+        onPress={handlePress}
+        style={{
+          backgroundColor: 'white',
+          paddingHorizontal: 12,
+          paddingVertical: 5,
+          marginHorizontal: 8,
+          borderRadius: 15,
+          marginVertical: 6,
+          ...styles.shadow,
+        }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View
+              style={[
+                styles.cryptoIcon,
+                {backgroundColor: getIconColor(item.symbol), marginRight: 12},
+              ]}>
+              <Image
+                source={{uri: item.icon}}
+                style={styles.cryptoIconImage}
+                resizeMode="contain"
+              />
+            </View>
+
+            <View style={{}}>
+              <Text
+                style={{
+                  fontSize: fontSize('subtitle'),
+                  fontWeight: '500',
+                  color: 'black',
+                }}>
+                {item.symbol}
+              </Text>
+              <Text style={{fontSize: fontSize('body'), color: '#B8B8B8'}}>
+                {item.name}
+              </Text>
+            </View>
+          </View>
+          <Text
+            style={{
+              fontSize: 14,
+              fontWeight: '600',
+              color: 'black',
+              paddingVertical: 18,
+            }}>
+            {item.amount} {item.symbol}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   // Modal component
   const AddTokenModal = () => (
@@ -307,179 +542,6 @@ const WalletScreen = () => {
     </Modal>
   );
 
-  const onBack = () => {
-    navigation.navigate('Home');
-  };
-
-  // Simulate loading data
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      // Set dummy crypto assets
-      setCryptoAssets([
-        {
-          id: '1',
-          symbol: 'XRUN',
-          name: 'XRUN',
-          amount: '3,600',
-          icon: require('./../../../assets/images/icon_xrun_white.png'),
-        },
-        {
-          id: '2',
-          symbol: 'POL',
-          name: 'Polygon',
-          amount: '1,600',
-          icon: require('./../../../assets/images/icon_polygon.png'),
-        },
-        {
-          id: '3',
-          symbol: 'REALVERSE',
-          name: 'RVC',
-          amount: '1,000,000',
-          icon: require('./../../../assets/images/icon_realverse.png'),
-        },
-        {
-          id: '4',
-          symbol: 'NFT #8282',
-          name: 'Round 1',
-          amount: '1',
-          icon: require('./../../../assets/images/icon_nft_black.png'),
-        },
-        {
-          id: '5',
-          symbol: 'NFT #8283',
-          name: 'Round 1',
-          amount: '1',
-          icon: require('./../../../assets/images/icon_nft_black.png'),
-        },
-        {
-          id: '6',
-          symbol: 'AD XRUN',
-          name: 'XRUN',
-          amount: '500',
-          icon: require('./../../../assets/images/icon_ad_xrun.png'),
-        },
-      ]);
-      setIsLoading(false);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handleCopyAddress = () => {
-    Clipboard.setString(publicAddress);
-    console.log('Address copied to clipboard');
-  };
-
-  const handleReceive = () => {
-    navigation.navigate('Receive', {
-      publicAddress,
-    });
-  };
-
-  const handleSend = () => {
-    navigation.navigate('Sending', {
-      symbol: 'POL',
-      fromAddress: publicAddress,
-      name: 'Polygon',
-      icon: require('./../../../assets/images/icon_xrun_white.png'),
-      contractAddress: 'dummy-contract-address',
-    });
-  };
-
-  const handlePolygonscan = () => {
-    Linking.openURL(`https://polygonscan.com/address/${publicAddress}`);
-  };
-
-  const renderCryptoItem = ({item}) => {
-    // Function to determine icon color based on crypto symbol
-    const getIconColor = symbol => {
-      switch (symbol) {
-        case 'XRUN':
-          return '#000000'; // atau '#5F59E0' kalau kamu prefer default
-        case 'POL':
-          return '#8347E6';
-        case 'REALVERSE':
-          return '#000000'; // warna coklat keemasan
-        case 'NFT #8282':
-        case 'NFT #8283':
-        case 'AD XRUN':
-          return '#1C1C1E'; // hitam doff
-        default:
-          return '#5F59E0';
-      }
-    };
-
-    const handlePress = () => {
-      navigation.navigate('WalletDetail', {
-        currID: item.id,
-        symbol: item.symbol,
-        amount: item.amount,
-        name: item.name,
-        icon: item.icon,
-        bgColor: getIconColor(item.symbol),
-      });
-    };
-
-    return (
-      <TouchableOpacity
-        onPress={handlePress}
-        style={{
-          backgroundColor: 'white',
-          paddingHorizontal: 12,
-          paddingVertical: 5,
-          marginHorizontal: 8,
-          borderRadius: 15,
-          marginVertical: 6,
-          ...styles.shadow,
-        }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <View
-              style={[
-                styles.cryptoIcon,
-                {backgroundColor: getIconColor(item.symbol), marginRight: 12},
-              ]}>
-              <Image
-                source={item.icon}
-                style={styles.cryptoIconImage}
-                resizeMode="contain"
-              />
-            </View>
-
-            <View style={{}}>
-              <Text
-                style={{
-                  fontSize: fontSize('subtitle'),
-                  fontWeight: '500',
-                  color: 'black',
-                }}>
-                {item.symbol}
-              </Text>
-              <Text style={{fontSize: fontSize('body'), color: '#B8B8B8'}}>
-                {item.name}
-              </Text>
-            </View>
-          </View>
-          <Text
-            style={{
-              fontSize: 14,
-              fontWeight: '600',
-              color: 'black',
-              paddingVertical: 18,
-            }}>
-            {/* {formatCustom(item.amount)} {item.symbol} */}
-            {item.amount} {item.symbol}
-          </Text>
-        </View>
-      </TouchableOpacity>
-    );
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="#FAFAFA" barStyle="dark-content" />
@@ -630,7 +692,7 @@ const WalletScreen = () => {
 
         {isLoading ? (
           <View style={styles.loadingContainer}>
-            <Text>Loading assets...</Text>
+            <ActivityIndicator size="large" color="#0000ff" />
           </View>
         ) : (
           <FlatList
