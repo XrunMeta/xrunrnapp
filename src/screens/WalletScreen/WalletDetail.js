@@ -178,25 +178,59 @@ const WalletDetailScreen = () => {
   }, []);
 
   // Fungsi untuk apply filter
-  const applyFilters = () => {
-    let result = dummyTransactions.filter(txn => txn.assetId === currID);
+  const applyFilters = (txnData = transactions) => {
+    let result = txnData.filter(txn => txn.currency === currID);
 
-    // Filter by type
+    // Filter by type if not 'All'
     if (selectedType !== 'All') {
-      result = result.filter(txn => txn.type === selectedType.toLowerCase());
+      result = result.filter(txn => {
+        // Map your action codes to types
+        const actionType = getActionType(txn.action);
+        return actionType === selectedType.toLowerCase();
+      });
     }
 
-    // Filter by date
+    // Filter by days
     const days = parseInt(selectedDays);
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - days);
 
     result = result.filter(txn => {
-      const txnDate = new Date(txn.date.replace(/\./g, '-').replace(' ', 'T'));
+      const txnDate = new Date(txn.excuteddatetime || txn.date);
       return txnDate >= cutoffDate;
     });
 
-    setFilteredTransactions(result);
+    // Format for UI
+    const formatted = result.map(txn => ({
+      id: txn.id || `${txn.excuteddatetime}_${txn.amount}`,
+      symbol: symbol,
+      type: getActionType(txn.action),
+      amount: txn.amount,
+      date: dateFormatter(txn.excuteddatetime),
+      ...txn, // Keep original data for detail view
+    }));
+
+    setFilteredTransactions(formatted);
+  };
+
+  // Helper to map action codes to types
+  const getActionType = actionCode => {
+    switch (actionCode) {
+      case 3304:
+        return 'transfer';
+      case 3651:
+        return 'deposit';
+      case 3305:
+        return 'withdrawal';
+      case 3306:
+        return 'exchange';
+      case 3307:
+        return 'received';
+      case 3308:
+        return 'sent';
+      default:
+        return 'other';
+    }
   };
 
   // Panggil applyFilters saat komponen mount atau filter berubah
