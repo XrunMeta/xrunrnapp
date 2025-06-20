@@ -161,12 +161,17 @@ const WalletDetailScreen = () => {
     }
   };
 
-  const setSelectedTypeStable = useCallback(type => {
-    setSelectedType(type);
-  }, []);
+  const setSelectedTypeStable = useCallback(
+    type => {
+      setSelectedType(type);
+      applyFilters();
+    },
+    [transactions],
+  );
 
   const setSelectedDaysStable = useCallback(days => {
     setSelectedDays(days);
+    fetchTransactions();
   }, []);
 
   const onCloseStable = useCallback(() => {
@@ -175,7 +180,8 @@ const WalletDetailScreen = () => {
 
   const onConfirmStable = useCallback(() => {
     setModalVisible(false);
-  }, []);
+    applyFilters();
+  }, [transactions]);
 
   // Fungsi untuk apply filter
   const applyFilters = (txnData = transactions) => {
