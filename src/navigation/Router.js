@@ -41,7 +41,7 @@ import CloseMembershipScreen from '../screens/SettingScreen/CloseMembershipScree
 import CloseConfirmPassword from '../screens/SettingScreen/ConfirmPasswordScreen_Close';
 import NotifyScreen from '../screens/NotifyScreen/NotifyScreen';
 import AdvertiseScreen from '../screens/AdvertiseScreen/AdvertiseScreen';
-import WalletScreen from '../screens/WalletScreen/index';
+import WalletScreen from '../screens/WalletScreen/index2';
 import SendWalletScreen from '../screens/SendWalletScreen';
 import ShowAdScreen from '../screens/AdvertiseScreen/ShowAdScreen';
 import CompleteSend from '../screens/CompleteSend';

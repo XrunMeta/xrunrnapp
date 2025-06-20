@@ -97,8 +97,22 @@ const WalletScreen = () => {
     const walletDataListener = data => {
       if (data.type === 'app4000-01-rev-01-response') {
         if (data.data) {
-          // Sort data with XRUN first, then ETH, RUN, POL, etc.
-          const sortedData = data.data.sort((a, b) => {
+          // Filter data as statusOtherChain
+          const filteredData = data.data.filter(item => {
+            if (statusOtherChain === 'on') {
+              return true; // If on -> show all
+            } else {
+              // If off -> show ETH currency
+              return (
+                item.subcurrency === 5000 ||
+                item.subcurrency === 5100 ||
+                item.subcurrency === 5200
+              );
+            }
+          });
+
+          // Sort data with XRUN first
+          const sortedData = filteredData.sort((a, b) => {
             if (a.currency === 1) return -1; // XRUN first
             if (b.currency === 1) return 1;
             if (a.currency === 2) return -1; // ETH second
@@ -112,13 +126,13 @@ const WalletScreen = () => {
 
           setCardsData(sortedData);
 
-          // Set public address to XRUN address
+          // Set public address as XRUN address
           const xrunWallet = sortedData.find(item => item.currency === 1);
           if (xrunWallet) {
             setPublicAddress(xrunWallet.address);
           }
 
-          // Format data for the UI
+          // Format data for UI
           const formattedAssets = sortedData.map(item => ({
             id: item.currency.toString(),
             symbol: item.symbol,
