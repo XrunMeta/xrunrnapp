@@ -482,6 +482,14 @@ export default function Home({route}) {
                 navigation.dispatch(CommonActions.navigate('InfoHome'));
               },
             )}
+            {renderTabButton(
+              'NStation',
+              require('../../../assets/images/icon_advertisement.png'),
+              'NStation',
+              () => {
+                navigation.dispatch(CommonActions.navigate('NStationTest'));
+              },
+            )}
           </View>
         </View>
       ) : (

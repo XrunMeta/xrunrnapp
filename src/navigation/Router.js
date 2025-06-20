@@ -43,6 +43,7 @@ import NotifyScreen from '../screens/NotifyScreen/NotifyScreen';
 import AdvertiseScreen from '../screens/AdvertiseScreen/AdvertiseScreen';
 import WalletScreen from '../screens/WalletScreen';
 import SendWalletScreen from '../screens/SendWalletScreen';
+import ReceiveScreen from '../screens/ReceiveScreen/ReceiveScreen';
 import ShowAdScreen from '../screens/AdvertiseScreen/ShowAdScreen';
 import CompleteSend from '../screens/CompleteSend';
 import CompleteExchange from '../screens/CompleteExchange';
@@ -70,6 +71,7 @@ import AdsCompletePurchase from '../screens/IndividualAdsScreen/AdsPurchaseScree
 import ManageAdsScreen from '../screens/IndividualAdsScreen/ManageAdsScreen/ManageAdsScreen';
 import WalletDetailScreen from '../screens/WalletScreen/WalletDetail';
 import TransactionDetailScreen from '../screens/WalletScreen/TxDetail';
+import NapCampaignExample from '../components/NapCampaignExample';
 
 export default Router = () => {
   const Stack = createNativeStackNavigator();
@@ -170,6 +172,7 @@ export default Router = () => {
         <Stack.Screen name="WalletDetail" component={WalletDetailScreen} />
         <Stack.Screen name="IOSWallet" component={IOSWallet} />
         <Stack.Screen name="SendWallet" component={SendWalletScreen} />
+        <Stack.Screen name="Receive" component={ReceiveScreen} />
         <Stack.Screen name="ShowAd" component={ShowAdScreen} />
         <Stack.Screen name="CompleteSend" component={CompleteSend} />
         <Stack.Screen name="CompleteExchange" component={CompleteExchange} />
@@ -203,6 +206,9 @@ export default Router = () => {
           component={AdsCompletePurchase}
         />
         <Stack.Screen name="ManageIndAds" component={ManageAdsScreen} />
+
+        {/* NStation API Test */}
+        <Stack.Screen name="NStationTest" component={NapCampaignExample} />
       </Stack.Navigator>
     </View>
   );
