@@ -10,14 +10,11 @@ import {
   StatusBar,
   Dimensions,
   Linking,
-  Modal,
-  TextInput,
 } from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {fontSize, getFontFam} from '../../../utils';
 import ButtonBack from '../../components/ButtonBack';
-import {dummyTransactions} from './dummyTX';
 import FilterModal from './FilterModal';
 import WebSocketInstance from '../../../utils/websocketUtils';
 import crashlytics from '@react-native-firebase/crashlytics';
@@ -65,7 +62,7 @@ const shortenAddress = (address, frontChars, backChars) => {
 const WalletDetailScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
-  const {currID, symbol, name, amount, icon, bgColor, publicAddress} =
+  const {currID, symbol, amount, name, icon, bgColor, originalData} =
     route.params;
 
   const [isLoading, setIsLoading] = useState(true);
@@ -272,20 +269,21 @@ const WalletDetailScreen = () => {
   }, []);
 
   const handleCopyAddress = () => {
-    Clipboard.setString(publicAddress);
+    Clipboard.setString(originalData?.address);
     console.log('Address copied to clipboard');
   };
 
   const handleReceive = () => {
+    const address = originalData?.address;
     navigation.navigate('Receive', {
-      publicAddress,
+      address,
     });
   };
 
   const handleSend = () => {
     navigation.navigate('Sending', {
       symbol: 'POL',
-      fromAddress: publicAddress,
+      fromAddress: originalData?.address,
       name: 'Polygon',
       icon: require('./../../../assets/images/icon_xrun_white.png'),
       contractAddress: 'dummy-contract-address',
@@ -293,7 +291,7 @@ const WalletDetailScreen = () => {
   };
 
   const handlePolygonscan = () => {
-    Linking.openURL(`https://polygonscan.com/address/${publicAddress}`);
+    Linking.openURL(`https://polygonscan.com/address/${originalData?.address}`);
   };
 
   const renderCryptoItem = ({item}) => {
@@ -451,7 +449,7 @@ const WalletDetailScreen = () => {
                 {amount} {symbol}
               </Text>
               <Text style={styles.walletAddress}>
-                {shortenAddress(publicAddress, front, back)}
+                {shortenAddress(originalData?.address, front, back)}
               </Text>
             </View>
           </View>
