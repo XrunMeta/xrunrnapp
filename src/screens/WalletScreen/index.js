@@ -190,7 +190,7 @@ const WalletScreen = () => {
         otherChainsListener,
       );
     };
-  }, [member]);
+  }, [member, statusOtherChain]);
 
   // Handle star icon click
   const handleAddToken = () => {
