@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {AuthProvider} from './src/context/AuthContext/AuthContext';
+import {NapProvider} from './src/context/NapContext';
 import Router from './src/navigation/Router';
 import {Linking} from 'react-native';
 import {saveLogsDB} from './utils';
@@ -36,9 +37,11 @@ function App() {
 
   return (
     <AuthProvider>
-      <NavigationContainer>
-        <Router />
-      </NavigationContainer>
+      <NapProvider>
+        <NavigationContainer>
+          <Router />
+        </NavigationContainer>
+      </NapProvider>
     </AuthProvider>
   );
 }

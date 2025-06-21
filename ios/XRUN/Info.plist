@@ -72,6 +72,8 @@
 	<string>We need permission to save images to your device.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) Need image access to showing Image </string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>This app uses advertising identifier to provide personalized ads and improve your experience.</string>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>
